@@ -1,0 +1,30 @@
+// ===========================================================================
+// Asshat Gaming RP
+// http://asshatgaming.com
+// © 2020 Asshat Gaming 
+// ---------------------------------------------------------------------------
+// FILE: const.js
+// DESC: Provides constants
+// TYPE: Server (JavaScript)
+// ===========================================================================
+
+// Sphere types
+const AG_SPHERE_HOUSE = 1;
+const AG_SPHERE_BUSINESS = 2;
+
+// Prompts (used for client GUI prompt responses)
+const AG_PROMPT_CREATEFIRSTCHAR = 1;
+
+// Job Types
+const AG_JOB_NONE = 0;
+const AG_JOB_POLICE = 1;
+const AG_JOB_MEDICAL = 2;
+const AG_JOB_FIRE = 3;
+const AG_JOB_BUS = 4;
+const AG_JOB_TAXI = 5;
+const AG_JOB_GARBAGE = 6;
+const AG_JOB_WEAPON = 7;
+const AG_JOB_DRUG = 8;
+
+// Pickup Owner Types
+const AG_PICKUP_JOB = 1;

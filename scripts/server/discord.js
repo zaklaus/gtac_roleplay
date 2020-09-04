@@ -1,0 +1,67 @@
+// ===========================================================================
+// Asshat Gaming RP
+// http://asshatgaming.com
+// © 2020 Asshat Gaming 
+// ---------------------------------------------------------------------------
+// FILE: discord.js
+// DESC: Provides discord bridging and connection functions and usage
+// TYPE: Server (JavaScript)
+// ===========================================================================
+
+addEventHandler("OnDiscordCommand", function(command, params, discordUser) {
+    let commandData = getCommand(command);
+
+    if(!commandData) {
+        messageClientError(discordUser, "That command does not exist!");
+        return false;
+    }
+
+    if(isCommandAllowedOnDiscord(command)) {
+        messageClientError(discordUser, "That command can not be used on Discord!");
+        return false;
+    }
+
+    if(doesClientHavePermission(discordUser, getCommandRequiredPermissions(command))) {
+        messageClientError(discordUser, "You do not have permission to use that command!");
+        return false;
+    }
+
+    commandData.handlerFunction(command, params, discordUser);
+});
+
+// ---------------------------------------------------------------------------
+
+function messageDiscordUser(discordUser, messageText) {
+    let socketData = JSON.stringify({
+		type: "chat.message.text", 
+		payload: {
+			author: discordUser.name,
+			text: messageText,
+		}
+	});
+	sendDiscordSocketData(socketData);	
+}
+
+// ---------------------------------------------------------------------------
+
+function sendDiscordSocketData(socketData) {
+    getDiscordSocket().send(module.hash.encodeBase64(socketData) + "\r\n");
+}
+
+// ---------------------------------------------------------------------------
+
+function isClientFromDiscord(client) {
+    if(client instanceof Client) {
+        return false;
+    } else {
+        return false;
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+function getDiscordUserData(discordUserId) {
+    return loadAccountFromDiscordUserId(discordUserId);
+}
+
+// ---------------------------------------------------------------------------

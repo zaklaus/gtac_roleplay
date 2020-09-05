@@ -85,6 +85,7 @@ function loadCommandData() {
             commandData("startwork", startWorkingCommand, "", getStaffFlagValue("none"), true, false),
             commandData("stopwork", stopWorkingCommand, "", getStaffFlagValue("none"), true, false),
             commandData("quitjob", quitJobCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("uniform", jobUniformCommand, "", getStaffFlagValue("none"), true, false),
 
             commandData("radio", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
             commandData("r", jobRadioCommand, "", getStaffFlagValue("none"), true, false),

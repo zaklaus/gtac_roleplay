@@ -290,7 +290,7 @@ app.init = function()
 			textFont: robotoFont,
 			textAlign: 0.5,
 		},
-	}, checkLogin);	
+	}, checkLogin);
 	
 	login.notRegisteredLabel = login.window.text(20, 240, 175, 20, "Don't have an account?", {
 		main: {
@@ -541,7 +541,7 @@ app.init = function()
 			textFont: robotoFont,			
 		}
 	});
-	//register.passwordInput.masked = true;
+	register.passwordInput.masked = true;
 	register.passwordInput.placeholder = "Password";
 	
 	register.confirmPasswordInput = register.window.textInput(20, 130, 260, 25, '', {
@@ -561,7 +561,7 @@ app.init = function()
 			textFont: robotoFont,			
 		}		
 	});
-	//register.confirmPasswordInput.masked = true;
+	register.confirmPasswordInput.masked = true;
 	register.confirmPasswordInput.placeholder = "Confirm password";	
 	
 	register.emailInput = register.window.textInput(20, 160, 260, 25, '', {

@@ -57,7 +57,7 @@ function loginCommand(command, params, client) {
 		return false;
 	}
 	
-	if(isAccountPasswordCorrect(serverData.clients[client.index].accountData, hashAccountPassword(client.name, params))) {
+	if(isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, params))) {
 		messageClientError(client, "Incorrect username or password!");
 		return false;
 	}
@@ -110,7 +110,7 @@ function registerCommand(command, params, client) {
 		return false;
 	}
 
-	serverData.clients[client.index].accountData = accountData;
+	getClientData(client).accountData = accountData;
 	messageClientSuccess(client, "Your account has been created!");
 	messageClientAlert(client, "To play on the server, you will need to make a character.");
 }
@@ -146,7 +146,7 @@ function changePasswordCommand(command, params, client) {
 	let oldPassword = splitParams[0];
 	let newPassword = splitParams[1];
 
-	if(isAccountPasswordCorrect(serverData.clients[client.index].accountData, hashAccountPassword(client.name, oldPassword))) {
+	if(isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, oldPassword))) {
 		messageClientError(client, "The old password is invalid!");
 		return false;
 	}
@@ -157,7 +157,7 @@ function changePasswordCommand(command, params, client) {
 		return false;
 	}
 	
-	serverData.clients[client.index].accountData.password = hashAccountPassword(serverData.clients[client.index].accountData.name, params);
+	getClientData(client).accountData.password = hashAccountPassword(getClientData(client).accountData.name, params);
 	messageClientSuccess(client, "Your password has been changed!");
 }
 
@@ -183,31 +183,29 @@ function switchCharacterCommand(command, params, client) {
 		return false;
 	}
 
-	let subAccountId = serverData.clients[client.index].currentSubAccount;
-	serverData.clients[client.index].subAccounts[subAccountId].spawnPosition = client.player.position;
-	serverData.clients[client.index].subAccounts[subAccountId].spawnHeading = client.player.heading;
+	getClientCurrentSubAccount(client).spawnPosition = client.player.position;
+	getClientCurrentSubAccount(client).spawnHeading = client.player.heading;
 
-	let tempSubAccount = serverData.clients[client.index].subAccounts[subAccountId];
+	let tempSubAccount = getClientCurrentSubAccount(client);
 	saveSubAccountToDatabase(tempSubAccount);
 	
 	client.despawnPlayer();
 	triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[server.game], serverConfig.connectCameraLookAt[server.game]);
-
 	triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);	
 }
 
 // ---------------------------------------------------------------------------
 
 function isClientLoggedIn(client) {
-	let loggedIn = serverData.clients[client.index].loggedIn;
+	let loggedIn = getClientData(client).loggedIn;
 	return loggedIn;
 }
 
 // ---------------------------------------------------------------------------
 
 function isClientRegistered(client) {
-	if(serverData.clients[client.index].accountData != false) {
-		if(serverData.clients[client.index].accountData.databaseId != 0) {
+	if(getClientData(client).accountData != false) {
+		if(getClientData(client).accountData.databaseId != 0) {
 			return true;
 		}
 	}
@@ -396,14 +394,13 @@ function hashAccountPassword(name, password) {
 // ---------------------------------------------------------------------------
 
 function saltAccountInfo(name, password) {
-	// Will be added later
-	return name + "." + password;
+	return "asshat.gaming." + String(accountSaltHash) + "." + String(name) + "." + String(password);
 }
 
 // ---------------------------------------------------------------------------
 
 function loginSuccess(client) {
-	serverData.clients[client.index].loggedIn = true;
+	getClientData(client).loggedIn = true;
 
 	triggerNetworkEvent("ag.loginSuccess", client);
 }
@@ -501,7 +498,7 @@ addNetworkHandler("ag.checkLogin", function(client, password) {
 		return false;
 	}
 	
-	if(!isAccountPasswordCorrect(serverData.clients[client.index].accountData, hashAccountPassword(client.name, password))) {
+	if(!isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, password))) {
 		//messageClientError(client, "Invalid password!");
 		triggerNetworkEvent("ag.loginFailed", client, "Invalid password! " + String(loginAttemptsRemaining) + " tries remaining.");
 		return false;
@@ -509,12 +506,12 @@ addNetworkHandler("ag.checkLogin", function(client, password) {
 
 	loginSuccess(client);
 
-	if(serverData.clients[client.index].subAccounts.length == 0) {
+	if(getClientData(client).subAccounts.length == 0) {
 		triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No characters");
 		client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
 	} else {
-		serverData.clients[client.index].currentSubAccount = 0;
-		let tempSubAccount = serverData.clients[client.index].subAccounts[0];
+		getClientData(client).currentSubAccount = 0;
+		let tempSubAccount = getClientData(client).subAccounts[0];
 		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 });
@@ -575,11 +572,14 @@ addNetworkHandler("ag.checkRegistration", function(client, password, confirmPass
 		return false;
 	}
 
-	serverData.clients[client.index].accountData = accountData;
+	getClientData(client).accountData = accountData;
+	getClientData(client).loggedIn = true;
+
 	messageClientSuccess(client, "Your account has been created!");
 	messageClientAlert(client, "To play on the server, you will need to make a character.");
 	triggerNetworkEvent("ag.registrationSuccess", client);
 	triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No Characters");
+
 	client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
 });
 
@@ -611,33 +611,33 @@ addNetworkHandler("ag.checkNewCharacter", function(client, firstName, lastName, 
 		return false;
 	}
 
-	let subAccountData = createSubAccount(serverData.clients[client.index].accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
+	let subAccountData = createSubAccount(getClientData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
 	if(!subAccountData) {
 		triggerNetworkEvent("ag.newCharacterFailed", client, "Something went wrong. Your character could not be created!");
 		messageClientAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
 		return false;
 	}
 
-	serverData.clients[client.index].accountData.subAccounts = loadSubAccountsFromAccount(serverData.clients[client.index].accountData.databaseId);
+	getClientData(client).subAccounts = loadSubAccountsFromAccount(getClientData(client).accountData.databaseId);
 	triggerNetworkEvent("ag.newCharacterSuccess", client);
 
-	serverData.clients[client.index].currentSubAccount = 0;
-	let tempSubAccount = serverData.clients[client.index].subAccounts[0];
+	getClientData(client).currentSubAccount = 0;
+	let tempSubAccount = getClientData(client).subAccounts[0];
 	triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.previousCharacter", function(client) {
-	if(serverData.clients[client.index].subAccounts.length > 1) {
-		if(serverData.clients[client.index].currentSubAccount <= 0) {
-			serverData.clients[client.index].currentSubAccount = serverData.clients[client.index].subAccounts.length-1;
+	if(getClientData(client).subAccounts.length > 1) {
+		if(getClientData(client).currentSubAccount <= 0) {
+			getClientData(client).currentSubAccount = getClientData(client).subAccounts.length-1;
 		} else {
-			serverData.clients[client.index].currentSubAccount--;
+			getClientData(client).currentSubAccount--;
 		}
 
-		let subAccountId = serverData.clients[client.index].currentSubAccount;
-		let tempSubAccount = serverData.clients[client.index].subAccounts[subAccountId];
+		let subAccountId = getClientData(client).currentSubAccount;
+		let tempSubAccount = getClientData(client).subAccounts[subAccountId];
 		triggerNetworkEvent("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 });
@@ -645,15 +645,15 @@ addNetworkHandler("ag.previousCharacter", function(client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.nextCharacter", function(client) {
-	if(serverData.clients[client.index].subAccounts.length > 1) {
-		if(serverData.clients[client.index].currentSubAccount >= serverData.clients[client.index].subAccounts.length-1) {
-			serverData.clients[client.index].currentSubAccount = 0;
+	if(getClientData(client).subAccounts.length > 1) {
+		if(getClientData(client).currentSubAccount >= getClientData(client).subAccounts.length-1) {
+			getClientData(client).currentSubAccount = 0;
 		} else {
-			serverData.clients[client.index].currentSubAccount++;
+			getClientData(client).currentSubAccount++;
 		}
 
-		let subAccountId = serverData.clients[client.index].currentSubAccount;
-		let tempSubAccount = serverData.clients[client.index].subAccounts[subAccountId];
+		let subAccountId = getClientData(client).currentSubAccount;
+		let tempSubAccount = getClientData(client).subAccounts[subAccountId];
 		triggerNetworkEvent("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 });
@@ -663,8 +663,8 @@ addNetworkHandler("ag.nextCharacter", function(client) {
 addNetworkHandler("ag.selectCharacter", function(client) {
 	triggerNetworkEvent("ag.characterSelectSuccess", client);
 
-	let subAccountId = serverData.clients[client.index].currentSubAccount;
-	let tempSubAccount = serverData.clients[client.index].subAccounts[subAccountId];
+	let subAccountId = getClientData(client).currentSubAccount;
+	let tempSubAccount = getClientData(client).subAccounts[subAccountId];
 	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
 });
 
@@ -720,3 +720,11 @@ function initClient(client) {
 		//messageClient("Welcome to Asshat Gaming RP, " + String(client.name) + "! Please /register to continue.", client, serverConfig.colour.byName["white"]);
 	}
 }
+
+// ---------------------------------------------------------------------------
+
+function getClientData(client) {
+	return serverData.clients[client.index];
+}
+
+// ---------------------------------------------------------------------------

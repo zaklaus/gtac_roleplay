@@ -24,6 +24,7 @@ function initServerScripts() {
 	initAccountScript();
 	initChatScript();
 	initJobScript();
+	initVehicleScript();
 }
 
 // ---------------------------------------------------------------------------

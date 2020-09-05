@@ -2451,6 +2451,12 @@ function getClosestJobPoint(position) {
 
 // ---------------------------------------------------------------------------
 
+function getJobIndex(jobData) {
+	return serverData.jobs[server.game].indexOf(jobData);
+}
+
+// ---------------------------------------------------------------------------
+
 function getVehiclesInRange(position, distance) {
 	return getElementsByType(ELEMENT_VEHICLE).filter(x => x.position.distance(position) <= distance);
 }
@@ -3214,3 +3220,17 @@ function saveAllServerDataToDatabase() {
 	saveAllBusinessesToDatabase();
 	saveAllClansToDatabase();
 }
+
+// ---------------------------------------------------------------------------
+
+function intToBool(intVal) {
+	return !!intVal;
+}
+
+// ---------------------------------------------------------------------------
+
+function boolToInt(boolVal) {
+	return (boolVal) ? 1 : 0;
+}
+
+// ---------------------------------------------------------------------------

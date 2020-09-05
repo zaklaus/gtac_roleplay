@@ -173,8 +173,8 @@ function takeJobCommand(command, params, client) {
 		return false;       
     }
 
-    if(getClientCurrentSubAccount(client).job != AG_JOB_NONE) {
-        getClientCurrentSubAccount(client).job = closestJob.jobType;
+    if(getClientCurrentSubAccount(client).job == -1) {
+        getClientCurrentSubAccount(client).job = getJobIndex(closestJob);
     }
 
     messageClientSuccess(client, "You now have the " + String(closestJob.name) + " job");
@@ -214,7 +214,7 @@ function startWorkingCommand(command, params, client) {
 		return false;       
     }
 
-    if(getClientCurrentSubAccount(client).job != closestJob.jobType) {
+    if(getClientCurrentSubAccount(client).job != getJobIndex(closestJob)) {
         messageClientError(client, "This is not your job!");
         messageClientInfo(client, "Use /quitjob if you want to quit your current job and take this one.");
         return false;
@@ -339,7 +339,6 @@ function stopWorking(client) {
     let jobId = getClientCurrentSubAccount(client).job;
     switch(serverData.jobs[server.game][jobId].jobType) {
         case AG_JOB_POLICE:
-            
             messageClientInfo(client, "Your uniform, equipment, and police car have been returned to the police station");
             break;
 

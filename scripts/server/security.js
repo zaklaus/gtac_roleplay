@@ -7,3 +7,5 @@
 // DESC: Provides security functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
+
+let accountSaltHash = "FGjD49yWqMrW"

@@ -74,6 +74,7 @@ function initClassTable() {
 				this.isWorking = false;
 				this.jobUniform = this.skin;
 				this.lastJobVehicle = null;
+				this.job = -1;
 
 				this.weapons = [];
 			}
@@ -127,8 +128,8 @@ function initClassTable() {
 				this.rentPrice = vehicleAssoc["veh_buy_price"];
 				
 				// Position and Rotation
-				this.savedPosition = new Vec3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
-				this.savedRotation = new Vec3(vehicleAssoc["veh_rot_x"], vehicleAssoc["veh_rot_y"], vehicleAssoc["veh_rot_z"]);
+				this.spawnPosition = new Vec3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
+				this.spawnRotation = Number(vehicleAssoc["veh_rot_z"]);
 				
 				// Colour Info
 				this.colour1IsRGBA = vehicleAssoc["veh_col1_isrgba"];

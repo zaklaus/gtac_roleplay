@@ -67,7 +67,7 @@ function showAccountHelpMessage(client) {
 
 function showAccountHelpMessage(client) {
     messageClientInfo(client, "== Account Help =============================");
-    messageClientInfo(client, "- Do not share your password with anybody else.";
+    messageClientInfo(client, "- Do not share your password with anybody else.");
     messageClientInfo(client, "- Use /settings to change your account settings.");
     messageClientInfo(client, "- Use /iplogin to automatically log you in with your IP");
     messageClientInfo(client, "- Use /changepass to change your password.");

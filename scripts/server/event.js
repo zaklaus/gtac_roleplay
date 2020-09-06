@@ -9,22 +9,26 @@
 // ===========================================================================
 
 addEventHandler("OnPlayerJoined", function(event, client) {
-    triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[server.game], serverConfig.connectCameraLookAt[server.game]);
-    
-    client.setData("ag.loginAttemptsRemaining", 3, false);
-    
-    let tempAccountData = loadAccountFromName(client.name);
-    let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
-    
-    serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
+    setTimeout(function() {
+        triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[server.game], serverConfig.connectCameraLookAt[server.game]);
+        
+        client.setData("ag.loginAttemptsRemaining", 3, false);
+        
+        let tempAccountData = loadAccountFromName(client.name);
+        let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
+        
+        serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
 
-    if(tempAccountData != false) {
-        triggerNetworkEvent("ag.showLogin", client);
-        //messageClient("Welcome back to Asshat Gaming RP, " + String(client.name) + "! Please /login to continue.", client, serverConfig.colour.byName["white"]);
-    } else {
-        triggerNetworkEvent("ag.showRegistration", client);
-        //messageClient("Welcome to Asshat Gaming RP, " + String(client.name) + "! Please /register to continue.", client, serverConfig.colour.byName["white"]);
-    }
+        sendAllBlips(client);
+
+        if(tempAccountData != false) {
+            triggerNetworkEvent("ag.showLogin", client);
+            //messageClient("Welcome back to Asshat Gaming RP, " + String(client.name) + "! Please /login to continue.", client, serverConfig.colour.byName["white"]);
+        } else {
+            triggerNetworkEvent("ag.showRegistration", client);
+            //messageClient("Welcome to Asshat Gaming RP, " + String(client.name) + "! Please /register to continue.", client, serverConfig.colour.byName["white"]);
+        }
+    }, 500);
 });
 
 // ---------------------------------------------------------------------------
@@ -38,10 +42,11 @@ addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPedSpawn", function(event, ped) {
-    if(ped.isType(ELEMENT_PLAYER)) {
-        let client = getClientFromPlayerElement(ped);
-        triggerNetworkEvent("ag.locations", client, serverData.policeStations[server.game], serverData.fireStations[server.game], serverData.hospitals[server.game], serverData.payAndSprays[server.game], serverData.ammunations[server.game], serverData.jobs[server.game]);
-    }
+    //if(ped.isType(ELEMENT_PLAYER)) {
+    //    let client = getClientFromPlayerElement(ped);
+    //    //triggerNetworkEvent("ag.locations", client, serverData.policeStations[server.game], serverData.fireStations[server.game], serverData.hospitals[server.game], serverData.payAndSprays[server.game], serverData.ammunations[server.game], serverData.jobs[server.game]);
+    //    
+    //}
 });
 
 // ---------------------------------------------------------------------------
@@ -67,7 +72,7 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
         initClient(client);
     });
 
-    createAllLocationBlips();
+    //createAllLocationBlips();
 
     serverData.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
 });

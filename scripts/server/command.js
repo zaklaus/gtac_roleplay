@@ -115,7 +115,11 @@ function loadCommandData() {
         startup: [],
         translate: [],
         utilities: [],
-        vehicle: [],
+         vehicle: [
+            commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, true),	
+            commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, true),	
+            commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, true),	
+        ],
     }
     return tempCommands;
 }

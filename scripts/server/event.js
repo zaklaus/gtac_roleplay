@@ -73,3 +73,9 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
 });
 
 // ---------------------------------------------------------------------------
+
+addEventHandler("onPedEnterVehicle", function(event, ped, vehicle, seat) {
+    ped.setData("ag.vehSeat", seat, false);
+});
+
+// ---------------------------------------------------------------------------

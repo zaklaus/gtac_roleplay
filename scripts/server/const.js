@@ -28,3 +28,11 @@ const AG_JOB_DRUG = 8;
 
 // Pickup Owner Types
 const AG_PICKUP_JOB = 1;
+
+// Vehicle Owner Types
+const AG_VEHOWNER_NONE = 0;
+const AG_VEHOWNER_PLAYER = 1;
+const AG_VEHOWNER_JOB = 2;
+const AG_VEHOWNER_CLAN = 3;
+const AG_VEHOWNER_FACTION = 4;
+const AG_VEHOWNER_PUBLIC = 5;

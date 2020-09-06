@@ -3179,8 +3179,14 @@ function sendAllPoliceStationBlips(client) {
 	if(serverConfig.blipSprites[server.game].policeStation != -1) {
 		let tempBlips = [];
 		for(let i in serverData.policeStations[server.game]) {
-			tempBlips.push([serverConfig.blipSprites[server.game].policeStation, serverData.policeStations[server.game][i].position, 0, 0]);
-			//serverData.policeStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].policeStation, serverData.policeStations[server.game][i].position);
+			tempBlips.push([
+				serverConfig.blipSprites[server.game].policeStation, 
+				serverData.policeStations[server.game][i].position.x, 
+				serverData.policeStations[server.game][i].position.y, 
+				serverData.policeStations[server.game][i].position.z, 
+				3, 
+				serverConfig.colour.byName.policeBlue,
+			]);
 		}
 		triggerNetworkEvent("ag.blips", client, tempBlips);
 	}
@@ -3192,8 +3198,14 @@ function sendAllFireStationBlips(client) {
 	if(serverConfig.blipSprites[server.game].fireStation != -1) {
 		let tempBlips = [];
 		for(let i in serverData.fireStations[server.game]) {
-			tempBlips.push([serverConfig.blipSprites[server.game].fireStation, serverData.fireStations[server.game][i].position, 0, 0]);
-			//serverData.fireStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].fireStation, serverData.fireStations[server.game][i].position);
+			tempBlips.push([
+				serverConfig.blipSprites[server.game].fireStation, 
+				serverData.fireStations[server.game][i].position.x, 
+				serverData.fireStations[server.game][i].position.y, 
+				serverData.fireStations[server.game][i].position.z, 
+				3, 
+				serverConfig.colour.byName.firefighterRed,
+			]);
 		}
 		triggerNetworkEvent("ag.blips", client, tempBlips);
 	}
@@ -3205,8 +3217,14 @@ function sendAllHospitalBlips(client) {
 	if(serverConfig.blipSprites[server.game].hospital != -1) {
 		let tempBlips = [];
 		for(let i in serverData.hospitals[server.game]) {
-			tempBlips.push([serverConfig.blipSprites[server.game].hospital, serverData.hospitals[server.game][i].position, 0, 0]);
-			//serverData.hospitals[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].hospital, serverData.hospitals[server.game][i].position);
+			tempBlips.push([
+				serverConfig.blipSprites[server.game].hospital, 
+				serverData.hospitals[server.game][i].position.x, 
+				serverData.hospitals[server.game][i].position.y, 
+				serverData.hospitals[server.game][i].position.z, 
+				3, 
+				serverConfig.colour.byName.medicPink,
+			]);
 		}
 		triggerNetworkEvent("ag.blips", client, tempBlips);
 	}
@@ -3218,8 +3236,14 @@ function sendAllAmmunationBlips(client) {
 	if(serverConfig.blipSprites[server.game].ammunation != -1) {
 		let tempBlips = [];
 		for(let i in serverData.ammunations[server.game]) {
-			tempBlips.push([serverConfig.blipSprites[server.game].ammunation, serverData.ammunations[server.game][i].position, 0, 0]);
-			//serverData.ammunations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].ammunation, serverData.ammunations[server.game][i].position);
+			tempBlips.push([
+				serverConfig.blipSprites[server.game].ammunation, 
+				serverData.ammunations[server.game][i].position.x, 
+				serverData.ammunations[server.game][i].position.y, 
+				serverData.ammunations[server.game][i].position.z, 
+				3, 
+				0
+			]);
 		}
 		triggerNetworkEvent("ag.blips", client, tempBlips);
 	}
@@ -3231,8 +3255,14 @@ function sendAllPayAndSprayBlips(client) {
 	if(serverConfig.blipSprites[server.game].payAndSpray != -1) {
 		let tempBlips = [];
 		for(let i in serverData.payAndSprays[server.game]) {
-			tempBlips.push([serverConfig.blipSprites[server.game].payAndSpray, serverData.payAndSprays[server.game][i].position, 0, 0]);
-			//serverData.payAndSprays[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].payAndSpray, serverData.payAndSprays[server.game][i].position);
+			tempBlips.push([
+				serverConfig.blipSprites[server.game].payAndSpray, 
+				serverData.payAndSprays[server.game][i].position.x, 
+				serverData.payAndSprays[server.game][i].position.y, 
+				serverData.payAndSprays[server.game][i].position.z, 
+				3, 
+				0
+			]);
 		}
 		triggerNetworkEvent("ag.blips", client, tempBlips);
 	}
@@ -3243,8 +3273,14 @@ function sendAllPayAndSprayBlips(client) {
 function sendAllFuelStationBlips(client) {
 	if(serverConfig.blipSprites[server.game].fuelStation != -1) {
 		for(let i in serverData.fuelStations[server.game]) {
-			tempBlips.push([serverConfig.blipSprites[server.game].fuelStation, serverData.fuelStations[server.game][i].position, 2, serverConfig.colour.byName.burntOrange]);
-			serverData.fuelStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].fuelStation, serverData.fuelStations[server.game][i].position, 2, serverConfig.colour.byName.burntOrange);
+			tempBlips.push([
+				serverConfig.blipSprites[server.game].fuelStation, 
+				serverData.fuelStations[server.game][i].position.x, 
+				serverData.fuelStations[server.game][i].position.y, 
+				serverData.fuelStations[server.game][i].position.z, 
+				3, 
+				serverConfig.colour.byName.burntOrange,
+			]);
 		}
 		triggerNetworkEvent("ag.blips", client, tempBlips);
 	}
@@ -3332,6 +3368,18 @@ function intToBool(intVal) {
 
 function boolToInt(boolVal) {
 	return (boolVal) ? 1 : 0;
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllBlips(client) {
+	sendAllPoliceStationBlips(client);
+	sendAllFireStationBlips(client);
+	sendAllHospitalBlips(client);
+	sendAllPayAndSprayBlips(client);
+	sendAllAmmunationBlips(client);
+	sendAllFuelStationBlips(client);
+	sendAllJobBlips(client);
 }
 
 // ---------------------------------------------------------------------------

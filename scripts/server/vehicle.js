@@ -10,7 +10,7 @@
 
 
 function initVehicleScript() {
-dd	console.log("[Asshat.Vehicle]: Initializing vehicle script ...");
+	console.log("[Asshat.Vehicle]: Initializing vehicle script ...");
 	serverData.vehicles = loadVehiclesFromDatabase();
 	spawnAllVehicles();
 	addVehicleCommandHandlers();
@@ -77,11 +77,11 @@ function saveVehicleToDatabase(vehicleData) {
 			//	dbQueryColourFields = "`veh_col1_rgba`, `veh_col2_rgba`, `veh_col3_rgba`, `veh_col4_rgba`";
 			//	dbQueryColourValues = vehicleData.colour1Red, `veh_col1_g`, `veh_col1_b`, `veh_col1_a`, `veh_col2_r`, `veh_col2_g`, `veh_col2_b`, `veh_col2_a`, `veh_col3_r`, `veh_col3_g`, `veh_col3_b`, `veh_col3_a`, `veh_col4_r`, `veh_col4_g`, `veh_col4_b`, `veh_col4_a`,";
 			//}
-			let dbQueryString = "INSERT INTO `veh_main` (`veh_model`, `veh_pos_x`, `veh_pos_y`, `veh_pos_z`, veh_owner_type`, `veh_owner_id`) VALUES (" + vehicleData.model + ", " + vehicleData.spawnPosition.x + ", " + vehicleData.spawnPosition.y + ", " + vehicleData.spawnPosition.z + ", " + vehicleData.spawnRotation.z + ", " + vehicleData.ownerType + ", " + vehicleData.ownerId + ");";
+			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_owner_type, veh_owner_id) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation.z}, ${vehicleData.ownerType}, ${vehicleData.ownerId})`;
 			let dbQuery = dbConnection.query(dbQueryString);
 			getVehicleData(vehicleData.vehicle).databaseId = dbConnection.insertId;
 		} else {
-			let dbQueryString = "UPDATE `veh_main` SET `veh_model` = " + vehicleData.modelId + ", `veh_pos_x` = " + vehicleData.spawnPosition.x + ", `veh_pos_y` = " + vehicleData.spawnPosition.y + ", " + vehicleData.spawnPosition.z + ", `veh_pos_z` = " + vehicleData.spawnRotation.z + ", `veh_owner_type`" + vehicleData.ownerType + ", `veh_owner_id` = " + vehicleData.ownerId;
+			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId} WHERE veh_id=${vehicleData.databaseId}`;
 			let dbQuery = dbConnection.query(dbQueryString);		
 		}
 		disconnectFromDatabase(dbConnection);
@@ -95,7 +95,6 @@ function saveVehicleToDatabase(vehicleData) {
 
 function spawnAllVehicles() {
 	for(let i in serverData.vehicles) {
-		console.log(serverData.vehicles[i].spawnRotation);
 		let vehicle = gta.createVehicle(serverData.vehicles[i].model, serverData.vehicles[i].spawnPosition, serverData.vehicles[i].spawnRotation);
 		addToWorld(vehicle);
 
@@ -115,7 +114,10 @@ function spawnAllVehicles() {
 		//vehicle.position = serverData.vehicles[i].spawnPosition;
 		vehicle.heading = serverData.vehicles[i].spawnRotation;
 
-		vehicle.locked = intToBool(serverData.vehicles[i].locked);		
+		vehicle.locked = intToBool(serverData.vehicles[i].locked);	
+		vehicle.setData("ag.siren", intToBool(serverData.vehicles[i].siren), true);
+		vehicle.setData("ag.engine", intToBool(serverData.vehicles[i].engine), true);
+		vehicle.setData("ag.lights", intToBool(serverData.vehicles[i].lights), true);
 
 		serverData.vehicles[i].vehicle = vehicle;
 		vehicle.setData("ag.dataSlot", i, false);
@@ -151,21 +153,231 @@ function vehicleLockCommand(command, params, client) {
 		return false;
 	}
 
-	let closestVehicle = getClosestVehicle();
-	if((!client.player.vehicle && doesClientHaveVehicleKeys(client, closestVehicle) && closestVehicle.position.distance(client.player.position) <= 5) || client.player.vehicle) {
-		if(getVehicleData(closestVehicle).locked) {
-			closestVehicle.locked = false;
-			getVehicleData(closestVehicles).locked = false;
-		} else {
-			closestVehicle.locked = true;
-			getVehicleData(closestVehicles).locked = true;
+	let vehicle = getClosestVehicle(client.player.position);
+	if(!client.player.vehicle && vehicle.position.distance(client.player.position) > serverConfig.vehicleLockDistance) {
+		messageClientError(client, "You need to be in or near a vehicle!");
+		return false;
+	}
+
+	if(client.player.vehicle) {
+		vehicle = client.player.vehicle;
+	} else {
+		if(!doesClientHaveVehicleKeys(client, vehicle)) {
+			messageClientError(client, "You don't have keys to this vehicle!");
+			return false;
 		}
 	}
 
-	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+	if(getVehicleData(vehicle).locked) {
+		vehicle.locked = false;
+		getVehicleData(vehicle).locked = false;
+	} else {
+		vehicle.locked = true;
+		getVehicleData(vehicle).locked = true;
+	}
+
+	let lockText = (vehicle.locked) ? "locked" : "unlocked";
+
+	meActionToNearbyPlayers(client, lockText + " the " + getVehicleName(vehicle));
+}
+
+// ---------------------------------------------------------------------------
+
+function vehicleLightsCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
 		return false;
 	}
+
+	if(!client.player.vehicle) {
+		messageClientError(client, "You need to be in a vehicle!");
+		return false;		
+	}
+
+	if(client.player.getData("ag.vehSeat") > 1) {
+		messageClientError(client, "You need to be in the front seat!");
+		return false;		
+	}	
+
+	let vehicle = client.player.vehicle;
+
+	if(getVehicleData(vehicle).lights) {
+		vehicle.setData("ag.lights", false, true);
+		triggerNetworkEvent("ag.veh.sync", null, vehicle);
+		getVehicleData(vehicle).lights = false;
+	} else {
+		vehicle.setData("ag.lights", true, true);
+		triggerNetworkEvent("ag.veh.sync", null, vehicle);
+		getVehicleData(vehicle).lights = true;
+	}
+
+	let lightsText = (getVehicleData(vehicle).lights) ? "on" : "off";
+	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s lights ${lightsText}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function vehicleEngineCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(!client.player.vehicle) {
+		messageClientError(client, "You need to be in a vehicle!");
+		return false;		
+	}
+
+	if(client.player.getData("ag.vehSeat") > 0) {
+		messageClientError(client, "You need to be the driver!");
+		return false;		
+	}
+
+	let vehicle = client.player.vehicle;
+
+	if(!doesClientHaveVehicleKeys(client, vehicle)) {
+		messageClientError(client, "You don't have keys to this vehicle!");
+		return false;
+	}
+
+	if(getVehicleData(vehicle).engine) {
+		vehicle.setData("ag.engine", false, true);
+		triggerNetworkEvent("ag.veh.sync", null, vehicle);
+		getVehicleData(vehicle).engine = false;
+	} else {
+		vehicle.setData("ag.engine", true, true);
+		triggerNetworkEvent("ag.veh.sync", null, vehicle);
+		getVehicleData(vehicle).engine = true;
+	}
+	let engineText = (getVehicleData(vehicle).engine) ? "on" : "off";
+
+	meActionToNearbyPlayers(client, "turned the " + String(getVehicleName(vehicle)) + "'s engine " + engineText);
+}
+
+// ---------------------------------------------------------------------------
+
+function vehicleSirenCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(!client.player.vehicle) {
+		messageClientError(client, "You need to be in a vehicle!");
+		return false;		
+	}
+
+	if(client.player.getData("ag.vehSeat") > 1) {
+		messageClientError(client, "You need to be in the front seat!");
+		return false;		
+	}
+
+	let vehicle = client.player.vehicle;
+
+	if(getVehicleData(vehicle).siren) {
+		vehicle.setData("ag.siren", false, true);
+		triggerNetworkEvent("ag.veh.sync", null, vehicle);
+		getVehicleData(vehicle).siren = false;
+	} else {
+		vehicle.setData("ag.siren", true, true);
+		triggerNetworkEvent("ag.veh.sync", null, vehicle);
+		getVehicleData(vehicle).siren = true;
+	}
+	let sirenText = (getVehicleData(vehicle).siren) ? "on" : "off";
+
+	meActionToNearbyPlayers(client, "turns the " + String(getVehicleName(vehicle)) + "'s siren " + sirenText);
+}
+
+// ---------------------------------------------------------------------------
+
+function doesClientHaveVehicleKeys(client, vehicle) {
+	let vehicleData = getVehicleData(vehicle);
+	
+	if(doesClientHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+		return true;
+	}
+
+	if(vehicleData.ownerType == AG_VEHOWNER_PUBLIC) {
+		return true;
+	}	
+
+	if(vehicleData.ownerType == AG_VEHOWNER_PLAYER) {
+		if(vehicleData.ownerId == getClientData(client).accountData.databaseId) {
+			return true;
+		}
+	}
+
+	if(vehicleData.ownerType == AG_VEHOWNER_CLAN) {
+		if(vehicleData.ownerId == getClientCurrentSubAccount(client).clan) {
+			if(vehicleData.clanRank <= getClientCurrentSubAccount(client).clanRank) {
+				return true;
+			}
+		}
+	}
+
+	if(vehicleData.ownerType == AG_VEHOWNER_FACTION) {
+		if(vehicleData.ownerId == getClientCurrentSubAccount(client).faction) {
+			if(vehicleData.factionRank <= getClientCurrentSubAccount(client).factionRank) {
+				return true;
+			}
+		}
+	}
+
+	if(vehicleData.ownerType == AG_VEHOWNER_JOB) {
+		if(getJobType(vehicleData.ownerId) == getJobType(getClientCurrentSubAccount(client).job)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function getVehicleName(vehicle) {
+	return getVehicleNameFromModelID(vehicle.modelIndex, server.game);
 }
 
 // ---------------------------------------------------------------------------

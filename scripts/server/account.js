@@ -416,7 +416,6 @@ function saveAccountToDatabase(accountData) {
 		//let safeIRCAccount = dbConnection.escapeString(accountData.ircAccount);
 
 		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_staff_title='${safeStaffTitle}', acct_mod_flags=${String(accountData.flags.moderation)}, acct_discord=${String(accountData.discordAccount)}, acct_email='${safeEmailAddress}' WHERE acct_id=${accountData.databaseId}`;
-		console.log(dbQueryString);
 		let dbQuery = dbConnection.query(dbQueryString);
 		//dbQuery.free();
 		disconnectFromDatabase(dbConnection);
@@ -687,17 +686,24 @@ function saveAllClientsToDatabase() {
 // ---------------------------------------------------------------------------
 
 function saveClientToDatabase(client) {
+	if(getClientData(client) == null) {
+		return false;
+	}
+	
+	if(!getClientData(client).loggedIn) {
+		return false;
+	}
+
 	console.log("[Asshat.Account]: Saving client " + String(client.name) + " to database ...");
 	saveAccountToDatabase(getClientData(client).accountData);
-	console.log("acct done");
 	let subAccountData = getClientCurrentSubAccount(client);
-	console.log("sacct got"); 
-	subAccountData.spawnPosition = client.player.position;
-	console.log("sacct pos"); 
-	subAccountData.spawnHeading = client.player.heading;  
-	console.log("sacct start");  
+	
+	if(client.player) {
+		subAccountData.spawnPosition = client.player.position;
+		subAccountData.spawnHeading = client.player.heading; 
+	}
+
 	saveSubAccountToDatabase(subAccountData);
-	console.log("sacct done");
 	console.log("[Asshat.Account]: Saved client " + String(client.name) + " to database successfully!");
 	return true;
 }

@@ -2451,6 +2451,18 @@ function getClosestJobPoint(position) {
 
 // ---------------------------------------------------------------------------
 
+function getClosestJobPointId(position) {
+	let closestJob = 0;
+	for(let i in serverData.jobs[server.game]) {
+		if(serverData.jobs[server.game][i].position.distance(position) < serverData.jobs[server.game][closestJob].position.distance(position)) {
+			closestJob = i;
+		}
+	}
+	return closestJob;
+}
+
+// ---------------------------------------------------------------------------
+
 function getJobIndex(jobData) {
 	return serverData.jobs[server.game].indexOf(jobData);
 }
@@ -2550,20 +2562,20 @@ function getVehicleModelIDFromParams(params, gameID = game.game) {
 		let modelID = getVehicleModelIDFromName(params);
 		
 		if(!modelID) {
-			return vehicleModelIDStart[gameID];
+			return gameData.vehicleModelIDStart[gameID];
 		}
 		
 		if(isValidVehicleModel(Number(modelID))) {
 			return Number(modelID);
 		}
 		
-		return vehicleModelIDStart[gameID];		
+		return gameData.vehicleModelIDStart[gameID];		
 	} else {
 		if(isValidVehicleModel(Number(params))) {
 			return Number(params);
 		}
 		
-		return vehicleModelIDStart[gameID];
+		return gameData.vehicleModelIDStart[gameID];
 	}
 	
 	return false;
@@ -2572,10 +2584,9 @@ function getVehicleModelIDFromParams(params, gameID = game.game) {
 // ---------------------------------------------------------------------------
 
 function getVehicleModelIDFromName(params, gameID = game.game) {
-	for(let i in vehicleNames[gameID]) {
-		if(vehicleNames[gameID][i].toLowerCase().indexOf(params.toLowerCase()) != -1) {
-			console.log(Number(i)+Number(vehicleModelIDStart[gameID]));
-			return Number(i)+Number(vehicleModelIDStart[gameID]);
+	for(let i in gameData.vehicleNames[gameID]) {
+		if(gameData.vehicleNames[gameID][i].toLowerCase().indexOf(params.toLowerCase()) != -1) {
+			return Number(i)+Number(gameData.vehicleModelIDStart[gameID]);
 		}
 	}
 	
@@ -2603,8 +2614,8 @@ function doesWordStartWithVowel(word) {
 // ---------------------------------------------------------------------------
 
 function getVehicleNameFromModelID(modelID, gameID = game.game) {
-	let modelIndex = modelID-vehicleModelIDStart[gameID];
-	return vehicleNames[gameID][modelIndex];
+	let modelIndex = modelID-gameData.vehicleModelIDStart[gameID];
+	return gameData.vehicleNames[gameID][modelIndex];
 }
 
 // ---------------------------------------------------------------------------
@@ -3104,48 +3115,138 @@ function createAllLocationBlips() {
 // ---------------------------------------------------------------------------
 
 function createAllPoliceStationBlips() {
-	for(let i in serverData.policeStations[server.game]) {
-		serverData.policeStations[server.game][i].blip = createBlip(RADAR_SPRITE_EL, serverData.policeStations[server.game][i].position);
+	if(serverConfig.blipSprites[server.game].policeStation != -1) {
+		for(let i in serverData.policeStations[server.game]) {
+			serverData.policeStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].policeStation, serverData.policeStations[server.game][i].position);
+		}
 	}
 }
 
 // ---------------------------------------------------------------------------
 
 function createAllFireStationBlips() {
-	for(let i in serverData.fireStations[server.game]) {
-		serverData.fireStations[server.game][i].blip = createBlip(RADAR_SPRITE_ICE, serverData.fireStations[server.game][i].position);
+	if(serverConfig.blipSprites[server.game].fireStation != -1) {
+		for(let i in serverData.fireStations[server.game]) {
+			serverData.fireStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].fireStation, serverData.fireStations[server.game][i].position);
+		}
 	}
 }
 
 // ---------------------------------------------------------------------------
 
 function createAllHospitalBlips() {
-	for(let i in serverData.hospitals[server.game]) {
-		serverData.hospitals[server.game][i].blip = createBlip(RADAR_SPRITE_LIZ, serverData.hospitals[server.game][i].position);
+	if(serverConfig.blipSprites[server.game].hospital != -1) {
+		for(let i in serverData.hospitals[server.game]) {
+			serverData.hospitals[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].hospital, serverData.hospitals[server.game][i].position);
+		}
 	}
 }
 
 // ---------------------------------------------------------------------------
 
 function createAllAmmunationBlips() {
-	for(let i in serverData.ammunations[server.game]) {
-		serverData.ammunations[server.game][i].blip = createBlip(RADAR_SPRITE_WEAPON, serverData.ammunations[server.game][i].position);
+	if(serverConfig.blipSprites[server.game].ammunation != -1) {
+		for(let i in serverData.ammunations[server.game]) {
+			serverData.ammunations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].ammunation, serverData.ammunations[server.game][i].position);
+		}
 	}
 }
 
 // ---------------------------------------------------------------------------
 
 function createAllPayAndSprayBlips() {
-	for(let i in serverData.payAndSprays[server.game]) {
-		serverData.payAndSprays[server.game][i].blip = createBlip(RADAR_SPRITE_SPRAY, serverData.payAndSprays[server.game][i].position);
+	if(serverConfig.blipSprites[server.game].payAndSpray != -1) {
+		for(let i in serverData.payAndSprays[server.game]) {
+			
+			serverData.payAndSprays[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].payAndSpray, serverData.payAndSprays[server.game][i].position);
+		}
 	}
 }
 
 // ---------------------------------------------------------------------------
 
 function createAllFuelStationBlips() {
-	for(let i in serverData.fuelStations[server.game]) {
-		serverData.fuelStations[server.game][i].blip = createBlip(RADAR_SPRITE_NONE, serverData.fuelStations[server.game][i].position, 2, serverConfig.colour.byName.burntOrange);
+	if(serverConfig.blipSprites[server.game].fuelStation != -1) {
+		for(let i in serverData.fuelStations[server.game]) {
+			serverData.fuelStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].fuelStation, serverData.fuelStations[server.game][i].position, 2, serverConfig.colour.byName.burntOrange);
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllPoliceStationBlips(client) {
+	if(serverConfig.blipSprites[server.game].policeStation != -1) {
+		let tempBlips = [];
+		for(let i in serverData.policeStations[server.game]) {
+			tempBlips.push([serverConfig.blipSprites[server.game].policeStation, serverData.policeStations[server.game][i].position, 0, 0]);
+			//serverData.policeStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].policeStation, serverData.policeStations[server.game][i].position);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllFireStationBlips(client) {
+	if(serverConfig.blipSprites[server.game].fireStation != -1) {
+		let tempBlips = [];
+		for(let i in serverData.fireStations[server.game]) {
+			tempBlips.push([serverConfig.blipSprites[server.game].fireStation, serverData.fireStations[server.game][i].position, 0, 0]);
+			//serverData.fireStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].fireStation, serverData.fireStations[server.game][i].position);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllHospitalBlips(client) {
+	if(serverConfig.blipSprites[server.game].hospital != -1) {
+		let tempBlips = [];
+		for(let i in serverData.hospitals[server.game]) {
+			tempBlips.push([serverConfig.blipSprites[server.game].hospital, serverData.hospitals[server.game][i].position, 0, 0]);
+			//serverData.hospitals[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].hospital, serverData.hospitals[server.game][i].position);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllAmmunationBlips(client) {
+	if(serverConfig.blipSprites[server.game].ammunation != -1) {
+		let tempBlips = [];
+		for(let i in serverData.ammunations[server.game]) {
+			tempBlips.push([serverConfig.blipSprites[server.game].ammunation, serverData.ammunations[server.game][i].position, 0, 0]);
+			//serverData.ammunations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].ammunation, serverData.ammunations[server.game][i].position);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllPayAndSprayBlips(client) {
+	if(serverConfig.blipSprites[server.game].payAndSpray != -1) {
+		let tempBlips = [];
+		for(let i in serverData.payAndSprays[server.game]) {
+			tempBlips.push([serverConfig.blipSprites[server.game].payAndSpray, serverData.payAndSprays[server.game][i].position, 0, 0]);
+			//serverData.payAndSprays[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].payAndSpray, serverData.payAndSprays[server.game][i].position);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllFuelStationBlips(client) {
+	if(serverConfig.blipSprites[server.game].fuelStation != -1) {
+		for(let i in serverData.fuelStations[server.game]) {
+			tempBlips.push([serverConfig.blipSprites[server.game].fuelStation, serverData.fuelStations[server.game][i].position, 2, serverConfig.colour.byName.burntOrange]);
+			serverData.fuelStations[server.game][i].blip = createBlip(serverConfig.blipSprites[server.game].fuelStation, serverData.fuelStations[server.game][i].position, 2, serverConfig.colour.byName.burntOrange);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
 	}
 }
 

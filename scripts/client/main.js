@@ -35,3 +35,54 @@ addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
 });
 
 // ---------------------------------------------------------------------------
+
+function syncVehicle(vehicle) {
+    if(vehicle.getData("ag.lights") != null) {
+        let lights = vehicle.getData("ag.lights");
+        if(lights != vehicle.lights) {
+            vehicle.lights = lights;
+        }
+    }  
+
+    if(vehicle.getData("ag.engine") != null) {
+        let engine = vehicle.getData("ag.engine");
+        if(engine != vehicle.engine) {
+            vehicle.engine = engine;
+        }
+    }
+
+    if(vehicle.getData("ag.siren") != null) {
+        let siren = vehicle.getData("ag.siren");
+        if(siren != vehicle.siren) {
+            vehicle.siren = siren;
+        }  
+    }
+}
+addNetworkHandler("ag.veh.sync", syncVehicle);
+
+// ---------------------------------------------------------------------------
+
+function syncCivilian(civilian) {
+
+}
+addNetworkHandler("ag.civ.sync", syncCivilian);
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("onElementStreamIn", function(event, element) {
+    switch(element.type) {
+        case ELEMENT_VEHICLE:
+            syncVehicle(element);
+            break;
+
+        case ELEMENT_CIVILIAN:
+            syncCivilian(element);
+            break;
+
+        default:
+            break;
+    }
+});
+
+// ---------------------------------------------------------------------------
+

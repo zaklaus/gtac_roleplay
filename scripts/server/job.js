@@ -12,7 +12,7 @@ function initJobScript() {
 	console.log("[Asshat.Job]: Initializing job script ...");
     addJobCommandHandlers();
     createAllJobPickups();
-    createAllJobBlips();
+    //createAllJobBlips();
 
     //addEvent("onJobPickupCollected", null, 2);
 
@@ -36,19 +36,31 @@ function addJobCommandHandlers() {
 
 function createAllJobBlips() {
     for(let i in serverData.jobs[server.game]) {
-        serverData.jobs[server.game][i].blip = createBlip(0, serverData.jobs[server.game][i].position, 2, serverConfig.colour.byName.burntYellow);
-        //serverData.jobs[server.game][i].position
+        serverData.jobs[server.game][i].blip = createBlip(0, serverData.jobs[server.game][i].position, 2, serverConfig.colour.byName.yellow);
     }
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllJobBlips(client) {
+    //if(getClientData(client).job == AG_JOB_NONE) {
+        let tempBlips = [];
+        for(let i in serverData.jobs[server.game]) {
+            let jobData = serverData.jobs[server.game][i];
+            tempBlips.push([0, jobData.position.x, jobData.position.y, jobData.position.z, 2, serverConfig.colour.byName.yellow]);
+        }
+        triggerNetworkEvent("ag.blips", client, tempBlips);
+    //}
 }
 
 // ---------------------------------------------------------------------------
 
 function createAllJobPickups() {
     for(let i in serverData.jobs[server.game]) {
-        serverData.jobs[server.game][i].pickup = createPickup(serverData.jobs[server.game][i].pickupModel, serverData.jobs[server.game][i].position, PICKUP_COLLECTABLE1);
+        serverData.jobs[server.game][i].pickup = createPickup(serverData.jobs[server.game][i].pickupModel, serverData.jobs[server.game][i].position);
 
-        serverData.jobs[server.game][i].pickup.setData("ag.ownerType", AG_PICKUP_JOB, false);
-        serverData.jobs[server.game][i].pickup.setData("ag.ownerId", i, false);
+        serverData.jobs[server.game][i].pickup.setData("ag.ownerType", AG_PICKUP_JOB, true);
+        serverData.jobs[server.game][i].pickup.setData("ag.ownerId", i, true);
     }
 }
 
@@ -166,18 +178,22 @@ function takeJobCommand(command, params, client) {
 		return false;
 	}
 
-    let closestJob = getClosestJobPoint(client.player.position);
+    let closestJobId = getClosestJobPointId(client.player.position);
+    let jobData = getJobData(closestJobId);
 
-    if(closestJob.position.distance(client.player.position) > 5) {
+    if(jobData.position.distance(client.player.position) > serverConfig.takeJobDistance) {
         messageClientError(client, "There are no job points close enough!");
 		return false;       
     }
 
-    if(getClientCurrentSubAccount(client).job == -1) {
-        getClientCurrentSubAccount(client).job = getJobIndex(closestJob);
+    if(getClientCurrentSubAccount(client).job != -1) {
+        messageClientError(client, "You already have a job! Use /quitjob to quit your job.");
+		return false;      
     }
-
-    messageClientSuccess(client, "You now have the " + String(closestJob.name) + " job");
+    
+    quitJob(client);
+    getClientCurrentSubAccount(client).job = closestJobId;
+    messageClientSuccess(client, "You now have the " + String(jobData.name) + " job");
 	return true;
 }
 
@@ -207,21 +223,28 @@ function startWorkingCommand(command, params, client) {
 		return false;
 	}
 
-    let closestJob = getClosestJobPoint(client.player.position);
+    let closestJobId = getClosestJobPointId(client.player.position);
+    let jobData = getJobData(closestJobId);
 
-    if(closestJob.position.distance(client.player.position) > 5) {
+    if(jobData.position.distance(client.player.position) > serverConfig.startWorkingDistance) {
         messageClientError(client, "There are no job points close enough!");
 		return false;       
-    }
+    }    
 
-    if(getClientCurrentSubAccount(client).job != getJobIndex(closestJob)) {
+    if(getJobType(getClientCurrentSubAccount(client).job) == AG_JOB_NONE) {
+        messageClientError(client, "You don't have a job!");
+        messageClientInfo(client, "You can get a job by going the yellow points on the map.");
+        return false;
+    }    
+
+    if(getJobType(getClientCurrentSubAccount(client).job) != jobData.jobType) {
         messageClientError(client, "This is not your job!");
         messageClientInfo(client, "Use /quitjob if you want to quit your current job and take this one.");
         return false;
     }
 
     startWorking(client);
-    messageClientSuccess(client, "You are now working as a " + String(closestJob.name));
+    messageClientSuccess(client, "You are now working as a " + String(jobData.name));
 	return true;
 }
 
@@ -251,9 +274,10 @@ function stopWorkingCommand(command, params, client) {
 		return false;
 	}
 
-    let closestJob = getClosestJobPoint(client.player.position);
+    let closestJobId = getClosestJobPointId(client.player.position);
+    let jobData = getJobData(closestJobId);
 
-    if(closestJob.position.distance(client.player.position) > 5) {
+    if(jobData.position.distance(client.player.position) > serverConfig.stopWorkingDistance) {
         messageClientError(client, "There are no job points close enough!");
 		return false;       
     }
@@ -332,6 +356,10 @@ function stopWorking(client) {
         jobVehicle.fix();
         jobVehicle.position = vehicleData.spawnPosition;
         jobVehicle.heading = vehicleData.spawnHeading;
+        jobVehicle.locked = true;
+        jobVehicle.setData("ag.lights", false, true);
+        jobVehicle.setData("ag.engine", false, true);
+        jobVehicle.setData("ag.siren", false, true);
     }
     
     triggerNetworkEvent("ag.clearWeapons", client);    
@@ -467,14 +495,10 @@ function quitJobCommand(command, params, client) {
 	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
 		messageClientError(client, "You do not have permission to use this command!");
 		return false;
-	}
-
-    stopWorking(client);
-
-    let tempJob = getClientCurrentSubAccount(client).job;
-    getClientCurrentSubAccount(client).job = AG_JOB_NONE;
-
-    messageClientSuccess(client, "You just quit the " + String(tempJob.name) + " job");
+    }
+    
+    quitJob(client);
+    messageClientSuccess(client, "You are now unemployed!");
 	return true;
 }
 
@@ -534,4 +558,24 @@ function jobDepartmentRadioCommand(command, params, client) {
 	}
 
 	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function getJobType(jobId) {
+    return serverData.jobs[server.game][jobId].jobType;
+}
+
+// ---------------------------------------------------------------------------
+
+function getJobData(jobId) {
+    return serverData.jobs[server.game][jobId];
+}
+
+// ---------------------------------------------------------------------------
+
+function quitJob(client) {
+    stopWorking(client);
+    getClientCurrentSubAccount(client).job = AG_JOB_NONE;
+    sendAllJobBlips(client);
 }

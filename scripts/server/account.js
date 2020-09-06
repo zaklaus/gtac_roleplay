@@ -725,6 +725,8 @@ function initClient(client) {
 		triggerNetworkEvent("ag.showRegistration", client);
 		//messageClient("Welcome to Asshat Gaming RP, " + String(client.name) + "! Please /register to continue.", client, serverConfig.colour.byName["white"]);
 	}
+
+	sendAllBlips(client);
 }
 
 // ---------------------------------------------------------------------------

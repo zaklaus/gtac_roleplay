@@ -75,7 +75,10 @@ let serverData = {
 		"useWhiteList", 
 		"useBlackList", 
 		"twoStepAuth", 
-		"authAttemptAlert"
+		"authAttemptAlert",
+		"alertWithGUI",
+		"errorWithGUI",
+		"askWithGUI",
 	],
 	subAccountSettingsFlagKeys: [],	
 	staffFlags: {},

@@ -110,51 +110,85 @@ function initClassTable() {
 
 		},
 		vehicleData: class {
-			constructor(vehicleAssoc) {
-				if(!vehicleAssoc) {
-					return;
-				}
-				
+			constructor(vehicleAssoc, vehicle = null) {
 				// General Info
-				this.databaseId = vehicleAssoc["veh_id"];
-				this.server = vehicleAssoc["veh_server"];
-				this.model = vehicleAssoc["veh_model"];
-				this.vehicle = null;
+				this.databaseId = 0;
+				this.server = serverId;
+				this.model = vehicle.modelIndex;
+				this.vehicle = vehicle;
 				
 				// Ownership
-				this.ownerType = vehicleAssoc["veh_owner_type"];
-				this.ownerId = vehicleAssoc["veh_owner_id"];
-				this.buyPrice = vehicleAssoc["veh_buy_price"];
-				this.rentPrice = vehicleAssoc["veh_buy_price"];
+				this.ownerType = AG_VEHOWNER_NONE;
+				this.ownerId = 0;
+				this.buyPrice = 0;
+				this.rentPrice = 0;
 				
 				// Position and Rotation
-				this.spawnPosition = new Vec3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
-				this.spawnRotation = Number(vehicleAssoc["veh_rot_z"]);
+				this.spawnPosition = vehicle.position;
+				this.spawnRotation = vehicle.heading;
 				
 				// Colour Info
-				this.colour1IsRGBA = vehicleAssoc["veh_col1_isrgba"];
-				this.colour2IsRGBA = vehicleAssoc["veh_col2_isrgba"];
-				this.colour3IsRGBA = vehicleAssoc["veh_col3_isrgba"];
-				this.colour4IsRGBA = vehicleAssoc["veh_col4_isrgba"];		
-				this.colour1RGBA = toColour(vehicleAssoc["veh_col1_r"], vehicleAssoc["veh_col1_g"], vehicleAssoc["veh_col1_b"], vehicleAssoc["veh_col1_a"]);
-				this.colour2RGBA = toColour(vehicleAssoc["veh_col2_r"], vehicleAssoc["veh_col2_g"], vehicleAssoc["veh_col2_b"], vehicleAssoc["veh_col2_a"]);
-				this.colour3RGBA = toColour(vehicleAssoc["veh_col3_r"], vehicleAssoc["veh_col3_g"], vehicleAssoc["veh_col3_b"], vehicleAssoc["veh_col3_a"]);
-				this.colour4RGBA = toColour(vehicleAssoc["veh_col4_r"], vehicleAssoc["veh_col4_g"], vehicleAssoc["veh_col4_b"], vehicleAssoc["veh_col4_a"]);		
-				this.colour1 = vehicleAssoc["veh_col1"];
-				this.colour2 = vehicleAssoc["veh_col2"];
-				this.colour3 = vehicleAssoc["veh_col3"];
-				this.colour4 = vehicleAssoc["veh_col4"];	
+				this.colour1IsRGBA = 0;
+				this.colour2IsRGBA = 0;
+				this.colour3IsRGBA = 0;
+				this.colour4IsRGBA = 0;		
+				this.colour1RGBA = toColour(255, 255, 255, 255);
+				this.colour2RGBA = toColour(255, 255, 255, 255);
+				this.colour3RGBA = toColour(255, 255, 255, 255);
+				this.colour4RGBA = toColour(255, 255, 255, 255);		
+				this.colour1 = vehicle.colour1 || 1;
+				this.colour2 = vehicle.colour2 || 1;
+				this.colour3 = vehicle.colour3 || 1; 
+				this.colour4 = vehicle.colour4 || 1;
 
 				// Vehicle Attributes
-				this.locked = vehicleAssoc["veh_locked"];
-				this.engine = vehicleAssoc["veh_engine"];
-				this.lights = vehicleAssoc["veh_lights"];
-				this.health = vehicleAssoc["veh_damage_normal"];
-				this.engineDamage = vehicleAssoc["veh_damage_engine"];
-				this.visualDamage = vehicleAssoc["veh_damage_visual"];
-				this.dirtLevel = vehicleAssoc["veh_dirt_level"];
+				this.locked = false;
+				this.engine = false;
+				this.lights = false;
+				this.health = 1000;
+				this.engineDamage = 0;
+				this.visualDamage = 0;
+				this.dirtLevel = 0;
 				
-				this.vehicle = null;
+				if(vehicleAssoc) {
+					// General Info
+					this.databaseId = vehicleAssoc["veh_id"];
+					this.server = vehicleAssoc["veh_server"];
+					this.model = vehicleAssoc["veh_model"];
+					
+					// Ownership
+					this.ownerType = vehicleAssoc["veh_owner_type"];
+					this.ownerId = vehicleAssoc["veh_owner_id"];
+					this.buyPrice = vehicleAssoc["veh_buy_price"];
+					this.rentPrice = vehicleAssoc["veh_buy_price"];
+					
+					// Position and Rotation
+					this.spawnPosition = new Vec3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
+					this.spawnRotation = Number(vehicleAssoc["veh_rot_z"]);
+					
+					// Colour Info
+					this.colour1IsRGBA = vehicleAssoc["veh_col1_isrgba"];
+					this.colour2IsRGBA = vehicleAssoc["veh_col2_isrgba"];
+					this.colour3IsRGBA = vehicleAssoc["veh_col3_isrgba"];
+					this.colour4IsRGBA = vehicleAssoc["veh_col4_isrgba"];		
+					this.colour1RGBA = toColour(vehicleAssoc["veh_col1_r"], vehicleAssoc["veh_col1_g"], vehicleAssoc["veh_col1_b"], vehicleAssoc["veh_col1_a"]);
+					this.colour2RGBA = toColour(vehicleAssoc["veh_col2_r"], vehicleAssoc["veh_col2_g"], vehicleAssoc["veh_col2_b"], vehicleAssoc["veh_col2_a"]);
+					this.colour3RGBA = toColour(vehicleAssoc["veh_col3_r"], vehicleAssoc["veh_col3_g"], vehicleAssoc["veh_col3_b"], vehicleAssoc["veh_col3_a"]);
+					this.colour4RGBA = toColour(vehicleAssoc["veh_col4_r"], vehicleAssoc["veh_col4_g"], vehicleAssoc["veh_col4_b"], vehicleAssoc["veh_col4_a"]);		
+					this.colour1 = vehicleAssoc["veh_col1"];
+					this.colour2 = vehicleAssoc["veh_col2"];
+					this.colour3 = vehicleAssoc["veh_col3"];
+					this.colour4 = vehicleAssoc["veh_col4"];	
+
+					// Vehicle Attributes
+					this.locked = vehicleAssoc["veh_locked"];
+					this.engine = vehicleAssoc["veh_engine"];
+					this.lights = vehicleAssoc["veh_lights"];
+					this.health = vehicleAssoc["veh_damage_normal"];
+					this.engineDamage = vehicleAssoc["veh_damage_engine"];
+					this.visualDamage = vehicleAssoc["veh_damage_visual"];
+					this.dirtLevel = vehicleAssoc["veh_dirt_level"];
+				}
 			}
 		},
 		commandData: class {

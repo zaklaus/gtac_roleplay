@@ -92,15 +92,15 @@ let characterSelect = {
 let skinNames = [
 	[],
 	[ // GTA III
-		[0, "Claude", "Skin000.png"],
-		[1, "Police Officer", "Skin001.png"],
-		[2, "SWAT Officer", "Skin002.png"],
-		[3, "FBI Agent", "Skin003.png"],
-		[4, "Army Soldier", "Skin004.png"],
-		[5, "Paramedic", "Skin005.png"],
-		[6, "Firefighter", "Skin006.png"],
+		//[0, "Claude", "Skin000.png"],
+		//[1, "Police Officer", "Skin001.png"],
+		//[2, "SWAT Officer", "Skin002.png"],
+		//[3, "FBI Agent", "Skin003.png"],
+		//[4, "Army Soldier", "Skin004.png"],
+		//[5, "Paramedic", "Skin005.png"],
+		//[6, "Firefighter", "Skin006.png"],
 		[7, "Wise Guy", "Skin007.png"],
-		[8, "Taxi Driver", "Skin008.png"],
+		//[8, "Taxi Driver", "Skin008.png"],
 		[9, "Pimp", "Skin009.png"],
 		[10, "Mafia Member", "Skin010.png"],
 		[11, "Mafia Member", "Skin011.png"],
@@ -179,7 +179,7 @@ let skinNames = [
 		[89, "Colombian Cartel Member", "Skin089.png"],
 		[90, "Colombian Cartel Member", "Skin090.png"],
 		[91, "Colombian Cartel Member", "Skin091.png"],
-		[92, "Police Officer", "Skin092.png"],
+		//[92, "Police Officer", "Skin092.png"],
 		[93, "Curly Bob", "Skin093.png"],
 		[94, "Phil Cassidy", "Skin094.png"],
 		[95, "Detective", "Skin095.png"],
@@ -207,7 +207,7 @@ let skinNames = [
 		[118, "Tanner", "Skin118.png"],
 		[119, "Toni Cipriani", "Skin119.png"],
 		[120, "Darkel", "Skin120.png"],
-		[121, "Chuff Security Officer", "Skin121.png"]
+		//[121, "Chuff Security Officer", "Skin121.png"]
 	],
 ];
 

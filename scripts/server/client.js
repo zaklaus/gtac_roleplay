@@ -63,7 +63,7 @@ addNetworkHandler("ag.promptAnswerYes", function(client) {
         case AG_PROMPT_CREATEFIRSTCHAR:
             triggerNetworkEvent("ag.showNewCharacter", client);
             break;
-        S
+        S   
         default:
             break;
     }
@@ -85,8 +85,39 @@ addNetworkHandler("ag.onPickupCollected", function(client, pickup) {
         default:
             break;
     }
+});
 
+// ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.afk", function(client, afkState) {
+    if(afkState) {
+        client.setData("ag.afk", true, true);
+    } else {
+        client.removeData("ag.afk");
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+// Not implemented yet
+addNetworkHandler("ag.heldKey", function(client, key) {
+    switch(key) {
+        case serverConfig.keybinds.actionKey: 
+            processHoldActionKey(client);
+            break;
+
+        case serverConfig.keybinds.vehicleLightsKey: 
+            processHoldVehicleLightsKey(client);
+            break;
+
+        case serverConfig.keybinds.vehicleLockKey: 
+            processHoldVehicleLockKey(client);
+            break;
+
+        case serverConfig.keybinds.vehicleEngineKey: 
+            processHoldVehicleEngineKey(client);
+            break;             
+    }
 });
 
 // ---------------------------------------------------------------------------

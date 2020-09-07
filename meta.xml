@@ -58,13 +58,14 @@
 	<script src="scripts/server/startup.js" type="server" language="javascript" />
 	
 	<!-- Client -->
-	<script src="scripts/client/main.js" type="client" language="javascript" />
-	<script src="scripts/client/gui.js" type="client" language="javascript" />
-
 	<!-- Files -->
 	<file type="client" src="files/images/main-logo.png" />
 	<file type="client" src="files/fonts/roboto-regular.ttf" />
 	<file type="client" src="files/fonts/pricedown.ttf" />
+
+	<script src="scripts/client/main.js" type="client" language="javascript" />
+	<script src="scripts/client/gui.js" type="client" language="javascript" />
+	<script src="scripts/client/nametags.js" type="client" language="javascript" />
 
 	<!-- Skin Images -->
 	<file type="client" src="files/images/skins/gta3/Skin000.png" />

@@ -133,6 +133,43 @@ function getVehicleData(vehicle) {
 
 // ---------------------------------------------------------------------------
 
+function createVehicleCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	let modelId = getVehicleModelIDFromParams(params);
+
+	if(!modelId) {
+		messageClientError(client, "That vehicle type is invalid!");
+		return false;
+	}
+
+	let frontPos = getPosInFrontOfPos(client.player.position, client.player.heading, s)
+	let vehicle = createVehicle(frontPos, client.player.heading);
+	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
+	let vehiclesLength = serverData.vehicles.push(tempVehicleData);
+	vehicle.setData("ag.dataSlot", vehiclesLength-1, false);
+	messageClientSuccess(client, "You created a ", getVehicleName(vehicle));
+}
+
+// ---------------------------------------------------------------------------
+
 function vehicleLockCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {

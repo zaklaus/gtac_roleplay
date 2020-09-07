@@ -191,8 +191,7 @@ function takeJobCommand(command, params, client) {
 		return false;      
     }
     
-    quitJob(client);
-    getClientCurrentSubAccount(client).job = closestJobId;
+    takeJob(client, closestJobId);
     messageClientSuccess(client, "You now have the " + String(jobData.name) + " job");
 	return true;
 }
@@ -239,12 +238,14 @@ function startWorkingCommand(command, params, client) {
 
     if(getJobType(getClientCurrentSubAccount(client).job) != jobData.jobType) {
         messageClientError(client, "This is not your job!");
-        messageClientInfo(client, "Use /quitjob if you want to quit your current job and take this one.");
+        messageClientInfo(client, `Use /quitjob to quit your current job.`);
         return false;
     }
 
-    startWorking(client);
+    
     messageClientSuccess(client, "You are now working as a " + String(jobData.name));
+    startWorking(client);
+    //showStartedWorkingTip(client);
 	return true;
 }
 
@@ -288,8 +289,9 @@ function stopWorkingCommand(command, params, client) {
     //    break;
     //}
 
-    stopWorking(client);
     messageClientSuccess(client, "You have stopped working!");
+    stopWorking(client);
+    //showApproachCurrentJobTip(client);
 	return true;
 }
 
@@ -337,6 +339,8 @@ function startWorking(client) {
         default:
             break;
     }
+
+    //showStartedWorkingTip(client);
 }
 
 // ---------------------------------------------------------------------------
@@ -348,18 +352,25 @@ function stopWorking(client) {
 
     getClientCurrentSubAccount(client).isWorking = false;
 
-    client.player.skin = getClientCurrentSubAccount(client).skin;
+    triggerNetworkEvent("ag.skin", null, client.player, getClientCurrentSubAccount(client).skin);
 
     let jobVehicle = getClientCurrentSubAccount(client).lastJobVehicle;
     if(jobVehicle) {
+        if(client.player.vehicle) {
+            triggerNetworkEvent("ag.removeFromVehicle", client);
+            //client.player.removeFromVehicle();
+        }
+
         let vehicleData = getVehicleData(jobVehicle);
         jobVehicle.fix();
         jobVehicle.position = vehicleData.spawnPosition;
-        jobVehicle.heading = vehicleData.spawnHeading;
+        jobVehicle.heading = vehicleData.spawnRotation;
         jobVehicle.locked = true;
         jobVehicle.setData("ag.lights", false, true);
         jobVehicle.setData("ag.engine", false, true);
         jobVehicle.setData("ag.siren", false, true);
+
+        getClientCurrentSubAccount(client).lastJobVehicle = false;
     }
     
     triggerNetworkEvent("ag.clearWeapons", client);    
@@ -423,40 +434,46 @@ function jobUniformCommand(command, params, client) {
 		return false;
     }
 
-    let uniformId = Number(params) || 0;
+    let uniformId = Number(params) || 1;
     
     let jobId = getClientCurrentSubAccount(client).job;
-    getClientCurrentSubAccount(client).jobUniform = uniformId;
+    getClientCurrentSubAccount(client).jobUniform = uniformId-1;
 
     switch(serverData.jobs[server.game][jobId].jobType) {
         case AG_JOB_POLICE:
-            client.player.modelIndex = serverData.policeJobSkins[server.game][uniformId];
+            triggerNetworkEvent("ag.skin", null, client.player, serverData.policeJobSkins[server.game][uniformId-1]);
+            //client.player.modelIndex = serverData.policeJobSkins[server.game][uniformId];
             triggerNetworkEvent("ag.giveWeapon", client, 2, 200, false);
             triggerNetworkEvent("ag.giveWeapon", client, 1, 1, false);  
             break;
 
         case AG_JOB_MEDICAL:
-            client.player.modelIndex = serverData.medicalJobSkins[server.game][uniformId];
+            triggerNetworkEvent("ag.skin", null, client.player, serverData.medicalJobSkins[server.game][uniformId-1]);
+            //client.player.modelIndex = serverData.medicalJobSkins[server.game][uniformId];
             messageClientInfo(client, "Your uniform and ambulance have been returned to the hospital");
             break;
 
         case AG_JOB_FIRE:
-            client.player.modelIndex = serverData.fireJobSkins[server.game][uniformId];
+            triggerNetworkEvent("ag.skin", null, client.player, serverData.fireJobSkins[server.game][uniformId-1]);
+            //client.player.modelIndex = serverData.fireJobSkins[server.game][uniformId];
             messageClientInfo(client, "Your uniform and fire truck have been returned to the fire station");
             break;
 
         case AG_JOB_BUS:
-            client.player.modelIndex = serverData.busJobSkins[server.game][uniformId];
+            triggerNetworkEvent("ag.skin", null, client.player, serverData.busJobSkins[server.game][uniformId-1]);
+            //client.player.modelIndex = serverData.busJobSkins[server.game][uniformId];
             messageClientInfo(client, "Your bus has been returned to the bus depot");
             break;
 
         case AG_JOB_TAXI:
-            client.player.modelIndex = serverData.taxiJobSkins[server.game][uniformId];
+            triggerNetworkEvent("ag.skin", null, client.player, serverData.taxiJobSkins[server.game][uniformId-1]);
+            //client.player.modelIndex = serverData.taxiJobSkins[server.game][uniformId];
             messageClientInfo(client, "Your taxi has been returned to the taxi depot");
             break;
 
         case AG_JOB_GARBAGE:
-            client.player.modelIndex = serverData.garbageJobSkins[server.game][uniformId];
+            triggerNetworkEvent("ag.skin", null, client.player, serverData.garbageJobSkins[server.game][uniformId-1]);
+            //client.player.modelIndex = serverData.garbageJobSkins[server.game][uniformId];
             messageClientInfo(client, "Your trash truck has been returned to the city landfill");
             break;
 
@@ -563,7 +580,7 @@ function jobDepartmentRadioCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function getJobType(jobId) {
-    return serverData.jobs[server.game][jobId].jobType;
+    return getJobData(jobId).jobType;
 }
 
 // ---------------------------------------------------------------------------
@@ -577,5 +594,12 @@ function getJobData(jobId) {
 function quitJob(client) {
     stopWorking(client);
     getClientCurrentSubAccount(client).job = AG_JOB_NONE;
-    sendAllJobBlips(client);
 }
+
+// ---------------------------------------------------------------------------
+
+function takeJob(client, jobId) {
+    getClientCurrentSubAccount(client).job = closestJobId;
+}
+
+// ---------------------------------------------------------------------------

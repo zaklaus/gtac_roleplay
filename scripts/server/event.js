@@ -42,11 +42,11 @@ addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPedSpawn", function(event, ped) {
-    //if(ped.isType(ELEMENT_PLAYER)) {
-    //    let client = getClientFromPlayerElement(ped);
-    //    //triggerNetworkEvent("ag.locations", client, serverData.policeStations[server.game], serverData.fireStations[server.game], serverData.hospitals[server.game], serverData.payAndSprays[server.game], serverData.ammunations[server.game], serverData.jobs[server.game]);
-    //    
-    //}
+    if(ped.isType(ELEMENT_PLAYER)) {
+        let client = getClientFromPlayerElement(ped);
+        //triggerNetworkEvent("ag.locations", client, serverData.policeStations[server.game], serverData.fireStations[server.game], serverData.hospitals[server.game], serverData.payAndSprays[server.game], serverData.ammunations[server.game], serverData.jobs[server.game]);
+        ped.setData("ag.name", getClientSubAccountName(client), true);
+    }
 });
 
 // ---------------------------------------------------------------------------
@@ -81,6 +81,30 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
 
 addEventHandler("onPedEnterVehicle", function(event, ped, vehicle, seat) {
     ped.setData("ag.vehSeat", seat, false);
+
+    let client = getClientFromPlayerElement(ped);
+    if(getClientCurrentSubAccount(client).isWorking) {
+        if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
+            if(getVehicleData(vehicle).ownerId == getJobType(getClientCurrentSubAccount(client).job)) {
+                if(seat == 0) {
+                    getClientCurrentSubAccount(client).lastJobVehicle = vehicle;
+                }
+            }
+        }
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("onEntityProcess", function(event, entity) {
+    /*
+    if(entity.isType(ELEMENT_PLAYER)) {
+        let client = getClientFromPlayerElement(entity);
+        if(isNearJobPoint(entity.position) {
+            let jobPoint = getNearbyJobPoint(entity);
+        }
+    }
+    */
 });
 
 // ---------------------------------------------------------------------------

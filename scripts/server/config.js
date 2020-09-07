@@ -129,6 +129,20 @@ let serverConfig = {
 			fuelStation: 0,
 		},						
 	],
+
+	// Not implemented yet
+	keybindText: {
+		actionKey: "E",
+		vehicleEngineKey: "O",
+		vehicleLightsKey: "K",
+		vehicleLocksKey: "L",
+	},
+	keybinds: {
+		actionKey: SDLK_e,
+		vehicleEngineKey: SDLK_e,
+		vehicleLightsKey: SDLK_k,
+		vehicleLocksKey: SDLK_l,		
+	},
 };
 
 // ----------------------------------------------------------------------------

@@ -91,7 +91,7 @@ addEventHandler("onElementStreamIn", function(event, element) {
 
 addNetworkHandler("ag.blips", function(blipData) {
     for(let i in blipData) {
-        allServerBlips.push(blipData);
+        allServerBlips.push(blipData[i]);
     }
 });
 
@@ -127,9 +127,7 @@ function getIslandFromPosition(position) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("onPedSpawn", function(event, ped) {
-    console.log("localPlayer: " + localPlayer);
-
-    // Nasty workaround since localPlayer is null as the player spawns (reported as client bug #194)
+     // Nasty workaround since localPlayer is null as the player spawns (reported as client bug #194)
     setTimeout(attemptToShowBlipsOnSpawn, 500, ped);
 });
 
@@ -140,5 +138,17 @@ function attemptToShowBlipsOnSpawn(ped) {
         showIslandBlips();
     }
 }
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.skin", function(ped, skin) {
+    ped.skin = skin;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.removeFromVehicle", function() {
+    localPlayer.removeFromVehicle();
+});
 
 // ---------------------------------------------------------------------------

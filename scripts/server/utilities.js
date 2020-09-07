@@ -3383,3 +3383,64 @@ function sendAllBlips(client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function processHoldActionKey(client) {
+	let closestJobId = getClosestJobPointId(client.player.position);
+	let closestVehicle = getClosestVehicle(client.player.position);
+	let closestHouse = getClosestHouse(client.player.position);
+	let closestBusiness = getClosestBusiness(client.player.position);
+	let jobData = getJobData(closestJobId);
+
+
+	if(getClientCurrentSubAccount(client).job == AG_JOB_NONE) {
+		if(jobData.position.distance(client.player.position) <= serverConfig.takeJobDistance) {
+			takeJob(client, closestJobId);
+			messageClientSuccess(client, "You now have the " + String(jobData.name) + " job");
+		}
+	} else {
+		if(jobData.jobType == getClientCurrentSubAccount(client).job) {
+			if(jobData.position.distance(client.player.position) <= serverConfig.startWorkDistance) {
+				startWorking(client);
+				messageClientSuccess(client, "You are now working as a " + String(jobData.name));
+				showStartedWorkingTip(client);
+				return true;
+			}
+		} else {
+			messageClientError(client, "This is not your job!");
+			messageClientInfo(client, `Use /quitjob to quit your current job.`);
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function processPressActionKey(client) {
+	// Check job stuff
+	let closestJob = getClosestJob(client.player.position);
+	
+	if(getClientCurrentSubAccount(client).job == AG_JOB_NONE) {
+		if(closestJob.position.distance(client.player.position) <= serverConfig.takeJobDistance) {
+			
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function processHoldVehicleLightsKey(client) {
+
+}
+
+// ---------------------------------------------------------------------------
+
+function processHoldVehicleLockKey(client) {
+
+}
+
+// ---------------------------------------------------------------------------
+
+function processHoldVehicleEngineKey(client) {
+	
+}
+
+// ---------------------------------------------------------------------------

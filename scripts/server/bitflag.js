@@ -72,9 +72,42 @@ function doesClientHaveStaffPermission(client, requiredFlags) {
 function getStaffFlagValue(flagName) {
     if(flagName == "all") {
         return -1;
-    }
+	}
+	
+	if(typeof serverData.staffFlags[flagName] === "undefined") {
+		return false;
+	}
 
 	return serverData.staffFlags[flagName];
+}
+
+// ---------------------------------------------------------------------------
+
+function giveClientStaffFlag(client, flagName) {
+	if(!getStaffFlagValue(flagName)) {
+		return false;
+	}
+
+	getClientData(client).accountData.staffFlags = getClientData(client).accountData.staffFlags | getStaffFlagValue(flagName);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function takeClientStaffFlag(client, flagName) {
+	if(!getStaffFlagValue(flagName)) {
+		return false;
+	}
+
+	getClientData(client).accountData.staffFlags = getClientData(client).accountData.staffFlags & ~getStaffFlagValue(flagName);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function clearClientStaffFlags(client) {
+	getClientData(client).accountData.staffFlags = getStaffFlagValue("none");
+	return true;
 }
 
 // ---------------------------------------------------------------------------

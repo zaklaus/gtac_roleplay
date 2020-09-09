@@ -23,7 +23,7 @@ function addModerationCommandHandlers() {
 
 // ---------------------------------------------------------------------------
 
-function kickClientCommand(command, params, client, fromDiscord) {
+function kickClientCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {
 			messageClientError(client, "You must be logged in to use this command!");
@@ -59,7 +59,7 @@ function kickClientCommand(command, params, client, fromDiscord) {
 
 // ---------------------------------------------------------------------------
 
-function muteClientCommand(command, params, client, fromDiscord) {
+function muteClientCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {
 			messageClientError(client, "You must be logged in to use this command!");
@@ -95,7 +95,7 @@ function muteClientCommand(command, params, client, fromDiscord) {
 
 // ---------------------------------------------------------------------------
 
-function unMuteClientCommand(command, params, client, fromDiscord) {
+function unMuteClientCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {
 			messageClientError(client, "You must be logged in to use this command!");
@@ -131,7 +131,7 @@ function unMuteClientCommand(command, params, client, fromDiscord) {
 
 // ---------------------------------------------------------------------------
 
-function freezeClientCommand(command, params, client, fromDiscord) {
+function freezeClientCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {
 			messageClientError(client, "You must be logged in to use this command!");
@@ -167,7 +167,7 @@ function freezeClientCommand(command, params, client, fromDiscord) {
 
 // ---------------------------------------------------------------------------
 
-function unFreezeClientCommand(command, params, client, fromDiscord) {
+function unFreezeClientCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {
 			messageClientError(client, "You must be logged in to use this command!");
@@ -197,8 +197,218 @@ function unFreezeClientCommand(command, params, client, fromDiscord) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + String(targetClient.name) + " has been un-frozen!");
+	message(`[#996600][ADMIN]: [#FFFFFF]${String(targetClient.name)} has been un-frozen!`);
 	triggerNetworkEvent("ag.frozen", client, false);
+}
+
+// ---------------------------------------------------------------------------
+
+function addStaffFlagCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	let splitParams = params.split("");
+	let targetClient = getClientFromParams(splitParams[0]);
+	let flagName = splitParams[1] || "none";
+
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+    }
+
+	// Prevent setting flags on admins with really high permissions
+    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
+		if(!doesClientHaveStaffPermission(client, "manageServer") && !doesClientHaveStaffPermission(client, "developer")) {
+			messageClientError(client, "You cannot give staff flags to this person!");
+			return false;
+		}
+	}
+
+	if(!getStaffFlagValue(flagName)) {
+		messageClientError(client, "That staff flag doesn't exist!");
+        return false;		
+	}
+
+	giveClientStaffFlag(targetClient, flagName);
+	messageClientSuccess(client, `You have given ${client.name} the ${flagName} staff flag!`);
+}
+
+// ---------------------------------------------------------------------------
+
+function takeStaffFlagCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	let splitParams = params.split("");
+	let targetClient = getClientFromParams(splitParams[0]);
+	let flagName = splitParams[1] || "none";
+
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+    }
+
+	// Prevent setting flags on admins with really high permissions
+    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
+		if(!doesClientHaveStaffPermission(client, "manageServer") && !doesClientHaveStaffPermission(client, "developer")) {
+			messageClientError(client, "You cannot take staff flags from this person!");
+			return false;
+		}
+	}
+
+	if(!getStaffFlagValue(flagName)) {
+		messageClientError(client, "That staff flag doesn't exist!");
+        return false;		
+	}
+
+	takeClientStaffFlag(targetClient, flagName);
+	messageClientSuccess(client, `You have taken the ${flagName} staff flag from ${targetClient.name}!`);
+}
+
+// ---------------------------------------------------------------------------
+
+function clearStaffFlagsCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	let splitParams = params.split("");
+	let targetClient = getClientFromParams(splitParams[0]);
+	let flagName = splitParams[1] || "none";
+
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+    }
+
+	// Prevent setting flags on admins with really high permissions
+    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
+		if(!doesClientHaveStaffPermission(client, "manageServer") && !doesClientHaveStaffPermission(client, "developer")) {
+			messageClientError(client, "You cannot clear staff flags for this person!");
+			return false;
+		}
+	}
+
+	if(!getStaffFlagValue(flagName)) {
+		messageClientError(client, "That staff flag doesn't exist!");
+        return false;		
+	}
+
+	clearClientStaffFlags(targetClient);
+	messageClientSuccess(client, `You have cleared all staff flags off of ${targetClient.name}!`);
+}
+
+// ---------------------------------------------------------------------------
+
+function getStaffFlagsCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	let splitParams = params.split("");
+	let targetClient = getClientFromParams(splitParams[0]);
+	let flagName = splitParams[1] || "none";
+
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+	}
+	
+	let tempStaffFlags = [];
+	for(let i in serverData.staffFlagKeys) {
+		let tempFlagValue = getStaffFlagValue(serverData.staffFlagKeys[i]);
+		if(doesClientHaveStaffPermission(client, tempFlagValue)) {
+			tempStaffFlags.push(serverData.staffFlagKeys[i]);
+		}
+	}
+
+	messageClientInfo(client, `${targetClient.name}'s staff flags: ${tempStaffFlags.join(", ")}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function allStaffFlagsCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	let splitParams = params.split("");
+	let targetClient = getClientFromParams(splitParams[0]);
+	let flagName = splitParams[1] || "none";
+
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+	}
+
+	messageClientInfo(client, `Staff flags: ${serverData.staffFlagKeys.join(", ")}`);
 }
 
 // ---------------------------------------------------------------------------

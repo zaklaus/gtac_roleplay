@@ -63,7 +63,7 @@ function loginCommand(command, params, client) {
 	}
 	
 	loginSuccess(client);
-	messageClientSuccess(client, "You have been logged in! Press left CTRL to spawn.");
+	//messageClientSuccess(client, "You have been logged in! Press left CTRL to spawn.");
 	return true;
 }
 
@@ -402,6 +402,10 @@ function saltAccountInfo(name, password) {
 function loginSuccess(client) {
 	getClientData(client).loggedIn = true;
 
+	if(doesClientHaveStaffPermission(client, "developer") || doesClientHaveStaffPermission(client, "manageServer")) {
+		client.administrator = true;
+	}
+
 	triggerNetworkEvent("ag.loginSuccess", client);
 }
 
@@ -589,11 +593,13 @@ addNetworkHandler("ag.checkNewCharacter", function(client, firstName, lastName, 
 		triggerNetworkEvent("ag.newCharacterFailed", client, "First name cannot be blank!");
 		return false;
 	}
+	firstName = firstName.trim();
 
 	if(areParamsEmpty(lastName)) {
 		triggerNetworkEvent("ag.newCharacterFailed", client, "Last name cannot be blank!");
 		return false;
 	}
+	lastName = lastName.trim();
 
 	if(areParamsEmpty(dateOfBirth)) {
 		triggerNetworkEvent("ag.newCharacterFailed", client, "Date of birth cannot be blank!");

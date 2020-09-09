@@ -21,6 +21,7 @@ let serverConfig = {
 			normalMessage: toColour(255, 255, 255, 255),
 			alertMessage: toColour(255, 255, 0, 255),
 			successMessage: toColour(0, 180, 0, 255),
+			clanChatMessage: toColour(0, 190, 0, 255),
 		},
 		byName: {
 			white: toColour(255, 255, 255, 255),

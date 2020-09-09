@@ -73,7 +73,8 @@ function loadCommandData() {
         developer: [
             commandData("scode", executeServerCodeCommand, "<code>", getStaffFlagValue("developer"), true, true), 
             commandData("ccode", executeClientCodeCommand, "<code>", getStaffFlagValue("developer"), true, true),
-            commandData("gmx", restartGameModeCommand, "", getStaffFlagValue("developer"), true, true)
+            commandData("gmx", restartGameModeCommand, "", getStaffFlagValue("developer"), true, true),
+            commandData("saveall", saveAllServerDataCommand, "", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],
         faction: [],
@@ -126,6 +127,14 @@ function loadCommandData() {
             commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, true),	
             commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, true),	
             commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, true),	
+
+            commandData("vehowner", setVehicleOwnerCommand, "<player id/name>", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehclan", setVehicleClanCommand, "<clan id/name>", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehjob", setVehicleJobCommand, "[job id/name]", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehdelowner", removeVehicleOwnerCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+
+            commandData("vehinfo", getVehicleInfoCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehpark", parkVehicleCommand, "", getStaffFlagValue("manageVehicles"), true, true),
         ],
     }
     return tempCommands;

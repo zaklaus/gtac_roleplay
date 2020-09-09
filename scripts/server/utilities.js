@@ -3106,7 +3106,8 @@ function getClientCurrentSubAccount(client) {
 // ---------------------------------------------------------------------------
 
 function getClientSubAccountName(client) {
-	return getClientCurrentSubAccount(client).firstName + " " + getClientCurrentSubAccount(client).lastName;
+	let subAccountData = getClientCurrentSubAccount(client);
+	return `${subAccountData.firstName} ${subAccountData.lastName}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -3359,11 +3360,13 @@ function canClientUseGuns(client) {
 // ---------------------------------------------------------------------------
 
 function saveAllServerDataToDatabase() {
+	console.log("[Asshat.Utilities]: Saving all server data to database ...");
 	saveAllClientsToDatabase();
 	saveAllVehiclesToDatabase();;
 	saveAllHousesToDatabase();
 	saveAllBusinessesToDatabase();
 	saveAllClansToDatabase();
+	console.log("[Asshat.Utilities]: Saved all server data to database!");
 }
 
 // ---------------------------------------------------------------------------
@@ -3449,6 +3452,18 @@ function processHoldVehicleLockKey(client) {
 
 function processHoldVehicleEngineKey(client) {
 	
+}
+
+// ---------------------------------------------------------------------------
+
+function getClientChatColour(client) {
+	let tempJob = getClientCurrentSubAccount(client).job;
+	if(job != -1) {
+		if(getClientData(client).isWorking) {
+			return getJobData(tempJob).jobColour;
+		}
+	}
+	return getColourByName("white");
 }
 
 // ---------------------------------------------------------------------------

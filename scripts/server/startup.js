@@ -25,6 +25,9 @@ function initServerScripts() {
 	initChatScript();
 	initJobScript();
 	initVehicleScript();
+	initDeveloperScript();
+
+	serverData.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
 }
 
 // ---------------------------------------------------------------------------
@@ -33,7 +36,6 @@ function checkForHashingModule() {
 	if(module.hashing == "undefined") {
 		return false;
 	}
-	
 	return true;
 }
 

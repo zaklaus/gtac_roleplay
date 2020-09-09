@@ -27,7 +27,10 @@ const AG_JOB_WEAPON = 7;
 const AG_JOB_DRUG = 8;
 
 // Pickup Owner Types
+const AG_PICKUP_NONE = 0;
 const AG_PICKUP_JOB = 1;
+const AG_PICKUP_BUSINESS = 2;
+const AG_PICKUP_HOUSE = 3;
 
 // Vehicle Owner Types
 const AG_VEHOWNER_NONE = 0;

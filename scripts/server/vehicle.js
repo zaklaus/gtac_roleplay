@@ -153,19 +153,22 @@ function createVehicleCommand(command, params, client) {
 		return false;
 	}
 
-	let modelId = getVehicleModelIDFromParams(params);
+	let modelId = getVehicleModelIdFromParams(params);
 
 	if(!modelId) {
 		messageClientError(client, "That vehicle type is invalid!");
 		return false;
 	}
 
-	let frontPos = getPosInFrontOfPos(client.player.position, client.player.heading, s)
-	let vehicle = createVehicle(frontPos, client.player.heading);
+	let frontPos = getPosInFrontOfPos(client.player.position, client.player.heading, serverConfig.spawnCarDistance);
+
+	let vehicle = createVehicle(modelId, frontPos, client.player.heading);
+
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
 	let vehiclesLength = serverData.vehicles.push(tempVehicleData);
 	vehicle.setData("ag.dataSlot", vehiclesLength-1, false);
-	messageClientSuccess(client, "You created a ", getVehicleName(vehicle));
+
+	messageClientSuccess(client, `You created a ${getVehicleName(vehicle)}!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -316,7 +319,7 @@ function vehicleEngineCommand(command, params, client) {
 	}
 	let engineText = (getVehicleData(vehicle).engine) ? "on" : "off";
 
-	meActionToNearbyPlayers(client, "turned the " + String(getVehicleName(vehicle)) + "'s engine " + engineText);
+	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s engine ${engineText}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -364,7 +367,7 @@ function vehicleSirenCommand(command, params, client) {
 	}
 	let sirenText = (getVehicleData(vehicle).siren) ? "on" : "off";
 
-	meActionToNearbyPlayers(client, "turns the " + String(getVehicleName(vehicle)) + "'s siren " + sirenText);
+	meActionToNearbyPlayers(client, `turns the ${getVehicleName(vehicle)}'s siren ${sirenText}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -414,7 +417,8 @@ function doesClientHaveVehicleKeys(client, vehicle) {
 // ---------------------------------------------------------------------------
 
 function getVehicleName(vehicle) {
-	return getVehicleNameFromModelID(vehicle.modelIndex, server.game);
+	let vehicleName = getVehicleNameFromModelId(vehicle.modelIndex);
+	return vehicleName;
 }
 
 // ---------------------------------------------------------------------------

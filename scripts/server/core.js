@@ -23,6 +23,7 @@ let serverData = {
 		"manageFactions", 
 		"manageClans", 
 		"manageServer", 
+		"manageAdmins",
 		"developer"
 	],
 	moderationFlagKeys: [

@@ -599,7 +599,7 @@ function quitJob(client) {
 // ---------------------------------------------------------------------------
 
 function takeJob(client, jobId) {
-    getClientCurrentSubAccount(client).job = closestJobId;
+    getClientCurrentSubAccount(client).job = jobId;
 }
 
 // ---------------------------------------------------------------------------

@@ -110,7 +110,7 @@ function initClassTable() {
 
 		},
 		vehicleData: class {
-			constructor(vehicleAssoc, vehicle = null) {
+			constructor(vehicleAssoc, vehicle = false) {
 				// General Info
 				this.databaseId = 0;
 				this.server = serverId;

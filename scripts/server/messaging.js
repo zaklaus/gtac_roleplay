@@ -91,3 +91,9 @@ function messageClientMeAction(client, talkingClient, messageText) {
 }
 
 // ---------------------------------------------------------------------------
+
+function messageClientClanChat(client, talkingClient, messageText) {
+    messageClient(`(${getClientSubAccountClanRank(talkingClient)}) ${getClientSubAccountName(talkingClient)} says (clan): ${messageText}`, client, getColourByType("clanChatMessage"));
+}
+
+// ---------------------------------------------------------------------------

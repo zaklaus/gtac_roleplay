@@ -169,7 +169,7 @@ let gameData = {
 			"User Track Player"
 		]
 	],
-	vehicleModelIDStart: [
+	vehicleModelIdStart: [
 		0, 
 		90, 	// GTA III
 		130, 	// GTA Vice City
@@ -2246,7 +2246,7 @@ function getMonthName(monthId) {
 
 // ---------------------------------------------------------------------------
 
-function getWeaponModelID(weaponId) {
+function getWeaponModelId(weaponId) {
 	let weaponModels = [
 		[ 0 , 172 , 173 , 178 , 176 , 171 , 180 , 177 , 175 , 181 , 174 , 170 ],
 		[],
@@ -2500,7 +2500,7 @@ function getJobPointsInRange(position, distance) {
 // ---------------------------------------------------------------------------
 
 function getWeaponName(weapon) {
-	return weaponNames[game.game][weapon];
+	return weaponNames[server.game][weapon];
 }
 
 // ---------------------------------------------------------------------------
@@ -2535,47 +2535,55 @@ function isParamsInvalid(params) {
 
 // ---------------------------------------------------------------------------
 
-function isValidVehicleModel(modelID) {
-	if(game.game == GAME_GTA_III) {
-		if(modelID < 90 || modelID > 150) {
+function isValidVehicleModel(modelId) {
+	if(server.game == GAME_GTA_III) {
+		if(modelId < 90 || modelId > 150) {
 			return false;
 		}
 		
 		return true;
 	}
 	
-	if(game.game == GAME_GTA_VC) {
-		if(modelID < 130 || modelID > 236) {
+	if(server.game == GAME_GTA_VC) {
+		if(modelId < 130 || modelId > 236) {
 			return false;
 		}
 		
 		return true;
 	}
+
+	if(server.game == GAME_GTA_SA) {
+		return true;
+	}
 	
+	if(server.game == GAME_GTA_IV) {
+		return true;
+	}
+
 	return false;
 }
 
 // ---------------------------------------------------------------------------
 
-function getVehicleModelIDFromParams(params, gameID = game.game) {
+function getVehicleModelIdFromParams(params) {
 	if(isNaN(params)) {
-		let modelID = getVehicleModelIDFromName(params);
+		let modelId = getVehicleModelIdFromName(params);
 		
-		if(!modelID) {
-			return gameData.vehicleModelIDStart[gameID];
+		if(!modelId) {
+			return false;
 		}
 		
-		if(isValidVehicleModel(Number(modelID))) {
-			return Number(modelID);
+		if(isValidVehicleModel(Number(modelId))) {
+			return Number(modelId);
 		}
 		
-		return gameData.vehicleModelIDStart[gameID];		
+		return false;		
 	} else {
 		if(isValidVehicleModel(Number(params))) {
 			return Number(params);
 		}
 		
-		return gameData.vehicleModelIDStart[gameID];
+		return false;
 	}
 	
 	return false;
@@ -2583,10 +2591,10 @@ function getVehicleModelIDFromParams(params, gameID = game.game) {
 
 // ---------------------------------------------------------------------------
 
-function getVehicleModelIDFromName(params, gameID = game.game) {
-	for(let i in gameData.vehicleNames[gameID]) {
-		if(gameData.vehicleNames[gameID][i].toLowerCase().indexOf(params.toLowerCase()) != -1) {
-			return Number(i)+Number(gameData.vehicleModelIDStart[gameID]);
+function getVehicleModelIdFromName(params) {
+	for(let i in gameData.vehicleNames[server.game]) {
+		if(gameData.vehicleNames[server.game][i].toLowerCase().indexOf(params.toLowerCase()) != -1) {
+			return Number(i)+Number(gameData.vehicleModelIdStart[server.game]);
 		}
 	}
 	
@@ -2613,9 +2621,9 @@ function doesWordStartWithVowel(word) {
 
 // ---------------------------------------------------------------------------
 
-function getVehicleNameFromModelID(modelID, gameID = game.game) {
-	let modelIndex = modelID-gameData.vehicleModelIDStart[gameID];
-	return gameData.vehicleNames[gameID][modelIndex];
+function getVehicleNameFromModelId(modelId) {
+	let modelIndex = modelId-gameData.vehicleModelIdStart[server.game];
+	return gameData.vehicleNames[server.game][modelIndex];
 }
 
 // ---------------------------------------------------------------------------
@@ -2631,9 +2639,9 @@ function replaceEmojiInString(message) {
 
 // ---------------------------------------------------------------------------
 
-function getSyncerFromID(syncerID) {
+function getSyncerFromId(syncerId) {
 	let clients = getClients();
-	return clients[syncerID];
+	return clients[syncerId];
 }
 
 // ---------------------------------------------------------------------------
@@ -2681,9 +2689,9 @@ function getPlayerFromParams(params, isServer) {
 				}			
 			}
 		} else {
-			let playerID = Number(params) || 0;
-			if(typeof clients[playerID] != "undefined") {
-				return clients[playerID].player;
+			let playerId = Number(params) || 0;
+			if(typeof clients[playerId] != "undefined") {
+				return clients[playerId].player;
 			}			
 		}
 	}
@@ -2711,9 +2719,9 @@ function getClientFromParams(params) {
 				}			
 			}
 		} else {
-			let clientID = Number(params) || 0;
-			if(typeof clients[clientID] != "undefined") {
-				return clients[clientID];
+			let clientId = Number(params) || 0;
+			if(typeof clients[clientId] != "undefined") {
+				return clients[clientId];
 			}			
 		}
 	}
@@ -2993,7 +3001,7 @@ function getRandom(min, max) {
 
 // ---------------------------------------------------------------------------
 
-function getArrayOfElementID(elements) {
+function getArrayOfElementId(elements) {
 	let tempArray = [];
 	for(let i in elements) {
 		tempArray.push(elements[i].id);

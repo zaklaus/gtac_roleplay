@@ -49,7 +49,7 @@ function doesClientHaveStaffPermission(client, requiredFlags) {
 	}
 
 	let staffFlags = 0;
-	if(isClientFromDiscord(client)) {
+	if(!isClientFromDiscord(client)) {
 		staffFlags = serverData.clients[client.index].accountData.staffFlags;
 	} else {
 		staffFlags = getDiscordUserData(client).accountData.staffFlags;

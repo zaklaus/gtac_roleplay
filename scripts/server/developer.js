@@ -19,7 +19,7 @@ function initDeveloperScript() {
 
 function addDeveloperCommandHandlers() {
 	console.log("[Asshat.Developer]: Adding developer command handlers ...");
-	let developerCommands = serverCommands.database;
+	let developerCommands = serverCommands.developer;
 	for(let i in developerCommands) {
 		addCommandHandler(developerCommands[i].command, developerCommands[i].handlerFunction);
 	}
@@ -102,12 +102,7 @@ function executeClientCodeCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function restartGameModeCommand(command, params, client) {
-	if(client.administrator) {
-		consoleCommand("/refresh");
-		thisResource.restart();
-	}
-
+function saveAllServerDataCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {
 			messageClientError(client, "You must be logged in to use this command!");
@@ -115,54 +110,49 @@ function restartGameModeCommand(command, params, client) {
 		}
 	}
 
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
 	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
 		messageClientError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
+	messageClientInfo(client, `[#FF9900]Saving all server data to database ...`);
+	saveAllServerDataToDatabase();
+	messageClientSuccess(client, `[#FF9900]All server data saved to database!`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function restartGameModeCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	consoleCommand("refresh");
 	thisResource.restart();
 	return true;
 }
-
-// ---------------------------------------------------------------------------
-
-function developerAnnounceCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
-	developerAnnouncement(client, params);
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function queryDatabaseCommand(command, params, client) {
-	//if(client == consoleClient) {
-		let databaseConnection = connectToDatabase();
-		if(databaseConnection.error) {
-			console.error("Database error: " + databaseConnection.error);
-			return false;
-		}
-
-		let query = databaseConnection.query(params);
-		if(databaseConnection.error) {
-			console.error("Query error: " + databaseConnection.error);
-			return false;			
-		}
-		console.log("Query executed!");
-		console.log(query.fetchRow()[0]);
-	//}
-}
-addCommandHandler("query", queryDatabaseCommand);
-
 
 // ---------------------------------------------------------------------------

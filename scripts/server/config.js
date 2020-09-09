@@ -76,6 +76,7 @@ let serverConfig = {
 	startWorkingDistance: 5,
 	takeJobDistance: 5,
 	stopWorkingDistance: 10,
+	spawnCarDistance: 5,
 	blipSprites: [
 		false,
 		{	// GTA III

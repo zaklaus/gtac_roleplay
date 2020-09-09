@@ -61,7 +61,7 @@ function accountBanCommand(command, params, client, fromDiscord) {
         return false;
 	}
 
-	message("[#996600][ADMIN]: [#FFFFFF]" + getClientData(targetClient).accountData.name + " has been banned from the server (account ban).");
+	message(`[#996600][ADMIN]: [#FFFFFF]${getClientData(targetClient).accountData.name} has been banned from the server (account ban).`);
 	banAccount(getClientData(targetClient).accountData.databaseId, getClientData(client).accountData.databaseId, "");
 	targetClient.disconnect();	
 }
@@ -92,7 +92,7 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 		return false;
 	}
 
-	message("[#996600][ADMIN]: [#FFFFFF]" + getClientData(targetClient).currentSubAccountData.name + " has been banned from the server (character ban).");
+	message(`[#996600][ADMIN]: [#FFFFFF]${getClientData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
 	banSubAccount(getClientData(targetClient).currentSubAccountData.databaseId, getClientData(client).accountData.databaseId, "");
 }
 
@@ -116,7 +116,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
 		return false;
 	}
 
-	message("[#996600][ADMIN]: [#FFFFFF]" + targetClient.name + " has been banned from the server (IP ban).");
+	message(`[#996600][ADMIN]: [#FFFFFF]vtargetClient.name} has been banned from the server (IP ban).`);
 	banIPAddress(targetClient.ip, getClientData(client).accountData.databaseId, "");	
 }
 
@@ -126,7 +126,7 @@ function banAccount(accountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapeString(reason);
-        let dbQuery = dbConnection.query("INSERT INTO `ban_main` (`ban_type`, `ban_detail`, `ban_who_banned`, `ban_reason`) VALUES (" + banType.account + ", " + accountId + ", " + adminAccountId + ", '" + safeReason + "');");
+        let dbQuery = dbConnection.query(`INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.account}, ${accountId}, ${adminAccountId}, '${safeReason}');`);
         dbQuery.free();
         dbConnection.close();
         return true;
@@ -141,7 +141,7 @@ function banSubAccount(subAccountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapeString(reason);
-        let dbQuery = dbConnection.query("INSERT INTO `ban_main` (`ban_type`, `ban_detail`, `ban_who_banned`, `ban_reason`) VALUES (" + banType.subAccount + ", " + subAccountId + ", " + adminAccountId + ", '" + safeReason + "');");
+        let dbQuery = dbConnection.query(`INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.subAccount}, ${subAccountId}, ${adminAccountId}, '${safeReason}');`);
         dbQuery.free();
         dbConnection.close();
         return true;
@@ -156,7 +156,7 @@ function banIPAddress(ipAddress, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapeString(reason);
-        let dbQuery = dbConnection.query("INSERT INTO `ban_main` (`ban_type`, `ban_detail`, `ban_who_banned`, `ban_reason`) VALUES (" + banType.ipAddress + ", " + INET_ATON(ipAddress) + ", " + adminAccountId + ", '" + safeReason + "');");
+        let dbQuery = dbConnection.query(`INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.ipAddress}, INET_ATON(${ipAddress}), ${adminAccountId}, '${safeReason}');`);
         dbQuery.free();
         dbConnection.close();
         return true;

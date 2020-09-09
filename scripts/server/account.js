@@ -694,7 +694,7 @@ function saveClientToDatabase(client) {
 		return false;
 	}
 
-	console.log("[Asshat.Account]: Saving client " + String(client.name) + " to database ...");
+	console.log(`[Asshat.Account]: Saving client ${client.name} to database ...`);
 	saveAccountToDatabase(getClientData(client).accountData);
 	let subAccountData = getClientCurrentSubAccount(client);
 	
@@ -704,7 +704,7 @@ function saveClientToDatabase(client) {
 	}
 
 	saveSubAccountToDatabase(subAccountData);
-	console.log("[Asshat.Account]: Saved client " + String(client.name) + " to database successfully!");
+	console.log(`[Asshat.Account]: Saved client ${client.name} to database successfully!`);
 	return true;
 }
 

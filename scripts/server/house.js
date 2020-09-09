@@ -11,6 +11,7 @@
 function initHouseScript() {
 	console.log("[Asshat.House]: Initializing house script ...");
 	serverData.houses = loadHousesFromDatabase();
+	createAllHousePickups();
 	addHouseCommandHandlers();
 	console.log("[Asshat.House]: House script initialized successfully!");
 	return true;
@@ -93,6 +94,16 @@ function getPlayerHouse(player) {
 
 function saveAllHousesToDatabase() {
 
+}
+
+// ---------------------------------------------------------------------------
+
+function createAllHousePickups() {
+	for(let i in serverData.houses) {
+		serverData.houses.pickup = createPickup(serverConfig.housePickupModel, serverData.houses[i].position);
+		serverData.houses[i].pickup.setData("ag.ownerType", AG_PICKUP_HOUSE, true);
+        serverData.houses[i].pickup.setData("ag.ownerId", i, true);
+	}
 }
 
 // ---------------------------------------------------------------------------

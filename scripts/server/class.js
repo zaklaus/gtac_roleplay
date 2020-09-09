@@ -74,7 +74,7 @@ function initClassTable() {
 				this.isWorking = false;
 				this.jobUniform = this.skin;
 				this.lastJobVehicle = null;
-				this.job = -1;
+				this.job = subAccountAssoc["sacct_job"];
 
 				this.weapons = [];
 			}
@@ -116,6 +116,7 @@ function initClassTable() {
 				this.server = serverId;
 				this.model = vehicle.modelIndex;
 				this.vehicle = vehicle;
+				this.tempVehicle = false;
 				
 				// Ownership
 				this.ownerType = AG_VEHOWNER_NONE;
@@ -126,6 +127,7 @@ function initClassTable() {
 				// Position and Rotation
 				this.spawnPosition = vehicle.position;
 				this.spawnRotation = vehicle.heading;
+				this.spawnLocked = false;
 				
 				// Colour Info
 				this.colour1IsRGBA = 0;
@@ -155,6 +157,7 @@ function initClassTable() {
 					this.databaseId = vehicleAssoc["veh_id"];
 					this.server = vehicleAssoc["veh_server"];
 					this.model = vehicleAssoc["veh_model"];
+					this.tempVehicle = false;
 					
 					// Ownership
 					this.ownerType = vehicleAssoc["veh_owner_type"];
@@ -165,6 +168,7 @@ function initClassTable() {
 					// Position and Rotation
 					this.spawnPosition = new Vec3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
 					this.spawnRotation = Number(vehicleAssoc["veh_rot_z"]);
+					this.spawnLocked = vehicleAssoc["veh_spawn_lock"];
 					
 					// Colour Info
 					this.colour1IsRGBA = vehicleAssoc["veh_col1_isrgba"];

@@ -82,13 +82,29 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
 addEventHandler("onPedEnterVehicle", function(event, ped, vehicle, seat) {
     ped.setData("ag.vehSeat", seat, false);
 
-    let client = getClientFromPlayerElement(ped);
-    if(getClientCurrentSubAccount(client).isWorking) {
-        if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
-            if(getVehicleData(vehicle).ownerId == getJobType(getClientCurrentSubAccount(client).job)) {
-                if(seat == 0) {
-                    getClientCurrentSubAccount(client).lastJobVehicle = vehicle;
+    let vehicleData = getVehicleData(vehicle);
+
+    if(ped.isType(ELEMENT_PLAYER)) {
+        let client = getClientFromPlayerElement(ped);
+        let currentSubAccount = getClientCurrentSubAccount(client);
+
+        if(currentSubAccount.isWorking) {
+            if(vehicleData.ownerType == AG_VEHOWNER_JOB) {
+                if(vehicleData.ownerId == getJobType(currentSubAccount.job)) {
+                    if(seat == 0) {
+                        getClientCurrentSubAccount(client).lastJobVehicle = vehicle;
+                    }
                 }
+            }
+        }
+
+        if(vehicleData.buyPrice > 0) {
+            messageClientInfo(client, `This vehicle is for sale! Cost $${vehicleData.buyPrice}`);
+            messageClientInfo(client, `Use /buycar if you'd like to buy this vehicle.`);
+        } else {
+            if(vehicleData.rentPrice > 0) {
+                messageClientInfo(client, `This vehicle is for rent! Cost: $${vehicleData.rentPrice} per minute`);
+                messageClientInfo(client, `Use /rentcar if you'd like to rent this vehicle.`);
             }
         }
     }

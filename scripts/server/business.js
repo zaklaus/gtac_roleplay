@@ -11,6 +11,7 @@
 function initBusinessScript() {
 	console.log("[Asshat.Business]: Initializing business script ...");
 	serverData.businesses = loadBusinessesFromDatabase();
+	createAllBusinessPickups();
 	addBusinessCommandHandlers();
 	console.log("[Asshat.Business]: Business script initialized successfully!");
 	return true;
@@ -318,3 +319,11 @@ function saveAllBusinessesToDatabase() {
 }
 
 // ---------------------------------------------------------------------------
+
+function createAllBusinessPickups() {
+	for(let i in serverData.businesses) {
+		serverData.businesses.pickup = createPickup(serverConfig.businessPickupModel, serverData.businesses[i].position);
+		serverData.businesses[i].pickup.setData("ag.ownerType", AG_PICKUP_BUSINESS, true);
+        serverData.businesses[i].pickup.setData("ag.ownerId", i, true);
+	}
+}

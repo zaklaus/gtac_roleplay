@@ -74,7 +74,7 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
 
     //createAllLocationBlips();
 
-    serverData.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
+    
 });
 
 // ---------------------------------------------------------------------------
@@ -121,6 +121,18 @@ addEventHandler("onEntityProcess", function(event, entity) {
         }
     }
     */
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("onPlayerChat", function(event, client, messageText) {
+    event.preventDefault();
+    if(!getClientData(client).loggedIn) {
+        messageClientError(client, "You need to login before you can chat!");
+        return false;
+    }
+
+    message(`${getClientSubAccountName(client)}: [#FFFFFF]${messageText}`, getClientChatColour(client));
 });
 
 // ---------------------------------------------------------------------------

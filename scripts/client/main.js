@@ -19,6 +19,8 @@ addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("onPickupCollected", function(event, pickup, ped) {
+    console.log(`PICKUP COLLECTED: Ped ${ped.id}, ${pickup.id}`);
+
     // This won't be needed in next GTAC update. onPickupCollccted has been added server side
     if(ped == localPlayer) {
         triggerNetworkEvent("ag.onPickupCollected", pickup);
@@ -128,7 +130,7 @@ function getIslandFromPosition(position) {
 
 addEventHandler("onPedSpawn", function(event, ped) {
      // Nasty workaround since localPlayer is null as the player spawns (reported as client bug #194)
-    setTimeout(attemptToShowBlipsOnSpawn, 500, ped);
+    setTimeout(initLocalPlayer, 500, ped);
 });
 
 // ---------------------------------------------------------------------------
@@ -150,5 +152,30 @@ addNetworkHandler("ag.skin", function(ped, skin) {
 addNetworkHandler("ag.removeFromVehicle", function() {
     localPlayer.removeFromVehicle();
 });
+
+// ---------------------------------------------------------------------------
+
+function initLocalPlayer(player) {
+    attemptToShowBlipsOnSpawn(player)
+    bindEventHandler("onEntityProcess", localPlayer, processLocalPlayerEntity);
+}
+
+// ---------------------------------------------------------------------------
+
+function processLocalPlayerEntity(event, player) {
+    getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
+        if(player.position.distance(sphere.position) <= sphere.radius) {
+            if(player.getData("ag.inSphere") == null) {
+                player.setData("ag.inSphere", sphere);
+                triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
+            }
+        } else {
+            if(player.getData("ag.inSphere")) {
+                player.removeData("ag.inSphere", sphere);
+                triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
+            }           
+        }
+    });
+}
 
 // ---------------------------------------------------------------------------

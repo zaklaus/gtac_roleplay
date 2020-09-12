@@ -39,13 +39,13 @@ function loadVehiclesFromDatabase() {
 	let dbAssoc;
 	if(dbConnection) {
 		let dbQueryString = `SELECT * FROM veh_main WHERE veh_server = ${serverId}`;
-		let dbQuery = dbConnection.query(dbQueryString);
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
-			while(dbAssoc = dbQuery.fetchAssoc()) {
+			while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 				let tempVehicleData = new serverClasses.vehicleData(dbAssoc);
 				tempVehicles.push(tempVehicleData);
 			}
-			dbQuery.free();
+			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -81,19 +81,19 @@ function saveVehicleToDatabase(vehicleData) {
 			//	dbQueryColourValues = vehicleData.colour1Red, `veh_col1_g`, `veh_col1_b`, `veh_col1_a`, `veh_col2_r`, `veh_col2_g`, `veh_col2_b`, `veh_col2_a`, `veh_col3_r`, `veh_col3_g`, `veh_col3_b`, `veh_col3_a`, `veh_col4_r`, `veh_col4_g`, `veh_col4_b`, `veh_col4_a`,";
 			//}
 			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId})`;
-			dbConnection.query(dbQueryString);
-			if(dbConnection.error) {
-				console.warn(`[Asshat.Vehicle]: There was a problem saving vehicle ${vehicleData.vehicle.id} to the database (INSERT). Error: ${dbConnection.error}`);
-				return false;
-			}
-			getVehicleData(vehicleData.vehicle).databaseId = dbConnection.insertId;
+			queryDatabase(dbConnection, dbQueryString);
+			//if(getDatabaseError(dbConnection)) {
+			//	console.warn(`[Asshat.Vehicle]: There was a problem saving vehicle ${vehicleData.vehicle.id} to the database (INSERT). Error: ${getDatabaseError(dbConnection)}`);
+			//	return false;
+			//}
+			getVehicleData(vehicleData.vehicle).databaseId = getDatabaseInsertId(dbConnection);
 		} else {
 			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId} WHERE veh_id=${vehicleData.databaseId}`;
-			dbConnection.query(dbQueryString);
-			if(dbConnection.error) {
-				console.warn(`[Asshat.Vehicle]: There was a problem saving vehicle ${vehicleData.vehicle.id} to the database (UPDATE). Error: ${dbConnection.error}`);
-				return false;
-			}
+			queryDatabase(dbConnection, dbQueryString);
+			//if(getDatabaseError(dbConnection)) {
+			//	console.warn(`[Asshat.Vehicle]: There was a problem saving vehicle ${vehicleData.vehicle.id} to the database (UPDATE). Error: ${getDatabaseError(dbConnection)}`);
+			//	return false;
+			//}
 		}
 		disconnectFromDatabase(dbConnection);
 		return true;

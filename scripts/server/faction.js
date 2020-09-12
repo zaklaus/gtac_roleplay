@@ -36,10 +36,10 @@ function loadFactionsFromDatabase() {
 	let dbConnection = connectToDatabase();
 	
 	if(dbConnection) {
-		let dbQuery = dbConnection.query("SELECT * FROM `fac_main` WHERE `fac_server` = " + String(serverId));
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM fac_main WHERE fac_server = ${getServerGame()}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				while(dbFetchAssoc = dbQuery.fetchAssoc()) {
+				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempFactionData = getClasses().clanData(dbFetchAssoc);
 					tempFactionData.members = loadFactionMembersFromDatabase(tempFactionData.databaseId);
 					tempFactionData.ranks = loadFactionRanksFromDatabase(tempFactionData.databaseId);
@@ -47,7 +47,7 @@ function loadFactionsFromDatabase() {
 					console.log(`[Asshat.Faction]: Faction '${tempFactionData.name}' loaded from database successfully!`);
 				}
 			}
-			dbQuery.free();
+			freeDatabaseQuery(dbQuery);
 		}
 		dbConnection.close();
 	}

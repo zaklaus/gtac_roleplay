@@ -37,10 +37,10 @@ function loadClansFromDatabase() {
 	let dbConnection = connectToDatabase();
 	
 	if(dbConnection) {
-		let dbQuery = dbConnection.query("SELECT * FROM `clan_main` WHERE `clan_server` = " + String(serverId));
+		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `clan_main` WHERE `clan_server` = " + String(serverId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				while(dbFetchAssoc = dbQuery.fetchAssoc()) {
+				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempClanData = getClasses().clanData(dbFetchAssoc);
 					tempClanData.members = loadClanMembersFromDatabase(tempClanData.databaseId);
 					tempClanData.ranks = loadClanRanksFromDatabase(tempClanData.databaseId);
@@ -48,7 +48,7 @@ function loadClansFromDatabase() {
 					console.log(`[Asshat.Clan]: Clan '${tempClanData.name}' loaded from database successfully!`);
 				}
 			}
-			dbQuery.free();
+			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -440,11 +440,11 @@ function createClan(name) {
 	let escapedName = name;
 	
 	if(dbConnection) {
-		escapedName = dbConnection.escapeString(escapedName)
-		let dbQuery = dbConnection.query("INSERT INTO `clan_main` (`clan_server`, `clan_name`) VALUES (" + String(serverId) + ", '" + escapedName + "')");
+		escapedName = escapeDatabaseString(dbConnection, escapedName)
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO clan_main (clan_server, clan_name) VALUES (${serverId}, '${escapedName}')`);
 		disconnectFromDatabase(dbConnection);
 
-		let tempClanData = loadClanFromDatabaseById(dbConnection.insertID);
+		let tempClanData = loadClanFromDatabaseById(getDatabaseInsertId(dbConnection));
 		if(tempClanData != false) {
 			let tempClan = serverClasses.clanData(tempClanData);
 			serverData.clans.push(tempClan);
@@ -460,8 +460,8 @@ function deleteClan(clanId) {
 
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQuery = dbConnection.query("DELETE FROM `clan_main` WHERE `clan_id` = " + clanId);
-		dbQuery.free();
+		let dbQuery = queryDatabase(dbConnection, `UPDATE clan_main SET clan_deleted = 1 WHERE clan_id = ${clanId}`);
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 
 		reloadAllClans();
@@ -530,9 +530,9 @@ function saveClansToDatabase() {
 function saveClanToDatabase(clanData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = "UPDATE `clan_main` SET `clan_name` = '" + dbConnection.escapeString(clanData.name) + "', `clan_owner` = " + clanData.ownerId;
-		let dbQuery = dbConnection.query(dbQueryString);
-		dbQuery.free();
+		let dbQueryString = `UPDATE clan_main SET clan_name = '${escapeDatabaseString(dbConnection, clanData.name)}', clan_owner = ${clanData.ownerId}`;
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}

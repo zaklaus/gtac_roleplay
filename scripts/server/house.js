@@ -37,16 +37,16 @@ function loadHousesFromDatabase() {
 	let dbConnection = connectToDatabase();
 	
 	if(dbConnection) {
-		let dbQuery = dbConnection.query("SELECT * FROM `house_main` WHERE `house_server` = " + String(serverId))
+		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `house_main` WHERE `house_server` = " + String(serverId))
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				while(dbFetchAssoc = dbQuery.fetchAssoc()) {
+				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempHouseData = getClasses().houseData(dbFetchAssoc);
 					tempHouses.push(tempHouseData);
 					console.log("[Asshat.House]: Houses '" + String(tempHouseData.databaseId) + "' loaded!");
 				}
 			}
-			dbQuery.free();
+			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}

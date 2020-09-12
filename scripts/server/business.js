@@ -39,16 +39,16 @@ function loadBusinessesFromDatabase() {
 	let dbQuery = null;
 	
 	if(dbConnection) {
-		dbQuery = dbConnection.query("SELECT * FROM `biz_main` WHERE `biz_server` = " + String(serverId));
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `biz_main` WHERE `biz_server` = " + String(serverId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				while(dbFetchAssoc = dbQuery.fetchAssoc()) {
+				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempBusinessData = businessData(dbFetchAssoc);
 					tempBusinesses.push(tempBusinessData);
 					console.log(`[Asshat.Business]: Business '${tempBusinessData.name}' loaded from database successfully!`);
 				}
 			}
-			dbQuery.free();
+			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -100,8 +100,8 @@ function createBusiness(name, entrancePosition, interiorId, virtualWorld) {
 	let escapedName = name;
 	
 	if(dbConnection) {
-		escapedName = dbConnection.escapeString(escapedName)
-		let dbQuery = dbConnection.query("INSERT INTO `biz_main` (`biz_server`, `biz_name`, `biz_entrance_x`, `biz_entrance_y`, `biz_entrance_z`, `biz_entrance_int`, `biz_entrance_vw`) VALUES (" + String(serverId) + ", '" + escapedName + "', " + String(entrancePosition.x) + ", " + String(entrancePosition.y) + ", " + String(entrancePosition.z) + ", " + String(interiorId) + ", " + String(virtualWorld) + ")");
+		escapedName = escapeDatabaseString(dbConnection, escapedName)
+		let dbQuery = queryDatabase(dbConnection, "INSERT INTO `biz_main` (`biz_server`, `biz_name`, `biz_entrance_x`, `biz_entrance_y`, `biz_entrance_z`, `biz_entrance_int`, `biz_entrance_vw`) VALUES (" + String(serverId) + ", '" + escapedName + "', " + String(entrancePosition.x) + ", " + String(entrancePosition.y) + ", " + String(entrancePosition.z) + ", " + String(interiorId) + ", " + String(virtualWorld) + ")");
 		disconnectFromDatabase(dbConnection);
 
 		let tempBusinessData = loadBusinessFromDatabaseById(dbConnection.insertID);

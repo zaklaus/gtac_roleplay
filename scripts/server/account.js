@@ -190,7 +190,7 @@ function switchCharacterCommand(command, params, client) {
 	saveSubAccountToDatabase(tempSubAccount);
 	
 	client.despawnPlayer();
-	triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[server.game], serverConfig.connectCameraLookAt[server.game]);
+	triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[getServerGame()], serverConfig.connectCameraLookAt[getServerGame()]);
 	triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);	
 }
 
@@ -235,15 +235,15 @@ function isAccountPasswordCorrect(accountData, password) {
 function loadAccountFromName(accountName) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		accountName = dbConnection.escapeString(accountName);
+		accountName = escapeDatabaseString(dbConnection, accountName);
 		let dbQueryString = `SELECT * FROM acct_main WHERE acct_name = '${accountName}' LIMIT 1;`;
-		let dbQuery = dbConnection.query(dbQueryString);
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				let dbAssoc = dbQuery.fetchAssoc();
+				let dbAssoc = fetchQueryAssoc(dbQuery);
 				let tempAccountData = new serverClasses.accountData(dbAssoc);
 
-				dbQuery.free();
+				freeDatabaseQuery(dbQuery);
 				return tempAccountData;
 			}
 		}
@@ -259,10 +259,10 @@ function loadAccountFromId(accountId) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let dbQueryString = `SELECT * FROM acct_main WHERE acct_id = ${accountId} LIMIT 1;`;
-		let dbQuery = dbConnection.query(dbQueryString);
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
-			let dbAssoc = dbQuery.fetchAssoc();
-			dbQuery.free();
+			let dbAssoc = fetchQueryAssoc(dbQuery);
+			freeDatabaseQuery(dbQuery);
 			return new serverClasses.accountData(dbAssoc);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -276,13 +276,13 @@ function loadAccountFromId(accountId) {
 function loadSubAccountFromName(firstName, lastName) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		firstName = dbConnection.escapeString(firstName);
-		lastName = dbConnection.escapeString(lastName);
+		firstName = escapeDatabaseString(dbConnection, firstName);
+		lastName = escapeDatabaseString(dbConnection, lastName);
 		let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_name_first = '${firstName}' AND sacct_name_last = '${lastName}' LIMIT 1;`;
-		let dbQuery = dbConnection.query(dbQueryString);
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
-			let dbAssoc = dbQuery.fetchAssoc();
-			dbQuery.free();
+			let dbAssoc = fetchQueryAssoc(dbQuery);
+			freeDatabaseQuery(dbQuery);
 			return new serverClasses.subAccountData(dbAssoc);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -297,10 +297,10 @@ function loadSubAccountFromId(subAccountId) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_id = ${subAccountId} LIMIT 1;`;
-		let dbQuery = dbConnection.query(dbQueryString);
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
-			let dbAssoc = dbQuery.fetchAssoc();
-			dbQuery.free();
+			let dbAssoc = fetchQueryAssoc(dbQuery);
+			freeDatabaseQuery(dbQuery);
 			return new serverClasses.subAccountData(dbAssoc);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -318,13 +318,13 @@ function loadSubAccountsFromAccount(accountId) {
 		let dbConnection = connectToDatabase();
 		if(dbConnection) {
 			let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_acct = ${accountId};`;
-			let dbQuery = dbConnection.query(dbQueryString);
+			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			if(dbQuery) {
-				while(dbAssoc = dbQuery.fetchAssoc()) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempSubAccount = new serverClasses.subAccountData(dbAssoc);
 					tempSubAccounts.push(tempSubAccount);
 				}
-				dbQuery.free();
+				freeDatabaseQuery(dbQuery);
 			}
 			disconnectFromDatabase(dbConnection);
 		}
@@ -414,14 +414,14 @@ function loginSuccess(client) {
 function saveAccountToDatabase(accountData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) { 
-		let safePassword = dbConnection.escapeString(accountData.password);
-		let safeStaffTitle = dbConnection.escapeString(accountData.staffTitle);
-		let safeEmailAddress = dbConnection.escapeString(accountData.emailAddress);
+		let safePassword = escapeDatabaseString(dbConnection, accountData.password);
+		let safeStaffTitle = escapeDatabaseString(dbConnection, accountData.staffTitle);
+		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
 		//let safeIRCAccount = dbConnection.escapeString(accountData.ircAccount);
 
 		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_staff_title='${safeStaffTitle}', acct_mod_flags=${String(accountData.flags.moderation)}, acct_discord=${String(accountData.discordAccount)}, acct_email='${safeEmailAddress}' WHERE acct_id=${accountData.databaseId}`;
-		let dbQuery = dbConnection.query(dbQueryString);
-		//dbQuery.free();
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 	}
 }
@@ -433,8 +433,8 @@ function saveSubAccountToDatabase(subAccountData) {
 
 	if(dbConnection) {
 		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash} WHERE sacct_id=${subAccountData.databaseId}`;
-		let dbQuery = dbConnection.query(dbQueryString);
-		//dbQuery.free();
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 	}
 }
@@ -446,12 +446,12 @@ function createAccount(name, password, email = "") {
 
 	if(dbConnection) {
 		let hashedPassword = hashAccountPassword(name, password);
-		let safeName = dbConnection.escapeString(name);
-		let safeEmail = dbConnection.escapeString(email);
+		let safeName = escapeDatabaseString(dbConnection, name);
+		let safeEmail = escapeDatabaseString(dbConnection, email);
 
-		let dbQuery = dbConnection.query(`INSERT INTO acct_main (acct_name, acct_pass, acct_email) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}')`);
-		if(dbConnection.insertId > 0) {
-			return loadAccountFromId(dbConnection.insertId);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}')`);
+		if(getDatabaseInsertId(dbConnection) > 0) {
+			return loadAccountFromId(getDatabaseInsertId(dbConnection));
 		}
 	}
 
@@ -464,13 +464,13 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
-		let safeFirstName = dbConnection.escapeString(firstName);
-		let safeLastName = dbConnection.escapeString(lastName);
-		let safePlaceOfOrigin = dbConnection.escapeString(placeOfOrigin);
+		let safeFirstName = escapeDatabaseString(dbConnection, firstName);
+		let safeLastName = escapeDatabaseString(dbConnection, lastName);
+		let safePlaceOfOrigin = escapeDatabaseString(dbConnection, placeOfOrigin);
 
-		let dbQuery = dbConnection.query(`INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_cash) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${serverConfig.newCharacter.spawnPosition.x}, ${serverConfig.newCharacter.spawnPosition.y}, ${serverConfig.newCharacter.spawnPosition.z}, ${serverConfig.newCharacter.money})`);
-		if(dbConnection.insertId > 0) {
-			return loadSubAccountFromId(dbConnection.insertId);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_cash) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${serverConfig.newCharacter.spawnPosition.x}, ${serverConfig.newCharacter.spawnPosition.y}, ${serverConfig.newCharacter.spawnPosition.z}, ${serverConfig.newCharacter.money})`);
+		if(getDatabaseInsertId(dbConnection) > 0) {
+			return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -671,6 +671,10 @@ addNetworkHandler("ag.selectCharacter", function(client) {
 	let subAccountId = getClientData(client).currentSubAccount;
 	let tempSubAccount = getClientData(client).subAccounts[subAccountId];
 	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
+
+	messageClientNormal(client, "Welcome to Asshat Gaming Roleplay!", getColourByName("white"));
+	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
+	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 });
 
 // ---------------------------------------------------------------------------
@@ -717,7 +721,7 @@ function saveClientToDatabase(client) {
 // ---------------------------------------------------------------------------
 
 function initClient(client) {
-	triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[server.game], serverConfig.connectCameraLookAt[server.game]);
+	triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[getServerGame()], serverConfig.connectCameraLookAt[getServerGame()]);
 	
 	let tempAccountData = loadAccountFromName(client.name);
 	let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);

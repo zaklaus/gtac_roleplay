@@ -126,8 +126,8 @@ function banAccount(accountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapeString(reason);
-        let dbQuery = dbConnection.query(`INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.account}, ${accountId}, ${adminAccountId}, '${safeReason}');`);
-        dbQuery.free();
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.account}, ${accountId}, ${adminAccountId}, '${safeReason}');`);
+        freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
     }
@@ -141,8 +141,8 @@ function banSubAccount(subAccountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapeString(reason);
-        let dbQuery = dbConnection.query(`INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.subAccount}, ${subAccountId}, ${adminAccountId}, '${safeReason}');`);
-        dbQuery.free();
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.subAccount}, ${subAccountId}, ${adminAccountId}, '${safeReason}');`);
+        freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
     }
@@ -156,8 +156,8 @@ function banIPAddress(ipAddress, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapeString(reason);
-        let dbQuery = dbConnection.query(`INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.ipAddress}, INET_ATON(${ipAddress}), ${adminAccountId}, '${safeReason}');`);
-        dbQuery.free();
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.ipAddress}, INET_ATON(${ipAddress}), ${adminAccountId}, '${safeReason}');`);
+        freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
     }
@@ -170,8 +170,8 @@ function banIPAddress(ipAddress, adminAccountId, reason) {
 function unbanAccount(accountId, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = dbConnection.query("UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.account + " AND ban_detail` = " + accountId + " AND `ban_removed` = 0");
-        dbQuery.free();
+        let dbQuery = queryDatabase(dbConnection, "UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.account + " AND ban_detail` = " + accountId + " AND `ban_removed` = 0");
+        freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
     }
@@ -184,8 +184,8 @@ function unbanAccount(accountId, adminAccountId) {
 function unbanSubAccount(subAccountId, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = dbConnection.query("UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.subAccount + " AND ban_detail` = " + subAccountId + " AND `ban_removed` = 0");
-        dbQuery.free();
+        let dbQuery = queryDatabase(dbConnection, "UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.subAccount + " AND ban_detail` = " + subAccountId + " AND `ban_removed` = 0");
+        freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
     }
@@ -198,8 +198,8 @@ function unbanSubAccount(subAccountId, adminAccountId) {
 function unbanIPAddress(ipAddress, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = dbConnection.query("UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.ipAddress + " AND ban_detail` = " + ipAddress + " AND `ban_removed` = 0");
-        dbQuery.free();
+        let dbQuery = queryDatabase(dbConnection, "UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.ipAddress + " AND ban_detail` = " + ipAddress + " AND `ban_removed` = 0");
+        freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
     }

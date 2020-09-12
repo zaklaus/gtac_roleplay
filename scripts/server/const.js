@@ -8,10 +8,6 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// Sphere types
-const AG_SPHERE_HOUSE = 1;
-const AG_SPHERE_BUSINESS = 2;
-
 // Prompts (used for client GUI prompt responses)
 const AG_PROMPT_CREATEFIRSTCHAR = 1;
 
@@ -26,11 +22,17 @@ const AG_JOB_GARBAGE = 6;
 const AG_JOB_WEAPON = 7;
 const AG_JOB_DRUG = 8;
 
-// Pickup Owner Types
+// Pickup Types
 const AG_PICKUP_NONE = 0;
 const AG_PICKUP_JOB = 1;
 const AG_PICKUP_BUSINESS = 2;
 const AG_PICKUP_HOUSE = 3;
+
+// Sphere Types
+const AG_SPHERE_NONE = 0;
+const AG_SPHERE_JOB = 1;
+const AG_SPHERE_BUSINESS = 2;
+const AG_SPHERE_HOUSE = 3;
 
 // Vehicle Owner Types
 const AG_VEHOWNER_NONE = 0;

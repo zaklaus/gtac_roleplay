@@ -73,12 +73,13 @@ addNetworkHandler("ag.promptAnswerYes", function(client) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.onPickupCollected", function(client, pickup) {
-    let ownerType = getPickupOwnerType(pickup);
-    let ownerId = getPickupOwnerType(pickup);
+addNetworkHandler("ag.onPlayerEnterSphere", function(client, sphere) {
+    let ownerType = sphere.getData("ag.ownerType");
+    let ownerId = sphere.getData("ag.ownerId");
+
     switch(ownerType) {
         case AG_PICKUP_JOB:
-            let jobData = serverData.jobs[server.game][jobId];
+            let jobData = getJobData(ownerId);
             showJobInformationToPlayer(client, jobData.jobType);
             break;
 

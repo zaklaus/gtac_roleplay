@@ -12,9 +12,9 @@
 
 function messageClientError(client, messageText) {
     if(client instanceof Client) {
-        messageClient("🚫 " + String(messageText), client, getColourByType("errorMessage"));
+        messageClientNormal(client, `🚫 ${messageText}`, getColourByType("errorMessage"));
     } else {
-        messageDiscordUser("🚫 " + String(messageText), client);
+        messageDiscordUser(client, `🚫 ${messageText}`);
     }
 }
 
@@ -22,9 +22,9 @@ function messageClientError(client, messageText) {
 
 function messageClientSyntax(client, messageText) {
     if(client instanceof Client) {
-        messageClient("⌨️ [#FFFFFF] " + String(messageText), client, getColourByType("syntaxMessage"));
+        messageClientNormal(client, `⌨️ [#FFFFFF] ${messageText}`, getColourByType("syntaxMessage"));
     } else {
-        messageDiscordUser("⌨️ " + String(messageText), client);
+        messageDiscordUser(client, `⌨️ ${messageText}`);
     }
 }
 
@@ -32,9 +32,9 @@ function messageClientSyntax(client, messageText) {
 
 function messageClientAlert(client, messageText) {
     if(client instanceof Client) {
-        messageClient("⚠️ [#FFFFFF] " + String(messageText), client, getColourByType("alertMessage"));
+        messageClientNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByType("alertMessage"));
     } else {
-        messageDiscordUser("⚠️ " + String(messageText), client);
+        messageDiscordUser(client, `⚠️ ${messageText}`);
     }
 }
 
@@ -42,9 +42,9 @@ function messageClientAlert(client, messageText) {
 
 function messageClientSuccess(client, messageText) {
     if(client instanceof Client) {
-        messageClient("👍 [#FFFFFF] " + String(messageText), client, getColourByType("successMessage"));
+        messageClientNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByType("successMessage"));
     } else {
-        messageDiscordUser("👍 " + String(messageText), client);
+        messageDiscordUser(client, `👍 ${messageText}`);
     }
 }
 
@@ -52,48 +52,48 @@ function messageClientSuccess(client, messageText) {
 
 function messageClientInfo(client, messageText) {
     if(client instanceof Client) {
-        messageClient("ℹ️ [#FFFFFF] " + String(messageText), client, getColourByType("successMessage"));
+        messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByType("successMessage"));
     } else {
-        messageDiscordUser("ℹ️ " + String(messageText), client);
+        messageDiscordUser(client, `ℹ️ ${messageText}`);
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function messageClientTalk(client, talkingClient, messageText) {
-    messageClient(getClientSubAccountName(client) + " says: " + String(messageText), client, getColourByType("talkMessage"));
+    messageClientNormal(client, `${getClientSubAccountName(client)} says: ${messageText}`, getColourByType("talkMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
 function messageClientWhisper(client, talkingClient, messageText) {
-    messageClient(getClientSubAccountName(client) + " whispers: " + String(messageText), client, getColourByType("whisperMessage"));
+    messageClientNormal(client, `${getClientSubAccountName(client)} whispers: ${messageText}`, getColourByType("whisperMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
 function messageClientShout(client, talkingClient, messageText) {
-    messageClient(getClientSubAccountName(client) + " shouts: " + String(messageText) + "!", client, getColourByType("shoutMessage"));
+    messageClientNormal(client, `${getClientSubAccountName(client)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
 function messageClientDoAction(client, talkingClient, messageText) {
     if(client instanceof Client) {
-        messageClient(String(messageText) + " * (" + getClientSubAccountName(client) + ")", client, getColourByType("doActionMessage"));
+        messageClientNormal(client, `${messageText} * (${getClientSubAccountName(client)})`, getColourByType("doActionMessage"));
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function messageClientMeAction(client, talkingClient, messageText) {
-    messageClient(getClientSubAccountName(client) + " " + String(messageText), client, getColourByType("meActionMessage"));
+    messageClientNormal(client, `${getClientSubAccountName(client)} ${messageText}`, getColourByType("meActionMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
 function messageClientClanChat(client, talkingClient, messageText) {
-    messageClient(`(${getClientSubAccountClanRank(talkingClient)}) ${getClientSubAccountName(talkingClient)} says (clan): ${messageText}`, client, getColourByType("clanChatMessage"));
+    messageClientNormal(client, `(${getClientSubAccountClanRank(talkingClient)}) ${getClientSubAccountName(talkingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
 }
 
 // ---------------------------------------------------------------------------

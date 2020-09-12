@@ -10,7 +10,7 @@
 
 addEventHandler("OnPlayerJoined", function(event, client) {
     setTimeout(function() {
-        triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[server.game], serverConfig.connectCameraLookAt[server.game]);
+        triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[getServerGame()], serverConfig.connectCameraLookAt[getServerGame()]);
         
         client.setData("ag.loginAttemptsRemaining", 3, false);
         
@@ -44,7 +44,7 @@ addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
 addEventHandler("OnPedSpawn", function(event, ped) {
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
-        //triggerNetworkEvent("ag.locations", client, serverData.policeStations[server.game], serverData.fireStations[server.game], serverData.hospitals[server.game], serverData.payAndSprays[server.game], serverData.ammunations[server.game], serverData.jobs[server.game]);
+        //triggerNetworkEvent("ag.locations", client, serverData.policeStations[getServerGame()], serverData.fireStations[getServerGame()], serverData.hospitals[getServerGame()], serverData.payAndSprays[getServerGame()], serverData.ammunations[getServerGame()], serverData.jobs[getServerGame()]);
         ped.setData("ag.name", getClientSubAccountName(client), true);
     }
 });

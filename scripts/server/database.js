@@ -70,3 +70,40 @@ function disconnectFromDatabase(dbConnection) {
 }
 
 // ----------------------------------------------------------------------------
+
+function queryDatabase(dbConnection, queryString) {
+	return dbConnection.query(queryString);
+}
+
+// ----------------------------------------------------------------------------
+
+function escapeDatabaseString(dbConnection, unsafeString) {
+	return dbConnection.escapeString(unsafeString);
+}
+
+// ----------------------------------------------------------------------------
+
+function getDatabaseInsertId(dbConnection) {
+	return dbConnection.insertId;
+}
+
+// ----------------------------------------------------------------------------
+
+function getDatabaseError(dbConnection) {
+	return dbConnection.error;
+}
+
+// ----------------------------------------------------------------------------
+
+function freeDatabaseQuery(dbQuery) {
+	dbQuery.free();
+	return;
+}
+
+// ----------------------------------------------------------------------------
+
+function fetchQueryAssoc(dbQuery) {
+	return dbQuery.fetchAssoc();
+}
+
+// ----------------------------------------------------------------------------

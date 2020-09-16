@@ -1,4 +1,5 @@
 Ideas for Asshat Gaming RP!
+
 NOTICE: Most of these ideas are totally random and some might be unrealistic. Every time I thought of something,
 I immediately threw it into this file. There may be duplicates or similar entries spread out and unorganized.
 
@@ -24,12 +25,19 @@ Thanks for understanding,
 	- Anonymous city traffic and pedestrians
 	- They come and go and aren't persistent.
 	- Police peds/traffic will pursue if player has 1+ stars and comes within range and line of sight.
+	- Police presence becomes more frequent in areas where crimes occur (default police spawn rate will be increased for the area)
+	- Random text bubble dialog above their heads. 
+		- Complain about life, work, taxes, nearby shady establishments, rising crime rates, gangs, etc
+		- Praise nearby good establishments, lowered taxes, crime rates dropping, etc
 	
 - Named NPCs
 	- Persistent
 	- Move from place to place. Eat at restaurants, drive home, to work, get drunk at a bar, etc.
 	- Different personalities
-	- Relationship levels with each player and faction. If you piss them off, they won't do business with you.
+	- Relationship levels with each player and faction. 
+		- If you piss them off, they won't do business with you. 
+		- If you fuck them over, you have a chance of being greenlit under certain circumstances (peds will show up randomly and attempt to kill or subdue you)
+		- Faction/clans at war is basically kill on sight as long as cops aren't around
 
 - Firefighter Job
     - Vehicles catch on fire instead of blowing up.
@@ -53,7 +61,7 @@ Thanks for understanding,
     - Return the truck for payment.
     
 - Vehicle Towing
-    - Use a Yankee or something to store the vehicle "inside" (just make the car disappear) until better sync options are built.
+    - Use a Yankee or something to store the vehicle "inside" (just make the car disappear) until better sync options are built for GTA 3/VC.
     - Universal command to tow/release a vehicle ( /tow ).
     - Attach to nearest vehicle.
     
@@ -85,9 +93,11 @@ Thanks for understanding,
 	- Faction abilities
 	- etc
 	
-- For games with interiors, properties inside of properties (make it a sub-property, but using a "type" to define it) AKA a business inside a business (illegal back room gambling, anyone?)
+- For games with interiors, properties inside of properties (make it a sub-property, but using a "type" to define it) AKA a business inside a business (illegal back room gambling, perhaps?)
 
-- Stealable skins. When one is stolen, it is replaced by the thief's skin
+- Stealable clothes.
+    - Police uniforms can be stolen, and the cop will be reverted to his non-uniform skin.
+    - Clothes are items so the criminal can apply it immediately or store/drop/give/sell it
 
 - Black market for anything. 
 	- Smuggled drugs
@@ -176,27 +186,38 @@ Thanks for understanding,
 
 - Get "inside" the back of trucks/trailers and store items inside. 
 	- Use an interior for this and allow dropped items (including crates and boxes and etc). 
-	- Shouts and certain speech can be heard outside wherever the truck is at.
+    - Ambulance, bus, delivery truck, semi truck trailer, etc.
+	- Shouts can be heard outside wherever the vehicle is at.
 	- Vehicle sink or explode while inside the back causes death and objects destroyed.
 	- Also for airplane interiors
 
-- Multi space impound lot. When retrieving a car from impound, spawn it in the first empty space that isn't obstructed.
+- Impound
+    - Inaccessible parking garage. Spawn retrieved impound vehicles at the door.
+    - Or multi-space impound lot. When retrieving a car from impound, spawn it in the first empty space that isn't obstructed.
 
-- Weapons obtain damage from use and time. If not cared for, they can have decreased damage from shots, or even break or malfunction
+- Weapon wear and tear
+    - If not cared for, they can have decreased damage from shots, jam, misfire, etc.
 	- Cleaning weapons improves reliability
 
-- Weapons have identifying parts like barrel bores (for ballistics) and serial numbers. Serial numbers can be removed.
+- Weapon ballistics and identity
+ - Barrel bores
+ - Serial numbers. Can be removed/rubbed off.
 	
-- GUI color schemes (https://vortrex.info/f/1/4eca24d1.png) with a settings page to switch them. Orange, red, blue, purple, etc.
+- GUI color schemes
+    - Settings page to switch them. Orange, red, blue, purple, etc.
 
 - Police
 	- Stars
-		- 1 star for an initial misdemeanor. Traffic violation, pedestrian crime, etc. Police will pursue to fine/ticket.
-		- 2 stars for any subsequent crimes committed in police presence, after receiving one star and no action taken (if you don't pull over, run on foot, etc). Results in arrest.
+		- 1 star
+            - Initial misdemeanor. Traffic violation, pedestrian crime, etc. Police will pursue to fine/ticket.
+		- 2 stars 
+            - Any subsequent crimes, whether felony or misdeanor, after receiving one star and no action taken (if you don't pull over, evade, etc). Results in arrest.
+            - Any felony crime that isn't extremely violent or doesn't involve a deadly weapon
 		- 3 stars is basically a warrant. Police will attempt to arrest you on sight and may use heavier force than normal if you become a threat.
 		- 4 stars is SWAT and/or air support backup callout. Police presence will become more dense and they will really pursue you now.
 		- 5 stars (highest in the server) is all out manhunt. Police everywhere. They will most likely shoot to kill.
 	- NPC police will chase you if you have 1+ stars. If you lose them with 2 or less stars, they go away unless you are sighted by another officer before cooldown.
+    - Civilians can report crimes by calling police or informing nearby police. They will give them your description.
 	- Any traffic violation that takes place within LOS and range of police will cause them to chase you until you pull over.
 		- Failure to pull over within a timely manner, or breaking another law before pulling over adds a second star. They won't fine you at this level, only arrest or worse.
 

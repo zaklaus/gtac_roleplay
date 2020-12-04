@@ -7,13 +7,10 @@ mexui.util.extend(mexui.Control.Month, mexui.Control.TextInput);
 // model
 mexui.Control.Month.prototype.validateInputCallback = function(e, character)
 {
-	var _int = parseInt(character);
-	
-	if(isNaN(_int))
-		return false;
-	
-	if(_int < 0 || _int > 11)
-		return false;
-	
-	return true;
+	return mexui.util.isPositiveIntChar(character) || mexui.util.isLetter(character);
+};
+
+mexui.Control.Month.prototype.validateValueCallback = function(e)
+{
+	return mexui.util.isMonthIdOrName(this.getText());
 };

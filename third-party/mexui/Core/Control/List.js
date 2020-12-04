@@ -23,7 +23,7 @@ mexui.util.linkBaseControlStyles('List', {
 // input
 mexui.Control.List.prototype.onMouseDown = function(e)
 {
-	if(this.isCursorOverControl())
+	if(e.button == 0 && this.isCursorOverControl())
 	{
 		this.activeRow = this.axis.y.getEntryByCursor();
 		this.checkToCallCallback();
@@ -34,6 +34,7 @@ mexui.Control.List.prototype.onMouseDown = function(e)
 mexui.Control.List.prototype.render = function()
 {
 	var pos = this.getScreenPosition();
+	var pos2 = new Vec2(pos.x, pos.y);
 	
 	for(var i in this.axis.y.entries)
 	{
@@ -46,6 +47,9 @@ mexui.Control.List.prototype.render = function()
 		pos.y += this.rowHeight;
 		mexui.native.drawAALine(pos, new Vec2(pos.x + this.size.x, pos.y), this.getStyles('rowLine'));
 	}
+	
+	if(this.isFocused())
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
 };
 
 // model

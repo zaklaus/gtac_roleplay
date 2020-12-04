@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: startup.js
 // DESC: Provides startup/shutdown procedures
@@ -9,6 +9,7 @@
 // ===========================================================================
 
 function initServerScripts() {
+
 	checkForAllRequiredModules();
 
 	initClassScript();
@@ -27,7 +28,13 @@ function initServerScripts() {
 	initVehicleScript();
 	initDeveloperScript();
 
-	serverData.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
+	initTimers();
+
+	//gta.time.hour = serverConfig.startup.hour;
+	//gta.time.minute = serverConfig.startup.minute;
+	//gta.forceWeather(serverConfig.startup.weather);
+
+	initAllClients();
 }
 
 // ---------------------------------------------------------------------------
@@ -52,26 +59,27 @@ function checkForMySQLModule() {
 // ---------------------------------------------------------------------------
 
 function checkForAllRequiredModules() {
-	console.log("[AsshatRP.Startup]: Checking for required modules ...");
+	console.log("[Asshat.Startup]: Checking for required modules ...");
 
 	if(!checkForHashingModule()) {
-		console.warn("[AsshatRP.Startup]: Hashing module is not loaded!");
-		console.warn("[AsshatRP.Startup]: This resource will now shutdown.");
+		console.warn("[Asshat.Startup]: Hashing module is not loaded!");
+		console.warn("[Asshat.Startup]: This resource will now shutdown.");
 		thisResource.stop();
 	}
 	
 	if(!checkForMySQLModule()) {
-		console.warn("[AsshatRP.Startup]: MySQL module is not loaded!");
-		console.warn("[AsshatRP.Startup]: This resource will now shutdown.");
+		console.warn("[Asshat.Startup]: MySQL module is not loaded!");
+		console.warn("[Asshat.Startup]: This resource will now shutdown.");
 		thisResource.stop();
 	}
 
-	console.log("[AsshatRP.Startup]: All required modules loaded!");
+	console.log("[Asshat.Startup]: All required modules loaded!");
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
+loadServerConfig();
 initServerScripts();
 
-// ----------------------------------------------------------------------------
+// ---------------------------------------------------------------------------

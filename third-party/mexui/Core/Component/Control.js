@@ -21,12 +21,15 @@ mexui.Component.Control.defaultStyles = mexui.util.linkStyles(mexui.Entity.Style
 // input
 mexui.Component.Control.prototype.onMouseDown = function(e)
 {
-	var hit = this.isCursorOverControl();
-	if(hit)
+	if(e.button == 0)
 	{
-		e.used = true;
-		e.clickedAControl = true;
-		mexui.focusedControl = this;
+		var hit = this.isCursorOverControl();
+		if(hit)
+		{
+			e.used = true;
+			e.clickedAControl = true;
+			mexui.focusedControl = this;
+		}
 	}
 };
 

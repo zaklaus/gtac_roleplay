@@ -9,7 +9,7 @@ mexui.util.extend(mexui.Entity.Component, mexui.Entity.StyleableEntity);
 // input
 mexui.Entity.Component.prototype.onMouseDown = function(e)
 {
-	if(this.moveable && this.isCursorOverComponent())
+	if(e.button == 0 && this.moveable && this.isCursorOverComponent())
 	{
 		this.moving = true;
 		e.used = true;
@@ -18,7 +18,7 @@ mexui.Entity.Component.prototype.onMouseDown = function(e)
 
 mexui.Entity.Component.prototype.onMouseUp = function(e)
 {
-	if(this.moving)
+	if(e.button == 0 && this.moving)
 	{
 		this.moving = false;
 		e.used = true;

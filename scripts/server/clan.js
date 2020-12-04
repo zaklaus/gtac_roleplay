@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: clan.js
 // DESC: Provides clan functions and usage

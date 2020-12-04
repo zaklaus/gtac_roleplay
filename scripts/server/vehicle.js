@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: vehicle.js
 // DESC: Provides vehicle functions and usage
@@ -38,7 +38,7 @@ function loadVehiclesFromDatabase() {
 	let tempVehicles = [];
 	let dbAssoc;
 	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM veh_main WHERE veh_server = ${serverId}`;
+		let dbQueryString = `SELECT * FROM veh_main WHERE veh_server = ${serverId} AND veh_deleted = 0`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -75,25 +75,12 @@ function saveVehicleToDatabase(vehicleData) {
 	if(dbConnection) {
 		// If vehicle hasn't been added to database, ID will be 0
 		if(vehicleData.databaseId == 0) {
-			//let dbQueryColourFields = "`veh_col1_id`, `veh_col2_id`, `veh_col3_id1, `veh_col4_id`";
-			//if(vehicleData.colourType == AH_VEH_COLOURTYPE_RGBA) {
-			//	dbQueryColourFields = "`veh_col1_rgba`, `veh_col2_rgba`, `veh_col3_rgba`, `veh_col4_rgba`";
-			//	dbQueryColourValues = vehicleData.colour1Red, `veh_col1_g`, `veh_col1_b`, `veh_col1_a`, `veh_col2_r`, `veh_col2_g`, `veh_col2_b`, `veh_col2_a`, `veh_col3_r`, `veh_col3_g`, `veh_col3_b`, `veh_col3_a`, `veh_col4_r`, `veh_col4_g`, `veh_col4_b`, `veh_col4_a`,";
-			//}
-			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId})`;
+			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${serverId})`;
 			queryDatabase(dbConnection, dbQueryString);
-			//if(getDatabaseError(dbConnection)) {
-			//	console.warn(`[Asshat.Vehicle]: There was a problem saving vehicle ${vehicleData.vehicle.id} to the database (INSERT). Error: ${getDatabaseError(dbConnection)}`);
-			//	return false;
-			//}
 			getVehicleData(vehicleData.vehicle).databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId} WHERE veh_id=${vehicleData.databaseId}`;
+			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId}, veh_col1=${vehicleData.colour1}, veh_col2=${vehicleData.colour2}, veh_col3=${vehicleData.colour3}, veh_col4=${vehicleData.colour4} WHERE veh_id=${vehicleData.databaseId}`;
 			queryDatabase(dbConnection, dbQueryString);
-			//if(getDatabaseError(dbConnection)) {
-			//	console.warn(`[Asshat.Vehicle]: There was a problem saving vehicle ${vehicleData.vehicle.id} to the database (UPDATE). Error: ${getDatabaseError(dbConnection)}`);
-			//	return false;
-			//}
 		}
 		disconnectFromDatabase(dbConnection);
 		return true;
@@ -106,6 +93,10 @@ function saveVehicleToDatabase(vehicleData) {
 // ---------------------------------------------------------------------------
 
 function spawnAllVehicles() {
+	//if(gta.game == GAME_GTA_IV) {
+	//	return false;
+	//}
+	
 	for(let i in serverData.vehicles) {
 		let vehicle = gta.createVehicle(serverData.vehicles[i].model, serverData.vehicles[i].spawnPosition, serverData.vehicles[i].spawnRotation);
 		addToWorld(vehicle);
@@ -174,7 +165,7 @@ function createVehicleCommand(command, params, client) {
 
 	let frontPos = getPosInFrontOfPos(client.player.position, client.player.heading, serverConfig.spawnCarDistance);
 
-	let vehicle = createVehicle(modelId, frontPos, client.player.heading);
+	let vehicle = gta.createVehicle(modelId, frontPos, client.player.heading);
 	vehicle.heading = client.player.heading;
 
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
@@ -493,8 +484,8 @@ function setVehicleClanCommand(command, params, client) {
 		if(!isCommandAllowedOnDiscord(command)) {
 			messageClientError(client, "That command isn't available on discord!");
 			return false;
-		}		
-	}	
+		}
+	}
 
 	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
 		messageClientError(client, "You do not have permission to use this command!");
@@ -534,8 +525,8 @@ function setVehicleOwnerCommand(command, params, client) {
 		if(!isCommandAllowedOnDiscord(command)) {
 			messageClientError(client, "That command isn't available on discord!");
 			return false;
-		}		
-	}	
+		}
+	}
 
 	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
 		messageClientError(client, "You do not have permission to use this command!");
@@ -730,6 +721,25 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 	getVehicleData(vehicle).spawnLocked = !getVehicleData(vehicle).spawnLocked
 
 	messageClientInfo(client, `This vehicle will now spawn ${(getVehicleData(vehicle).spawnLocked) ? "here" : "wherever a player leaves it."}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllVehiclesToClient(client) {
+	/*
+	let tempVehicles = [];
+	for(let i in serverData.vehicles) {
+		let thisVehicle = serverData.vehicles[i];
+
+		tempVehicles.push({
+			model: thisVehicle.model,
+			spawnPosition: thisVehicle.spawnPosition,
+			spawnHeading: thisVehicle.spawnHeading,
+			colours: [thisVehicle.colour1, thisVehicle.colour2, thisVehicle.colour3, thisVehicle.colour4],
+			locked: thisVehicle.locked,
+		});
+	}
+	*/
 }
 
 // ---------------------------------------------------------------------------

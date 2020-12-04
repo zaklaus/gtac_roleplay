@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: class.js
 // DESC: Provides classes
@@ -92,12 +92,33 @@ function initClassTable() {
 				this.locked = businessAssoc("biz_locked");
 
 				this.entrancePosition = new Vec3(businessAssoc("biz_entrance_pos_x"), businessAssoc("biz_entrance_pos_y"), businessAssoc("biz_entrance_pos_z"));
+				this.entranceRotation = Number(businessAssoc["biz_entrance_rot_z"]);
 				this.entranceInterior = Number(businessAssoc["biz_entrance_int"]);
 				this.entranceDimension = Number(businessAssoc["biz_entrance_vw"]);
 				
 				this.exitPosition = new Vec3(businessAssoc("biz_exit_pos_x"), businessAssoc("biz_exit_pos_y"), businessAssoc("biz_exit_pos_z"));
+				this.exitRotation = Number(businessAssoc["biz_exit_rot_z"]);
 				this.exitInterior = Number(businessAssoc["biz_exit_int"]);
 				this.exitDimension = Number(businessAssoc["biz_exit_vw"]);
+
+				this.till = Number(businessAssoc["biz_till"]);
+			}
+		},
+		locationData: class {
+			constructor(locationAssoc) {
+				if(!locationAssoc) {
+					return;
+				}
+
+				this.databaseId = locationAssoc("biz_id");
+				this.name = locationAssoc("loc_name");
+				this.type = locationAssoc("loc_type");
+				this.business = locationAssoc("loc_biz");
+				this.enabled = locationAssoc("loc_enabled");
+
+				this.position = new Vec3(businessAssoc("loc_pos_x"), businessAssoc("loc__pos_y"), businessAssoc("loc_pos_z"));
+				this.interior = Number(businessAssoc["loc_int"]);
+				this.dimension = Number(businessAssoc["loc_vw"]);
 			}
 		},
 		houseData: class {
@@ -117,6 +138,7 @@ function initClassTable() {
 				this.model = vehicle.modelIndex;
 				this.vehicle = vehicle;
 				this.tempVehicle = false;
+				this.streamedBy = false; // For IV only
 				
 				// Ownership
 				this.ownerType = AG_VEHOWNER_NONE;

@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2019 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: mechanic.js
 // DESC: Provides mechanic/vehicle repair business functions and usage

@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: utilities.js
 // DESC: Provides util functions and arrays with data
@@ -98,6 +98,18 @@ let gameData = {
 			"Sandstorm",
 			"Greenish/Foggy"
 		],
+		[ // GTA IV
+			"Extra Sunny",
+			"Sunny",
+			"Sunny/Windy",
+			"Cloudy",
+			"Rain",
+			"Light Rain",
+			"Foggy",
+			"Thunderstorm",
+			"Extra Sunny",
+			"Sunny/Windy",
+		],		
 	],
 	gameNames: [
 		"Unknown", 
@@ -1972,6 +1984,354 @@ let gameData = {
 			// More will be added soon!
 		], 	
 	],
+	gtaivSkinModels: [
+		//["Nico Bellic", 1862763509],
+		["Male Multiplayer", -2020305438],
+		["Female Multiplayer", -641875910],
+		["MODEL_SUPERLOD", -1370810922],
+		["Anna", 1853617247],
+		["Anthony", -1646893330],
+		["Badman", 1495769888],
+		["Bernie Crane", 1500493064],
+		["Bledar", 1731510984],
+		["Brian", 422305098],
+		["Brucie", -1729980128],
+		["Bulgarin", 237511807],
+		["Charise", 88667657],
+		["Charlie Undercover", -1328445565],
+		["Clarence", 1343144208],
+		["Dardan", 1468450703],
+		["Darko", 386513184],
+		["Derric", 1169442297],
+		["Dmitri", 237497537],
+		["Dwayne", -617264103],
+		["Eddie", -1600585231],
+		["Faustin", 57218969],
+		["Francis", 1710545037],
+		["French Tom", 1424670436],
+		["Gordon", 2129490787],
+		["Gracie", -357652594],
+		["Hossan", 980768434],
+		["Ilyena", -835225126],
+		["Issac", -479595866],
+		["Ivan", 1166762483],
+		["Jay", 364686627],
+		["Jason", 170756246],
+		["Jeff", 390357829],
+		["Jimmy", -366421228],
+		["Johnny Klebitz", -911507684],
+		["Kate", -773750838],
+		["Kenny", 995576506],
+		["Lil Jacob", 1487004273],
+		["Lil Jacob 2", -1275031987],
+		["Luca", -681942840],
+		["Luis", -492470690],
+		["Mallorie", -1040287406],
+		["Mam", -322700377],
+		["Manny", 1445589009],
+		["Marnie", 411185872],
+		["Mel", -807339118],
+		["Michael", 735211577],
+		["Michelle", -1080659212],
+		["Mickey", -636669566],
+		["Packie", 1690783035],
+		["Pathos", -165448092],
+		["Petrovic", -1947682830],
+		["Phil Bell", -1826458934],
+		["Playboy X", 1794146792],
+		["Ray Boccino", 954215094],
+		["Ricky", -587324132],
+		["Roman", -1992728631],
+		["Roman 2", 558221221],
+		["Sarah", -17823883],
+		["Tuna", 1384833284],
+		["Vinny Spaz", -1014976873],
+		["Vlad", 896408642],
+		["Black Street Thug 1", -301223260],
+		["Black Street Thug 2", -1143910864],
+		["Black Street OG 1", 869501081],
+		["Black Street OG 1", 632613980],
+		["Albanian Thug 1", -503930010],
+		["Albanian Thug 2", -235584669],
+		["Albanian Thug 3", 207714363],
+		["Albanian Thug 4", 514268366],
+		["Biker 1", 43005364],
+		["Biker 2", 1346668127],
+		["Biker 3", -1677255197],
+		["Biker 4", -1461281345],
+		["Biker 5", 1574850459],
+		["Biker 6", -1953289472],
+		["Irish Man 1", 280474699],
+		["Irish Man 2", -19263344],
+		["Irish Man 3", 1844702918],
+		["Jamaican OG 1", 1609755055],
+		["Jamaican OG 2", -330497431],
+		["Jamaican OG 3", 1117105909],
+		["Jamaican Thug 1", -1500397869],
+		["Jamaican Thug 2", -881358690],
+		["Asian Man 1", 1540383669],
+		["Asian Man 2", 764249904],
+		["Hispanic Man 1", 492147228],
+		["Hispanic Man 2", -1926041127],
+		["Hispanic Man 3", 1168388225],
+		["Hispanic Man 4", -1746774780],
+		["Fat Italian Mafia Boss", -302362397],
+		["Italian Mafia Boss", -1616890832],
+		["Italian Mafia Associate", 64730935],
+		["Fat Italian Mafia Associate", 510389335],
+		["Russian Thug 1", -1836006237],
+		["Russian Thug 2", -2088164056],
+		["Russian Thug 3", 1976502708],
+		["Russian Thug 4", 1543404628],
+		["Russian Thug 5", 1865532596],
+		["Russian Thug 6", 431692232],
+		["Russian Thug 7", 1724587620],
+		["Russian Thug 8", -1180674815],
+		["Triad Boss 1", 871281791],
+		["Triad Boss 2", 683712035],
+		["Triad Member 3", -1084007777],
+		["Triad Member 4", -164935626],
+		["Female Maid", -751071255],
+		["Female Binco Worker", -109247258],
+		["Female Bank Teller", 1366257926],
+		["Female Doctor", 346338575],
+		["Female Gym Worker", 1350216795],
+		["Female Burger Shot Worker", 924926104],
+		["Female Cluckin Bell Worker", -346378101],
+		["Female Rockstar Cafe Worker", -2104311883],
+		["Female TW@ Cafe Worker", 212900845],
+		["Female Well Stacked Pizza Worker", -290070895],
+		["Hooker", 552542187],
+		["Hooker 2", 996267216],
+		["Nurse", -1193778389],
+		["Stripper 1", 1113677074],
+		["Stripper 2", 1353709999],
+		["Waitress", 24233425],
+		["Alcoholic Man", -1761003415],
+		["Armoured Truck Driver", 1075583233],
+		["Bus Driver", 134077503],
+		["Generic Asian Man", 757349871],
+		["Black Crackhead", -1827421800],
+		["Doctor (Scrubs)", 219393781],
+		["Doctor", -1186940778],
+		["Doctor (Blood Covered Coat)", 375732086],
+		["Cook", 2105015949],
+		["Italian Mob Enforcer", -200234085],
+		["Factory Worker", 800131009],
+		["FIB Agent", -999506922],
+		["Fat Delivery Driver", -1993909080],
+		["Fire Chief", 610888851],
+		["Mercenary Soldier", 486302863],
+		["Helicopter Pilot", -778316080],
+		["Hotel Doorman", 624314380],
+		["Korean Cook", -1784833142],
+		["Lawyer 1", -1852976689],
+		["Lawyer 2", -1134712978],
+		["Loony Black Man", 379171768],
+		["Pilot", -1945168882],
+		["Generic Man", 807236245],
+		["Postal Worker", -284362863],
+		["Saxophone Player", -1188246269],
+		["Security Guard", -1870989171],
+		["Stadium Food Vendor", 420915580],
+		["Stadium Food Cook", 1878085135],
+		["Street Food Vendor", 142730876],
+		["Street Sweeper Driver", -690681764],
+		["Taxi Driver", 8772846],
+		["Telephone Company Worker", 1186270890],
+		["Tennis Player", -379234846],
+		["Train Conductor", 1159759556],
+		["Homeless Black Man", -142386662],
+		["Trucker", -46564867],
+		["Janitor", -1284047560],
+		["Hotel Doorman 2", 22944263],
+		["Mob Boss", 1178487645],
+		["Airport Worker", -1464712858],
+		["Bartender", -2139064254],
+		["Biker Bouncer", -1780698891],
+		["High End Club Bouncer", -409283472],
+		["Bowling Alley Worker", -799229885],
+		["Bowling Alley Worker 2", -434183225],
+		["Chinese Food Vendor", 768442188],
+		["Club Security", 676448572],
+		["Construction Worker", -722019798],
+		["Construction Worker 2", -1015957728],
+		["Construction Worker 3", -714220780],
+		["Police Officer", -183203150],
+		["Traffic Officer", -1518937979],
+		["Fat Police Officer", -370395528],
+		["Courier", -1371133859],
+		["Cowboy 1", -573788283],
+		["Drug Dealer 1", -1283406538],
+		["Drug Dealer 2", 1448755353],
+		["Male Burger Shot Worker", 989485],
+		["Male Cluckin Bell Worker", -1011530423],
+		["Male Rockstar Cafe Worker", 1979561477],
+		["Male TW@ Cafe Worker", -786449781],
+		["Male Well Stacked Pizza Worker", 206941425],
+		["Firefighter", -610224615],
+		["Garbage Collector", 1136499716],
+		["Goon", 897868981],
+		["Male Gym Worker", -1902758612],
+		["Mechanic 2", -356904519],
+		["Male Modo Worker", -1056268969],
+		["Helicopter Pilot", 1201610759],
+		["Perseus", -151000142],
+		["Generic Male 1", 501136335],
+		["Generic Male 2", 186619473],
+		["Generic Male 3", -111611196],
+		["Paramedic", -1175077216],
+		["Prisoner", -1676937780],
+		["Prisoner 2", 215190023],
+		["Roman's Taxi Service Driver", 1552970117],
+		["Male Runner", -1481923910],
+		["Male Shop Assistant 1", 357919731],
+		["State Trooper", -89302119],
+		["SWAT", -1004762946],
+		["Sword Swallower", -64233032],
+		["Thief", -1292254815],
+		["Valet", 271284208],
+		["Vendor", -186113957],
+		["French Tom", -2015686009],
+		["Jim Fitz", 1977784957],
+		["East European Woman", -203833294],
+		["East European Woman 2", 189853472],
+		["Woman", -349043578],
+		["Jersey Woman", -114937692],
+		["Oriental Woman", -1697333660],
+		["Rich Woman", 100706569],
+		["Business Woman 1", 155063868],
+		["Business Woman 2", 394310337],
+		["Chinatown Woman", 1375728805],
+		["Business Woman 3", -284229525],
+		["East European Woman 3", 677687516],
+		["Fat Black Woman", -1188238883],
+		["Jersey Woman 1", -2075220936],
+		["Jersey Woman 2", -1356924456],
+		["Fat Hispanic Woman 1", 812112483],
+		["Fat Hispanic Woman 2", -129242580],
+		["White Manhattan Woman", 852423121],
+		["Black Manhattan Woman", 76551508],
+		["Old Asian Woman", -2118501976],
+		["Old Rich Woman", 1616769823],
+		["Business Woman 4", 453889158],
+		["Asian Woman in Dress", 824245375],
+		["Fat Black Bronx Woman", -1362442041],
+		["Random White Woman", -1788328884],
+		["Random Hispanic Woman", -1523915823],
+		["Random Eastern European Woman", -949987237],
+		["Random Black Woman", -1926577323],
+		["Black Harlem Woman 1", 168065679],
+		["Fat Jersey Woman 1", 441464],
+		["Fat Hispanic Woman 3", 54114008],
+		["Hispanic Woman 1", -292713088],
+		["Hispanic Woman 2", 1743814728],
+		["Manhattan Woman 1", 1670568326],
+		["Manhattan Woman 2", 1354281938],
+		["Manhattan Woman 1", 1056837725],
+		["Asian Woman 1", -1193633577],
+		["Black Woman 2", 713691120],
+		["Rich White Woman 1", -1780385799],
+		["Asian Woman", -952185135],
+		["Female Shopper 1", 1586287288],
+		["Female Shopper 2", 1848013291],
+		["Female Shopper 3", -1702036227],
+		["Female Socialite 1", 1182843182],
+		["Street Woman 1", -900623157],
+		["Street Woman 2", 286007875],
+		["Street Woman 3", 1473654742],
+		["Street Woman 4", -1850743775],
+		["Street Woman 5", 1290755317],
+		["Street Woman 6", 1872110126],
+		["Tourist Woman 1", 1754440500],
+		["MODEL_F_Y_VILLBO_01", 761763258],
+		["Business Man 1", -636579119],
+		["Business Man 2", -1754526315],
+		["Street Criminal 1", -1516474414],
+		["Street Criminal 2", -1821258883],
+		["Obese Mafia Thug", 1952671026],
+		["Gay Man 1", -1991603022],
+		["Homeless Bum 1", -1080673049],
+		["Loony White Man 1", 495499562],
+		["MODEL_M_M_MIDTOWN_01", -1984134881],
+		["Business Man 2", 1063816580],
+		["Eastern European Man 1", 208763854],
+		["Fat Black Man 2", -1020237172],
+		["MODEL_M_M_PINDUS_02", 1782277836],
+		["Fat Italian Man 1", -1402442039],
+		["Italian Man 2", -1628417063],
+		["Hispanic Man 1", 1158569407],
+		["Hispanic Man 2", 1969438324],
+		["Hispanic Man 3", 1621955848],
+		["Tourist Man 1", -657489059],
+		["Black Business Man 1", -1307068958],
+		["Asian Man 3", 734334931],
+		["MODEL_M_M_PRICH_01", 1865082075],
+		["MODEL_M_O_EASTEURO_01", -432593815],
+		["Hasidic Jewish Man 1", -1639359785],
+		["Old Man 1", 1656087115],
+		["MODEL_M_O_PEASTEURO_02", 2034185905],
+		["MODEL_M_O_PHARBRON_01", 1316404726],
+		["MODEL_M_O_PJERSEY_01", 980990533],
+		["MODEL_M_O_STREET_01", -1298691925],
+		["Old Business Man", 243672348],
+		["MODEL_M_Y_BOHO_01", 2085884255],
+		["MODEL_M_Y_BOHOGUY_01", 221246143],
+		["MODEL_M_Y_BRONX_01", 52357603],
+		["Black Business Man 2", 1530937394],
+		["Black Business Man 3", 690281432],
+		["Asian Man 4", -1149743642],
+		["Chopshop Mechanic 1", -314369597],
+		["Chopshop Mechanic 2", -552829610],
+		["MODEL_M_Y_DODGY_01", -1097188138],
+		["MODEL_M_Y_DORK_02", -1775659292],
+		["MODEL_M_Y_DOWNTOWN_01", 1207402441],
+		["MODEL_M_Y_DOWNTOWN_02", 1500619449],
+		["MODEL_M_Y_DOWNTOWN_03", 594261682],
+		["MODEL_M_Y_GAYYOUNG", -747824291],
+		["MODEL_M_Y_GENSTREET_11", -677160979],
+		["MODEL_M_Y_GENSTREET_16", -1678614360],
+		["MODEL_M_Y_GENSTREET_20", 989044076],
+		["MODEL_M_Y_GENSTREET_34", 1180218190],
+		["MODEL_M_Y_HARDMAN_01", -1420592428],
+		["MODEL_M_Y_HARLEM_01", -1222963415],
+		["MODEL_M_Y_HARLEM_02", -1746153269],
+		["MODEL_M_Y_HARLEM_04", 2104499156],
+		["Hasidic Jewish Man 2", -1874580889],
+		["MODEL_M_Y_LEASTSIDE_01", -1055386282],
+		["MODEL_M_Y_PBRONX_01", 575808580],
+		["MODEL_M_Y_PCOOL_01", -71980543],
+		["MODEL_M_Y_PCOOL_02", -195159218],
+		["MODEL_M_Y_PEASTEURO_01", 697247370],
+		["MODEL_M_Y_PHARBRON_01", 670406267],
+		["MODEL_M_Y_PHARLEM_01", 26615298],
+		["MODEL_M_Y_PJERSEY_01", 1542927558],
+		["MODEL_M_Y_PLATIN_01", -1806886352],
+		["MODEL_M_Y_PLATIN_02", -1022920796],
+		["MODEL_M_Y_PLATIN_03", -1326394505],
+		["MODEL_M_Y_PMANHAT_01", 607901190],
+		["MODEL_M_Y_PMANHAT_02", 1968470106],
+		["MODEL_M_Y_PORIENT_01", -344136289],
+		["MODEL_M_Y_PQUEENS_01", 560413584],
+		["MODEL_M_Y_PRICH_01", 1352017873],
+		["MODEL_M_Y_PVILLBO_01", 223726252],
+		["MODEL_M_Y_PVILLBO_02", -1252681043],
+		["MODEL_M_Y_PVILLBO_03", -1562020391],
+		["MODEL_M_Y_QUEENSBRIDGE", 1223224881],
+		["MODEL_M_Y_SHADY_02", -1220737489],
+		["MODEL_M_Y_SKATEBIKE_01", 1755322862],
+		["MODEL_M_Y_SOHO_01", 386690478],
+		["MODEL_M_Y_STREET_01", 62496225],
+		["MODEL_M_Y_STREET_03", 523785438],
+		["MODEL_M_Y_STREET_04", 813889395],
+		["MODEL_M_Y_STREETBLK_02", -1552214124],
+		["MODEL_M_Y_STREETBLK_03", -650575089],
+		["Street Punk 1", -740078918],
+		["Street Punk 2", -1927496394],
+		["Street Punk 3", 1374242512],
+		["Tough Guy", -1139941790],
+		["Male Tourist", 809067472],
+	],
 };
 
 // ---------------------------------------------------------------------------
@@ -3281,6 +3641,7 @@ function sendAllPayAndSprayBlips(client) {
 
 function sendAllFuelStationBlips(client) {
 	if(serverConfig.blipSprites[getServerGame()].fuelStation != -1) {
+		let tempBlips = [];
 		for(let i in serverData.fuelStations[getServerGame()]) {
 			tempBlips.push([
 				serverConfig.blipSprites[getServerGame()].fuelStation, 
@@ -3359,15 +3720,7 @@ function canClientUseGuns(client) {
 
 // ---------------------------------------------------------------------------
 
-function saveAllServerDataToDatabase() {
-	console.log("[Asshat.Utilities]: Saving all server data to database ...");
-	saveAllClientsToDatabase();
-	saveAllVehiclesToDatabase();;
-	saveAllHousesToDatabase();
-	saveAllBusinessesToDatabase();
-	saveAllClansToDatabase();
-	console.log("[Asshat.Utilities]: Saved all server data to database!");
-}
+
 
 // ---------------------------------------------------------------------------
 
@@ -3458,12 +3811,75 @@ function processHoldVehicleEngineKey(client) {
 
 function getClientChatColour(client) {
 	let tempJob = getClientCurrentSubAccount(client).job;
-	if(job != -1) {
+	if(tempJob != -1) {
 		if(getClientData(client).isWorking) {
 			return getJobData(tempJob).jobColour;
 		}
 	}
 	return getColourByName("white");
+}
+
+// ---------------------------------------------------------------------------
+
+function showConnectCameraToPlayer(client) {
+	triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition, serverConfig.connectCameraLookAt);
+	//triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);	
+}
+
+// ---------------------------------------------------------------------------
+
+function initAllClients() {
+	getClients().forEach(function(client) {
+		initClient(client);
+	});
+}
+
+// ---------------------------------------------------------------------------
+
+function getYesNoFromBool(boolVal) {
+	return (boolVal) ? "Yes" : "No";
+}
+
+// ---------------------------------------------------------------------------
+
+function updateServerRules() {
+	server.setRule("Time", makeReadableTime(serverConfig.hour, serverConfig.minute));
+	server.setRule("Weather", gameData.weatherNames[server.game][serverConfig.weather]);
+	server.setRule("Snowing", getYesNoFromBool(serverConfig.fallingSnow));
+}
+
+// ---------------------------------------------------------------------------
+
+function getWeatherFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in weatherNames[server.game]) {
+			if(weatherNames[server.game][i].toLowerCase().indexOf(params.toLowerCase()) != -1) {
+				return i;
+			}
+		}
+		return false;
+	} else {
+		if(typeof weatherNames[server.game][i] != "undefined") {
+			return i;
+		}
+		return false;
+	}
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function updatePlayerCash(client) {
+	triggerNetworkEvent("ag.money", getClientCurrentSubAccount(client).cash);
+}
+
+// ---------------------------------------------------------------------------
+
+function clearChatBox(client) {
+	//gta.messages.clear();
+	for(let i = 0; i <= 20; i++) {
+		messageClient(" ", client, COLOUR_WHITE);
+	}
 }
 
 // ---------------------------------------------------------------------------

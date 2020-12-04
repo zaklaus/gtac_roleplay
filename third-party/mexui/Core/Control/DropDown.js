@@ -30,29 +30,51 @@ mexui.util.linkBaseControlStyles('DropDown', {
 // input
 mexui.Control.DropDown.prototype.onMouseDown = function(e)
 {
-	if(this.axis.y.entries.length == 0)
-		return;
-	
-	var hitButton = this.isCursorOverControl();
-	if(hitButton)
+	if(e.button == 0)
 	{
-		e.used = true;
-		this.setListShown(!this.axis.y.entriesShown);
-	}
-	else if(this.axis.y.entriesShown)
-	{
-		var selectedEntryIndex = this.axis.y.getEntryIndexByCursor();
-		if(selectedEntryIndex != null)
+		if(this.axis.y.entries.length == 0)
+			return;
+		
+		var hitButton = this.isCursorOverControl();
+		if(hitButton)
 		{
 			e.used = true;
-			this.selectedEntryIndex = selectedEntryIndex;
-			this.checkToCallCallback();
-			this.setListShown(false);
+			this.setListShown(!this.axis.y.entriesShown);
+		}
+		else if(this.isListShown())
+		{
+			var selectedEntryIndex = this.axis.y.getEntryIndexByCursor();
+			if(selectedEntryIndex != null)
+			{
+				this.selectEntryByIndex(selectedEntryIndex);
+				e.used = true;
+			}
 		}
 	}
 	
 	if(!e.used)
 		mexui.Entity.ControlWithEntries.prototype.onMouseDown.call(this, e);
+};
+
+mexui.Control.DropDown.prototype.onKeyDown = function(e, key, mods)
+{
+	if(this.isFocused())
+	{
+		if(key == SDLK_RETURN || key == SDLK_RETURN2 || key == SDLK_KP_ENTER || key == SDLK_SPACE)
+		{
+			var selectedEntryIndex = this.axis.y.getEntryIndexByCursor();
+			if(selectedEntryIndex == null)
+			{
+				this.setListShown(!this.isListShown());
+				e.used = true;
+			}
+			else
+			{
+				this.selectEntryByIndex(selectedEntryIndex);
+				e.used = true;
+			}
+		}
+	}
 };
 
 // render
@@ -72,6 +94,9 @@ mexui.Control.DropDown.prototype.render = function()
 	}
 	
 	mexui.Entity.ControlWithEntries.prototype.render.call(this);
+	
+	if(this.isFocused())
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
 };
 
 mexui.Control.DropDown.prototype.renderAfter = function()
@@ -79,9 +104,13 @@ mexui.Control.DropDown.prototype.renderAfter = function()
 	if(this.axis.y.entriesShown)
 	{
 		var pos = this.getScreenPosition();
+		var pos2 = new Vec2(pos.x, pos.y);
 		
 		pos.x += this.entriesPositionOffset.x;
 		pos.y += this.entriesPositionOffset.y;
+		
+		pos2.x += this.entriesPositionOffset.x;
+		pos2.y += this.entriesPositionOffset.y;
 		
 		for(var i=this.axis.y.getEntryStartIndex(),j=this.axis.y.getEntryEndIndex(); i<j; i++)
 		{
@@ -96,6 +125,9 @@ mexui.Control.DropDown.prototype.renderAfter = function()
 			
 			pos.y += this.entrySize.y;
 		}
+		
+		if(this.isFocused())
+			mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(new Vec2(this.entrySize.x,this.axis.y.getDisplayedEntriesLength()),new Vec2(3,3)), this.getStyles('focused'));
 	}
 	
 	mexui.Entity.ControlWithEntries.prototype.renderAfter.call(this);
@@ -115,3 +147,14 @@ mexui.Control.DropDown.prototype.setListShown = function(shown)
 	this.axis.y.setScrollBarShown(shown);
 };
 
+mexui.Control.DropDown.prototype.isListShown = function()
+{
+	return this.axis.y.entriesShown;
+};
+
+mexui.Control.DropDown.prototype.selectEntryByIndex = function(entryIndex)
+{
+	this.selectedEntryIndex = entryIndex;
+	this.checkToCallCallback();
+	this.setListShown(false);
+};

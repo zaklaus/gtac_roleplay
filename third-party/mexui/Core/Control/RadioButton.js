@@ -20,13 +20,21 @@ mexui.util.linkBaseControlStyles('RadioButton', {
 // input
 mexui.Control.RadioButton.prototype.onMouseDown = function(e)
 {
-	if(this.isCursorOverControl())
+	if(e.button == 0 && this.isCursorOverControl())
 	{
-		var checkedRadio = this.getCheckedRadio();
-		if(checkedRadio != this.checked)
-			checkedRadio.checked = false;
-		this.checked = !this.checked;
-		this.checkToCallCallback();
+		this.setChecked();
+	}
+};
+
+mexui.Control.RadioButton.prototype.onKeyDown = function(e, key, mods)
+{
+	if(this.isFocused())
+	{
+		if(key == SDLK_RETURN || key == SDLK_RETURN2 || key == SDLK_KP_ENTER || key == SDLK_SPACE)
+		{
+			e.used = true;
+			this.setChecked();
+		}
 	}
 };
 
@@ -41,6 +49,9 @@ mexui.Control.RadioButton.prototype.render = function()
 		mexui.native.drawRectangle(mexui.util.addVec2(pos, new Vec2(2, 2)), new Vec2(this.size.x - 4, this.size.y - 4), this.getStyles('innerBox'));
 	
 	mexui.native.drawText(mexui.util.addVec2(pos, new Vec2(this.size.x + this.textMarginLeft, 2)), this.size, this.text, this.getStyles('main'));
+	
+	if(this.isFocused())
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
 };
 
 // model
@@ -85,4 +96,14 @@ mexui.Control.RadioButton.prototype.getCheckedRadio = function()
 mexui.Control.RadioButton.prototype.isFirstRadioInGroup = function()
 {
 	return this.getGroupRadios().length == 0;
+};
+
+mexui.Control.RadioButton.prototype.setChecked = function()
+{
+	var checkedRadio = this.getCheckedRadio();
+	if(checkedRadio != this.checked)
+		checkedRadio.checked = false;
+	
+	this.checked = !this.checked;
+	this.checkToCallCallback();
 };

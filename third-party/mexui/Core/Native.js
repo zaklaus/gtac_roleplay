@@ -10,7 +10,19 @@ mexui.native.loadImage = function(imageFilePath, imageName)
 		return false;
 	}
 	
-	var image = drawing.loadPNG(file);
+	var image = null;
+	var parts = imageFilePath.split('.');
+	var ext = parts[parts.length - 1].toLowerCase();
+	if(ext == 'png')
+		image = drawing.loadPNG(file);
+	else if(ext == 'bmp')
+		image = drawing.loadBMP(file);
+	else
+	{
+		console.log('ERROR [IMAGE LOAD] - Unsupported image file path extension. Currently only supports PNG or BMP.');
+		return false;
+	}
+	
 	if(!image)
 	{
 		file.close();
@@ -120,9 +132,6 @@ mexui.native.drawAALine = function(point1, point2, styles)
 	var lineColour = styles.lineColour != null ? styles.lineColour : styles.lineColor;
 	if(lineColour == null || lineColour == 'none')
 		return;
-	
-	//console.log(typeof lineColour);
-	//console.log(lineColour);
 	
 	drawing.drawRectangle(null, point1, new Vec2((point2.x - point1.x) + styles.lineWeight, (point2.y - point1.y) + styles.lineWeight), lineColour, lineColour, lineColour, lineColour);
 };

@@ -17,6 +17,8 @@ mexui.util.createControlConstructor('TextInput', false, function(window, x, y, w
 	this.caretShownForBlink	= true;
 	this.lineHeight			= 25;
 	this.maxLength			= this.singleCharacter ? 1 : false;
+	
+	this.validValue			= true;
 });
 
 // default styles
@@ -34,10 +36,13 @@ mexui.util.linkBaseControlStyles('TextInput', {
 // input
 mexui.Control.TextInput.prototype.onMouseDown = function(e)
 {
-	var hit = this.isCursorOverControl();
-	if(hit)
+	if(e.button == 0)
 	{
-		this.caretPosition = this.getCaretPositionByCursor();
+		var hit = this.isCursorOverControl();
+		if(hit)
+		{
+			this.caretPosition = this.getCaretPositionByCursor();
+		}
 	}
 	
 	mexui.Component.Control.prototype.onMouseDown.call(this, e);
@@ -70,6 +75,7 @@ mexui.Control.TextInput.prototype.onCharacter = function(e, character)
 		}
 		
 		this.checkToCallCallback();
+		this.validateValue(e);
 	}
 };
 
@@ -193,12 +199,16 @@ mexui.Control.TextInput.prototype.onKeyDown = function(e, key, mods)
 				break;
 		}
 	}
+	
+	this.validateValue(e);
 };
 
 // render
 mexui.Control.TextInput.prototype.render = function()
 {
 	var pos = this.getScreenPosition();
+	var pos2 = new Vec2(pos.x, pos.y);
+	
 	mexui.native.drawRectangle(pos, this.size, this.getStyles('main'));
 	
 	if(this.isEmpty())
@@ -217,22 +227,31 @@ mexui.Control.TextInput.prototype.render = function()
 		}
 	}
 	
-	if(mexui.focusedControl == this && this.caretShownForBlink)
+	var valueIsInvalid = !this.isEmpty() && !this.validValue;
+	
+	if(this.isFocused())
 	{
-		var pos = this.getScreenPosition();
-		var text = this.lines[this.caretPosition.y].substr(0, this.caretPosition.x);
-		var displayedText = this.masked ? '*'.repeat(text.length) : text;
-		var textWidth = mexui.native.getTextWidth(displayedText, this.getStyles('main'));
-		var caretPosOffset = new Vec2(5 + textWidth, (this.caretPosition.y * this.lineHeight) + 1);
-		var caretPoint1 = mexui.util.addVec2(pos, caretPosOffset);
-		var caretPoint2 = new Vec2(caretPoint1.x, caretPoint1.y + 22);
-		mexui.native.drawAALine(caretPoint1, caretPoint2, this.getStyles('caret'));
+		if(!valueIsInvalid)
+			mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
+		
+		if(this.caretShownForBlink)
+		{
+			var pos = this.getScreenPosition();
+			var text = this.lines[this.caretPosition.y].substr(0, this.caretPosition.x);
+			var displayedText = this.masked ? '*'.repeat(text.length) : text;
+			var textWidth = mexui.native.getTextWidth(displayedText, this.getStyles('main'));
+			var caretPosOffset = new Vec2(5 + textWidth, (this.caretPosition.y * this.lineHeight) + 1);
+			var caretPoint1 = mexui.util.addVec2(pos, caretPosOffset);
+			var caretPoint2 = new Vec2(caretPoint1.x, caretPoint1.y + 22);
+			mexui.native.drawAALine(caretPoint1, caretPoint2, this.getStyles('caret'));
+		}
 	}
+	
+	if(valueIsInvalid)
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('invalidValue'));
 };
 
 // model
-
-
 mexui.Control.TextInput.prototype.getTextWithNewCharacter = function(character)
 {
 	return this.lines[this.caretPosition.y].substr(0, this.caretPosition.x) + character + this.lines[this.caretPosition.y].substr(this.caretPosition.x);
@@ -335,6 +354,16 @@ mexui.Control.TextInput.prototype.deleteCharacter = function(charPos)
 };
 
 // text overall
+mexui.Control.TextInput.prototype.setText = function(text)
+{
+	this.lines = mexui.util.splitLines(text);
+};
+
+mexui.Control.TextInput.prototype.getText = function()
+{
+	return this.lines.join("\r\n");
+};
+
 mexui.Control.TextInput.prototype.resetText = function()
 {
 	this.lines = [''];
@@ -345,3 +374,8 @@ mexui.Control.TextInput.prototype.isEmpty = function()
 	return this.lines.length == 1 && this.lines[0] == '';
 };
 
+// validation
+mexui.Control.TextInput.prototype.validateValue = function(e)
+{
+	this.validValue = this.validateValueCallback ? this.validateValueCallback(e) : true;
+};

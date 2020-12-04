@@ -10,13 +10,15 @@ mexui.util.extend(mexui.Control.RangedNumber, mexui.Control.TextInput);
 // model
 mexui.Control.RangedNumber.prototype.validateInputCallback = function(e, character)
 {
-	var number = parseFloat(this.getTextWithNewCharacter(character));
-	
-	if(!isNaN(number))
+	return mexui.util.isFloatChar(character);
+};
+
+mexui.Control.RangedNumber.prototype.validateValueCallback = function(e)
+{
+	var text = this.getText();
+	if(!mexui.util.isFloat(text))
 		return false;
 	
-	if(number < this.min || number > this.max)
-		return false;
-	
-	return true;
+	var number = parseFloat(text);
+	return number >= this.min && number <= this.max;
 };

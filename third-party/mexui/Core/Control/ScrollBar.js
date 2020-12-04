@@ -36,22 +36,25 @@ mexui.util.linkBaseControlStyles('ScrollBar', {
 // input
 mexui.Control.ScrollBar.prototype.onMouseDown = function(e)
 {
-	if(mexui.util.isCursorInRectangle(this.getInnerBarPosition(), this.getInnerBarSize()))
+	if(e.button == 0)
 	{
-		e.used = true;
-		this.isScrolling = true;
-	}
-	else if(this.isCursorOverControl())
-	{
-		e.used = true;
-		this.scrolledRatio += this.getScrolledRatioOuterBarClickIncrease();
-		this.clampScrolledRatio();
+		if(mexui.util.isCursorInRectangle(this.getInnerBarPosition(), this.getInnerBarSize()))
+		{
+			e.used = true;
+			this.isScrolling = true;
+		}
+		else if(this.isCursorOverControl())
+		{
+			e.used = true;
+			this.scrolledRatio += this.getScrolledRatioOuterBarClickIncrease();
+			this.clampScrolledRatio();
+		}
 	}
 };
 
 mexui.Control.ScrollBar.prototype.onMouseUp = function(e)
 {
-	if(this.isScrolling)
+	if(e.button == 0 && this.isScrolling)
 	{
 		this.isScrolling = false;
 		e.used = true;

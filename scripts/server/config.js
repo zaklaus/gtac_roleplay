@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: config.js
 // DESC: Provides server configuration
@@ -9,6 +9,15 @@
 // ===========================================================================
 
 let serverConfig = {
+	useGUI: true,
+	name: "Asshat Gaming Roleplay",
+	password: "LockedForStartup*128",
+	hour: 0,
+	minute: 0,
+	weather: 1,
+	fallingSnow: 0,
+	groundSnow: 0,
+	showLogo: true,	
 	colour: {
 		byType: {
 			talkMessage: toColour(200, 200, 200),
@@ -42,27 +51,16 @@ let serverConfig = {
 			burntYellow: toColour(210, 210, 0, 255),
 			burntOrange: toColour(210, 120, 0, 255),
 			bankGreen: toColour(0, 150, 0, 255),
+			softGreen: toColour(144, 255, 96, 255),
 		}
 	},
 	accountPasswordHash: "SHA512",
-	connectCameraPosition: [
-		false,
-		new Vec3(-1176.481, -17.694, 95.992),
-		false,
-		false,
-		false,
-	],
-	connectCameraLookAt: [
-		false,
-		new Vec3(-1175.726, -17.055, 95.847),
-		false,
-		false,
-		false,
-	],
+	connectCameraPosition: false,
+	connectCameraLookAt: false,
 	newCharacter: {
-		spawnPosition: new Vec3(1038.40, -666.70, 14.97),
+		spawnPosition: false,
 		spawnHeading: 0.0,
-		money: 1000,
+		money: 0,
 	},
 	npcFarProximity: 100,
 	npcMediumProximity: 40,
@@ -145,6 +143,58 @@ let serverConfig = {
 		vehicleLightsKey: SDLK_k,
 		vehicleLocksKey: SDLK_l,		
 	},
+	discordBotToken: "",
+	discordEnabled: false,
 };
+
+// ----------------------------------------------------------------------------
+
+function loadServerConfig() {
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let dbQueryString = `SELECT * FROM svr_main WHERE svr_game = ${server.game} AND svr_port = ${server.port} LIMIT 1;`;
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				let dbAssoc = fetchQueryAssoc(dbQuery);
+
+				serverId = dbAssoc["svr_id"];
+				serverConfig.name = dbAssoc["svr_name"];
+				serverConfig.password = dbAssoc["svr_password"];
+				serverConfig.newCharacter.spawnPosition = new Vec3(dbAssoc["svr_newchar_pos_x"], dbAssoc["svr_newchar_pos_y"], dbAssoc["svr_newchar_pos_z"]);
+				serverConfig.newCharacter.spawnHeading = dbAssoc["svr_newchar_rot_z"];
+				serverConfig.newCharacter.money = dbAssoc["svr_newchar_money"];
+				serverConfig.newCharacter.bank = dbAssoc["svr_newchar_bank"];
+				serverConfig.newCharacter.skin = dbAssoc["svr_newchar_skin"];
+
+				serverConfig.connectCameraPosition = new Vec3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
+				serverConfig.connectCameraLookAt = new Vec3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
+				serverConfig.hour = dbAssoc["svr_start_time_hour"];
+				serverConfig.minute = dbAssoc["svr_start_time_min"];
+				serverConfig.weather = dbAssoc["svr_start_weather"];
+				serverConfig.fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
+				serverConfig.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
+				serverConfig.useGUI = intToBool(dbAssoc["svr_gui"]);
+
+				applyConfigToServer();
+
+				freeDatabaseQuery(dbQuery);
+			}
+		}
+		disconnectFromDatabase(dbConnection);
+	}	
+}
+
+// ----------------------------------------------------------------------------
+
+function applyConfigToServer() {
+	server.name = serverConfig.name;
+	server.password = serverConfig.password;
+	gta.time.hour = serverConfig.hour;
+	gta.time.minute = serverConfig.minute;
+	gta.forceWeather(serverConfig.weather);
+
+	updateServerRules();
+}
 
 // ----------------------------------------------------------------------------

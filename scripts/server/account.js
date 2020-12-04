@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: account.js
 // DESC: Provides account functions and usage
@@ -57,13 +57,7 @@ function loginCommand(command, params, client) {
 		return false;
 	}
 	
-	if(isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, params))) {
-		messageClientError(client, "Incorrect username or password!");
-		return false;
-	}
-	
-	loginSuccess(client);
-	//messageClientSuccess(client, "You have been logged in! Press left CTRL to spawn.");
+	checkLogin(client, params);
 	return true;
 }
 
@@ -99,20 +93,10 @@ function registerCommand(command, params, client) {
 		return false;
 	}
 	
-	if(!doesPasswordMeetRequirements(params)) {
-		return false
-	}
-
-	let accountData = createAccount(client.name, params);
-	if(!accountData) {
-		messageClientError(client, "Something went wrong, and your account could not be created!");
-		messageClientAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
-		return false;
-	}
-
-	getClientData(client).accountData = accountData;
-	messageClientSuccess(client, "Your account has been created!");
-	messageClientAlert(client, "To play on the server, you will need to make a character.");
+	checkRegistration(client, params);
+	//getClientData(client).accountData = accountData;
+	//messageClientSuccess(client, "Your account has been created!");
+	//messageClientAlert(client, "To play on the server, you will need to make a character.");
 }
 
 // ---------------------------------------------------------------------------
@@ -129,7 +113,7 @@ function changePasswordCommand(command, params, client) {
 		if(!isCommandAllowedOnDiscord(command)) {
 			messageClientError(client, "That command isn't available on discord!");
 			return false;
-		}		
+		}
 	}
 
 	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
@@ -186,12 +170,77 @@ function switchCharacterCommand(command, params, client) {
 	getClientCurrentSubAccount(client).spawnPosition = client.player.position;
 	getClientCurrentSubAccount(client).spawnHeading = client.player.heading;
 
-	let tempSubAccount = getClientCurrentSubAccount(client);
-	saveSubAccountToDatabase(tempSubAccount);
+	saveSubAccountToDatabase(getClientCurrentSubAccount(client));
 	
 	client.despawnPlayer();
-	triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[getServerGame()], serverConfig.connectCameraLookAt[getServerGame()]);
-	triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);	
+	showConnectCameraToPlayer(client);
+	showCharacterSelectToClient(client);
+}
+
+// ---------------------------------------------------------------------------
+
+function newCharacterCommand(command, params, client) {
+	if(doesCommandRequireLogin(command)) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You are not logged in!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let firstName = splitParams[0];
+	let lastName = splitParams[1];
+
+	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", serverConfig.newCharacter.skin);	
+}
+
+// ---------------------------------------------------------------------------
+
+function useCharacterCommand(command, params, client) {
+	if(doesCommandRequireLogin(command)) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You are not logged in!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let characterId = Number(params) || 1;
+
+	selectCharacter(client, characterId-1);
 }
 
 // ---------------------------------------------------------------------------
@@ -317,7 +366,7 @@ function loadSubAccountsFromAccount(accountId) {
 	if(accountId > 0) {
 		let dbConnection = connectToDatabase();
 		if(dbConnection) {
-			let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_acct = ${accountId};`;
+			let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_acct = ${accountId} AND sacct_server = ${serverId}`;
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			if(dbQuery) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -394,7 +443,7 @@ function hashAccountPassword(name, password) {
 // ---------------------------------------------------------------------------
 
 function saltAccountInfo(name, password) {
-	return "asshat.gaming." + String(accountSaltHash) + "." + String(name) + "." + String(password);
+	return "ag.gaming." + String(accountSaltHash) + "." + String(name) + "." + String(password);
 }
 
 // ---------------------------------------------------------------------------
@@ -406,7 +455,9 @@ function loginSuccess(client) {
 		client.administrator = true;
 	}
 
-	triggerNetworkEvent("ag.loginSuccess", client);
+	if(serverConfig.useGUI) {
+		triggerNetworkEvent("ag.loginSuccess", client);
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -461,6 +512,7 @@ function createAccount(name, password, email = "") {
 // ---------------------------------------------------------------------------
 
 function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin) {
+	console.log(`[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
@@ -468,7 +520,7 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 		let safePlaceOfOrigin = escapeDatabaseString(dbConnection, placeOfOrigin);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_cash) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${serverConfig.newCharacter.spawnPosition.x}, ${serverConfig.newCharacter.spawnPosition.y}, ${serverConfig.newCharacter.spawnPosition.z}, ${serverConfig.newCharacter.money})`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${serverConfig.newCharacter.spawnPosition.x}, ${serverConfig.newCharacter.spawnPosition.y}, ${serverConfig.newCharacter.spawnPosition.z}, ${serverConfig.newCharacter.spawnHeading}, ${serverConfig.newCharacter.money}, ${serverId})`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
 		}
@@ -480,97 +532,138 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.checkLogin", function(client, password) {
+function checkLogin(client, password) {
 	let loginAttemptsRemaining = client.getData("ag.loginAttemptsRemaining")-1;
 
 	if(isClientLoggedIn(client)) {
-		//messageClientError(client, "You are already logged in!");
-		triggerNetworkEvent("ag.loginSuccess", client);
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.loginSuccess", client);
+		} else {
+			messageClientError(client, "You are already logged in!");
+		}
 		return false;
 	}
 	
 	if(!isClientRegistered(client)) {
-		//messageClientError(client, "Your name is not registered! Use /register to make an account.");
-		triggerNetworkEvent("ag.showRegistration", client);
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.showRegistration", client);
+		} else {
+			messageClientError(client, "Your name is not registered! Use /register to make an account.");
+		}		
 		return false;
 	}
 
 	if(areParamsEmpty(password)) {
-		//messageClientError(client, "You must enter a password!");
-		triggerNetworkEvent("ag.loginFailed", client, "Invalid password! " + String(loginAttemptsRemaining) + " tries remaining.");		
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);		
+		} else {
+			messageClientError(client, "You must enter a password!");
+		}
 		return false;
 	}
 	
 	if(!isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, password))) {
-		//messageClientError(client, "Invalid password!");
-		triggerNetworkEvent("ag.loginFailed", client, "Invalid password! " + String(loginAttemptsRemaining) + " tries remaining.");
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);
+		} else {
+			messageClientError(client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);
+		}
 		return false;
 	}
 
 	loginSuccess(client);
 
 	if(getClientData(client).subAccounts.length == 0) {
-		triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No characters");
-		client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No characters");
+			client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+		} else {
+			messageClientAlert(client, `You have no characters. Use /newchar to make one.`);
+		}
 	} else {
-		getClientData(client).currentSubAccount = 0;
-		let tempSubAccount = getClientData(client).subAccounts[0];
-		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
+		showCharacterSelectToClient(client);
 	}
-});
+}
+addNetworkHandler("ag.checkLogin", checkLogin);
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.checkRegistration", function(client, password, confirmPassword, emailAddress) {
+function checkRegistration(client, password, confirmPassword = "", emailAddress = "") {
 	console.log("[Asshat.Account]: Checking registration for " + String(client.name));
 
 	if(isClientRegistered(client)) {
-		//messageClientError(client, "Your name is already registered!");
-		triggerNetworkEvent("ag.showLogin", client);
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.showLogin", client);
+		} else {
+			messageClientError(client, "Your name is already registered!");
+		}
 		return false;
 	}
 
 	if(isClientLoggedIn(client)) {
-		//messageClientError(client, "You are already logged in!");
-		triggerNetworkEvent("ag.loginSuccess", client);
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.loginSuccess", client);
+		} else {
+			messageClientError(client, "You are already logged in!");
+		}
 		return false;
 	}
 
 	if(areParamsEmpty(password)) {
-		triggerNetworkEvent("ag.registrationFailed", client, "Password cannot be blank!");
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.registrationFailed", client, "Password cannot be blank!");
+		} else {
+			messageClientError(client, "The password cannot be blank!");
+		}
 		return false;
 	}
 
-	if(areParamsEmpty(confirmPassword)) {
-		triggerNetworkEvent("ag.registrationFailed", client, "Password confirm cannot be blank!");
-		return false;
+	if(serverConfig.useGUI) {
+		if(areParamsEmpty(confirmPassword)) {
+			triggerNetworkEvent("ag.registrationFailed", client, "Password confirm cannot be blank!");
+			return false;
+		}
 	}
 
-	if(areParamsEmpty(emailAddress)) {
-		triggerNetworkEvent("ag.registrationFailed", client, "Email address cannot be blank!");
-		return false;
+	if(serverConfig.useGUI) {
+		if(areParamsEmpty(emailAddress)) {
+			triggerNetworkEvent("ag.registrationFailed", client, "Email address cannot be blank!");
+			return false;
+		}
 	}
 
-	if(password != confirmPassword) {
-		triggerNetworkEvent("ag.registrationFailed", client, "The passwords must match!");
-		return false;
+	if(serverConfig.useGUI) {
+		if(password != confirmPassword) {
+			triggerNetworkEvent("ag.registrationFailed", client, "The passwords must match!");
+			return false;
+		}
 	}
 	
 	if(!doesPasswordMeetRequirements(password)) {
-		// Work on this later. Function should return true by default anyway for now.
-		triggerNetworkEvent("ag.registrationFailed", client, "Password doesn't meet requirements!");
+		if(serverConfig.useGUI) {
+			// Work on this later. Function should return true by default anyway for now.
+			triggerNetworkEvent("ag.registrationFailed", client, "Password doesn't meet requirements!");
+		} else {
+			messageClientError(client, "Password doesn't meet requirements!");
+		}
 		return false
 	}
 
-	if(!isValidEmailAddress(emailAddress)) {
-		// Work on this later. Function should return true by default anyway for now.
-		triggerNetworkEvent("ag.registrationFailed", client, "You must put a valid email!");
-		return false
+	if(serverConfig.useGUI) {
+		if(!isValidEmailAddress(emailAddress)) {
+			triggerNetworkEvent("ag.registrationFailed", client, "You must put a valid email!");
+			return false
+		}
 	}
 
 	let accountData = createAccount(client.name, password, emailAddress);
 	if(!accountData) {
-		triggerNetworkEvent("ag.registrationFailed", client, "Something went wrong. Your account could not be created!");
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.registrationFailed", client, "Something went wrong. Your account could not be created!");
+		} else {
+			messageClientAlert(client, "Something went wrong. Your account could not be created!");
+		}
+		
 		messageClientAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
 		return false;
 	}
@@ -580,15 +673,20 @@ addNetworkHandler("ag.checkRegistration", function(client, password, confirmPass
 
 	messageClientSuccess(client, "Your account has been created!");
 	messageClientAlert(client, "To play on the server, you will need to make a character.");
-	triggerNetworkEvent("ag.registrationSuccess", client);
-	triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No Characters");
-
-	client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
-});
+	
+	if(serverConfig.useGUI) {
+		triggerNetworkEvent("ag.registrationSuccess", client);
+		triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No Characters");
+		client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+	} else {
+		messageClientAlert(client, `You have no characters. Use /newchar to make one.`);
+	}
+};
+addNetworkHandler("ag.checkRegistration", checkRegistration);
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.checkNewCharacter", function(client, firstName, lastName, dateOfBirth, placeOfOrigin, skinId) {
+function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrigin, skinId) {
 	if(areParamsEmpty(firstName)) {
 		triggerNetworkEvent("ag.newCharacterFailed", client, "First name cannot be blank!");
 		return false;
@@ -618,18 +716,21 @@ addNetworkHandler("ag.checkNewCharacter", function(client, firstName, lastName, 
 
 	let subAccountData = createSubAccount(getClientData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
 	if(!subAccountData) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Something went wrong. Your character could not be created!");
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.newCharacterFailed", client, "Something went wrong. Your character could not be created!");
+		} else {
+			messageClientAlert(client, "Something went wrong. Your character could not be created!");
+		}
 		messageClientAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
 		return false;
 	}
 
 	getClientData(client).subAccounts = loadSubAccountsFromAccount(getClientData(client).accountData.databaseId);
-	triggerNetworkEvent("ag.newCharacterSuccess", client);
-
 	getClientData(client).currentSubAccount = 0;
 	let tempSubAccount = getClientData(client).subAccounts[0];
-	triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
-});
+	showCharacterSelectToClient(client);
+}
+addNetworkHandler("ag.checkNewCharacter", checkNewCharacter);
 
 // ---------------------------------------------------------------------------
 
@@ -665,17 +766,26 @@ addNetworkHandler("ag.nextCharacter", function(client) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.selectCharacter", function(client) {
-	triggerNetworkEvent("ag.characterSelectSuccess", client);
+function selectCharacter(client, characterId = -1) {
+	if(serverConfig.useGUI) {
+		triggerNetworkEvent("ag.characterSelectSuccess", client);
+	}
 
-	let subAccountId = getClientData(client).currentSubAccount;
-	let tempSubAccount = getClientData(client).subAccounts[subAccountId];
+	if(characterId != -1) {
+		getClientData(client).currentSubAccount = characterId;
+	}
+
+	console.log(getClientData(client).currentSubAccount);
+
+	let tempSubAccount = getClientCurrentSubAccount(client);
 	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
 
-	messageClientNormal(client, "Welcome to Asshat Gaming Roleplay!", getColourByName("white"));
+	messageClientNormal(client, `You are playing as ${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
 	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
 	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
-});
+	triggerNetworkEvent("ag.restoreCamera", client);
+}
+addNetworkHandler("ag.selectCharacter", selectCharacter);
 
 // ---------------------------------------------------------------------------
 
@@ -721,7 +831,10 @@ function saveClientToDatabase(client) {
 // ---------------------------------------------------------------------------
 
 function initClient(client) {
-	triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[getServerGame()], serverConfig.connectCameraLookAt[getServerGame()]);
+	serverData.clients[client.index] = null;
+	triggerNetworkEvent("ag.logo", client, serverConfig.showLogo);
+	showConnectCameraToPlayer(client);
+	clearChatBox(client);
 	
 	let tempAccountData = loadAccountFromName(client.name);
 	let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
@@ -729,14 +842,22 @@ function initClient(client) {
 	serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
 
 	if(tempAccountData != false) {
-		triggerNetworkEvent("ag.showLogin", client);
-		//messageClient("Welcome back to Asshat Gaming RP, " + String(client.name) + "! Please /login to continue.", client, serverConfig.colour.byName["white"]);
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.showLogin", client);
+		} else {
+			messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, serverConfig.colour.byName.softGreen);
+		}
 	} else {
-		triggerNetworkEvent("ag.showRegistration", client);
-		//messageClient("Welcome to Asshat Gaming RP, " + String(client.name) + "! Please /register to continue.", client, serverConfig.colour.byName["white"]);
+		if(serverConfig.useGUI) {
+			triggerNetworkEvent("ag.showRegistration", client);
+		} else {
+			messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, serverConfig.colour.byName.softGreen);
+		}
 	}
 
-	sendAllBlips(client);
+	if(server.game < GAME_GTA_IV) {
+		sendAllBlips(client);
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -746,3 +867,21 @@ function getClientData(client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function showCharacterSelectToClient(client) {
+	if(serverConfig.useGUI) {
+		getClientData(client).currentSubAccount = 0;
+		let tempSubAccount = getClientData(client).subAccounts[0];
+		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
+	} else {	
+		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
+		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
+		messageClientNormal(client, `You have the following characters. Use /usechar <id> to select one:`, serverConfig.colour.byName.teal);
+		getClientData(client).subAccounts.forEach(function(subAccount, index) {
+			messageClientNormal(client, `${index+1} • [#CCCCCC]${subAccount.firstName} ${subAccount.lastName}`);
+		});
+	}
+}
+
+// ---------------------------------------------------------------------------
+

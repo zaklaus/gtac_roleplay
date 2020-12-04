@@ -1,5 +1,10 @@
 mexui.util = {};
 
+// static
+mexui.util.monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+mexui.util.weekDayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+// functions
 mexui.util.extend = function(d, b)
 {
 	d.prototype = Object.create(b.prototype);
@@ -22,6 +27,11 @@ mexui.util.isCursorInRectangle = function(position, size)
 mexui.util.addVec2 = function(vec2a, vec2b)
 {
 	return new Vec2(vec2a.x + vec2b.x, vec2a.y + vec2b.y);
+};
+
+mexui.util.subtractVec2 = function(vec2a, vec2b)
+{
+	return new Vec2(vec2a.x - vec2b.x, vec2a.y - vec2b.y);
 };
 
 mexui.util.addVec3 = function(vec3a, vec3b)
@@ -469,3 +479,226 @@ mexui.util.time = function()
 	return gta.tickCount;
 };
 
+mexui.util.isIntChar = function(character)
+{
+	return mexui.util.isPositiveIntChar(character);
+};
+
+mexui.util.isPositiveIntChar = function(character)
+{
+	return mexui.util.isDigit(character) || character == '-' || character == '+' || character == 'e' || character == 'E';
+};
+
+mexui.util.isFloatChar = function(character)
+{
+	return mexui.util.isIntChar(character) || character == '.';
+};
+
+mexui.util.isPositiveFloatChar = function(character)
+{
+	return mexui.util.isPositiveIntChar(character) || character == '.';
+};
+
+mexui.util.isInt = function(str)
+{
+	var strInt = parseInt(str);
+	return !isNaN(strInt) && str.length == (strInt+'').length;
+};
+
+mexui.util.isPositiveInt = function(str)
+{
+	var strInt = parseInt(str);
+	return !isNaN(strInt) && strInt >= 0 && str.length == (strInt+'').length;
+};
+
+mexui.util.isFloat = function(str)
+{
+	var strFloat = parseFloat(str);
+	var firstDot = str.indexOf('.');
+	var addOffset = (str.substr(str.length - 2, 2) == '.0' && firstDot == (str.length - 2)) ? 2 : 0;
+	if(firstDot == 0)
+		addOffset--;
+	return !isNaN(strFloat) && str.length == ((strFloat+'').length + addOffset);
+};
+
+mexui.util.isPositiveFloat = function(str)
+{
+	var strFloat = parseFloat(str);
+	var firstDot = str.indexOf('.');
+	var addOffset = (str.substr(str.length - 2, 2) == '.0' && firstDot == (str.length - 2)) ? 2 : 0;
+	if(firstDot == 0)
+		addOffset--;
+	return !isNaN(strFloat) && strFloat >= 0.0 && str.length == ((strFloat+'').length + addOffset);
+};
+
+mexui.util.isMonthName = function(text)
+{
+	return mexui.util.inArrayOrStartsWithInArray(text, mexui.util.monthNames, 3);
+};
+
+mexui.util.isWeekDayName = function(text)
+{
+	return mexui.util.inArrayOrStartsWithInArray(text, mexui.util.weekDayNames, 3);
+};
+
+mexui.util.isDayIdSuffix = function(text)
+{
+	switch(text.toLowerCase())
+	{
+		case 'st':
+		case 'nd':
+		case 'rd':
+		case 'th':
+			return true;
+	}
+	return false;
+};
+
+mexui.util.isDayIdSuffixForDayId = function(dayId, text)
+{
+	switch(text.toLowerCase())
+	{
+		case 'st':		return dayId == 1 || dayId == 21 || dayId == 31;
+		case 'nd':		return dayId == 2 || dayId == 22;
+		case 'rd':		return dayId == 3 || dayId == 23;
+		case 'th':		return !(dayId >= 1 && dayId <= 3) && !(dayId >= 21 && dayId <= 23) && dayId != 31;
+		default:		return false;
+	}
+};
+
+mexui.util.isDayId = function(text)
+{
+	if(text.length == 2 && text.substr(0, 1) == '0')
+		text = text.substr(1);
+	
+	if(mexui.util.isPositiveInt(text))
+	{
+		var _int = parseInt(text);
+		if(_int >= 1 && _int <= 31)
+			return true;
+	}
+	
+	return false;
+};
+
+mexui.util.isDayIdWithOptionalSuffix = function(text)
+{
+	if(mexui.util.isDayId(text))
+		return true;
+	
+	if(text.length > 2)
+	{
+		var last2Chars = text.substr(text.length - 2, 2);
+		if(mexui.util.isDayIdSuffix(last2Chars))
+		{
+			var textWithoutLast2Chars = text.substr(0, text.length - 2);
+			if(mexui.util.isDayId(textWithoutLast2Chars) && mexui.util.isDayIdSuffixForDayId(parseInt(textWithoutLast2Chars), last2Chars))
+			{
+				return true;
+			}
+		}
+	}
+	
+	return false;
+};
+
+mexui.util.inArrayOrStartsWithInArray = function(text, arr, startsWithCharCount)
+{
+	text = text.toLowerCase();
+	
+	for(var i in arr)
+	{
+		if(text === arr[i])
+		{
+			return true;
+		}
+	}
+	
+	if(text.length == startsWithCharCount)
+	{
+		for(var i in arr)
+		{
+			if(text === arr[i].substr(0, startsWithCharCount))
+			{
+				return true;
+			}
+		}
+	}
+	
+	return false;
+};
+
+mexui.util.isMonthIdOrName = function(text)
+{
+	var text2 = text;
+	if(text2.length == 2 && text2.substr(0, 1) == '0')
+		text2 = text2.substr(1);
+	
+	if(mexui.util.isPositiveInt(text2))
+	{
+		var _int = parseInt(text2);
+		if(_int >= 1 && _int <= 12)
+			return true;
+	}
+	
+	return mexui.util.isMonthName(text);
+};
+
+mexui.util.isWeekDayId = function(text)
+{
+	var text2 = text;
+	if(text2.length == 2 && text2.substr(0, 1) == '0')
+		text2 = text2.substr(1);
+	
+	if(mexui.util.isPositiveInt(text2))
+	{
+		var _int = parseInt(text2);
+		if(_int >= 1 && _int <= 7)
+			return true;
+	}
+	
+	return false;
+};
+
+mexui.util.isWeekDayIdOrName = function(text)
+{
+	var text2 = text;
+	if(text2.length == 2 && text2.substr(0, 1) == '0')
+		text2 = text2.substr(1);
+	
+	if(mexui.util.isPositiveInt(text2))
+	{
+		var _int = parseInt(text2);
+		if(_int >= 1 && _int <= 7)
+			return true;
+	}
+	
+	return mexui.util.isWeekDayName(text);
+};
+
+mexui.util.expand2DigitYear = function(year, twoDigitYearCapOffset)
+{
+	var currentFullYear = new Date().getFullYear();
+	var currentTwoDigitYearPlusCapOffset = parseInt((currentFullYear+'').substr(2, 2)) + twoDigitYearCapOffset;
+	if(year <= currentTwoDigitYearPlusCapOffset)
+		year += currentFullYear - (currentFullYear % 100);
+	else
+		year += (currentFullYear - (currentFullYear % 100)) - 100;
+	return year;
+};
+
+mexui.util.isYear = function(text, minYear, maxYear, twoDigitYearCapOffset)
+{
+	var _int = parseInt(text);
+	
+	if(isNaN(_int))
+		return false;
+	
+	if(_int >= 0 && _int <= 99)
+		_int = mexui.util.expand2DigitYear(_int, twoDigitYearCapOffset);
+	
+	if(_int < minYear || _int > maxYear)
+		return false;
+	
+	return true;
+};

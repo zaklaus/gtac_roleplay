@@ -1,4 +1,12 @@
-"use strict";
+// ===========================================================================
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// ---------------------------------------------------------------------------
+// FILE: nametags.js
+// DESC: Provides nametags for VRS
+// TYPE: Client (JavaScript)
+// ===========================================================================
 
 // ----------------------------------------------------------------------------
 
@@ -20,22 +28,7 @@ addEventHandler("OnResourceReady", function(event, resource) {
 
 // ----------------------------------------------------------------------------
 
-function createColour(alpha, red, green, blue) {
-	return alpha << 24 | red << 16 | green << 8 | blue;
-}
-
-// ----------------------------------------------------------------------------
-
-function getDistance(pos1, pos2) {
-	let dx = pos1[0] - pos2[0];
-	let dy = pos1[1] - pos2[1];
-	let dz = pos1[2] - pos2[2];
-	return Math.sqrt(dx*dx + dy*dy + dz*dz);
-}
-
-// ----------------------------------------------------------------------------
-
-function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, afk) {
+function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, afk, skin) {
 	if(nametagFont == null) {
 		return false;
 	}
@@ -49,18 +42,21 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
     // -------------------------------------------
     // Health Bar
 	
-	if(skin == 109) {
-		y -= 20;
-	} else {
-		y -= 5;
-	}	
+	if(gta.game == GAME_GTA_III) {
+		// Mickey Hamfists is ridiculously tall. Raise the nametag for him a bit
+		if(skin == 109) {
+			y -= 20;
+		} else {
+			y -= 5;
+		}
+	}
 	
 	if(health > 0.0) {
 		let hx = x-width/2;
 		let hy = y-10/2;
 		let colourB = toColour(0, 0, 0, Math.floor(255.0*alpha)); // Background colour (black)
 		drawing.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
-		let colour = createColour(Math.floor(255.0*alpha), Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0); // Health bar colour (varies, depending on health)
+		let colour = toColour(Math.floor(255.0*alpha), Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0); // Health bar colour (varies, depending on health)
 		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*health, 10-6], colour, colour, colour, colour);
 	}
     
@@ -71,9 +67,9 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		y -= 10;		
 		let hx = x-width/2;
 		let hy = y-10/2;
-		let colourB = createColour(Math.floor(255.0*alpha), 0, 0, 0); // Background colour (black)
+		let colourB = toColour(Math.floor(255.0*alpha), 0, 0, 0); // Background colour (black)
 		drawing.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
-		let colour = createColour(Math.floor(255.0*alpha), 255, 255, 255); // Armour bar colour (white)
+		let colour = toColour(Math.floor(255.0*alpha), 255, 255, 255); // Armour bar colour (white)
 		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*armour, 10-6], colour, colour, colour, colour);
 	}
     
@@ -82,7 +78,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
     // Nametag
 	if(nametagFont != null) {
 		let size = nametagFont.measure(text, game.width, 0.0, 0.0, nametagFont.size, false, false);
-		let colourT = createColour(Math.floor(255.0*alpha), 255, 255, 255);
+		let colourT = toColour(Math.floor(255.0*alpha), 255, 255, 255);
 		nametagFont.render(text, [x-size[0]/2, y-size[1]/2], game.width, 0.0, 0.0, nametagFont.size, colour, false, false, false, true);
 	}
 	
@@ -95,18 +91,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 			let size = afkStatusFont.measure("PAUSED", game.width, 0.0, 0.0, afkStatusFont.size, false, false);
 			afkStatusFont.render("PAUSED", [x-size[0]/2, y-size[1]/2], game.width, 0.0, 0.0, afkStatusFont.size, toColour(255, 0, 0, 255), false, false, false, true);
 		}
-	}	
-	
-	// Go up another 50 pixels for the next part
-    //y -= 30;
-	
-	//if(ping != -1) {
-	//	if(pingFont != null) {
-	//		let size2 = pingFont.measure(ping, game.width, 0.0, 0.0, pingFont.size, false, false);
-	//		let colourT2 = createColour(Math.floor(255.0*alpha), 255, 255, 255);
-	//		pingFont.render(ping, [x-size2[0]/2, y-size2[1]/2], game.width, 0.0, 0.0, pingFont.size, colourT2, false, false, false, true);			
-	//	}
-	//}
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -132,27 +117,26 @@ function updateNametags(element) {
 				armour = 1.0; 
 			}
 			
-			let distance = getDistance(playerPos, elementPos);
-			if(distance < nametagDistance) {
+			let distance = playerPos.distance(elementPos);
+			if(distance <= nametagDistance) {
 				if(element.type == ELEMENT_PLAYER) {
-        
                     let name = element.name;
                     let colour = COLOUR_WHITE;
                     let afk = false;        
             
-                    if(element.getData("ag.name") != null) {
-                        name = element.getData("ag.name");
+                    if(client.getData("ag.name") != null) {
+                        name = client.getData("ag.name");
                     }
             
-                    if(element.getData("ag.afk") != null) {
+                    if(client.getData("ag.afk") != null) {
                         afk = true;
                     }
 
-                    if(element.getData("ag.colour") != null) {
-                        colour = element.getData("ag.colour");
-                    }                    
+                    if(client.getData("ag.colour") != null) {
+                        colour = client.getData("ag.colour");
+					}
 
-					drawNametag(screenPos[0], screenPos[1], health, armour, name, 0, 1.0-distance/nametagDistance, distance, colour, afk);
+					drawNametag(screenPos[0], screenPos[1], health, armour, name, 0, 1.0-distance/nametagDistance, distance, colour, afk, element.skin);
 				}
 			}
 		}
@@ -162,31 +146,23 @@ function updateNametags(element) {
 // ----------------------------------------------------------------------------
 
 function getClientFromPlayer(player) {
-	let clients = getClients();
-	for(let i in clients) {
-		if(clients[i].player == player) {
-			return clients[i];
+	getClients().forEach(function(client) {
+		if(client.player == player) {
+			return client;
 		}
-	}
+	});
 }
 
 // ----------------------------------------------------------------------------
 
-addNetworkHandler("armour", function(client, ped, armour) {
-	if(ped != null) {
-		ped.armour = armour;
-	}
-});
-
-// ----------------------------------------------------------------------------
-
 addEventHandler("OnDrawnHUD", function(event) {
-	let peds = getPeds();
-	for(let i in peds) {
-		if(peds[i] != localPlayer) {
-			updateNametags(peds[i]);
-        }
-	}
+	//if(gta.game >= GAME_GTA_IV) {
+	//	return false;
+	//}
+	
+	//getElementsByType(ELEMENT_PLAYER).forEach(function(player) {
+	//	updateNametags(player)
+	//})
 });
 
 // ----------------------------------------------------------------------------

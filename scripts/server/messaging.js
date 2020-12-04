@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: messaging.js
 // DESC: Provides messaging functions and usage
@@ -10,11 +10,28 @@
 
 // ---------------------------------------------------------------------------
 
+function messageAdminAction(messageText) {
+    message(`⚠️ ${messageText}`, getColourByName("orange"));
+    messageDiscord(`:warning: ${messageText}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
+    if(client instanceof Client) {
+        messageClient(`${messageText}`, client, colour);
+    } else {
+        messageDiscordUser(client, `:no_entry_sign: ${messageText}`);
+    }
+}
+
+// ---------------------------------------------------------------------------
+
 function messageClientError(client, messageText) {
     if(client instanceof Client) {
         messageClientNormal(client, `🚫 ${messageText}`, getColourByType("errorMessage"));
     } else {
-        messageDiscordUser(client, `🚫 ${messageText}`);
+        messageDiscordUser(client, `:no_entry_sign: ${messageText}`);
     }
 }
 
@@ -24,7 +41,7 @@ function messageClientSyntax(client, messageText) {
     if(client instanceof Client) {
         messageClientNormal(client, `⌨️ [#FFFFFF] ${messageText}`, getColourByType("syntaxMessage"));
     } else {
-        messageDiscordUser(client, `⌨️ ${messageText}`);
+        messageDiscordUser(client, `:keyboard: ${messageText}`);
     }
 }
 
@@ -34,7 +51,7 @@ function messageClientAlert(client, messageText) {
     if(client instanceof Client) {
         messageClientNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByType("alertMessage"));
     } else {
-        messageDiscordUser(client, `⚠️ ${messageText}`);
+        messageDiscordUser(client, `:warning: ${messageText}`);
     }
 }
 
@@ -44,7 +61,7 @@ function messageClientSuccess(client, messageText) {
     if(client instanceof Client) {
         messageClientNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByType("successMessage"));
     } else {
-        messageDiscordUser(client, `👍 ${messageText}`);
+        messageDiscordUser(client, `:thumbsup: ${messageText}`);
     }
 }
 
@@ -54,7 +71,7 @@ function messageClientInfo(client, messageText) {
     if(client instanceof Client) {
         messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByType("successMessage"));
     } else {
-        messageDiscordUser(client, `ℹ️ ${messageText}`);
+        messageDiscordUser(client, `:information_source: ${messageText}`);
     }
 }
 

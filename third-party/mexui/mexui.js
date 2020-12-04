@@ -17,7 +17,7 @@ mexui.hoveredComponent	= null;
 // initialization
 mexui.init = function()
 {
-	mexui.native.loadImage('third-party/mexui/Images/down-arrow.png', 'downArrow');
+	mexui.native.loadImage('mexui/Images/down-arrow.png', 'downArrow');
 	mexui.bindEvents();
 	mexui.startTimers();
 };
@@ -25,24 +25,26 @@ mexui.init = function()
 // events
 mexui.bindEvents = function()
 {
-	addEventHandler('onMouseDown', function(event)
+	addEventHandler('onMouseDown', function(event, mouse, button)
 	{
-		var e = mexui.triggerEvent('onMouseDown');
+		var e = mexui.triggerEvent('onMouseDown', {button: button});
 		if(!e.clickedAControl)
 		{
 			mexui.focusedControl = null;
 		}
 	});
 
-	addEventHandler('onMouseUp', function(event)
+	addEventHandler('onMouseUp', function(event, mouse, button)
 	{
-		mexui.triggerEvent('onMouseUp');
+		mexui.triggerEvent('onMouseUp', {button: button});
 	});
 
 	addEventHandler('onMouseMove', function(event, mouse, isAbsolute, position)
 	{
-		var mouseSpeed = gta.getMouseSpeed();
-		mexui.triggerEvent('onMouseMove', new Vec2(mouseSpeed.x, -mouseSpeed.y), true);
+		if(isAbsolute)
+			return;
+		
+		mexui.triggerEvent('onMouseMove', new Vec2(position.x, position.y), true);
 	});
 
 	addEventHandler('onMouseWheel', function(event, mouse, offset, flipped)
@@ -116,6 +118,10 @@ mexui.render = function()
 mexui.triggerEvent = function(eventName, data, callBaseMethodFirst)
 {
 	var e = new mexui.Component.Event();
+	
+	if(data.button !== undefined)
+		e.button = data.button;
+	
 	var windows = mexui.windows.slice(0, mexui.windows.length).reverse();
 	for(var i in windows)
 	{
@@ -281,12 +287,12 @@ mexui.isAnyWindowShown = function()
 mexui.setInput = function(showInput)
 {
 	gui.showCursor(showInput, !showInput);
-	if(localPlayer)
-	{
-		if(showInput)
-			setCameraLookAtEntity(new Vec3(cameraMatrix.m41, cameraMatrix.m42, cameraMatrix.m43), localPlayer, false);
-		else
-			restoreCamera(false);
-	}
+	//if(localPlayer)
+	//{
+	//	if(showInput)
+	//		gta.setCameraLookAtEntity(new Vec3(gta.cameraMatrix.m41, gta.cameraMatrix.m42, gta.cameraMatrix.m43), localPlayer, false);
+	//	else
+	//		gta.restoreCamera(false);
+	//}
 };
 

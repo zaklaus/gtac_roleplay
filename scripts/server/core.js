@@ -1,14 +1,14 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2019 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: core.js
 // DESC: Provides core data structures, function, and operations
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let serverId = server.game;
+let serverId = 0;
 
 // ----------------------------------------------------------------------------
 
@@ -260,16 +260,111 @@ let serverData = {
 			},
 		],
 		[	// GTA VC
-
+			{ 
+				position: new Vec3(399.77, -468.90, 11.73),
+				heading: 0.0,
+				blip: false,
+				name: "Washington Beach",
+			},
+			{ 
+				position: new Vec3(508.96, 512.07, 12.10),
+				heading: 0.0,
+				blip: false,
+				name: "Vice Point",
+			},
+			{ 
+				position: new Vec3(-657.43, 762.31, 11.59),
+				heading: 0.0,
+				blip: false,
+				name: "Downtown",
+			},
+			{ 
+				position: new Vec3(-885.08, -470.44, 13.11),
+				heading: 0.0,
+				blip: false,
+				name: "Little Havana",
+			},
 		],
 		[	// GTA SA
-
+			{ 
+				position: new Vec3(1545.53, -1675.64, 13.561),
+				heading: -1.575,
+				blip: false,
+				name: "Los Santos",
+			},			
+			
 		],
 		[	// GTA UG
 			
 		],
 		[	// GTA IV
 
+			{ 
+				position: new Vec3(894.99, -357.39, 18.185),
+				heading: 2.923,
+				blip: false,
+				name: "Broker",
+			},
+			{ 
+				position: new Vec3(435.40, 1592.29, 17.353),
+				heading: 3.087,
+				blip: false,
+				name: "South Bohan",
+			}, 
+			{ 
+				position: new Vec3(974.93, 1870.45, 23.073),
+				heading: -1.621,
+				blip: false,
+				name: "Northern Gardens",
+			}, 
+			{ 
+				position: new Vec3(1233.25, -89.13, 28.034),
+				heading: 1.568,
+				blip: false,
+				name: "South Slopes",
+			},
+			{ 
+				position: new Vec3(50.12, 679.88, 15.316),
+				heading: 1.569,
+				blip: false,
+				name: "Middle Park East",
+			},
+			{ 
+				position: new Vec3(85.21, 1189.82, 14.755),
+				heading: 3.127,
+				blip: false,
+				name: "East Holland",
+			},
+			{ 
+				position: new Vec3(2170.87, 448.87, 6.085),
+				heading: 1.501,
+				blip: false,
+				name: "Francis International Airport",
+			},
+			{ 
+				position: new Vec3(213.12, -211.70, 10.752),
+				heading: 0.200,
+				blip: false,
+				name: "Chinatown",
+			},
+			{ 
+				position: new Vec3(-1714.95, 276.31, 22.134),
+				heading: 1.127,
+				blip: false,
+				name: "Acter",
+			},
+			{ 
+				position: new Vec3(-1220.73, -231.53, 3.024),
+				heading: 2.210,
+				blip: false,
+				name: "Port Tudor",
+			},
+			{ 
+				position: new Vec3(-927.66, 1263.63, 24.587),
+				heading: -0.913,
+				blip: false,
+				name: "Leftwood",
+			},			
 		]		
 	],
 	fireStations: [
@@ -304,8 +399,37 @@ let serverData = {
 			
 		],
 		[	// GTA IV
-
-		]					
+			{ 
+				position: new Vec3(953.13, 95.90, 35.004),
+				heading: 1.595,
+				blip: false,
+				name: "Broker",
+			},
+			{ 
+				position: new Vec3(-271.02, 1542.15, 20.420),
+				heading: -1.160,
+				blip: false,
+				name: "Northwood",
+			},
+			{ 
+				position: new Vec3(1120.47, 1712.36, 10.534),
+				heading: -0.682,
+				blip: false,
+				name: "Northern Gardens",
+			},
+			{ 
+				position: new Vec3(2364.87, 166.83, 5.813),
+				heading: 0.156,
+				blip: false,
+				name: "Francis International Airport",
+			},
+			{ 
+				position: new Vec3(295.40, -336.88, 4.963),
+				heading: 2.887,
+				blip: false,
+				name: "Chinatown",
+			},
+		]
 	],
 	hospitals: [
 		false,
@@ -339,7 +463,30 @@ let serverData = {
 			
 		],
 		[	// GTA IV
-
+			{ 
+				position: new Vec3(1199.59, 196.78, 33.554),
+				heading: 1.633,
+				blip: false,
+				name: "Schottler",
+			},
+			{ 
+				position: new Vec3(980.71, 1831.61, 23.898),
+				heading: -0.049,
+				blip: false,
+				name: "Northern Gardens",
+			},	
+			{ 
+				position: new Vec3(-1317.27, 1277.20, 22.370),
+				heading: 2.246,
+				blip: false,
+				name: "Leftwood",
+			},	
+			{ 
+				position: new Vec3(-1538.43, 344.58, 20.943),
+				heading: -0.156,
+				blip: false,
+				name: "Acter",
+			},
 		]				
 	],
 	payAndSprays: [
@@ -738,3 +885,10 @@ function getServerId() {
 }
 
 // ----------------------------------------------------------------------------
+
+function getServerGame() {
+	return server.game;
+}
+
+// ----------------------------------------------------------------------------
+

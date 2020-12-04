@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: event.js
 // DESC: Provides handlers for built in GTAC and Asshat-Gaming created events
@@ -10,24 +10,25 @@
 
 addEventHandler("OnPlayerJoined", function(event, client) {
     setTimeout(function() {
-        triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[getServerGame()], serverConfig.connectCameraLookAt[getServerGame()]);
+        initClient(client);
+        //triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[getServerGame()], serverConfig.connectCameraLookAt[getServerGame()]);
         
-        client.setData("ag.loginAttemptsRemaining", 3, false);
+        //client.setData("ag.loginAttemptsRemaining", 3, false);
         
-        let tempAccountData = loadAccountFromName(client.name);
-        let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
+        //let tempAccountData = loadAccountFromName(client.name);
+        //let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
         
-        serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
+        //serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
 
-        sendAllBlips(client);
+        //sendAllBlips(client);
 
-        if(tempAccountData != false) {
-            triggerNetworkEvent("ag.showLogin", client);
-            //messageClient("Welcome back to Asshat Gaming RP, " + String(client.name) + "! Please /login to continue.", client, serverConfig.colour.byName["white"]);
-        } else {
-            triggerNetworkEvent("ag.showRegistration", client);
-            //messageClient("Welcome to Asshat Gaming RP, " + String(client.name) + "! Please /register to continue.", client, serverConfig.colour.byName["white"]);
-        }
+        //if(tempAccountData != false) {
+        //    triggerNetworkEvent("ag.showLogin", client);
+        //    //messageClient("Welcome back to Asshat Gaming RP, " + String(client.name) + "! Please /login to continue.", client, serverConfig.colour.byName["white"]);
+        //} else {
+        //    triggerNetworkEvent("ag.showRegistration", client);
+        //    //messageClient("Welcome to Asshat Gaming RP, " + String(client.name) + "! Please /register to continue.", client, serverConfig.colour.byName["white"]);
+        //}
     }, 500);
 });
 
@@ -52,9 +53,17 @@ addEventHandler("OnPedSpawn", function(event, ped) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weaponId, pedPiece) {
-    let closestHospital = getClosestHospital(wastedPed.position);
-    let client = getClientFromPedElement(wastedPed);
-    spawnPlayer(client, closestHospital.position, closestHospital.heading, getClientCurrentSubAccount(client).skin);
+    if(ped.isType(ELEMENT_PLAYER)) {
+        let closestHospital = getClosestHospital(wastedPed.position);
+        let client = getClientFromPedElement(wastedPed);
+        client.despawnPlayer();
+        if(getClientCurrentSubAccount(client).inJail) {
+            let closestJail = getClosestJail(wastedPed.position);
+            spawnPlayer(client, closestJail.position, closestJail.heading, getClientCurrentSubAccount(client).skin);
+        } else {
+            spawnPlayer(client, closestHospital.position, closestHospital.heading, getClientCurrentSubAccount(client).skin);
+        }
+    }
 });
 
 // ---------------------------------------------------------------------------
@@ -68,13 +77,7 @@ bindEventHandler("OnResourceStop", thisResource, function(event, resource) {
 // ---------------------------------------------------------------------------
 
 bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
-    getClients().forEach(function(client) {
-        initClient(client);
-    });
-
-    //createAllLocationBlips();
-
-    
+    //initAllClients();    
 });
 
 // ---------------------------------------------------------------------------

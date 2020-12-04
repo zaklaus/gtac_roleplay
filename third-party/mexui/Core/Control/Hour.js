@@ -7,12 +7,14 @@ mexui.util.extend(mexui.Control.Hour, mexui.Control.TextInput);
 // model
 mexui.Control.Hour.prototype.validateInputCallback = function(e, character)
 {
-	var _int = parseInt(character);
+	return mexui.util.isPositiveIntChar(character);
+};
+
+mexui.Control.Hour.prototype.validateValueCallback = function(e)
+{
+	var _int = parseInt(this.getText());
 	
-	if(isNaN(_int))
-		return false;
-	
-	if(_int < 0 || _int > 23)
+	if(_int < 1 || _int > 23)
 		return false;
 	
 	return true;

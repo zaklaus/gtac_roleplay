@@ -1,3 +1,13 @@
+// ===========================================================================
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// ---------------------------------------------------------------------------
+// FILE: afk.js
+// DESC: Provides AFK detection
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
 // ----------------------------------------------------------------------------
 
 addEventHandler("OnLostFocus", function(event) {

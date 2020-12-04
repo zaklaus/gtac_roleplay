@@ -1,9 +1,9 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2019 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: medic.js
-// DESC: Provides medic job functions and usage
+// DESC: Provides paramedic job functions and usage
 // TYPE: Job (JavaScript)
 // ===========================================================================

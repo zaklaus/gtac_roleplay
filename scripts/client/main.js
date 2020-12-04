@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: main.js
 // DESC: Main client script (will be reorganized into individual files later)
@@ -11,20 +11,38 @@
 let allServerBlips = [];
 let currentServerBlips = [];
 
+let bigMessageFont = null;
+let mainLogo = null;
+
+let showLogo = true;
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
-    gta.fadeCamera(true);
-    gta.setCameraLookAt(cameraPosition, cameraLookat, true);
+    //if(gta.game < GAME_GTA_IV) {
+        gta.fadeCamera(true);
+        gta.setCameraLookAt(cameraPosition, cameraLookat, true);
+    //}
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.restoreCamera", function() {
+    //if(gta.game < GAME_GTA_IV) {
+        gta.restoreCamera(true);
+    //}
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.logo", function(state) {
+    showLogo = state;
 });
 
 // ---------------------------------------------------------------------------
 
 addEventHandler("onPickupCollected", function(event, pickup, ped) {
     console.log(`PICKUP COLLECTED: Ped ${ped.id}, ${pickup.id}`);
-
-    // This won't be needed in next GTAC update. onPickupCollccted has been added server side
-    if(ped == localPlayer) {
-        triggerNetworkEvent("ag.onPickupCollected", pickup);
-    }
 });
 
 // ---------------------------------------------------------------------------
@@ -37,6 +55,20 @@ addNetworkHandler("ag.clearWeapons", function() {
 
 addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
     localPlayer.giveWeapon(weaponId, ammo, active);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.showRegisterMessage", function() {
+    showRegisterMessage = true;
+    showLoginMessage = false;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.showLoginMessage", function() {
+    showLoginMessage = true;
+    showRegisterMessage = false;
 });
 
 // ---------------------------------------------------------------------------
@@ -143,8 +175,27 @@ function attemptToShowBlipsOnSpawn(ped) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.skin", function(ped, skin) {
-    ped.skin = skin;
+addNetworkHandler("ag.skin", function(skin) {
+    localPlayer.skin = skin;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.position", function(position) {
+    localPlayer.position = position;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.interior", function(interior) {
+    localPlayer.interior = interior;
+    cameraInterior = interior;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.dimension", function(dimension) {
+    localPlayer.dimension = dimension;
 });
 
 // ---------------------------------------------------------------------------
@@ -156,22 +207,24 @@ addNetworkHandler("ag.removeFromVehicle", function() {
 // ---------------------------------------------------------------------------
 
 function initLocalPlayer(player) {
-    attemptToShowBlipsOnSpawn(player)
-    bindEventHandler("onEntityProcess", localPlayer, processLocalPlayerEntity);
+    attemptToShowBlipsOnSpawn(player);
+    if(gta.game < GAME_GTA_IV) {
+        addEventHandler("onProcess", processEvent);
+    }   
 }
 
 // ---------------------------------------------------------------------------
 
-function processLocalPlayerEntity(event, player) {
+function processEvent(event, deltaTime) {
     getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
-        if(player.position.distance(sphere.position) <= sphere.radius) {
-            if(player.getData("ag.inSphere") == null) {
-                player.setData("ag.inSphere", sphere);
+        if(localPlayer.position.distance(sphere.position) <= sphere.radius) {
+            if(localPlayer.getData("ag.inSphere") == null) {
+                localPlayer.setData("ag.inSphere", sphere);
                 triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
             }
         } else {
-            if(player.getData("ag.inSphere")) {
-                player.removeData("ag.inSphere", sphere);
+            if(localPlayer.getData("ag.inSphere")) {
+                localPlayer.removeData("ag.inSphere", sphere);
                 triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
             }           
         }
@@ -179,3 +232,58 @@ function processLocalPlayerEntity(event, player) {
 }
 
 // ---------------------------------------------------------------------------
+
+addEventHandler("OnDrawnHUD", function (event) {
+    if(bigMessageFont != null && mainLogo != null) {
+        /*
+        if(showLoginMessage) {
+            let logoPos = new Vec2(gta.width/2-128, gta.height/2-256);
+            let logoSize = new Vec2(256, 256);
+            drawing.drawRectangle(mainLogo, logoPos, logoSize);
+
+            let y = gta.height/2+10;
+
+            bigMessageFont.render(`Welcome back to Asshat Gaming, ${localClient.name}`, [gta.width/2, y], gta.width, 0.0, 0.0, bigMessageFont.size, COLOUR_WHITE, false, false, false, true);
+            y += 18;
+            bigMessageFont.render(`Please /login to access your account`, [gta.width/2, y], gta.width, 0.0, 0.0, bigMessageFont.size, COLOUR_WHITE, false, false, false, true);
+        }
+
+        if(showRegisterMessage) {
+            let logoPos = new Vec2(gta.width/2-128, gta.height/2-256);
+            let logoSize = new Vec2(256, 256);
+            drawing.drawRectangle(mainLogo, logoPos, logoSize);
+
+            let y = gta.height/2+10;
+
+            bigMessageFont.render(`Welcome to Asshat Gaming, ${localClient.name}`, [gta.width/2, y], gta.width, 0.0, 0.0, bigMessageFont.size, COLOUR_WHITE, false, false, false, true);
+            y += 18;
+            bigMessageFont.render(`Please /register to create an account`, [gta.width/2, y], gta.width, 0.0, 0.0, bigMessageFont.size, COLOUR_WHITE, false, false, false, true);
+        }
+        */
+    }
+
+    // Draw logo in corner of screen
+    if(mainLogo != null && showLogo) {
+        let logoPos = new Vec2(gta.width-132, gta.height-132);
+        let logoSize = new Vec2(128, 128);
+        drawing.drawRectangle(mainLogo, logoPos, logoSize);
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnResourceStart", function(event, resource) {
+	if(resource == thisResource) {
+		let fontStream = openFile("files/fonts/pricedown.ttf");
+		if(fontStream != null) {
+			bigMessageFont = lucasFont.createFont(fontStream, 28.0);
+			fontStream.close();
+		}
+		
+		let logoStream = openFile("files/images/main-logo.png");
+		if(logoStream != null) {
+			mainLogo = drawing.loadPNG(logoStream);
+			logoStream.close();
+		}
+	}
+});

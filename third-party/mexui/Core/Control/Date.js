@@ -9,6 +9,11 @@ mexui.util.createControlConstructor('Date', false, function(window, x, y, w, h, 
 	this.inputShown				= false;
 	this.valueBoxSize			= new Vec2(50, 30);
 	this.arrowBoxSize			= new Vec2(25, 22);
+	
+	this.maxYearOffset			= 10;
+	this.minYearCallback		= ()=>{ return 1900; };
+	this.maxYearCallback		= ()=>{ return new Date().getFullYear() + this.maxYearOffset; }
+	this.twoDigitYearCapOffset	= 10;
 });
 mexui.util.extend(mexui.Control.Date, mexui.Control.TextInput);
 
@@ -51,10 +56,12 @@ mexui.Control.Date.prototype.onMouseDown = function(e)
 			else if(this.month == 13)
 				this.month = 1;
 			
-			if(this.year == 1899)
-				this.year = 1900;
-			else if(this.year == 2020)
-				this.year = 2019;
+			var minYear = this.minYearCallback();
+			var maxYear = this.maxYearCallback();
+			if(this.year < minYear)
+				this.year = minYear;
+			else if(this.year > maxYear)
+				this.year = maxYear;
 			
 			this.generateText();
 			
@@ -113,31 +120,44 @@ mexui.Control.Date.prototype.renderAfter = function()
 // model
 mexui.Control.Date.prototype.generateText = function()
 {
-	this.text = (this.day < 10 ? '0'+this.day : this.day)
+	this.setText((this.day < 10 ? '0'+this.day : this.day)
 			+'/'+(this.month < 10 ? '0'+this.month : this.month)
-			+'/'+(this.year < 10 ? '0'+this.year : this.year);
+			+'/'+(this.year < 10 ? '0'+this.year : this.year));
 };
 
 mexui.Control.Date.prototype.validateInputCallback = function(e, character)
 {
-	var text = this.getTextWithNewCharacter(character);
-	var parts = text.split(':');
+	return mexui.util.isPositiveIntChar(character) || mexui.util.isLetter(character) || character == '/';
+};
+
+mexui.Control.Date.prototype.validateValueCallback = function(e)
+{
+	var parts = this.getText().split('/');
+	
+	if(parts.length != 3)
+		return false;
 	
 	for(var i in parts)
 	{
-		if(i == 3)
+		var partAsStr = parts[i];
+		if(partAsStr === '')
 			return false;
 		
-		var part = parseInt(parts[i]);
-		
-		if(isNaN(part))
-			return false;
-		
-		if(part < 0)
-			return false;
-		
-		if(part > (i == 0 ? 23 : 59))
-			return false;
+		if(i == 0)
+		{
+			if(!mexui.util.isDayIdWithOptionalSuffix(partAsStr))
+				return false;
+		}
+		else if(i == 1)
+		{
+			if(!mexui.util.isMonthIdOrName(partAsStr))
+				return false;
+		}
+		else if(i == 2)
+		{
+			if(!mexui.util.isYear(partAsStr, this.minYearCallback(), this.maxYearCallback(), this.twoDigitYearCapOffset))
+				return false;
+		}
 	}
 	
 	return true;

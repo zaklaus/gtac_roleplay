@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: command.js
 // DESC: Provides command data, functions and usage
@@ -24,6 +24,8 @@ function loadCommandData() {
             commandData("changepass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false),
             //commandData("setpass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false),
             commandData("switchchar", switchCharacterCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("newchar", newCharacterCommand, "<first name> <last name>", getStaffFlagValue("none"), true, false),
+            commandData("usechar", useCharacterCommand, "<character id>", getStaffFlagValue("none"), true, false),
         ],
         ammunation: [],
         ban: [
@@ -33,8 +35,17 @@ function loadCommandData() {
         ],
         bitFlag: [],
         business: [
-            commandData("addbiz", createBusinessCommand, "<name>", getStaffFlagValue("manageBusinesses"), true, false),           
+            commandData("addbiz", createBusinessCommand, "<name>", getStaffFlagValue("manageBusinesses"), true, false),
             commandData("delbiz", deleteBusinessCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, true),
+            commandData("addloc", createBusinessLocationCommand, "<type> <business id> <name>", getStaffFlagValue("manageBusinesses"), true, false),
+            commandData("delloc", deleteBusinessLocationCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, false),
+            commandData("lockbiz", lockBusinessCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("enterfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true),
+            commandData("till", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("bizwithdraw", withdrawFromBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
+            commandData("bizdeposit", depositIntoBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
+            commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("none"), true, true),
+            commandData("bizowner", setBusinessOwnerCommand, "<player name/id>", getStaffFlagValue("none"), true, true),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
@@ -104,7 +115,12 @@ function loadCommandData() {
         ],
         locale: [],
         messaging: [],
-        misc: [],
+        misc: [
+            commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("manageServer"), true, true),
+            commandData("setweather", setWeatherCommand, "<weather id/name>", getStaffFlagValue("manageServer"), true, true),
+            commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("manageServer"), true, true),
+            commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),
+        ],
         moderation: [
             commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
 			commandData("mute", muteClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
@@ -175,6 +191,12 @@ function doesCommandRequireLogin(command) {
 
 function getCommandRequiredPermissions(command) {
     return getCommand(command).requiredStaffFlags;
+}
+
+// ---------------------------------------------------------------------------
+
+function getCommandSyntaxText(command) {
+    return getCommand(command).syntaxString;
 }
 
 // ---------------------------------------------------------------------------

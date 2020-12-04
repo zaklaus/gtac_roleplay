@@ -1,7 +1,7 @@
 // ===========================================================================
-// Asshat Gaming RP
-// http://asshatgaming.com
-// © 2020 Asshat Gaming 
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: job.js
 // DESC: Provides job functions and usage
@@ -75,7 +75,7 @@ function sendAllJobSpheres() {
 
 function createAllJobPickups() {
 	for(let i in serverData.jobs[getServerGame()]) {
-		serverData.jobs[getServerGame()][i].pickup = createPickup(serverData.jobs[getServerGame()][i].pickupModel, serverData.jobs[getServerGame()][i].position);
+		serverData.jobs[getServerGame()][i].pickup = gta.createPickup(serverData.jobs[getServerGame()][i].pickupModel, serverData.jobs[getServerGame()][i].position);
 
 		serverData.jobs[getServerGame()][i].pickup.setData("ag.ownerType", AG_PICKUP_JOB, true);
 		serverData.jobs[getServerGame()][i].pickup.setData("ag.ownerId", i, true);
@@ -323,7 +323,7 @@ function startWorking(client) {
 	getClientCurrentSubAccount(client).isWorking = true;
 
 	let jobId = getClientCurrentSubAccount(client).job;
-	switch(serverData.jobs[getServerGame()][jobId].jobType) {
+	switch(getJobType(jobId)) {
 		case AG_JOB_POLICE:
 			messageClientInfo(client, "Use /uniform and /equip to get your equipment.");
 			break;
@@ -370,7 +370,7 @@ function stopWorking(client) {
 
 	getClientCurrentSubAccount(client).isWorking = false;
 
-	triggerNetworkEvent("ag.skin", null, client.player, getClientCurrentSubAccount(client).skin);
+	triggerNetworkEvent("ag.skin", client, getClientCurrentSubAccount(client).skin);
 
 	let jobVehicle = getClientCurrentSubAccount(client).lastJobVehicle;
 	if(jobVehicle) {
@@ -394,7 +394,7 @@ function stopWorking(client) {
 	triggerNetworkEvent("ag.clearWeapons", client);    
 
 	let jobId = getClientCurrentSubAccount(client).job;
-	switch(serverData.jobs[getServerGame()][jobId].jobType) {
+	switch(getJobType(jobId)) {
 		case AG_JOB_POLICE:
 			messageClientInfo(client, "Your uniform, equipment, and police car have been returned to the police station");
 			break;
@@ -456,41 +456,41 @@ function jobUniformCommand(command, params, client) {
 	
 	let jobId = getClientCurrentSubAccount(client).job;
 	getClientCurrentSubAccount(client).jobUniform = uniformId-1;
-
-	switch(serverData.jobs[getServerGame()][jobId].jobType) {
+	
+	switch(getJobType(jobId)) {
 		case AG_JOB_POLICE:
-			triggerNetworkEvent("ag.skin", null, client.player, serverData.policeJobSkins[getServerGame()][uniformId-1]);
+			triggerNetworkEvent("ag.skin", client, serverData.policeJobSkins[getServerGame()][uniformId-1]);
 			//client.player.modelIndex = serverData.policeJobSkins[getServerGame()][uniformId];
 			triggerNetworkEvent("ag.giveWeapon", client, 2, 200, false);
 			triggerNetworkEvent("ag.giveWeapon", client, 1, 1, false);  
 			break;
 
 		case AG_JOB_MEDICAL:
-			triggerNetworkEvent("ag.skin", null, client.player, serverData.medicalJobSkins[getServerGame()][uniformId-1]);
+			triggerNetworkEvent("ag.skin", client, serverData.medicalJobSkins[getServerGame()][uniformId-1]);
 			//client.player.modelIndex = serverData.medicalJobSkins[getServerGame()][uniformId];
 			messageClientInfo(client, "Your uniform and ambulance have been returned to the hospital");
 			break;
 
 		case AG_JOB_FIRE:
-			triggerNetworkEvent("ag.skin", null, client.player, serverData.fireJobSkins[getServerGame()][uniformId-1]);
+			triggerNetworkEvent("ag.skin", client, serverData.fireJobSkins[getServerGame()][uniformId-1]);
 			//client.player.modelIndex = serverData.fireJobSkins[getServerGame()][uniformId];
 			messageClientInfo(client, "Your uniform and fire truck have been returned to the fire station");
 			break;
 
 		case AG_JOB_BUS:
-			triggerNetworkEvent("ag.skin", null, client.player, serverData.busJobSkins[getServerGame()][uniformId-1]);
+			triggerNetworkEvent("ag.skin", client, serverData.busJobSkins[getServerGame()][uniformId-1]);
 			//client.player.modelIndex = serverData.busJobSkins[getServerGame()][uniformId];
 			messageClientInfo(client, "Your bus has been returned to the bus depot");
 			break;
 
 		case AG_JOB_TAXI:
-			triggerNetworkEvent("ag.skin", null, client.player, serverData.taxiJobSkins[getServerGame()][uniformId-1]);
+			triggerNetworkEvent("ag.skin", client, serverData.taxiJobSkins[getServerGame()][uniformId-1]);
 			//client.player.modelIndex = serverData.taxiJobSkins[getServerGame()][uniformId];
 			messageClientInfo(client, "Your taxi has been returned to the taxi depot");
 			break;
 
 		case AG_JOB_GARBAGE:
-			triggerNetworkEvent("ag.skin", null, client.player, serverData.garbageJobSkins[getServerGame()][uniformId-1]);
+			triggerNetworkEvent("ag.skin", client, serverData.garbageJobSkins[getServerGame()][uniformId-1]);
 			//client.player.modelIndex = serverData.garbageJobSkins[getServerGame()][uniformId];
 			messageClientInfo(client, "Your trash truck has been returned to the city landfill");
 			break;

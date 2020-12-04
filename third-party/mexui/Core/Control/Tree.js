@@ -28,10 +28,13 @@ mexui.util.linkBaseControlStyles('Tree', {
 // input
 mexui.Control.Tree.prototype.onMouseDown = function(e)
 {
-	var pos = this.getScreenPosition();
-	pos.y -= this.axis.y.getScrolledOffset();
-	
-	this.testRowClick(e, this.axis.y.entries, pos);
+	if(e.button == 0)
+	{
+		var pos = this.getScreenPosition();
+		pos.y -= this.axis.y.getScrolledOffset();
+		
+		this.testRowClick(e, this.axis.y.entries, pos);
+	}
 	
 	if(!e.used)
 		mexui.Entity.ControlWithEntries.prototype.onMouseDown.call(this, e);
@@ -44,6 +47,9 @@ mexui.Control.Tree.prototype.render = function()
 	pos.y -= this.axis.y.getScrolledOffset();
 	
 	this.renderRows(this.axis.y.entries, 0, pos);
+	
+	if(this.isFocused())
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
 };
 
 mexui.Control.Tree.prototype.renderRows = function(rows, level, pos)

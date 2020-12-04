@@ -77,6 +77,9 @@ mexui.Control.Grid.prototype.render = function()
 		startY += row.rowHeight;
 		mexui.native.drawAALine(new Vec2(pos.x, startY), new Vec2(pos.x + this.size.x, startY), this.getStyles('row'));
 	}
+	
+	if(this.isFocused())
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
 };
 
 // model

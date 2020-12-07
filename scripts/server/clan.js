@@ -35,13 +35,14 @@ function loadClansFromDatabase() {
 
 	let tempClans = [];
 	let dbConnection = connectToDatabase();
+	let dbAssoc;
 	
 	if(dbConnection) {
-		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `clan_main` WHERE `clan_server` = " + String(serverId));
+		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `clan_main` WHERE `clan_deleted` = 0 AND `clan_server` = " + String(serverId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempClanData = getClasses().clanData(dbFetchAssoc);
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempClanData = getClasses().clanData(dbAssoc);
 					tempClanData.members = loadClanMembersFromDatabase(tempClanData.databaseId);
 					tempClanData.ranks = loadClanRanksFromDatabase(tempClanData.databaseId);
 					tempClans.push(tempClanData);

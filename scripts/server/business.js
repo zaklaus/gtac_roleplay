@@ -37,13 +37,15 @@ function loadBusinessesFromDatabase() {
 	let tempBusinesses = [];
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
+	let dbAssoc;
 	
 	if(dbConnection) {
 		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `biz_main` WHERE `biz_server` = " + String(serverId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempBusinessData = businessData(dbFetchAssoc);
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempBusinessData = new serverClasses.businessData(dbAssoc);
+					tempBusinessData.locations = loadBusinessLocationsFromDatabase(tempBusinessData.databaseId);
 					tempBusinesses.push(tempBusinessData);
 					console.log(`[Asshat.Business]: Business '${tempBusinessData.name}' loaded from database successfully!`);
 				}
@@ -59,21 +61,22 @@ function loadBusinessesFromDatabase() {
 
 // ---------------------------------------------------------------------------
 
-function loadLocationsFromDatabase() {
+function loadBusinessLocationsFromDatabase(businessId) {
 	console.log("[Asshat.Business]: Loading locations from database ...");
 
-	let tempLocations = [];
+	let tempBusinessLocations = [];
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
+	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `loc_main` WHERE `loc_server` = " + String(serverId));
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `biz_loc` WHERE `biz_loc_biz` = " + String(businessId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempLocationData = locationData(dbFetchAssoc);
-					tempLocations.push(tempLocationData);
-					console.log(`[Asshat.Business]: Location '${tempLocationData.name}' loaded from database successfully!`);
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempBusinessLocationData = new serverClasses.businessLocationData(dbAssoc);
+					tempBusinessLocations.push(tempBusinessLocationData);
+					console.log(`[Asshat.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -81,8 +84,8 @@ function loadLocationsFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Business]: ${tempBusinesses.length} locations loaded from database successfully!`);
-	return tempLocations;
+	console.log(`[Asshat.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
+	return tempBusinessLocations;
 }
 
 // ---------------------------------------------------------------------------
@@ -173,7 +176,7 @@ function createBusiness(name, entrancePosition, interiorId, virtualWorld) {
 
 		let tempBusinessData = loadBusinessFromDatabaseById(dbConnection.insertID);
 		if(tempBusinessData != false) {
-			let tempBusiness = getClasses().businessData(tempBusinessData);
+			let tempBusiness = new serverClasses.businessData(tempBusinessData);
 			serverData.business.push(tempBusiness);
 		}
 	}

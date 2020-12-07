@@ -122,3 +122,18 @@ addNetworkHandler("ag.heldKey", function(client, key) {
 });
 
 // ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.player.sync", function(client, position, heading) {
+    client.setData("ag.position", position, true);
+    client.setData("ag.heading", heading, true);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
+    //let vehicle = getVehicleFromSyncId(syncId);
+    //vehicle.setData("ag.position") = position;
+    //vehicle.setData("ag.heading") = heading;
+});
+
+// ---------------------------------------------------------------------------

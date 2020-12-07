@@ -73,6 +73,11 @@ function saveVehicleToDatabase(vehicleData) {
 	console.log(`[Asshat.Vehicle]: Saving vehicles ${vehicleData.vehicle.id} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
+		if(!vehicleData.spawnLocked) {
+			vehicleData.spawnPosition = vehicle.position;
+			vehicleData.spawnRotation = vehicle.heading;        
+		}
+
 		// If vehicle hasn't been added to database, ID will be 0
 		if(vehicleData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${serverId})`;
@@ -131,7 +136,10 @@ function spawnAllVehicles() {
 
 function getVehicleData(vehicle) {
 	let dataIndex = vehicle.getData("ag.dataSlot");
-	return serverData.vehicles[dataIndex];
+	if(typeof serverData.vehicles[dataIndex] != "undefined") {
+		return serverData.vehicles[dataIndex];
+	}
+	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -713,14 +721,93 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 
 	let vehicle = client.player.vehicle;
 
-	if(!getVehicleData(vehicle).spawnLocked) {
+	let spawnLocked = getVehicleData(vehicle).spawnLocked;
+	getVehicleData(vehicle).spawnLocked = !spawnLocked;
+	if(spawnLocked) {
 		getVehicleData(vehicle).spawnPosition = vehicle.position;
 		getVehicleData(vehicle).spawnRotation = vehicle.heading;
+	}	
+
+	messageClientInfo(client, `This vehicle will now spawn ${(spawnLocked) ? "here" : "wherever a player leaves it."}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function reloadAllVehiclesCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
 	}
 
-	getVehicleData(vehicle).spawnLocked = !getVehicleData(vehicle).spawnLocked
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
 
-	messageClientInfo(client, `This vehicle will now spawn ${(getVehicleData(vehicle).spawnLocked) ? "here" : "wherever a player leaves it."}`);
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(!client.player.vehicle) {
+		messageClientError(client, "You need to be in a vehicle!");
+		return false;		
+	}
+
+	for(let i in serverData.vehicles) {
+		if(serverData.vehicles[i].vehicle) {
+			destroyElement(serverData.vehicles[i].vehicle);
+		}
+	}
+
+	serverData.vehicles = null;
+	serverData.vehicles = loadVehiclesFromDatabase();
+	spawnAllVehicles();
+
+	messageAdminAction(`All server vehicles have been reloaded by an admin!`);
+}
+
+// ---------------------------------------------------------------------------
+
+function respawnAllVehiclesCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(!client.player.vehicle) {
+		messageClientError(client, "You need to be in a vehicle!");
+		return false;		
+	}
+
+	for(let i in serverData.vehicles) {
+		if(serverData.vehicles[i].vehicle) {
+			destroyElement(serverData.vehicles[i].vehicle);
+			serverData.vehicles[i].vehicle = null;
+		}
+	}
+
+	spawnAllVehicles();
+
+	messageAdminAction(`All server vehicles have been respawned by an admin!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -740,6 +827,18 @@ function sendAllVehiclesToClient(client) {
 		});
 	}
 	*/
+}
+
+// ---------------------------------------------------------------------------
+
+function getVehicleDataFromIVSyncId(syncId) {
+	for(let i in serverData.vehicles) {
+		if(serverData.vehicles[i].ivSyncId != -1) {
+			if(serverData.vehicles[i].ivSyncId == syncId) {
+				return serverData.vehicles[i];
+			}
+		}
+	}
 }
 
 // ---------------------------------------------------------------------------

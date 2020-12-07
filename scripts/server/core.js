@@ -9,6 +9,8 @@
 // ===========================================================================
 
 let serverId = 0;
+let scriptVersion = "1.0";
+let serverStartTime = new Date().getTime();
 
 // ----------------------------------------------------------------------------
 
@@ -584,7 +586,46 @@ let serverData = {
 				jobType: AG_JOB_POLICE, 
 				jobSkin: 1, 
 				jobColour: serverConfig.colour.byName.policeBlue, 
-				enabled: true 
+				enabled: true,
+				weapons: [[1,1], [2, 150], [4,20]],
+				equipment: [
+					{	// Standard police officer equipment
+						requiredRank: 0,
+						weapons: [
+							[1,1], 			// Baseball Bat (Nitestick alternative)
+							[2,150],  		// Pistol
+							[4,20],			// Shotgun
+						]
+					},
+					{	// Detective Equipment
+						requiredRank: 1,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[34,100],		// Camera
+						]
+					},
+					{	// Supervisor Equipment
+						requiredRank: 3,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[25,300],		// MP5
+						]
+					},	
+					{	// SWAT Equipment
+						requiredRank: 2,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],			// Shotgun
+							[25,300],		// MP5
+							[26,300],		// M4
+						]
+					},														
+				]				  
 			}, 
 			{   
 				name: "Paramedic", 
@@ -661,7 +702,8 @@ let serverData = {
 				jobType: AG_JOB_POLICE, 
 				jobSkin: 1, 
 				jobColour: serverConfig.colour.byName.policeBlue, 
-				enabled: true 
+				enabled: true,
+				weapons: [[1,1], [2, 150], [4,20]], 
 			}, 
 			{   
 				name: "Police Officer",
@@ -672,7 +714,8 @@ let serverData = {
 				jobType: AG_JOB_POLICE, 
 				jobSkin: 1, 
 				jobColour: serverConfig.colour.byName.policeBlue, 
-				enabled: true 
+				enabled: true,
+				weapons: [[1,1], [2, 150], [4,20]], 
 			}, 
 			{   
 				name: "Paramedic",
@@ -742,7 +785,202 @@ let serverData = {
 			},   
 		],
 		[	// GTA VC
-
+			{   
+				name: "Police Officer", 
+				position: new Vec3(399.77, -468.90, 11.73), 
+				pickup: false, 
+				pickupModel: 375, 
+				blip: false, 
+				jobType: AG_JOB_POLICE, 
+				jobSkin: 1, 
+				jobColour: serverConfig.colour.byName.policeBlue, 
+				enabled: true,
+				equipment: [
+					{	// Standard police officer equipment
+						requiredRank: 0,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+						]
+					},
+					{	// Detective Equipment
+						requiredRank: 1,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[34,100],		// Camera
+						]
+					},
+					{	// Supervisor Equipment
+						requiredRank: 3,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[25,300],		// MP5
+						]
+					},	
+					{	// SWAT Equipment
+						requiredRank: 2,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],			// Shotgun
+							[25,300],		// MP5
+							[26,300],		// M4
+						]
+					},														
+				]
+			}, 
+			{   
+				name: "Police Officer", 
+				position: new Vec3(508.96, 512.07, 12.10), 
+				pickup: false, 
+				pickupModel: 375, 
+				blip: false, 
+				jobType: AG_JOB_POLICE, 
+				jobSkin: 1, 
+				jobColour: serverConfig.colour.byName.policeBlue, 
+				enabled: true,
+				equipment: [
+					{	// Standard police officer equipment
+						requiredRank: 0,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+						]
+					},
+					{	// Detective Equipment
+						requiredRank: 1,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[34,100],		// Camera
+						]
+					},
+					{	// Supervisor Equipment
+						requiredRank: 3,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[25,300],		// MP5
+						]
+					},	
+					{	// SWAT Equipment
+						requiredRank: 2,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],			// Shotgun
+							[25,300],		// MP5
+							[26,300],		// M4
+						]
+					},														
+				]
+			}, 
+			{   
+				name: "Police Officer", 
+				position: new Vec3(-657.43, 762.31, 11.59), 
+				pickup: false, 
+				pickupModel: 375, 
+				blip: false, 
+				jobType: AG_JOB_POLICE, 
+				jobSkin: 1, 
+				jobColour: serverConfig.colour.byName.policeBlue, 
+				enabled: true,
+				equipment: [
+					{	// Standard police officer equipment
+						requiredRank: 0,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+						]
+					},
+					{	// Detective Equipment
+						requiredRank: 1,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[34,100],		// Camera
+						]
+					},
+					{	// Supervisor Equipment
+						requiredRank: 3,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[25,300],		// MP5
+						]
+					},	
+					{	// SWAT Equipment
+						requiredRank: 2,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],			// Shotgun
+							[25,300],		// MP5
+							[26,300],		// M4
+						]
+					},														
+				]
+			},
+			{   
+				name: "Police Officer", 
+				position: new Vec3(-885.08, -470.44, 13.11), 
+				pickup: false, 
+				pickupModel: 375, 
+				blip: false, 
+				jobType: AG_JOB_POLICE, 
+				jobSkin: 1, 
+				jobColour: serverConfig.colour.byName.policeBlue, 
+				enabled: true,
+				equipment: [
+					{	// Standard police officer equipment
+						requiredRank: 0,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+						]
+					},
+					{	// Detective Equipment
+						requiredRank: 1,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[34,100],		// Camera
+						]
+					},
+					{	// Supervisor Equipment
+						requiredRank: 3,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],		// Shotgun
+							[25,300],		// MP5
+						]
+					},	
+					{	// SWAT Equipment
+						requiredRank: 2,
+						weapons: [
+							[4,1], 			// Nitestick
+							[17,150],  		// Colt 45
+							[19,20],			// Shotgun
+							[25,300],		// MP5
+							[26,300],		// M4
+						]
+					},														
+				]
+			},
 		],
 		[	// GTA SA
 

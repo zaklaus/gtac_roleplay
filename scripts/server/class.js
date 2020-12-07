@@ -104,21 +104,21 @@ function initClassTable() {
 				this.till = Number(businessAssoc["biz_till"]);
 			}
 		},
-		locationData: class {
-			constructor(locationAssoc) {
-				if(!locationAssoc) {
+		businessLocationData: class {
+			constructor(businessLocationAssoc) {
+				if(!businessLocationAssoc) {
 					return;
 				}
 
-				this.databaseId = locationAssoc("biz_id");
-				this.name = locationAssoc("loc_name");
-				this.type = locationAssoc("loc_type");
-				this.business = locationAssoc("loc_biz");
-				this.enabled = locationAssoc("loc_enabled");
+				this.databaseId = businessLocationAssoc("biz_loc_id");
+				this.name = businessLocationAssoc("biz_loc_name");
+				this.type = businessLocationAssoc("biz_loc_type");
+				this.business = businessLocationAssoc("biz_loc_biz");
+				this.enabled = businessLocationAssoc("biz_loc_enabled");
 
-				this.position = new Vec3(businessAssoc("loc_pos_x"), businessAssoc("loc__pos_y"), businessAssoc("loc_pos_z"));
-				this.interior = Number(businessAssoc["loc_int"]);
-				this.dimension = Number(businessAssoc["loc_vw"]);
+				this.position = new Vec3(businessLocationAssoc("biz_loc_pos_x"), businessLocationAssoc("biz_loc_pos_y"), businessLocationAssoc("biz_loc_pos_z"));
+				this.interior = Number(businessLocationAssoc["biz_loc_int"]);
+				this.dimension = Number(businessLocationAssoc["biz_loc_vw"]);
 			}
 		},
 		houseData: class {
@@ -135,10 +135,11 @@ function initClassTable() {
 				// General Info
 				this.databaseId = 0;
 				this.server = serverId;
-				this.model = vehicle.modelIndex;
+				this.model = (vehicle) ? vehicle.modelIndex : 0;
 				this.vehicle = vehicle;
 				this.tempVehicle = false;
 				this.streamedBy = false; // For IV only
+				this.ivSyncId = -1;
 				
 				// Ownership
 				this.ownerType = AG_VEHOWNER_NONE;
@@ -147,9 +148,11 @@ function initClassTable() {
 				this.rentPrice = 0;
 				
 				// Position and Rotation
-				this.spawnPosition = vehicle.position;
-				this.spawnRotation = vehicle.heading;
+				this.spawnPosition = (vehicle) ? vehicle.position : new Vec3(0.0, 0.0, 0.0);
+				this.spawnRotation = (vehicle) ? vehicle.heading : 0.0;
 				this.spawnLocked = false;
+				this.syncPosition = new Vec3(0.0, 0.0, 0.0); // For IV only
+				this.syncHeading = 0.0; // For IV only
 				
 				// Colour Info
 				this.colour1IsRGBA = 0;
@@ -191,6 +194,7 @@ function initClassTable() {
 					this.spawnPosition = new Vec3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
 					this.spawnRotation = Number(vehicleAssoc["veh_rot_z"]);
 					this.spawnLocked = vehicleAssoc["veh_spawn_lock"];
+
 					
 					// Colour Info
 					this.colour1IsRGBA = vehicleAssoc["veh_col1_isrgba"];
@@ -249,7 +253,83 @@ function initClassTable() {
 				this.whenReported = new Date().getTime();
 				this.databaseId = 0;
 			}
-		}
+		},
+		jobData: class {
+			constructor(jobAssoc) {
+				if(!jobAssoc) {
+					return;
+				}
+
+				this.databaseId = jobAssoc["job_id"];
+				this.type = jobAssoc["job_type"];
+				this.name = jobAssoc["job_name"];
+				this.enabled = jobAssoc["job_enabled"];
+				this.blipModel = jobAssoc["job_blip"];
+				this.pickupModel = jobAssoc["job_pickup"];
+				this.colour = toColour(jobAssoc["job_colour_r"], jobAssoc["job_colour_g"], jobAssoc["job_colour_b"], 255);
+				this.whitelist = jobAssoc["job_whitelist"];
+
+				this.equipment = [];
+				this.uniforms = [];
+				this.locations = [];
+			}
+		},
+		jobEquipmentData: class {
+			constructor(jobEquipmentAssoc) {
+				if(!jobEquipmentAssoc) {
+					return;
+				}
+
+				this.databaseId = jobEquipmentAssoc["job_equip_id"];
+				this.job = jobEquipmentAssoc["job_equip_job"];
+				this.name = jobEquipmentAssoc["job_equip_name"];
+				this.requiredRank = jobEquipmentAssoc["job_equip_minrank"];
+				this.enabled = jobEquipmentAssoc["job_equip_enabled"];
+			}
+		},
+		jobEquipmentWeaponData: class {
+			constructor(jobEquipmentWeaponAssoc) {
+				if(!jobEquipmentWeaponAssoc) {
+					return;
+				}
+
+				this.databaseId = jobEquipmentWeaponAssoc["job_equip_wep_id"];
+				this.equipmentId = jobEquipmentWeaponAssoc["job_equip_wep_equip"];
+				this.weaponId = jobEquipmentWeaponAssoc["job_equip_wep_wep"];
+				this.ammo = jobEquipmentWeaponAssoc["job_equip_wep_ammo"];
+				this.enabled = jobEquipmentWeaponAssoc["job_equip_wep_enabled"];
+			}
+		},
+		jobUniformData: class {
+			constructor(jobUniformAssoc) {
+				if(!jobUniformAssoc) {
+					return;
+				}
+
+				this.databaseId = jobUniformAssoc["job_uniform_id"];
+				this.job = jobUniformAssoc["job_uniform_job"];
+				this.name = jobUniformAssoc["job_uniform_name"];
+				this.requiredRank = jobUniformAssoc["job_uniform_minrank"];
+				this.skin = jobUniformAssoc["job_uniform_skin"];
+				this.enabled = jobUniformAssoc["job_uniform_skin"];				
+			}
+		},
+		jobLocationData: class {
+			constructor(jobLocationAssoc) {
+				if(!jobLocationAssoc) {
+					return;
+				}
+
+				this.databaseId = jobLocationAssoc["job_loc_id"];
+				this.job = jobLocationAssoc["job_loc_job"];
+				this.position = new Vec3(jobLocationAssoc["job_loc_pos_x"], jobLocationAssoc["job_loc_pos_y"], jobLocationAssoc["job_loc_pos_z"]);
+				//this.blipModel = jobAssoc["job_blip"];
+				//this.pickupModel = jobAssoc["job_pickup"];
+				this.blip = false;
+				this.pickup = false;
+				this.enabled = jobLocationAssoc["job_loc_enabled"];
+			}
+		},
 	}
 	
 	return tempClasses;

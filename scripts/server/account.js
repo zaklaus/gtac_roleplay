@@ -775,8 +775,6 @@ function selectCharacter(client, characterId = -1) {
 		getClientData(client).currentSubAccount = characterId;
 	}
 
-	console.log(getClientData(client).currentSubAccount);
-
 	let tempSubAccount = getClientCurrentSubAccount(client);
 	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
 
@@ -831,39 +829,40 @@ function saveClientToDatabase(client) {
 // ---------------------------------------------------------------------------
 
 function initClient(client) {
-	serverData.clients[client.index] = null;
+	triggerNetworkEvent("ag.guiColour", client, serverConfig.guiColour[0], serverConfig.guiColour[1], serverConfig.guiColour[2]);
 	triggerNetworkEvent("ag.logo", client, serverConfig.showLogo);
+	
 	showConnectCameraToPlayer(client);
-	clearChatBox(client);
+	messageClient(`Please wait ...`, client, serverConfig.colour.byName.softGreen);
 	
-	let tempAccountData = loadAccountFromName(client.name);
-	let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
-	
-	serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
+	setTimeout(function() {
+		let sessionId = saveSessionToDatabase(client);
+		client.setData("ag.session", sessionId, false);
 
-	if(tempAccountData != false) {
-		if(serverConfig.useGUI) {
-			triggerNetworkEvent("ag.showLogin", client);
+		clearChatBox(client);
+		let tempAccountData = loadAccountFromName(client.name);
+		let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
+		
+		serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
+
+		if(tempAccountData != false) {
+			if(serverConfig.useGUI) {
+				triggerNetworkEvent("ag.showLogin", client);
+			} else {
+				messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, serverConfig.colour.byName.softGreen);
+			}
 		} else {
-			messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, serverConfig.colour.byName.softGreen);
+			if(serverConfig.useGUI) {
+				triggerNetworkEvent("ag.showRegistration", client);
+			} else {
+				messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, serverConfig.colour.byName.softGreen);
+			}
 		}
-	} else {
-		if(serverConfig.useGUI) {
-			triggerNetworkEvent("ag.showRegistration", client);
-		} else {
-			messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, serverConfig.colour.byName.softGreen);
-		}
-	}
+	}, 2500);
 
-	if(server.game < GAME_GTA_IV) {
-		sendAllBlips(client);
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function getClientData(client) {
-	return serverData.clients[client.index];
+	//if(server.game < GAME_GTA_IV) {
+	//	sendAllBlips(client);
+	//}
 }
 
 // ---------------------------------------------------------------------------
@@ -885,3 +884,9 @@ function showCharacterSelectToClient(client) {
 
 // ---------------------------------------------------------------------------
 
+function saveSessionToDatabase(client) {
+	// To-do
+	return 0;
+}
+
+// ---------------------------------------------------------------------------

@@ -18,6 +18,7 @@ let serverConfig = {
 	fallingSnow: 0,
 	groundSnow: 0,
 	showLogo: true,	
+	guiColour: [200, 200, 200],
 	colour: {
 		byType: {
 			talkMessage: toColour(200, 200, 200),
@@ -175,6 +176,7 @@ function loadServerConfig() {
 				serverConfig.fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
 				serverConfig.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
 				serverConfig.useGUI = intToBool(dbAssoc["svr_gui"]);
+				serverConfig.guiColour = [dbAssoc["svr_gui_col1_r"], dbAssoc["svr_gui_col1_g"], dbAssoc["svr_gui_col1_b"]];
 
 				applyConfigToServer();
 

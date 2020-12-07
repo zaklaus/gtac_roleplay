@@ -11,7 +11,22 @@
 let serverCommands = {};
 
 function initCommandScript() {
+    console.log("[Asshat.Command]: Initializing commands script ...");
     serverCommands = loadCommandData();
+    addCommandCommandHandlers();
+    console.log("[Asshat.Command]: Initialized commands script!");
+}
+
+// ---------------------------------------------------------------------------
+
+function addCommandCommandHandlers() {
+	console.log("[Asshat.Clan]: Adding command command handlers ...");
+	let commandCommands = serverCommands.command;
+	for(let i in commandCommands) {
+		addCommandHandler(commandCommands[i].command, commandCommands[i].handlerFunction);
+	}
+	console.log("[Asshat.Command]: Command command handlers added successfully!");
+	return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -77,7 +92,12 @@ function loadCommandData() {
         class: [],
         client: [],
         colour: [],
-        command: [],
+        command: [
+            commandData("cmd_enabletype", enableAllCommandsByType, "<type>", getStaffFlagValue("developer"), true, true),
+            commandData("cmd_disabletype", disableAllCommandsByType, "<type>", getStaffFlagValue("developer"), true, true),
+            commandData("cmd_enable", enableCommand, "<command>", getStaffFlagValue("developer"), true, true),
+            commandData("cmd_disable", disableCommand, "<command>", getStaffFlagValue("developer"), true, true),
+        ],
         config: [],
         core: [],
         database: [],
@@ -97,7 +117,8 @@ function loadCommandData() {
             commandData("startwork", startWorkingCommand, "", getStaffFlagValue("none"), true, false),
             commandData("stopwork", stopWorkingCommand, "", getStaffFlagValue("none"), true, false),
             commandData("quitjob", quitJobCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("uniform", jobUniformCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("uniform", jobUniformCommand, "[uniform]", getStaffFlagValue("none"), true, false),
+            commandData("equip", jobEquipmentCommand, "[equipment]", getStaffFlagValue("none"), true, false),
 
             commandData("radio", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
             commandData("r", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
@@ -120,6 +141,10 @@ function loadCommandData() {
             commandData("setweather", setWeatherCommand, "<weather id/name>", getStaffFlagValue("manageServer"), true, true),
             commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("manageServer"), true, true),
             commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),
+            commandData("pos", getPositionCommand, "", getStaffFlagValue("basicModeration"), true, true),
+            commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("manageServer"), true, true),
+            commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("manageServer"), true, true),
+            commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),
         ],
         moderation: [
             commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
@@ -150,7 +175,7 @@ function loadCommandData() {
             commandData("vehdelowner", removeVehicleOwnerCommand, "", getStaffFlagValue("manageVehicles"), true, true),
 
             commandData("vehinfo", getVehicleInfoCommand, "", getStaffFlagValue("manageVehicles"), true, true),
-            commandData("vehpark", parkVehicleCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehpark", toggleVehicleSpawnLockCommand, "", getStaffFlagValue("manageVehicles"), true, true),
         ],
     }
     return tempCommands;
@@ -196,7 +221,7 @@ function getCommandRequiredPermissions(command) {
 // ---------------------------------------------------------------------------
 
 function getCommandSyntaxText(command) {
-    return getCommand(command).syntaxString;
+    return `/${command} ${getCommand(command).syntaxString}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -206,3 +231,130 @@ function isCommandAllowedOnDiscord(command) {
 }
 
 // ---------------------------------------------------------------------------
+
+function disableCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	removeCommandHandler(params);
+	messageClientSuccess(client, `[#FF9900]All server data saved to database!`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function enableCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	addCommandHandler(params, getCommand(params).handlerFunction);
+	messageClientSuccess(client, `[#FF9900]All server data saved to database!`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function disableAllCommandsByType(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+    }
+    
+    params = params.toLowerCase();
+    
+    if(typeof serverData.commands[params] == "undefined") {
+        messageClientError(client, "That command type does not exist!");
+        return false;
+    }    
+
+    for(let i in serverData.commands[params]) {
+        removeCommandHandler(serverData.commands[params][i].command);
+    }
+
+	messageClientSuccess(client, `[#FF9900]All ${params} commands have been disabled!`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function enableAllCommandsByType(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+    }
+
+    params = params.toLowerCase();
+    
+    if(typeof serverData.commands[params] == "undefined") {
+        messageClientError(client, "That command type does not exist!");
+        return false;
+    }
+
+    for(let i in serverData.commands[params]) {
+        let command = serverData.commands[params][i].command;
+        addCommandHandler(command, serverData.commands[params][i].handlerFunction);
+    }
+
+	messageClientSuccess(client, `[#FF9900]All ${params} commands have been enabled!`);
+	return true;
+}

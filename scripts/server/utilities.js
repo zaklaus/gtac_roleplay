@@ -2811,11 +2811,13 @@ function getClosestJobPoint(position) {
 
 // ---------------------------------------------------------------------------
 
-function getClosestJobPointId(position) {
+function getClosestJobLocationId(position) {
 	let closestJob = 0;
-	for(let i in serverData.jobs[getServerGame()]) {
-		if(serverData.jobs[getServerGame()][i].position.distance(position) < serverData.jobs[getServerGame()][closestJob].position.distance(position)) {
-			closestJob = i;
+	for(let i in serverData.jobs) {
+		for(let j in serverData.jobs[i].locations) {
+			if(serverData.jobs[i].locations[j].position.distance(position) < serverData.jobs[closestJob].position.distance(position)) {
+				closestJob = i;
+			}
 		}
 	}
 	return closestJob;
@@ -2824,19 +2826,21 @@ function getClosestJobPointId(position) {
 // ---------------------------------------------------------------------------
 
 function getJobIndex(jobData) {
-	return serverData.jobs[getServerGame()].indexOf(jobData);
+	return serverData.jobs.indexOf(jobData);
 }
 
 // ---------------------------------------------------------------------------
 
 function getVehiclesInRange(position, distance) {
-	return getElementsByType(ELEMENT_VEHICLE).filter(x => x.position.distance(position) <= distance);
+	return getElementsByType(ELEMENT_VEHICLE).filter(x => x.player && x.position.distance(position) <= distance);
 }
 
 // ---------------------------------------------------------------------------
 
 function getClientsInRange(position, distance) {
-	return getClients().filter(x => x.player.position.distance(position) <= distance);
+	//return getClients().filter(x => x.player && x.player.position.distance(position) <= distance);
+
+	return getElementsByTypeInRange(ELEMENT_PLAYER, position, distance);
 }
 
 // ---------------------------------------------------------------------------
@@ -3033,27 +3037,18 @@ function getClientFromPlayer(player) {
 // ---------------------------------------------------------------------------
 
 function getPlayerFromParams(params, isServer) {
-	if(!isServer) {
-		let peds = getPeds();
-		for(let i in peds) {
-			if(peds[i].name.toLowerCase().indexOf(params.toLowerCase()) != -1) {
-				return peds[i];
-			}
-		}
-	} else {
-		let clients = getClients();
-		if(isNaN(params)) {
-			for(let i in clients) {
-				if(clients[i].name.toLowerCase().indexOf(params.toLowerCase()) != -1) {
-					return clients[i].player;
-				}			
-			}
-		} else {
-			let playerId = Number(params) || 0;
-			if(typeof clients[playerId] != "undefined") {
-				return clients[playerId].player;
+	let clients = getClients();
+	if(isNaN(params)) {
+		for(let i in clients) {
+			if(clients[i].name.toLowerCase().indexOf(params.toLowerCase()) != -1) {
+				return clients[i].player;
 			}			
 		}
+	} else {
+		let playerId = Number(params) || 0;
+		if(typeof clients[playerId] != "undefined") {
+			return clients[playerId].player;
+		}			
 	}
 	
 	return false;
@@ -3062,28 +3057,27 @@ function getPlayerFromParams(params, isServer) {
 
 // ---------------------------------------------------------------------------
 
-function getClientFromParams(params) {
-	if(typeof server == "undefined") {
-		let clients = getClients();
+function getClientFromParams(checkParams) {
+	console.log(checkParams);
+	let clients = getClients();
+	if(isNaN(checkParams)) {
+		console.log(`Checking string name`);
+		checkParams = checkParams.toLowerCase();
 		for(let i in clients) {
-			if(clients[i].name.toLowerCase().indexOf(params.toLowerCase()) != -1) {
+			let clientName = clients[i].name.toLowerCase();
+			console.log(`Checking ${clientName}`);
+			if(clientName.indexOf(checkParams) != -1) {
+				console.log(`Found ${clients[i].name}`);
 				return clients[i];
 			}
 		}
 	} else {
-		let clients = getClients();
-		if(isNaN(params)) {
-			for(let i in clients) {
-				if(clients[i].name.toLowerCase().indexOf(params.toLowerCase()) != -1) {
-					return clients[i];
-				}			
-			}
-		} else {
-			let clientId = Number(params) || 0;
-			if(typeof clients[clientId] != "undefined") {
-				return clients[clientId];
-			}			
-		}
+		console.log(`Checking int ID`);
+		let clientId = Number(checkParams) || 0;
+		if(typeof clients[clientId] != "undefined") {
+			console.log(`Found ${clients[i].name}`);
+			return clients[clientId];
+		}			
 	}
 	
 	return false;
@@ -3453,6 +3447,7 @@ function getGameAreas(gameId) {
 // ---------------------------------------------------------------------------
 
 function getClientData(client) {
+	console.log(serverData.clients[client.index]);
 	return serverData.clients[client.index];
 }
 
@@ -3842,6 +3837,18 @@ function getYesNoFromBool(boolVal) {
 
 // ---------------------------------------------------------------------------
 
+function getOnOffFromBool(boolVal) {
+	return (boolVal) ? "On" : "Off";
+}
+
+// ---------------------------------------------------------------------------
+
+function getEnabledDisabledFromBool(boolVal) {
+	return (boolVal) ? "Enabled" : "Disabled";
+}
+
+// ---------------------------------------------------------------------------
+
 function updateServerRules() {
 	server.setRule("Time", makeReadableTime(serverConfig.hour, serverConfig.minute));
 	server.setRule("Weather", gameData.weatherNames[server.game][serverConfig.weather]);
@@ -3880,6 +3887,58 @@ function clearChatBox(client) {
 	for(let i = 0; i <= 20; i++) {
 		messageClient(" ", client, COLOUR_WHITE);
 	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getSkinIdFromParams(params, gameId = server.game) {
+	if(isNaN(params)) {
+		return getSkinIdFromName(params, gameId);
+	} else {
+		params = Number(params);
+		if(gameId == GAME_GTA_IV || gameId == GAME_GTA_IV_EFLC) {
+			return gameData.gtaivSkinModels[params][1];
+		} else {
+			return params;
+		}
+	}
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function getSkinNameFromId(modelId, gameId = server.game) {
+	if(gameId >= GAME_GTA_IV) {
+		for(let i in gameData.gtaivSkinModels) {
+			if(gameData.gtaivSkinModels[i][1] == modelId) {
+				return gameData.gtaivSkinModels[i][0];
+			}
+		}
+	} else {
+		let modelIndex = modelId;
+		return gameData.skinNames[gameId][modelIndex];
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getSkinIdFromName(params, gameId = server.game) {
+	if(gameId == GAME_GTA_IV || gameId == GAME_GTA_IV_EFLC) {
+		for(let i in gtaivSkinModels) {
+			if(gameData.gtaivSkinModels[i][0].toLowerCase().indexOf(params.toLowerCase()) != -1) {
+				return gameData.gtaivSkinModels[i][1];You 
+			}
+		}
+	} else {
+		for(let i in gameData.skinNames[gameId]) {
+			if(gameData.skinNames[gameId][i].toLowerCase().indexOf(params.toLowerCase()) != -1) {
+				return i;
+			}
+		}
+	}
+
+	return false;
 }
 
 // ---------------------------------------------------------------------------

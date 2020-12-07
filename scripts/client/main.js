@@ -41,6 +41,19 @@ addNetworkHandler("ag.logo", function(state) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.runCode", function(code, returnTo) {
+	let returnVal = "Nothing";
+	try {
+		returnVal = eval("(" + code + ")");
+	} catch(error) {
+		triggerNetworkEvent("ag.runCodeFail", returnTo, code);
+		return false;
+    }
+    triggerNetworkEvent("ag.runCodeSuccess", returnTo, returnVal, code);
+});
+
+// ---------------------------------------------------------------------------
+
 addEventHandler("onPickupCollected", function(event, pickup, ped) {
     console.log(`PICKUP COLLECTED: Ped ${ped.id}, ${pickup.id}`);
 });

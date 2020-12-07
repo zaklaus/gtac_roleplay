@@ -12,15 +12,7 @@ var app = {};
 
 let robotoFont = "Tahoma";
 
-let primaryColour = [
-	null,
-	[51, 153, 255],
-	[144, 255, 96],
-	[255, 188, 218],
-	[255, 188, 218],
-	[180, 180, 180],
-	[180, 180, 180],
-];
+let primaryColour = [200, 200, 200];
 
 let windowAlpha = 185;
 let windowTitleAlpha = 200;
@@ -1139,7 +1131,7 @@ app.init = function()
 	
 	login.loginButton = login.window.button(20, 205, 260, 30, 'LOGIN', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
@@ -1158,7 +1150,7 @@ app.init = function()
 
 	login.registerButton = login.window.button(205, 242, 75, 15, 'REGISTER', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 9.0,
 			textFont: robotoFont,
@@ -1175,7 +1167,7 @@ app.init = function()
 		title: {
 			textSize: 11.0,
 			textColour: toColour(0, 0, 0, 255),
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], windowTitleAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},	
 		icon: {
 			textSize: 0.0,
@@ -1282,7 +1274,7 @@ app.init = function()
 		newCharacter.placeOfOrigin.item(placesOfOrigin[i]);
 	}
 	
-	newCharacter.placeOfOrigin.axis.y.scrollBar.styles.innerBar.backgroundColour = toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], 200);
+	newCharacter.placeOfOrigin.axis.y.scrollBar.styles.innerBar.backgroundColour = toColour(primaryColour[0], primaryColour[1], primaryColour[2], 200);
 	newCharacter.placeOfOrigin.setScrollBarsManual(true);
 
 	if(gta.game == GAME_GTA_III) {
@@ -1345,11 +1337,11 @@ app.init = function()
 			newCharacter.skinDropDown.item(skinNames[gta.game][i][1]);
 		}
 	}
-	newCharacter.skinDropDown.selectedEntryIndex = 1;
+	//newCharacter.skinDropDown.selectedEntryIndex = 1;
 
 	newCharacter.createButton = newCharacter.window.button(220, 130, 200, 25, 'CREATE', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
@@ -1366,12 +1358,12 @@ app.init = function()
 		title: {
 			textSize: 0.0,
 			textColour: toColour(0, 0, 0, 0),
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], windowTitleAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},	
 		icon: {
 			textSize: 0.0,
 			textColour: toColour(0, 0, 0, 0),
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], windowTitleAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		}
 	});	
 	register.window.titleBarIconSize = new Vec2(0,0);
@@ -1449,7 +1441,7 @@ app.init = function()
 	
 	register.registerButton = register.window.button(20, 195, 260, 30, 'CREATE ACCOUNT', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], 120),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 120),
 			textColour: toColour(255, 255, 255, 255),
 			textSize: 12.0,
 			textFont: robotoFont,
@@ -1468,7 +1460,7 @@ app.init = function()
 
 	register.loginButton = register.window.button(205, 232, 75, 15, 'LOGIN', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], 120),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 120),
 			textColour: toColour(255, 255, 255, 255),
 			textSize: 9.0,
 			textAlign: 0.5,
@@ -1485,7 +1477,7 @@ app.init = function()
 		title: {
 			textSize: 11.0,
 			textColour: toColour(0, 0, 0, 255),
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], windowTitleAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},	
 		icon: {
 			textSize: 0.0,
@@ -1505,7 +1497,7 @@ app.init = function()
 	
 	errorDialog.okayButton = errorDialog.window.button(20, 95, 360, 30, 'OK', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
@@ -1522,7 +1514,7 @@ app.init = function()
 		title: {
 			textSize: 11.0,
 			textColour: toColour(0, 0, 0, 255),
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], windowTitleAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},	
 		icon: {
 			textSize: 0.0,
@@ -1542,7 +1534,7 @@ app.init = function()
 	
 	yesNoDialog.yesButton = yesNoDialog.window.button(20, 95, 175, 30, 'YES', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
@@ -1552,7 +1544,7 @@ app.init = function()
 
 	yesNoDialog.noButton = yesNoDialog.window.button(205, 95, 175, 30, 'NO', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
@@ -1569,7 +1561,7 @@ app.init = function()
 		title: {
 			textSize: 11.0,
 			textColour: toColour(0, 0, 0, 255),
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], windowTitleAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},	
 		icon: {
 			textSize: 0.0,
@@ -1589,7 +1581,7 @@ app.init = function()
 	
 	infoDialog.okayButton = infoDialog.window.button(20, 95, 360, 30, 'OK', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
@@ -1606,7 +1598,7 @@ app.init = function()
 		title: {
 			textSize: 11.0,
 			textColour: toColour(0, 0, 0, 255),
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], windowTitleAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},	
 		icon: {
 			textSize: 0.0,
@@ -1644,7 +1636,7 @@ app.init = function()
 
 	characterSelect.selectCharacterButton = characterSelect.window.button(90, 130, 250, 25, 'SELECT', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 12.0,
 			textFont: robotoFont,
@@ -1654,7 +1646,7 @@ app.init = function()
 
 	characterSelect.newCharacterButton = characterSelect.window.button(140, 180, 150, 25, 'NEW CHARACTER', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 12.0,
 			textFont: robotoFont,
@@ -1664,7 +1656,7 @@ app.init = function()
 
 	characterSelect.previousCharacterButton = characterSelect.window.button(10, 130, 75, 25, '< PREV', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
@@ -1674,7 +1666,7 @@ app.init = function()
 
 	characterSelect.nextCharacterButton = characterSelect.window.button(345, 130, 75, 25, 'NEXT >', {
 		main: {
-			backgroundColour: toColour(primaryColour[gta.game][0], primaryColour[gta.game][1], primaryColour[gta.game][2], buttonAlpha),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
@@ -2021,6 +2013,13 @@ addNetworkHandler("ag.registrationSuccess", function() {
 
 addNetworkHandler("ag.registrationFailed", function(errorMessage) {
 	registrationFailed(errorMessage);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.guiColour", function(red, blue, green) {
+	console.log(`NEW GUI COLOURS: ${red}, ${green}, ${blue}`);
+	primaryColour = [red, blue, green];
 });
 
 // ---------------------------------------------------------------------------

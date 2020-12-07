@@ -11,24 +11,6 @@
 addEventHandler("OnPlayerJoined", function(event, client) {
     setTimeout(function() {
         initClient(client);
-        //triggerNetworkEvent("ag.connectCamera", client, serverConfig.connectCameraPosition[getServerGame()], serverConfig.connectCameraLookAt[getServerGame()]);
-        
-        //client.setData("ag.loginAttemptsRemaining", 3, false);
-        
-        //let tempAccountData = loadAccountFromName(client.name);
-        //let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
-        
-        //serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
-
-        //sendAllBlips(client);
-
-        //if(tempAccountData != false) {
-        //    triggerNetworkEvent("ag.showLogin", client);
-        //    //messageClient("Welcome back to Asshat Gaming RP, " + String(client.name) + "! Please /login to continue.", client, serverConfig.colour.byName["white"]);
-        //} else {
-        //    triggerNetworkEvent("ag.showRegistration", client);
-        //    //messageClient("Welcome to Asshat Gaming RP, " + String(client.name) + "! Please /register to continue.", client, serverConfig.colour.byName["white"]);
-        //}
     }, 500);
 });
 
@@ -85,7 +67,16 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
 addEventHandler("onPedEnterVehicle", function(event, ped, vehicle, seat) {
     ped.setData("ag.vehSeat", seat, false);
 
+    if(!vehicle || vehicle.owner != -1) {
+        return false;
+    }
+
     let vehicleData = getVehicleData(vehicle);
+    if(!vehicleData) {
+        return false;
+    }
+
+    
 
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
@@ -139,3 +130,13 @@ addEventHandler("onPlayerChat", function(event, client, messageText) {
 });
 
 // ---------------------------------------------------------------------------
+
+addEventHandler("OnPedExitVehicle", function(event, ped, vehicle) {
+    if(!vehicle || vehicle.owner != -1) {
+        return false;
+    }
+
+    if(!getVehicleData(vehicle)) {
+        return false;
+    }
+});

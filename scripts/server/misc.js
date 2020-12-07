@@ -157,12 +157,156 @@ function toggleServerLogoCommand(command, params, client) {
 	}
 
 	let splitParams = params.split();
-    let logoState = Number(splitParams[0]) || 1;
+    let logoState = Number(params) || 1;
 
     serverConfig.useLogo = !!logoState;
 
-    messageAdminAction(`${client.name} turned the server logo image ${getOnOffFromBool(intToBool(fallingSnow))}`);
+    messageAdminAction(`${client.name} turned the server logo image ${getOnOffFromBool(!!logoState).toLowerCase()}`);
     updateServerRules();
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function getPositionCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	let position = client.player.position;
+
+	messageClientNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
+	console.log(`Position: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function setNewCharacterSpawnPositionCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	let position = client.player.position;
+	serverConfig.newCharacter.spawnPosition = position;
+	serverConfig.newCharacter.spawnHeading = client.player.heading;
+
+    messageClientNormal(client, `The new character spawn position has been set to ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`)
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function setNewCharacterMoneyCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split();
+	let amount = Number(splitParams[0]) || 1000;
+
+	serverConfig.newCharacter.cash = skinId;
+
+    messageClientNormal(client, `The new character money has been set to $${amount}`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function setNewCharacterSkinCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	let skinId = 0;
+	if(areParamsEmpty(params)) {
+		skinId = client.player.modelIndex;
+	} else {
+		skinId = getSkinFromParams(params);
+	}
+
+	serverConfig.newCharacter.skin = skinId;
+
+    messageClientNormal(client, `The new character skin has been set to ${getSkinNameFromId(skinId)} (ID ${skinId})`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function submitIdeaCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	submitIdea(client, params);
+
+    messageClientNormal(client, `Your suggestion/idea has been sent to the developers!`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function submitBugCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	submitBugReport(client, params);
+
+    messageClientNormal(client, `Your bug report has been sent to the developers!`);
 	return true;
 }
 

@@ -103,19 +103,19 @@ addNetworkHandler("ag.afk", function(client, afkState) {
 // Not implemented yet
 addNetworkHandler("ag.heldKey", function(client, key) {
     switch(key) {
-        case serverConfig.keybinds.actionKey: 
+        case getServerConfig().keybinds.actionKey: 
             processHoldActionKey(client);
             break;
 
-        case serverConfig.keybinds.vehicleLightsKey: 
+        case getServerConfig().keybinds.vehicleLightsKey: 
             processHoldVehicleLightsKey(client);
             break;
 
-        case serverConfig.keybinds.vehicleLockKey: 
+        case getServerConfig().keybinds.vehicleLockKey: 
             processHoldVehicleLockKey(client);
             break;
 
-        case serverConfig.keybinds.vehicleEngineKey: 
+        case getServerConfig().keybinds.vehicleEngineKey: 
             processHoldVehicleEngineKey(client);
             break;             
     }
@@ -124,16 +124,39 @@ addNetworkHandler("ag.heldKey", function(client, key) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.player.sync", function(client, position, heading) {
+    //console.log(`POS: ${position}, X: ${position.x}, Y: ${position.y}, Z: ${position.z}`);
     client.setData("ag.position", position, true);
     client.setData("ag.heading", heading, true);
 });
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.player.death", function(client, position, heading) {
+    //console.log(`POS: ${position}, X: ${position.x}, Y: ${position.y}, Z: ${position.z}`);
+    client.setData("ag.position", position, true);
+    client.setData("ag.heading", heading, true);
+    processPlayerDeath(client);
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
-    //let vehicle = getVehicleFromSyncId(syncId);
-    //vehicle.setData("ag.position") = position;
-    //vehicle.setData("ag.heading") = heading;
+    let vehicleData = getVehicleDataFromSyncId(syncId);
+    if(vehicleData) {
+        vehicleData.syncPosition = position;
+        vehicleData.syncHeading = heading;
+    }
+
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.iv.veh", function(client, syncId) {
+    if(syncId == -1) {
+        client.removeData("ag.vehicle");
+    } else {
+        client.setData("ag.vehicle", syncId, true);
+    }
 });
 
 // ---------------------------------------------------------------------------

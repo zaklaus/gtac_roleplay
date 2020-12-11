@@ -18,16 +18,26 @@ function messageAdminAction(messageText) {
 // ---------------------------------------------------------------------------
 
 function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
+    if(client.console) {
+        console.log(`${messageText}`);
+        return true;
+    }
+
     if(client instanceof Client) {
         messageClient(`${messageText}`, client, colour);
     } else {
-        messageDiscordUser(client, `:no_entry_sign: ${messageText}`);
+        messageDiscordUser(client, `${messageText}`);
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function messageClientError(client, messageText) {
+    if(client.console) {
+        console.log(`🚫 ${messageText}`);
+        return true;
+    }
+
     if(client instanceof Client) {
         messageClientNormal(client, `🚫 ${messageText}`, getColourByType("errorMessage"));
     } else {
@@ -38,8 +48,13 @@ function messageClientError(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function messageClientSyntax(client, messageText) {
+    if(client.console) {
+        console.log(`⌨️ ${messageText}`);
+        return true;
+    }
+
     if(client instanceof Client) {
-        messageClientNormal(client, `⌨️ [#FFFFFF] ${messageText}`, getColourByType("syntaxMessage"));
+        messageClientNormal(client, `⌨️ USAGE: [#FFFFFF] ${messageText}`, getColourByType("syntaxMessage"));
     } else {
         messageDiscordUser(client, `:keyboard: ${messageText}`);
     }
@@ -48,6 +63,11 @@ function messageClientSyntax(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function messageClientAlert(client, messageText) {
+    if(client.console) {
+        console.log(`⚠️ ${messageText}`);
+        return true;
+    }
+
     if(client instanceof Client) {
         messageClientNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByType("alertMessage"));
     } else {
@@ -58,6 +78,11 @@ function messageClientAlert(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function messageClientSuccess(client, messageText) {
+    if(client.console) {
+        console.log(`👍 ${messageText}`);
+        return true;
+    }
+
     if(client instanceof Client) {
         messageClientNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByType("successMessage"));
     } else {
@@ -68,6 +93,11 @@ function messageClientSuccess(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function messageClientInfo(client, messageText) {
+    if(client.console) {
+        console.log(`ℹ️ ${messageText}`);
+        return true;
+    }
+        
     if(client instanceof Client) {
         messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByType("successMessage"));
     } else {

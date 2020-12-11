@@ -10,7 +10,7 @@
 
 function initHouseScript() {
 	console.log("[Asshat.House]: Initializing house script ...");
-	serverData.houses = loadHousesFromDatabase();
+	getServerData().houses = loadHousesFromDatabase();
 	createAllHousePickups();
 	addHouseCommandHandlers();
 	console.log("[Asshat.House]: House script initialized successfully!");
@@ -35,29 +35,30 @@ function loadHousesFromDatabase() {
 	console.log("[Asshat.House]: Loading houses from database ...");
 	let tempHouses = [];
 	let dbConnection = connectToDatabase();
+	let dbAssoc;
 	
 	if(dbConnection) {
-		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `house_main` WHERE `house_server` = " + String(serverId))
+		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `house_main` WHERE `house_server` = " + toString(serverId))
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
-				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempHouseData = getClasses().houseData(dbFetchAssoc);
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempHouseData = serverClasses.houseData(dbAssoc);
 					tempHouses.push(tempHouseData);
-					console.log("[Asshat.House]: Houses '" + String(tempHouseData.databaseId) + "' loaded!");
+					console.log("[Asshat.House]: Houses '" + toString(tempHouseData.databaseId) + "' loaded!");
 				}
 			}
 			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
-	console.log("[Asshat.House]: " + String(tempHouses.length) + " houses loaded from database successfully!");
+	console.log("[Asshat.House]: " + toString(tempHouses.length) + " houses loaded from database successfully!");
 	return tempHouses;
 }
 
 // ---------------------------------------------------------------------------
 
 function getHouseDataFromDatabaseId(databaseId) {
-	let matchingHouses = serverData.houses.filter(b => b.databaseId == databaseId)
+	let matchingHouses = getServerData().houses.filter(b => b.databaseId == databaseId)
 	if(matchingHouses.length == 1) {
 		return matchingHouses[0];
 	}
@@ -67,7 +68,7 @@ function getHouseDataFromDatabaseId(databaseId) {
 // ---------------------------------------------------------------------------
 
 function getClosestHouseEntrance(position) {
-	return serverData.houses.reduce((i, j) => ((i.entrancePosition.distance(position) <= j.entrancePosition.distance(position)) ? i : j));
+	return getServerData().houses.reduce((i, j) => ((i.entrancePosition.distance(position) <= j.entrancePosition.distance(position)) ? i : j));
 }
 
 // ---------------------------------------------------------------------------
@@ -99,10 +100,10 @@ function saveAllHousesToDatabase() {
 // ---------------------------------------------------------------------------
 
 function createAllHousePickups() {
-	for(let i in serverData.houses) {
-		serverData.houses.pickup = createPickup(serverConfig.housePickupModel, serverData.houses[i].position);
-		serverData.houses[i].pickup.setData("ag.ownerType", AG_PICKUP_HOUSE, true);
-        serverData.houses[i].pickup.setData("ag.ownerId", i, true);
+	for(let i in getServerData().houses) {
+		getServerData().houses.pickup = createPickup(getServerConfig().housePickupModel, getServerData().houses[i].position);
+		getServerData().houses[i].pickup.setData("ag.ownerType", AG_PICKUP_HOUSE, true);
+        getServerData().houses[i].pickup.setData("ag.ownerId", i, true);
 	}
 }
 

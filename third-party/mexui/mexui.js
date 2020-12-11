@@ -44,7 +44,7 @@ mexui.bindEvents = function()
 		if(isAbsolute)
 			return;
 		
-		mexui.triggerEvent('onMouseMove', new Vec2(position.x, position.y), true);
+		mexui.triggerEvent('onMouseMove', toVector2(position.x, position.y), true);
 	});
 
 	addEventHandler('onMouseWheel', function(event, mouse, offset, flipped)
@@ -290,7 +290,7 @@ mexui.setInput = function(showInput)
 	//if(localPlayer)
 	//{
 	//	if(showInput)
-	//		gta.setCameraLookAtEntity(new Vec3(gta.cameraMatrix.m41, gta.cameraMatrix.m42, gta.cameraMatrix.m43), localPlayer, false);
+	//		gta.setCameraLookAtEntity(toVector3(gta.cameraMatrix.m41, gta.cameraMatrix.m42, gta.cameraMatrix.m43), localPlayer, false);
 	//	else
 	//		gta.restoreCamera(false);
 	//}

@@ -141,7 +141,7 @@ let skinNames = [
 		[58, "Delivery Guy", "Skin058.png"],
 		[59, "Business Man", "Skin059.png"],
 		[60, "Marty Chonks", "Skin060.png"],
-		[61, "Cia Agent", "Skin061.png"],
+		[61, "CIA Agent", "Skin061.png"],
 		[62, "Female Client", "Skin062.png"],
 		[63, "Young Woman", "Skin063.png"],
 		[64, "Business Woman", "Skin064.png"],
@@ -203,12 +203,12 @@ let skinNames = [
 	],
 	[ // GTA Vice City
 		[0, "Tommy Vercetti", false],
-		[1, "Police Officer", false],
-		[2, "SWAT Officer", false],
-		[3, "FBI Agent", false],
-		[4, "Army Soldier", false],
-		[5, "Paramedic", false],
-		[6, "Fireman", false],
+		//[1, "Police Officer", false],
+		//[2, "SWAT Officer", false],
+		//[3, "FBI Agent", false],
+		//[4, "Army Soldier", false],
+		//[5, "Paramedic", false],
+		//[6, "Fireman", false],
 		[7, "Golfer", false],
 		[8, "INVALID", false],
 		[9, "Random Lady", false],
@@ -293,18 +293,18 @@ let skinNames = [
 		[88, "Shark", false],
 		[89, "Diaz Guy", false],
 		[90, "Diaz Guy", false],
-		[91, "Security Guard", false],
-		[92, "Security Guard", false],
+		//[91, "Security Guard", false],
+		//[92, "Security Guard", false],
 		[93, "Biker", false],
 		[94, "Biker", false],
 		[95, "Vercetti Guy", false],
 		[96, "Vercetti Guy", false],
-		[97, "Undercover Cop", false],
-		[98, "Undercover Cop", false],
-		[99, "Undercover Cop", false],
-		[100, "Undercover Cop ", false],
-		[101, "Undercover Cop", false],
-		[102, "Undercover Cop", false],
+		//[97, "Undercover Cop", false],
+		//[98, "Undercover Cop", false],
+		//[99, "Undercover Cop", false],
+		//[100, "Undercover Cop ", false],
+		//[101, "Undercover Cop", false],
+		//[102, "Undercover Cop", false],
 		[103, "Random Guy", false],
 		[104, "Bodyguard", false],
 		[105, "Prostitute", false],
@@ -322,7 +322,7 @@ let skinNames = [
 		[117, "Mercedes", false],
 		[118, "Love Fist", false],
 		[119, "Alex Scrub", false],
-		[120, "Officer Lance Vance", false],
+		//[120, "Officer Lance Vance", false],
 		[121, "Lance Vance", false],
 		[122, "Cortez", false],
 		[123, "SWAT 2", false],
@@ -368,7 +368,7 @@ let skinNames = [
 		[163, "Tommy Vercetti (SpandEx Overalls)", false],
 		[164, "Tommy Vercetti (Golfer)", false],
 		[165, "Tommy Vercetti (Cuban)", false],
-		[166, "Tommy Vercetti (Cop)", false],
+		//[166, "Tommy Vercetti (Cop)", false],
 		[167, "Tommy Vercetti (Robbery Suit)", false],
 		[168, "Tommy Vercetti (T-Shirt and Jeans)", false],
 		[169, "Tommy Vercetti (Striped Suit)", false],
@@ -393,11 +393,11 @@ let skinNames = [
 	],
 
 	[ // GTA San Andreas
-		[0, "Carl 'CJ' Johnson", false],
+		//[0, "Carl 'CJ' Johnson", false],
 		[1, "The Truth", false],
 		[2, "Maccer", false],
 		[3, "Andre", false],
-		[4, "Barry 'Big Bear' Thorne", false],
+		[4, "Barry Big Bear Thorne", false],
 		[5, "Emmet", false],
 		[6, "Taxi Driver/Train Driver", false],
 		[7, "Janitor", false],
@@ -413,7 +413,7 @@ let skinNames = [
 		[17, "Businessman", false],
 		[18, "Beach Visitor", false],
 		[19, "DJ", false],
-		[20, "Rich Guy (Madd Dogg's Manager)", false],
+		[20, "Rich Guy (Madd Doggs Manager)", false],
 		[21, "Normal Ped", false],
 		[22, "Normal Ped", false],
 		[23, "Bmxer", false],
@@ -558,9 +558,9 @@ let skinNames = [
 		[162, "Hillbilly", false],
 		[163, "Black Bouncer", false],
 		[164, "White Bouncer", false],
-		[165, "White Mib Agent", false],
-		[166, "Black Mib Agent", false],
-		[167, "Cluckin' Bell Worker", false],
+		[165, "White MIB Agent", false],
+		[166, "Black MIB Agent", false],
+		[167, "Cluckin Bell Worker", false],
 		[168, "Hotdog/Chilli Dog Vendor", false],
 		[169, "Normal Ped", false],
 		[170, "Normal Ped", false],
@@ -658,43 +658,43 @@ let skinNames = [
 		[262, "Cab Driver", false],
 		[263, "Normal Ped", false],
 		[264, "Clown (Ice-Cream Van Driver)", false],
-		[265, "Officer Frank Tenpenny", false],
-		[266, "Officer Eddie Pulaski", false],
-		[267, "Officer Jimmy Hernandez", false],
+		//[265, "Officer Frank Tenpenny", false],
+		//[266, "Officer Eddie Pulaski", false],
+		//[267, "Officer Jimmy Hernandez", false],
 		[268, "Dwaine/Dwayne", false],
-		[269, "Melvin 'Big Smoke' Harris (Mission)", false],
-		[270, "Sean 'Sweet' Johnson", false],
-		[271, "Lance 'Ryder' Wilson", false],
+		[269, "Melvin Big Smoke Harris (Mission)", false],
+		[270, "Sean Sweet Johnson", false],
+		[271, "Lance Ryder Wilson", false],
 		[272, "Mafia Boss", false],
 		[273, "T-Bone Mendez", false],
-		[274, "Paramedic", false],
-		[275, "Paramedic", false],
-		[276, "Paramedic", false],
-		[277, "Firefighter", false],
-		[278, "Firefighter", false],
-		[279, "Firefighter", false],
-		[280, "Los Santos Police Officer", false],
-		[281, "San Fierro Police Officer", false],
-		[282, "Las Venturas Police Officer", false],
-		[283, "County Sheriff", false],
-		[284, "Motorbike Cop", false],
-		[285, "S.W.A.T.", false],
-		[286, "Federal Agent", false],
-		[287, "Army Soldier", false],
-		[288, "Desert Sheriff", false],
+		//[274, "Paramedic", false],
+		//[275, "Paramedic", false],
+		//[276, "Paramedic", false],
+		//[277, "Firefighter", false],
+		//[278, "Firefighter", false],
+		//[279, "Firefighter", false],
+		//[280, "Los Santos Police Officer", false],
+		//[281, "San Fierro Police Officer", false],
+		//[282, "Las Venturas Police Officer", false],
+		//[283, "County Sheriff", false],
+		//[284, "Motorbike Cop", false],
+		//[285, "S.W.A.T.", false],
+		//[286, "Federal Agent", false],
+		//[287, "Army Soldier", false],
+		//[288, "Desert Sheriff", false],
 		[289, "Zero", false],
 		[290, "Ken Rosenberg", false],
 		[291, "Kent Paul", false],
 		[292, "Cesar Vialpando", false],
-		[293, "Jeffery 'Og Loc' Martin/Cross", false],
+		[293, "Jeffery Og Loc Martin/Cross", false],
 		[294, "Wu Zi Mu (Woozie)", false],
 		[295, "Michael Toreno", false],
 		[296, "Jizzy B.", false],
 		[297, "Madd Dogg", false],
 		[298, "Catalina", false],
 		[299, "Claude Speed", false],
-		[300, "Lance 'Ryder' Wilson", false],
-		[301, "Lance 'Ryder' Wilson (robbery mask)", false],
+		[300, "Lance Ryder Wilson", false],
+		[301, "Lance Ryder Wilson (robbery mask)", false],
 		[302, "Emmet", false],
 		[303, "Unknown", false],
 		[304, "Denise", false],
@@ -703,10 +703,10 @@ let skinNames = [
 		[307, "T-Bone Mendez", false],
 		[308, "Forelli", false],
 		[309, "Mechanic", false],
-		[310, "Barry 'Big Bear' Thorne (Skinny)", false],
-		[311, "Melvin 'Big Smoke' Harris (Vest)", false],
-		[312, "Army Guy", false],
-		[313, "Barry 'Big Bear' Thorne (Fat)", false],
+		[310, "Barry Big Bear Thorne (Skinny)", false],
+		[311, "Melvin Big Smoke Harris (Vest)", false],
+		//[312, "Army Guy", false],
+		[313, "Barry Big Bear Thorne (Fat)", false],
 	],	
 	false,
 	[
@@ -1095,7 +1095,7 @@ app.init = function()
 			textColour: toColour(0, 0, 0, 0),
 		}
 	});
-	login.window.titleBarIconSize = new Vec2(0,0);
+	login.window.titleBarIconSize = toVector2(0,0);
 	login.window.titleBarHeight = 0;
 	
 	login.logoImage = login.window.image(100, 20, 100, 100, "files/images/main-logo.png");
@@ -1157,6 +1157,7 @@ app.init = function()
 			textAlign: 0.5,
 		},
 	}, showRegistration);
+	console.log("LOGIN WINDOW ADDED");
 	
 	// ---------------------------------------------------------------------------------
 	
@@ -1324,7 +1325,7 @@ app.init = function()
 			newCharacter.skinImage.remove();
 		}
 		if(gta.game == GAME_GTA_III) {
-			newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/gta3/" + skinImagePath.toString());
+			newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/gta3/" + toString(skinImagePath));
 		} else {
 			newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/none.png");
 		}
@@ -1347,7 +1348,8 @@ app.init = function()
 			textFont: robotoFont,
 			textAlign: 0.5,
 		},
-	}, checkNewCharacter);		
+	}, checkNewCharacter);
+	console.log("NEWCHAR WINDOW ADDED");
 	
 	// ---------------------------------------------------------------------------------
 	
@@ -1366,7 +1368,7 @@ app.init = function()
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		}
 	});	
-	register.window.titleBarIconSize = new Vec2(0,0);
+	register.window.titleBarIconSize = toVector2(0,0);
 	register.window.titleBarHeight = 0;	
 	
 	register.window.image(115, 10, 65, 65, "files/images/main-logo.png");
@@ -1677,8 +1679,6 @@ app.init = function()
 	characterSelect.skinImage = characterSelect.window.image(265, 30, 130, 85, "files/images/skins/gta3/Skin000.png");
 	
 	// ---------------------------------------------------------------------------
-
-	closeAllWindows();
 	
 };
 
@@ -1734,7 +1734,7 @@ let checkNewCharacter = function() {
 	triggerNetworkEvent("ag.checkNewCharacter", 
 		newCharacter.firstNameInput.lines[0], 
 		newCharacter.lastNameInput.lines[0], 
-		String(String(newCharacter.dateOfBirth.day) + "/" + String(newCharacter.dateOfBirth.month) + "/" + String(newCharacter.dateOfBirth.year)),
+		toString(toString(newCharacter.dateOfBirth.day) + "/" + toString(newCharacter.dateOfBirth.month) + "/" + toString(newCharacter.dateOfBirth.year)),
 		placesOfOrigin[newCharacter.placeOfOrigin.selectedEntryIndex],
 		skinNames[gta.game][newCharacter.skinDropDown.selectedEntryIndex][0],
 	);
@@ -1828,14 +1828,13 @@ let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBir
 	mexui.setInput(true);
 
 	characterSelect.nameText.text = lastName + ", " + firstName;
-	characterSelect.dateOfBirthText.text = "Born: " + String(dateOfBirth);
-	characterSelect.placeOfOrigin.text = "From: " + String(placeOfOrigin);
+	characterSelect.dateOfBirthText.text = "Born: " + toString(dateOfBirth);
+	characterSelect.placeOfOrigin.text = "From: " + toString(placeOfOrigin);
 
 	if(characterSelect.skinImage != null) {
 		characterSelect.skinImage.remove();
 	}
 
-	console.log(skinId);
 	let skinImagePath = "Skin000.png";
 	for(let i in skinNames[gta.game]) {
 		if(skinNames[gta.game][i][0] == skinId) {
@@ -1843,7 +1842,7 @@ let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBir
 		}
 	}
 	
-	characterSelect.skinImage = characterSelect.window.image(265, 30, 130, 85, "files/images/skins/gta3/" + String(skinImagePath));
+	characterSelect.skinImage = characterSelect.window.image(265, 30, 130, 85, "files/images/skins/gta3/" + toString(skinImagePath));
 
 	characterSelect.window.shown = true;
 }
@@ -1910,14 +1909,12 @@ let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfB
 	setChatWindowEnabled(false);
 	characterSelect.window.shown = false;
 	characterSelect.nameText.text = lastName + ", " + firstName;
-	characterSelect.dateOfBirthText.text = "Born: " + String(dateOfBirth);
-	characterSelect.placeOfOrigin.text = "From: " + String(placeOfOrigin);
+	characterSelect.dateOfBirthText.text = "Born: " + toString(dateOfBirth);
+	characterSelect.placeOfOrigin.text = "From: " + toString(placeOfOrigin);
 
 	if(characterSelect.skinImage != null) {
 		characterSelect.skinImage.remove();
 	}
-
-	console.log(skinId);
 
 	let skinImagePath = "Skin000.png";
 	for(let i in skinNames[gta.game]) {
@@ -1926,19 +1923,20 @@ let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfB
 		}
 	}
 
-	characterSelect.skinImage = characterSelect.window.image(265, 30, 130, 85, "files/images/skins/gta3/" + String(skinImagePath));
+	characterSelect.skinImage = characterSelect.window.image(265, 30, 130, 85, "files/images/skins/gta3/" + toString(skinImagePath));
 	characterSelect.window.shown = true;
 }
 
 // ---------------------------------------------------------------------------
 
 bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
-	app.init();	
+	
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showLogin", function() {
+	console.log("SHOWING LOGIN");
 	showLogin();
 });
 
@@ -1957,6 +1955,7 @@ addNetworkHandler("ag.showNewCharacter", function() {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showCharacterSelect", function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
+	console.log("SHOWING CHAR SELECT");
 	showCharacterSelect(firstName, lastName, placeOfOrigin, dateOfBirth, skinId);
 });
 
@@ -1975,6 +1974,7 @@ addNetworkHandler("ag.showError", function(errorMessage, errorTitle) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showPrompt", function(promptMessage, promptTitle) {
+	console.log("SHOWING PROMPT");
 	showYesNo(promptMessage, promptTitle);
 });
 
@@ -2017,9 +2017,12 @@ addNetworkHandler("ag.registrationFailed", function(errorMessage) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.guiColour", function(red, blue, green) {
-	console.log(`NEW GUI COLOURS: ${red}, ${green}, ${blue}`);
-	primaryColour = [red, blue, green];
+addNetworkHandler("ag.guiColour", function(red, green, blue) {
+	console.log("NEW GUI COLOURS");
+	primaryColour = [red, green, blue];
+	app.init();
+	console.log("APP INIT");
+	closeAllWindows();
 });
 
 // ---------------------------------------------------------------------------

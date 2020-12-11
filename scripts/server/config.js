@@ -77,6 +77,7 @@ let serverConfig = {
 	takeJobDistance: 5,
 	stopWorkingDistance: 10,
 	spawnCarDistance: 5,
+	payAndSprayDistance: 5,
 	blipSprites: [
 		false,
 		{	// GTA III
@@ -146,9 +147,33 @@ let serverConfig = {
 	},
 	discordBotToken: "",
 	discordEnabled: false,
+	defaultKeybinds: [
+		new serverClasses.keyBindData(false, SDLK_o, "engine"),
+		new serverClasses.keyBindData(false, SDLK_i, "lights"),
+		new serverClasses.keyBindData(false, SDLK_l, "lock"),
+	],
 };
 
 // ----------------------------------------------------------------------------
+
+function initConfigScript() {
+	console.log("[Asshat.Config]: Initializing config script ...");
+	addConfigCommandHandlers();
+	console.log("[Asshat.Config]: Config script initialized!");
+}
+
+// ---------------------------------------------------------------------------
+
+function addConfigCommandHandlers() {
+	console.log("[Asshat.Config]: Adding config command handlers ...");
+	let configCommands = serverCommands.config;
+	for(let i in configCommands) {
+		addCommandHandler(configCommands[i].command, configCommands[i].handlerFunction);
+	}
+	console.log("[Asshat.Config]: Config command handlers added!");
+}
+
+// ---------------------------------------------------------------------------
 
 function loadServerConfig() {
 	let dbConnection = connectToDatabase();
@@ -160,23 +185,23 @@ function loadServerConfig() {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 
 				serverId = dbAssoc["svr_id"];
-				serverConfig.name = dbAssoc["svr_name"];
-				serverConfig.password = dbAssoc["svr_password"];
-				serverConfig.newCharacter.spawnPosition = new Vec3(dbAssoc["svr_newchar_pos_x"], dbAssoc["svr_newchar_pos_y"], dbAssoc["svr_newchar_pos_z"]);
-				serverConfig.newCharacter.spawnHeading = dbAssoc["svr_newchar_rot_z"];
-				serverConfig.newCharacter.money = dbAssoc["svr_newchar_money"];
-				serverConfig.newCharacter.bank = dbAssoc["svr_newchar_bank"];
-				serverConfig.newCharacter.skin = dbAssoc["svr_newchar_skin"];
+				getServerConfig().name = dbAssoc["svr_name"];
+				getServerConfig().password = dbAssoc["svr_password"];
+				getServerConfig().newCharacter.spawnPosition = toVector3(dbAssoc["svr_newchar_pos_x"], dbAssoc["svr_newchar_pos_y"], dbAssoc["svr_newchar_pos_z"]);
+				getServerConfig().newCharacter.spawnHeading = dbAssoc["svr_newchar_rot_z"];
+				getServerConfig().newCharacter.money = dbAssoc["svr_newchar_money"];
+				getServerConfig().newCharacter.bank = dbAssoc["svr_newchar_bank"];
+				getServerConfig().newCharacter.skin = dbAssoc["svr_newchar_skin"];
 
-				serverConfig.connectCameraPosition = new Vec3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
-				serverConfig.connectCameraLookAt = new Vec3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
-				serverConfig.hour = dbAssoc["svr_start_time_hour"];
-				serverConfig.minute = dbAssoc["svr_start_time_min"];
-				serverConfig.weather = dbAssoc["svr_start_weather"];
-				serverConfig.fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
-				serverConfig.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
-				serverConfig.useGUI = intToBool(dbAssoc["svr_gui"]);
-				serverConfig.guiColour = [dbAssoc["svr_gui_col1_r"], dbAssoc["svr_gui_col1_g"], dbAssoc["svr_gui_col1_b"]];
+				getServerConfig().connectCameraPosition = toVector3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
+				getServerConfig().connectCameraLookAt = toVector3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
+				getServerConfig().hour = toInteger(dbAssoc["svr_start_time_hour"]);
+				getServerConfig().minute = toInteger(dbAssoc["svr_start_time_min"]);
+				getServerConfig().weather = toInteger(dbAssoc["svr_start_weather"]);
+				getServerConfig().fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
+				getServerConfig().groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
+				getServerConfig().useGUI = intToBool(dbAssoc["svr_gui"]);
+				getServerConfig().guiColour = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
 
 				applyConfigToServer();
 
@@ -190,13 +215,186 @@ function loadServerConfig() {
 // ----------------------------------------------------------------------------
 
 function applyConfigToServer() {
-	server.name = serverConfig.name;
-	server.password = serverConfig.password;
-	gta.time.hour = serverConfig.hour;
-	gta.time.minute = serverConfig.minute;
-	gta.forceWeather(serverConfig.weather);
+	server.name = getServerConfig().name;
+	server.password = getServerConfig().password;
+	gta.time.hour = getServerConfig().hour;
+	gta.time.minute = getServerConfig().minute;
+	gta.forceWeather(getServerConfig().weather);
 
 	updateServerRules();
+}
+
+// ----------------------------------------------------------------------------
+
+function saveServerConfigToDatabase() {
+	console.log(`[Asshat.Config]: Saving server configuration to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) { 
+		let safeServerName = escapeDatabaseString(dbConnection, getServerConfig().name);
+		let safePassword = escapeDatabaseString(dbConnection, getServerConfig().password);
+
+		let dbQueryString = `UPDATE svr_main SET svr_logo=${boolToInt(getServerConfig().showLogo)}, svr_gui=${boolToInt(getServerConfig().useGUI)}, svr_password='${safePassword}', svr_name='${safeServerName}', svr_start_time_hour=${getServerConfig().hour}, svr_start_time_min=${getServerConfig().minute}, svr_start_weather=${getServerConfig().weather}, svr_start_snow_falling=${boolToInt(getServerConfig().fallingSnow)}, svr_start_snow_ground=${boolToInt(getServerConfig().groundSnow)}, svr_newchar_pos_x=${getServerConfig().newCharacter.spawnPosition.x}, svr_newchar_pos_y=${getServerConfig().newCharacter.spawnPosition.y}, svr_newchar_pos_z=${getServerConfig().newCharacter.spawnPosition.z}, svr_newchar_rot_z=${getServerConfig().newCharacter.spawnHeading}, svr_newchar_money=${getServerConfig().newCharacter.money}, svr_newchar_skin=${getServerConfig().newCharacter.skin}, svr_gui_col1_r=${getServerConfig().guiColour[0]}, svr_gui_col1_g=${getServerConfig().guiColour[1]}, svr_gui_col1_b=${getServerConfig().guiColour[2]} WHERE svr_id = ${serverId}`;
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		disconnectFromDatabase(dbConnection);
+	}
+	console.log(`[Asshat.Config]: Server configuration saved to database!`);
+}
+
+// ----------------------------------------------------------------------------
+
+function getServerConfig() {
+	return serverConfig;
+}
+
+// ----------------------------------------------------------------------------
+
+function setTimeCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split();
+	let hour = toInteger(splitParams[0]) || 0;
+	let minute = toInteger(splitParams[1]) || 0;
+
+	if(hour > 23 || hour < 0) {
+		messageClientError(client, "The hour must be between 0 and 23!");
+		return false;		
+    }
+
+	if(minute > 59 || minute < 0) {
+		messageClientError(client, "The minute must be between 0 and 59!");
+		return false;		
+    }    
+    
+    gta.time.hour = hour;
+    gta.time.minute = minute;
+
+	messageAdminAction(`${client.name} set the time to ${makeReadableTime(hour, minute)}`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function setWeatherCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split();
+	let weatherId = getWeatherFromParams(splitParams[0]);
+
+	if(!weatherId) {
+		messageClientError(client, `That weather ID or name is invalid!`);
+		return false;
+    } 
+    
+    gta.forceWeather(weatherId);
+
+    messageAdminAction(`${client.name} set the weather to to ${weatherNames[server.game][weatherId]}`);
+    updateServerRules();
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function setSnowingCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split();
+    let fallingSnow = toInteger(splitParams[0]) || 0;
+    let groundSnow = toInteger(splitParams[1]) || 0;
+
+    getServerConfig().fallingSnow = 0;
+
+    messageAdminAction(`${client.name} turned falling snow ${getOnOffFromBool(intToBool(fallingSnow))} and ground snow ${getOnOffFromBool(intToBool(groundSnow))}`);
+    updateServerRules();
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleServerLogoCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+    getServerConfig().useLogo = !getServerConfig().useLogo;
+
+    messageAdminAction(`${client.name} turned the server logo image ${toLowerCase(getOnOffFromBool(getServerConfig().useLogo))}`);
+    updateServerRules();
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleServerGUICommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+    getServerConfig().useGUI = !getServerConfig().useGUI;
+
+    messageAdminAction(`${client.name} turned GUI ${toLowerCase(getOnOffFromBool(getServerConfig().useGUI))} for this server`);
+    updateServerRules();
+	return true;
 }
 
 // ----------------------------------------------------------------------------

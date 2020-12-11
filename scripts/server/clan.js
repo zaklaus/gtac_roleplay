@@ -10,7 +10,7 @@
 
 function initClanScript() {
 	console.log("[Asshat.Clan]: Initializing clans script ...");
-	serverData.clans = loadClansFromDatabase();
+	getServerData().clans = loadClansFromDatabase();
 	addClanCommandHandlers();
 	console.log("[Asshat.Clan]: Clan script initialized successfully!");
 	return true;
@@ -38,7 +38,7 @@ function loadClansFromDatabase() {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `clan_main` WHERE `clan_deleted` = 0 AND `clan_server` = " + String(serverId));
+		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `clan_main` WHERE `clan_deleted` = 0 AND `clan_server` = " + toString(serverId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -54,7 +54,7 @@ function loadClansFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log("[Asshat.Clan]: " + String(tempClans.length) + " clans loaded from database successfully!");
+	console.log("[Asshat.Clan]: " + toString(tempClans.length) + " clans loaded from database successfully!");
 	return tempClans;
 }
 
@@ -127,13 +127,13 @@ function deleteClanCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesClanIDExist(Number(params))) {
+	if(!doesClanIDExist(toInteger(params))) {
 		messageClientError(client, "That clan ID does not exist!");
 		return false;
 	}
 
-	messageClientSuccess(client, "The '" + getClanData(Number(params)).name + "' clan has been deleted!");
-	deleteClan(Number(params));
+	messageClientSuccess(client, "The '" + getClanData(toInteger(params)).name + "' clan has been deleted!");
+	deleteClan(toInteger(params));
 }
 
 // ----------------------------------------------------------------------------
@@ -448,7 +448,7 @@ function createClan(name) {
 		let tempClanData = loadClanFromDatabaseById(getDatabaseInsertId(dbConnection));
 		if(tempClanData != false) {
 			let tempClan = serverClasses.clanData(tempClanData);
-			serverData.clans.push(tempClan);
+			getServerData().clans.push(tempClan);
 		}
 	}
 	return true;

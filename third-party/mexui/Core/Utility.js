@@ -26,17 +26,17 @@ mexui.util.isCursorInRectangle = function(position, size)
 
 mexui.util.addVec2 = function(vec2a, vec2b)
 {
-	return new Vec2(vec2a.x + vec2b.x, vec2a.y + vec2b.y);
+	return toVector2(vec2a.x + vec2b.x, vec2a.y + vec2b.y);
 };
 
 mexui.util.subtractVec2 = function(vec2a, vec2b)
 {
-	return new Vec2(vec2a.x - vec2b.x, vec2a.y - vec2b.y);
+	return toVector2(vec2a.x - vec2b.x, vec2a.y - vec2b.y);
 };
 
 mexui.util.addVec3 = function(vec3a, vec3b)
 {
-	return new Vec3(vec3a.x + vec3b.x, vec3a.y + vec3b.y, vec3a.z + vec3b.z);
+	return toVector3(vec3a.x + vec3b.x, vec3a.y + vec3b.y, vec3a.z + vec3b.z);
 };
 
 mexui.util.createControlConstructor = function(controlName, hasEntries, constructor)
@@ -228,7 +228,7 @@ mexui.util.round = function(x, n)
 
 mexui.util.getCenterPosition = function(largerSize, smallerSize)
 {
-	return new Vec2(
+	return toVector2(
 		(largerSize.x - smallerSize.x) / 2.0,
 		(largerSize.y - smallerSize.y) / 2.0
 	);
@@ -236,7 +236,7 @@ mexui.util.getCenterPosition = function(largerSize, smallerSize)
 
 mexui.util.getWindowSize = function()
 {
-	return new Vec2(gta.width, gta.height);
+	return toVector2(gta.width, gta.height);
 };
 
 mexui.util.isRectangleInsideRectangle = function(pos1, size1, pos2, size2)
@@ -543,7 +543,7 @@ mexui.util.isWeekDayName = function(text)
 
 mexui.util.isDayIdSuffix = function(text)
 {
-	switch(text.toLowerCase())
+	switch(toLowerCase(text))
 	{
 		case 'st':
 		case 'nd':
@@ -556,7 +556,7 @@ mexui.util.isDayIdSuffix = function(text)
 
 mexui.util.isDayIdSuffixForDayId = function(dayId, text)
 {
-	switch(text.toLowerCase())
+	switch(toLowerCase(text))
 	{
 		case 'st':		return dayId == 1 || dayId == 21 || dayId == 31;
 		case 'nd':		return dayId == 2 || dayId == 22;
@@ -604,7 +604,7 @@ mexui.util.isDayIdWithOptionalSuffix = function(text)
 
 mexui.util.inArrayOrStartsWithInArray = function(text, arr, startsWithCharCount)
 {
-	text = text.toLowerCase();
+	text = toLowerCase(text);
 	
 	for(var i in arr)
 	{

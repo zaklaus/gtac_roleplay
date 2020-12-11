@@ -63,6 +63,40 @@ function loginCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function autoLoginByIPCommand(command, params, client) {
+	if(doesCommandRequireLogin(command)) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You are not logged in!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
+	
+	if(getClientData(client).accountData.settings & flagValue) {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		messageClientSuccess(client, `You will not be automatically logged in via your current IP (${client.ip})`);
+	} else {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		messageClientSuccess(client, `You will now be automatically logged in from your current IP (${client.ip})`);
+	}
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
 function registerCommand(command, params, client) {
 	if(doesCommandRequireLogin(command)) {
 		if(!isClientLoggedIn(client)) {
@@ -167,8 +201,8 @@ function switchCharacterCommand(command, params, client) {
 		return false;
 	}
 
-	getClientCurrentSubAccount(client).spawnPosition = client.player.position;
-	getClientCurrentSubAccount(client).spawnHeading = client.player.heading;
+	getClientCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
+	getClientCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
 
 	saveSubAccountToDatabase(getClientCurrentSubAccount(client));
 	
@@ -208,7 +242,7 @@ function newCharacterCommand(command, params, client) {
 	let firstName = splitParams[0];
 	let lastName = splitParams[1];
 
-	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", serverConfig.newCharacter.skin);	
+	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", getServerConfig().newCharacter.skin);	
 }
 
 // ---------------------------------------------------------------------------
@@ -238,7 +272,7 @@ function useCharacterCommand(command, params, client) {
 		return false;
 	}
 
-	let characterId = Number(params) || 1;
+	let characterId = toInteger(params) || 1;
 
 	selectCharacter(client, characterId-1);
 }
@@ -246,6 +280,10 @@ function useCharacterCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function isClientLoggedIn(client) {
+	if(client.console) {
+		return true;
+	}
+
 	let loggedIn = getClientData(client).loggedIn;
 	return loggedIn;
 }
@@ -253,6 +291,10 @@ function isClientLoggedIn(client) {
 // ---------------------------------------------------------------------------
 
 function isClientRegistered(client) {
+	if(client.console) {
+		return true;
+	}
+
 	if(getClientData(client).accountData != false) {
 		if(getClientData(client).accountData.databaseId != 0) {
 			return true;
@@ -291,6 +333,10 @@ function loadAccountFromName(accountName) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 				let tempAccountData = new serverClasses.accountData(dbAssoc);
+				tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
+				tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
+				tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
+				tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
 
 				freeDatabaseQuery(dbQuery);
 				return tempAccountData;
@@ -322,70 +368,8 @@ function loadAccountFromId(accountId) {
 
 // ---------------------------------------------------------------------------
 
-function loadSubAccountFromName(firstName, lastName) {
-	let dbConnection = connectToDatabase();
-	if(dbConnection) {
-		firstName = escapeDatabaseString(dbConnection, firstName);
-		lastName = escapeDatabaseString(dbConnection, lastName);
-		let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_name_first = '${firstName}' AND sacct_name_last = '${lastName}' LIMIT 1;`;
-		let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		if(dbQuery) {
-			let dbAssoc = fetchQueryAssoc(dbQuery);
-			freeDatabaseQuery(dbQuery);
-			return new serverClasses.subAccountData(dbAssoc);
-		}
-		disconnectFromDatabase(dbConnection);
-	}
-	
-	return false;
-}
-
-// ---------------------------------------------------------------------------
-
-function loadSubAccountFromId(subAccountId) {
-	let dbConnection = connectToDatabase();
-	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_id = ${subAccountId} LIMIT 1;`;
-		let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		if(dbQuery) {
-			let dbAssoc = fetchQueryAssoc(dbQuery);
-			freeDatabaseQuery(dbQuery);
-			return new serverClasses.subAccountData(dbAssoc);
-		}
-		disconnectFromDatabase(dbConnection);
-	}
-	
-	return false;
-}
-
-// ---------------------------------------------------------------------------
-
-function loadSubAccountsFromAccount(accountId) {
-	let tempSubAccounts = [];
-	let dbAssoc = false;
-	if(accountId > 0) {
-		let dbConnection = connectToDatabase();
-		if(dbConnection) {
-			let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_acct = ${accountId} AND sacct_server = ${serverId}`;
-			let dbQuery = queryDatabase(dbConnection, dbQueryString);
-			if(dbQuery) {
-				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempSubAccount = new serverClasses.subAccountData(dbAssoc);
-					tempSubAccounts.push(tempSubAccount);
-				}
-				freeDatabaseQuery(dbQuery);
-			}
-			disconnectFromDatabase(dbConnection);
-		}
-	}
-	
-	return tempSubAccounts;
-}
-
-// ---------------------------------------------------------------------------
-
 function getAccountHashingFunction() {
-	switch(serverConfig.accountPasswordHash.toLowerCase()) {
+	switch(toLowerCase(getServerConfig().accountPasswordHash)) {
 		case "md5":
 			return module.hashing.md5;
 			
@@ -443,7 +427,7 @@ function hashAccountPassword(name, password) {
 // ---------------------------------------------------------------------------
 
 function saltAccountInfo(name, password) {
-	return "ag.gaming." + String(accountSaltHash) + "." + String(name) + "." + String(password);
+	return "ag.gaming." + toString(accountSaltHash) + "." + toString(name) + "." + toString(password);
 }
 
 // ---------------------------------------------------------------------------
@@ -455,9 +439,18 @@ function loginSuccess(client) {
 		client.administrator = true;
 	}
 
-	if(serverConfig.useGUI) {
-		triggerNetworkEvent("ag.loginSuccess", client);
+	if(getClientData(client).subAccounts.length == 0) {
+		if(getServerConfig().useGUI) {
+			triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No characters");
+			client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+		} else {
+			messageClientAlert(client, `You have no characters. Use /newchar to make one.`);
+		}
+	} else {
+		showCharacterSelectToClient(client);
 	}
+	
+	getClientData(client).accountData.ipAddress = client.ip;
 }
 
 // ---------------------------------------------------------------------------
@@ -468,22 +461,9 @@ function saveAccountToDatabase(accountData) {
 		let safePassword = escapeDatabaseString(dbConnection, accountData.password);
 		let safeStaffTitle = escapeDatabaseString(dbConnection, accountData.staffTitle);
 		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
-		//let safeIRCAccount = dbConnection.escapeString(accountData.ircAccount);
+		//let safeIRCAccount = dbConnection.escapetoString(accountData.ircAccount);
 
-		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_staff_title='${safeStaffTitle}', acct_mod_flags=${String(accountData.flags.moderation)}, acct_discord=${String(accountData.discordAccount)}, acct_email='${safeEmailAddress}' WHERE acct_id=${accountData.databaseId}`;
-		let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		//freeDatabaseQuery(dbQuery);
-		disconnectFromDatabase(dbConnection);
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function saveSubAccountToDatabase(subAccountData) {
-	let dbConnection = connectToDatabase();
-
-	if(dbConnection) {
-		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash} WHERE sacct_id=${subAccountData.databaseId}`;
+		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_staff_title='${safeStaffTitle}', acct_mod_flags=${toString(accountData.flags.moderation)}, acct_discord=${toString(accountData.discordAccount)}, acct_email='${safeEmailAddress}', acct_ip='${accountData.ipAddress}' WHERE acct_id=${accountData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
@@ -511,32 +491,11 @@ function createAccount(name, password, email = "") {
 
 // ---------------------------------------------------------------------------
 
-function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin) {
-	console.log(`[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
-	let dbConnection = connectToDatabase();
-
-	if(dbConnection) {
-		let safeFirstName = escapeDatabaseString(dbConnection, firstName);
-		let safeLastName = escapeDatabaseString(dbConnection, lastName);
-		let safePlaceOfOrigin = escapeDatabaseString(dbConnection, placeOfOrigin);
-
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${serverConfig.newCharacter.spawnPosition.x}, ${serverConfig.newCharacter.spawnPosition.y}, ${serverConfig.newCharacter.spawnPosition.z}, ${serverConfig.newCharacter.spawnHeading}, ${serverConfig.newCharacter.money}, ${serverId})`);
-		if(getDatabaseInsertId(dbConnection) > 0) {
-			return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
-		}
-		disconnectFromDatabase(dbConnection);
-	}
-
-	return false;
-}
-
-// ---------------------------------------------------------------------------
-
 function checkLogin(client, password) {
 	let loginAttemptsRemaining = client.getData("ag.loginAttemptsRemaining")-1;
 
 	if(isClientLoggedIn(client)) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.loginSuccess", client);
 		} else {
 			messageClientError(client, "You are already logged in!");
@@ -545,7 +504,7 @@ function checkLogin(client, password) {
 	}
 	
 	if(!isClientRegistered(client)) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.showRegistration", client);
 		} else {
 			messageClientError(client, "Your name is not registered! Use /register to make an account.");
@@ -554,7 +513,7 @@ function checkLogin(client, password) {
 	}
 
 	if(areParamsEmpty(password)) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);		
 		} else {
 			messageClientError(client, "You must enter a password!");
@@ -563,36 +522,29 @@ function checkLogin(client, password) {
 	}
 	
 	if(!isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, password))) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);
 		} else {
 			messageClientError(client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);
 		}
 		return false;
 	}
+	
+	if(getServerConfig().useGUI) {
+		triggerNetworkEvent("ag.loginSuccess", client);
+	}
 
 	loginSuccess(client);
-
-	if(getClientData(client).subAccounts.length == 0) {
-		if(serverConfig.useGUI) {
-			triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No characters");
-			client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
-		} else {
-			messageClientAlert(client, `You have no characters. Use /newchar to make one.`);
-		}
-	} else {
-		showCharacterSelectToClient(client);
-	}
 }
 addNetworkHandler("ag.checkLogin", checkLogin);
 
 // ---------------------------------------------------------------------------
 
 function checkRegistration(client, password, confirmPassword = "", emailAddress = "") {
-	console.log("[Asshat.Account]: Checking registration for " + String(client.name));
+	console.log("[Asshat.Account]: Checking registration for " + toString(client.name));
 
 	if(isClientRegistered(client)) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.showLogin", client);
 		} else {
 			messageClientError(client, "Your name is already registered!");
@@ -601,7 +553,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 
 	if(isClientLoggedIn(client)) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.loginSuccess", client);
 		} else {
 			messageClientError(client, "You are already logged in!");
@@ -610,7 +562,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 
 	if(areParamsEmpty(password)) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.registrationFailed", client, "Password cannot be blank!");
 		} else {
 			messageClientError(client, "The password cannot be blank!");
@@ -618,21 +570,21 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		return false;
 	}
 
-	if(serverConfig.useGUI) {
+	if(getServerConfig().useGUI) {
 		if(areParamsEmpty(confirmPassword)) {
 			triggerNetworkEvent("ag.registrationFailed", client, "Password confirm cannot be blank!");
 			return false;
 		}
 	}
 
-	if(serverConfig.useGUI) {
+	if(getServerConfig().useGUI) {
 		if(areParamsEmpty(emailAddress)) {
 			triggerNetworkEvent("ag.registrationFailed", client, "Email address cannot be blank!");
 			return false;
 		}
 	}
 
-	if(serverConfig.useGUI) {
+	if(getServerConfig().useGUI) {
 		if(password != confirmPassword) {
 			triggerNetworkEvent("ag.registrationFailed", client, "The passwords must match!");
 			return false;
@@ -640,7 +592,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 	
 	if(!doesPasswordMeetRequirements(password)) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			// Work on this later. Function should return true by default anyway for now.
 			triggerNetworkEvent("ag.registrationFailed", client, "Password doesn't meet requirements!");
 		} else {
@@ -649,7 +601,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		return false
 	}
 
-	if(serverConfig.useGUI) {
+	if(getServerConfig().useGUI) {
 		if(!isValidEmailAddress(emailAddress)) {
 			triggerNetworkEvent("ag.registrationFailed", client, "You must put a valid email!");
 			return false
@@ -658,7 +610,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	let accountData = createAccount(client.name, password, emailAddress);
 	if(!accountData) {
-		if(serverConfig.useGUI) {
+		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.registrationFailed", client, "Something went wrong. Your account could not be created!");
 		} else {
 			messageClientAlert(client, "Something went wrong. Your account could not be created!");
@@ -674,7 +626,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	messageClientSuccess(client, "Your account has been created!");
 	messageClientAlert(client, "To play on the server, you will need to make a character.");
 	
-	if(serverConfig.useGUI) {
+	if(getServerConfig().useGUI) {
 		triggerNetworkEvent("ag.registrationSuccess", client);
 		triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No Characters");
 		client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
@@ -683,107 +635,6 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 };
 addNetworkHandler("ag.checkRegistration", checkRegistration);
-
-// ---------------------------------------------------------------------------
-
-function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrigin, skinId) {
-	if(areParamsEmpty(firstName)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "First name cannot be blank!");
-		return false;
-	}
-	firstName = firstName.trim();
-
-	if(areParamsEmpty(lastName)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Last name cannot be blank!");
-		return false;
-	}
-	lastName = lastName.trim();
-
-	if(areParamsEmpty(dateOfBirth)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Date of birth cannot be blank!");
-		return false;
-	}
-
-	if(areParamsEmpty(placeOfOrigin)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Place of origin cannot be blank!");
-		return false;
-	}
-
-	if(areParamsEmpty(skinId)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Invalid skin!");
-		return false;
-	}
-
-	let subAccountData = createSubAccount(getClientData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
-	if(!subAccountData) {
-		if(serverConfig.useGUI) {
-			triggerNetworkEvent("ag.newCharacterFailed", client, "Something went wrong. Your character could not be created!");
-		} else {
-			messageClientAlert(client, "Something went wrong. Your character could not be created!");
-		}
-		messageClientAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
-		return false;
-	}
-
-	getClientData(client).subAccounts = loadSubAccountsFromAccount(getClientData(client).accountData.databaseId);
-	getClientData(client).currentSubAccount = 0;
-	let tempSubAccount = getClientData(client).subAccounts[0];
-	showCharacterSelectToClient(client);
-}
-addNetworkHandler("ag.checkNewCharacter", checkNewCharacter);
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.previousCharacter", function(client) {
-	if(getClientData(client).subAccounts.length > 1) {
-		if(getClientData(client).currentSubAccount <= 0) {
-			getClientData(client).currentSubAccount = getClientData(client).subAccounts.length-1;
-		} else {
-			getClientData(client).currentSubAccount--;
-		}
-
-		let subAccountId = getClientData(client).currentSubAccount;
-		let tempSubAccount = getClientData(client).subAccounts[subAccountId];
-		triggerNetworkEvent("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
-	}
-});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.nextCharacter", function(client) {
-	if(getClientData(client).subAccounts.length > 1) {
-		if(getClientData(client).currentSubAccount >= getClientData(client).subAccounts.length-1) {
-			getClientData(client).currentSubAccount = 0;
-		} else {
-			getClientData(client).currentSubAccount++;
-		}
-
-		let subAccountId = getClientData(client).currentSubAccount;
-		let tempSubAccount = getClientData(client).subAccounts[subAccountId];
-		triggerNetworkEvent("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
-	}
-});
-
-// ---------------------------------------------------------------------------
-
-function selectCharacter(client, characterId = -1) {
-	if(serverConfig.useGUI) {
-		triggerNetworkEvent("ag.characterSelectSuccess", client);
-	}
-
-	if(characterId != -1) {
-		getClientData(client).currentSubAccount = characterId;
-	}
-
-	let tempSubAccount = getClientCurrentSubAccount(client);
-	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
-
-	messageClientNormal(client, `You are playing as ${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
-	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
-	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
-	triggerNetworkEvent("ag.restoreCamera", client);
-}
-addNetworkHandler("ag.selectCharacter", selectCharacter);
 
 // ---------------------------------------------------------------------------
 
@@ -816,10 +667,8 @@ function saveClientToDatabase(client) {
 	saveAccountToDatabase(getClientData(client).accountData);
 	let subAccountData = getClientCurrentSubAccount(client);
 	
-	if(client.player) {
-		subAccountData.spawnPosition = client.player.position;
-		subAccountData.spawnHeading = client.player.heading; 
-	}
+	subAccountData.spawnPosition = getPlayerPosition(client);
+	subAccountData.spawnHeading = getPlayerHeading(client);
 
 	saveSubAccountToDatabase(subAccountData);
 	console.log(`[Asshat.Account]: Saved client ${client.name} to database successfully!`);
@@ -829,11 +678,11 @@ function saveClientToDatabase(client) {
 // ---------------------------------------------------------------------------
 
 function initClient(client) {
-	triggerNetworkEvent("ag.guiColour", client, serverConfig.guiColour[0], serverConfig.guiColour[1], serverConfig.guiColour[2]);
-	triggerNetworkEvent("ag.logo", client, serverConfig.showLogo);
-	
+	triggerNetworkEvent("ag.guiColour", client, getServerConfig().guiColour[0], getServerConfig().guiColour[1], getServerConfig().guiColour[2]);
+	triggerNetworkEvent("ag.logo", client, getServerConfig().showLogo);
+
 	showConnectCameraToPlayer(client);
-	messageClient(`Please wait ...`, client, serverConfig.colour.byName.softGreen);
+	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
 	
 	setTimeout(function() {
 		let sessionId = saveSessionToDatabase(client);
@@ -843,19 +692,24 @@ function initClient(client) {
 		let tempAccountData = loadAccountFromName(client.name);
 		let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
 		
-		serverData.clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
+		getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
 
 		if(tempAccountData != false) {
-			if(serverConfig.useGUI) {
-				triggerNetworkEvent("ag.showLogin", client);
+			if(isAccountAutoIPLoginEnabled(tempAccountData) && getClientData(client).accountData.ipAddress == client.ip) {
+				messageClientAlert(client, "You have been automatically logged in via IP!");
+				loginSuccess(client);
 			} else {
-				messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, serverConfig.colour.byName.softGreen);
+				if(getServerConfig().useGUI) {
+					triggerNetworkEvent("ag.showLogin", client);
+				} else {
+					messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
+				}
 			}
 		} else {
-			if(serverConfig.useGUI) {
+			if(getServerConfig().useGUI) {
 				triggerNetworkEvent("ag.showRegistration", client);
 			} else {
-				messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, serverConfig.colour.byName.softGreen);
+				messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
 			}
 		}
 	}, 2500);
@@ -867,26 +721,147 @@ function initClient(client) {
 
 // ---------------------------------------------------------------------------
 
-function showCharacterSelectToClient(client) {
-	if(serverConfig.useGUI) {
-		getClientData(client).currentSubAccount = 0;
-		let tempSubAccount = getClientData(client).subAccounts[0];
-		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
-	} else {	
-		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
-		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
-		messageClientNormal(client, `You have the following characters. Use /usechar <id> to select one:`, serverConfig.colour.byName.teal);
-		getClientData(client).subAccounts.forEach(function(subAccount, index) {
-			messageClientNormal(client, `${index+1} • [#CCCCCC]${subAccount.firstName} ${subAccount.lastName}`);
-		});
+function saveSessionToDatabase(client) {
+	// To-do
+	return 0;
+}
+
+// ---------------------------------------------------------------------------
+
+function createDefaultKeybindsForAccount(accountDatabaseId) {
+	for(let i in getServerConfig().defaultKeybinds) {
+		quickDatabaseQuery(`INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added) VALUES (${accountDatabaseId}, ${getServerConfig().defaultKeybinds[i].key}, '${getServerConfig().defaultKeybinds[i].commandString}', UNIX_TIMESTAMP())`);
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function saveSessionToDatabase(client) {
-	// To-do
-	return 0;
+function loadAccountKeybindsFromDatabase(accountDatabaseID) {
+	console.log(`[Asshat.Account]: Loading account keybinds for account ${accountDatabaseID} from database ...`);
+
+	let tempAccountKeybinds = [];
+	let dbConnection = connectToDatabase();
+	let dbQuery = null;
+	let dbAssoc;
+	
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `acct_hotkey` WHERE `acct_hotkey_enabled` = 1 AND `acct_hotkey_acct` = " + toString(accountDatabaseID));
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempAccountKeyBindData = new serverClasses.accountKeybindData(dbAssoc);
+					tempAccountKeybinds.push(tempAccountKeybinds);
+					console.log(`[Asshat.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	console.log(`[Asshat.Account]: ${tempAccountKeybinds.length} account keybinds for account ${accountDatabaseID} loaded from database successfully!`);
+	return tempAccountKeybinds;
 }
+
+// ---------------------------------------------------------------------------
+
+function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
+	console.log(`[Asshat.Account]: Loading account staff notes for account ${accountDatabaseID} from database ...`);
+
+	let tempAccountStaffNotes = [];
+	let dbConnection = connectToDatabase();
+	let dbQuery = null;
+	let dbAssoc;
+	
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `acct_note` WHERE `acct_note_deleted` = 0 AND `acct_note_acct` = " + toString(accountDatabaseID));
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempAccountStaffNoteData = new serverClasses.accountStaffNoteData(dbAssoc);
+					tempAccountStaffNotes.push(tempAccountStaffNoteData);
+					console.log(`[Asshat.Account]: Account staff note '${tempAccountStaffNoteData.databaseId}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	console.log(`[Asshat.Account]: ${tempAccountStaffNotes.length} account staff notes for account ${accountDatabaseID} loaded from database successfully!`);
+	return tempAccountStaffNotes;
+}
+
+// ---------------------------------------------------------------------------
+
+function loadAccountContactsFromDatabase(accountDatabaseID) {
+	console.log(`[Asshat.Account]: Loading account contacts for account ${accountDatabaseID} from database ...`);
+
+	let tempAccountContacts = [];
+	let dbConnection = connectToDatabase();
+	let dbQuery = null;
+	let dbAssoc;
+	
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `acct_contact` WHERE `acct_contact_deleted` = 0 AND `acct_contact_acct` = " + toString(accountDatabaseID));
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempAccountContactData = new serverClasses.accountContactData(dbAssoc);
+					tempAccountContacts.push(tempAccountContactData);
+					console.log(`[Asshat.Account]: Account contact '${tempAccountContactData.databaseId}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	console.log(`[Asshat.Account]: ${tempAccountContacts.length} account contacts for account ${accountDatabaseID} loaded from database successfully!`);
+	return tempAccountContacts;
+}
+
+// ---------------------------------------------------------------------------
+
+function loadAccountMessagesFromDatabase(accountDatabaseID) {
+	console.log(`[Asshat.Account]: Loading account messages for account ${accountDatabaseID} from database ...`);
+
+	let tempAccountMessages = [];
+	let dbConnection = connectToDatabase();
+	let dbQuery = null;
+	let dbAssoc;
+	
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `acct_msg` WHERE `acct_msg_deleted` = 0 AND `acct_msg_acct` = " + toString(accountDatabaseID));
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempAccountMessageData = new serverClasses.accountContactData(dbAssoc);
+					tempAccountMessages.push(tempAccountMessageData);
+					console.log(`[Asshat.Account]: Account contact '${tempAccountMessageData.databaseId}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	console.log(`[Asshat.Account]: ${tempAccountMessages.length} account messages for account ${accountDatabaseID} loaded from database successfully!`);
+	return tempAccountMessages;
+}
+
+// ---------------------------------------------------------------------------
+
+function isAccountAutoIPLoginEnabled(accountData) {
+	let accountSettings = accountData.settings;
+	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
+	return hasBitFlag(accountSettings, flagValue);
+}
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.clientReady", function(client) {
+
+});
 
 // ---------------------------------------------------------------------------

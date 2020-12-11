@@ -18,7 +18,7 @@ function translateMessage(messageText, fromLanguageId, toLanguageId) {
 		thisTranslationURL,
 		"",
 		function(data) {
-			data = String(data).substr(0, String(data).lastIndexOf("}")+1);
+			data = toString(data).substr(0, toString(data).lastIndexOf("}")+1);
 			let translationData = JSON.parse(data);
 			//this.translatedText = translationData.responseData.translatedText;
 			addTranslationToCache(messageText, translationData.responseData.translatedText, fromLanguageId, toLanguageId);
@@ -34,32 +34,32 @@ function translateMessage(messageText, fromLanguageId, toLanguageId) {
 // ---------------------------------------------------------------------------
 
 function addTranslationToCache(originalText, translatedText, fromLanguageId, toLanguageId) {
-	serverData.translation.cache[fromLanguageId][toLanguageId].push([originalText, translatedText]);
+	getServerData().translation.cache[fromLanguageId][toLanguageId].push([originalText, translatedText]);
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function formatTranslationURL(originalText, fromLanguageId, toLanguageId) {
-	return serverData.translation.translationBaseURL.format(encodeURI(originalText), getLanguageShortCode(fromLanguageId), getLanguageShortCode(toLanguageId));
+	return getServerData().translation.translationBaseURL.format(encodeURI(originalText), getLanguageShortCode(fromLanguageId), getLanguageShortCode(toLanguageId));
 }
 
 // ---------------------------------------------------------------------------
 
 function getLanguageShortCode(languageId) {
-	return serverData.translation.languages[languageId][1];
+	return getServerData().translation.languages[languageId][1];
 }
 
 // ---------------------------------------------------------------------------
 
 function getLanguageFullName(languageId) {
-	return serverData.translation.languages[languageId][0];
+	return getServerData().translation.languages[languageId][0];
 }
 
 // ---------------------------------------------------------------------------
 
 function getLanguageIdFromFullName(languageName) {
-	let languages = serverData.translation.languages;
+	let languages = getServerData().translation.languages;
 	for(let i in languages) {
 		if(languages[i][0] == languageName) {
 			return i;
@@ -71,7 +71,7 @@ function getLanguageIdFromFullName(languageName) {
 // ---------------------------------------------------------------------------
 
 function getLanguageIdFromShortCode(languageShortCode) {
-	let languages = serverData.translation.languages;
+	let languages = getServerData().translation.languages;
 	for(let i in languages) {
 		if(languages[i][1] == languageShortCode) {
 			return i;

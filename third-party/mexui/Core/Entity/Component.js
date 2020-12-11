@@ -29,7 +29,7 @@ mexui.Entity.Component.prototype.onMouseMove = function(e, offset)
 {
 	if(this.moving)
 	{
-		this.position = new Vec2(this.position.x + offset.x, this.position.y + offset.y);
+		this.position = toVector2(this.position.x + offset.x, this.position.y + offset.y);
 		e.used = true;
 	}
 };

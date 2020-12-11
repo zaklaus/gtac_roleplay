@@ -47,7 +47,7 @@ function connectToDatabase() {
 		console.log("[Asshat.Database] Initializing database connection ...");
 		persistentDatabaseConnection = module.mysql.connect(databaseConfig.host, databaseConfig.user, databaseConfig.pass, databaseConfig.name, databaseConfig.port);
 		if(persistentDatabaseConnection.error) {
-			console.warn("[Asshat.Database] Database connection error: " + String(persistentDatabaseConnection.error));
+			console.warn("[Asshat.Database] Database connection error: " + toString(persistentDatabaseConnection.error));
 			persistentDatabaseConnection = null;
 			return false;
 		}

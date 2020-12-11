@@ -53,7 +53,7 @@ function kickClientCommand(command, params, client) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + String(targetClient.name) + " has been kicked from the server.");
+	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been kicked from the server.");
 	targetClient.disconnect();
 }
 
@@ -89,7 +89,7 @@ function muteClientCommand(command, params, client) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + String(targetClient.name) + " has been muted!");
+	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been muted!");
 	targetClient.setData("ag.muted", true, false);
 }
 
@@ -125,7 +125,7 @@ function unMuteClientCommand(command, params, client) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + String(targetClient.name) + " has been unmuted!");
+	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been unmuted!");
 	targetClient.removeData("ag.muted");
 }
 
@@ -161,7 +161,7 @@ function freezeClientCommand(command, params, client) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + String(targetClient.name) + " has been frozen!");
+	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been frozen!");
 	triggerNetworkEvent("ag.frozen", client, true);
 }
 
@@ -197,7 +197,7 @@ function unFreezeClientCommand(command, params, client) {
         return false;
 	}
 	
-	message(`[#996600][ADMIN]: [#FFFFFF]${String(targetClient.name)} has been un-frozen!`);
+	message(`[#996600][ADMIN]: [#FFFFFF]${toString(targetClient.name)} has been un-frozen!`);
 	triggerNetworkEvent("ag.frozen", client, false);
 }
 
@@ -369,10 +369,10 @@ function getStaffFlagsCommand(command, params, client) {
 	}
 	
 	let tempStaffFlags = [];
-	for(let i in serverData.staffFlagKeys) {
-		let tempFlagValue = getStaffFlagValue(serverData.staffFlagKeys[i]);
+	for(let i in getServerData().staffFlagKeys) {
+		let tempFlagValue = getStaffFlagValue(getServerData().staffFlagKeys[i]);
 		if(doesClientHaveStaffPermission(client, tempFlagValue)) {
-			tempStaffFlags.push(serverData.staffFlagKeys[i]);
+			tempStaffFlags.push(getServerData().staffFlagKeys[i]);
 		}
 	}
 
@@ -408,7 +408,7 @@ function allStaffFlagsCommand(command, params, client) {
         return false;
 	}
 
-	messageClientInfo(client, `Staff flags: ${serverData.staffFlagKeys.join(", ")}`);
+	messageClientInfo(client, `Staff flags: ${getServerData().staffFlagKeys.join(", ")}`);
 }
 
 // ---------------------------------------------------------------------------

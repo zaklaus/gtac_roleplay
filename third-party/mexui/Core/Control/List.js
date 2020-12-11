@@ -34,22 +34,22 @@ mexui.Control.List.prototype.onMouseDown = function(e)
 mexui.Control.List.prototype.render = function()
 {
 	var pos = this.getScreenPosition();
-	var pos2 = new Vec2(pos.x, pos.y);
+	var pos2 = toVector2(pos.x, pos.y);
 	
 	for(var i in this.axis.y.entries)
 	{
 		var row = this.axis.y.entries[i];
 		var rowText = row.text;
 		
-		mexui.native.drawRectangle(pos, new Vec2(this.size.x, this.rowHeight), this.getStyles('row'));
-		mexui.native.drawText(pos, new Vec2(this.size.x, this.rowHeight), rowText, this.getStyles('row'));
+		mexui.native.drawRectangle(pos, toVector2(this.size.x, this.rowHeight), this.getStyles('row'));
+		mexui.native.drawText(pos, toVector2(this.size.x, this.rowHeight), rowText, this.getStyles('row'));
 		
 		pos.y += this.rowHeight;
-		mexui.native.drawAALine(pos, new Vec2(pos.x + this.size.x, pos.y), this.getStyles('rowLine'));
+		mexui.native.drawAALine(pos, toVector2(pos.x + this.size.x, pos.y), this.getStyles('rowLine'));
 	}
 	
 	if(this.isFocused())
-		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('focused'));
 };
 
 // model

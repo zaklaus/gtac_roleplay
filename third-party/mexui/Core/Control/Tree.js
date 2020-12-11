@@ -49,7 +49,7 @@ mexui.Control.Tree.prototype.render = function()
 	this.renderRows(this.axis.y.entries, 0, pos);
 	
 	if(this.isFocused())
-		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('focused'));
 };
 
 mexui.Control.Tree.prototype.renderRows = function(rows, level, pos)
@@ -62,17 +62,17 @@ mexui.Control.Tree.prototype.renderRows = function(rows, level, pos)
 		if(shouldDraw)
 		{
 			if(row.rows.length > 0)
-				mexui.native.drawText(new Vec2(pos.x - (this.rowLevelIndentation * 2), pos.y), new Vec2(this.size.x, this.rowHeight), row.open ? '-' : '+', this.getStyles('rowIcon'));
+				mexui.native.drawText(toVector2(pos.x - (this.rowLevelIndentation * 2), pos.y), toVector2(this.size.x, this.rowHeight), row.open ? '-' : '+', this.getStyles('rowIcon'));
 			
-			mexui.native.drawRectangle(pos, new Vec2(this.size.x - (this.rowLevelIndentation * level), this.rowHeight), this.getStyles('row'));
-			mexui.native.drawText(pos, new Vec2(this.size.x, this.rowHeight), row.text, this.getStyles('row'));
+			mexui.native.drawRectangle(pos, toVector2(this.size.x - (this.rowLevelIndentation * level), this.rowHeight), this.getStyles('row'));
+			mexui.native.drawText(pos, toVector2(this.size.x, this.rowHeight), row.text, this.getStyles('row'));
 		}
 		
 		pos.y += this.rowHeight;
 		
 		if(shouldDraw)
 		{
-			mexui.native.drawAALine(pos, new Vec2(pos.x + this.size.x, pos.y), this.getStyles('rowLine'));
+			mexui.native.drawAALine(pos, toVector2(pos.x + this.size.x, pos.y), this.getStyles('rowLine'));
 		}
 		
 		if(row.rows.length > 0 && row.open)
@@ -107,8 +107,8 @@ mexui.Control.Tree.prototype.testRowClick = function(e, rows, pos)
 	{
 		var row = rows[i];
 		
-		var rowPos = new Vec2(pos.x - (this.rowLevelIndentation * 2), pos.y);
-		var rowSize = new Vec2(this.size.x + (this.rowLevelIndentation * 2), this.rowHeight);
+		var rowPos = toVector2(pos.x - (this.rowLevelIndentation * 2), pos.y);
+		var rowSize = toVector2(this.size.x + (this.rowLevelIndentation * 2), this.rowHeight);
 		if(mexui.util.isCursorInRectangle(rowPos, rowSize))
 		{
 			this.onClickRow(row);

@@ -8,7 +8,7 @@ mexui.util.createControlConstructor('TextInput', false, function(window, x, y, w
 	
 	this.lines				= text ? mexui.util.splitLines(text) : [''];
 	
-	this.caretPosition		= new Vec2(0, 0);
+	this.caretPosition		= toVector2(0, 0);
 	this.multiLineSupported	= multiLineSupported === undefined ? true : multiLineSupported;
 	this.multiLine			= this.multiLineSupported ? mexui.util.doesContainEOLChar(text) : false;
 	this.masked				= false;
@@ -143,7 +143,7 @@ mexui.Control.TextInput.prototype.onKeyDown = function(e, key, mods)
 		case SDLK_BACKSPACE:
 			if(this.caretPosition.x != 0)
 			{
-				this.deleteCharacter(new Vec2(this.caretPosition.x - 1, this.caretPosition.y));
+				this.deleteCharacter(toVector2(this.caretPosition.x - 1, this.caretPosition.y));
 				this.caretPosition.x--;
 				this.checkToCallCallback();
 			}
@@ -207,7 +207,7 @@ mexui.Control.TextInput.prototype.onKeyDown = function(e, key, mods)
 mexui.Control.TextInput.prototype.render = function()
 {
 	var pos = this.getScreenPosition();
-	var pos2 = new Vec2(pos.x, pos.y);
+	var pos2 = toVector2(pos.x, pos.y);
 	
 	mexui.native.drawRectangle(pos, this.size, this.getStyles('main'));
 	
@@ -217,7 +217,7 @@ mexui.Control.TextInput.prototype.render = function()
 	}
 	else
 	{
-		var lineSize = new Vec2(this.size.x, this.lineHeight);
+		var lineSize = toVector2(this.size.x, this.lineHeight);
 		for(var i=0,j=this.lines.length; i<j; i++)
 		{
 			var displayedText = this.masked ? '*'.repeat(this.lines[i].length) : this.lines[i];
@@ -232,7 +232,7 @@ mexui.Control.TextInput.prototype.render = function()
 	if(this.isFocused())
 	{
 		if(!valueIsInvalid)
-			mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
+			mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('focused'));
 		
 		if(this.caretShownForBlink)
 		{
@@ -240,15 +240,15 @@ mexui.Control.TextInput.prototype.render = function()
 			var text = this.lines[this.caretPosition.y].substr(0, this.caretPosition.x);
 			var displayedText = this.masked ? '*'.repeat(text.length) : text;
 			var textWidth = mexui.native.getTextWidth(displayedText, this.getStyles('main'));
-			var caretPosOffset = new Vec2(5 + textWidth, (this.caretPosition.y * this.lineHeight) + 1);
+			var caretPosOffset = toVector2(5 + textWidth, (this.caretPosition.y * this.lineHeight) + 1);
 			var caretPoint1 = mexui.util.addVec2(pos, caretPosOffset);
-			var caretPoint2 = new Vec2(caretPoint1.x, caretPoint1.y + 22);
+			var caretPoint2 = toVector2(caretPoint1.x, caretPoint1.y + 22);
 			mexui.native.drawAALine(caretPoint1, caretPoint2, this.getStyles('caret'));
 		}
 	}
 	
 	if(valueIsInvalid)
-		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('invalidValue'));
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('invalidValue'));
 };
 
 // model
@@ -280,7 +280,7 @@ mexui.Control.TextInput.prototype.getCaretPositionByCursor = function()
 {
 	var lineIndex = this.getCaretLineIndexByCursor();
 	var charIndex = this.getCharIndexByCursor(lineIndex);
-	return new Vec2(charIndex, lineIndex);
+	return toVector2(charIndex, lineIndex);
 };
 
 mexui.Control.TextInput.prototype.getCaretLineIndexByCursor = function()

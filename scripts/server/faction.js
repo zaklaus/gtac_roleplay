@@ -8,6 +8,8 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+// This system will probably be removed at some point.
+
 function initFactionScript() {
 	console.log("[Asshat.Faction]: Initializing faction script ...");
 	addFactionCommandHandlers();
@@ -52,7 +54,7 @@ function loadFactionsFromDatabase() {
 		dbConnection.close();
 	}
 
-	console.log("[Asshat.Faction]: " + String(tempFactions.length) + " factions loaded from database successfully!");
+	console.log("[Asshat.Faction]: " + toString(tempFactions.length) + " factions loaded from database successfully!");
 	return tempFactions;
 }
 

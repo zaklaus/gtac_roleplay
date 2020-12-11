@@ -111,7 +111,6 @@ function updateNametags(element) {
 				health = 1.0;
 			}
 			
-			//console.log("Armour: " + String(element.armour));
 			let armour = element.armour/100.0;
 			if(armour > 1.0) {
 				armour = 1.0; 

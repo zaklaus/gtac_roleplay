@@ -14,25 +14,26 @@ function initServerScripts() {
 
 	initClassScript();
 	initDatabaseScript();
-
+	initBitFlagScript();
 	initCommandScript();
-
 	initBusinessScript();
 	initClanScript();
 	initHouseScript();
 	initChatScript();
 	initModerationScript();
 	initAccountScript();
+	initSubAccountScript();
 	initChatScript();
 	initJobScript();
 	initVehicleScript();
 	initDeveloperScript();
+	initConfigScript();
 
 	initTimers();
 
-	//gta.time.hour = serverConfig.startup.hour;
-	//gta.time.minute = serverConfig.startup.minute;
-	//gta.forceWeather(serverConfig.startup.weather);
+	//gta.time.hour = getServerConfig().startup.hour;
+	//gta.time.minute = getServerConfig().startup.minute;
+	//gta.forceWeather(getServerConfig().startup.weather);
 
 	initAllClients();
 }

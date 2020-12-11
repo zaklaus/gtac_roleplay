@@ -85,8 +85,6 @@ function executeClientCodeCommand(command, params, client) {
 	let targetClient = getClientFromParams(splitParams[0]);
 	let targetCode = splitParams.slice(1).join(" ");
 
-	console.log(targetCode);
-
 	if(!targetClient) {
 		messageClientError(client, "That player was not found!");
 		return false;		
@@ -99,7 +97,7 @@ function executeClientCodeCommand(command, params, client) {
 
 	triggerNetworkEvent("ag.runCode", targetClient, targetCode);
 
-	messageClientSuccess(client, "Executing client code for " + String(targetClient.name) + "!");
+	messageClientSuccess(client, "Executing client code for " + toString(targetClient.name) + "!");
 	messageClientNormal(client, "Code: " + targetCode);
 	return true;
 }
@@ -173,7 +171,7 @@ addNetworkHandler("ag.runCodeFail", function(client, returnTo, code) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.runCodeFail", function(client, returnTo, returnVal, code) {
+addNetworkHandler("ag.runCodeSuccess", function(client, returnTo, returnVal, code) {
 	let returnClient = getClientFromParams(returnTo);
 	if(!returnClient) {
 		return false;
@@ -187,20 +185,66 @@ addNetworkHandler("ag.runCodeFail", function(client, returnTo, returnVal, code) 
 // ---------------------------------------------------------------------------
 
 function submitIdea(client, ideaText) {
+	let position = toVector3(0.0, 0.0, 0.0);
+	let heading = 0.0;
+	let session = 0;
+	let databaseId = 0;
+
+	if(client.getData("ag.position")) {
+		position = client.getData("ag.position");
+	}
+
+	if(client.getData("ag.heading")) {
+		heading = client.getData("ag.heading");
+	}
+
+	if(client.getData("ag.session")) {
+		session = client.getData("ag.session");
+	}
+
+	if(client.console) {
+		databaseId = -1
+	} else {
+		databaseId = getClientData(client).accountData.databaseId;
+	}
+		
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeIdeaMessage = escapeDatabaseString(dbConnection, ideaText);
-		executeDatabaseQuery(dbConnection, `INSERT INTO idea_main (idea_server, idea_script_ver, idea_who_added, idea_when_added, idea_message, idea_pos_x, idea_pos_y, idea_pos_z, idea_rot_z, idea_svr_start, idea_session) VALUES (${serverId}, '${scriptVersion}', ${getClientData(client).accountData.databaseId}, UNIX_TIMESTAMP(), '${safeIdeaMessage}', ${client.getData("ag.pos").x}, ${client.getData("ag.pos").y}, ${client.getData("ag.pos").z}, ${client.getData("ag.heading")}, ${serverStartTime}, ${client.getData("ag.session")})`)
+		queryDatabase(dbConnection, `INSERT INTO idea_main (idea_server, idea_script_ver, idea_who_added, idea_when_added, idea_message, idea_pos_x, idea_pos_y, idea_pos_z, idea_rot_z, idea_svr_start, idea_session) VALUES (${serverId}, '${scriptVersion}', ${databaseId}, UNIX_TIMESTAMP(), '${safeIdeaMessage}',${position.x}, ${position.y}, ${position.z}, ${heading}, ${serverStartTime}, ${session})`);
 	}
 }
 
 // ---------------------------------------------------------------------------
 
 function submitBugReport(client, bugText) {
+	let position = toVector3(0.0, 0.0, 0.0);
+	let heading = 0.0;
+	let session = 0;
+	let databaseId = 0;
+
+	if(client.getData("ag.position")) {
+		position = client.getData("ag.position");
+	}
+
+	if(client.getData("ag.heading")) {
+		heading = client.getData("ag.heading");
+	}
+
+	if(client.getData("ag.session")) {
+		session = client.getData("ag.session");
+	}
+
+	if(client.console) {
+		databaseId = -1
+	} else {
+		databaseId = getClientData(client).accountData.databaseId;
+	}
+
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeBugMessage = escapeDatabaseString(dbConnection, bugText);
-		executeDatabaseQuery(dbConnection, `INSERT INTO bug_main (bug_server, bug_script_ver, bug_who_added, bug_when_added, bug_message, bug_pos_x, bug_pos_y, bug_pos_z, bug_rot_z, bug_svr_start, bug_session) VALUES (${serverId}, '${scriptVersion}', ${getClientData(client).accountData.databaseId}, UNIX_TIMESTAMP(), '${safeBugMessage}', ${client.getData("ag.pos").x}, ${client.getData("ag.pos").y}, ${client.getData("ag.pos").z}, ${client.getData("ag.heading")}, ${serverStartTime}, ${client.getData("ag.session")})`)
+		queryDatabase(dbConnection, `INSERT INTO bug_main (bug_server, bug_script_ver, bug_who_added, bug_when_added, bug_message, bug_pos_x, bug_pos_y, bug_pos_z, bug_rot_z, bug_svr_start, bug_session) VALUES (${serverId}, '${scriptVersion}', ${databaseId}, UNIX_TIMESTAMP(), '${safeBugMessage}', ${position.x}, ${position.y}, ${position.z}, ${heading}, ${serverStartTime}, ${session})`);
 	}
 }
 

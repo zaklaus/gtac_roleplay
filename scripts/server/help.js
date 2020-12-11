@@ -99,7 +99,7 @@ function showAccountHelpMessage(client) {
 
 function showEnteredDriverSeatHelpTip(client) {
     if(getClientData(client).accountData.shownTips & !shownTipsFlags.enteredDriverSeat) {
-        //messageClientInfo(client, `Press ${serverConfig.keybindText.vehicleEngineKey} for engine, ${serverConfig.keybindText.vehicleLightsKey} for lights, and ${serverConfig.keybindText.vehicleLockKey} for door locks`);
+        messageClientInfo(client, `Press ${getServerConfig().keybindText.vehicleEngineKey} for engine, ${getServerConfig().keybindText.vehicleLightsKey} for lights, and ${getServerConfig().keybindText.vehicleLockKey} for door locks`);
         getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.enteredDriverSeat;
     }  
 }
@@ -108,7 +108,7 @@ function showEnteredDriverSeatHelpTip(client) {
 
 function showApproachJobWhileUnemployedTip(client) {
     if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachJobWhileUnemployed) {
-        //messageClientInfo(client, `Approach the icon and press ${serverConfig.keybindText.actionKey} to see info about this job.`);
+        messageClientInfo(client, `Approach the icon and press ${getServerConfig().keybindText.actionKey} to see info about this job.`);
         getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachJobWhileUnemployed;
     }  
 }
@@ -117,7 +117,7 @@ function showApproachJobWhileUnemployedTip(client) {
 
 function showTakeNearbyJobTip(client) {
     if(getClientData(client).accountData.shownTips & !shownTipsFlags.takeJobWhileUnemployed) {
-        //messageClientInfo(client, `Use /takejob to take this job.`);
+        messageClientInfo(client, `Use /takejob to take this job.`);
         getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.takeJobWhileUnemployed;
     }  
 }
@@ -126,8 +126,8 @@ function showTakeNearbyJobTip(client) {
 
 function showApproachCurrentJobTip(client) {
     if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
-        //messageClientInfo(client, `Press ${serverConfig.keybindText.actionKey} to start working, or hold ${serverConfig.keybindText.actionKey} to quit your job.`);
-        //messageClientInfo(client, `Use /startwork to start working, or /quitjob to quit your job.`);
+        //messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to start working, or hold ${getServerConfig().keybindText.actionKey} to quit your job.`);
+        messageClientTip(client, `Use /startwork to start working, or /quitjob to quit your job.`);
         getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachCurrentJob;
     }
 }
@@ -136,7 +136,8 @@ function showApproachCurrentJobTip(client) {
 
 function showStartedWorkingTip(client) {
     if(getClientData(client).accountData.shownTips & !shownTipsFlags.startedWorking) {
-        messageClientInfo(client, `Press ${serverConfig.keybindText.actionKey} to change uniform, or hold ${serverConfig.keybindText.actionKey} to stop working.`);
+        //messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to change uniform, or hold ${getServerConfig().keybindText.actionKey} to stop working.`);
+        messageClientTip(client, `Use /uniform to see job skins and /equip to see available jobs tools and weapons.`);
         getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.startedWorking;
     }
 }
@@ -145,7 +146,7 @@ function showStartedWorkingTip(client) {
 
 function showApproachOwnedVehicleTip(client) {
     if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachOwnedVehicle) {
-        messageClientInfo(client, `Press ${serverConfig.keybindText.actionKey} to see vehicle info, or press ${serverConfig.keybindText.vehicleLockKey} to lock and unlock the vehicle.`);
+        messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to see vehicle info, or press ${getServerConfig().keybindText.vehicleLockKey} to lock and unlock the vehicle.`);
         getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachOwnedVehicle;
     }
 }
@@ -154,7 +155,7 @@ function showApproachOwnedVehicleTip(client) {
 
 function showApproachAnyVehicleTip(client) {
     if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachAnyVehicle) {
-        messageClientInfo(client, `Press ${serverConfig.keybindText.actionKey} to see vehicle info.`);
+        messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to see vehicle info.`);
         getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachAnyVehicle;
     }
 }

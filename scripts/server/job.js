@@ -10,7 +10,8 @@
 
 function initJobScript() {
 	console.log("[Asshat.Job]: Initializing job script ...");
-	loadJobsFromDatabase();
+	getServerData().jobs = loadJobsFromDatabase();
+
 	addJobCommandHandlers();
 	createAllJobPickups();
 	createAllJobBlips();
@@ -44,14 +45,14 @@ function loadJobsFromDatabase() {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_main` WHERE `job_enabled` = 1 AND `job_server` = " + String(serverId));
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_main` WHERE `job_enabled` = 1 AND `job_server` = " + toString(serverId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempJobData = new serverClasses.jobData(dbAssoc);
+					tempJobData.locations = loadJobLocationsFromDatabase(tempJobData.databaseId);
 					tempJobData.equipment = loadJobEquipmentsFromDatabase(tempJobData.databaseId);
 					tempJobData.uniforms = loadJobUniformsFromDatabase(tempJobData.databaseId);
-					tempJobData.locations = loadJobLocationsFromDatabase(tempJobData.databaseId);
 					tempJobs.push(tempJobData);
 					console.log(`[Asshat.Job]: Job '${tempJobData.name}' loaded from database successfully!`);
 				}
@@ -67,6 +68,30 @@ function loadJobsFromDatabase() {
 
 // ---------------------------------------------------------------------------
 
+function loadAllJobEquipmentFromDatabase() {
+	for(let i in getServerData().jobs) {
+		getServerData().jobs[i].equipment = loadJobEquipmentsFromDatabase(getServerData().jobs[i].databaseId);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function loadAllJobUniformsFromDatabase() {
+	for(let i in getServerData().jobs) {
+		getServerData().jobs[i].uniforms = loadJobUniformsFromDatabase(getServerData().jobs[i].databaseId);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function loadAllJobLocationsFromDatabase() {
+	for(let i in getServerData().jobs) {
+		getServerData().jobs[i].locations = loadJobLocationsFromDatabase(getServerData().jobs[i].databaseId);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
 function loadJobEquipmentsFromDatabase(jobDatabaseId) {
 	console.log(`[Asshat.Job]: Loading job equipments for job ${jobDatabaseId} from database ...`);
 
@@ -76,7 +101,7 @@ function loadJobEquipmentsFromDatabase(jobDatabaseId) {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_equip` WHERE `job_equip_enabled` = 1 AND `job_equip_job` = " + String(jobDatabaseId));
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_equip` WHERE `job_equip_enabled` = 1 AND `job_equip_job` = " + toString(jobDatabaseId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -106,7 +131,7 @@ function loadJobLocationsFromDatabase(jobDatabaseId) {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_loc` WHERE `job_loc_enabled` = 1 AND `job_loc_job` = " + String(jobDatabaseId));
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_loc` WHERE `job_loc_enabled` = 1 AND `job_loc_job` = " + toString(jobDatabaseId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -135,7 +160,7 @@ function loadJobUniformsFromDatabase(jobDatabaseId) {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_uniform` WHERE `job_uniform_enabled` = 1 AND `job_uniform_job` = " + String(jobDatabaseId));
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_uniform` WHERE `job_uniform_enabled` = 1 AND `job_uniform_job` = " + toString(jobDatabaseId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -164,7 +189,7 @@ function loadJobEquipmentWeaponsFromDatabase(jobEquipmentDatabaseId) {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_equip_wep` WHERE `job_equip_wep_enabled` = 1 AND `job_equip_wep_equip` = " + String(jobEquipmentDatabaseId));
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_equip_wep` WHERE `job_equip_wep_enabled` = 1 AND `job_equip_wep_equip` = " + toString(jobEquipmentDatabaseId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -185,11 +210,12 @@ function loadJobEquipmentWeaponsFromDatabase(jobEquipmentDatabaseId) {
 // ---------------------------------------------------------------------------
 
 function createAllJobBlips() {
-	for(let i in serverData.jobs) {
-		for(let j in serverData.jobs[i].locations) {
-			serverData.jobs[i].locations[j].blip = createBlip(0, serverData.jobs[i].locations[j], 2, serverConfig.colour.byName.yellow);
-
-			console.log(`[Asshat.Job] Job '${serverData.jobs[i].name}' location blip ${j} spawned!`);
+	console.log(`[Asshat.Job] Spawning all job location blips ...`);
+	for(let i in getServerData().jobs) {
+		for(let j in getServerData().jobs[i].locations) {
+			getServerData().jobs[i].locations[j].blip = gta.createBlip((getServerData().jobs[i].blipModel!=0) ? getServerData().jobs[i].blipModel : 0, getServerData().jobs[i].locations[j].position, 2, getColourByName("yellow"));
+			addToWorld(getServerData().jobs[i].locations[j].blip);
+			console.log(`[Asshat.Job] Job '${getServerData().jobs[i].name}' location blip ${j} spawned!`);
 		}
 	}
 	console.log(`[Asshat.Job] All job location blips spawned!`);
@@ -198,18 +224,22 @@ function createAllJobBlips() {
 // ---------------------------------------------------------------------------
 
 function createAllJobPickups() {
-	for(let i in serverData.jobs) {
-		if(serverData.jobs[i].pickupModel != 0) {
-			for(let j in serverData.jobs[i].locations) {
-				serverData.jobs[i].locations[j].pickup = createPickup(serverData.jobs[i].pickupModel, serverData.jobs[i].locations[j].position);
-				serverData.jobs[i].locations[j].pickup.setData("ag.ownerType", AG_PICKUP_JOB, true);
-				serverData.jobs[i].locations[j].pickup.setData("ag.ownerId", i, true);			
+	console.log(`[Asshat.Job] Spawning all job location pickups ...`);
+	let pickupCount = 0;
+	for(let i in getServerData().jobs) {
+		if(getServerData().jobs[i].pickupModel != 0) {
+			for(let j in getServerData().jobs[i].locations) {
+				pickupCount++;
+				getServerData().jobs[i].locations[j].pickup = gta.createPickup(getServerData().jobs[i].pickupModel, getServerData().jobs[i].locations[j].position);
+				getServerData().jobs[i].locations[j].pickup.setData("ag.ownerType", AG_PICKUP_JOB, true);
+				getServerData().jobs[i].locations[j].pickup.setData("ag.ownerId", i, true);			
+				addToWorld(getServerData().jobs[i].locations[j].pickup);
 
-				console.log(`[Asshat.Job] Job '${serverData.jobs[i].name}' location pickup ${j} spawned!`);
+				console.log(`[Asshat.Job] Job '${getServerData().jobs[i].name}' location pickup ${j} spawned!`);
 			}
 		}
 	}
-	console.log(`[Asshat.Job] All job location pickups spawned!`);
+	console.log(`[Asshat.Job] All job location pickups (${pickupCount}) spawned!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -330,18 +360,18 @@ function takeJobCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(client.player.position);
 	let jobData = getJobData(closestJobLocation.job);
 
-	if(closestJobLocation.position.distance(client.player.position) > serverConfig.takeJobDistance) {
+	if(closestJobLocation.position.distance(client.player.position) > getServerConfig().takeJobDistance) {
 		messageClientError(client, "There are no job points close enough!");
 		return false;       
 	}
 
-	if(getClientCurrentSubAccount(client).job != AG_JOB_NONE) {
+	if(getClientCurrentSubAccount(client).job > AG_JOB_NONE) {
 		messageClientError(client, "You already have a job! Use /quitjob to quit your job.");
 		return false;      
 	}
 	
 	takeJob(client, closestJobLocation.job);
-	messageClientSuccess(client, "You now have the " + String(jobData.name) + " job");
+	messageClientSuccess(client, "You now have the " + toString(jobData.name) + " job");
 	return true;
 }
 
@@ -374,12 +404,12 @@ function startWorkingCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(client.player.position);
 	let jobData = getJobData(closestJobLocation.job);
 
-	if(closestJobLocation.position.distance(client.player.position) > serverConfig.startWorkingDistance) {
+	if(closestJobLocation.position.distance(client.player.position) > getServerConfig().startWorkingDistance) {
 		messageClientError(client, "There are no job points close enough!");
 		return false;       
-	}    
+	}
 
-	if(getJobType(getClientCurrentSubAccount(client).job) == AG_JOB_NONE) {
+	if(getClientCurrentSubAccount(client).job == AG_JOB_NONE) {
 		messageClientError(client, "You don't have a job!");
 		messageClientInfo(client, "You can get a job by going the yellow points on the map.");
 		return false;
@@ -392,7 +422,7 @@ function startWorkingCommand(command, params, client) {
 	}
 
 	
-	messageClientSuccess(client, "You are now working as a " + String(jobData.name));
+	messageClientSuccess(client, "You are now working as a " + toString(jobData.name));
 	startWorking(client);
 	//showStartedWorkingTip(client);
 	return true;
@@ -426,7 +456,7 @@ function stopWorkingCommand(command, params, client) {
 
 	let closestJobLocation = getClosestJobLocation(client.player.position);
 
-	if(closestJobLocation.position.distance(client.player.position) > serverConfig.stopWorkingDistance) {
+	if(closestJobLocation.position.distance(client.player.position) > getServerConfig().stopWorkingDistance) {
 		messageClientError(client, "There are no job locations close enough!");
 		return false;       
 	}
@@ -494,13 +524,15 @@ function startWorking(client) {
 // ---------------------------------------------------------------------------
 
 function givePlayerJobEquipment(client, equipmentId) {
-	if(!canClientUseJobs(client)){ 
+	if(!canClientUseJobs(client)) {
 		return false;
 	}
 
 	let jobId = getClientCurrentSubAccount(client).job;
-	for(let i in serverData.jobs[jobId].equipments[equipmentId].weapons) {
-		triggerNetworkEvent("ag.giveWeapon", client, serverData.jobs[jobId].equipments[equipmentId].weapons[i].weapon, serverData.jobs[jobId].equipments[equipmentId].weapons[i].ammo, false);
+	let equipments = getJobData(jobId).equipment;
+
+	for(let i in equipments[equipmentId].weapons) {
+		triggerNetworkEvent("ag.giveWeapon", client, equipments[equipmentId].weapons[i].weaponId, equipments[equipmentId].weapons[i].ammo, false);
 	}
 }
 
@@ -595,31 +627,33 @@ function jobUniformCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getClientCurrentSubAccount(client).job
+	let jobId = getClientCurrentSubAccount(client).job;
+	let uniforms = getJobData(jobId).uniforms;
 
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
-		messageClientNormal(`0: No uniform (sets you back to your main skin)`);
-		for(let i in serverData.jobs[jobId].uniforms) {
-			messageClientNormal(`${i+1}: ${serverData.jobs[jobId].uniforms.name} (Requires rank ${serverData.jobs[jobId].uniforms.minRank})`);
+		messageClientNormal(client, `0: No uniform (sets you back to your main skin)`);
+		
+		for(let i in uniforms) {
+			messageClientNormal(client, `${toInteger(i)+1}: ${uniforms[i].name} (Requires rank ${uniforms[i].requiredRank})`);
 		}
 		return false;
 	}
 
+	let uniformId = toInteger(params) || 1;
 	if(uniformId == 0) {
-		getClientCurrentSubAccount(client).jobUniform = false;
 		triggerNetworkEvent("ag.skin", client, getClientCurrentSubAccount(client).skin);
 		messageClientSuccess(client, "You changed your uniform to (none)");
-		return;
+		return true;
 	}
 
-	let uniformId = Number(params) || 1;
-	if(uniformId < 1 || uniformId > serverData.jobs[jobId].uniforms.length-1) {
+	if(uniformId < 1 || uniformId > uniforms.length) {
 		messageClientError(client, "That uniform ID is invalid!");
 		return false;
 	}
 
-	triggerNetworkEvent("ag.skin", client, serverData.jobs[jobId].uniforms[uniformId].skin);
+	messageClientSuccess(client, `You put on the ${uniforms[uniformId-1].name} uniform`);
+	triggerNetworkEvent("ag.skin", client, uniforms[uniformId-1].skin);
 }
 
 // ---------------------------------------------------------------------------
@@ -644,11 +678,32 @@ function jobEquipmentCommand(command, params, client) {
 		return false;
 	}
 
-	let equipmentId = Number(params) || 1;
-	
 	let jobId = getClientCurrentSubAccount(client).job;
-	
-	givePlayerJobEquipment(client, equipmentId);
+	let equipments = getJobData(jobId).equipment;
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		messageClientNormal(client, `0: No equipment`);
+		for(let i in equipments) {
+			messageClientNormal(client, `${toInteger(i)+1}: ${equipments[i].name} (Requires rank ${equipments[i].requiredRank})`);
+		}
+		return false;
+	}
+
+	let equipmentId = toInteger(params) || 1;
+
+	if(equipmentId == 0) {
+		messageClientSuccess(client, "You put your equipment away");
+		return true;
+	}
+
+	if(equipmentId < 1 || equipmentId > equipments.length) {
+		messageClientError(client, "That equipment ID is invalid!");
+		return false;
+	}
+		
+	givePlayerJobEquipment(client, equipmentId-1);
+	messageClientSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
 }
 
 // ---------------------------------------------------------------------------
@@ -749,9 +804,9 @@ function getJobType(jobId) {
 // ---------------------------------------------------------------------------
 
 function getJobData(jobId) {
-	for(let i in serverData.jobs) {
-		if(serverData.jobs[i].databaseId == jobId) {
-			return serverData.jobs[i];
+	for(let i in getServerData().jobs) {
+		if(getServerData().jobs[i].databaseId == jobId) {
+			return getServerData().jobs[i];
 		}
 	}
 	return false;
@@ -768,6 +823,43 @@ function quitJob(client) {
 
 function takeJob(client, jobId) {
 	getClientCurrentSubAccount(client).job = jobId;
+}
+
+// ---------------------------------------------------------------------------
+
+function reloadAllJobsCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(isClientFromDiscord(client)) {
+		if(!isCommandAllowedOnDiscord(command)) {
+			messageClientError(client, "That command isn't available on discord!");
+			return false;
+		}		
+	}	
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	for(let i in getServerData().jobs) {
+		for(let j in getServerData().jobs[i].locations) {
+			destroyElement(getServerData().jobs[i].locations[j].blip);
+			destroyElement(getServerData().jobs[i].locations[j].pickup);
+		}
+	}
+	
+	getServerData().jobs = null;
+	getServerData().jobs = loadJobsFromDatabase();
+	createAllJobPickups();
+	createAllJobBlips();
+
+	messageAdminAction(`All server jobs have been reloaded by an admin!`);
 }
 
 // ---------------------------------------------------------------------------

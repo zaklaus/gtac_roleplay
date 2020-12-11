@@ -28,7 +28,7 @@ function initBanScript() {
 
 function addBanCommandHandlers() {
     console.log("[Asshat.Ban]: Adding ban command handlers ...");
-	let banCommands = serverData.commands.ban;
+	let banCommands = getServerData().commands.ban;
 	for(let i in banCommands) {
 		addCommandHandler(banCommands[i].command, banCommands[i].handlerFunction);
     }
@@ -125,7 +125,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
 function banAccount(accountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let safeReason = dbConnection.escapeString(reason);
+        let safeReason = dbConnection.escapetoString(reason);
         let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.account}, ${accountId}, ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
@@ -140,7 +140,7 @@ function banAccount(accountId, adminAccountId, reason) {
 function banSubAccount(subAccountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let safeReason = dbConnection.escapeString(reason);
+        let safeReason = dbConnection.escapetoString(reason);
         let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.subAccount}, ${subAccountId}, ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
@@ -155,7 +155,7 @@ function banSubAccount(subAccountId, adminAccountId, reason) {
 function banIPAddress(ipAddress, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let safeReason = dbConnection.escapeString(reason);
+        let safeReason = dbConnection.escapetoString(reason);
         let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.ipAddress}, INET_ATON(${ipAddress}), ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
@@ -210,7 +210,7 @@ function unbanIPAddress(ipAddress, adminAccountId) {
 // ---------------------------------------------------------------------------
 
 function isAccountBanned(accountId) {
-    let bans = serverData.bans;
+    let bans = getServerData().bans;
     for(let i in bans) {
         if(bans[i].type == banType.account) {
             if(bans[i].detail == accountId) {
@@ -225,7 +225,7 @@ function isAccountBanned(accountId) {
 // ---------------------------------------------------------------------------
 
 function isSubAccountBanned(subAccountId) {
-    let bans = serverData.bans;
+    let bans = getServerData().bans;
     for(let i in bans) {
         if(bans[i].type == banType.subAcount) {
             if(bans[i].detail == subAccountId) {
@@ -240,7 +240,7 @@ function isSubAccountBanned(subAccountId) {
 // ---------------------------------------------------------------------------
 
 function isIpAddressBanned(ipAddress) {
-    let bans = serverData.bans;
+    let bans = getServerData().bans;
     for(let i in bans) {
         if(bans[i].type == banType.ipAddress) {
             if(bans[i].detail == ipAddress) {

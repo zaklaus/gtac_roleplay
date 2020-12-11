@@ -12,7 +12,7 @@ mexui.native.loadImage = function(imageFilePath, imageName)
 	
 	var image = null;
 	var parts = imageFilePath.split('.');
-	var ext = parts[parts.length - 1].toLowerCase();
+	var ext = toLowerCase(parts[parts.length - 1]);
 	if(ext == 'png')
 		image = drawing.loadPNG(file);
 	else if(ext == 'bmp')
@@ -105,10 +105,10 @@ mexui.native.drawRectangleBorder = function(position, size, styles)
 	var rightXPosition			= position.x + size.x;
 	var bottomYPosition			= position.y + size.y;
 	
-	var topLeftPosition			= new Vec2(position.x, position.y);
-	var topRightPosition		= new Vec2(rightXPosition, position.y);
-	var bottomLeftPosition		= new Vec2(position.x, bottomYPosition);
-	var bottomRightPosition		= new Vec2(rightXPosition, bottomYPosition);
+	var topLeftPosition			= toVector2(position.x, position.y);
+	var topRightPosition		= toVector2(rightXPosition, position.y);
+	var bottomLeftPosition		= toVector2(position.x, bottomYPosition);
+	var bottomRightPosition		= toVector2(rightXPosition, bottomYPosition);
 	
 	var original = styles.lineColour;
 	
@@ -133,7 +133,7 @@ mexui.native.drawAALine = function(point1, point2, styles)
 	if(lineColour == null || lineColour == 'none')
 		return;
 	
-	drawing.drawRectangle(null, point1, new Vec2((point2.x - point1.x) + styles.lineWeight, (point2.y - point1.y) + styles.lineWeight), lineColour, lineColour, lineColour, lineColour);
+	drawing.drawRectangle(null, point1, toVector2((point2.x - point1.x) + styles.lineWeight, (point2.y - point1.y) + styles.lineWeight), lineColour, lineColour, lineColour, lineColour);
 };
 
 mexui.native.drawText = function(position, size, text, styles)
@@ -142,7 +142,7 @@ mexui.native.drawText = function(position, size, text, styles)
 	
 	var textHeight = mexui.native.getTextHeight(text, styles, font);
 	var textIndent = styles.textAlign == 0.0 || styles.textAlign == 1.0 ? styles.textIndent : 0;
-	var textPos = new Vec2(position.x + textIndent, position.y + ((size.y - textHeight) / 2.0));
+	var textPos = toVector2(position.x + textIndent, position.y + ((size.y - textHeight) / 2.0));
 	
 	font.render(text + '', textPos, size.x, styles.textAlign, 0.0, styles.textSize, styles.textColour != null ? styles.textColour : styles.textColor);
 };

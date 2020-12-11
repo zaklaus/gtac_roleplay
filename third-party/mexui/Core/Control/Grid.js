@@ -1,7 +1,7 @@
 mexui.util.createControlConstructor('Grid', true, function(window, x, y, w, h, styles)
 {
 	mexui.Component.Control.call(this, window, x, y, w, h, this.linkControlStyles('Grid', styles));
-	mexui.Entity.ControlWithEntries.call(this, false, false, new Vec2(0, 25), new Vec2(this.size.x, 25), new Vec2(0, -25));
+	mexui.Entity.ControlWithEntries.call(this, false, false, toVector2(0, 25), toVector2(this.size.x, 25), toVector2(0, -25));
 });
 
 // default styles
@@ -39,10 +39,10 @@ mexui.Control.Grid.prototype.render = function()
 	{
 		var column = this.axis.x.entries[i];
 		
-		mexui.native.drawText(new Vec2(startX, pos.y), new Vec2(column.width, column.height), column.text, this.getStyles('header'));
+		mexui.native.drawText(toVector2(startX, pos.y), toVector2(column.width, column.height), column.text, this.getStyles('header'));
 		
 		startX += column.width;
-		mexui.native.drawAALine(new Vec2(startX, pos.y), new Vec2(startX, pos.y + this.size.y), this.getStyles('column'));
+		mexui.native.drawAALine(toVector2(startX, pos.y), toVector2(startX, pos.y + this.size.y), this.getStyles('column'));
 		
 		if(column.height > maxColumnHeight)
 		{
@@ -51,7 +51,7 @@ mexui.Control.Grid.prototype.render = function()
 	}
 	
 	var startY = pos.y + maxColumnHeight;
-	mexui.native.drawAALine(new Vec2(pos.x, startY), new Vec2(pos.x + this.size.x, startY), this.getStyles('row'));
+	mexui.native.drawAALine(toVector2(pos.x, startY), toVector2(pos.x + this.size.x, startY), this.getStyles('row'));
 	
 	for(var i=this.axis.y.getEntryStartIndex(),j=this.axis.y.getEntryEndIndex(); i<j; i++)
 	{
@@ -68,18 +68,18 @@ mexui.Control.Grid.prototype.render = function()
 			
 			var styles = this.getEntryStyles([[cell,'main'], [row,'main'], [this,'row'], [this,'cell']]);
 			
-			mexui.native.drawRectangle(new Vec2(startX, startY), new Vec2(column.width, column.height), styles);
-			mexui.native.drawText(new Vec2(startX, startY), new Vec2(column.width, column.height), cellText, styles);
+			mexui.native.drawRectangle(toVector2(startX, startY), toVector2(column.width, column.height), styles);
+			mexui.native.drawText(toVector2(startX, startY), toVector2(column.width, column.height), cellText, styles);
 			
 			startX += column.width;
 		}
 		
 		startY += row.rowHeight;
-		mexui.native.drawAALine(new Vec2(pos.x, startY), new Vec2(pos.x + this.size.x, startY), this.getStyles('row'));
+		mexui.native.drawAALine(toVector2(pos.x, startY), toVector2(pos.x + this.size.x, startY), this.getStyles('row'));
 	}
 	
 	if(this.isFocused())
-		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('focused'));
 };
 
 // model

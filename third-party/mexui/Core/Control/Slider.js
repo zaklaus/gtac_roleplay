@@ -14,7 +14,7 @@ mexui.util.createControlConstructor('Slider', false, function(window, x, y, w, h
 	
 	this.progress			= 0.0;
 	this.axisIndex			= isVertical ? 1 : 0;
-	this.innerBarSize		= new Vec2(30, 25);
+	this.innerBarSize		= toVector2(30, 25);
 });
 
 // default styles
@@ -67,7 +67,7 @@ mexui.Control.Slider.prototype.onMouseMove = function(e, offset)
 mexui.Control.Slider.prototype.render = function()
 {
 	var pos = this.getScreenPosition();
-	var pos2 = new Vec2(pos.x, pos.y);
+	var pos2 = toVector2(pos.x, pos.y);
 	
 	mexui.native.drawRectangle(pos, this.size, this.getStyles('main'));
 	mexui.native.drawRectangle(this.getInnerBarPosition(), this.innerBarSize, this.getStyles('innerBar'));
@@ -84,7 +84,7 @@ mexui.Control.Slider.prototype.render = function()
 	mexui.native.drawText(pos, this.size, this.maxText, this.getStyles('maxText'));
 	
 	if(this.isFocused())
-		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('focused'));
 };
 
 // model
@@ -98,7 +98,7 @@ mexui.Control.Slider.prototype.getInnerBarPosition = function()
 	var pos = this.getScreenPosition();
 	pos[this.axisIndex] = mexui.util.interpolateScalar(pos.x, (pos.x + this.size.x) - this.innerBarSize.x, this.progress);
 	pos.y -= 3;
-	return new Vec2(pos.x, pos.y);
+	return toVector2(pos.x, pos.y);
 };
 
 mexui.Control.Slider.prototype.getProgressIncreaseByPixels = function(offset)

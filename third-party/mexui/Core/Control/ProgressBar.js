@@ -27,7 +27,7 @@ mexui.Control.ProgressBar.prototype.render = function()
 	
 	mexui.native.drawRectangle(pos, this.size, this.getStyles('main'));
 	
-	var innerBarSize = new Vec2(this.size.x * this.progress, this.size.y);
+	var innerBarSize = toVector2(this.size.x * this.progress, this.size.y);
 	mexui.native.drawRectangle(pos, innerBarSize, this.getStyles('innerBar'));
 	
 	if(this.text != '')

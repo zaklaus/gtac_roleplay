@@ -60,6 +60,12 @@ addEventHandler("onPickupCollected", function(event, pickup, ped) {
 
 // ---------------------------------------------------------------------------
 
+bindEventHandler("onResourceStart", thisResource, function(event, resource) {
+    triggerNetworkEvent("ag.clientReady");
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.clearWeapons", function() {
     localPlayer.clearWeapons();
 });
@@ -108,7 +114,8 @@ function syncVehicle(vehicle) {
         }  
     }
 }
-addNetworkHandler("ag.veh.sync", syncVehicle);
+addNetworkHandler("ag.veh.sync", syncVehicle)
+;
 
 // ---------------------------------------------------------------------------
 
@@ -146,7 +153,7 @@ addNetworkHandler("ag.blips", function(blipData) {
 
 function showIslandBlips() {
     for(let i in allServerBlips) {
-        let position = new Vec3(allServerBlips[i][1], allServerBlips[i][2], allServerBlips[i][3]);
+        let position = toVector3(allServerBlips[i][1], allServerBlips[i][2], allServerBlips[i][3]);
         if(getIslandFromPosition(position) == getIslandFromPosition(localPlayer.position)) {
             let tempBlip = createBlip(position, allServerBlips[i][0], allServerBlips[i][4], allServerBlips[i][5]);
             currentServerBlips.push(tempBlip);
@@ -250,8 +257,8 @@ addEventHandler("OnDrawnHUD", function (event) {
     if(bigMessageFont != null && mainLogo != null) {
         /*
         if(showLoginMessage) {
-            let logoPos = new Vec2(gta.width/2-128, gta.height/2-256);
-            let logoSize = new Vec2(256, 256);
+            let logoPos = toVector2(gta.width/2-128, gta.height/2-256);
+            let logoSize = toVector2(256, 256);
             drawing.drawRectangle(mainLogo, logoPos, logoSize);
 
             let y = gta.height/2+10;
@@ -262,8 +269,8 @@ addEventHandler("OnDrawnHUD", function (event) {
         }
 
         if(showRegisterMessage) {
-            let logoPos = new Vec2(gta.width/2-128, gta.height/2-256);
-            let logoSize = new Vec2(256, 256);
+            let logoPos = toVector2(gta.width/2-128, gta.height/2-256);
+            let logoSize = toVector2(256, 256);
             drawing.drawRectangle(mainLogo, logoPos, logoSize);
 
             let y = gta.height/2+10;
@@ -277,8 +284,8 @@ addEventHandler("OnDrawnHUD", function (event) {
 
     // Draw logo in corner of screen
     if(mainLogo != null && showLogo) {
-        let logoPos = new Vec2(gta.width-132, gta.height-132);
-        let logoSize = new Vec2(128, 128);
+        let logoPos = toVector2(gta.width-132, gta.height-132);
+        let logoSize = toVector2(128, 128);
         drawing.drawRectangle(mainLogo, logoPos, logoSize);
     }
 });
@@ -300,3 +307,77 @@ addEventHandler("OnResourceStart", function(event, resource) {
 		}
 	}
 });
+
+// ---------------------------------------------------------------------------
+
+function openAllGarages() {
+    switch(gta.game) {
+        case GAME_GTA_III:
+            for(let i=0;i<=26;i++) {
+                openGarage(i);
+            }
+            break;
+        
+        case GAME_GTA_VC:
+            for(let i=0;i<=32;i++) {
+                openGarage(i);
+            }            
+            break;
+
+        case GAME_GTA_SA:
+            for(let i=0;i<=44;i++) {
+                openGarage(i);
+            }            
+            break; 
+            
+        default:
+            break;
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+function closeAllGarages() {
+    switch(gta.game) {
+        case GAME_GTA_III:
+            for(let i=0;i<=26;i++) {
+                closeGarage(i);
+            }
+            break;
+        
+        case GAME_GTA_VC:
+            for(let i=0;i<=32;i++) {
+                closeGarage(i);
+            }            
+            break;
+
+        case GAME_GTA_SA:
+            for(let i=0;i<=44;i++) {
+                closeGarage(i);
+            }            
+            break; 
+            
+        default:
+            break;
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.freeze", function(state) {
+    gui.showCursor(state, !state);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.control", function(state) {
+    gui.showCursor(state, false);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.fadeCamera", function(state, time) {
+    gta.fadeCamera(state, time);
+});
+
+// ---------------------------------------------------------------------------

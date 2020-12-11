@@ -46,19 +46,19 @@ mexui.Control.CheckBox.prototype.render = function()
 	mexui.native.drawRectangle(pos, this.size, this.getStyles('main'));
 	
 	if(this.checked)
-		mexui.native.drawRectangle(mexui.util.addVec2(pos, new Vec2(1, 1)), new Vec2(this.size.x - 2, this.size.y - 2), this.getStyles('innerBox'));
+		mexui.native.drawRectangle(mexui.util.addVec2(pos, toVector2(1, 1)), toVector2(this.size.x - 2, this.size.y - 2), this.getStyles('innerBox'));
 	
-	mexui.native.drawText(mexui.util.addVec2(pos, new Vec2(this.size.x + this.textMarginLeft, 2)), this.size, this.text, this.getStyles('main'));
+	mexui.native.drawText(mexui.util.addVec2(pos, toVector2(this.size.x + this.textMarginLeft, 2)), this.size, this.text, this.getStyles('main'));
 	
 	if(this.isFocused())
-		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('focused'));
 };
 
 // model
 mexui.Control.CheckBox.prototype.getSizeForInput = function()
 {
 	var textWidth = mexui.native.getTextWidth(this.text, this.getStyles('main'));
-	return new Vec2(this.size.x + this.textMarginLeft + textWidth, this.size.y);
+	return toVector2(this.size.x + this.textMarginLeft + textWidth, this.size.y);
 };
 
 mexui.Control.CheckBox.prototype.toggleChecked = function()

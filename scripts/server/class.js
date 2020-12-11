@@ -48,11 +48,62 @@ function initClassTable() {
 				this.discordAccount = accountAssoc["acct_discord"];
 				this.settings = accountAssoc["acct_settings"];
 				this.emailAddress = accountAssoc["acct_email"];
+				this.ipAddress = accountAssoc["acct_ip"];
 				
+				this.notes = [];
+				this.messages = [];
+				this.keybinds = [];
+				this.contacts = [];
 				this.subAccounts = [];
 				this.loggedIn = false;				
 			}
 		},
+		accountContactData: class {
+			constructor(accountContactAssoc) {
+				if(!accountContactAssoc) {
+					return;
+				}
+				
+				this.databaseId = accountContactAssoc["acct_contact_id"];
+				this.accountId = accountContactAssoc["acct_contact_acct"];
+				this.contactAccountId = accountContactAssoc["acct_contact_contact"];
+				this.type = accountContactAssoc["acct_contact_type"];
+				this.whenAdded = accountContactAssoc["acct_contact_when_added"];
+			}
+		},
+		accountMessageData: class {
+			constructor(accountMessageAssoc) {
+				if(!accountMessageAssoc) {
+					return;
+				}
+				
+				this.databaseId = accountMessageAssoc["acct_msg_id"];
+				this.accountId = accountMessageAssoc["acct_msg_acct"];
+				this.whoSent = accountMessageAssoc["acct_msg_who_sent"];
+				this.whenSent = accountMessageAssoc["acct_msg_when_sent"];
+				this.whenRead = accountMessageAssoc["acct_msg_when_read"];
+				this.deleted = intToBool(accountMessageAssoc["acct_msg_deleted"]);
+				this.whenDeleted = accountMessageAssoc["acct_msg_when_deleted"];
+				this.folder = accountMessageAssoc["acct_msg_folder"];
+				this.message = accountMessageAssoc["acct_msg_message"];
+			}
+		},		
+		accountStaffNoteData: class {
+			constructor(accountStaffNoteAssoc) {
+				if(!accountStaffNoteAssoc) {
+					return;
+				}
+				
+				this.databaseId = accountStaffNoteAssoc["acct_note_id"];
+				this.accountId = accountStaffNoteAssoc["acct_note_acct"];
+				this.whoAdded = accountStaffNoteAssoc["acct_note_who_added"];
+				this.whenAdded = accountStaffNoteAssoc["acct_note_when_added"];
+				this.deleted = intToBool(accountMessageAssoc["acct_note_deleted"]);
+				this.whenDeleted = accountMessageAssoc["acct_note_when_deleted"];
+				this.server = accountMessageAssoc["acct_note_server"];
+				this.note = accountMessageAssoc["acct_note_message"];
+			}
+		},			
 		subAccountData: class {
 			constructor(subAccountAssoc) {
 				if(!subAccountAssoc) {
@@ -68,8 +119,8 @@ function initClassTable() {
 				this.cash = subAccountAssoc["sacct_cash"];
 				this.placeOfOrigin = subAccountAssoc["sacct_origin"];
 				this.dateOfBirth = subAccountAssoc["sacct_when_born"];
-				this.spawnPosition = new Vec3(subAccountAssoc["sacct_pos_x"], subAccountAssoc["sacct_pos_y"], subAccountAssoc["sacct_pos_z"]);
-				this.spawnHeading = Number(subAccountAssoc["sacct_angle"]);
+				this.spawnPosition = toVector3(subAccountAssoc["sacct_pos_x"], subAccountAssoc["sacct_pos_y"], subAccountAssoc["sacct_pos_z"]);
+				this.spawnHeading = toInteger(subAccountAssoc["sacct_angle"]);
 
 				this.isWorking = false;
 				this.jobUniform = this.skin;
@@ -77,6 +128,7 @@ function initClassTable() {
 				this.job = subAccountAssoc["sacct_job"];
 
 				this.weapons = [];
+				this.inJail = false;
 			}
 		},		
 		businessData: class {
@@ -91,17 +143,17 @@ function initClassTable() {
 				this.ownerId = businessAssoc("biz_owner_id");
 				this.locked = businessAssoc("biz_locked");
 
-				this.entrancePosition = new Vec3(businessAssoc("biz_entrance_pos_x"), businessAssoc("biz_entrance_pos_y"), businessAssoc("biz_entrance_pos_z"));
-				this.entranceRotation = Number(businessAssoc["biz_entrance_rot_z"]);
-				this.entranceInterior = Number(businessAssoc["biz_entrance_int"]);
-				this.entranceDimension = Number(businessAssoc["biz_entrance_vw"]);
+				this.entrancePosition = toVector3(businessAssoc("biz_entrance_pos_x"), businessAssoc("biz_entrance_pos_y"), businessAssoc("biz_entrance_pos_z"));
+				this.entranceRotation = toInteger(businessAssoc["biz_entrance_rot_z"]);
+				this.entranceInterior = toInteger(businessAssoc["biz_entrance_int"]);
+				this.entranceDimension = toInteger(businessAssoc["biz_entrance_vw"]);
 				
-				this.exitPosition = new Vec3(businessAssoc("biz_exit_pos_x"), businessAssoc("biz_exit_pos_y"), businessAssoc("biz_exit_pos_z"));
-				this.exitRotation = Number(businessAssoc["biz_exit_rot_z"]);
-				this.exitInterior = Number(businessAssoc["biz_exit_int"]);
-				this.exitDimension = Number(businessAssoc["biz_exit_vw"]);
+				this.exitPosition = toVector3(businessAssoc("biz_exit_pos_x"), businessAssoc("biz_exit_pos_y"), businessAssoc("biz_exit_pos_z"));
+				this.exitRotation = toInteger(businessAssoc["biz_exit_rot_z"]);
+				this.exitInterior = toInteger(businessAssoc["biz_exit_int"]);
+				this.exitDimension = toInteger(businessAssoc["biz_exit_vw"]);
 
-				this.till = Number(businessAssoc["biz_till"]);
+				this.till = toInteger(businessAssoc["biz_till"]);
 			}
 		},
 		businessLocationData: class {
@@ -116,9 +168,9 @@ function initClassTable() {
 				this.business = businessLocationAssoc("biz_loc_biz");
 				this.enabled = businessLocationAssoc("biz_loc_enabled");
 
-				this.position = new Vec3(businessLocationAssoc("biz_loc_pos_x"), businessLocationAssoc("biz_loc_pos_y"), businessLocationAssoc("biz_loc_pos_z"));
-				this.interior = Number(businessLocationAssoc["biz_loc_int"]);
-				this.dimension = Number(businessLocationAssoc["biz_loc_vw"]);
+				this.position = toVector3(businessLocationAssoc("biz_loc_pos_x"), businessLocationAssoc("biz_loc_pos_y"), businessLocationAssoc("biz_loc_pos_z"));
+				this.interior = toInteger(businessLocationAssoc["biz_loc_int"]);
+				this.dimension = toInteger(businessLocationAssoc["biz_loc_vw"]);
 			}
 		},
 		houseData: class {
@@ -139,19 +191,21 @@ function initClassTable() {
 				this.vehicle = vehicle;
 				this.tempVehicle = false;
 				this.streamedBy = false; // For IV only
-				this.ivSyncId = -1;
+				this.syncId = -1;
 				
 				// Ownership
 				this.ownerType = AG_VEHOWNER_NONE;
 				this.ownerId = 0;
 				this.buyPrice = 0;
 				this.rentPrice = 0;
+				this.rentedBy = false;
+				this.rentStart = 0;				
 				
 				// Position and Rotation
-				this.spawnPosition = (vehicle) ? vehicle.position : new Vec3(0.0, 0.0, 0.0);
+				this.spawnPosition = (vehicle) ? vehicle.position : toVector3(0.0, 0.0, 0.0);
 				this.spawnRotation = (vehicle) ? vehicle.heading : 0.0;
 				this.spawnLocked = false;
-				this.syncPosition = new Vec3(0.0, 0.0, 0.0); // For IV only
+				this.syncPosition = toVector3(0.0, 0.0, 0.0); // For IV only
 				this.syncHeading = 0.0; // For IV only
 				
 				// Colour Info
@@ -191,10 +245,9 @@ function initClassTable() {
 					this.rentPrice = vehicleAssoc["veh_buy_price"];
 					
 					// Position and Rotation
-					this.spawnPosition = new Vec3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
-					this.spawnRotation = Number(vehicleAssoc["veh_rot_z"]);
+					this.spawnPosition = toVector3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
+					this.spawnRotation = toInteger(vehicleAssoc["veh_rot_z"]);
 					this.spawnLocked = vehicleAssoc["veh_spawn_lock"];
-
 					
 					// Colour Info
 					this.colour1IsRGBA = vehicleAssoc["veh_col1_isrgba"];
@@ -218,6 +271,11 @@ function initClassTable() {
 					this.engineDamage = vehicleAssoc["veh_damage_engine"];
 					this.visualDamage = vehicleAssoc["veh_damage_visual"];
 					this.dirtLevel = vehicleAssoc["veh_dirt_level"];
+
+					// Other/Misc
+					this.insuranceAccount = 0;
+					this.fuel = 0;
+					this.flags = 0;
 				}
 			}
 		},
@@ -322,12 +380,31 @@ function initClassTable() {
 
 				this.databaseId = jobLocationAssoc["job_loc_id"];
 				this.job = jobLocationAssoc["job_loc_job"];
-				this.position = new Vec3(jobLocationAssoc["job_loc_pos_x"], jobLocationAssoc["job_loc_pos_y"], jobLocationAssoc["job_loc_pos_z"]);
+				this.position = toVector3(jobLocationAssoc["job_loc_pos_x"], jobLocationAssoc["job_loc_pos_y"], jobLocationAssoc["job_loc_pos_z"]);
 				//this.blipModel = jobAssoc["job_blip"];
 				//this.pickupModel = jobAssoc["job_pickup"];
 				this.blip = false;
 				this.pickup = false;
 				this.enabled = jobLocationAssoc["job_loc_enabled"];
+			}
+		},
+		keyBindData: class {
+			constructor(keyBindAssoc, key = 0, commandString = "") {
+				this.databaseId = 0;
+				this.key = key;
+				this.account = 0;
+				this.commandString = commandString;
+				this.whenAdded = 0;
+				this.enabled = true;
+
+				if(keyBindAssoc) {
+					this.databaseId = keyBindAssoc["acct_hotkey_id"];
+					this.key = keyBindAssoc["acct_hotkey_key"];
+					this.account = keyBindAssoc["acct_hotkey_acct"];
+					this.commandString = keyBindAssoc["acct_hotkey_cmdstr"];
+					this.whenAdded = keyBindAssoc["acct_hotkey_when_added"];
+					this.enabled = intToBool(keyBindAssoc["acct_hotkey_enabled"]);
+				}
 			}
 		},
 	}

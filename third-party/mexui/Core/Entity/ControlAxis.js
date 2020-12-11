@@ -19,12 +19,12 @@ mexui.Entity.ControlAxis.prototype.initScrollBar = function()
 {
 	if(this.isVertical)
 	{
-		var pos					= mexui.util.addVec2(this.control.position, new Vec2(this.control.entrySize.x, this.control.entriesPositionOffset.y));
+		var pos					= mexui.util.addVec2(this.control.position, toVector2(this.control.entrySize.x, this.control.entriesPositionOffset.y));
 		this.scrollBar			= new mexui.Control.ScrollBar(this.control.window, pos.x, pos.y, 25, this.getDisplayedEntriesLength(), true, this.control.styles.scrollBar);
 	}
 	else
 	{
-		var pos					= mexui.util.addVec2(this.control.position, new Vec2(this.control.entriesPositionOffset.x, this.control.size.y));
+		var pos					= mexui.util.addVec2(this.control.position, toVector2(this.control.entriesPositionOffset.x, this.control.size.y));
 		this.scrollBar			= new mexui.Control.ScrollBar(this.control.window, pos.x, pos.y, this.getDisplayedEntriesLength(), 25, false, this.control.styles.scrollBar);
 	}
 	
@@ -74,7 +74,7 @@ mexui.Entity.ControlAxis.prototype.getEntryIndexByPoint = function(point)
 			return null;
 		}
 		
-		var pos = new Vec2(screenPos.x + this.control.entriesPositionOffset.x, screenPos.y + this.control.entriesPositionOffset.y);
+		var pos = toVector2(screenPos.x + this.control.entriesPositionOffset.x, screenPos.y + this.control.entriesPositionOffset.y);
 		var index = Math.floor((point.y - pos.y) / this.control.entrySize[this.axisIndex]);
 		index += this.getEntryStartIndex();
 		

@@ -10,6 +10,8 @@
 
 let serverCommands = {};
 
+// ---------------------------------------------------------------------------
+
 function initCommandScript() {
     console.log("[Asshat.Command]: Initializing commands script ...");
     serverCommands = loadCommandData();
@@ -37,10 +39,7 @@ function loadCommandData() {
             commandData("login", loginCommand, "<password>", getStaffFlagValue("none"), false, false),
             commandData("register", registerCommand, "<password>", getStaffFlagValue("none"), false, false),
             commandData("changepass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false),
-            //commandData("setpass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false),
-            commandData("switchchar", switchCharacterCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("newchar", newCharacterCommand, "<first name> <last name>", getStaffFlagValue("none"), true, false),
-            commandData("usechar", useCharacterCommand, "<character id>", getStaffFlagValue("none"), true, false),
+            //commandData("iplogin", autoLoginByIPCommand, "", getStaffFlagValue("none"), true, false),
         ],
         ammunation: [],
         ban: [
@@ -119,6 +118,7 @@ function loadCommandData() {
             commandData("quitjob", quitJobCommand, "", getStaffFlagValue("none"), true, false),
             commandData("uniform", jobUniformCommand, "[uniform]", getStaffFlagValue("none"), true, false),
             commandData("equip", jobEquipmentCommand, "[equipment]", getStaffFlagValue("none"), true, false),
+            commandData("reloadjobs", reloadAllJobsCommand, "", getStaffFlagValue("developer"), true, false),
 
             commandData("radio", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
             commandData("r", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
@@ -145,6 +145,9 @@ function loadCommandData() {
             commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),
+
+            commandData("idea", submitIdeaCommand, "<message>", getStaffFlagValue("none"), true, true),
+            commandData("bug", submitBugReportCommand, "<message>", getStaffFlagValue("none"), true, true),
         ],
         moderation: [
             commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
@@ -161,10 +164,15 @@ function loadCommandData() {
         ],
         security: [],
         startup: [],
+        subAccount: [
+            commandData("switchchar", switchCharacterCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("newchar", newCharacterCommand, "<first name> <last name>", getStaffFlagValue("none"), true, false),
+            commandData("usechar", useCharacterCommand, "<character id>", getStaffFlagValue("none"), true, false),            
+        ],
         translate: [],
         utilities: [],
          vehicle: [
-            commandData("addcar", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, true),	
+            commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, true),	
             commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, true),	
             commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, true),	
             commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, true),	
@@ -176,6 +184,13 @@ function loadCommandData() {
 
             commandData("vehinfo", getVehicleInfoCommand, "", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehpark", toggleVehicleSpawnLockCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehrespawnall", respawnAllVehiclesCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehreloadall", reloadAllVehiclesCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+
+            commandData("vehrent", rentVehicleCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("stoprent", stopRentingVehicleCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("vehbuy", buyVehicleCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("vehcolour", setVehicleColourCommand, "<colour1> <colour2>", getStaffFlagValue("none"), true, true),
         ],
     }
     return tempCommands;
@@ -188,7 +203,7 @@ function getCommand(command) {
     for(let i in commandGroups) {
         let commandGroup = commandGroups[i];
         for(let j in commandGroup)
-        if(commandGroup[j].command.toLowerCase() == command.toLowerCase()) {
+        if(toLowerCase(commandGroup[j].command) == toLowerCase(command)) {
             return commandGroup[j];
         }
     }
@@ -306,15 +321,15 @@ function disableAllCommandsByType(command, params, client) {
 		return false;
     }
     
-    params = params.toLowerCase();
+    params = toLowerCase(params);
     
-    if(typeof serverData.commands[params] == "undefined") {
+    if(isNull(getServerData().commands[params])) {
         messageClientError(client, "That command type does not exist!");
         return false;
     }    
 
-    for(let i in serverData.commands[params]) {
-        removeCommandHandler(serverData.commands[params][i].command);
+    for(let i in getServerData().commands[params]) {
+        removeCommandHandler(getServerData().commands[params][i].command);
     }
 
 	messageClientSuccess(client, `[#FF9900]All ${params} commands have been disabled!`);
@@ -343,16 +358,16 @@ function enableAllCommandsByType(command, params, client) {
 		return false;
     }
 
-    params = params.toLowerCase();
+    params = toLowerCase(params);
     
-    if(typeof serverData.commands[params] == "undefined") {
+    if(isNull(getServerData().commands[params])) {
         messageClientError(client, "That command type does not exist!");
         return false;
     }
 
-    for(let i in serverData.commands[params]) {
-        let command = serverData.commands[params][i].command;
-        addCommandHandler(command, serverData.commands[params][i].handlerFunction);
+    for(let i in getServerData().commands[params]) {
+        let command = getServerData().commands[params][i].command;
+        addCommandHandler(command, getServerData().commands[params][i].handlerFunction);
     }
 
 	messageClientSuccess(client, `[#FF9900]All ${params} commands have been enabled!`);

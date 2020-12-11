@@ -8,6 +8,14 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnPlayerConnect", function(event, ipAddress, port) {
+    console.log(`[Asshat.Event] Client connecting (IP: ${ipAddress}, Port: ${port})`);
+});
+
+// ---------------------------------------------------------------------------
+
 addEventHandler("OnPlayerJoined", function(event, client) {
     setTimeout(function() {
         initClient(client);
@@ -17,9 +25,11 @@ addEventHandler("OnPlayerJoined", function(event, client) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
+    //console.log(`[Asshat.Event] Client disconnected (Name: ${client.name}, Reason: ${gameData.quitReasons[quitReasonId]})`);
     saveClientToDatabase(client);
 
-    serverData.clients[client.index] = null;
+    getServerData().clients[client.index] = null;
+    //message(`${client.name} has left the server (${gameData.quitReasons[quitReasonId]})`);
 });
 
 // ---------------------------------------------------------------------------
@@ -27,7 +37,7 @@ addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
 addEventHandler("OnPedSpawn", function(event, ped) {
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
-        //triggerNetworkEvent("ag.locations", client, serverData.policeStations[getServerGame()], serverData.fireStations[getServerGame()], serverData.hospitals[getServerGame()], serverData.payAndSprays[getServerGame()], serverData.ammunations[getServerGame()], serverData.jobs[getServerGame()]);
+        //triggerNetworkEvent("ag.locations", client, getServerData().policeStations[getServerGame()], getServerData().fireStations[getServerGame()], getServerData().hospitals[getServerGame()], getServerData().payAndSprays[getServerGame()], getServerData().ammunations[getServerGame()], getServerData().jobs[getServerGame()]);
         ped.setData("ag.name", getClientSubAccountName(client), true);
     }
 });
@@ -35,17 +45,13 @@ addEventHandler("OnPedSpawn", function(event, ped) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weaponId, pedPiece) {
-    if(ped.isType(ELEMENT_PLAYER)) {
-        let closestHospital = getClosestHospital(wastedPed.position);
-        let client = getClientFromPedElement(wastedPed);
-        client.despawnPlayer();
-        if(getClientCurrentSubAccount(client).inJail) {
-            let closestJail = getClosestJail(wastedPed.position);
-            spawnPlayer(client, closestJail.position, closestJail.heading, getClientCurrentSubAccount(client).skin);
-        } else {
-            spawnPlayer(client, closestHospital.position, closestHospital.heading, getClientCurrentSubAccount(client).skin);
-        }
+    if(!wastedPed) {
+        return false;
     }
+
+    //if(wastedPed.isType(ELEMENT_PLAYER)) {
+    //    processPlayerDeath(wastedPed);
+    //}
 });
 
 // ---------------------------------------------------------------------------
@@ -72,49 +78,32 @@ addEventHandler("onPedEnterVehicle", function(event, ped, vehicle, seat) {
     }
 
     let vehicleData = getVehicleData(vehicle);
-    if(!vehicleData) {
+    if(vehicleData == null) {
         return false;
     }
 
-    
-
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
-        let currentSubAccount = getClientCurrentSubAccount(client);
-
-        if(currentSubAccount.isWorking) {
-            if(vehicleData.ownerType == AG_VEHOWNER_JOB) {
-                if(vehicleData.ownerId == getJobType(currentSubAccount.job)) {
-                    if(seat == 0) {
-                        getClientCurrentSubAccount(client).lastJobVehicle = vehicle;
-                    }
-                }
-            }
-        }
-
-        if(vehicleData.buyPrice > 0) {
-            messageClientInfo(client, `This vehicle is for sale! Cost $${vehicleData.buyPrice}`);
-            messageClientInfo(client, `Use /buycar if you'd like to buy this vehicle.`);
-        } else {
-            if(vehicleData.rentPrice > 0) {
-                messageClientInfo(client, `This vehicle is for rent! Cost: $${vehicleData.rentPrice} per minute`);
-                messageClientInfo(client, `Use /rentcar if you'd like to rent this vehicle.`);
-            }
-        }
+        clientEnteredVehicle(client);
     }
 });
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("onEntityProcess", function(event, entity) {
-    /*
-    if(entity.isType(ELEMENT_PLAYER)) {
-        let client = getClientFromPlayerElement(entity);
-        if(isNearJobPoint(entity.position) {
-            let jobPoint = getNearbyJobPoint(entity);
-        }
-    }
-    */
+addEventHandler("onProcess", function(event, deltaTime) {
+    //if(!isGTAIV()) {
+    //    let clients = getClients();
+    //    for(let i in clients) {
+    //        if(!clients[i].console) {
+    //            if(clients[i].getData("ag.isPlaying")) {
+    //                if(clients[i].player.health <= 0) {
+    //                    console.log(clients[i].name + " died");
+    //                    processPlayerDeath(clients[i]);
+    //                }
+    //            }
+    //        }
+    //    }        
+    //}
 });
 
 // ---------------------------------------------------------------------------
@@ -140,3 +129,31 @@ addEventHandler("OnPedExitVehicle", function(event, ped, vehicle) {
         return false;
     }
 });
+
+// ---------------------------------------------------------------------------
+
+function clientEnteredVehicle(client, vehicleData) {
+    let currentSubAccount = getClientCurrentSubAccount(client);
+
+    if(currentSubAccount.isWorking) {
+        if(vehicleData.ownerType == AG_VEHOWNER_JOB) {
+            if(vehicleData.ownerId == getJobType(currentSubAccount.job)) {
+                if(seat == 0) {
+                    getClientCurrentSubAccount(client).lastJobVehicle = vehicleData.syncId;
+                }
+            }
+        }
+    }
+
+    if(vehicleData.buyPrice > 0) {
+        messageClientInfo(client, `This vehicle is for sale! Cost $${vehicleData.buyPrice}`);
+        messageClientInfo(client, `Use /vehbuy if you want to buy this vehicle.`);
+    } else {
+        if(vehicleData.rentPrice > 0) {
+            messageClientInfo(client, `This vehicle is for rent! Cost: $${vehicleData.rentPrice} per minute`);
+            messageClientInfo(client, `Use /vehrent if you want to rent this vehicle.`);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------

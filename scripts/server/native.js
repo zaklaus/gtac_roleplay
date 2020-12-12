@@ -73,52 +73,56 @@ function getServerGame() {
 // ---------------------------------------------------------------------------
 
 function getPlayerPosition(client) {
-    return client.getData("ag.position");
+    //return (isGTAIV()) ? getEntityData(client, "ag.position") : client.player.position;
+    return getEntityData(client, "ag.position");
 }
 
 // ---------------------------------------------------------------------------
 
 function getPlayerHeading(client) {
-    return client.getData("ag.heading");
+    //return (isGTAIV()) ? getEntityData(client, "ag.heading") : client.player.heading;
+    return getEntityData(client, "ag.heading");
 }
 
 // ---------------------------------------------------------------------------
 
 function getPlayerVehicle(client) {
-	return getVehicleDataFromSyncId(client.getData("ag.vehicle"));
+    //return (isGTAIV()) ? getVehicleDataFromSyncId(getEntityData(client, "ag.vehicle")) : getVehicleData(client.player.vehicle);
+    let playerVehicle = getEntityData(client, "ag.vehicle");
+    let vehicleData = getVehicleDataFromSyncId(playerVehicle);
+    console.log(`playerVehicle: ${playerVehicle}, vehicleData: ${vehicleData}`);
+    return vehicleData;
 }
 
 // ---------------------------------------------------------------------------
 
 function isPlayerInAnyVehicle(client) {
-    if(isGTAIV()) {
-        return (client.getData("ag.vehicle") != null);
-    } else {
-        return (client.player.vehicle != null);
-    }
+    return doesEntityDataExist(client, "ag.vehicle");
 }
 
 // ---------------------------------------------------------------------------
 
 function getPlayerVehicleSeat(client) {
-    return client.getData("ag.vehicleSeat");
+    return getEntityData(client, "ag.vehicleSeat");
 }
 
 // ---------------------------------------------------------------------------
 
 function isPlayerSpawned(client) {
-    return client.getData("ag.spawned");
+    return getEntityData(client, "ag.spawned");
 }
 
 // ---------------------------------------------------------------------------
 
 function getVehiclePosition(vehicleData) {
+    //return (isGTAIV()) ? vehicleData.syncPosition : vehicleData.vehicle.position;
     return vehicleData.syncPosition;
 }
 
 // ---------------------------------------------------------------------------
 
 function getVehicleHeading(vehicleData) {
+    //return (isGTAIV()) ? vehicleData.syncHeading : vehicleData.vehicle.heading;
     return vehicleData.syncHeading;
 }
 

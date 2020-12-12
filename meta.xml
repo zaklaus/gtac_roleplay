@@ -74,7 +74,7 @@
 	<script src="scripts/client/gui.js" type="client" language="javascript" />
 	<script src="scripts/client/main.js" type="client" language="javascript" />
 	<script src="scripts/client/nametags.js" type="client" language="javascript" />
-	<script src="scripts/client/iv.js" type="client" language="javascript" />
+	<script src="scripts/client/sync.js" type="client" language="javascript" />
 
 	<file type="client" src="files/images/skins/none.png" />
 	<file type="client" src="files/images/skins/gta3/Skin000.png" />

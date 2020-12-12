@@ -559,9 +559,9 @@ function stopWorking(client) {
 		jobVehicle.position = vehicleData.spawnPosition;
 		jobVehicle.heading = vehicleData.spawnRotation;
 		jobVehicle.locked = true;
-		jobVehicle.setData("ag.lights", false, true);
-		jobVehicle.setData("ag.engine", false, true);
-		jobVehicle.setData("ag.siren", false, true);
+		setEntityData(jobVehicle, "ag.lights", false, true);
+		setEntityData(jobVehicle, "ag.engine", false, true);
+		setEntityData(jobVehicle, "ag.siren", false, true);
 
 		getClientCurrentSubAccount(client).lastJobVehicle = false;
 	}

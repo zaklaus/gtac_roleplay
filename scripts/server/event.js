@@ -71,21 +71,21 @@ bindEventHandler("OnResourceStart", thisResource, function(event, resource) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("onPedEnterVehicle", function(event, ped, vehicle, seat) {
-    ped.setData("ag.vehSeat", seat, false);
+    //ped.setData("ag.vehSeat", seat, false);
 
-    if(!vehicle || vehicle.owner != -1) {
-        return false;
-    }
+    //if(!vehicle || vehicle.owner != -1) {
+    //    return false;
+    //}
 
-    let vehicleData = getVehicleData(vehicle);
-    if(vehicleData == null) {
-        return false;
-    }
+    //let vehicleData = getVehicleData(vehicle);
+    //if(vehicleData == null) {
+    //    return false;
+    //}
 
-    if(ped.isType(ELEMENT_PLAYER)) {
-        let client = getClientFromPlayerElement(ped);
-        clientEnteredVehicle(client);
-    }
+    //if(ped.isType(ELEMENT_PLAYER)) {
+    //    let client = getClientFromPlayerElement(ped);
+    //    clientEnteredVehicle(client);
+    //}
 });
 
 // ---------------------------------------------------------------------------

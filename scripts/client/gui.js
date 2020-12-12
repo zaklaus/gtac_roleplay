@@ -202,7 +202,7 @@ let skinNames = [
 		//[121, "Chuff Security Officer", "Skin121.png"]
 	],
 	[ // GTA Vice City
-		[0, "Tommy Vercetti", false],
+		//[0, "Tommy Vercetti", false],
 		//[1, "Police Officer", false],
 		//[2, "SWAT Officer", false],
 		//[3, "FBI Agent", false],
@@ -210,7 +210,7 @@ let skinNames = [
 		//[5, "Paramedic", false],
 		//[6, "Fireman", false],
 		[7, "Golfer", false],
-		[8, "INVALID", false],
+		//[8, "INVALID", false],
 		[9, "Random Lady", false],
 		[10, "Bum", false],
 		[11, "Greaser", false],
@@ -325,7 +325,7 @@ let skinNames = [
 		//[120, "Officer Lance Vance", false],
 		[121, "Lance Vance", false],
 		[122, "Cortez", false],
-		[123, "SWAT 2", false],
+		//[123, "SWAT 2", false],
 		[124, "Columbian", false],
 		[125, "Hilary", false],
 		[126, "Mercedes", false],

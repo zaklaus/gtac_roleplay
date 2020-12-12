@@ -90,7 +90,7 @@ function muteClientCommand(command, params, client) {
 	}
 	
 	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been muted!");
-	targetClient.setData("ag.muted", true, false);
+	setEntityData(targetClient, "ag.muted", true, false);
 }
 
 // ---------------------------------------------------------------------------
@@ -126,7 +126,7 @@ function unMuteClientCommand(command, params, client) {
 	}
 	
 	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been unmuted!");
-	targetClient.removeData("ag.muted");
+	removeEntityData(targetClient, "ag.muted");
 }
 
 // ---------------------------------------------------------------------------

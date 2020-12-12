@@ -442,7 +442,7 @@ function loginSuccess(client) {
 	if(getClientData(client).subAccounts.length == 0) {
 		if(getServerConfig().useGUI) {
 			triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No characters");
-			client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+			setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
 		} else {
 			messageClientAlert(client, `You have no characters. Use /newchar to make one.`);
 		}
@@ -492,7 +492,7 @@ function createAccount(name, password, email = "") {
 // ---------------------------------------------------------------------------
 
 function checkLogin(client, password) {
-	let loginAttemptsRemaining = client.getData("ag.loginAttemptsRemaining")-1;
+	let loginAttemptsRemaining = getEntityData(client, "ag.loginAttemptsRemaining")-1;
 
 	if(isClientLoggedIn(client)) {
 		if(getServerConfig().useGUI) {
@@ -629,7 +629,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	if(getServerConfig().useGUI) {
 		triggerNetworkEvent("ag.registrationSuccess", client);
 		triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No Characters");
-		client.setData("ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+		setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
 	} else {
 		messageClientAlert(client, `You have no characters. Use /newchar to make one.`);
 	}
@@ -686,7 +686,7 @@ function initClient(client) {
 	
 	setTimeout(function() {
 		let sessionId = saveSessionToDatabase(client);
-		client.setData("ag.session", sessionId, false);
+		setEntityData(client, "ag.session", sessionId, false);
 
 		clearChatBox(client);
 		let tempAccountData = loadAccountFromName(client.name);

@@ -553,8 +553,8 @@ function getClosestBusinessEntrance(position) {
 
 // ---------------------------------------------------------------------------
 
-function isPlayerInAnyBusiness(player) {
-	if(player.getData("ag.inBusiness")) {
+function isPlayerInAnyBusiness(client) {
+	if(doesEntityDataExist(client, "ag.inBusiness")) {
 		return true;
 	}
 
@@ -563,9 +563,9 @@ function isPlayerInAnyBusiness(player) {
 
 // ---------------------------------------------------------------------------
 
-function getPlayerBusiness(player) {
-	if(player.getData("ag.inBusiness")) {
-		return player.getData("ag.inBusiness");
+function getPlayerBusiness(client) {
+	if(doesEntityDataExist(client, "ag.inBusiness")) {
+		return getEntityData(client, "ag.inBusiness");
 	}
 
 	return false;
@@ -658,8 +658,8 @@ function deleteBusiness(businessId) {
 
 function removePlayersFromBusiness(businessId) {
 	getClients().forEach(function(client) {
-		if(client.getData("ag.inBusiness")) {
-			if(client.getData("ag.inBusiness") == businessId) {
+		if(doesEntityDataExist(client, "ag.inBusiness")) {
+			if(getEntityData(client, "ag.inBusiness") == businessId) {
 				exitBusiness(client);
 			}
 		}
@@ -669,8 +669,8 @@ function removePlayersFromBusiness(businessId) {
 // ---------------------------------------------------------------------------
 
 function exitBusiness(client) {
-	let businessId = client.getData("ag.inBusiness");
-	if(client.player) {
+	let businessId = getEntityData(client, "ag.inBusiness");
+	if(isPlayerSpawned(client)) {
 		triggerNetworkEvent("ag.interior", client, getServerData().businesses[businessId].entranceInterior);
 		triggerNetworkEvent("ag.dimension", client, getServerData().businesses[businessId].entranceDimension);
 		triggerNetworkEvent("ag.position", client, getServerData().businesses[businessId].entrancePosition);

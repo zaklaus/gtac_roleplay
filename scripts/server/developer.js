@@ -190,16 +190,16 @@ function submitIdea(client, ideaText) {
 	let session = 0;
 	let databaseId = 0;
 
-	if(client.getData("ag.position")) {
-		position = client.getData("ag.position");
+	if(getEntityData(client, "ag.position")) {
+		position = getEntityData(client, "ag.position");
 	}
 
-	if(client.getData("ag.heading")) {
-		heading = client.getData("ag.heading");
+	if(getEntityData(client, "ag.heading")) {
+		heading = getEntityData(client, "ag.heading");
 	}
 
-	if(client.getData("ag.session")) {
-		session = client.getData("ag.session");
+	if(getEntityData(client, "ag.session")) {
+		session = getEntityData(client, "ag.session");
 	}
 
 	if(client.console) {
@@ -223,16 +223,16 @@ function submitBugReport(client, bugText) {
 	let session = 0;
 	let databaseId = 0;
 
-	if(client.getData("ag.position")) {
-		position = client.getData("ag.position");
+	if(getEntityData(client, "ag.position")) {
+		position = getEntityData(client, "ag.position");
 	}
 
-	if(client.getData("ag.heading")) {
-		heading = client.getData("ag.heading");
+	if(getEntityData(client, "ag.heading")) {
+		heading = getEntityData(client, "ag.heading");
 	}
 
-	if(client.getData("ag.session")) {
-		session = client.getData("ag.session");
+	if(getEntityData(client, "ag.session")) {
+		session = getEntityData(client, "ag.session");
 	}
 
 	if(client.console) {

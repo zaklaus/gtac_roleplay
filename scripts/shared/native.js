@@ -61,3 +61,31 @@ function isNull(val) {
 }
 
 // ---------------------------------------------------------------------------
+
+function getEntityData(entity, dataName) {
+    return entity.getData(dataName);
+}
+
+// ---------------------------------------------------------------------------
+
+function setEntityData(entity, dataName, dataValue, syncToClients = true) {
+	if(!isNull(server)) {
+		return entity.setData(dataName, dataValue, syncToClients);
+	} else {
+		return entity.setData(dataName, dataValue);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function removeEntityData(entity, dataName) {
+    return entity.removeData(dataName);
+}
+
+// ---------------------------------------------------------------------------
+
+function doesEntityDataExist(entity, dataName) {
+    return (entity.getData(dataName) != null);
+}
+
+// ---------------------------------------------------------------------------

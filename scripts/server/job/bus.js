@@ -102,12 +102,12 @@ let busRoutes = [
 // ---------------------------------------------------------------------------
 
 function getNextStopOnBusRoute(client) {
-    if(client.getData("ag.busRoute") && client.getData("ag.lastBusStop")) {
+    if(getEntityData(client, "ag.busRoute") && getEntityData(client, "ag.lastBusStop")) {
         if(!isGoingToLastStopOnBusRoute(client)) {
-            return busRoutes[server.game][client.getData("ag.busRoute")][client.getData("ag.lastBusStop")+1];
+            return busRoutes[server.game][getEntityData(client, "ag.busRoute")][getEntityData(client, "ag.lastBusStop")+1];
         } else {
-            let slot = busRoutes[server.game][client.getData("ag.busRoute")].length-1;
-            return busRoutes[server.game][client.getData("ag.busRoute")][slot];
+            let slot = busRoutes[server.game][getEntityData(client, "ag.busRoute")].length-1;
+            return busRoutes[server.game][getEntityData(client, "ag.busRoute")][slot];
         }
     }    
 }
@@ -115,8 +115,8 @@ function getNextStopOnBusRoute(client) {
 // ---------------------------------------------------------------------------
 
 function isGoingToLastStopOnBusRoute(client) {
-    if(client.getData("ag.busRoute") && client.getData("ag.lastBusStop")) {
-        if(client.getData("ag.lastBusStop")+1 == busRoutes[server.game][client.getData("ag.busRoute")].length-1) {
+    if(getEntityData(client, "ag.busRoute") && getEntityData(client, "ag.lastBusStop")) {
+        if(getEntityData(client, "ag.lastBusStop")+1 == busRoutes[server.game][getEntityData(client, "ag.busRoute")].length-1) {
             return true;
         }
     }

@@ -123,16 +123,16 @@ function updateNametags(element) {
                     let colour = COLOUR_WHITE;
                     let afk = false;        
             
-                    if(client.getData("ag.name") != null) {
-                        name = client.getData("ag.name");
+                    if(getEntityData(client, "ag.name") != null) {
+                        name = getEntityData(client, "ag.name");
                     }
             
-                    if(client.getData("ag.afk") != null) {
+                    if(getEntityData(client, "ag.afk") != null) {
                         afk = true;
                     }
 
-                    if(client.getData("ag.colour") != null) {
-                        colour = client.getData("ag.colour");
+                    if(getEntityData(client, "ag.colour") != null) {
+                        colour = getEntityData(client, "ag.colour");
 					}
 
 					drawNametag(screenPos[0], screenPos[1], health, armour, name, 0, 1.0-distance/nametagDistance, distance, colour, afk, element.skin);

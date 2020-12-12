@@ -35,11 +35,11 @@ addNetworkHandler("ag.onPlayerExitSphere", function(client, sphere) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.promptAnswerNo", function(client) {
-    if(!client.getData("ag.prompt")) {
+    if(!getEntityData(client, "ag.prompt")) {
         return false;
     }
 
-    switch(client.getData("ag.prompt")) {
+    switch(getEntityData(client, "ag.prompt")) {
         case AG_PROMPT_CREATEFIRSTCHAR:
             triggerNetworkEvent("ag.showError", client, "You don't have a character to play. Goodbye!", "No Characters");            
             setTimeout(function() { client.disconnect(); }, 5000);
@@ -55,11 +55,11 @@ addNetworkHandler("ag.promptAnswerNo", function(client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.promptAnswerYes", function(client) {
-    if(!client.getData("ag.prompt")) {
+    if(!getEntityData(client, "ag.prompt")) {
         return false;
     }
 
-    switch(client.getData("ag.prompt")) {
+    switch(getEntityData(client, "ag.prompt")) {
         case AG_PROMPT_CREATEFIRSTCHAR:
             triggerNetworkEvent("ag.showNewCharacter", client);
             break;
@@ -92,7 +92,7 @@ addNetworkHandler("ag.onPlayerEnterSphere", function(client, sphere) {
 
 addNetworkHandler("ag.afk", function(client, afkState) {
     if(afkState) {
-        client.setData("ag.afk", true, true);
+        setEntityData(client, "ag.afk", true, true);
     } else {
         client.removeData("ag.afk");
     }
@@ -125,16 +125,16 @@ addNetworkHandler("ag.heldKey", function(client, key) {
 
 addNetworkHandler("ag.player.sync", function(client, position, heading) {
     //console.log(`POS: ${position}, X: ${position.x}, Y: ${position.y}, Z: ${position.z}`);
-    client.setData("ag.position", position, true);
-    client.setData("ag.heading", heading, true);
+    setEntityData(client, "ag.position", position, true);
+    setEntityData(client, "ag.heading", heading, true);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.player.death", function(client, position, heading) {
     //console.log(`POS: ${position}, X: ${position.x}, Y: ${position.y}, Z: ${position.z}`);
-    client.setData("ag.position", position, true);
-    client.setData("ag.heading", heading, true);
+    setEntityData(client, "ag.position", position, true);
+    setEntityData(client, "ag.heading", heading, true);
     processPlayerDeath(client);
 });
 
@@ -146,16 +146,15 @@ addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
         vehicleData.syncPosition = position;
         vehicleData.syncHeading = heading;
     }
-
 });
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.iv.veh", function(client, syncId) {
+addNetworkHandler("ag.player.vehicle", function(client, syncId) {
     if(syncId == -1) {
         client.removeData("ag.vehicle");
     } else {
-        client.setData("ag.vehicle", syncId, true);
+        setEntityData(client, "ag.vehicle", syncId, true);
     }
 });
 

@@ -343,10 +343,14 @@ function setSnowingCommand(command, params, client) {
 	}
 
 	let splitParams = params.split();
-    let fallingSnow = toInteger(splitParams[0]) || 0;
-    let groundSnow = toInteger(splitParams[1]) || 0;
+    let fallingSnow = splitParams[0] || 0;
+	let groundSnow = splitParams[1] || 0;
+	
+	fallingSnow = intToBool(toInteger(fallingSnow));
+	groundSnow = intToBool(toInteger(groundSnow));
 
-    getServerConfig().fallingSnow = 0;
+	getServerConfig().fallingSnow = fallingSnow;
+	getServerConfig().groundSnow = groundSnow;
 
     messageAdminAction(`${client.name} turned falling snow ${getOnOffFromBool(intToBool(fallingSnow))} and ground snow ${getOnOffFromBool(intToBool(groundSnow))}`);
     updateServerRules();

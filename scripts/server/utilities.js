@@ -1681,7 +1681,7 @@ function processPlayerDeath(client) {
 			} else {
 				spawnPlayer(client, closestHospital.position, closestHospital.heading, getClientCurrentSubAccount(client).skin);
 			}
-			client.getData("ag.spawned", true, true);	
+			getEntityData(client, "ag.spawned", true, true);	
 			setTimeout(function() {
 				triggerNetworkEvent("ag.fadeCamera", client, true, 1.0);
 				triggerNetworkEvent("ag.control", client, true);

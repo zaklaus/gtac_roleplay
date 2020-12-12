@@ -183,11 +183,11 @@ function initClassTable() {
 
 		},
 		vehicleData: class {
-			constructor(vehicleAssoc, vehicle = false) {
+			constructor(vehicleAssoc = false, vehicle = false) {
 				// General Info
 				this.databaseId = 0;
 				this.server = serverId;
-				this.model = (vehicle) ? vehicle.modelIndex : 0;
+				this.model = (vehicle != false) ? vehicle.modelIndex : 0;
 				this.vehicle = vehicle;
 				this.tempVehicle = false;
 				this.streamedBy = false; // For IV only

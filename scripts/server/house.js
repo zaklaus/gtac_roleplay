@@ -73,18 +73,8 @@ function getClosestHouseEntrance(position) {
 
 // ---------------------------------------------------------------------------
 
-function isPlayerInAnyBusiness(player) {
-	if(player.getData("ag.inHouse")) {
-		return true;
-	}
-
-	return false;
-}
-
-// ---------------------------------------------------------------------------
-
-function getPlayerHouse(player) {
-	if(player.getData("ag.inHouse")) {
+function getPlayerHouse(client) {
+	if(doesEntityDataExist("ag.inHouse")) {
 		return player.getData("ag.inHouse");
 	}
 

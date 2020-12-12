@@ -19,7 +19,7 @@ function messageAdminAction(messageText) {
 
 function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
     if(client.console) {
-        console.log(`${messageText}`);
+        console.log(`[Asshat.Messaging] ${messageText}`);
         return true;
     }
 
@@ -34,7 +34,7 @@ function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
 
 function messageClientError(client, messageText) {
     if(client.console) {
-        console.log(`🚫 ${messageText}`);
+        console.log(`[Asshat.Messaging] ERROR:  ${messageText}`);
         return true;
     }
 
@@ -49,7 +49,7 @@ function messageClientError(client, messageText) {
 
 function messageClientSyntax(client, messageText) {
     if(client.console) {
-        console.log(`⌨️ ${messageText}`);
+        console.log(`[Asshat.Messaging] USAGE:  ${messageText}`);
         return true;
     }
 
@@ -64,7 +64,7 @@ function messageClientSyntax(client, messageText) {
 
 function messageClientAlert(client, messageText) {
     if(client.console) {
-        console.log(`⚠️ ${messageText}`);
+        console.log(`[Asshat.Messaging] ALERT: ${messageText}`);
         return true;
     }
 
@@ -79,7 +79,7 @@ function messageClientAlert(client, messageText) {
 
 function messageClientSuccess(client, messageText) {
     if(client.console) {
-        console.log(`👍 ${messageText}`);
+        console.log(`[Asshat.Messaging] SUCCESS: ${messageText}`);
         return true;
     }
 
@@ -94,7 +94,7 @@ function messageClientSuccess(client, messageText) {
 
 function messageClientInfo(client, messageText) {
     if(client.console) {
-        console.log(`ℹ️ ${messageText}`);
+        console.log(`[INFO] ${messageText}`);
         return true;
     }
         
@@ -108,39 +108,39 @@ function messageClientInfo(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function messageClientTalk(client, talkingClient, messageText) {
-    messageClientNormal(client, `${getClientSubAccountName(client)} says: ${messageText}`, getColourByType("talkMessage"));
+    messageClientNormal(client, `${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientWhisper(client, talkingClient, messageText) {
-    messageClientNormal(client, `${getClientSubAccountName(client)} whispers: ${messageText}`, getColourByType("whisperMessage"));
+function messageClientWhisper(client, whisperingClient, messageText) {
+    messageClientNormal(client, `${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientShout(client, talkingClient, messageText) {
-    messageClientNormal(client, `${getClientSubAccountName(client)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
+function messageClientShout(client, shoutingClient, messageText) {
+    messageClientNormal(client, `${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientDoAction(client, talkingClient, messageText) {
+function messageClientDoAction(client, doingActionClient, messageText) {
     if(client instanceof Client) {
-        messageClientNormal(client, `${messageText} * (${getClientSubAccountName(client)})`, getColourByType("doActionMessage"));
+        messageClientNormal(client, `${messageText} * (${getClientSubAccountName(doingActionClient)})`, getColourByType("doActionMessage"));
     }
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientMeAction(client, talkingClient, messageText) {
-    messageClientNormal(client, `${getClientSubAccountName(client)} ${messageText}`, getColourByType("meActionMessage"));
+function messageClientMeAction(client, doingActionClient, messageText) {
+    messageClientNormal(client, `${getClientSubAccountName(doingActionClient)} ${messageText}`, getColourByType("meActionMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientClanChat(client, talkingClient, messageText) {
-    messageClientNormal(client, `(${getClientSubAccountClanRank(talkingClient)}) ${getClientSubAccountName(talkingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
+function messageClientClanChat(client, clanChattingClient, messageText) {
+    messageClientNormal(client, `(${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
 }
 
 // ---------------------------------------------------------------------------

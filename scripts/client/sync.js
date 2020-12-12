@@ -3,20 +3,24 @@
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
-// FILE: iv.js
-// DESC: Provides IV fixes and sync
+// FILE: sync.js
+// DESC: Provides some elements and data sync
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
 // ---------------------------------------------------------------------------
 
 let syncPosition = false;
+let inVehicle = null;
+
+// ---------------------------------------------------------------------------
 
 addEventHandler("onProcess", function(event, deltaTime) {
     //if(gta.game == GAME_GTA_IV) {
         getVehicles().forEach(function(vehicle) {
-            if(vehicle.isSyncer && vehicle.getData("ag.syncId") != null) {
-                triggerNetworkEvent("ag.veh.sync", vehicle.getData("ag.syncId"), vehicle.position, vehicle.heading.toFixed(2));
+            if(vehicle.isSyncer && getEntityData(vehicle, "ag.syncId") != null) {
+                //console.log(`Syncing vehicle ${getEntityData(vehicle, "ag.syncId")} to server. Pos: ${vehicle.position.x}, ${vehicle.position.y}, ${vehicle.position.z}`);
+                triggerNetworkEvent("ag.veh.sync", getEntityData(vehicle, "ag.syncId"), vehicle.position, vehicle.heading.toFixed(2));
             }
         });
         
@@ -27,17 +31,22 @@ addEventHandler("onProcess", function(event, deltaTime) {
                 triggerNetworkEvent("ag.player.sync", localPlayer.position, localPlayer.heading.toFixed(2));
 
                 if(localPlayer.vehicle) {
-                    if(localPlayer.getData("ag.veh") == null) {
-                        if(localPlayer.vehicle.getData("ag.syncId") != null) {
-                            triggerNetworkEvent("ag.iv.veh", localPlayer.getData("ag.syncId"));
-                            localPlayer.setData("ag.veh", localPlayer.vehicle);
+                    if(!inVehicle) {
+                        inVehicle = localPlayer.vehicle;
+                        console.log(`Entered vehicle ${inVehicle}`);
+                        if(doesEntityDataExist(vehicle, "ag.syncId")) {
+                            triggerNetworkEvent("ag.player.vehicle", getEntityData(localPlayer.vehicle, "ag.syncId"));
+                            //localPlayer.setData("ag.vehicle", localPlayer.vehicle);
                         }
                     }
                 } else {
-                    if(localPlayer.getData("ag.veh") != null) {
-                        triggerNetworkEvent("ag.iv.veh", -1);
-                        localPlayer.removeData("ag.veh", localPlayer.vehicle);
+                    if(inVehicle != null) {
+                        console.log(`Exited vehicle ${inVehicle}`);
+                        triggerNetworkEvent("ag.player.vehicle", -1);
+                        //localPlayer.removeData("ag.vehicle", localPlayer.vehicle);
+                        inVehicle = null;
                     }
+
                 }
             }
         }
@@ -48,13 +57,14 @@ addEventHandler("onProcess", function(event, deltaTime) {
 
 addNetworkHandler("ag.vehicle", function(syncId, model, position, heading, colour1, colour2, locked, lights) { //livery, dirtLevel, locked, lights) {
     let vehicle = createVehicle(model, position, heading);
-    vehicle.setData("ag.syncId", syncId);
+    setEntityData(vehicle, "ag.syncId", syncId);
     vehicle.colour1 = colour1;
     vehicle.colour2 = colour2;
     //vehicle.livery = livery;
     //vehicle.dirtLevel = dirtLevel;
     vehicle.carLock = locked;
     vehicle.lights = lights;
+    serverVehicles.push(vehicle);
 });
 
 // ---------------------------------------------------------------------------
@@ -103,8 +113,8 @@ addNetworkHandler("ag.iv.syncPosition", function(state) {
 function getVehicleFromIVSyncId(syncId) {
     let vehicles = getVehicles();
     for(let i in vehicles) {
-        if(vehicles[i].getData("ag.syncId")) {
-            if(vehicles[i].getData("ag.syncId") == syncId) {
+        if(getEntityData(vehicles[i], "ag.syncId")) {
+            if(getEntityData(vehicles[i], "ag.syncId") == syncId) {
                 return vehicles[i];
             }
         }
@@ -116,8 +126,8 @@ function getVehicleFromIVSyncId(syncId) {
 function getVehicleFromSyncId(syncId) {
     let vehicles = getVehicles();
     for(let i in vehicles) {
-        if(vehicles[i].getData("ag.syncId") != null) {
-            if(vehicles[i].getData("ag.syncId") == syncId) {
+        if(getEntityData(vehicles[i], "ag.syncId") != null) {
+            if(getEntityData(vehicles[i], "ag.syncId") == syncId) {
                 return vehicles[i];
             }
         }

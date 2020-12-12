@@ -111,7 +111,7 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 		let safePlaceOfOrigin = escapeDatabaseString(dbConnection, placeOfOrigin);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${serverId})`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${serverId}, 100, UNIX_TIMESTAMP(), 0)`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
 		}
@@ -236,14 +236,12 @@ function selectCharacter(client, characterId = -1) {
 	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
 	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 	triggerNetworkEvent("ag.restoreCamera", client);
-	client.setData("ag.spawned", true, true);
-	client.setData("ag.position", tempSubAccount.spawnPosition, true);
-	client.setData("ag.heading", tempSubAccount.spawnHeading, true);
-	if(isGTAIV()) {
-		triggerNetworkEvent("ag.iv.syncPosition", client, true);
-	}	
+	setEntityData(client, "ag.spawned", true, true);
+	setEntityData(client, "ag.position", tempSubAccount.spawnPosition, true);
+	setEntityData(client, "ag.heading", tempSubAccount.spawnHeading, true);
 
 	if(isGTAIV()) {
+		triggerNetworkEvent("ag.iv.syncPosition", client, true);
 		spawnAllVehicles();
 	}
 }

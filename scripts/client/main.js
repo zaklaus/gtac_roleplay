@@ -93,22 +93,22 @@ addNetworkHandler("ag.showLoginMessage", function() {
 // ---------------------------------------------------------------------------
 
 function syncVehicle(vehicle) {
-    if(vehicle.getData("ag.lights") != null) {
-        let lights = vehicle.getData("ag.lights");
+    if(getEntityData(vehicle, "ag.lights") != null) {
+        let lights = getEntityData(vehicle, "ag.lights");
         if(lights != vehicle.lights) {
             vehicle.lights = lights;
         }
     }  
 
-    if(vehicle.getData("ag.engine") != null) {
-        let engine = vehicle.getData("ag.engine");
+    if(getEntityData(vehicle, "ag.engine") != null) {
+        let engine = getEntityData(vehicle, "ag.engine");
         if(engine != vehicle.engine) {
             vehicle.engine = engine;
         }
     }
 
-    if(vehicle.getData("ag.siren") != null) {
-        let siren = vehicle.getData("ag.siren");
+    if(getEntityData(vehicle, "ag.siren") != null) {
+        let siren = getEntityData(vehicle, "ag.siren");
         if(siren != vehicle.siren) {
             vehicle.siren = siren;
         }  

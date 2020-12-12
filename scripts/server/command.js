@@ -97,7 +97,16 @@ function loadCommandData() {
             commandData("cmd_enable", enableCommand, "<command>", getStaffFlagValue("developer"), true, true),
             commandData("cmd_disable", disableCommand, "<command>", getStaffFlagValue("developer"), true, true),
         ],
-        config: [],
+        config: [
+            commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("manageServer"), true, true),
+            commandData("setweather", setWeatherCommand, "<weather id/name>", getStaffFlagValue("manageServer"), true, true),
+            commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("manageServer"), true, true),
+            commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),   
+            commandData("setgui", toggleServerGUICommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),   
+            commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("manageServer"), true, true),
+            commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("manageServer"), true, true),
+            commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),                     
+        ],
         core: [],
         database: [],
         developer: [
@@ -137,15 +146,7 @@ function loadCommandData() {
         locale: [],
         messaging: [],
         misc: [
-            commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("manageServer"), true, true),
-            commandData("setweather", setWeatherCommand, "<weather id/name>", getStaffFlagValue("manageServer"), true, true),
-            commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("manageServer"), true, true),
-            commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),
             commandData("pos", getPositionCommand, "", getStaffFlagValue("basicModeration"), true, true),
-            commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("manageServer"), true, true),
-            commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("manageServer"), true, true),
-            commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),
-
             commandData("idea", submitIdeaCommand, "<message>", getStaffFlagValue("none"), true, true),
             commandData("bug", submitBugReportCommand, "<message>", getStaffFlagValue("none"), true, true),
         ],
@@ -173,6 +174,8 @@ function loadCommandData() {
         utilities: [],
          vehicle: [
             commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, true),	
+            commandData("tempveh", createTemporaryVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, true),
+            
             commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, true),	
             commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, true),	
             commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, true),	

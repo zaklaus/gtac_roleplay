@@ -73,31 +73,25 @@ function getServerGame() {
 // ---------------------------------------------------------------------------
 
 function getPlayerPosition(client) {
-    //return (isGTAIV()) ? getEntityData(client, "ag.position") : client.player.position;
-    return getEntityData(client, "ag.position");
+    return client.player.position;
 }
 
 // ---------------------------------------------------------------------------
 
 function getPlayerHeading(client) {
-    //return (isGTAIV()) ? getEntityData(client, "ag.heading") : client.player.heading;
-    return getEntityData(client, "ag.heading");
+    return client.player.heading;
 }
 
 // ---------------------------------------------------------------------------
 
 function getPlayerVehicle(client) {
-    //return (isGTAIV()) ? getVehicleDataFromSyncId(getEntityData(client, "ag.vehicle")) : getVehicleData(client.player.vehicle);
-    let playerVehicle = getEntityData(client, "ag.vehicle");
-    let vehicleData = getVehicleDataFromSyncId(playerVehicle);
-    console.log(`playerVehicle: ${playerVehicle}, vehicleData: ${vehicleData}`);
-    return vehicleData;
+    return client.player.vehicle;
 }
 
 // ---------------------------------------------------------------------------
 
 function isPlayerInAnyVehicle(client) {
-    return doesEntityDataExist(client, "ag.vehicle");
+    return (client.player.vehicle != null);
 }
 
 // ---------------------------------------------------------------------------
@@ -109,41 +103,43 @@ function getPlayerVehicleSeat(client) {
 // ---------------------------------------------------------------------------
 
 function isPlayerSpawned(client) {
-    return getEntityData(client, "ag.spawned");
+    return client.player
 }
 
 // ---------------------------------------------------------------------------
 
-function getVehiclePosition(vehicleData) {
-    //return (isGTAIV()) ? vehicleData.syncPosition : vehicleData.vehicle.position;
-    return vehicleData.syncPosition;
+function getVehiclePosition(vehicle) {
+    return vehicle.position;
 }
 
 // ---------------------------------------------------------------------------
 
-function getVehicleHeading(vehicleData) {
-    //return (isGTAIV()) ? vehicleData.syncHeading : vehicleData.vehicle.heading;
-    return vehicleData.syncHeading;
+function getVehicleHeading(vehicle) {
+    return vehicle.heading;
 }
 
 // ---------------------------------------------------------------------------
 
-function getVehicleSyncer(vehicleData) {
-    if(isGTAIV()) {
-        return vehicleData.syncedBy;
-    } else {
-        vehicleData.vehicle.syncer;
-    }
+function getVehicleSyncer(vehicle) {
+    return vehicleData.vehicle.syncer;
 }
 
 // ---------------------------------------------------------------------------
 
-function getVehicleForNetworkEvent(vehicleData) {
-    if(isGTAIV()) {
-        return vehicleData.syncId;
-    } else {
-        vehicleData.vehicle.syncer;
-    }
+function getVehicleForNetworkEvent(vehicle) {
+    return vehicle;
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteGameElement(element) {
+    destroyElement(element);
+}
+
+// ---------------------------------------------------------------------------
+
+function isPlayerInFrontVehicleSeat(client) {
+    return (getPlayerVehicleSeat(client) == 0 || getPlayerVehicleSeat(client) == 1);
 }
 
 // ---------------------------------------------------------------------------

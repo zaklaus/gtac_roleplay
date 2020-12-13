@@ -1716,3 +1716,7 @@ function arrayBufferToString(arrayBuffer) {
 }
 
 // ----------------------------------------------------------------------------
+
+function getClientDisplayForConsole(client) {
+	return `${client.name}[${client.index}]`;
+}

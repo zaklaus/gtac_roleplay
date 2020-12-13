@@ -17,12 +17,12 @@ let inVehicle = null;
 
 addEventHandler("onProcess", function(event, deltaTime) {
     //if(gta.game == GAME_GTA_IV) {
-        getVehicles().forEach(function(vehicle) {
-            if(vehicle.isSyncer && getEntityData(vehicle, "ag.syncId") != null) {
-                //console.log(`Syncing vehicle ${getEntityData(vehicle, "ag.syncId")} to server. Pos: ${vehicle.position.x}, ${vehicle.position.y}, ${vehicle.position.z}`);
-                triggerNetworkEvent("ag.veh.sync", getEntityData(vehicle, "ag.syncId"), vehicle.position, vehicle.heading.toFixed(2));
-            }
-        });
+        //getVehicles().forEach(function(vehicle) {
+        //    if(vehicle.isSyncer && getEntityData(vehicle, "ag.syncId") != null) {
+        //        //console.log(`Syncing vehicle ${getEntityData(vehicle, "ag.syncId")} to server. Pos: ${vehicle.position.x}, ${vehicle.position.y}, ${vehicle.position.z}`);
+        //        triggerNetworkEvent("ag.veh.sync", getEntityData(vehicle, "ag.syncId"), vehicle.position, vehicle.heading.toFixed(2));
+        //    }
+        //});
         
         if(localPlayer != null && syncPosition) {
             if(localPlayer.health <= 0) {
@@ -30,6 +30,7 @@ addEventHandler("onProcess", function(event, deltaTime) {
             } else {
                 triggerNetworkEvent("ag.player.sync", localPlayer.position, localPlayer.heading.toFixed(2));
 
+                /*
                 if(localPlayer.vehicle) {
                     if(!inVehicle) {
                         inVehicle = localPlayer.vehicle;
@@ -46,8 +47,8 @@ addEventHandler("onProcess", function(event, deltaTime) {
                         //localPlayer.removeData("ag.vehicle", localPlayer.vehicle);
                         inVehicle = null;
                     }
-
                 }
+                */
             }
         }
     //}

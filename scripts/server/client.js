@@ -141,11 +141,11 @@ addNetworkHandler("ag.player.death", function(client, position, heading) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
-    let vehicleData = getVehicleDataFromSyncId(syncId);
-    if(vehicleData) {
-        vehicleData.syncPosition = position;
-        vehicleData.syncHeading = heading;
-    }
+    //let vehicleData = getVehicleDataFromSyncId(syncId);
+    //if(vehicleData) {
+    //    vehicleData.syncPosition = position;
+    //    vehicleData.syncHeading = heading;
+    //}
 });
 
 // ---------------------------------------------------------------------------

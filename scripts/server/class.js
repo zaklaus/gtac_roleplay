@@ -137,13 +137,13 @@ function initClassTable() {
 					return;
 				}
 
-				this.databaseId = businessAssoc("biz_id");
-				this.name = businessAssoc("biz_name");
-				this.ownerType = businessAssoc("biz_owner_type");
-				this.ownerId = businessAssoc("biz_owner_id");
-				this.locked = businessAssoc("biz_locked");
+				this.databaseId = toInteger(businessAssoc("biz_id"));
+				this.name = toString(businessAssoc("biz_name"));
+				this.ownerType = toInteger(businessAssoc("biz_owner_type"));
+				this.ownerId = toInteger(businessAssoc("biz_owner_id"));
+				this.locked = intToBool(toInteger(businessAssoc("biz_locked")));
 
-				this.entrancePosition = toVector3(businessAssoc("biz_entrance_pos_x"), businessAssoc("biz_entrance_pos_y"), businessAssoc("biz_entrance_pos_z"));
+				this.entrancePosition = toVector3(toFloat(businessAssoc("biz_entrance_pos_x")), toFloat(businessAssoc("biz_entrance_pos_y")), toFloat(businessAssoc("biz_entrance_pos_z")));
 				this.entranceRotation = toInteger(businessAssoc["biz_entrance_rot_z"]);
 				this.entranceInterior = toInteger(businessAssoc["biz_entrance_int"]);
 				this.entranceDimension = toInteger(businessAssoc["biz_entrance_vw"]);
@@ -162,13 +162,13 @@ function initClassTable() {
 					return;
 				}
 
-				this.databaseId = businessLocationAssoc("biz_loc_id");
-				this.name = businessLocationAssoc("biz_loc_name");
-				this.type = businessLocationAssoc("biz_loc_type");
-				this.business = businessLocationAssoc("biz_loc_biz");
-				this.enabled = businessLocationAssoc("biz_loc_enabled");
+				this.databaseId = toInteger(businessLocationAssoc("biz_loc_id"));
+				this.name = toString(businessLocationAssoc("biz_loc_name"));
+				this.type = toInteger(businessLocationAssoc("biz_loc_type"));
+				this.business = toInteger(businessLocationAssoc("biz_loc_biz"));
+				this.enabled = intToBool(toInteger(businessLocationAssoc("biz_loc_enabled")));
 
-				this.position = toVector3(businessLocationAssoc("biz_loc_pos_x"), businessLocationAssoc("biz_loc_pos_y"), businessLocationAssoc("biz_loc_pos_z"));
+				this.position = toVector3(toFloat(businessLocationAssoc("biz_loc_pos_x")), toFloat(businessLocationAssoc("biz_loc_pos_y")), toFloat(businessLocationAssoc("biz_loc_pos_z")));
 				this.interior = toInteger(businessLocationAssoc["biz_loc_int"]);
 				this.dimension = toInteger(businessLocationAssoc["biz_loc_vw"]);
 			}
@@ -189,9 +189,6 @@ function initClassTable() {
 				this.server = serverId;
 				this.model = (vehicle != false) ? vehicle.modelIndex : 0;
 				this.vehicle = vehicle;
-				this.tempVehicle = false;
-				this.streamedBy = false; // For IV only
-				this.syncId = -1;
 				
 				// Ownership
 				this.ownerType = AG_VEHOWNER_NONE;
@@ -205,8 +202,6 @@ function initClassTable() {
 				this.spawnPosition = (vehicle) ? vehicle.position : toVector3(0.0, 0.0, 0.0);
 				this.spawnRotation = (vehicle) ? vehicle.heading : 0.0;
 				this.spawnLocked = false;
-				this.syncPosition = toVector3(0.0, 0.0, 0.0); // For IV only
-				this.syncHeading = 0.0; // For IV only
 				
 				// Colour Info
 				this.colour1IsRGBA = 0;
@@ -217,10 +212,10 @@ function initClassTable() {
 				this.colour2RGBA = toColour(255, 255, 255, 255);
 				this.colour3RGBA = toColour(255, 255, 255, 255);
 				this.colour4RGBA = toColour(255, 255, 255, 255);		
-				this.colour1 = vehicle.colour1 || 1;
-				this.colour2 = vehicle.colour2 || 1;
-				this.colour3 = vehicle.colour3 || 1; 
-				this.colour4 = vehicle.colour4 || 1;
+				this.colour1 = (vehicle) ? vehicle.colour1 : 1;
+				this.colour2 = (vehicle) ? vehicle.colour2 : 1;
+				this.colour3 = (vehicle) ? vehicle.colour3 : 1; 
+				this.colour4 = (vehicle) ? vehicle.colour4 : 1;
 
 				// Vehicle Attributes
 				this.locked = false;
@@ -233,49 +228,48 @@ function initClassTable() {
 				
 				if(vehicleAssoc) {
 					// General Info
-					this.databaseId = vehicleAssoc["veh_id"];
-					this.server = vehicleAssoc["veh_server"];
-					this.model = vehicleAssoc["veh_model"];
-					this.tempVehicle = false;
+					this.databaseId = toInteger(vehicleAssoc["veh_id"]);
+					this.server = toInteger(vehicleAssoc["veh_server"]);
+					this.model = toInteger(vehicleAssoc["veh_model"]);
 					
 					// Ownership
-					this.ownerType = vehicleAssoc["veh_owner_type"];
-					this.ownerId = vehicleAssoc["veh_owner_id"];
-					this.buyPrice = vehicleAssoc["veh_buy_price"];
-					this.rentPrice = vehicleAssoc["veh_buy_price"];
+					this.ownerType = toInteger(vehicleAssoc["veh_owner_type"]);
+					this.ownerId = toInteger(vehicleAssoc["veh_owner_id"]);
+					this.buyPrice = toInteger(vehicleAssoc["veh_buy_price"]);
+					this.rentPrice = toInteger(vehicleAssoc["veh_buy_price"]);
 					
 					// Position and Rotation
 					this.spawnPosition = toVector3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
 					this.spawnRotation = toInteger(vehicleAssoc["veh_rot_z"]);
-					this.spawnLocked = vehicleAssoc["veh_spawn_lock"];
+					this.spawnLocked = intToBool(toInteger(vehicleAssoc["veh_spawn_lock"]));
 					
 					// Colour Info
-					this.colour1IsRGBA = vehicleAssoc["veh_col1_isrgba"];
-					this.colour2IsRGBA = vehicleAssoc["veh_col2_isrgba"];
-					this.colour3IsRGBA = vehicleAssoc["veh_col3_isrgba"];
-					this.colour4IsRGBA = vehicleAssoc["veh_col4_isrgba"];		
-					this.colour1RGBA = toColour(vehicleAssoc["veh_col1_r"], vehicleAssoc["veh_col1_g"], vehicleAssoc["veh_col1_b"], vehicleAssoc["veh_col1_a"]);
-					this.colour2RGBA = toColour(vehicleAssoc["veh_col2_r"], vehicleAssoc["veh_col2_g"], vehicleAssoc["veh_col2_b"], vehicleAssoc["veh_col2_a"]);
-					this.colour3RGBA = toColour(vehicleAssoc["veh_col3_r"], vehicleAssoc["veh_col3_g"], vehicleAssoc["veh_col3_b"], vehicleAssoc["veh_col3_a"]);
-					this.colour4RGBA = toColour(vehicleAssoc["veh_col4_r"], vehicleAssoc["veh_col4_g"], vehicleAssoc["veh_col4_b"], vehicleAssoc["veh_col4_a"]);		
-					this.colour1 = vehicleAssoc["veh_col1"];
-					this.colour2 = vehicleAssoc["veh_col2"];
-					this.colour3 = vehicleAssoc["veh_col3"];
-					this.colour4 = vehicleAssoc["veh_col4"];	
+					this.colour1IsRGBA = intToBool(toInteger(vehicleAssoc["veh_col1_isrgba"]));
+					this.colour2IsRGBA = intToBool(toInteger(vehicleAssoc["veh_col2_isrgba"]));
+					this.colour3IsRGBA = intToBool(toInteger(vehicleAssoc["veh_col3_isrgba"]));
+					this.colour4IsRGBA = intToBool(toInteger(vehicleAssoc["veh_col4_isrgba"]));		
+					this.colour1RGBA = toColour(toInteger(vehicleAssoc["veh_col1_r"]), toInteger(vehicleAssoc["veh_col1_g"]), toInteger(vehicleAssoc["veh_col1_b"]), toInteger(vehicleAssoc["veh_col1_a"]));
+					this.colour2RGBA = toColour(toInteger(vehicleAssoc["veh_col2_r"]), toInteger(vehicleAssoc["veh_col2_g"]), toInteger(vehicleAssoc["veh_col2_b"]), toInteger(vehicleAssoc["veh_col2_a"]));
+					this.colour3RGBA = toColour(toInteger(vehicleAssoc["veh_col3_r"]), toInteger(vehicleAssoc["veh_col3_g"]), toInteger(vehicleAssoc["veh_col3_b"]), toInteger(vehicleAssoc["veh_col3_a"]));
+					this.colour4RGBA = toColour(toInteger(vehicleAssoc["veh_col4_r"]), toInteger(vehicleAssoc["veh_col4_g"]), toInteger(vehicleAssoc["veh_col4_b"]), toInteger(vehicleAssoc["veh_col4_a"]));		
+					this.colour1 = toInteger(vehicleAssoc["veh_col1"]);
+					this.colour2 = toInteger(vehicleAssoc["veh_col2"]);
+					this.colour3 = toInteger(vehicleAssoc["veh_col3"]);
+					this.colour4 = toInteger(vehicleAssoc["veh_col4"]);	
 
 					// Vehicle Attributes
-					this.locked = vehicleAssoc["veh_locked"];
-					this.engine = vehicleAssoc["veh_engine"];
-					this.lights = vehicleAssoc["veh_lights"];
-					this.health = vehicleAssoc["veh_damage_normal"];
-					this.engineDamage = vehicleAssoc["veh_damage_engine"];
-					this.visualDamage = vehicleAssoc["veh_damage_visual"];
-					this.dirtLevel = vehicleAssoc["veh_dirt_level"];
+					this.locked = intToBool(toInteger(vehicleAssoc["veh_locked"]));
+					this.engine = intToBool(toInteger(vehicleAssoc["veh_engine"]));
+					this.lights = intToBool(toInteger(vehicleAssoc["veh_lights"]));
+					this.health = toInteger(vehicleAssoc["veh_damage_normal"]);
+					this.engineDamage = toInteger(vehicleAssoc["veh_damage_engine"]);
+					this.visualDamage = toInteger(vehicleAssoc["veh_damage_visual"]);
+					this.dirtLevel = toInteger(vehicleAssoc["veh_dirt_level"]);
 
 					// Other/Misc
-					this.insuranceAccount = 0;
-					this.fuel = 0;
-					this.flags = 0;
+					this.insuranceAccount = toInteger(0);
+					this.fuel = toInteger(0);
+					this.flags = toInteger(0);
 				}
 			}
 		},

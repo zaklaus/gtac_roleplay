@@ -10,20 +10,7 @@
 
 function initChatScript() {
 	console.log("[Asshat.Chat]: Initializing chat script ...");
-	addChatCommandHandlers();
 	console.log("[Asshat.Chat]: Chat script initialized successfully!");
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addChatCommandHandlers() {
-	console.log("[Asshat.Chat]: Adding chat command handlers ...");
-	let chatCommands = serverCommands.chat;
-	for(let i in chatCommands) {
-		addCommandHandler(chatCommands[i].command, chatCommands[i].handlerFunction);
-	}	
-	console.log("[Asshat.Chat]: Chat command handlers added successfully!");
 	return true;
 }
 

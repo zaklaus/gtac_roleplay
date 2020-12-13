@@ -158,19 +158,7 @@ let serverConfig = {
 
 function initConfigScript() {
 	console.log("[Asshat.Config]: Initializing config script ...");
-	addConfigCommandHandlers();
 	console.log("[Asshat.Config]: Config script initialized!");
-}
-
-// ---------------------------------------------------------------------------
-
-function addConfigCommandHandlers() {
-	console.log("[Asshat.Config]: Adding config command handlers ...");
-	let configCommands = serverCommands.config;
-	for(let i in configCommands) {
-		addCommandHandler(configCommands[i].command, configCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Config]: Config command handlers added!");
 }
 
 // ---------------------------------------------------------------------------

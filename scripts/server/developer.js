@@ -10,20 +10,7 @@
 
 function initDeveloperScript() {
 	console.log("[Asshat.Developer]: Initializing developer script ...");
-	addDeveloperCommandHandlers()
 	console.log("[Asshat.Developer]: Developer script initialized successfully!");
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addDeveloperCommandHandlers() {
-	console.log("[Asshat.Developer]: Adding developer command handlers ...");
-	let developerCommands = serverCommands.developer;
-	for(let i in developerCommands) {
-		addCommandHandler(developerCommands[i].command, developerCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Developer]: Developer command handlers added!");
 	return true;
 }
 
@@ -105,24 +92,7 @@ function executeClientCodeCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function saveAllServerDataCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
 
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	messageClientInfo(client, `[#FF9900]Saving all server data to database ...`);
 	saveAllServerDataToDatabase();
@@ -133,24 +103,7 @@ function saveAllServerDataCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function restartGameModeCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
 
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	consoleCommand("refresh");
 	thisResource.restart();

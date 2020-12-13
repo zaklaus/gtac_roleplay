@@ -10,43 +10,12 @@
 
 function initAccountScript() {
 	console.log("[Asshat.Account]: Initializing account script ...");
-	addAccountCommandHandlers();
 	console.log("[Asshat.Account]: Account script initialized!");
 }
 
 // ---------------------------------------------------------------------------
 
-function addAccountCommandHandlers() {
-	console.log("[Asshat.Account]: Adding account command handlers ...");
-	let accountCommands = serverCommands.account;
-	for(let i in accountCommands) {
-		addCommandHandler(accountCommands[i].command, accountCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Account]: Account command handlers added!");
-}
-
-// ---------------------------------------------------------------------------
-
 function loginCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
 	if(!isClientRegistered(client)) {
 		messageClientError(client, "Your name is not registered! Use /register to make an account.");
 		return false;
@@ -64,25 +33,6 @@ function loginCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function autoLoginByIPCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
 	
 	if(getClientData(client).accountData.settings & flagValue) {
@@ -98,25 +48,6 @@ function autoLoginByIPCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function registerCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(isClientRegistered(client)) {
 		messageClientError(client, "Your name is already registered!");
 		return false;
@@ -136,25 +67,6 @@ function registerCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function changePasswordCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -177,104 +89,6 @@ function changePasswordCommand(command, params, client) {
 	
 	getClientData(client).accountData.password = hashAccountPassword(getClientData(client).accountData.name, params);
 	messageClientSuccess(client, "Your password has been changed!");
-}
-
-// ---------------------------------------------------------------------------
-
-function switchCharacterCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
-	getClientCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
-	getClientCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
-
-	saveSubAccountToDatabase(getClientCurrentSubAccount(client));
-	
-	client.despawnPlayer();
-	showConnectCameraToPlayer(client);
-	showCharacterSelectToClient(client);
-}
-
-// ---------------------------------------------------------------------------
-
-function newCharacterCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
-	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
-
-	let splitParams = params.split(" ");
-	let firstName = splitParams[0];
-	let lastName = splitParams[1];
-
-	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", getServerConfig().newCharacter.skin);	
-}
-
-// ---------------------------------------------------------------------------
-
-function useCharacterCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
-	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
-
-	let characterId = toInteger(params) || 1;
-
-	selectCharacter(client, characterId-1);
 }
 
 // ---------------------------------------------------------------------------

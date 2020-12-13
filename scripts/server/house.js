@@ -12,20 +12,7 @@ function initHouseScript() {
 	console.log("[Asshat.House]: Initializing house script ...");
 	getServerData().houses = loadHousesFromDatabase();
 	createAllHousePickups();
-	addHouseCommandHandlers();
 	console.log("[Asshat.House]: House script initialized successfully!");
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addHouseCommandHandlers() {
-	console.log("[Asshat.House]: Adding house commands!");
-	let houseCommands = serverCommands.house;
-	for(let i in houseCommands) {
-		addCommandHandler(houseCommands[i].command, houseCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.House]: House commands added!");
 	return true;
 }
 

@@ -12,20 +12,7 @@ function initBusinessScript() {
 	console.log("[Asshat.Business]: Initializing business script ...");
 	getServerData().businesses = loadBusinessesFromDatabase();
 	createAllBusinessPickups();
-	addBusinessCommandHandlers();
 	console.log("[Asshat.Business]: Business script initialized successfully!");
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addBusinessCommandHandlers() {
-	console.log("[Asshat.Business]: Adding business commands!");
-	let businessCommands = serverCommands.business;
-	for(let i in businessCommands) {
-		addCommandHandler(businessCommands[i].command, businessCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Business]: Business commands added!");
 	return true;
 }
 
@@ -91,25 +78,6 @@ function loadBusinessLocationsFromDatabase(businessId) {
 // ---------------------------------------------------------------------------
 
 function createBusinessCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-	
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -127,25 +95,6 @@ function createBusinessCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function createBusinessLocationCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-	
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -186,25 +135,6 @@ function createBusiness(name, entrancePosition, interiorId, virtualWorld) {
 // ---------------------------------------------------------------------------
 
 function deleteBusinessCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -218,28 +148,6 @@ function deleteBusinessCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function deleteBusinessLocationCommand(command, params, client) {
-	messageClientError(client, "This command is under construction!");
-	return false;
-
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -253,25 +161,6 @@ function deleteBusinessLocationCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setBusinessNameCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -289,25 +178,6 @@ function setBusinessNameCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setBusinessOwnerCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -340,25 +210,6 @@ function setBusinessOwnerCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function lockBusinessCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -380,25 +231,6 @@ function lockBusinessCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setBusinessEntranceFeeCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -416,25 +248,6 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function withdrawFromBusinessCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -461,25 +274,6 @@ function withdrawFromBusinessCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function depositIntoBusinessCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -504,25 +298,6 @@ function depositIntoBusinessCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function viewBusinessTillAmountCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	//if(areParamsEmpty(params)) {
 	//	messageClientSyntax(client, getCommandSyntaxText(command));
 	//	return false;

@@ -13,24 +13,6 @@ function policeTazerCommand(command, params, client) {
         return false;
     }
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	return true;
 }
@@ -42,24 +24,6 @@ function policeCuffCommand(command, params, client) {
         return false;
     }
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	return true;
 }
@@ -71,24 +35,6 @@ function policeArrestCommand(command, params, client) {
         return false;
     }
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	return true;
 }
@@ -100,24 +46,6 @@ function policeSearchCommand(command, params, client) {
         return false;
     }
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	return true;
 }
@@ -129,24 +57,6 @@ function policeDragCommand(command, params, client) {
         return false;
     }
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	return true;
 }
@@ -158,24 +68,6 @@ function policeDetainCommand(command, params, client) {
         return false;
     }
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	return true;
 }

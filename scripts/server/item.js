@@ -14,12 +14,6 @@ function initItemScript() {
 
 // ---------------------------------------------------------------------------
 
-function addItemCommandHandlers() {
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
 function loadItemsFromDatabase() {
 	let tempItems = [];
 	let dbConnection = connectToDatabase();

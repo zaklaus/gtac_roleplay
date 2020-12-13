@@ -9,16 +9,6 @@
 // ===========================================================================
 
 function initModerationScript() {
-	addModerationCommandHandlers();
-}
-
-// ---------------------------------------------------------------------------
-
-function addModerationCommandHandlers() {
-	let moderationCommands = serverCommands.moderation;
-	for(let i in moderationCommands) {
-		addCommandHandler(moderationCommands[i].command, moderationCommands[i].handlerFunction);
-	}
 }
 
 // ---------------------------------------------------------------------------

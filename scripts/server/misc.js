@@ -10,22 +10,9 @@
 
 // ---------------------------------------------------------------------------
 
-function initBusinessScript() {
+function initMiscScript() {
 	console.log("[Asshat.Misc]: Initializing misc script ...");
-	addMiscCommandHandlers();
 	console.log("[Asshat.Misc]: Misc script initialized successfully!");
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addMiscCommandHandlers() {
-	console.log("[Asshat.Misc]: Adding misc commands!");
-	let businessCommands = serverCommands.misc;
-	for(let i in businessCommands) {
-		addCommandHandler(businessCommands[i].command, businessCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Misc]: Misc commands added!");
 	return true;
 }
 

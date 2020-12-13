@@ -12,25 +12,12 @@ function initJobScript() {
 	console.log("[Asshat.Job]: Initializing job script ...");
 	getServerData().jobs = loadJobsFromDatabase();
 
-	addJobCommandHandlers();
 	createAllJobPickups();
 	createAllJobBlips();
 
 	//addEvent("onJobPickupCollected", null, 2);
 
 	console.log("[Asshat.Job]: Job script initialized successfully!");
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addJobCommandHandlers() {
-	console.log("[Asshat.Job]: Adding job command handlers ...");
-	let jobCommands = serverCommands.job;
-	for(let i in jobCommands) {
-		addCommandHandler(jobCommands[i].command, jobCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Job]: Job command handlers added successfully!");
 	return true;
 }
 
@@ -382,24 +369,6 @@ function startWorkingCommand(command, params, client) {
 		return false;
 	}
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	let closestJobLocation = getClosestJobLocation(client.player.position);
 	let jobData = getJobData(closestJobLocation.job);
@@ -435,24 +404,6 @@ function stopWorkingCommand(command, params, client) {
 		return false;
 	}
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	let closestJobLocation = getClosestJobLocation(client.player.position);
 
@@ -608,24 +559,6 @@ function stopWorking(client) {
 // ---------------------------------------------------------------------------
 
 function jobUniformCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	let jobId = getClientCurrentSubAccount(client).job;
 	let uniforms = getJobData(jobId).uniforms;
@@ -659,24 +592,6 @@ function jobUniformCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function jobEquipmentCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	let jobId = getClientCurrentSubAccount(client).job;
 	let equipments = getJobData(jobId).equipment;
@@ -713,25 +628,7 @@ function quitJobCommand(command, params, client) {
 		return false;
 	}
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
 
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
 	quitJob(client);
 	messageClientSuccess(client, "You are now unemployed!");
 	return true;
@@ -744,24 +641,7 @@ function jobRadioCommand(command, params, client) {
 		return false;
 	}
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
 
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	return true;
 }
@@ -773,24 +653,6 @@ function jobDepartmentRadioCommand(command, params, client) {
 		return false;
 	}
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	return true;
 }
@@ -828,24 +690,7 @@ function takeJob(client, jobId) {
 // ---------------------------------------------------------------------------
 
 function reloadAllJobsCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
 
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 
 	for(let i in getServerData().jobs) {
 		for(let j in getServerData().jobs[i].locations) {

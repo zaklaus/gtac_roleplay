@@ -20,19 +20,7 @@ const banType = {
 
 function initBanScript() {
     console.log("[Asshat.Ban]: Initializing ban script ...");
-    addBanCommandHandlers();
     console.log("[Asshat.Ban]: Ban script initialized!");
-}
-
-// ---------------------------------------------------------------------------
-
-function addBanCommandHandlers() {
-    console.log("[Asshat.Ban]: Adding ban command handlers ...");
-	let banCommands = getServerData().commands.ban;
-	for(let i in banCommands) {
-		addCommandHandler(banCommands[i].command, banCommands[i].handlerFunction);
-    }
-    console.log("[Asshat.Ban]: Bans command handlers added! ...");
 }
 
 // ---------------------------------------------------------------------------

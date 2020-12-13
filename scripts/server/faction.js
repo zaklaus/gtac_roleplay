@@ -12,20 +12,7 @@
 
 function initFactionScript() {
 	console.log("[Asshat.Faction]: Initializing faction script ...");
-	addFactionCommandHandlers();
 	console.log("[Asshat.Faction]: Faction script initialized!");	
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addFactionCommandHandlers() {
-	console.log("[Asshat.Faction]: Adding faction command handlers ...");
-	let factionCommands = serverCommands.faction;
-	for(let i in factionCommands) {
-		addCommandHandler(factionCommands[i].command, factionCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Faction]: Faction command handlers added!");	
 	return true;
 }
 

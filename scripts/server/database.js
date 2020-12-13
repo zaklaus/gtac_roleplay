@@ -25,19 +25,7 @@ let persistentDatabaseConnection = null;
 
 function initDatabaseScript() {
 	console.log("[Asshat.Database]: Initializing database script ...");
-	addDatabaseCommandHandlers()
 	console.log("[Asshat.Database]: Database script initialized successfully!");
-}
-
-// ----------------------------------------------------------------------------
-
-function addDatabaseCommandHandlers() {
-	console.log("[Asshat.Database]: Adding database command handlers ...");
-	let databaseCommands = serverCommands.database;
-	for(let i in databaseCommands) {
-		addCommandHandler(databaseCommands[i].command, databaseCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Database]: Database command handlers added!");
 }
 
 // ----------------------------------------------------------------------------
@@ -78,6 +66,9 @@ function queryDatabase(dbConnection, queryString) {
 // ----------------------------------------------------------------------------
 
 function escapeDatabaseString(dbConnection, unsafeString) {
+	if(!dbConnection) {
+		dbConnection = connectToDatabase();
+	}
 	return dbConnection.escapeString(unsafeString);
 }
 
@@ -104,6 +95,19 @@ function freeDatabaseQuery(dbQuery) {
 
 function fetchQueryAssoc(dbQuery) {
 	return dbQuery.fetchAssoc();
+}
+
+// ----------------------------------------------------------------------------
+
+function quickDatabaseQuery(queryString) {
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let dbQuery = queryDatabase(dbConnection, queryString);
+		if(dbQuery) {
+			dbQuery.free();
+		}
+		disconnectFromDatabase();
+	}
 }
 
 // ----------------------------------------------------------------------------

@@ -13,20 +13,7 @@ function initVehicleScript() {
 	console.log("[Asshat.Vehicle]: Initializing vehicle script ...");
 	getServerData().vehicles = loadVehiclesFromDatabase();
 	spawnAllVehicles();
-	addVehicleCommandHandlers();
 	console.log("[Asshat.Vehicle]: Vehicle script initialized successfully!");
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addVehicleCommandHandlers() {
-	console.log("[Asshat.Vehicle]: Adding vehicle command handlers ...");
-	let vehicleCommands = serverCommands.vehicle;
-	for(let i in vehicleCommands) {
-		addCommandHandler(vehicleCommands[i].command, vehicleCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Vehicle]: Vehicle command handlers added successfully!");
 	return true;
 }
 
@@ -137,25 +124,6 @@ function getVehicleData(vehicle) {
 // ---------------------------------------------------------------------------
 
 function createVehicleCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	let modelId = getVehicleModelIdFromParams(params);
 
 	if(!modelId) {
@@ -188,25 +156,6 @@ function createVehicleCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function createTemporaryVehicleCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	let modelId = getVehicleModelIdFromParams(params);
 
 	if(!modelId) {
@@ -232,25 +181,6 @@ function createTemporaryVehicleCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function vehicleLockCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	let vehicleData = getClosestVehicle(getPlayerPosition(client));
 	if(!getPlayerVehicle(client) && getVehiclePosition(vehicleData).distance(getPlayerPosition(client)) > getServerConfig().vehicleLockDistance) {
 		messageClientError(client, "You need to be in or near a vehicle!");
@@ -286,25 +216,6 @@ function vehicleLockCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function vehicleLightsCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!getPlayerVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -327,25 +238,6 @@ function vehicleLightsCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function vehicleEngineCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!getPlayerVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -373,25 +265,6 @@ function vehicleEngineCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function vehicleSirenCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!getPlayerVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -418,25 +291,6 @@ function vehicleSirenCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setVehicleColourCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!getPlayerVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -472,25 +326,6 @@ function setVehicleColourCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function vehicleRepairCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -520,25 +355,6 @@ function vehicleRepairCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function buyVehicleCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -565,25 +381,6 @@ function buyVehicleCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function rentVehicleCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -607,25 +404,6 @@ function rentVehicleCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function stopRentingVehicleCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}	
-
 	//getClientCurrentSubAccount(client).cash -= getVehicleData(vehicle).rentPrice;
 	let vehicle = getClientCurrentSubAccount(client).rentingVehicle;
 	stopRentingVehicle(client);
@@ -712,25 +490,6 @@ function getVehicleName(modelId) {
 // ---------------------------------------------------------------------------
 
 function setVehicleJobCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -760,25 +519,6 @@ function setVehicleJobCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setVehicleClanCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -801,25 +541,6 @@ function setVehicleClanCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setVehicleOwnerCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -842,25 +563,6 @@ function setVehicleOwnerCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setVehicleRentPriceCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -884,25 +586,6 @@ function setVehicleRentPriceCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setVehicleBuyPriceCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -926,25 +609,6 @@ function setVehicleBuyPriceCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function removeVehicleOwnerCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -968,25 +632,6 @@ function removeVehicleOwnerCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function getVehicleInfoCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -1025,25 +670,6 @@ function getVehicleInfoCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function toggleVehicleSpawnLockCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!isPlayerInAnyVehicle(client)) {
 		messageClientError(client, "You need to be in a vehicle!");
 		return false;		
@@ -1065,25 +691,6 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function reloadAllVehiclesCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	for(let i in getServerData().vehicles) {
 		if(getServerData().vehicles[i].vehicle) {
 			deleteGameElement(getServerData().vehicles[i].vehicle);
@@ -1100,25 +707,6 @@ function reloadAllVehiclesCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function respawnAllVehiclesCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	for(let i in getServerData().vehicles) {
 		if(getServerData().vehicles[i].vehicle) {
 			deleteGameElement(getServerData().vehicles[i].vehicle);

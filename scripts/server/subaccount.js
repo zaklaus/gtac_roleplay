@@ -10,19 +10,7 @@
 
 function initSubAccountScript() {
 	console.log("[Asshat.SubAccount]: Initializing account script ...");
-	addSubAccountCommandHandlers();
 	console.log("[Asshat.SubAccount]: Account script initialized!");
-}
-
-// ---------------------------------------------------------------------------
-
-function addSubAccountCommandHandlers() {
-	console.log("[Asshat.SubAccount]: Adding sub account command handlers ...");
-	let subAccountCommands = serverCommands.subAccount;
-	for(let i in subAccountCommands) {
-		addCommandHandler(subAccountCommands[i].command, subAccountCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.SubAccount]: Sub Account command handlers added!");
 }
 
 // ---------------------------------------------------------------------------
@@ -239,10 +227,48 @@ function selectCharacter(client, characterId = -1) {
 	setEntityData(client, "ag.spawned", true, true);
 	setEntityData(client, "ag.position", tempSubAccount.spawnPosition, true);
 	setEntityData(client, "ag.heading", tempSubAccount.spawnHeading, true);
-
-	if(isGTAIV()) {
-		triggerNetworkEvent("ag.iv.syncPosition", client, true);
-		spawnAllVehicles();
-	}
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);
+
+// ---------------------------------------------------------------------------
+
+function switchCharacterCommand(command, params, client) {
+	getClientCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
+	getClientCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
+
+	saveSubAccountToDatabase(getClientCurrentSubAccount(client));
+	
+	client.despawnPlayer();
+	showConnectCameraToPlayer(client);
+	showCharacterSelectToClient(client);
+}
+
+// ---------------------------------------------------------------------------
+
+function newCharacterCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let firstName = splitParams[0];
+	let lastName = splitParams[1];
+
+	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", getServerConfig().newCharacter.skin);	
+}
+
+// ---------------------------------------------------------------------------
+
+function useCharacterCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let characterId = toInteger(params) || 1;
+
+	selectCharacter(client, characterId-1);
+}
+
+// ---------------------------------------------------------------------------

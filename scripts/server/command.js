@@ -15,20 +15,7 @@ let serverCommands = {};
 function initCommandScript() {
     console.log("[Asshat.Command]: Initializing commands script ...");
     serverCommands = loadCommandData();
-    addCommandCommandHandlers();
     console.log("[Asshat.Command]: Initialized commands script!");
-}
-
-// ---------------------------------------------------------------------------
-
-function addCommandCommandHandlers() {
-	console.log("[Asshat.Clan]: Adding command command handlers ...");
-	let commandCommands = serverCommands.command;
-	for(let i in commandCommands) {
-		addCommandHandler(commandCommands[i].command, commandCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Command]: Command command handlers added successfully!");
-	return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -205,11 +192,14 @@ function getCommand(command) {
     let commandGroups = getCommands()
     for(let i in commandGroups) {
         let commandGroup = commandGroups[i];
-        for(let j in commandGroup)
-        if(toLowerCase(commandGroup[j].command) == toLowerCase(command)) {
-            return commandGroup[j];
+        for(let j in commandGroup) {
+            if(toLowerCase(commandGroup[j].command) == toLowerCase(command)) {
+                return commandGroup[j];
+            }
         }
     }
+
+    return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -251,128 +241,130 @@ function isCommandAllowedOnDiscord(command) {
 // ---------------------------------------------------------------------------
 
 function disableCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
-	}
+    }
+    
+    params = toLowerCase(params);
 
-	removeCommandHandler(params);
-	messageClientSuccess(client, `[#FF9900]All server data saved to database!`);
+    if(!getCommand(params)) {
+        messageClientError(client, `The command [#CCCCCC]/${params} [#FFFFFF] does not exist!`);
+        return false;
+    }    
+
+    getCommand(params).enabled = false;
+	messageClientSuccess(client, `Command [#CCCCCC]/${params} [#FFFFFF]has been disabled!`);
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function enableCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
-	}
+    }
+    
+    params = toLowerCase(params);
 
-	addCommandHandler(params, getCommand(params).handlerFunction);
-	messageClientSuccess(client, `[#FF9900]All server data saved to database!`);
+    if(!getCommand(params)) {
+        messageClientError(client, `The command [#CCCCCC]/${params} [#FFFFFF] does not exist!`);
+        return false;
+    }    
+
+    getCommand(params).enabled = true;
+	messageClientSuccess(client, `Command [#CCCCCC]/${params} [#FFFFFF]has been enabled!`);
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function disableAllCommandsByType(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
 	}
 
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-    }
-    
     params = toLowerCase(params);
     
     if(isNull(getServerData().commands[params])) {
-        messageClientError(client, "That command type does not exist!");
+        messageClientError(client, `Command type [#CCCCCC]${params} [#FFFFFF]does not exist!`);
         return false;
     }    
 
     for(let i in getServerData().commands[params]) {
-        removeCommandHandler(getServerData().commands[params][i].command);
+        getServerData().commands[params][i].enabled = false;
     }
 
-	messageClientSuccess(client, `[#FF9900]All ${params} commands have been disabled!`);
+	messageClientSuccess(client, `[#FF9900]All [#CCCCCC]${params} [#FFFFFF]commands have been disabled!`);
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function enableAllCommandsByType(command, params, client) {
-	if(getCommand(command).requireLogin) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+    }
+        
+    params = toLowerCase(params);
+    
+    if(isNull(getServerData().commands[params])) {
+        messageClientError(client, `Command type [#CCCCCC]${params} [#FFFFFF]does not exist!`);
+        return false;
+    }
+
+    for(let i in getServerData().commands[params]) {
+        getServerData().commands[params][i].enabled = true;
+    }
+
+	messageClientSuccess(client, `[#FF9900]All [#CCCCCC]${params} [#FFFFFF]commands have been enabled!`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnPlayerCommand", function(event, client, command, params) {
+    let commandData = getCommand(command);
+
+    if(!commandData) {
+        messageClientError(client, `The command [#CCCCCC]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+        return false;
+    }
+
+    if(!commandData.enabled) {
+        messageClientError(client, `The command [#CCCCCC]/${command} [#FFFFFF]is disabled!`);
+        return false;
+    }
+
+	if(doesCommandRequireLogin(command)) {
 		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+			messageClientError(client, `You must be logged in to use the [#CCCCCC]/${command} [#FFFFFF]command!`);
 			return false;
 		}
 	}
 
 	if(isClientFromDiscord(client)) {
 		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
+			messageClientError(client, `The [#CCCCCC]/${command} [#FFFFFF] command isn't available on discord!`);
 			return false;
 		}		
-	}	
+	}
 
 	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+		messageClientError(client, `You do not have permission to use the [#CCCCCC]/${command} [#FFFFFF]command!`);
 		return false;
     }
 
-    params = toLowerCase(params);
+    let paramsDisplay = params;
+    if(areParamsEmpty(params)) {
+        paramsDisplay = ""
+    }
     
-    if(isNull(getServerData().commands[params])) {
-        messageClientError(client, "That command type does not exist!");
-        return false;
-    }
+    console.log(`[Asshat.Command] ${getClientDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
+    commandData.handlerFunction(command, params, client);
+});
 
-    for(let i in getServerData().commands[params]) {
-        let command = getServerData().commands[params][i].command;
-        addCommandHandler(command, getServerData().commands[params][i].handlerFunction);
-    }
-
-	messageClientSuccess(client, `[#FF9900]All ${params} commands have been enabled!`);
-	return true;
-}
+// ---------------------------------------------------------------------------

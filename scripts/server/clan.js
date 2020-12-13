@@ -11,20 +11,7 @@
 function initClanScript() {
 	console.log("[Asshat.Clan]: Initializing clans script ...");
 	getServerData().clans = loadClansFromDatabase();
-	addClanCommandHandlers();
 	console.log("[Asshat.Clan]: Clan script initialized successfully!");
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
-function addClanCommandHandlers() {
-	console.log("[Asshat.Clan]: Adding clan command handlers ...");
-	let clanCommands = serverCommands.clan;
-	for(let i in clanCommands) {
-		addCommandHandler(clanCommands[i].command, clanCommands[i].handlerFunction);
-	}
-	console.log("[Asshat.Clan]: Clan command handlers added successfully!");
 	return true;
 }
 
@@ -61,25 +48,6 @@ function loadClansFromDatabase() {
 // ----------------------------------------------------------------------------
 
 function createClanCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -98,25 +66,6 @@ function createClanCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function deleteClanCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -139,25 +88,6 @@ function deleteClanCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanOwnerCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "owner")) {
 		messageClientError(client, "You must be the clan owner to use this command!");
 		return false;
@@ -172,25 +102,6 @@ function setClanOwnerCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanTagCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "clanTag")) {
 		messageClientError(client, "You can not change the clan tag!");
 		return false;
@@ -205,25 +116,6 @@ function setClanTagCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanNameCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "clanName")) {
 		messageClientError(client, "You can not change the clan name!");
 		return false;
@@ -238,25 +130,6 @@ function setClanNameCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanMemberTagCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "memberTag")) {
 		messageClientError(client, "You can not change a clan member's tag!");
 		return false;
@@ -271,25 +144,6 @@ function setClanMemberTagCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanRankTagCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "rankTag")) {
 		messageClientError(client, "You can not change a clan ranks's tag!");
 		return false;
@@ -304,25 +158,6 @@ function setClanRankTagCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanMemberFlagsCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "memberFlags")) {
 		messageClientError(client, "You can not change a clan member's permissions!");
 		return false;
@@ -337,25 +172,6 @@ function setClanMemberFlagsCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanRankFlagsCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "rankFlags")) {
 		messageClientError(client, "You can not change a clan ranks's permissions!");
 		return false;
@@ -370,25 +186,6 @@ function setClanRankFlagsCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanMemberTitleCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "memberFlags")) {
 		messageClientError(client, "You can not change a clan member's title!");
 		return false;
@@ -403,25 +200,6 @@ function setClanMemberTitleCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanRankTitleCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}		
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(!doesClientHaveClanPermission(client, "rankTitle")) {
 		messageClientError(client, "You can not change a clan ranks's title!");
 		return false;

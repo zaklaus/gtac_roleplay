@@ -87,8 +87,12 @@ let serverConfig = {
 			ammunation: 20,
 			payAndSpray: 18,
 			vehicleDealership: 6,
+			restaurant: -1,
+			fastFood: -1,
 			bank: 0,
 			fuelStation: -1,
+			business: -1,
+			house: -1,
 		},
 		{	// GTA VC
 			policeStation: 0,
@@ -97,8 +101,12 @@ let serverConfig = {
 			ammunation: 16,
 			payAndSpray: 27,
 			vehicleDealership: 7,
+			restaurant: -1,
+			fastFood: -1,
 			bank: 0,
 			fuelStation: -1,
+			business: -1,
+			house: -1,			
 		},
 		{	// GTA SA
 			policeStation: 30,
@@ -107,8 +115,12 @@ let serverConfig = {
 			ammunation: 6,
 			payAndSpray: 63,
 			vehicleDealership: 55,
+			restaurant: -1,
+			fastFood: -1,
 			bank: 52,
 			fuelStation: 0,
+			business: -1,
+			house: -1,			
 		},
 		{	// GTA UG
 			policeStation: 8,
@@ -117,8 +129,12 @@ let serverConfig = {
 			ammunation: 20,
 			payAndSpray: 18,
 			vehicleDealership: 6,
+			restaurant: -1,
+			fastFood: -1,
 			bank: 52,
 			fuelStation: 0,
+			business: -1,
+			house: -1,			
 		},
 		{	// GTA IV
 			policeStation: 8,
@@ -127,15 +143,36 @@ let serverConfig = {
 			ammunation: 20,
 			payAndSpray: 18,
 			vehicleDealership: 6,
+			restaurant: -1,
+			fastFood: -1,
 			bank: 52,
 			fuelStation: 0,
+			business: -1,
+			house: -1,			
 		},						
 	],
+	pickupModels: {
 
+	},
+	pickupTypes: [
+		{},
+
+		{ // GTA 3
+			business: 2,
+		},
+		
+		{ // GTA Vice City
+			business: 2,
+		},
+
+		{ // GTA San Andreas
+			business: 2,
+		}	
+	],
 	// Not implemented yet
 	keybindText: {
 		actionKey: "E",
-		vehicleEngineKey: "O",
+		vehicleEngineKey: "I",
 		vehicleLightsKey: "K",
 		vehicleLocksKey: "L",
 	},
@@ -148,8 +185,8 @@ let serverConfig = {
 	discordBotToken: "",
 	discordEnabled: false,
 	defaultKeybinds: [
-		new serverClasses.keyBindData(false, SDLK_o, "engine"),
-		new serverClasses.keyBindData(false, SDLK_i, "lights"),
+		new serverClasses.keyBindData(false, SDLK_i, "engine"),
+		new serverClasses.keyBindData(false, SDLK_k, "lights"),
 		new serverClasses.keyBindData(false, SDLK_l, "lock"),
 	],
 };

@@ -39,7 +39,7 @@ function messageClientError(client, messageText) {
     }
 
     if(client instanceof Client) {
-        messageClientNormal(client, `🚫 ${messageText}`, getColourByType("errorMessage"));
+        messageClientNormal(client, `🚫 ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:no_entry_sign: ${messageText}`);
     }
@@ -69,7 +69,7 @@ function messageClientAlert(client, messageText) {
     }
 
     if(client instanceof Client) {
-        messageClientNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByType("alertMessage"));
+        messageClientNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:warning: ${messageText}`);
     }
@@ -84,7 +84,7 @@ function messageClientSuccess(client, messageText) {
     }
 
     if(client instanceof Client) {
-        messageClientNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByType("successMessage"));
+        messageClientNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:thumbsup: ${messageText}`);
     }
@@ -99,7 +99,7 @@ function messageClientInfo(client, messageText) {
     }
         
     if(client instanceof Client) {
-        messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByType("successMessage"));
+        messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:information_source: ${messageText}`);
     }

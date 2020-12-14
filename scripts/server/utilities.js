@@ -680,7 +680,6 @@ function doesWordStartWithVowel(word) {
 // ---------------------------------------------------------------------------
 
 function getVehicleNameFromModelId(modelId) {
-	console.log(modelId);
 	if(isGTAIV()) {
 		for(let i in getGameData().gtaivVehicleModels) {
 			if(getGameData().gtaivVehicleModels[i][1] == modelId) {
@@ -1661,33 +1660,24 @@ function getClosestPoliceStation(position) {
 // ----------------------------------------------------------------------------
 
 function processPlayerDeath(client) {
-	client.removeData("ag.spawned", true);
-
-	if(isGTAIV()) {
-		triggerNetworkEvent("ag.iv.syncPosition", client, false);
-	}
+	removeEntityData(client.player, "ag.spawned", true);
 	
 	let closestHospital = getClosestHospital(getPlayerPosition(client));
 	triggerNetworkEvent("ag.control", client, false);
 	setTimeout(function() {
 		triggerNetworkEvent("ag.fadeCamera", client, false, 1.0);
 		setTimeout(function() {
-			if(!isGTAIV()) {
-				client.despawnPlayer();
-			}
+			client.despawnPlayer();
 			if(getClientCurrentSubAccount(client).inJail) {
 				let closestJail = getClosestJail(getPlayerPosition(client));
 				spawnPlayer(client, closestJail.position, closestJail.heading, getClientCurrentSubAccount(client).skin);
 			} else {
 				spawnPlayer(client, closestHospital.position, closestHospital.heading, getClientCurrentSubAccount(client).skin);
 			}
-			getEntityData(client, "ag.spawned", true, true);	
 			setTimeout(function() {
+				setEntityData(client.player, "ag.spawned", true, true);
 				triggerNetworkEvent("ag.fadeCamera", client, true, 1.0);
 				triggerNetworkEvent("ag.control", client, true);
-				if(isGTAIV()) {
-					triggerNetworkEvent("ag.iv.syncPosition", client, true);
-				}				
 			}, 1000);
 		}, 2000);		
 	}, 1000);

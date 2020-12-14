@@ -26,7 +26,8 @@ function loadCommandData() {
             commandData("login", loginCommand, "<password>", getStaffFlagValue("none"), false, false),
             commandData("register", registerCommand, "<password>", getStaffFlagValue("none"), false, false),
             commandData("changepass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false),
-            //commandData("iplogin", autoLoginByIPCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("iplogin", autoLoginByIPCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("gui", toggleAccountGUICommand, "", getStaffFlagValue("none"), false, false),
         ],
         ammunation: [],
         ban: [
@@ -104,7 +105,9 @@ function loadCommandData() {
         ],
         discord: [],
         faction: [],
-        help: [],
+        help: [
+            commandData("help", helpCommand, "", getStaffFlagValue("none"), false, false),
+        ],
         house: [],
         item: [],
         job: [
@@ -159,9 +162,10 @@ function loadCommandData() {
         ],
         translate: [],
         utilities: [],
-         vehicle: [
+        vehicle: [
             commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, true),	
             commandData("tempveh", createTemporaryVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("delveh", deleteVehicleCommand, "", getStaffFlagValue("manageVehicles"), true, true),
             
             commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, true),	
             commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, true),	
@@ -169,6 +173,7 @@ function loadCommandData() {
 
             commandData("vehowner", setVehicleOwnerCommand, "<player id/name>", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehclan", setVehicleClanCommand, "<clan id/name>", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehdealer", setVehicleToDealershipCommand, "", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehjob", setVehicleJobCommand, "[job id/name]", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehdelowner", removeVehicleOwnerCommand, "", getStaffFlagValue("manageVehicles"), true, true),
 
@@ -178,6 +183,8 @@ function loadCommandData() {
             commandData("vehreloadall", reloadAllVehiclesCommand, "", getStaffFlagValue("manageVehicles"), true, true),
 
             commandData("vehrent", rentVehicleCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("vehrentprice", setVehicleRentPriceCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("vehbuyprice", setVehicleBuyPriceCommand, "", getStaffFlagValue("none"), true, true),
             commandData("stoprent", stopRentingVehicleCommand, "", getStaffFlagValue("none"), true, true),
             commandData("vehbuy", buyVehicleCommand, "", getStaffFlagValue("none"), true, true),
             commandData("vehcolour", setVehicleColourCommand, "<colour1> <colour2>", getStaffFlagValue("none"), true, true),
@@ -249,12 +256,12 @@ function disableCommand(command, params, client) {
     params = toLowerCase(params);
 
     if(!getCommand(params)) {
-        messageClientError(client, `The command [#CCCCCC]/${params} [#FFFFFF] does not exist!`);
+        messageClientError(client, `The command [#AAAAAA]/${params} [#FFFFFF] does not exist!`);
         return false;
     }    
 
     getCommand(params).enabled = false;
-	messageClientSuccess(client, `Command [#CCCCCC]/${params} [#FFFFFF]has been disabled!`);
+	messageClientSuccess(client, `Command [#AAAAAA]/${params} [#FFFFFF]has been disabled!`);
 	return true;
 }
 
@@ -269,12 +276,12 @@ function enableCommand(command, params, client) {
     params = toLowerCase(params);
 
     if(!getCommand(params)) {
-        messageClientError(client, `The command [#CCCCCC]/${params} [#FFFFFF] does not exist!`);
+        messageClientError(client, `The command [#AAAAAA]/${params} [#FFFFFF] does not exist!`);
         return false;
     }    
 
     getCommand(params).enabled = true;
-	messageClientSuccess(client, `Command [#CCCCCC]/${params} [#FFFFFF]has been enabled!`);
+	messageClientSuccess(client, `Command [#AAAAAA]/${params} [#FFFFFF]has been enabled!`);
 	return true;
 }
 
@@ -289,7 +296,7 @@ function disableAllCommandsByType(command, params, client) {
     params = toLowerCase(params);
     
     if(isNull(getServerData().commands[params])) {
-        messageClientError(client, `Command type [#CCCCCC]${params} [#FFFFFF]does not exist!`);
+        messageClientError(client, `Command type [#AAAAAA]${params} [#FFFFFF]does not exist!`);
         return false;
     }    
 
@@ -297,7 +304,7 @@ function disableAllCommandsByType(command, params, client) {
         getServerData().commands[params][i].enabled = false;
     }
 
-	messageClientSuccess(client, `[#FF9900]All [#CCCCCC]${params} [#FFFFFF]commands have been disabled!`);
+	messageClientSuccess(client, `[#FF9900]All [#AAAAAA]${params} [#FFFFFF]commands have been disabled!`);
 	return true;
 }
 
@@ -312,7 +319,7 @@ function enableAllCommandsByType(command, params, client) {
     params = toLowerCase(params);
     
     if(isNull(getServerData().commands[params])) {
-        messageClientError(client, `Command type [#CCCCCC]${params} [#FFFFFF]does not exist!`);
+        messageClientError(client, `Command type [#AAAAAA]${params} [#FFFFFF]does not exist!`);
         return false;
     }
 
@@ -320,7 +327,7 @@ function enableAllCommandsByType(command, params, client) {
         getServerData().commands[params][i].enabled = true;
     }
 
-	messageClientSuccess(client, `[#FF9900]All [#CCCCCC]${params} [#FFFFFF]commands have been enabled!`);
+	messageClientSuccess(client, `[#FF9900]All [#AAAAAA]${params} [#FFFFFF]commands have been enabled!`);
 	return true;
 }
 
@@ -329,38 +336,43 @@ function enableAllCommandsByType(command, params, client) {
 addEventHandler("OnPlayerCommand", function(event, client, command, params) {
     let commandData = getCommand(command);
 
+    let paramsDisplay = params;
+    if(areParamsEmpty(params)) {
+        paramsDisplay = ""
+    }    
+
     if(!commandData) {
-        messageClientError(client, `The command [#CCCCCC]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+        console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
+        messageClientError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
         return false;
     }
 
     if(!commandData.enabled) {
-        messageClientError(client, `The command [#CCCCCC]/${command} [#FFFFFF]is disabled!`);
+        console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (command is disabled): /${command} ${paramsDisplay}`);
+        messageClientError(client, `The command [#AAAAAA]/${command} [#FFFFFF]is disabled!`);
         return false;
     }
 
 	if(doesCommandRequireLogin(command)) {
 		if(!isClientLoggedIn(client)) {
-			messageClientError(client, `You must be logged in to use the [#CCCCCC]/${command} [#FFFFFF]command!`);
+            console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (requires login first): /${command} ${paramsDisplay}`);
+			messageClientError(client, `You must be logged in to use the [#AAAAAA]/${command} [#FFFFFF]command!`);
 			return false;
 		}
 	}
 
 	if(isClientFromDiscord(client)) {
 		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, `The [#CCCCCC]/${command} [#FFFFFF] command isn't available on discord!`);
+            console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
+			messageClientError(client, `The [#AAAAAA]/${command} [#FFFFFF] command isn't available on discord!`);
 			return false;
 		}		
 	}
 
 	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, `You do not have permission to use the [#CCCCCC]/${command} [#FFFFFF]command!`);
+        console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);
+		messageClientError(client, `You do not have permission to use the [#AAAAAA]/${command} [#FFFFFF]command!`);
 		return false;
-    }
-
-    let paramsDisplay = params;
-    if(areParamsEmpty(params)) {
-        paramsDisplay = ""
     }
     
     console.log(`[Asshat.Command] ${getClientDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);

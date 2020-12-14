@@ -30,6 +30,7 @@ let serverColours = {
 		royalBlue: toColour(0, 0, 255, 255),
 		teal: toColour(0, 255, 255, 255),
 		orange: toColour(255, 128, 0, 255),
+		lightPurple: toColour(150, 0, 150, 255),
 		lightGrey: toColour(200, 200, 200, 255),
 		mediumGrey: toColour(150, 150, 150, 255),
 		darkGrey: toColour(64, 64, 64, 255),

@@ -112,17 +112,19 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 // ---------------------------------------------------------------------------
 
 function showCharacterSelectToClient(client) {
-	if(getServerConfig().useGUI) {
+	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		getClientData(client).currentSubAccount = 0;
 		let tempSubAccount = getClientData(client).subAccounts[0];
 		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {	
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
 		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
 		messageClientNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
 		getClientData(client).subAccounts.forEach(function(subAccount, index) {
-			messageClientNormal(client, `${index+1} • [#CCCCCC]${subAccount.firstName} ${subAccount.lastName}`);
+			messageClientNormal(client, `${index+1} • [#AAAAAA]${subAccount.firstName} ${subAccount.lastName}`);
 		});
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
 	}
 }
 
@@ -158,7 +160,7 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 
 	let subAccountData = createSubAccount(getClientData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
 	if(!subAccountData) {
-		if(getServerConfig().useGUI) {
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.newCharacterFailed", client, "Something went wrong. Your character could not be created!");
 		} else {
 			messageClientAlert(client, "Something went wrong. Your character could not be created!");
@@ -209,7 +211,7 @@ addNetworkHandler("ag.nextCharacter", function(client) {
 // ---------------------------------------------------------------------------
 
 function selectCharacter(client, characterId = -1) {
-	if(getServerConfig().useGUI) {
+	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		triggerNetworkEvent("ag.characterSelectSuccess", client);
 	}
 
@@ -225,8 +227,9 @@ function selectCharacter(client, characterId = -1) {
 	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 	triggerNetworkEvent("ag.restoreCamera", client);
 	setEntityData(client, "ag.spawned", true, true);
-	setEntityData(client, "ag.position", tempSubAccount.spawnPosition, true);
-	setEntityData(client, "ag.heading", tempSubAccount.spawnHeading, true);
+	setTimeout(function() {
+		setEntityData(client.player, "ag.spawned", true, true);
+	}, client.ping+500);
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 

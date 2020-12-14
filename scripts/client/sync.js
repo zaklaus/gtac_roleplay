@@ -10,7 +10,6 @@
 
 // ---------------------------------------------------------------------------
 
-let syncPosition = false;
 let inVehicle = null;
 
 // ---------------------------------------------------------------------------
@@ -24,8 +23,9 @@ addEventHandler("onProcess", function(event, deltaTime) {
         //    }
         //});
         
-        if(localPlayer != null && syncPosition) {
+        if(localPlayer != null && localPlayer.getData("ag.spawned") != null) {
             if(localPlayer.health <= 0) {
+                localPlayer.clearWeapons();
                 triggerNetworkEvent("ag.player.death", localPlayer.position, localPlayer.heading.toFixed(2));
             } else {
                 triggerNetworkEvent("ag.player.sync", localPlayer.position, localPlayer.heading.toFixed(2));

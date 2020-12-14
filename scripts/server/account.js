@@ -35,12 +35,49 @@ function loginCommand(command, params, client) {
 function autoLoginByIPCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
 	
-	if(getClientData(client).accountData.settings & flagValue) {
+	if(isAccountAutoIPLoginEnabled(getClientData(client).accountData)) {
 		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
 		messageClientSuccess(client, `You will not be automatically logged in via your current IP (${client.ip})`);
 	} else {
 		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
 		messageClientSuccess(client, `You will now be automatically logged in from your current IP (${client.ip})`);
+	}
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleAccountGUICommand(command, params, client) {
+	let flagValue = getAccountSettingsFlagValue("noGUI");
+	
+	if(!doesPlayerHaveGUIEnabled(client)) {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		messageClientSuccess(client, `You will now be shown GUI (if enabled on current server)`);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI on for their account`);
+	} else {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		messageClientSuccess(client, `You will not be shown GUI anymore. Any GUI stuff will be shown as messages in the chatbox instead.`);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI off for their account`);
+	}
+
+	if(!isClientLoggedIn(client)) {
+		if(getClientData().accountData.databaseId != 0) {
+			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+				triggerNetworkEvent("ag.showLogin", client);
+				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login GUI`);
+			} else {
+				messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
+				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
+			}
+		} else {
+			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+				triggerNetworkEvent("ag.showRegistration", client);
+				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register GUI`);
+			} else {
+				messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
+				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
+			}
+		}
 	}
 	return true;
 }
@@ -247,18 +284,22 @@ function saltAccountInfo(name, password) {
 // ---------------------------------------------------------------------------
 
 function loginSuccess(client) {
+	console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} successfully logged in.`);
 	getClientData(client).loggedIn = true;
 
 	if(doesClientHaveStaffPermission(client, "developer") || doesClientHaveStaffPermission(client, "manageServer")) {
+		console.warn(`[Asshat.Account] ${getClientDisplayForConsole(client)} has needed permissions and is being given administrator access`);
 		client.administrator = true;
 	}
 
 	if(getClientData(client).subAccounts.length == 0) {
-		if(getServerConfig().useGUI) {
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No characters");
 			setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the no characters prompt GUI`);
 		} else {
 			messageClientAlert(client, `You have no characters. Use /newchar to make one.`);
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the no characters message (GUI disabled)`);
 		}
 	} else {
 		showCharacterSelectToClient(client);
@@ -309,42 +350,53 @@ function checkLogin(client, password) {
 	let loginAttemptsRemaining = getEntityData(client, "ag.loginAttemptsRemaining")-1;
 
 	if(isClientLoggedIn(client)) {
-		if(getServerConfig().useGUI) {
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.loginSuccess", client);
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has successfully logged in`);
 		} else {
 			messageClientError(client, "You are already logged in!");
+			console.warn(`[Asshat.Account] ${getClientDisplayForConsole(client)} attempted to login but is already logged in`);
 		}
 		return false;
 	}
 	
 	if(!isClientRegistered(client)) {
-		if(getServerConfig().useGUI) {
+		console.warn(`[Asshat.Account] ${getClientDisplayForConsole(client)} attempted to login but is not registered`);
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.showRegistration", client);
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register GUI`);
 		} else {
 			messageClientError(client, "Your name is not registered! Use /register to make an account.");
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
 		}		
 		return false;
 	}
 
 	if(areParamsEmpty(password)) {
-		if(getServerConfig().useGUI) {
-			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);		
+		console.warn(`[Asshat.Account] ${getClientDisplayForConsole(client)} attempted to login but failed (empty password). ${loginAttemptsRemaining} login attempts remaining`);
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);	
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login GUI with ${loginAttemptsRemaining} login attempts remaining alert.`);	
 		} else {
-			messageClientError(client, "You must enter a password!");
+			messageClientError(client, `You must enter a password! ${loginAttemptsRemaining} tries remaining.`);
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${loginAttemptsRemaining} login attempts remaining alert.`);
 		}
 		return false;
 	}
 	
 	if(!isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, password))) {
-		if(getServerConfig().useGUI) {
+		console.warn(`[Asshat.Account] ${getClientDisplayForConsole(client)} attempted to login but failed (wrong password). ${loginAttemptsRemaining} login attempts remaining`);
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login GUI with ${loginAttemptsRemaining} login attempts remaining alert.`);
 		} else {
 			messageClientError(client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);
+			console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${loginAttemptsRemaining} login attempts remaining alert.`);
 		}
 		return false;
 	}
 	
-	if(getServerConfig().useGUI) {
+	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		triggerNetworkEvent("ag.loginSuccess", client);
 	}
 
@@ -358,7 +410,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	console.log("[Asshat.Account]: Checking registration for " + toString(client.name));
 
 	if(isClientRegistered(client)) {
-		if(getServerConfig().useGUI) {
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.showLogin", client);
 		} else {
 			messageClientError(client, "Your name is already registered!");
@@ -367,7 +419,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 
 	if(isClientLoggedIn(client)) {
-		if(getServerConfig().useGUI) {
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.loginSuccess", client);
 		} else {
 			messageClientError(client, "You are already logged in!");
@@ -376,7 +428,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 
 	if(areParamsEmpty(password)) {
-		if(getServerConfig().useGUI) {
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.registrationFailed", client, "Password cannot be blank!");
 		} else {
 			messageClientError(client, "The password cannot be blank!");
@@ -384,21 +436,21 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		return false;
 	}
 
-	if(getServerConfig().useGUI) {
+	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(confirmPassword)) {
 			triggerNetworkEvent("ag.registrationFailed", client, "Password confirm cannot be blank!");
 			return false;
 		}
 	}
 
-	if(getServerConfig().useGUI) {
+	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(emailAddress)) {
 			triggerNetworkEvent("ag.registrationFailed", client, "Email address cannot be blank!");
 			return false;
 		}
 	}
 
-	if(getServerConfig().useGUI) {
+	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(password != confirmPassword) {
 			triggerNetworkEvent("ag.registrationFailed", client, "The passwords must match!");
 			return false;
@@ -406,7 +458,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 	
 	if(!doesPasswordMeetRequirements(password)) {
-		if(getServerConfig().useGUI) {
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			// Work on this later. Function should return true by default anyway for now.
 			triggerNetworkEvent("ag.registrationFailed", client, "Password doesn't meet requirements!");
 		} else {
@@ -415,7 +467,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		return false
 	}
 
-	if(getServerConfig().useGUI) {
+	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(!isValidEmailAddress(emailAddress)) {
 			triggerNetworkEvent("ag.registrationFailed", client, "You must put a valid email!");
 			return false
@@ -424,7 +476,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	let accountData = createAccount(client.name, password, emailAddress);
 	if(!accountData) {
-		if(getServerConfig().useGUI) {
+		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.registrationFailed", client, "Something went wrong. Your account could not be created!");
 		} else {
 			messageClientAlert(client, "Something went wrong. Your account could not be created!");
@@ -440,7 +492,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	messageClientSuccess(client, "Your account has been created!");
 	messageClientAlert(client, "To play on the server, you will need to make a character.");
 	
-	if(getServerConfig().useGUI) {
+	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		triggerNetworkEvent("ag.registrationSuccess", client);
 		triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No Characters");
 		setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
@@ -513,14 +565,14 @@ function initClient(client) {
 				messageClientAlert(client, "You have been automatically logged in via IP!");
 				loginSuccess(client);
 			} else {
-				if(getServerConfig().useGUI) {
+				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 					triggerNetworkEvent("ag.showLogin", client);
 				} else {
 					messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
 				}
 			}
 		} else {
-			if(getServerConfig().useGUI) {
+			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 				triggerNetworkEvent("ag.showRegistration", client);
 			} else {
 				messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
@@ -677,5 +729,25 @@ function isAccountAutoIPLoginEnabled(accountData) {
 addNetworkHandler("ag.clientReady", function(client) {
 
 });
+
+// ---------------------------------------------------------------------------
+
+function doesPlayerHaveGUIEnabled(client) {
+	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("noGUI"))) {
+		return false;
+	}
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function doesPlayerHaveAutoLoginByIPEnabled(client) {
+	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
+		return false;
+	}
+
+	return true;
+}
 
 // ---------------------------------------------------------------------------

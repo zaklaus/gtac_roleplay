@@ -8,13 +8,13 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-let allServerBlips = [];
-let currentServerBlips = [];
-
 let bigMessageFont = null;
 let mainLogo = null;
 
 let showLogo = true;
+
+let busStopBlip = null;
+let busStopSphere = null;
 
 // ---------------------------------------------------------------------------
 
@@ -62,6 +62,9 @@ addEventHandler("onPickupCollected", function(event, pickup, ped) {
 
 bindEventHandler("onResourceStart", thisResource, function(event, resource) {
     triggerNetworkEvent("ag.clientReady");
+
+    addEvent("OnLocalPlayerEnterSphere", 1);
+    addEvent("OnLocalPlayerExitSphere", 1);
 });
 
 // ---------------------------------------------------------------------------
@@ -227,10 +230,7 @@ addNetworkHandler("ag.removeFromVehicle", function() {
 // ---------------------------------------------------------------------------
 
 function initLocalPlayer(player) {
-    attemptToShowBlipsOnSpawn(player);
-    if(gta.game < GAME_GTA_IV) {
-        addEventHandler("onProcess", processEvent);
-    }   
+    addEventHandler("onProcess", processEvent); 
 }
 
 // ---------------------------------------------------------------------------
@@ -240,11 +240,13 @@ function processEvent(event, deltaTime) {
         if(localPlayer.position.distance(sphere.position) <= sphere.radius) {
             if(localPlayer.getData("ag.inSphere") == null) {
                 localPlayer.setData("ag.inSphere", sphere);
+                triggerEvent("OnLocalPlayerEnterSphere", sphere, sphere);
                 triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
             }
         } else {
-            if(localPlayer.getData("ag.inSphere")) {
+            if(localPlayer.getData("ag.inSphere") != null) {
                 localPlayer.removeData("ag.inSphere", sphere);
+                triggerEvent("OnLocalPlayerExitSphere", sphere, sphere);
                 triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
             }           
         }
@@ -370,14 +372,31 @@ addNetworkHandler("ag.freeze", function(state) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.control", function(state) {
-    gui.showCursor(state, false);
+addNetworkHandler("ag.control", function(controlState, cursorState = false) {
+    gui.showCursor(cursorState, controlState);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.fadeCamera", function(state, time) {
     gta.fadeCamera(state, time);
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, pedPiece) {
+    wastedPed.clearWeapons();
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.showBusStop", function(position, colour) {
+    let busStopSphere = gta.createSphere(position, 3);
+    let busStopBlip = gta.createBlip(position, 0, 2, colour);
+
+    bindEventHandler("OnLocalPlayerEnterSphere", busStopSphere, function(event, sphere) {
+        triggerNetworkEvent("ag.arrivedAtBusStop");
+    });
 });
 
 // ---------------------------------------------------------------------------

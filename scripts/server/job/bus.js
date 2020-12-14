@@ -104,10 +104,10 @@ let busRoutes = [
 function getNextStopOnBusRoute(client) {
     if(getEntityData(client, "ag.busRoute") && getEntityData(client, "ag.lastBusStop")) {
         if(!isGoingToLastStopOnBusRoute(client)) {
-            return busRoutes[server.game][getEntityData(client, "ag.busRoute")][getEntityData(client, "ag.lastBusStop")+1];
+            return busRoutes[server.game][getEntityData(client, "ag.busRoute")].positions[getEntityData(client, "ag.lastBusStop")+1];
         } else {
             let slot = busRoutes[server.game][getEntityData(client, "ag.busRoute")].length-1;
-            return busRoutes[server.game][getEntityData(client, "ag.busRoute")][slot];
+            return busRoutes[server.game][getEntityData(client, "ag.busRoute")].positions[slot];
         }
     }    
 }
@@ -125,13 +125,20 @@ function isGoingToLastStopOnBusRoute(client) {
 // ---------------------------------------------------------------------------
 
 function freezeBusForStop(client) {
-    triggerNetworkEvent("ag.freeze", client, true);
+    triggerNetworkEvent("ag.control", client, false, false);
 }
 
 // ---------------------------------------------------------------------------
 
 function unFreezeBusForStop(client) {
-    triggerNetworkEvent("ag.freeze", client, false);
+    triggerNetworkEvent("ag.control", client, true, false);
+}
+
+// ---------------------------------------------------------------------------
+
+function showNextBusStop(client) {
+    let nextStop = getNextStopOnBusRoute(client);
+    triggerNetworkEvent("ag.showBusStop", client, nextStop, getColourByName("busDriverGreen"));
 }
 
 // ---------------------------------------------------------------------------

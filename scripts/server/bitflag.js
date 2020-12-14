@@ -88,9 +88,7 @@ let serverBitFlagKeys = {
 		"useBlackList", 
 		"twoStepAuth", 
 		"authAttemptAlert",
-		"alertWithGUI",
-		"errorWithGUI",
-		"askWithGUI",
+		"noGUI",
 		"autoLoginIP",
 	],
 	subAccountSettingsFlagKeys: [],
@@ -99,13 +97,13 @@ let serverBitFlagKeys = {
 // ---------------------------------------------------------------------------
 
 function initBitFlagScript() {
-	getServerData().staffFlags = createBitFlagTable(getServerData().staffFlagKeys);
-	getServerData().moderationFlags = createBitFlagTable(getServerData().moderationFlagKeys);
-	getServerData().accountSettingsFlags = createBitFlagTable(getServerData().accountSettingsFlagKeys);
-	//getServerData().subAccountSettingsFlags = createBitFlagTable(getServerData().subAccountSettingsFlagKeys);
-	getServerData().clanFlags = createBitFlagTable(getServerData().clanFlagKeys);
-	getServerData().clanPermissionFlags = createBitFlagTable(getServerData().clanPermissionFlagKeys);
-	getServerData().factionFlags = createBitFlagTable(getServerData().factionFlagKeys);
+	serverBitFlags.staffFlags = createBitFlagTable(serverBitFlagKeys.staffFlagKeys);
+	serverBitFlags.moderationFlags = createBitFlagTable(serverBitFlagKeys.moderationFlagKeys);
+	serverBitFlags.accountSettingsFlags = createBitFlagTable(serverBitFlagKeys.accountSettingsFlagKeys);
+	//serverBitFlags.subAccountSettingsFlags = createBitFlagTable(getServerData().subAccountSettingsFlagKeys);
+	serverBitFlags.clanFlags = createBitFlagTable(serverBitFlagKeys.clanFlagKeys);
+	serverBitFlags.clanPermissionFlags = createBitFlagTable(serverBitFlagKeys.clanPermissionFlagKeys);
+	serverBitFlags.factionFlags = createBitFlagTable(serverBitFlagKeys.factionFlagKeys);
 	return true;
 }
 
@@ -174,11 +172,11 @@ function getStaffFlagValue(flagName) {
         return -1;
 	}
 	
-	if(typeof getServerData().staffFlags[flagName] === "undefined") {
+	if(typeof serverBitFlags.staffFlags[flagName] === "undefined") {
 		return false;
 	}
 
-	return getServerData().staffFlags[flagName];
+	return serverBitFlags.staffFlags[flagName];
 }
 
 // ---------------------------------------------------------------------------
@@ -188,11 +186,11 @@ function getAccountSettingsFlagValue(flagName) {
         return -1;
 	}
 	
-	if(typeof getServerData().accountSettingsFlags[flagName] === "undefined") {
+	if(typeof serverBitFlags.accountSettingsFlags[flagName] === "undefined") {
 		return false;
 	}
 
-	return getServerData().accountSettingsFlags[flagName];
+	return serverBitFlags.accountSettingsFlags[flagName];
 }
 
 // ---------------------------------------------------------------------------
@@ -202,11 +200,11 @@ function getAccountFlagsFlagValue(flagName) {
         return -1;
 	}
 	
-	if(typeof getServerData().accountFlags[flagName] === "undefined") {
+	if(typeof serverBitFlags.accountFlags[flagName] === "undefined") {
 		return false;
 	}
 
-	return getServerData().accountFlags[flagName];
+	return serverBitFlags.accountFlags[flagName];
 }
 
 // ---------------------------------------------------------------------------

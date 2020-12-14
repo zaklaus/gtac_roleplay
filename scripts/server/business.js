@@ -88,7 +88,10 @@ function createBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	createBusiness(params, client.player.position, getClientInterior(client), getClientVirtualWorld(client));
+	let tempBusinessData = createBusiness(params, client.player.position, getClientInterior(client), getClientVirtualWorld(client));
+	tempBusiness
+
+
 	messageClientSuccess(client, "Business created in " + getAreaName(client.player.position) + " (" + params + ")");
 }
 
@@ -108,24 +111,37 @@ function createBusinessLocationCommand(command, params, client) {
 	let locationType = toString(splitParams[0]);
 	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client.player)) ? getPlayerBusiness(client.player) : getClosestBusinessEntrance(client.player.position);	
 
+	if(!getBusinessData(businessId)) {
+		messageClientError("Business not found!");
+		return false;
+	}		
+
 	createBusinessLocation(locationType, businessId);
 	messageClientSuccess(client, "Business created in " + getAreaName(client.player.position) + " (" + params + ")");
 }
 
 // ---------------------------------------------------------------------------
 
-function createBusiness(name, entrancePosition, interiorId, virtualWorld) {
+function createBusiness(name, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = 0, exitVirtualWorld = 0) {
 	let dbConnection = connectToDatabase();
 	let escapedName = name;
 	
 	if(dbConnection) {
 		escapedName = escapeDatabaseString(dbConnection, escapedName)
-		let dbQuery = queryDatabase(dbConnection, "INSERT INTO `biz_main` (`biz_server`, `biz_name`, `biz_entrance_x`, `biz_entrance_y`, `biz_entrance_z`, `biz_entrance_int`, `biz_entrance_vw`) VALUES (" + toString(serverId) + ", '" + escapedName + "', " + toString(entrancePosition.x) + ", " + toString(entrancePosition.y) + ", " + toString(entrancePosition.z) + ", " + toString(interiorId) + ", " + toString(virtualWorld) + ")");
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO biz_main (biz_server, biz_name, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_int, biz_entrance_vw, biz_entrance_pickup, biz_entrance_blip, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_int, biz_exit_vw, biz_exit_pickup, biz_exit_blip) VALUES (${serverId}, '${escapedName}', ${entrancePosition.x}, ${entrancePosition.y}, ${entrancePosition.z}, ${entranceInteriorId}, ${entranceVirtualWorld}, ${entrancePickupModel}, ${entranceBlipModel}, ${exitPosition.x}, ${exitPosition.y}, ${exitPosition.z}, ${exitInteriorId}, ${exitVirtualWorld}, ${exitPickupModel}, ${exitBlipModel})`);
 		disconnectFromDatabase(dbConnection);
 
 		let tempBusinessData = loadBusinessFromDatabaseById(dbConnection.insertID);
 		if(tempBusinessData != false) {
 			let tempBusiness = new serverClasses.businessData(tempBusinessData);
+			if(entrancePickupModel != -1) {
+				tempBusiness.entrancePickup = gta.createPickup(entrancePickupModel, entrancePickupModel, getServerConfig().pickupTypes[getServerGame()].business);
+			}
+
+			if(entranceBlipModel != -1) {
+				tempBusiness.entranceBlip = gta.createBlip(entrancePosition, entranceBlipModel, 1, getColourByName("lightPurple")); 
+			}			
+			
 			getServerData().business.push(tempBusiness);
 		}
 	}
@@ -141,6 +157,12 @@ function deleteBusinessCommand(command, params, client) {
 	}
 
 	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client.player)) ? getPlayerBusiness(client.player) : getClosestBusinessEntrance(client.player.position);
+
+	if(!getBusinessData(businessId)) {
+		messageClientError("Business not found!");
+		return false;
+	}		
+
 	deleteBusiness(businessId);
 	messageClientSuccess(client, `Business '${tempBusinessData.name} deleted!`);
 }
@@ -169,7 +191,13 @@ function setBusinessNameCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let newBusinessName = toString(splitParams[0]);
+
 	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client.player)) ? getPlayerBusiness(client.player) : getClosestBusinessEntrance(client.player.position);
+
+	if(!getBusinessData(businessId)) {
+		messageClientError("Business not found!");
+		return false;
+	}	
 
 	getServerData().businesses[businessId].name = newBusinessName;
 	messageClientSuccess(client, `Business '${getServerData().businesses[businessId].name}' renamed to '${newBusinessName}'!`);
@@ -198,7 +226,7 @@ function setBusinessOwnerCommand(command, params, client) {
 		return false;
 	}
 
-	if(!getBusinessDataFromDatabaseId(businessId)) {
+	if(!getBusinessData(businessId)) {
 		messageClientError("Business not found!");
 		return false;
 	}
@@ -223,6 +251,11 @@ function lockBusinessCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let businessId = toInteger(splitParams[0]) || (isPlayerInAnyBusiness(client.player)) ? getPlayerBusiness(client.player) : getClosestBusinessEntrance(client.player.position);
+	
+	if(!getBusinessData(businessId)) {
+		messageClientError("Business not found!");
+		return false;
+	}	
 
 	getServerData().businesses[businessId].locked = !getServerData().businesses[businessId].locked;
 	messageClientSuccess(client, "Business " + getServerData().businesses[businessId].name + " " + (getServerData().businesses[businessId].locked) ? "locked" : "unlocked" + "!");
@@ -241,6 +274,11 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 	let entranceFee = toInteger(splitParams[0]) || 0;
 	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client.player)) ? getPlayerBusiness(client.player) : getClosestBusinessEntrance(client.player.position);
 
+	if(!getBusinessData(businessId)) {
+		messageClientError("Business not found!");
+		return false;
+	}
+
 	getServerData().businesses[businessId].entranceFee = entranceFee;
 	messageClientSuccess(client, `Business '${getServerData().businesses[businessId].name}' entrance fee to $'${entranceFee}'!`);
 }
@@ -257,6 +295,11 @@ function withdrawFromBusinessCommand(command, params, client) {
 
 	let amount = toInteger(splitParams[0]) || 0;
 	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client.player)) ? getPlayerBusiness(client.player) : getClosestBusinessEntrance(client.player.position);
+
+	if(!getBusinessData(businessId)) {
+		messageClientError("Business not found!");
+		return false;
+	}
 
 	let tempBusinessData = getServerData().businesses.filter(b => b.databaseId == businessId)[0];
 	

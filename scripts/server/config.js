@@ -151,22 +151,84 @@ let serverConfig = {
 			house: -1,			
 		},						
 	],
-	pickupModels: {
+	pickupModels: [
+		{},
 
-	},
+		{ // GTA 3
+			policeStation: 1361,
+			fireStation: 1361,
+			hospital: 1361, 
+			ammunation: 1361,
+			payAndSpray: 1361,
+			vehicleDealership: 1361,
+			restaurant: 1361,
+			fastFood: 1361,
+			bank: 1323,
+			fuelStation: 1361,
+			business: 1361,
+			house: 1361,
+			clothes: 1361,
+			misc: 1361,
+		},
+		
+		{ // GTA Vice City
+			policeStation: 406,
+			fireStation: 406,
+			hospital: 406, 
+			ammunation: 406,
+			payAndSpray: 406,
+			vehicleDealership: 406,
+			restaurant: 406,
+			fastFood: 406,
+			bank: 408,
+			fuelStation: 406,
+			business: 406,
+			house: 407,
+			clothes: 409,
+			misc: 1361,
+		},
+
+		{ // GTA San Andreas
+			policeStation: 1239,
+			fireStation: 1239,
+			hospital: 1239, 
+			ammunation: 1239,
+			payAndSpray: 1239,
+			vehicleDealership: 1239,
+			restaurant: 1239,
+			fastFood: 1239,
+			bank: 1274,
+			fuelStation: 1239,
+			business: 1272,
+			house: 1273,
+			clothes: 1239,
+		}
+	],
 	pickupTypes: [
 		{},
 
 		{ // GTA 3
 			business: 2,
+			house: 2,
+			bank: 2,
+			clothes: 2,
+			info: 2,
 		},
 		
 		{ // GTA Vice City
 			business: 2,
+			house: 2,
+			bank: 2,
+			clothes: 2,
+			info: 2,
 		},
 
 		{ // GTA San Andreas
-			business: 2,
+			business: 1,
+			house: 1,
+			bank: 1,
+			clothes: 1,
+			info: 1,
 		}	
 	],
 	// Not implemented yet

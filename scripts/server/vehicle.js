@@ -569,14 +569,14 @@ function setVehicleToDealershipCommand(command, params, client) {
 	}
 	
 	let vehicle = getPlayerVehicle(client);
-	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client.player)) ? getPlayerBusiness(client.player) : getClosestBusinessEntrance(client.player.position);
+	let businessId = toInteger(toInteger(params)) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	let tempBusinessData = getServerData().businesses.filter(b => b.databaseId == businessId)[0];
 
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_DEALERSHIP;
 	getVehicleData(vehicle).ownerId = businessData.databaseId;
 
-	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s owner to the ${clan.name} clan!`);
+	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s owner to the ${tempBusinessData.name} dealership business!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -705,7 +705,7 @@ function getVehicleInfoCommand(command, params, client) {
 			break;
 	}
 
-	messageClientInfo(client, `[#0099FF][Vehicle Info] [#FFFFFF]ID: [#AAAAAA]${vehicle.id}, [#FFFFFF]DatabaseID: [#AAAAAA]${vehicleData.databaseId}, [#FFFFFF]Owner: [#AAAAAA]${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), [#FFFFFF]Type: [#AAAAAA]${getVehicleName(vehicle)}[${vehicle.modelIndex}], [#FFFFFF]BuyPrice: [#AAAAAA]${vehicleData.buyPrice}, [#FFFFFF]RentPrice: [#AAAAAA]${vehicleData.rentPrice}`);
+	messageClientInfo(client, `[#CC22CC][Vehicle Info] [#FFFFFF]ID: [#AAAAAA]${vehicle.id}, [#FFFFFF]DatabaseID: [#AAAAAA]${vehicleData.databaseId}, [#FFFFFF]Owner: [#AAAAAA]${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), [#FFFFFF]Type: [#AAAAAA]${getVehicleName(vehicle)}[${vehicle.modelIndex}], [#FFFFFF]BuyPrice: [#AAAAAA]${vehicleData.buyPrice}, [#FFFFFF]RentPrice: [#AAAAAA]${vehicleData.rentPrice}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -866,10 +866,22 @@ function getVehicleOwnerTypeText(ownerType) {
 
 		case AG_VEHOWNER_PLAYER:
 			return "player";
+
+		case AG_VEHOWNER_DEALERSHIP:
+			return "dealership";			
 			
 		default:
 			return "unknown";
 	}
+}
+
+// ----------------------------------------------------------------------------
+
+function isVehicleOwnedByJob(vehicle, jobId) {
+	if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
+		return (getVehicleData(vehicle).ownerId == jobId);
+	}
+	return false;
 }
 
 // ----------------------------------------------------------------------------

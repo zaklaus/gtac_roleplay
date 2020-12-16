@@ -45,7 +45,11 @@ function messageDiscordUser(discordUser, messageText) {
 // ---------------------------------------------------------------------------
 
 function sendDiscordSocketData(socketData) {
-    //getDiscordSocket().send(module.hash.encodeBase64(socketData) + "\r\n");
+    if(!getDiscordSocket()) {
+        return false;
+    }
+    
+    getDiscordSocket().send(module.hash.encodeBase64(socketData) + "\r\n");
 }
 
 // ---------------------------------------------------------------------------
@@ -66,8 +70,20 @@ function getDiscordUserData(discordUserId) {
 
 // ---------------------------------------------------------------------------
 
-function messageDiscord(message) {
+function messageDiscordChatChannel(message) {
+    let gameEmoji = getGameEmojiForDiscord(getServerGame());
+}
 
+// ---------------------------------------------------------------------------
+
+function messageDiscordAdminChannel(message) {
+    let gameEmoji = getGameEmojiForDiscord(getServerGame());
+}
+
+// ---------------------------------------------------------------------------
+
+function messageDiscordEventChannel(message) {
+    let gameEmoji = getGameEmojiForDiscord(getServerGame());
 }
 
 // ---------------------------------------------------------------------------

@@ -90,6 +90,18 @@ function getPlayerVehicle(client) {
 
 // ---------------------------------------------------------------------------
 
+function getPlayerVirtualWorld(client) {
+    return client.player.dimension;
+}
+
+// ---------------------------------------------------------------------------
+
+function getPlayerInterior(client) {
+    return client.player.interior;
+}
+
+// ---------------------------------------------------------------------------
+
 function isPlayerInAnyVehicle(client) {
     return (client.player.vehicle != null);
 }
@@ -140,6 +152,12 @@ function deleteGameElement(element) {
 
 function isPlayerInFrontVehicleSeat(client) {
     return (getPlayerVehicleSeat(client) == 0 || getPlayerVehicleSeat(client) == 1);
+}
+
+// ---------------------------------------------------------------------------
+
+function getDistance(vec1, vec2) {
+    return vec1.distance(vec2);
 }
 
 // ---------------------------------------------------------------------------

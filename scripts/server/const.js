@@ -70,3 +70,9 @@ const AG_CONTACTTYPE_NONE = 0;
 const AG_CONTACTTYPE_NEUTRAL = 1;
 const AG_CONTACTTYPE_FRIEND = 2;
 const AG_CONTACTTYPE_BLOCKED = 3;
+
+// Job Work Types (Currently Unused)
+const AG_JOBWORKTYPE_NONE = 0;
+const AG_JOBWORKTYPE_ROUTE = 1; // Jobs that use routes. Bus, trash collector, mail, etc
+const AG_JOBWORKTYPE_SELL = 2; // Jobs that sell items to other players and NPCs. Drugs, guns, etc
+const AG_JOBWORKTYPE_SERVICE = 3; // Services to other players and NPCs. Taxi ride, mechanic fix, etc

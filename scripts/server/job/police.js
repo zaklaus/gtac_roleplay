@@ -9,10 +9,27 @@
 // ===========================================================================
 
 function policeTazerCommand(command, params, client) {
-    if(!canClientUseJobs(client) || !!canClientUsePoliceJob(client)){ 
+    if(!canPlayerUseJobs(client)) { 
+        messageClientError(client, "You are not allowed to use jobs.");
         return false;
     }
 
+    if(!canPlayerUsePoliceJob(client)) { 
+        messageClientError(client, "You are not allowed to use the police job.");
+        return false;
+    }
+
+    if(!isPlayerWorking(client)) {
+        messageClientError(client, "You are working! Use /startwork first.");
+        return false;
+    }
+
+    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+        messageClientError(client, "You don't have a police job.");
+        return false;
+    }
+
+    
 
 	return true;
 }
@@ -20,10 +37,25 @@ function policeTazerCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function policeCuffCommand(command, params, client) {
-    if(!canClientUseJobs(client) || !!canClientUsePoliceJob(client)) { 
+    if(!canPlayerUseJobs(client)) { 
+        messageClientError(client, "You are not allowed to use jobs.");
         return false;
     }
 
+    if(!canPlayerUsePoliceJob(client)) { 
+        messageClientError(client, "You are not allowed to use the police job.");
+        return false;
+    }
+
+    if(!isPlayerWorking(client)) {
+        messageClientError(client, "You are working! Use /startwork first.");
+        return false;
+    }
+
+    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+        messageClientError(client, "You don't have a police job.");
+        return false;
+    }   
 
 	return true;
 }
@@ -31,10 +63,25 @@ function policeCuffCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function policeArrestCommand(command, params, client) {
-    if(!canClientUseJobs(client) || !!canClientUsePoliceJob(client)) { 
+    if(!canPlayerUseJobs(client)) { 
+        messageClientError(client, "You are not allowed to use jobs.");
         return false;
     }
 
+    if(!canPlayerUsePoliceJob(client)) { 
+        messageClientError(client, "You are not allowed to use the police job.");
+        return false;
+    }
+
+    if(!isPlayerWorking(client)) {
+        messageClientError(client, "You are working! Use /startwork first.");
+        return false;
+    }
+
+    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+        messageClientError(client, "You don't have a police job.");
+        return false;
+    } 
 
 	return true;
 }
@@ -42,10 +89,25 @@ function policeArrestCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function policeSearchCommand(command, params, client) {
-    if(!canClientUseJobs(client) || !!canClientUsePoliceJob(client)) { 
+    if(!canPlayerUseJobs(client)) { 
+        messageClientError(client, "You are not allowed to use jobs.");
         return false;
     }
 
+    if(!canPlayerUsePoliceJob(client)) { 
+        messageClientError(client, "You are not allowed to use the police job.");
+        return false;
+    }
+
+    if(!isPlayerWorking(client)) {
+        messageClientError(client, "You are working! Use /startwork first.");
+        return false;
+    }
+
+    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+        messageClientError(client, "You don't have a police job.");
+        return false;
+    }   
 
 	return true;
 }
@@ -53,10 +115,25 @@ function policeSearchCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function policeDragCommand(command, params, client) {
-    if(!canClientUseJobs(client) || !!canClientUsePoliceJob(client)) { 
+    if(!canPlayerUseJobs(client)) { 
+        messageClientError(client, "You are not allowed to use jobs.");
         return false;
     }
 
+    if(!canPlayerUsePoliceJob(client)) { 
+        messageClientError(client, "You are not allowed to use the police job.");
+        return false;
+    }
+
+    if(!isPlayerWorking(client)) {
+        messageClientError(client, "You are working! Use /startwork first.");
+        return false;
+    }
+
+    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+        messageClientError(client, "You don't have a police job.");
+        return false;
+    }      
 
 	return true;
 }
@@ -64,10 +141,25 @@ function policeDragCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function policeDetainCommand(command, params, client) {
-    if(!canClientUseJobs(client) || !!canClientUsePoliceJob(client)) { 
+    if(!canPlayerUseJobs(client)) { 
+        messageClientError(client, "You are not allowed to use jobs.");
         return false;
     }
 
+    if(!canPlayerUsePoliceJob(client)) { 
+        messageClientError(client, "You are not allowed to use the police job.");
+        return false;
+    }
+
+    if(!isPlayerWorking(client)) {
+        messageClientError(client, "You are working! Use /startwork first.");
+        return false;
+    }
+
+    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+        messageClientError(client, "You don't have a police job.");
+        return false;
+    } 
 
 	return true;
 }

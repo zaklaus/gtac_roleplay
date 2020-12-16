@@ -12,7 +12,9 @@
 
 function messageAdminAction(messageText) {
     message(`⚠️ ${messageText}`, getColourByName("orange"));
-    messageDiscord(`:warning: ${messageText}`);
+    if(getServerConfig().discordEnabled) {
+        messageDiscord(`:warning: ${messageText}`);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -23,7 +25,7 @@ function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
         return true;
     }
 
-    if(client instanceof Client) {
+    if(!isClientFromDiscord(client)) {
         messageClient(`${messageText}`, client, colour);
     } else {
         messageDiscordUser(client, `${messageText}`);
@@ -38,7 +40,7 @@ function messageClientError(client, messageText) {
         return true;
     }
 
-    if(client instanceof Client) {
+    if(!isClientFromDiscord(client)) {
         messageClientNormal(client, `🚫 ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:no_entry_sign: ${messageText}`);
@@ -53,7 +55,7 @@ function messageClientSyntax(client, messageText) {
         return true;
     }
 
-    if(client instanceof Client) {
+    if(!isClientFromDiscord(client)) {
         messageClientNormal(client, `⌨️ USAGE: [#FFFFFF] ${messageText}`, getColourByType("syntaxMessage"));
     } else {
         messageDiscordUser(client, `:keyboard: ${messageText}`);
@@ -68,7 +70,7 @@ function messageClientAlert(client, messageText) {
         return true;
     }
 
-    if(client instanceof Client) {
+    if(!isClientFromDiscord(client)) {
         messageClientNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:warning: ${messageText}`);
@@ -83,7 +85,7 @@ function messageClientSuccess(client, messageText) {
         return true;
     }
 
-    if(client instanceof Client) {
+    if(!isClientFromDiscord(client)) {
         messageClientNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:thumbsup: ${messageText}`);
@@ -98,7 +100,7 @@ function messageClientInfo(client, messageText) {
         return true;
     }
         
-    if(client instanceof Client) {
+    if(!isClientFromDiscord(client)) {
         messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:information_source: ${messageText}`);
@@ -126,7 +128,7 @@ function messageClientShout(client, shoutingClient, messageText) {
 // ---------------------------------------------------------------------------
 
 function messageClientDoAction(client, doingActionClient, messageText) {
-    if(client instanceof Client) {
+    if(!isClientFromDiscord(client)) {
         messageClientNormal(client, `${messageText} * (${getClientSubAccountName(doingActionClient)})`, getColourByType("doActionMessage"));
     }
 }

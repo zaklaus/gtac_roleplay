@@ -65,6 +65,8 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
 
     addEvent("OnLocalPlayerEnterSphere", 1);
     addEvent("OnLocalPlayerExitSphere", 1);
+    addEvent("OnLocalPlayerEnterVehicle", 2);
+    addEvent("OnLocalPlayerExitVehicle", 2);    
 });
 
 // ---------------------------------------------------------------------------
@@ -236,21 +238,37 @@ function initLocalPlayer(player) {
 // ---------------------------------------------------------------------------
 
 function processEvent(event, deltaTime) {
-    getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
-        if(localPlayer.position.distance(sphere.position) <= sphere.radius) {
-            if(localPlayer.getData("ag.inSphere") == null) {
-                localPlayer.setData("ag.inSphere", sphere);
-                triggerEvent("OnLocalPlayerEnterSphere", sphere, sphere);
-                triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
+    if(localPlayer != null) {
+        getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
+            if(localPlayer.position.distance(sphere.position) <= sphere.radius) {
+                if(localPlayer.getData("ag.inSphere") == null) {
+                    localPlayer.setData("ag.inSphere", sphere);
+                    triggerEvent("OnLocalPlayerEnterSphere", sphere, sphere);
+                    triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
+                }
+            } else {
+                if(localPlayer.getData("ag.inSphere") != null) {
+                    localPlayer.removeData("ag.inSphere");
+                    triggerEvent("OnLocalPlayerExitSphere", sphere, sphere);
+                    triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
+                }           
+            }
+        });
+
+        if(localPlayer.vehicle != null) {
+            if(!inVehicle) {
+                inVehicle = localPlayer.vehicle;
+                triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
+                triggerNetworkEvent("ag.onPlayerEnterVehicle", inVehicle);
             }
         } else {
-            if(localPlayer.getData("ag.inSphere") != null) {
-                localPlayer.removeData("ag.inSphere", sphere);
-                triggerEvent("OnLocalPlayerExitSphere", sphere, sphere);
-                triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
+            if(inVehicle) {
+                triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
+                triggerNetworkEvent("ag.onPlayerExitVehicle", inVehicle);
+                inVehicle = false;
             }           
-        }
-    });
+        } 
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -391,11 +409,16 @@ addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, ped
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showBusStop", function(position, colour) {
-    let busStopSphere = gta.createSphere(position, 3);
-    let busStopBlip = gta.createBlip(position, 0, 2, colour);
+    busStopSphere = gta.createSphere(position, 3);
+    busStopBlip = gta.createBlip(position, 0, 2, colour);
 
     bindEventHandler("OnLocalPlayerEnterSphere", busStopSphere, function(event, sphere) {
         triggerNetworkEvent("ag.arrivedAtBusStop");
+        unbindEventHandler("OnLocalPlayerEnterSphere", busStopSphere);
+        destroyElement(busStopSphere);
+        destroyElement(busStopBlip);
+        busStopSphere = null;
+        busStopBlip = null;
     });
 });
 

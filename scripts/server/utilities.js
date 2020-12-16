@@ -1359,7 +1359,7 @@ function getPickupOwnerId(pickup) {
 
 // ---------------------------------------------------------------------------
 
-function canClientUseJobs(client) {
+function canPlayerUseJobs(client) {
 	if(getClientData(client).accountData.flags.moderation & getServerData().moderationFlags.jobBanned) {
 		return false;
 	}
@@ -1369,7 +1369,7 @@ function canClientUseJobs(client) {
 
 // ---------------------------------------------------------------------------
 
-function canClientUsePoliceJob(client) {
+function canPlayerUsePoliceJob(client) {
 	if(getClientData(client).accountData.flags.moderation & getServerData().moderationFlags.policeBanned) {
 		return false;
 	}

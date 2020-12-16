@@ -45,7 +45,7 @@ function messageDiscordUser(discordUser, messageText) {
 // ---------------------------------------------------------------------------
 
 function sendDiscordSocketData(socketData) {
-    getDiscordSocket().send(module.hash.encodeBase64(socketData) + "\r\n");
+    //getDiscordSocket().send(module.hash.encodeBase64(socketData) + "\r\n");
 }
 
 // ---------------------------------------------------------------------------
@@ -54,7 +54,7 @@ function isClientFromDiscord(client) {
     if(client instanceof Client) {
         return false;
     } else {
-        return false;
+        return true;
     }
 }
 

@@ -48,6 +48,9 @@ function loadCommandData() {
             commandData("bizdeposit", depositIntoBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
             commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("none"), true, true),
             commandData("bizowner", setBusinessOwnerCommand, "<player name/id>", getStaffFlagValue("none"), true, true),
+            commandData("bizblip", setBusinessBlipCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true),
+            commandData("bizpickup", setBusinessPickupCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true),
+            commandData("bizinfo", getBusinessInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
@@ -131,7 +134,10 @@ function loadCommandData() {
             commandData("cuff", policeCuffCommand, "", getStaffFlagValue("none"), true, false),
             commandData("detain", policeDetainCommand, "", getStaffFlagValue("none"), true, false),
             commandData("drag", policeDragCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("search", policeSearchCommand, "", getStaffFlagValue("none"), true, false),            
+            commandData("search", policeSearchCommand, "", getStaffFlagValue("none"), true, false),
+            
+            // Bus/Garbage
+            commandData("startroute", jobStartRouteCommand, "", getStaffFlagValue("none"), true, false),
         ],
         locale: [],
         messaging: [],
@@ -339,7 +345,7 @@ addEventHandler("OnPlayerCommand", function(event, client, command, params) {
     let paramsDisplay = params;
     if(areParamsEmpty(params)) {
         paramsDisplay = ""
-    }    
+    }
 
     if(!commandData) {
         console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
@@ -361,13 +367,13 @@ addEventHandler("OnPlayerCommand", function(event, client, command, params) {
 		}
 	}
 
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-            console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
-			messageClientError(client, `The [#AAAAAA]/${command} [#FFFFFF] command isn't available on discord!`);
-			return false;
-		}		
-	}
+	//if(isClientFromDiscord(client)) {
+	//	if(!isCommandAllowedOnDiscord(command)) {
+    //        console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
+	//		messageClientError(client, `The [#AAAAAA]/${command} [#FFFFFF] command isn't available on discord!`);
+	//		return false;
+	//	}		
+	//}
 
 	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
         console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);

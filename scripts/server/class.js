@@ -26,6 +26,12 @@ function initClassTable() {
 				this.client = client;
 				this.currentSubAccount = 0;
 				this.loggedIn = false;
+
+				this.busRoute = null;
+				this.lastBusStop = null;
+
+				this.garbageRoute = null;
+				this.lastGarbageStop = null;
 			}
 		},
 		accountData: class {
@@ -137,21 +143,29 @@ function initClassTable() {
 					return;
 				}
 
-				this.databaseId = toInteger(businessAssoc("biz_id"));
-				this.name = toString(businessAssoc("biz_name"));
-				this.ownerType = toInteger(businessAssoc("biz_owner_type"));
-				this.ownerId = toInteger(businessAssoc("biz_owner_id"));
-				this.locked = intToBool(toInteger(businessAssoc("biz_locked")));
+				this.databaseId = toInteger(businessAssoc["biz_id"]);
+				this.name = toString(businessAssoc["biz_name"]);
+				this.ownerType = toInteger(businessAssoc["biz_owner_type"]);
+				this.ownerId = toInteger(businessAssoc["biz_owner_id"]);
+				this.locked = intToBool(toInteger(businessAssoc["biz_locked"]));
 
-				this.entrancePosition = toVector3(toFloat(businessAssoc("biz_entrance_pos_x")), toFloat(businessAssoc("biz_entrance_pos_y")), toFloat(businessAssoc("biz_entrance_pos_z")));
+				this.entrancePosition = toVector3(toFloat(businessAssoc["biz_entrance_pos_x"]), toFloat(businessAssoc["biz_entrance_pos_y"]), toFloat(businessAssoc["biz_entrance_pos_z"]));
 				this.entranceRotation = toInteger(businessAssoc["biz_entrance_rot_z"]);
 				this.entranceInterior = toInteger(businessAssoc["biz_entrance_int"]);
 				this.entranceDimension = toInteger(businessAssoc["biz_entrance_vw"]);
+				this.entrancePickupModel = toInteger(businessAssoc["biz_entrance_pickup"]);
+				this.entranceBlipModel = toInteger(businessAssoc["biz_entrance_blip"]);	
+				this.entrancePickup = null;
+				this.entrancePickup = null;
 				
-				this.exitPosition = toVector3(businessAssoc("biz_exit_pos_x"), businessAssoc("biz_exit_pos_y"), businessAssoc("biz_exit_pos_z"));
+				this.exitPosition = toVector3(businessAssoc["biz_exit_pos_x"], businessAssoc["biz_exit_pos_y"], businessAssoc["biz_exit_pos_z"]);
 				this.exitRotation = toInteger(businessAssoc["biz_exit_rot_z"]);
 				this.exitInterior = toInteger(businessAssoc["biz_exit_int"]);
 				this.exitDimension = toInteger(businessAssoc["biz_exit_vw"]);
+				this.exitPickupModel = toInteger(businessAssoc["biz_exit_pickup"]);
+				this.exitBlipModel = toInteger(businessAssoc["biz_exit_blip"]);
+				this.exitPickup = null;
+				this.exitBlip = null;
 
 				this.till = toInteger(businessAssoc["biz_till"]);
 			}

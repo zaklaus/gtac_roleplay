@@ -174,7 +174,7 @@ function isAccountPasswordCorrect(accountData, password) {
 
 // ---------------------------------------------------------------------------
 
-function loadAccountFromName(accountName) {
+function loadAccountFromName(accountName, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		accountName = escapeDatabaseString(dbConnection, accountName);
@@ -184,12 +184,14 @@ function loadAccountFromName(accountName) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 				let tempAccountData = new serverClasses.accountData(dbAssoc);
-				tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
-				tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
-				tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
-				tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
-
 				freeDatabaseQuery(dbQuery);
+				if(fullLoad) {
+					tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
+					tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
+					tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
+					tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
+				}
+
 				return tempAccountData;
 			}
 		}
@@ -201,15 +203,23 @@ function loadAccountFromName(accountName) {
 
 // ---------------------------------------------------------------------------
 
-function loadAccountFromId(accountId) {
+function loadAccountFromId(accountId, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let dbQueryString = `SELECT * FROM acct_main WHERE acct_id = ${accountId} LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
+			let tempAccountData = new serverClasses.accountData(dbAssoc);
 			freeDatabaseQuery(dbQuery);
-			return new serverClasses.accountData(dbAssoc);
+			if(fullLoad) {
+				tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
+				tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
+				tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
+				tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
+			}
+
+			return tempAccountData;
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -259,7 +269,7 @@ function getAccountHashingFunction() {
 // ---------------------------------------------------------------------------
 
 function isNameRegistered(name) {
-	let accountData = loadAccountFromName(name);
+	let accountData = loadAccountFromName(name, true);
 	if(accountData.databaseId > 0) {
 		return true;
 	}
@@ -555,7 +565,7 @@ function initClient(client) {
 		setEntityData(client, "ag.session", sessionId, false);
 
 		clearChatBox(client);
-		let tempAccountData = loadAccountFromName(client.name);
+		let tempAccountData = loadAccountFromName(client.name, true);
 		let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
 		
 		getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);

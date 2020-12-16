@@ -137,6 +137,12 @@ addNetworkHandler("ag.player.death", function(client, position, heading) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.player.vehicle", function(client, vehicle) {
+    clientEnteredVehicle(client, vehicle);
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
     //let vehicleData = getVehicleDataFromSyncId(syncId);
     //if(vehicleData) {
@@ -147,12 +153,7 @@ addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.player.vehicle", function(client, syncId) {
-    if(syncId == -1) {
-        client.removeData("ag.vehicle");
-    } else {
-        setEntityData(client, "ag.vehicle", syncId, true);
-    }
-});
+addNetworkHandler("ag.onPlayerEnterVehicle", playerEnteredVehicle);
+addNetworkHandler("ag.onPlayerExitVehicle", playerExitedVehicle);
 
 // ---------------------------------------------------------------------------

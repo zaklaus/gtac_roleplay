@@ -232,7 +232,7 @@ function createAllJobPickups() {
 // ---------------------------------------------------------------------------
 
 function showJobInformationToPlayer(client, jobType) {
-	if(!canClientUseJobs(client)){ 
+	if(!canPlayerUseJobs(client)){ 
 		return false;
 	}
 
@@ -243,7 +243,7 @@ function showJobInformationToPlayer(client, jobType) {
 
 	switch(jobType) {
 		case AG_JOB_POLICE:
-			if(!canClientUsePoliceJob(client)) { 
+			if(!canPlayerUsePoliceJob(client)) { 
 				return false;
 			}
 
@@ -320,7 +320,7 @@ function showJobInformationToPlayer(client, jobType) {
 // ---------------------------------------------------------------------------
 
 function takeJobCommand(command, params, client) {
-	if(!canClientUseJobs(client)) {
+	if(!canPlayerUseJobs(client)) {
 		messageClientError(client, "You are not allowed to use jobs!"); 
 		return false;
 	}
@@ -365,10 +365,9 @@ function takeJobCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function startWorkingCommand(command, params, client) {
-	if(!canClientUseJobs(client)){ 
+	if(!canPlayerUseJobs(client)){ 
 		return false;
 	}
-
 
 	let closestJobLocation = getClosestJobLocation(client.player.position);
 	let jobData = getJobData(closestJobLocation.job);
@@ -400,16 +399,13 @@ function startWorkingCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function stopWorkingCommand(command, params, client) {
-	if(!canClientUseJobs(client)){ 
+	if(!canPlayerUseJobs(client)) { 
 		return false;
 	}
 
-
-	let closestJobLocation = getClosestJobLocation(client.player.position);
-
-	if(closestJobLocation.position.distance(client.player.position) > getServerConfig().stopWorkingDistance) {
-		messageClientError(client, "There are no job locations close enough!");
-		return false;       
+	if(!isPlayerWorking(client)) {
+		messageClientError(client, "You are not working!");
+		return false;
 	}
 
 	//if(getClientCurrentSubAccount(client).job != closestJob.jobType) {
@@ -427,7 +423,7 @@ function stopWorkingCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function startWorking(client) {
-	if(!canClientUseJobs(client)){ 
+	if(!canPlayerUseJobs(client)){ 
 		return false;
 	}
 
@@ -475,7 +471,7 @@ function startWorking(client) {
 // ---------------------------------------------------------------------------
 
 function givePlayerJobEquipment(client, equipmentId) {
-	if(!canClientUseJobs(client)) {
+	if(!canPlayerUseJobs(client)) {
 		return false;
 	}
 
@@ -490,7 +486,11 @@ function givePlayerJobEquipment(client, equipmentId) {
 // ---------------------------------------------------------------------------
 
 function stopWorking(client) {
-	if(!canClientUseJobs(client)){ 
+	if(!canPlayerUseJobs(client)){ 
+		return false;
+	}
+
+	if(!isPlayerWorking(client)) {
 		return false;
 	}
 
@@ -624,7 +624,7 @@ function jobEquipmentCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function quitJobCommand(command, params, client) {
-	if(!canClientUseJobs(client)){ 
+	if(!canPlayerUseJobs(client)){ 
 		return false;
 	}
 
@@ -637,7 +637,7 @@ function quitJobCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function jobRadioCommand(command, params, client) {
-	if(!canClientUseJobs(client)){ 
+	if(!canPlayerUseJobs(client)){ 
 		return false;
 	}
 
@@ -649,7 +649,7 @@ function jobRadioCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function jobDepartmentRadioCommand(command, params, client) {
-	if(!canClientUseJobs(client)){ 
+	if(!canPlayerUseJobs(client)){ 
 		return false;
 	}
 
@@ -699,12 +699,66 @@ function reloadAllJobsCommand(command, params, client) {
 		}
 	}
 	
+	forceAllPlayersToStopWorking();
 	getServerData().jobs = null;
 	getServerData().jobs = loadJobsFromDatabase();
 	createAllJobPickups();
 	createAllJobBlips();
 
 	messageAdminAction(`All server jobs have been reloaded by an admin!`);
+}
+
+function forceAllPlayersToStopWorking() {
+	getClients().forEach(function(client) {
+		stopWorking(client);
+	});
+}
+
+// ---------------------------------------------------------------------------
+
+function jobStartRouteCommand(command, params, client) {
+    if(!canPlayerUseJobs(client)) { 
+		messageClientError(client, "You are not allowed to use jobs.");
+        return false;
+    }
+
+    if(!isPlayerWorking(client)) {
+		messageClientError(client, "You aren't working yet! Use /startwork first.");
+        return false;
+    }
+
+    if(!doesPlayerHaveJobType(client, AG_JOB_BUS) && !doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
+		messageClientError(client, "Your job doesn't use a route!");
+        return false;
+	}
+
+	if(!isPlayerInJobVehicle(client)) {
+		messageClientError(client, "You need to be in a vehicle that belongs to your job!");
+        return false;		
+	}
+	
+	startJobRoute(client);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function isPlayerInJobVehicle(client) {
+	if(getPlayerVehicle(client)) {
+		let vehicle = getPlayerVehicle(client);
+		if(isVehicleOwnedByJob(vehicle, getClientCurrentSubAccount(client).job)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function isPlayerWorking(client) {
+	return getClientCurrentSubAccount(client).isWorking;
 }
 
 // ---------------------------------------------------------------------------

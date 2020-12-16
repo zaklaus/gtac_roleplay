@@ -101,13 +101,21 @@ let busRoutes = [
 
 // ---------------------------------------------------------------------------
 
+function getRandomBusRoute(island) {
+    let islandBusRoutes = busRoutes[getServerGame()].filter(busRoute => busRoute.island == island);
+    let randomRoute = getRandom(0, islandBusRoutes.length-1);
+    return islandBusRoutes[randomRoute];
+}
+
+// ---------------------------------------------------------------------------
+
 function getNextStopOnBusRoute(client) {
-    if(getEntityData(client, "ag.busRoute") && getEntityData(client, "ag.lastBusStop")) {
+    if(getClientData(client).busRoute && getClientData(client).lastBusStop) {
         if(!isGoingToLastStopOnBusRoute(client)) {
-            return busRoutes[server.game][getEntityData(client, "ag.busRoute")].positions[getEntityData(client, "ag.lastBusStop")+1];
+            return busRoutes[getServerGame()][getClientData(client).busRoute].positions[getClientData(client).lastBusStop+1];
         } else {
-            let slot = busRoutes[server.game][getEntityData(client, "ag.busRoute")].length-1;
-            return busRoutes[server.game][getEntityData(client, "ag.busRoute")].positions[slot];
+            let slot = busRoutes[getServerGame()][getClientData(client).busRoute].length-1;
+            return busRoutes[getServerGame()][getClientData(client).busRoute].positions[slot];
         }
     }    
 }
@@ -115,8 +123,8 @@ function getNextStopOnBusRoute(client) {
 // ---------------------------------------------------------------------------
 
 function isGoingToLastStopOnBusRoute(client) {
-    if(getEntityData(client, "ag.busRoute") && getEntityData(client, "ag.lastBusStop")) {
-        if(getEntityData(client, "ag.lastBusStop")+1 == busRoutes[server.game][getEntityData(client, "ag.busRoute")].length-1) {
+    if(getClientData(client).busRoute && getClientData(client).lastBusStop) {
+        if(getClientData(client).lastBusStop+1 == busRoutes[getServerGame()][getClientData(client).busRoute].length-1) {
             return true;
         }
     }

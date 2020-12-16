@@ -28,6 +28,7 @@ function initServerScripts() {
 	initVehicleScript();
 	initDeveloperScript();
 	initConfigScript();
+	initKeyBindScript()
 
 	initTimers();
 

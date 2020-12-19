@@ -27,6 +27,7 @@
 	<script src="scripts/server/help.js" type="server" language="javascript" />
 	<script src="scripts/server/house.js" type="server" language="javascript" />
 	<script src="scripts/server/job.js" type="server" language="javascript" />
+	<script src="scripts/server/keybind.js" type="server" language="javascript" />
 	<script src="scripts/server/locale.js" type="server" language="javascript" />
 	<script src="scripts/server/messaging.js" type="server" language="javascript" />
 	<script src="scripts/server/misc.js" type="server" language="javascript" />

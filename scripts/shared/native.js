@@ -69,10 +69,12 @@ function getEntityData(entity, dataName) {
 // ---------------------------------------------------------------------------
 
 function setEntityData(entity, dataName, dataValue, syncToClients = true) {
-	if(!isNull(server)) {
-		return entity.setData(dataName, dataValue, syncToClients);
-	} else {
-		return entity.setData(dataName, dataValue);
+	if(entity != null) {
+		if(!isNull(server)) {
+			return entity.setData(dataName, dataValue, syncToClients);
+		} else {
+			return entity.setData(dataName, dataValue);
+		}
 	}
 }
 

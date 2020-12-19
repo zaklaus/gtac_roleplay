@@ -459,11 +459,11 @@ function getClosestVehicle(position) {
 	let vehicles = getServerData().vehicles;
 	let closest = 0;
 	for(let i in vehicles) {
-		if(vehicles[i].syncPosition.distance(position) < vehicles[closest].syncPosition.distance(position)) {
+		if(getDistance(getVehiclePosition(vehicles[i].vehicle, position)) < getDistance(getVehiclePosition(vehicles[closest].vehicle, position))) {
 			closest = i;
 		}
 	}
-	return vehicles[closest];
+	return vehicles[closest].vehicle;
 }
 
 // ---------------------------------------------------------------------------
@@ -478,12 +478,11 @@ function getClosestPlayer(position) {
 	let clients = getClients();
 	let closest = 0;
 	for(let i in clients) {
-		if(clients[i].getData("ag.position") != null) {
-			if(clients[i].getData("ag.position").distance(position) < clients[closest].getData("ag.position").distance(position)) {
+		if(getDistance(getPlayerPosition(clients[i]), position) > 0.0) {
+			if(getDistance(getPlayerPosition(clients[i]), position) < getDistance(getPlayerPosition(clients[closest]), position)) {
 				closest = i;
 			}
 		}
-
 	}
 	return clients[closest];
 }
@@ -1360,7 +1359,7 @@ function getPickupOwnerId(pickup) {
 // ---------------------------------------------------------------------------
 
 function canPlayerUseJobs(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerData().moderationFlags.jobBanned) {
+	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.jobBanned) {
 		return false;
 	}
 
@@ -1370,7 +1369,7 @@ function canPlayerUseJobs(client) {
 // ---------------------------------------------------------------------------
 
 function canPlayerUsePoliceJob(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerData().moderationFlags.policeBanned) {
+	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.policeBanned) {
 		return false;
 	}
 
@@ -1380,7 +1379,7 @@ function canPlayerUsePoliceJob(client) {
 // ---------------------------------------------------------------------------
 
 function canClientUseFireJob(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerData().moderationFlags.fireBanned) {
+	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.fireBanned) {
 		return false;
 	}
 
@@ -1390,7 +1389,7 @@ function canClientUseFireJob(client) {
 // ---------------------------------------------------------------------------
 
 function canClientUseAmmunations(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerData().moderationFlags.ammuBanned) {
+	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.ammuBanned) {
 		return false;
 	}
 
@@ -1400,7 +1399,7 @@ function canClientUseAmmunations(client) {
 // ---------------------------------------------------------------------------
 
 function canClientUseGuns(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerData().moderationFlags.gunBanned) {
+	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.gunBanned) {
 		return false;
 	}
 
@@ -1410,7 +1409,7 @@ function canClientUseGuns(client) {
 // ---------------------------------------------------------------------------
 
 function intToBool(intVal) {
-	return !!intVal;
+	return (intVal == 1) ? true : false;
 }
 
 // ---------------------------------------------------------------------------

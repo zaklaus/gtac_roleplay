@@ -47,6 +47,21 @@ function autoLoginByIPCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function autoSelectLastCharacterCommand(command, params, client) {
+	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
+	
+	if(isAccountAutoSelectLastCharacterEnabled(getClientData(client).accountData)) {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		messageClientSuccess(client, `You will not be automatically spawned as your last used character`);
+	} else {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		messageClientSuccess(client, `You will now be automatically spawned as your last used character`);
+	}
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
 function toggleAccountGUICommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noGUI");
 	
@@ -556,6 +571,7 @@ function saveClientToDatabase(client) {
 function initClient(client) {
 	triggerNetworkEvent("ag.guiColour", client, getServerConfig().guiColour[0], getServerConfig().guiColour[1], getServerConfig().guiColour[2]);
 	triggerNetworkEvent("ag.logo", client, getServerConfig().showLogo);
+	triggerNetworkEvent("ag.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
 
 	showConnectCameraToPlayer(client);
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
@@ -754,6 +770,16 @@ function doesPlayerHaveGUIEnabled(client) {
 
 function doesPlayerHaveAutoLoginByIPEnabled(client) {
 	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
+		return false;
+	}
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
+	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"))) {
 		return false;
 	}
 

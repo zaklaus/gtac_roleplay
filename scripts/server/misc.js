@@ -19,18 +19,6 @@ function initMiscScript() {
 // ---------------------------------------------------------------------------
 
 function getPositionCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	let position = client.player.position;
 
 	messageClientNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
@@ -41,18 +29,6 @@ function getPositionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setNewCharacterSpawnPositionCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	let position = client.player.position;
 	getServerConfig().newCharacter.spawnPosition = position;
 	getServerConfig().newCharacter.spawnHeading = client.player.heading;
@@ -64,18 +40,6 @@ function setNewCharacterSpawnPositionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setNewCharacterMoneyCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -93,15 +57,8 @@ function setNewCharacterMoneyCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setNewCharacterSkinCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -121,15 +78,8 @@ function setNewCharacterSkinCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function submitIdeaCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -142,21 +92,94 @@ function submitIdeaCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function submitBugReportCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	submitBugReport(client, params);
 
     messageClientNormal(client, `Your bug report has been sent to the developers!`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function enterExitPropertyCommand(command, params, client) {
+	if(isPlayerInAnyHouse(client)) {
+		let inHouse = getServerData().houses[getPlayerHouse(client)];
+		if(getDistance(inHouse.exitPosition, getPlayerPosition(client)) <= getServerConfig().exitPropertyDistance) {
+			if(inHouse.locked) {
+				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
+				return false;
+			}
+			meActionToNearbyPlayers(client, "opens the door and exits the house");
+			triggerNetworkEvent("ag.exitProperty", client, inHouse.entrancePosition, inHouse.entranceRotation, 0, 0);
+			client.player.dimension = inHouse.entranceDimension;
+			removeEntityData(client, "ag.inHouse");
+		}
+		return true;
+	}
+
+	console.log("Not in a house.");
+
+	if(isPlayerInAnyBusiness(client)) {
+		let inBusiness = getServerData().businesses[getPlayerBusiness(client)];
+		if(getDistance(inBusiness.exitPosition, getPlayerPosition(client)) <= getServerConfig().exitPropertyDistance) {
+			if(inBusiness.locked) {
+				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
+				return false;
+			}					
+			meActionToNearbyPlayers(client, "opens the door and exits the business");
+			triggerNetworkEvent("ag.exitProperty", client, inBusiness.entrancePosition, inBusiness.entranceRotation, 0, 0);
+			client.player.dimension = inBusiness.entranceDimension;
+			removeEntityData(client, "ag.inBusiness");
+		}
+		return true;	
+	}
+
+	console.log("Not in a business.");
+
+	if(getServerData().businesses.length > 0) {
+		let closestBusinessId = getClosestBusinessEntrance(getPlayerPosition(client));
+		let closestBusiness = getBusinessData(closestBusinessId)
+		if(getDistance(closestBusiness.entrancePosition, getPlayerPosition(client)) <= getServerConfig().enterPropertyDistance) {
+			if(closestBusiness.locked) {
+				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
+				return false;
+			}			
+			meActionToNearbyPlayers(client, "opens the door and enters the business");
+			triggerNetworkEvent("ag.enterProperty", client, closestBusiness.exitPosition, closestBusiness.exitRotation, closestBusiness.exitInterior, closestBusinessId+getServerConfig().businessDimensionStart);
+			client.player.dimension = closestBusiness.exitDimension;
+			setEntityData(client, "ag.inBusiness", closestBusinessId);
+			return true;
+		}
+	}
+
+	console.log("Not near a business entrance.");
+
+	if(getServerData().houses.length > 0) {
+		let closestHouseId = getClosestHouseEntrance(getPlayerPosition(client));
+		//console.log(closestHouseId);
+		let closestHouse = getHouseData(closestHouseId);
+		//let distance = getDistance(closestHouse.entrancePosition, getPlayerPosition(client));
+		//console.log(`Distance to closest house door: ${distance}`);
+		if(getDistance(closestHouse.entrancePosition, getPlayerPosition(client)) <= getServerConfig().enterPropertyDistance) {
+			if(closestHouse.locked) {
+				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
+				return false;
+			}
+			meActionToNearbyPlayers(client, "opens the door and enters the house");
+			triggerNetworkEvent("ag.enterProperty", client, closestHouse.exitPosition, closestHouse.exitRotation, closestHouse.exitInterior, closestHouse+getServerConfig().houseDimensionStart);
+			//client.player.dimension = closestHouse.exitDimension;
+			setEntityData(client, "ag.inHouse", closestHouseId);
+			return true;
+		}
+	}
+
+	console.log("Not near a house entrance.");
+	messageClientError(client, "You aren't close enough to a door!");
+	
 	return true;
 }
 

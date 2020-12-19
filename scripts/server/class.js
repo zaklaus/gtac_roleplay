@@ -127,7 +127,7 @@ function initClassTable() {
 				this.dateOfBirth = subAccountAssoc["sacct_when_born"];
 				this.spawnPosition = toVector3(subAccountAssoc["sacct_pos_x"], subAccountAssoc["sacct_pos_y"], subAccountAssoc["sacct_pos_z"]);
 				this.spawnHeading = toFloat(subAccountAssoc["sacct_angle"]);
-				this.lastLogin = toInteger(subAcountAssoc["sacct_last_login"]);
+				this.lastLogin = toInteger(subAccountAssoc["sacct_last_login"]);
 
 				this.isWorking = false;
 				this.jobUniform = this.skin;

@@ -111,7 +111,13 @@ function loadCommandData() {
         help: [
             commandData("help", helpCommand, "", getStaffFlagValue("none"), false, false),
         ],
-        house: [],
+        house: [
+            commandData("houseinfo", getHouseInfoCommand, "", getStaffFlagValue("none"), true, false),
+            //commandData("housedesc", setHouseDescriptionCommand, "", getStaffFlagValue("none"), true, false),
+            //commandData("houselock", lockUnlockHouseCommand, "", getStaffFlagValue("none"), true, false),
+            //commandData("houseowner", setHouseOwnerCommand, "", getStaffFlagValue("none"), true, false),
+            
+        ],
         item: [],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),
@@ -142,9 +148,11 @@ function loadCommandData() {
         locale: [],
         messaging: [],
         misc: [
-            commandData("pos", getPositionCommand, "", getStaffFlagValue("basicModeration"), true, true),
+            commandData("pos", getPositionCommand, "", getStaffFlagValue("basicModeration"), true, false),
             commandData("idea", submitIdeaCommand, "<message>", getStaffFlagValue("none"), true, true),
             commandData("bug", submitBugReportCommand, "<message>", getStaffFlagValue("none"), true, true),
+            commandData("enter", enterExitPropertyCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("exit", enterExitPropertyCommand, "", getStaffFlagValue("none"), true, false),
         ],
         moderation: [
             commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
@@ -169,13 +177,13 @@ function loadCommandData() {
         translate: [],
         utilities: [],
         vehicle: [
-            commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, true),	
-            commandData("tempveh", createTemporaryVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, true),
-            commandData("delveh", deleteVehicleCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, false),	
+            commandData("tempveh", createTemporaryVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, false),
+            commandData("delveh", deleteVehicleCommand, "", getStaffFlagValue("manageVehicles"), true, false),
             
-            commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, true),	
-            commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, true),	
-            commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, true),	
+            commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),	
+            commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, false),	
+            commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, false),	
 
             commandData("vehowner", setVehicleOwnerCommand, "<player id/name>", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehclan", setVehicleClanCommand, "<clan id/name>", getStaffFlagValue("manageVehicles"), true, true),

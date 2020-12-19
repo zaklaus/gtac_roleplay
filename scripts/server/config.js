@@ -251,6 +251,10 @@ let serverConfig = {
 		new serverClasses.keyBindData(false, SDLK_k, "lights"),
 		new serverClasses.keyBindData(false, SDLK_l, "lock"),
 	],
+	exitPropertyDistance: 3.0,
+	enterPropertyDistance: 3.0,
+	businessDimensionStart: 1000,
+	houseDimensionStart: 3000,
 };
 
 // ----------------------------------------------------------------------------
@@ -430,8 +434,8 @@ function setSnowingCommand(command, params, client) {
 	}
 
 	let splitParams = params.split();
-    let fallingSnow = splitParams[0] || 0;
-	let groundSnow = splitParams[1] || 0;
+    let fallingSnow = Number(splitParams[0]) || !getServerConfig().fallingSnow;
+	let groundSnow = Number(splitParams[1]) || !getServerConfig().groundSnow;
 	
 	fallingSnow = intToBool(toInteger(fallingSnow));
 	groundSnow = intToBool(toInteger(groundSnow));
@@ -439,7 +443,9 @@ function setSnowingCommand(command, params, client) {
 	getServerConfig().fallingSnow = fallingSnow;
 	getServerConfig().groundSnow = groundSnow;
 
-    messageAdminAction(`${client.name} turned falling snow ${getOnOffFromBool(intToBool(fallingSnow))} and ground snow ${getOnOffFromBool(intToBool(groundSnow))}`);
+	triggerNetworkEvent("ag.snow", null, fallingSnow, groundSnow);
+
+    messageAdminAction(`${client.name} turned falling snow ${getOnOffFromBool(fallingSnow)} and ground snow ${getOnOffFromBool(groundSnow)}`);
     updateServerRules();
 	return true;
 }
@@ -459,7 +465,9 @@ function toggleServerLogoCommand(command, params, client) {
 		return false;
 	}
 
-    getServerConfig().useLogo = !getServerConfig().useLogo;
+	getServerConfig().useLogo = !getServerConfig().useLogo;
+	
+	triggerNetworkEvent("ag.logo", null, intToBool(getServerConfig().useLogo));
 
     messageAdminAction(`${client.name} turned the server logo image ${toLowerCase(getOnOffFromBool(getServerConfig().useLogo))}`);
     updateServerRules();

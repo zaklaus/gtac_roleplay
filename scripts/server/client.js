@@ -152,8 +152,3 @@ addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
 });
 
 // ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.onPlayerEnterVehicle", playerEnteredVehicle);
-addNetworkHandler("ag.onPlayerExitVehicle", playerExitedVehicle);
-
-// ---------------------------------------------------------------------------

@@ -112,6 +112,11 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 // ---------------------------------------------------------------------------
 
 function showCharacterSelectToClient(client) {
+	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client) && getClientData().subAccounts.length > 0) {
+		selectCharacter(client, getPlayerLastUsedSubAccount(client));
+		return false;
+	}
+
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		getClientData(client).currentSubAccount = 0;
 		let tempSubAccount = getClientData(client).subAccounts[0];
@@ -120,6 +125,7 @@ function showCharacterSelectToClient(client) {
 	} else {	
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
 		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
+		//let emojiNumbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"];
 		messageClientNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
 		getClientData(client).subAccounts.forEach(function(subAccount, index) {
 			messageClientNormal(client, `${index+1} • [#AAAAAA]${subAccount.firstName} ${subAccount.lastName}`);
@@ -219,17 +225,21 @@ function selectCharacter(client, characterId = -1) {
 		getClientData(client).currentSubAccount = characterId;
 	}
 
+	getClientCurrentSubAccount(client).lastLogin = new Date().getTime();
+
 	let tempSubAccount = getClientCurrentSubAccount(client);
 	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
 
 	messageClientAlert(client, `You are now playing as: [#0099FF]${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
 	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
 	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
+	
 	triggerNetworkEvent("ag.restoreCamera", client);
 	setEntityData(client, "ag.spawned", true, true);
 	setTimeout(function() {
 		setEntityData(client.player, "ag.spawned", true, true);
-	}, client.ping+500);
+		//triggerNetworkEvent("ag.restoreCamera", client);
+	}, client.ping+1000);
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 
@@ -272,6 +282,19 @@ function useCharacterCommand(command, params, client) {
 	let characterId = toInteger(params) || 1;
 
 	selectCharacter(client, characterId-1);
+}
+
+// ---------------------------------------------------------------------------
+
+function getPlayerLastUsedSubAccount(client) {
+	let subAccounts = getClientData(client).subAccounts;
+	lastUsed = 0;
+	for(let i in subAccounts) {
+		if(subAccounts[i].lastLogin > subAccounts[lastUsed].lastLogin) {
+			lastUsed = i;
+		}
+	}
+	return lastUsed
 }
 
 // ---------------------------------------------------------------------------

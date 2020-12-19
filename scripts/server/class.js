@@ -126,7 +126,8 @@ function initClassTable() {
 				this.placeOfOrigin = subAccountAssoc["sacct_origin"];
 				this.dateOfBirth = subAccountAssoc["sacct_when_born"];
 				this.spawnPosition = toVector3(subAccountAssoc["sacct_pos_x"], subAccountAssoc["sacct_pos_y"], subAccountAssoc["sacct_pos_z"]);
-				this.spawnHeading = toInteger(subAccountAssoc["sacct_angle"]);
+				this.spawnHeading = toFloat(subAccountAssoc["sacct_angle"]);
+				this.lastLogin = toInteger(subAcountAssoc["sacct_last_login"]);
 
 				this.isWorking = false;
 				this.jobUniform = this.skin;
@@ -188,7 +189,35 @@ function initClassTable() {
 			}
 		},
 		houseData: class {
-
+			constructor(houseAssoc) {
+				if(!houseAssoc) {
+					return false;
+				}
+				
+				this.databaseId = toInteger(houseAssoc["house_id"]);
+				this.description = toString(houseAssoc["house_description"]);
+				this.ownerType = toInteger(houseAssoc["house_owner_type"]);
+				this.ownerId = toInteger(houseAssoc["house_owner_id"]);
+				this.locked = intToBool(toInteger(houseAssoc["house_locked"]));
+	
+				this.entrancePosition = toVector3(toFloat(houseAssoc["house_entrance_pos_x"]), toFloat(houseAssoc["house_entrance_pos_y"]), toFloat(houseAssoc["house_entrance_pos_z"]));
+				this.entranceRotation = toFloat(houseAssoc["house_entrance_rot_z"]);
+				this.entranceInterior = toInteger(houseAssoc["house_entrance_int"]);
+				this.entranceDimension = toInteger(houseAssoc["house_entrance_vw"]);
+				this.entrancePickupModel = toInteger(houseAssoc["house_entrance_pickup"]);
+				this.entranceBlipModel = toInteger(houseAssoc["house_entrance_blip"]);	
+				this.entrancePickup = null;
+				this.entranceBlip = null;
+				
+				this.exitPosition = toVector3(toFloat(houseAssoc["house_exit_pos_x"]), toFloat(houseAssoc["house_exit_pos_y"]), toFloat(houseAssoc["house_exit_pos_z"]));
+				this.exitRotation = toFloat(houseAssoc["house_exit_rot_z"]);
+				this.exitInterior = toInteger(houseAssoc["house_exit_int"]);
+				this.exitDimension = toInteger(houseAssoc["house_exit_vw"]);
+				this.exitPickupModel = toInteger(houseAssoc["house_exit_pickup"]);
+				this.exitBlipModel = toInteger(houseAssoc["house_exit_blip"]);
+				this.exitPickup = null;
+				this.exitBlip = null;
+			}
 		},
 		familyData: class {
 

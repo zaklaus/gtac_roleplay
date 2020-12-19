@@ -80,7 +80,7 @@ let serverBitFlagKeys = {
 		"manageVehicles",
 		"manageHouses",
 		"manageBusinesses",
-		"owner"
+		"owner",
 	],
 	accountSettingsFlagKeys: [
 		"none", 
@@ -90,6 +90,8 @@ let serverBitFlagKeys = {
 		"authAttemptAlert",
 		"noGUI",
 		"autoLoginIP",
+		"noServerLogo",
+		"autoSelectLastCharacter",
 	],
 	subAccountSettingsFlagKeys: [],
 }
@@ -260,3 +262,13 @@ function clearClientStaffFlags(client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function getServerBitFlags() {
+	return serverBitFlags;
+}
+
+// ---------------------------------------------------------------------------
+
+function getServerBitFlagKeys() {
+	return serverBitFlagKeys;
+}

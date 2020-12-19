@@ -41,14 +41,16 @@ function initTimers() {
 
 function vehicleRentCheck() {
 	for(let i in getServerData().vehicles) {
-		if(getServerData().vehicles[i].rentPrice > 0) {
-			if(getServerData().vehicles[i].rentedBy) {
-				let rentedBy = getServerData().vehicles[i].rentedBy;
-				if(getClientData(rentedBy).cash < getServerData().vehicles[i].rentPrice) {
-					messageClientAlert(rentedBy, `You do not have enough money to continue renting this vehicle!`);
-					stopRentingVehicle(rentedBy);
-				} else {
-					getClientData(rentedBy).cash -= getServerData().vehicles[i].rentPrice;
+		if(getServerData().vehicles[i] != null) {
+			if(getServerData().vehicles[i].rentPrice > 0) {
+				if(getServerData().vehicles[i].rentedBy) {
+					let rentedBy = getServerData().vehicles[i].rentedBy;
+					if(getClientData(rentedBy).cash < getServerData().vehicles[i].rentPrice) {
+						messageClientAlert(rentedBy, `You do not have enough money to continue renting this vehicle!`);
+						stopRentingVehicle(rentedBy);
+					} else {
+						getClientData(rentedBy).cash -= getServerData().vehicles[i].rentPrice;
+					}
 				}
 			}
 		}

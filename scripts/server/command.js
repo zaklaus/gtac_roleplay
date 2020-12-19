@@ -105,6 +105,7 @@ function loadCommandData() {
             commandData("ccode", executeClientCodeCommand, "<code>", getStaffFlagValue("developer"), true, true),
             commandData("gmx", restartGameModeCommand, "", getStaffFlagValue("developer"), true, true),
             commandData("saveall", saveAllServerDataCommand, "", getStaffFlagValue("developer"), true, true),
+            commandData("docmd", simulatePlayerCommand, "<player name/id> <command> [params]", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],
         faction: [],
@@ -347,7 +348,7 @@ function enableAllCommandsByType(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnPlayerCommand", function(event, client, command, params) {
+function onPlayerCommand(event, client, command, params) {
     let commandData = getCommand(command);
 
     let paramsDisplay = params;
@@ -391,6 +392,21 @@ addEventHandler("OnPlayerCommand", function(event, client, command, params) {
     
     console.log(`[Asshat.Command] ${getClientDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
     commandData.handlerFunction(command, params, client);
+}
+addEventHandler("OnPlayerCommand", onPlayerCommand);
+
+// ---------------------------------------------------------------------------
+
+addCommandHandler("cmd", function(command, params, client) {
+    if(!client.console) {
+        return false;
+    }
+
+    let splitParams = params.split(" ");
+    let newCommand = splitParams[0];
+    let newParams = splitParams.slice(1).join(" ");
+
+    onPlayerCommand(newCommand, newParams, client);
 });
 
 // ---------------------------------------------------------------------------

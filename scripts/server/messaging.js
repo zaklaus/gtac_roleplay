@@ -109,6 +109,21 @@ function messageClientInfo(client, messageText) {
 
 // ---------------------------------------------------------------------------
 
+function messageClientTip(client, messageText) {
+    if(client.console) {
+        console.log(`[TIP] ${messageText}`);
+        return true;
+    }
+        
+    if(!isClientFromDiscord(client)) {
+        messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
+    } else {
+        messageDiscordUser(client, `:information_source: ${messageText}`);
+    }
+}
+
+// ---------------------------------------------------------------------------
+
 function messageClientTalk(client, talkingClient, messageText) {
     messageClientNormal(client, `${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
 }

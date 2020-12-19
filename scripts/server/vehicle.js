@@ -57,6 +57,11 @@ function saveAllVehiclesToDatabase() {
 // ---------------------------------------------------------------------------
 
 function saveVehicleToDatabase(vehicleData) {
+	if(vehicleData == null) {
+		// Invalid vehicle data
+		return false;
+	}
+
 	if(vehicleData.databaseId == -1) {
 		// Temp vehicle, no need to save
 		return false;
@@ -139,8 +144,9 @@ function createVehicleCommand(command, params, client) {
 		messageClientError(client, "The vehicle could not be created!");
 		return false;
 	}	
+	vehicle.heading = getPlayerHeading(client);
 	addToWorld(vehicle);
-
+	
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
 
 	setEntityData(vehicle, "ag.dataSlot", vehicleDataSlot, true);
@@ -169,6 +175,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 		messageClientError(client, "The vehicle could not be created!");
 		return false;
 	}
+	vehicle.heading = getPlayerHeading(client);
 	addToWorld(vehicle);
 
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
@@ -679,6 +686,12 @@ function getVehicleInfoCommand(command, params, client) {
 	}
 	
 	let vehicle = getPlayerVehicle(client);
+
+	if(!getVehicleData(vehicle)) {
+		messageClientError(client, "This is a random traffic vehicle and doesn't have any info");
+		return false;		
+	}	
+
 	let vehicleData = getVehicleData(vehicle);
 
 	let ownerName = "Nobody";
@@ -705,7 +718,7 @@ function getVehicleInfoCommand(command, params, client) {
 			break;
 	}
 
-	messageClientInfo(client, `[#CC22CC][Vehicle Info] [#FFFFFF]ID: [#AAAAAA]${vehicle.id}, [#FFFFFF]DatabaseID: [#AAAAAA]${vehicleData.databaseId}, [#FFFFFF]Owner: [#AAAAAA]${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), [#FFFFFF]Type: [#AAAAAA]${getVehicleName(vehicle)}[${vehicle.modelIndex}], [#FFFFFF]BuyPrice: [#AAAAAA]${vehicleData.buyPrice}, [#FFFFFF]RentPrice: [#AAAAAA]${vehicleData.rentPrice}`);
+	messageClientNormal(client, `🚗 [#CC22CC][Vehicle Info] [#FFFFFF]ID: [#AAAAAA]${vehicle.id}, [#FFFFFF]DatabaseID: [#AAAAAA]${vehicleData.databaseId}, [#FFFFFF]Owner: [#AAAAAA]${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), [#FFFFFF]Type: [#AAAAAA]${getVehicleName(vehicle)}[${vehicle.modelIndex}], [#FFFFFF]BuyPrice: [#AAAAAA]${vehicleData.buyPrice}, [#FFFFFF]RentPrice: [#AAAAAA]${vehicleData.rentPrice}`);
 }
 
 // ---------------------------------------------------------------------------

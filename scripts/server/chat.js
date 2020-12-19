@@ -17,18 +17,6 @@ function initChatScript() {
 // ---------------------------------------------------------------------------
 
 function meActionCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	meActionToNearbyPlayers(client, params);
 	return true;
 }
@@ -36,18 +24,6 @@ function meActionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function doActionCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	doActionToNearbyPlayers(client, params);
 	return true;
 }
@@ -55,18 +31,6 @@ function doActionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function shoutCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	shoutToNearbyPlayers(client, params);
 	return true;
 }
@@ -74,18 +38,6 @@ function shoutCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function talkCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	talkToNearbyPlayers(client, params);
 	return true;
 }
@@ -93,18 +45,6 @@ function talkCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function whisperCommand(command, params, client) {
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	whisperToNearbyPlayers(client, params);
 	return true;
 }

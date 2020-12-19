@@ -608,7 +608,10 @@ function getBusinessOwnerTypeText(ownerType) {
 // ---------------------------------------------------------------------------
 
 function getBusinessData(businessId) {
-	return (!isNull(getServerData().businesses[businessId])) ? getServerData().businesses[businessId] : false;
+	if(typeof getServerData().businesses[businessId] != null) {
+		return getServerData().businesses[businessId];
+	}
+	return false;
 }
 
 // ---------------------------------------------------------------------------

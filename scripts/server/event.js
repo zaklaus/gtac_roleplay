@@ -10,6 +10,15 @@
 
 // ---------------------------------------------------------------------------
 
+function initEventScript() {
+	console.log("[Asshat.Event]: Initializing event script ...");    
+    addNetworkHandler("ag.onPlayerEnterVehicle", playerEnteredVehicle);
+    addNetworkHandler("ag.onPlayerExitVehicle", playerExitedVehicle);
+    console.log("[Asshat.Event]: Event script initialized!");
+}
+
+// ---------------------------------------------------------------------------
+
 addEventHandler("OnPlayerConnect", function(event, ipAddress, port) {
     console.log(`[Asshat.Event] Client connecting (IP: ${ipAddress}, Port: ${port})`);
 });

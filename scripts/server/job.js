@@ -690,8 +690,6 @@ function takeJob(client, jobId) {
 // ---------------------------------------------------------------------------
 
 function reloadAllJobsCommand(command, params, client) {
-
-
 	for(let i in getServerData().jobs) {
 		for(let j in getServerData().jobs[i].locations) {
 			destroyElement(getServerData().jobs[i].locations[j].blip);
@@ -699,7 +697,7 @@ function reloadAllJobsCommand(command, params, client) {
 		}
 	}
 	
-	forceAllPlayersToStopWorking();
+	//forceAllPlayersToStopWorking();
 	getServerData().jobs = null;
 	getServerData().jobs = loadJobsFromDatabase();
 	createAllJobPickups();
@@ -707,6 +705,8 @@ function reloadAllJobsCommand(command, params, client) {
 
 	messageAdminAction(`All server jobs have been reloaded by an admin!`);
 }
+
+// ---------------------------------------------------------------------------
 
 function forceAllPlayersToStopWorking() {
 	getClients().forEach(function(client) {

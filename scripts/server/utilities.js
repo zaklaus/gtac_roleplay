@@ -247,8 +247,14 @@ function areParamsEmpty(params) {
 
 // ---------------------------------------------------------------------------
 
-function getParamsCount(params, delimiter) {
+function getParamsCount(params, delimiter = " ") {
 	return params.split(delimiter).length;
+}
+
+// ---------------------------------------------------------------------------
+
+function areThereEnoughParams(params, requiredAmount, delimiter = " ") {
+	return (params.split(delimiter).length >= requiredAmount);
 }
 
 // ---------------------------------------------------------------------------

@@ -22,6 +22,7 @@ addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
     //if(gta.game < GAME_GTA_IV) {
         gta.fadeCamera(true);
         gta.setCameraLookAt(cameraPosition, cameraLookat, true);
+        //gta.setGenerateCarsAroundCamera(true);
     //}
 });
 
@@ -30,6 +31,7 @@ addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
 addNetworkHandler("ag.restoreCamera", function() {
     //if(gta.game < GAME_GTA_IV) {
         gta.restoreCamera(true);
+        //gta.setGenerateCarsAroundCamera(false);
     //}
 });
 
@@ -66,7 +68,9 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
     addEvent("OnLocalPlayerEnterSphere", 1);
     addEvent("OnLocalPlayerExitSphere", 1);
     addEvent("OnLocalPlayerEnterVehicle", 2);
-    addEvent("OnLocalPlayerExitVehicle", 2);    
+    addEvent("OnLocalPlayerExitVehicle", 2);   
+    
+    gta.setDefaultInteriors(false);
 });
 
 // ---------------------------------------------------------------------------
@@ -225,6 +229,41 @@ addNetworkHandler("ag.dimension", function(dimension) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.enterProperty", function(position, heading, interior, dimension) {
+    gta.fadeCamera(false, 1.0);
+    setTimeout(function() {
+        localPlayer.interior = interior;
+        gta.cameraInterior = interior;
+
+        setTimeout(function() {
+            localPlayer.position = position;
+            localPlayer.heading = heading;
+            gta.fadeCamera(true, 1.0);
+        }, 1000);
+    }, 1100);
+
+    //localPlayer.dimension = dimension;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.exitProperty", function(position, heading, interior, dimension) {
+    gta.fadeCamera(false, 1.0);
+    setTimeout(function() {
+        localPlayer.interior = 0;
+        gta.cameraInterior = 0;
+
+        setTimeout(function() {
+            localPlayer.position = position;
+            localPlayer.heading = heading;
+            gta.fadeCamera(true, 1.0);
+        }, 1000);
+    }, 1100);
+    //localPlayer.dimension = dimension;
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.removeFromVehicle", function() {
     localPlayer.removeFromVehicle();
 });
@@ -255,15 +294,17 @@ function processEvent(event, deltaTime) {
             }
         });
 
-        if(localPlayer.vehicle != null) {
+        if(localPlayer.vehicle) {
             if(!inVehicle) {
                 inVehicle = localPlayer.vehicle;
                 triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
+                console.log(`Entered vehicle: ${inVehicle.id}`);
                 triggerNetworkEvent("ag.onPlayerEnterVehicle", inVehicle);
             }
         } else {
             if(inVehicle) {
                 triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
+                console.log(`Exited vehicle: ${inVehicle.id}`);
                 triggerNetworkEvent("ag.onPlayerExitVehicle", inVehicle);
                 inVehicle = false;
             }           
@@ -420,6 +461,15 @@ addNetworkHandler("ag.showBusStop", function(position, colour) {
         busStopSphere = null;
         busStopBlip = null;
     });
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
+    if(!isNull(snowing)) {
+        snowing = fallingSnow;
+        forceSnowing(groundSnow);
+    }
 });
 
 // ---------------------------------------------------------------------------

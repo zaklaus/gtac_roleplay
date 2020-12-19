@@ -16,6 +16,44 @@ function initDeveloperScript() {
 
 // ---------------------------------------------------------------------------
 
+function simulatePlayerCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(areParamsEmpty(params) || !areThereEnoughParams(params, 3)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let tempCommand = splitParams[1];
+	let tempParams = splitParams.slice(2).join(" ");
+
+	if(!targetClient) {
+		messageClientError(client, "Invalid player name or ID");
+		return false;
+	}
+
+	if(!getCommand(tempCommand)) {
+		messageClientError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+		return false;
+	}
+
+	onPlayerCommand(tempCommand, tempParams, targetClient);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
 function executeServerCodeCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {

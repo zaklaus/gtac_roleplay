@@ -50,7 +50,7 @@ function autoLoginByIPCommand(command, params, client) {
 function autoSelectLastCharacterCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
 	
-	if(isAccountAutoSelectLastCharacterEnabled(getClientData(client).accountData)) {
+	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
 		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
 		messageClientSuccess(client, `You will not be automatically spawned as your last used character`);
 	} else {
@@ -68,11 +68,11 @@ function toggleAccountGUICommand(command, params, client) {
 	if(!doesPlayerHaveGUIEnabled(client)) {
 		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
 		messageClientSuccess(client, `You will now be shown GUI (if enabled on current server)`);
-		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI on for their account`);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	} else {
 		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
 		messageClientSuccess(client, `You will not be shown GUI anymore. Any GUI stuff will be shown as messages in the chatbox instead.`);
-		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI off for their account`);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI for their account OFF.`);
 	}
 
 	if(!isClientLoggedIn(client)) {
@@ -93,6 +93,57 @@ function toggleAccountGUICommand(command, params, client) {
 				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
 			}
 		}
+	}
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleAccountServerLogoCommand(command, params, client) {
+	let flagValue = getAccountSettingsFlagValue("noServerLogo");
+	
+	if(!doesPlayerHaveLogoEnabled(client)) {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		messageClientSuccess(client, `You will now be shown the server logo (if enabled on current server)`);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled the server logo ON for their account`);
+		triggerNetworkEvent("ag.logo", client, true);
+	} else {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		messageClientSuccess(client, `You will not be shown the server logo.`);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled the server logo OFF for their account`);
+		triggerNetworkEvent("ag.logo", client, false);
+	}
+	
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+// UNFINISHED!
+// TO-DO: Make GUI, add command to generate code to add to auth app and command to input code returned by auth app
+function toggleAccountTwoFactorAuthCommand(command, params, client) {
+	let flagValue = getAccountSettingsFlagValue("twoStepAuth");
+	
+	if(getClientData(client).emailAddress != "") {
+		messageClientError(client, "You need to add your email to your account to use two-factor authentication.");
+		messageClientTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add your email.");
+		return false;
+	}
+
+	if(!isValidEmailAddress(getClientData(client).emailAddress)) {
+		messageClientError(client, "The email you previously added is not valid.");
+		messageClientTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add a valid email.");		
+		return false;
+	}
+
+	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		messageClientSuccess(client, `[#FFFFFF]Use this code to add your account into your authenticator app: [#AAAAAA]${addtoAuthenticatorCode}`);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
+	} else {
+		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		messageClientSuccess(client, `You have turned off two-factor authentication for login.`);
+		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
 	return true;
 }
@@ -141,6 +192,54 @@ function changePasswordCommand(command, params, client) {
 	
 	getClientData(client).accountData.password = hashAccountPassword(getClientData(client).accountData.name, params);
 	messageClientSuccess(client, "Your password has been changed!");
+}
+
+// ---------------------------------------------------------------------------
+
+function setAccountEmailCommand(command, params, client) {
+	messageClientError(client, `This command is not yet finished and will be available soon!`);
+	return false;
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let emailAddress = splitParams[0];
+	
+	if(!isValidEmailAddress(emailAddress)) {
+		messageClientError(client, `The email '${emailAddress} is not valid!`);
+		return false;
+	}
+	
+	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
+	//getClientData(client).accountData.emailAddress = emailAddress;
+	messageClientSuccess(client, "Your password has been changed!");
+}
+
+// ---------------------------------------------------------------------------
+
+function setAccountDiscordCommand(command, params, client) {
+	messageClientError(client, `This command is not yet finished and will be available soon!`);
+	return false;
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let discordName = splitParams[0];
+	
+	if(!isValidEmailAddress(emailAddress)) {
+		messageClientError(client, `The discord '${discordName} is not valid!`);
+		return false;
+	}
+	
+	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
+	//getClientData(client).accountData.emailAddress = emailAddress;
+	//messageClientSuccess(client, "Your discord account has been attached to your game account!");
 }
 
 // ---------------------------------------------------------------------------
@@ -768,8 +867,8 @@ function doesPlayerHaveGUIEnabled(client) {
 
 // ---------------------------------------------------------------------------
 
-function doesPlayerHaveAutoLoginByIPEnabled(client) {
-	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
+function doesPlayerHaveLogoEnabled(client) {
+	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("noServerLogo"))) {
 		return false;
 	}
 
@@ -778,9 +877,19 @@ function doesPlayerHaveAutoLoginByIPEnabled(client) {
 
 // ---------------------------------------------------------------------------
 
+function doesPlayerHaveAutoLoginByIPEnabled(client) {
+	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
+		return true;
+	}
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
 function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
 	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"))) {
-		return false;
+		return true;
 	}
 
 	return true;

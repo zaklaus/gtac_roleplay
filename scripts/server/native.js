@@ -78,9 +78,22 @@ function getPlayerPosition(client) {
 
 // ---------------------------------------------------------------------------
 
+function setPlayerPosition(client, position) {
+    return triggerNetworkEvent("ag.position", client, position);
+}
+
+// ---------------------------------------------------------------------------
+
 function getPlayerHeading(client) {
     return client.player.heading;
 }
+
+// ---------------------------------------------------------------------------
+
+function setPlayerHeading(client, heading) {
+    return triggerNetworkEvent("ag.heading", client, heading);
+}
+
 
 // ---------------------------------------------------------------------------
 
@@ -98,6 +111,18 @@ function getPlayerVirtualWorld(client) {
 
 function getPlayerInterior(client) {
     return client.player.interior;
+}
+
+// ---------------------------------------------------------------------------
+
+function setPlayerVirtualWorld(client, dimension) {
+    client.player.dimension = dimension;
+}
+
+// ---------------------------------------------------------------------------
+
+function setPlayerInterior(client, interior) {
+    triggerNetworkEvent("ag.interior", client, interior);
 }
 
 // ---------------------------------------------------------------------------

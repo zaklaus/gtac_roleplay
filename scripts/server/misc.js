@@ -121,8 +121,6 @@ function enterExitPropertyCommand(command, params, client) {
 		return true;
 	}
 
-	console.log("Not in a house.");
-
 	if(isPlayerInAnyBusiness(client)) {
 		let inBusiness = getServerData().businesses[getPlayerBusiness(client)];
 		if(getDistance(inBusiness.exitPosition, getPlayerPosition(client)) <= getServerConfig().exitPropertyDistance) {
@@ -138,16 +136,21 @@ function enterExitPropertyCommand(command, params, client) {
 		return true;	
 	}
 
-	console.log("Not in a business.");
-
 	if(getServerData().businesses.length > 0) {
 		let closestBusinessId = getClosestBusinessEntrance(getPlayerPosition(client));
 		let closestBusiness = getBusinessData(closestBusinessId)
 		if(getDistance(closestBusiness.entrancePosition, getPlayerPosition(client)) <= getServerConfig().enterPropertyDistance) {
+			if(doesBusinessHaveInterior(closestBusinessId)) {
+				messageClientAlert(client, "This business does not have an interior.");
+				messageClientTip(client, "You can use business commands at the door.");
+				return false;
+			}
+
 			if(closestBusiness.locked) {
 				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
 				return false;
-			}			
+			}
+			
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
 			triggerNetworkEvent("ag.enterProperty", client, closestBusiness.exitPosition, closestBusiness.exitRotation, closestBusiness.exitInterior, closestBusinessId+getServerConfig().businessDimensionStart);
 			client.player.dimension = closestBusiness.exitDimension;
@@ -156,8 +159,6 @@ function enterExitPropertyCommand(command, params, client) {
 		}
 	}
 
-	console.log("Not near a business entrance.");
-
 	if(getServerData().houses.length > 0) {
 		let closestHouseId = getClosestHouseEntrance(getPlayerPosition(client));
 		//console.log(closestHouseId);
@@ -165,10 +166,17 @@ function enterExitPropertyCommand(command, params, client) {
 		//let distance = getDistance(closestHouse.entrancePosition, getPlayerPosition(client));
 		//console.log(`Distance to closest house door: ${distance}`);
 		if(getDistance(closestHouse.entrancePosition, getPlayerPosition(client)) <= getServerConfig().enterPropertyDistance) {
+			if(doesHouseHaveInterior(closestHouseId)) {
+				messageClientAlert(client, "This house does not have an interior.");
+				messageClientTip(client, "You can use house commands at the door.");
+				return false;
+			}
+
 			if(closestHouse.locked) {
 				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
 				return false;
 			}
+
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
 			triggerNetworkEvent("ag.enterProperty", client, closestHouse.exitPosition, closestHouse.exitRotation, closestHouse.exitInterior, closestHouse+getServerConfig().houseDimensionStart);
 			//client.player.dimension = closestHouse.exitDimension;

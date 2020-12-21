@@ -123,9 +123,8 @@ function showMainHelpMessage(client) {
 function showAccountHelpMessage(client) {
     messageClientInfo(client, "[#FF9900]== [#FFFF00]Account Help [#FF9900]=============================");
     messageClientNormal(client, "[#FF9900]• [#FFFFFF]Do not share your password with anybody else.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Use [#AAAAAA]/gui[#FFFFFF] to toggle GUI on or off for your account");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Use [#AAAAAA]/iplogin[#FFFFFF] to set whether you are automatically logged in by your IP");
     messageClientNormal(client, "[#FF9900]• [#FFFFFF]Use [#AAAAAA]/changepass[#FFFFFF] to change your password.");
+    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Some settings you can use: [#AAAAAA]/gui, /logo, /iplogin, /autolastchar, /2fa, /loginalert");
 }
 
 // ----------------------------------------------------------------------------
@@ -134,8 +133,8 @@ function showVehicleHelpMessage(client) {
     messageClientInfo(client, "[#FF9900]== [#FFFF00]Vehicle Help [#FF9900]=============================");
     messageClientNormal(client, "[#FF9900]• [#FFFFFF]Visit dealerships to buy new vehicles (Use [#AAAAAA]/help dealership [#FFFFFF]for more info.");
     messageClientNormal(client, "[#FF9900]• [#FFFFFF]Some commands: [#AAAAAA]/lock, /engine, /lights, /trunk, /rentveh, /buyveh, /rentprice, /buyprice");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Your personal vehicles will save and respawn wherever you or somebody else leaves them!");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Visit a mechanic garage to repair, colour, and tune up your car!");
+    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Your personal vehicles will save wherever you or somebody else leaves them!");
+    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Visit a mechanic garage to repair, colour, and tune up your car! [#AAAAAA]/help mechanic [#FFFFFF] for info");
     messageClientNormal(client, "[#FF9900]• [#FFFFFF]Don't forget to register and insure your vehicle! Use [#AAAAAA]/gps [#FFFFFF]to find a DMV for this.");
 }
 

@@ -81,7 +81,7 @@ function saveSubAccountToDatabase(subAccountData) {
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
-		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job} WHERE sacct_id=${subAccountData.databaseId}`;
+		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension} WHERE sacct_id=${subAccountData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
@@ -112,9 +112,13 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 // ---------------------------------------------------------------------------
 
 function showCharacterSelectToClient(client) {
-	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client) && getClientData().subAccounts.length > 0) {
-		selectCharacter(client, getPlayerLastUsedSubAccount(client));
-		return false;
+	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
+		if(getClientData().subAccounts != null) {
+			if(getClientData().subAccounts.length > 0) {
+				selectCharacter(client, getPlayerLastUsedSubAccount(client));
+				return true;
+			}
+		}
 	}
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -225,10 +229,10 @@ function selectCharacter(client, characterId = -1) {
 		getClientData(client).currentSubAccount = characterId;
 	}
 
-	getClientCurrentSubAccount(client).lastLogin = new Date().getTime();
-
 	let tempSubAccount = getClientCurrentSubAccount(client);
 	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
+
+	tempSubAccount.lastLogin = new Date().getTime();
 
 	messageClientAlert(client, `You are now playing as: [#0099FF]${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
 	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
@@ -239,6 +243,10 @@ function selectCharacter(client, characterId = -1) {
 	setTimeout(function() {
 		setEntityData(client.player, "ag.spawned", true, true);
 		//triggerNetworkEvent("ag.restoreCamera", client);
+		setPlayerPosition(client, tempSubAccount.spawnPosition);
+		setPlayerHeading(client, tempSubAccount.spawnHeading);
+		setPlayerInterior(client, tempSubAccount.interior);
+		setPlayerVirtualWorld(client, tempSubAccount.dimension);
 	}, client.ping+1000);
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);

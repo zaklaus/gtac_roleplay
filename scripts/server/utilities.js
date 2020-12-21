@@ -1148,7 +1148,10 @@ function getGameAreas(gameId) {
 // ---------------------------------------------------------------------------
 
 function getClientData(client) {
-	return getServerData().clients[client.index];
+	if(client != null) {
+		return getServerData().clients[client.index];
+	}
+	return false;
 }
 
 // ---------------------------------------------------------------------------

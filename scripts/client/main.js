@@ -70,7 +70,10 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
     addEvent("OnLocalPlayerEnterVehicle", 2);
     addEvent("OnLocalPlayerExitVehicle", 2);   
     
-    gta.setDefaultInteriors(false);
+    if(gta.game == GAME_GTA_SA) {
+        gta.setDefaultInteriors(false);
+        gta.setCiviliansEnabled(false);
+    }
 });
 
 // ---------------------------------------------------------------------------
@@ -216,6 +219,12 @@ addNetworkHandler("ag.position", function(position) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.heading", function(heading) {
+    localPlayer.heading = heading;
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.interior", function(interior) {
     localPlayer.interior = interior;
     cameraInterior = interior;
@@ -251,7 +260,7 @@ addNetworkHandler("ag.exitProperty", function(position, heading, interior, dimen
     gta.fadeCamera(false, 1.0);
     setTimeout(function() {
         localPlayer.interior = 0;
-        gta.cameraInterior = 0;
+        cameraInterior = 0;
 
         setTimeout(function() {
             localPlayer.position = position;

@@ -136,6 +136,9 @@ function initClassTable() {
 
 				this.weapons = [];
 				this.inJail = false;
+				
+				this.interior = 0;
+				this.dimension = 0;
 			}
 		},		
 		businessData: class {
@@ -442,6 +445,29 @@ function initClassTable() {
 					this.whenAdded = keyBindAssoc["acct_hotkey_when_added"];
 					this.enabled = intToBool(keyBindAssoc["acct_hotkey_enabled"]);
 				}
+			}
+		},
+		blackListedGameScriptData: class {
+			constructor(dbAssoc) {
+				if(!dbAssoc) {
+					return;
+				}
+				this.databaseId = dbAssoc["ac_script_bl_id"];
+				this.enabled = intToBool(dbAssoc["ac_script_bl_enabled"]);
+				this.server = dbAssoc["ac_script_bl_server"];
+				this.scriptName = dbAssoc["ac_script_bl_name"];
+			}
+		},
+		whiteListedGameScriptData: class {
+			constructor(dbAssoc) {
+				if(!dbAssoc) {
+					return;
+				}
+				
+				this.databaseId = dbAssoc["ac_script_wl_id"];
+				this.enabled = intToBool(dbAssoc["ac_script_wl_enabled"]);
+				this.server = dbAssoc["ac_script_wl_server"];
+				this.scriptName = dbAssoc["ac_script_wl_name"];
 			}
 		},
 	}

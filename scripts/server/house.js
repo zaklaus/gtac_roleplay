@@ -183,3 +183,26 @@ function getHouseData(houseId) {
 }
 
 // ---------------------------------------------------------------------------
+
+function doesHouseHaveInterior(houseId) {
+	if(getHouseData(houseId)) {
+		return false;
+	}
+
+	let houseData = getHouseData(houseId);
+	if(houseData.exitPosition == toVector3(0.0, 0.0, 0.0)) {
+		return false;
+	}
+
+	if(houseData.exitDimension == houseData.entranceDimension) {
+		return false;
+	}
+
+	if(houseData.exitDimension == 0) {
+		return false;
+	}
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------

@@ -27,7 +27,11 @@ function loadCommandData() {
             commandData("register", registerCommand, "<password>", getStaffFlagValue("none"), false, false),
             commandData("changepass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false),
             commandData("iplogin", autoLoginByIPCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("autolastchar", autoSelectLastCharacterCommand, "", getStaffFlagValue("none"), true, false),
             commandData("gui", toggleAccountGUICommand, "", getStaffFlagValue("none"), false, false),
+            commandData("2fa", toggleAccountTwoFactorAuthCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("setemail", setAccountEmailCommand, "<email address>", getStaffFlagValue("none"), true, false),
+            commandData("setdiscord", setAccountDiscordCommand, "<Name#0000 - discord name and id>", getStaffFlagValue("none"), true, false),
         ],
         ammunation: [],
         ban: [

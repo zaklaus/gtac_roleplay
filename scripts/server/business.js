@@ -541,33 +541,13 @@ function deleteBusiness(businessId) {
 
 // ---------------------------------------------------------------------------
 
-/*
-function deleteBusiness(businessId) {
-	let tempBusinessData = getServerData().businesses[businessId];
-
-	let dbConnection = connectToDatabase();
-	let dbQuery = null;
-	
-	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `UPDATE biz_main SET biz_deleted = 1 AND biz_who_deleted = ${getClientData(client).accountData.databaseId} AND biz_when_deleted = UNIX_TIMESTAMP() WHERE biz_id = ${tempBusinessData.databaseId} LIMIT 1`);
-		if(dbQuery) {
-			freeDatabaseQuery(dbQuery);
-		}
-		disconnectFromDatabase(dbConnection);
-	}
-
-	destroyElement(tempBusinessData.pickup);
-	removePlayersFromBusiness(businessId);
-}
-*/
-
-// ---------------------------------------------------------------------------
-
 function removePlayersFromBusiness(businessId) {
 	getClients().forEach(function(client) {
-		if(doesEntityDataExist(client, "ag.inBusiness")) {
-			if(getEntityData(client, "ag.inBusiness") == businessId) {
-				exitBusiness(client);
+		if(doesBusinessHaveInterior(businessId)) {
+			if(doesEntityDataExist(client, "ag.inBusiness")) {
+				if(getEntityData(client, "ag.inBusiness") == businessId) {
+					exitBusiness(client);
+				}
 			}
 		}
 	});
@@ -612,6 +592,29 @@ function getBusinessData(businessId) {
 		return getServerData().businesses[businessId];
 	}
 	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function doesBusinessHaveInterior(businessId) {
+	if(getBusinessData(businessId)) {
+		return false;
+	}
+
+	let businessData = getBusinessData(businessId);
+	if(businessData.exitPosition == toVector3(0.0, 0.0, 0.0)) {
+		return false;
+	}
+
+	if(businessData.exitDimension == businessData.entranceDimension) {
+		return false;
+	}	
+
+	if(businessData.exitDimension == 0) {
+		return false;
+	}	
+
+	return true;
 }
 
 // ---------------------------------------------------------------------------

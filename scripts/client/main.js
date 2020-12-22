@@ -314,7 +314,7 @@ function processEvent(event, deltaTime) {
             if(inVehicle) {
                 triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
                 console.log(`Exited vehicle: ${inVehicle.id}`);
-                triggerNetworkEvent("ag.onPlayerExitVehicle", localPlayer.vehicle);
+                triggerNetworkEvent("ag.onPlayerExitVehicle", inVehicle);
                 inVehicle = false;
             }           
         } 

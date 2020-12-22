@@ -24,8 +24,12 @@ addEventHandler("OnLostFocus", function(event) {
 addEventHandler("OnFocus", function(event) {
     triggerNetworkEvent("ag.afk", false);
 	if(localPlayer != null) {
-        localPlayer.collisionsEnabled = true;
-        gta.setCiviliansEnabled(true);
+		localPlayer.collisionsEnabled = true;
+		if(gta.game == GAME_GTA_SA) {
+			gta.setCiviliansEnabled(true);
+		}
         gta.setTrafficEnabled(true);		
 	}
 });
+
+// ----------------------------------------------------------------------------

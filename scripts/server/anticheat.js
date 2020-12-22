@@ -8,6 +8,12 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+function initAntiCheatScript() {
+	console.log("[Asshat.AntiCheat]: Initializing anticheat script ...");
+	console.log("[Asshat.AntiCheat]: Anticheat script initialized!");
+}
+// ---------------------------------------------------------------------------
+
 function loadAntiCheatGameScriptWhiteListFromDatabase(serverId) {
     console.log(`[Asshat.AntiCheat] Loading whitelisted game scripts ...`);
     let dbConnection = connectToDatabase();

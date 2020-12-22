@@ -137,9 +137,9 @@ addNetworkHandler("ag.player.death", function(client, position, heading) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.player.vehicle", function(client, vehicle) {
-    clientEnteredVehicle(client, vehicle);
-});
+//addNetworkHandler("ag.player.vehicle", function(client, vehicle) {
+//    clientEnteredVehicle(client, vehicle);
+//});
 
 // ---------------------------------------------------------------------------
 

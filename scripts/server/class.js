@@ -32,6 +32,8 @@ function initClassTable() {
 
 				this.garbageRoute = null;
 				this.lastGarbageStop = null;
+				
+				this.spawned = false;
 			}
 		},
 		accountData: class {
@@ -58,7 +60,7 @@ function initClassTable() {
 				
 				this.notes = [];
 				this.messages = [];
-				this.keybinds = [];
+				this.keyBinds = [];
 				this.contacts = [];
 				this.subAccounts = [];
 				this.loggedIn = false;				
@@ -84,7 +86,7 @@ function initClassTable() {
 				}
 				
 				this.databaseId = accountMessageAssoc["acct_msg_id"];
-				this.accountId = accountMessageAssoc["acct_msg_acct"];
+				this.account = accountMessageAssoc["acct_msg_acct"];
 				this.whoSent = accountMessageAssoc["acct_msg_who_sent"];
 				this.whenSent = accountMessageAssoc["acct_msg_when_sent"];
 				this.whenRead = accountMessageAssoc["acct_msg_when_read"];
@@ -101,7 +103,7 @@ function initClassTable() {
 				}
 				
 				this.databaseId = accountStaffNoteAssoc["acct_note_id"];
-				this.accountId = accountStaffNoteAssoc["acct_note_acct"];
+				this.account = accountStaffNoteAssoc["acct_note_acct"];
 				this.whoAdded = accountStaffNoteAssoc["acct_note_who_added"];
 				this.whenAdded = accountStaffNoteAssoc["acct_note_when_added"];
 				this.deleted = intToBool(accountMessageAssoc["acct_note_deleted"]);
@@ -120,7 +122,7 @@ function initClassTable() {
 				this.server = subAccountAssoc["sacct_server"];
 				this.firstName = subAccountAssoc["sacct_name_first"];
 				this.lastName = subAccountAssoc["sacct_name_last"];
-				this.accountId = subAccountAssoc["sacct_acct"];
+				this.account = subAccountAssoc["sacct_acct"];
 				this.skin = subAccountAssoc["sacct_skin"];
 				this.cash = subAccountAssoc["sacct_cash"];
 				this.placeOfOrigin = subAccountAssoc["sacct_origin"];
@@ -436,14 +438,17 @@ function initClassTable() {
 				this.commandString = commandString;
 				this.whenAdded = 0;
 				this.enabled = true;
+				this.keyState = false;
 
-				if(keyBindAssoc) {
+				if(keyBindAssoc != null) {
+					console.log(keyBindAssoc["acct_hotkey_key"]);
 					this.databaseId = keyBindAssoc["acct_hotkey_id"];
-					this.key = keyBindAssoc["acct_hotkey_key"];
+					this.key = toInteger(keyBindAssoc["acct_hotkey_key"]);
 					this.account = keyBindAssoc["acct_hotkey_acct"];
 					this.commandString = keyBindAssoc["acct_hotkey_cmdstr"];
 					this.whenAdded = keyBindAssoc["acct_hotkey_when_added"];
 					this.enabled = intToBool(keyBindAssoc["acct_hotkey_enabled"]);
+					this.keyState = intToBool(keyBindAssoc["acct_hotkey_down"]);
 				}
 			}
 		},

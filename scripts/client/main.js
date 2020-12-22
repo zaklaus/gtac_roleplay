@@ -227,7 +227,7 @@ addNetworkHandler("ag.heading", function(heading) {
 
 addNetworkHandler("ag.interior", function(interior) {
     localPlayer.interior = interior;
-    cameraInterior = interior;
+    gta.cameraInterior = interior;
 });
 
 // ---------------------------------------------------------------------------
@@ -259,8 +259,8 @@ addNetworkHandler("ag.enterProperty", function(position, heading, interior, dime
 addNetworkHandler("ag.exitProperty", function(position, heading, interior, dimension) {
     gta.fadeCamera(false, 1.0);
     setTimeout(function() {
-        localPlayer.interior = 0;
-        cameraInterior = 0;
+        localPlayer.interior = interior;
+        gta.cameraInterior = interior;
 
         setTimeout(function() {
             localPlayer.position = position;
@@ -308,13 +308,13 @@ function processEvent(event, deltaTime) {
                 inVehicle = localPlayer.vehicle;
                 triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
                 console.log(`Entered vehicle: ${inVehicle.id}`);
-                triggerNetworkEvent("ag.onPlayerEnterVehicle", inVehicle);
+                triggerNetworkEvent("ag.onPlayerEnterVehicle", localPlayer.vehicle);
             }
         } else {
             if(inVehicle) {
                 triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
                 console.log(`Exited vehicle: ${inVehicle.id}`);
-                triggerNetworkEvent("ag.onPlayerExitVehicle", inVehicle);
+                triggerNetworkEvent("ag.onPlayerExitVehicle", localPlayer.vehicle);
                 inVehicle = false;
             }           
         } 

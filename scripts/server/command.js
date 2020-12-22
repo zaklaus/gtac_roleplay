@@ -150,6 +150,11 @@ function loadCommandData() {
             // Bus/Garbage
             commandData("startroute", jobStartRouteCommand, "", getStaffFlagValue("none"), true, false),
         ],
+        keybind: [
+            commandData("bindkey", addKeyBindCommand, "<key id/name> <command> [params]", getStaffFlagValue("none"), true, false),
+            commandData("unbindkey", removeKeyBindCommand, "<key id/name>", getStaffFlagValue("none"), true, false),
+            //commandData("keybinds", showKeyBindCommands, "", getStaffFlagValue("none"), true, false),
+        ],
         locale: [],
         messaging: [],
         misc: [
@@ -410,7 +415,7 @@ addCommandHandler("cmd", function(command, params, client) {
     let newCommand = splitParams[0];
     let newParams = splitParams.slice(1).join(" ");
 
-    onPlayerCommand(newCommand, newParams, client);
+    getCommand(newCommand).handlerFunction(newCommand, newParams, client);
 });
 
 // ---------------------------------------------------------------------------

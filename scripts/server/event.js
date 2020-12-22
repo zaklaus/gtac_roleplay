@@ -78,33 +78,18 @@ addEventHandler("OnPedExitVehicle", function(event, ped, vehicle) {
 // ---------------------------------------------------------------------------
 
 function playerEnteredVehicle(client, vehicle) {
+    console.log(`Vehicle: ${vehicle}`);
+
     if(!vehicle || vehicle == null) {
         return false;
     }
+    console.log(`Vehicle not null`);
 
     if(!getVehicleData(vehicle)) {
         return false;
     }
 
-    if(!getVehicleData(vehicle).engine) {
-        messageClientTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
-        if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
-            messageClientTip(client, `You can also press ${getPlayerKeyBindForCommand(client, "engine")} to start and stop the engine.`);
-        }
-        triggerNetworkEvent("ag.control", client, false, false);
-    }
-
-    let currentSubAccount = getClientCurrentSubAccount(client);
-
-    if(isPlayerWorking(client)) {
-        if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
-            if(getVehicleData(vehicle).ownerId == getClientCurrentSubAccount(client).job) {
-                //if(seat == 0) {
-                    getClientCurrentSubAccount(client).lastJobVehicle = vehicle;
-                //}
-            }
-        }
-    }
+    console.log(`Vehicle data found`);
 
     if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
         if(getVehicleData(vehicle).buyPrice > 0) {
@@ -114,12 +99,34 @@ function playerEnteredVehicle(client, vehicle) {
             messageClientAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: $${getVehicleData(vehicle).rentPrice} per minute`);
             messageClientTip(client, `Use /vehrent if you want to rent it.`);
         }
+
+        if(!getVehicleData(vehicle).engine) {
+            messageClientTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
+            if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
+                messageClientTip(client, `You can also press ${getPlayerKeyBindForCommand(client, "engine")} to start and stop the engine.`);
+            }
+            triggerNetworkEvent("ag.control", client, false, false);
+        }
+    
+        let currentSubAccount = getClientCurrentSubAccount(client);
+    
+        if(isPlayerWorking(client)) {
+            if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
+                if(getVehicleData(vehicle).ownerId == getClientCurrentSubAccount(client).job) {
+                    //if(seat == 0) {
+                        getClientCurrentSubAccount(client).lastJobVehicle = vehicle;
+                    //}
+                }
+            }
+        }        
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function playerExitedVehicle(client, vehicle) {
+    //let vehicle = getElementFromId(vehicleId);
+
 
 }
 

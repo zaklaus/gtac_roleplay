@@ -220,6 +220,7 @@ let serverConfig = {
 		new serverClasses.keyBindData(false, SDLK_i, "engine"),
 		new serverClasses.keyBindData(false, SDLK_k, "lights"),
 		new serverClasses.keyBindData(false, SDLK_l, "lock"),
+		new serverClasses.keyBindData(false, SDLK_f, "enter"),
 	],
 	exitPropertyDistance: 3.0,
 	enterPropertyDistance: 3.0,
@@ -384,7 +385,7 @@ function setWeatherCommand(command, params, client) {
     
     gta.forceWeather(weatherId);
 
-    messageAdminAction(`${client.name} set the weather to to ${weatherNames[server.game][weatherId]}`);
+    messageAdminAction(`${client.name} set the weather to [#AAAAAA]${weatherNames[server.game][weatherId]}`);
     updateServerRules();
 	return true;
 }
@@ -421,7 +422,7 @@ function setSnowingCommand(command, params, client) {
 
 	triggerNetworkEvent("ag.snow", null, fallingSnow, groundSnow);
 
-    messageAdminAction(`${client.name} turned falling snow ${getOnOffFromBool(fallingSnow)} and ground snow ${getOnOffFromBool(groundSnow)}`);
+    messageAdminAction(`${client.name} turned falling snow ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} [#FFFFFF]and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
     updateServerRules();
 	return true;
 }
@@ -445,7 +446,7 @@ function toggleServerLogoCommand(command, params, client) {
 	
 	triggerNetworkEvent("ag.logo", null, intToBool(getServerConfig().useLogo));
 
-    messageAdminAction(`${client.name} turned the server logo image ${toLowerCase(getOnOffFromBool(getServerConfig().useLogo))}`);
+    messageAdminAction(`${client.name} turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toLowerCase(getOnOffFromBool(getServerConfig().useLogo))}`);
     updateServerRules();
 	return true;
 }

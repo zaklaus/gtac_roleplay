@@ -135,7 +135,17 @@ function isPlayerInAnyVehicle(client) {
 // ---------------------------------------------------------------------------
 
 function getPlayerVehicleSeat(client) {
-    return getEntityData(client, "ag.vehicleSeat");
+    if(!getPlayerVehicle(client)) {
+        return false;
+    }
+    
+    for(let i = 0 ; i <= 8 ; i++) {
+        if(getPlayerVehicle(client).getOccupant(i) == client.player) {
+            return i;
+        }
+    }
+
+    return false;
 }
 
 // ---------------------------------------------------------------------------

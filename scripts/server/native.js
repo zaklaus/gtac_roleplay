@@ -73,7 +73,9 @@ function getServerGame() {
 // ---------------------------------------------------------------------------
 
 function getPlayerPosition(client) {
-    return client.player.position;
+    if(client.player != null) {
+        return client.player.position;
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -93,7 +95,6 @@ function getPlayerHeading(client) {
 function setPlayerHeading(client, heading) {
     return triggerNetworkEvent("ag.heading", client, heading);
 }
-
 
 // ---------------------------------------------------------------------------
 

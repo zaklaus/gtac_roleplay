@@ -30,6 +30,7 @@ function initServerScripts() {
 	initConfigScript();
 	initKeyBindScript();
 	initEventScript();
+	initAntiCheatScript();
 
 	initTimers();
 

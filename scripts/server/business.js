@@ -52,7 +52,7 @@ function loadBusinessesFromDatabase() {
 					let tempBusinessData = new serverClasses.businessData(dbAssoc);
 					tempBusinessData.locations = loadBusinessLocationsFromDatabase(tempBusinessData.databaseId);
 					tempBusinesses.push(tempBusinessData);
-					console.log(`[Asshat.Business]: Business '${tempBusinessData.name}' loaded from database successfully!`);
+					console.log(`[Asshat.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -67,7 +67,7 @@ function loadBusinessesFromDatabase() {
 // ---------------------------------------------------------------------------
 
 function loadBusinessLocationsFromDatabase(businessId) {
-	console.log("[Asshat.Business]: Loading locations from database ...");
+	//console.log("[Asshat.Business]: Loading locations from database ...");
 
 	let tempBusinessLocations = [];
 	let dbConnection = connectToDatabase();
@@ -81,7 +81,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempBusinessLocationData = new serverClasses.businessLocationData(dbAssoc);
 					tempBusinessLocations.push(tempBusinessLocationData);
-					console.log(`[Asshat.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
+					//console.log(`[Asshat.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -89,7 +89,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
+	//console.log(`[Asshat.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
 	return tempBusinessLocations;
 }
 
@@ -512,7 +512,15 @@ function saveBusinessToDatabase(businessId) {
 function createAllBusinessPickups() {
 	for(let i in getServerData().businesses) {
 		if(getServerData().businesses[i].pickupModel != -1) {
-			getServerData().businesses[i].pickup = gta.createPickup(getServerData().businesses[i].entrancePickupModel, getServerData().businesses[i].entrancePosition);
+			let pickupModelId = getServerConfig().pickupModels[getServerGame()].business;
+
+			if(getServerData().businesses[i].entrancePickupModel != 0) {
+				pickupModelId = getServerData().businesses[i].entrancePickupModel;
+			}
+
+			getServerData().businesses[i].pickup = gta.createPickup(pickupModelId, getServerData().businesses[i].entrancePosition);
+			//getServerData().businesses[i].pickup.dimension = getServerData().businesses[i].entranceDimension;
+			//getServerData().businesses[i].pickup.interior = getServerData().businesses[i].entranceInterior;
 			getServerData().businesses[i].pickup.setData("ag.ownerType", AG_PICKUP_BUSINESS, true);
 			getServerData().businesses[i].pickup.setData("ag.ownerId", i, true);
 		}

@@ -41,13 +41,13 @@ function toVector2(x, y, z) {
 // ---------------------------------------------------------------------------
 
 function toUpperCase(val) {
-	return val.toUpperCase();
+	return String(val).toUpperCase();
 }
 
 // ---------------------------------------------------------------------------
 
 function toLowerCase(val) {
-	return val.toLowerCase();
+	return String(val).toLowerCase();
 }
 
 // ---------------------------------------------------------------------------

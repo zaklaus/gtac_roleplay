@@ -34,6 +34,7 @@ function saveAllServerDataToDatabase() {
 function initTimers() {
     serverTimers.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
 	serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
+	serverTimers.updateNameTagsTimer = setInterval(updateNameTags, 5000);
 	serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
 }
 
@@ -53,6 +54,17 @@ function vehicleRentCheck() {
 					}
 				}
 			}
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function updateNameTags() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(!clients[i].console) {
+			updatePlayerNameTag(clients[i]);
 		}
 	}
 }

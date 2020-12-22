@@ -234,12 +234,17 @@ function selectCharacter(client, characterId = -1) {
 
 	tempSubAccount.lastLogin = new Date().getTime();
 
+	updatePlayerNameTag(client);
+	sendAccountKeyBindsToClient(client);
+
 	messageClientAlert(client, `You are now playing as: [#0099FF]${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
 	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
 	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 	
 	triggerNetworkEvent("ag.restoreCamera", client);
 	setEntityData(client, "ag.spawned", true, true);
+	while(client.player == null) {};
+	
 	setTimeout(function() {
 		setEntityData(client.player, "ag.spawned", true, true);
 		//triggerNetworkEvent("ag.restoreCamera", client);
@@ -303,6 +308,12 @@ function getPlayerLastUsedSubAccount(client) {
 		}
 	}
 	return lastUsed
+}
+
+// ---------------------------------------------------------------------------
+
+function transferCharacterToServer(subAccountDatabaseId, newServerId) {
+	quickDatabaseQuery(`UPDATE sacct_main SET sacct_server = ${newServerId}, sacct_needs_setup = 1 WHERE sacct_id = ${subAccountDatabaseId} LIMIT 1;`);
 }
 
 // ---------------------------------------------------------------------------

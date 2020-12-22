@@ -4,11 +4,9 @@
 // Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: nametags.js
-// DESC: Provides nametags for VRS
+// DESC: Provides nametag rendering
 // TYPE: Client (JavaScript)
 // ===========================================================================
-
-// ----------------------------------------------------------------------------
 
 // Configuration
 let nametagFont = null;
@@ -17,6 +15,11 @@ let pingFont = null;
 let nametagDistance = 50.0;
 let nametagWidth = 70;
 
+let playerNames = {};
+let playerColours = {};
+let playerPaused = {};
+let playerPing = {};
+
 // ----------------------------------------------------------------------------
 
 addEventHandler("OnResourceReady", function(event, resource) {
@@ -24,6 +27,15 @@ addEventHandler("OnResourceReady", function(event, resource) {
 		nametagFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 		afkStatusFont = lucasFont.createDefaultFont(18.0, "Roboto", "Light");
 	}
+});
+
+// ----------------------------------------------------------------------------
+
+addNetworkHandler("ag.nametag", function(mainName, characterName, colour, paused, ping) {
+	playerNames[mainName] = characterName;
+	playerColours[mainName] = colour;
+	playerPaused[mainName] = paused;
+	playerPing[mainName] = ping;
 });
 
 // ----------------------------------------------------------------------------
@@ -49,6 +61,8 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		} else {
 			y -= 5;
 		}
+	} else {
+		y -= 5;
 	}
 	
 	if(health > 0.0) {
@@ -121,21 +135,26 @@ function updateNametags(element) {
 				if(element.type == ELEMENT_PLAYER) {
                     let name = element.name;
                     let colour = COLOUR_WHITE;
-                    let afk = false;        
+					let paused = false;     
+					let ping = -1;   
             
-                    if(getEntityData(client, "ag.name") != null) {
-                        name = getEntityData(client, "ag.name");
+                    if(typeof playerNames[element.name] != "undefined") {
+                        name = playerNames[element.name];
                     }
             
-                    if(getEntityData(client, "ag.afk") != null) {
-                        afk = true;
+                    if(typeof playerPaused[element.name] != "undefined") {
+                        paused = playerPaused[element.name];
                     }
 
-                    if(getEntityData(client, "ag.colour") != null) {
-                        colour = getEntityData(client, "ag.colour");
+                    if(typeof playerColours[element.name] != "undefined") {
+                        colour = playerColours[element.name];
 					}
+					
+                    if(typeof playerPing[element.name] != "undefined") {
+                        ping = playerPing[element.name];
+                    }			
 
-					drawNametag(screenPos[0], screenPos[1], health, armour, name, 0, 1.0-distance/nametagDistance, distance, colour, afk, element.skin);
+					drawNametag(screenPos[0], screenPos[1], health, armour, name, ping, 1.0-distance/nametagDistance, distance, colour, paused, element.skin);
 				}
 			}
 		}
@@ -155,13 +174,15 @@ function getClientFromPlayer(player) {
 // ----------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function(event) {
-	//if(gta.game >= GAME_GTA_IV) {
-	//	return false;
-	//}
+	if(gta.game >= GAME_GTA_IV) {
+		return false;
+	}
 	
-	//getElementsByType(ELEMENT_PLAYER).forEach(function(player) {
-	//	updateNametags(player)
-	//})
+	getElementsByType(ELEMENT_PLAYER).forEach(function(player) {
+		if(player != localPlayer) {
+			updateNametags(player);
+		}
+	});
 });
 
 // ----------------------------------------------------------------------------

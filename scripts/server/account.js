@@ -249,8 +249,11 @@ function isClientLoggedIn(client) {
 		return true;
 	}
 
-	let loggedIn = getClientData(client).loggedIn;
-	return loggedIn;
+	if(getClientData(client) != null) {
+		return getClientData(client).loggedIn;
+	}
+
+	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -298,14 +301,13 @@ function loadAccountFromName(accountName, fullLoad = false) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 				let tempAccountData = new serverClasses.accountData(dbAssoc);
-				freeDatabaseQuery(dbQuery);
 				if(fullLoad) {
 					tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 					tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
 					tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
 					tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
 				}
-
+				freeDatabaseQuery(dbQuery);
 				return tempAccountData;
 			}
 		}
@@ -451,6 +453,67 @@ function saveAccountToDatabase(accountData) {
 
 // ---------------------------------------------------------------------------
 
+function saveAccountKeyBindsDatabase(keyBindData) {
+	let dbConnection = connectToDatabase();
+	if(dbConnection) { 
+		let safeCommandString = escapeDatabaseString(dbConnection, keyBindData.commandString);
+		if(keyBindData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_cmdstr, acct_hotkey_key, acct_hotkey_down, acct_hotkey_enabled) VALUES ('${safeCommandString}', ${keyBindData.key}, ${boolToInt(keyBindData.keyState)}, ${boolToInt(keyBindData.enabled)}, ${keyBindData.account}`;
+			keyBindData.databaseId = getDatabaseInsertId(dbConnection);
+			let dbQuery = queryDatabase(dbConnection, dbQueryString);
+			freeDatabaseQuery(dbQuery);
+		} else {
+			let dbQueryString = `UPDATE acct_hotkey SET acct_hotkey_cmdstr='${safeCommandString}', acct_hotkey_key=${keyBindData.key}, acct_hotkey_down=${boolToInt(keyBindData.keyState)}, acct_hotkey_enabled=${boolToInt(keyBindData.enabled)} WHERE acct_hotkey_id=${keyBindData.databaseId}`;
+			let dbQuery = queryDatabase(dbConnection, dbQueryString);
+			freeDatabaseQuery(dbQuery);			
+		}
+
+		disconnectFromDatabase(dbConnection);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function saveAccountStaffNotesDatabase(staffNoteData) {
+	let dbConnection = connectToDatabase();
+	if(dbConnection) { 
+		let safeNoteContent = escapeDatabaseString(dbConnection, staffNoteData.note);
+		if(staffNoteData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO acct_note (acct_note_message, acct_note_who_added, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${serverId}, ${staffNoteData.account}`;
+			staffNoteData.databaseId = getDatabaseInsertId(dbConnection);
+			let dbQuery = queryDatabase(dbConnection, dbQueryString);
+			freeDatabaseQuery(dbQuery);
+		}
+
+		disconnectFromDatabase(dbConnection);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+/*
+function saveAccountContactsDatabase(accountContactData) {
+	let dbConnection = connectToDatabase();
+	if(dbConnection) { 
+		let safeNoteContent = escapeDatabaseString(dbConnection, accountContactData.note);
+		if(accountContactData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO acct_contact (acct_contact_note, acct_contact_, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${serverId}, ${staffNoteData.account}`;
+			staffNoteData.databaseId = getDatabaseInsertId(dbConnection);
+			let dbQuery = queryDatabase(dbConnection, dbQueryString);
+			freeDatabaseQuery(dbQuery);
+		}// else {
+		//	let dbQueryString = `UPDATE acct_hotkey SET acct_hotkey_cmdstr='${safeCommandString}', acct_hotkey_key=${keyBindData.key}, acct_hotkey_down=${boolToInt(keyBindData.keyState)}, acct_hotkey_enabled=${boolToInt(keyBindData.enabled)} WHERE acct_hotkey_id=${keyBindData.databaseId}`;
+		//	let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		//	freeDatabaseQuery(dbQuery);			
+		//}
+
+		disconnectFromDatabase(dbConnection);
+	}
+}
+*/
+
+// ---------------------------------------------------------------------------
+
 function createAccount(name, password, email = "") {
 	let dbConnection = connectToDatabase();
 
@@ -461,7 +524,9 @@ function createAccount(name, password, email = "") {
 
 		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}')`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
-			return loadAccountFromId(getDatabaseInsertId(dbConnection));
+			let accountData = loadAccountFromId(getDatabaseInsertId(dbConnection), true);
+			createDefaultKeybindsForAccount(accountData.databaseId);
+			return accountData;
 		}
 	}
 
@@ -655,13 +720,17 @@ function saveClientToDatabase(client) {
 
 	console.log(`[Asshat.Account]: Saving client ${client.name} to database ...`);
 	saveAccountToDatabase(getClientData(client).accountData);
+
+
 	let subAccountData = getClientCurrentSubAccount(client);
-	
-	subAccountData.spawnPosition = getPlayerPosition(client);
-	subAccountData.spawnHeading = getPlayerHeading(client);
+
+	if(client.player != null) {
+		subAccountData.spawnPosition = getPlayerPosition(client);
+		subAccountData.spawnHeading = getPlayerHeading(client);
+	}
 
 	saveSubAccountToDatabase(subAccountData);
-	console.log(`[Asshat.Account]: Saved client ${client.name} to database successfully!`);
+	console.log(`[Asshat.Account]: Saved client ${getClientDisplayForConsole(client)} to database successfully!`);
 	return true;
 }
 
@@ -736,13 +805,13 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `acct_hotkey` WHERE `acct_hotkey_enabled` = 1 AND `acct_hotkey_acct` = " + toString(accountDatabaseID));
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempAccountKeyBindData = new serverClasses.accountKeybindData(dbAssoc);
-					tempAccountKeybinds.push(tempAccountKeybinds);
-					console.log(`[Asshat.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' loaded from database successfully!`);
+					let tempAccountKeyBindData = new serverClasses.keyBindData(dbAssoc);
+					tempAccountKeybinds.push(tempAccountKeyBindData);
+					console.log(`[Asshat.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${sdl.getKeyName(tempAccountKeyBindData.key)}') loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);

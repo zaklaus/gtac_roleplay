@@ -43,7 +43,7 @@ function connectToDatabase() {
 		console.log("[Asshat.Database] Database connection successful!");
 		return persistentDatabaseConnection;	
 	} else {
-		console.log("[Asshat.Database] Using existing database connection.");
+		//console.log("[Asshat.Database] Using existing database connection.");
 		return persistentDatabaseConnection;
 	}
 }

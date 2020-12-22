@@ -1718,3 +1718,32 @@ function arrayBufferToString(arrayBuffer) {
 function getClientDisplayForConsole(client) {
 	return `${client.name}[${client.index}]`;
 }
+
+// ----------------------------------------------------------------------------
+
+function getBoolRedGreenInlineColour(boolVal) {
+	return (!boolVal) ? getColourByName("softRed") : getColourByName("softGreen");
+}
+
+// ----------------------------------------------------------------------------
+
+function updatePlayerNameTag(client) {
+	triggerNetworkEvent("ag.nametag", null, client.name, getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
+}
+
+// ----------------------------------------------------------------------------
+
+function getPlayerNameForNameTag(client) {
+	if(isPlayerSpawned(client)) {
+		return `${getClientCurrentSubAccount(client).firstName} ${getClientCurrentSubAccount(client).lastName}`;
+	}
+	return client.name;
+}
+
+// ----------------------------------------------------------------------------
+
+function isPlayerSpawned(client) {
+	return (localPlayer != null);
+}
+
+// ----------------------------------------------------------------------------

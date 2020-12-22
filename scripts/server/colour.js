@@ -30,6 +30,8 @@ let serverColours = {
 		royalBlue: toColour(0, 0, 255, 255),
 		teal: toColour(0, 255, 255, 255),
 		orange: toColour(255, 128, 0, 255),
+		softRed: toColour(205, 92, 92, 255),
+		softGreen: toColour(50, 205, 50, 255),
 		lightPurple: toColour(150, 0, 150, 255),
 		lightGrey: toColour(200, 200, 200, 255),
 		mediumGrey: toColour(150, 150, 150, 255),
@@ -39,6 +41,7 @@ let serverColours = {
 		firefighterRed: toColour(205, 92, 92, 255),
 		busDriverGreen: toColour(50, 205, 50, 255),
 		taxiDriverYellow: toColour(240, 230, 140, 255),
+		civilianWhite: toColour(255, 255, 255, 255),
 		burntYellow: toColour(210, 210, 0, 255),
 		burntOrange: toColour(210, 120, 0, 255),
 		bankGreen: toColour(0, 150, 0, 255),
@@ -62,6 +65,22 @@ function getColourByType(typeName) {
 
 function getColourByName(colourName) {
 	return getServerColours().byName[colourName];
+}
+
+// ---------------------------------------------------------------------------
+
+function getPlayerColour(client) {
+	if(getClientData(client) != false) {
+		if(!isClientLoggedIn(client)) {
+			return getColourByName("darkGrey");
+		} else {
+			if(isPlayerWorking(client)) {
+				return getJobData(getClientCurrentSubAccount(client).job).colour;
+			}
+		}
+	}
+
+	return getColourByName("civilianWhite");
 }
 
 // ---------------------------------------------------------------------------

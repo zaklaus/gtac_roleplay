@@ -63,7 +63,10 @@ function isNull(val) {
 // ---------------------------------------------------------------------------
 
 function getEntityData(entity, dataName) {
-    return entity.getData(dataName);
+	if(entity != null) {
+		return entity.getData(dataName);
+	}
+    return null;
 }
 
 // ---------------------------------------------------------------------------
@@ -81,13 +84,19 @@ function setEntityData(entity, dataName, dataValue, syncToClients = true) {
 // ---------------------------------------------------------------------------
 
 function removeEntityData(entity, dataName) {
-    return entity.removeData(dataName);
+	if(entity != null) {
+		return entity.removeData(dataName);
+	}
+    return null;
 }
 
 // ---------------------------------------------------------------------------
 
 function doesEntityDataExist(entity, dataName) {
-    return (entity.getData(dataName) != null);
+	if(entity != null) {
+		return (entity.getData(dataName) != null);
+	}
+	return null;
 }
 
 // ---------------------------------------------------------------------------

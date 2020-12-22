@@ -114,7 +114,7 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
-			triggerNetworkEvent("ag.exitProperty", client, inHouse.entrancePosition, inHouse.entranceRotation, 0, 0);
+			triggerNetworkEvent("ag.exitProperty", client, inHouse.entrancePosition, inHouse.entranceRotation, inHouse.entranceInterior, inHouse.entranceDimension);
 			client.player.dimension = inHouse.entranceDimension;
 			removeEntityData(client, "ag.inHouse");
 		}
@@ -129,7 +129,7 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}					
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
-			triggerNetworkEvent("ag.exitProperty", client, inBusiness.entrancePosition, inBusiness.entranceRotation, 0, 0);
+			triggerNetworkEvent("ag.exitProperty", client, inBusiness.entrancePosition, inBusiness.entranceRotation, inBusiness.entranceInterior, inBusiness.entranceDimension);
 			client.player.dimension = inBusiness.entranceDimension;
 			removeEntityData(client, "ag.inBusiness");
 		}

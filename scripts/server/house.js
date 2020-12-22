@@ -11,7 +11,7 @@
 function initHouseScript() {
 	console.log("[Asshat.House]: Initializing house script ...");
 	getServerData().houses = loadHousesFromDatabase();
-	//createAllHousePickups();
+	createAllHousePickups();
 	console.log("[Asshat.House]: House script initialized successfully!");
 	return true;
 }
@@ -31,7 +31,7 @@ function loadHousesFromDatabase() {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempHouseData = new serverClasses.houseData(dbAssoc);
 					tempHouses.push(tempHouseData);
-					console.log(`[Asshat.House]: House '${tempHouseData.databaseId}' loaded!`);
+					console.log(`[Asshat.House]: House '${tempHouseData.description}' (ID ${tempHouseData.databaseId}) loaded!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -91,12 +91,13 @@ function saveHouseToDatabase(houseId) {
 	console.log(`[Asshat.House]: Saving house '${tempHouseData.databaseId}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
+		let safeHouseDescription = escapeDatabaseString(tempHouseData.description);
 		if(tempHouseData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw) VALUES ('${tempHouseData.description}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPos.x}, ${tempHouseData.exitPos.y}, ${tempHouseData.exitPos.z}, ${tempHouseData.exitHeading}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension})`;
+			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw) VALUES ('${safeHouseDescription}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPos.x}, ${tempHouseData.exitPos.y}, ${tempHouseData.exitPos.z}, ${tempHouseData.exitHeading}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().houses[houseId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE house_main SET house_description='${tempHouseData.description}', house_owner_type=${tempHouseData.ownerType}, house_owner_id=${tempHouseData.ownerId}, house_locked=${boolToInt(tempHouseData.locked)}, house_entrance_pos_x=${tempHouseData.entrancePosition.x}, house_entrance_pos_y=${tempHouseData.entrancePosition.y}, house_entrance_pos_z=${tempHouseData.entrancePosition.z}, house_entrance_rot_z=${tempHouseData.entranceRotation}, house_entrance_int=${tempHouseData.entranceInterior}, house_entrance_vw=${tempHouseData.entranceDimension}, house_exit_pos_x=${tempHouseData.exitPosition.x}, house_exit_pos_y=${tempHouseData.exitPosition.y}, house_exit_pos_z=${tempHouseData.exitPosition.z}, house_exit_rot_z=${tempHouseData.exitRotation}, house_exit_int=${tempHouseData.exitInterior}, house_exit_vw=${tempHouseData.exitDimension} WHERE house_id=${tempHouseData.databaseId}`;
+			let dbQueryString = `UPDATE house_main SET house_description='${safeHouseDescription}', house_owner_type=${tempHouseData.ownerType}, house_owner_id=${tempHouseData.ownerId}, house_locked=${boolToInt(tempHouseData.locked)}, house_entrance_pos_x=${tempHouseData.entrancePosition.x}, house_entrance_pos_y=${tempHouseData.entrancePosition.y}, house_entrance_pos_z=${tempHouseData.entrancePosition.z}, house_entrance_rot_z=${tempHouseData.entranceRotation}, house_entrance_int=${tempHouseData.entranceInterior}, house_entrance_vw=${tempHouseData.entranceDimension}, house_exit_pos_x=${tempHouseData.exitPosition.x}, house_exit_pos_y=${tempHouseData.exitPosition.y}, house_exit_pos_z=${tempHouseData.exitPosition.z}, house_exit_rot_z=${tempHouseData.exitRotation}, house_exit_int=${tempHouseData.exitInterior}, house_exit_vw=${tempHouseData.exitDimension} WHERE house_id=${tempHouseData.databaseId}`;
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -111,9 +112,19 @@ function saveHouseToDatabase(houseId) {
 
 function createAllHousePickups() {
 	for(let i in getServerData().houses) {
-		getServerData().houses[i].pickup = gta.createPickup(getServerConfig().pickupModels[getServerGame()].house, getServerData().houses[i].entrancePosition);
-		getServerData().houses[i].pickup.setData("ag.ownerType", AG_PICKUP_HOUSE, true);
-        getServerData().houses[i].pickup.setData("ag.ownerId", i, true);
+		if(getServerData().houses[i].entrancePickupModel != -1) {
+			let pickupModelId = getServerConfig().pickupModels[getServerGame()].house;
+
+			if(getServerData().houses[i].entrancePickupModel != 0) {
+				pickupModelId = getServerData().houses[i].entrancePickupModel;
+			}
+			
+			getServerData().houses[i].pickup = gta.createPickup(pickupModelId, getServerData().houses[i].entrancePosition);
+			//getServerData().houses[i].pickup.dimension = getServerData().houses[i].entranceDimension;
+			//getServerData().houses[i].pickup.interior = getServerData().houses[i].entranceInterior;			
+			getServerData().houses[i].pickup.setData("ag.ownerType", AG_PICKUP_HOUSE, true);
+			getServerData().houses[i].pickup.setData("ag.ownerId", i, true);
+		}
 	}
 }
 

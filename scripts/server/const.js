@@ -76,3 +76,9 @@ const AG_JOBWORKTYPE_NONE = 0;
 const AG_JOBWORKTYPE_ROUTE = 1; // Jobs that use routes. Bus, trash collector, mail, etc
 const AG_JOBWORKTYPE_SELL = 2; // Jobs that sell items to other players and NPCs. Drugs, guns, etc
 const AG_JOBWORKTYPE_SERVICE = 3; // Services to other players and NPCs. Taxi ride, mechanic fix, etc
+
+// Vehicle Seats
+const AG_VEHSEAT_DRIVER = 0;
+const AG_VEHSEAT_FRONTPASSENGER = 1;
+const AG_VEHSEAT_REARLEFTPASSENGER = 2;
+const AG_VEHSEAT_REARRIGHTPASSENGER = 3;

@@ -452,6 +452,12 @@ addNetworkHandler("ag.fadeCamera", function(state, time) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.removeFromVehicle", function() {
+    localPlayer.removeFromVehicle();
+});
+
+// ---------------------------------------------------------------------------
+
 addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, pedPiece) {
     wastedPed.clearWeapons();
 });

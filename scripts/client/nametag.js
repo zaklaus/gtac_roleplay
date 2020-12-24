@@ -92,7 +92,6 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
     // Nametag
 	if(nametagFont != null) {
 		let size = nametagFont.measure(text, game.width, 0.0, 0.0, nametagFont.size, false, false);
-		let colourT = toColour(Math.floor(255.0*alpha), 255, 255, 255);
 		nametagFont.render(text, [x-size[0]/2, y-size[1]/2], game.width, 0.0, 0.0, nametagFont.size, colour, false, false, false, true);
 	}
 	

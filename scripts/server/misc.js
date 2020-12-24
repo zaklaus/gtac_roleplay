@@ -185,8 +185,7 @@ function enterExitPropertyCommand(command, params, client) {
 		}
 	}
 
-	console.log("Not near a house entrance.");
-	messageClientError(client, "You aren't close enough to a door!");
+	//messageClientError(client, "You aren't close enough to a door!");
 	
 	return true;
 }

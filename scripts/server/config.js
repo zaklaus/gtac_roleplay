@@ -178,7 +178,7 @@ let serverConfig = {
 		{},
 
 		{ // GTA 3
-			business: 2,
+			business: 0,
 			house: 2,
 			bank: 2,
 			clothes: 2,
@@ -226,6 +226,17 @@ let serverConfig = {
 	enterPropertyDistance: 3.0,
 	businessDimensionStart: 1000,
 	houseDimensionStart: 3000,
+
+	// THIS IS SCREEN HEIGHT, NOT ACTUAL DOOR POSITION IN THE WORLD
+	propertyLabelHeight: [
+		false,
+		85,
+		85,
+		85,
+		85,
+		85,
+		85,
+	],
 };
 
 // ----------------------------------------------------------------------------

@@ -20,7 +20,11 @@ function initEventScript() {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPlayerConnect", function(event, ipAddress, port) {
-    console.log(`[Asshat.Event] Client connecting (IP: ${ipAddress}, Port: ${port})`);
+    console.log(`[Asshat.Event] Client connecting (IP: ${ipAddress})`);
+    if(isIpAddressBanned(ipAddress)) {
+        messageClientError(client, "You are banned from this server!");
+        return false;
+    }
 });
 
 // ---------------------------------------------------------------------------
@@ -66,13 +70,25 @@ addEventHandler("onPlayerChat", function(event, client, messageText) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPedExitVehicle", function(event, ped, vehicle) {
-    if(!vehicle || vehicle.owner != -1) {
-        return false;
-    }
+    //if(!vehicle || vehicle.owner != -1) {
+    //    return false;
+    //}
 
-    if(!getVehicleData(vehicle)) {
-        return false;
-    }
+    //if(!getVehicleData(vehicle)) {
+    //    return false;
+    //}
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnPedEnterVehicle", function(event, ped, vehicle, seat) {
+    //if(!vehicle || vehicle.owner != -1) {
+    //    return false;
+    //}
+
+    //if(!getVehicleData(vehicle)) {
+    //    return false;
+    //}
 });
 
 // ---------------------------------------------------------------------------

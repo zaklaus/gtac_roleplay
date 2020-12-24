@@ -721,7 +721,6 @@ function saveClientToDatabase(client) {
 	console.log(`[Asshat.Account]: Saving client ${client.name} to database ...`);
 	saveAccountToDatabase(getClientData(client).accountData);
 
-
 	let subAccountData = getClientCurrentSubAccount(client);
 
 	if(client.player != null) {

@@ -34,6 +34,23 @@ function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
 
 // ---------------------------------------------------------------------------
 
+function messageAdmins(client, messageText, colour = COLOUR_WHITE) {
+    if(client.console) {
+        console.log(`[Asshat.Messaging] (Admins only) ${messageText}`);
+        return true;
+    }
+
+    // 🛡️
+
+    for(let i in clients) {
+        if(doesClientHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
+            messageClient(`${messageText}`, client, colour);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+
 function messageClientError(client, messageText) {
     if(client.console) {
         console.log(`[Asshat.Messaging] ERROR:  ${messageText}`);
@@ -158,6 +175,12 @@ function messageClientMeAction(client, doingActionClient, messageText) {
 
 function messageClientClanChat(client, clanChattingClient, messageText) {
     messageClientNormal(client, `(${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
+}
+
+// ---------------------------------------------------------------------------
+
+function messageClientAdminChat(client, adminChattingClient, messageText) {
+    messageClientNormal(client, `[ADMIN CHAT] [#AAAAAA]${getClientData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getClientData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
 }
 
 // ---------------------------------------------------------------------------

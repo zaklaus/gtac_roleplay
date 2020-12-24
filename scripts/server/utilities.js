@@ -1722,7 +1722,7 @@ function getClientDisplayForConsole(client) {
 // ----------------------------------------------------------------------------
 
 function getBoolRedGreenInlineColour(boolVal) {
-	return (!boolVal) ? getColourByName("softRed") : getColourByName("softGreen");
+	return (!boolVal) ? "[#AA2222]" : "[#22AA22]";
 }
 
 // ----------------------------------------------------------------------------

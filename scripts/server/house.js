@@ -196,7 +196,7 @@ function getHouseData(houseId) {
 // ---------------------------------------------------------------------------
 
 function doesHouseHaveInterior(houseId) {
-	if(getHouseData(houseId)) {
+	if(!getHouseData(houseId)) {
 		return false;
 	}
 
@@ -209,11 +209,32 @@ function doesHouseHaveInterior(houseId) {
 		return false;
 	}
 
-	if(houseData.exitDimension == 0) {
+	if(houseData.exitInterior == 0) {
 		return false;
 	}
 
+	if(houseData.exitInterior == -1) {
+		return false;
+	}	
+
 	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllHouseLabelsToClient(client) {
+	let tempHouseLabels = [];
+	for(let i in getServerData().houses) {
+		tempHouseLabels.push([i, getServerData().houses[i].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().houses[i].description, getServerData().houses[i].locked, false]);
+	}
+		
+	triggerNetworkEvent("ag.houselabel.all", client, tempHouseLabels);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendHouseLabelToClients(houseId) {
+	triggerNetworkEvent("ag.houselabel.add", null, houseId, getServerData().houses[houseId].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().houses[houseId].description, getServerData().houses[houseId].locked, false);
 }
 
 // ---------------------------------------------------------------------------

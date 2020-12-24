@@ -64,6 +64,12 @@ function isClientFromDiscord(client) {
 
 // ---------------------------------------------------------------------------
 
+function getDiscordSocket() {
+    return false;
+}
+
+// ---------------------------------------------------------------------------
+
 function getDiscordUserData(discordUserId) {
     return loadAccountFromDiscordUserId(discordUserId);
 }

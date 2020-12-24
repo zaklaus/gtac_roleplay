@@ -26,18 +26,6 @@ function initBanScript() {
 // ---------------------------------------------------------------------------
 
 function accountBanCommand(command, params, client, fromDiscord) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}	
-	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -49,26 +37,14 @@ function accountBanCommand(command, params, client, fromDiscord) {
         return false;
 	}
 
-	message(`[#996600][ADMIN]: [#FFFFFF]${getClientData(targetClient).accountData.name} has been banned from the server (account ban).`);
+	messageAdminAction(`${getClientData(targetClient).accountData.name} has been banned from the server (account ban).`);
 	banAccount(getClientData(targetClient).accountData.databaseId, getClientData(client).accountData.databaseId, "");
-	targetClient.disconnect();	
+	targetClient.disconnect();
 }
 
 // ---------------------------------------------------------------------------
 
 function subAccountBanCommand(command, params, client, fromDiscord) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -78,34 +54,62 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 	if(doesClientHaveStaffPermission(targetClient, "ManageServer") || doesClientHaveStaffPermission(targetClient, "Developer")) {
 		messageClientError(client, "You cannot ban this person!");
 		return false;
-	}
+    }
+    
+    let splitParams = params.split(" ");
+    let targetClient = getClientFromParams(splitParams[0]);
+    let reason = splitParams.slice(1).join(" ");
 
-	message(`[#996600][ADMIN]: [#FFFFFF]${getClientData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
-	banSubAccount(getClientData(targetClient).currentSubAccountData.databaseId, getClientData(client).accountData.databaseId, "");
+	messageAdminAction(`${getClientData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
+    banSubAccount(getClientData(targetClient).currentSubAccountData.databaseId, getClientData(client).accountData.databaseId, reason);
+    targetClient.disconnect();
 }
 
 // ---------------------------------------------------------------------------
 
 function ipBanCommand(command, params, client, fromDiscord) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
-	}
+    }
 
-	message(`[#996600][ADMIN]: [#FFFFFF]vtargetClient.name} has been banned from the server (IP ban).`);
-	banIPAddress(targetClient.ip, getClientData(client).accountData.databaseId, "");	
+	// Prevent banning admins with really high permissions
+	if(doesClientHaveStaffPermission(targetClient, "ManageServer") || doesClientHaveStaffPermission(targetClient, "Developer")) {
+		messageClientError(client, "You cannot ban this person!");
+		return false;
+    }    
+    
+    let splitParams = params.split(" ");
+    let targetClient = getClientFromParams(splitParams[0]);
+    let reason = splitParams.slice(1).join(" ");    
+
+    messageAdminAction(`${targetClient.name} has been banned from the server (IP ban).`);
+    banIPAddress(targetClient.ip, getClientData(client).accountData.databaseId, reason);	
+    server.banIP(targetClient.ip);
+    targetClient.disconnect();
+}
+
+// ---------------------------------------------------------------------------
+
+function subNetBanCommand(command, params, client, fromDiscord) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+    }
+
+	// Prevent banning admins with really high permissions
+	if(doesClientHaveStaffPermission(targetClient, "ManageServer") || doesClientHaveStaffPermission(targetClient, "Developer")) {
+		messageClientError(client, "You cannot ban this person!");
+		return false;
+    }
+    
+    let splitParams = params.split(" ");
+    let targetClient = getClientFromParams(splitParams[0]);
+    let octetAmount = Number(splitParams[1]);
+    let reason = splitParams.slice(2).join(" ");
+
+	messageAdminAction(`${targetClient.name} has been banned from the server (subnet ban).`);
+	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getClientData(client).accountData.databaseId, reason);	
 }
 
 // ---------------------------------------------------------------------------
@@ -114,7 +118,7 @@ function banAccount(accountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapetoString(reason);
-        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.account}, ${accountId}, ${adminAccountId}, '${safeReason}');`);
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${AG_BANTYPE_ACCOUNT}, ${accountId}, ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -129,7 +133,7 @@ function banSubAccount(subAccountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapetoString(reason);
-        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.subAccount}, ${subAccountId}, ${adminAccountId}, '${safeReason}');`);
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${AG_BANTYPE_SUBACCOUNT}, ${subAccountId}, ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -144,7 +148,22 @@ function banIPAddress(ipAddress, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapetoString(reason);
-        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${banType.ipAddress}, INET_ATON(${ipAddress}), ${adminAccountId}, '${safeReason}');`);
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${AG_BANTYPE_IPADDRESS}, INET_ATON(${ipAddress}), ${adminAccountId}, '${safeReason}');`);
+        freeDatabaseQuery(dbQuery);
+        dbConnection.close();
+        return true;
+    }
+
+    return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function banSubNet(ipAddressStart, ipAddressEnd, adminAccountId, reason) {
+    let dbConnection = connectToDatabase();
+    if(dbConnection) {
+        let safeReason = dbConnection.escapetoString(reason);
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_ip_start, ban_ip_end, ban_who_banned, ban_reason) VALUES (${AG_BANTYPE_SUBNET}, INET_ATON(${ipAddressStart}), INET_ATON(${ipAddressEnd}), ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -158,7 +177,7 @@ function banIPAddress(ipAddress, adminAccountId, reason) {
 function unbanAccount(accountId, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = queryDatabase(dbConnection, "UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.account + " AND ban_detail` = " + accountId + " AND `ban_removed` = 0");
+        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${AG_BANTYPE_ACCOUNT} AND ban_detail=${accountId}`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -172,7 +191,7 @@ function unbanAccount(accountId, adminAccountId) {
 function unbanSubAccount(subAccountId, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = queryDatabase(dbConnection, "UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.subAccount + " AND ban_detail` = " + subAccountId + " AND `ban_removed` = 0");
+        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${AG_BANTYPE_SUBACCOUNT} AND ban_detail=${subAccountId}`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -186,7 +205,21 @@ function unbanSubAccount(subAccountId, adminAccountId) {
 function unbanIPAddress(ipAddress, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = queryDatabase(dbConnection, "UPDATE `ban_main` SET `ban_who_removed` = " + adminAccountId + ", `ban_removed` = 1 WHERE `ban_type` = " + banType.ipAddress + " AND ban_detail` = " + ipAddress + " AND `ban_removed` = 0");
+        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${AG_BANTYPE_IPADDRESS} AND ban_detail=INET_ATON(${ipAddress})`);
+        freeDatabaseQuery(dbQuery);
+        dbConnection.close();
+        return true;
+    }
+
+    return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function unbanSubNet(ipAddressStart, ipAddressEnd, adminAccountId) {
+    let dbConnection = connectToDatabase();
+    if(dbConnection) {
+        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${AG_BANTYPE_SUBNET} AND ban_ip_start=INET_ATON(${ipAddressStart}) AND ban_ip_end=INET_ATON(${ipAddressEnd})`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -200,7 +233,7 @@ function unbanIPAddress(ipAddress, adminAccountId) {
 function isAccountBanned(accountId) {
     let bans = getServerData().bans;
     for(let i in bans) {
-        if(bans[i].type == banType.account) {
+        if(bans[i].type == AG_BANTYPE_ACCOUNT) {
             if(bans[i].detail == accountId) {
                 return true;
             }
@@ -215,7 +248,7 @@ function isAccountBanned(accountId) {
 function isSubAccountBanned(subAccountId) {
     let bans = getServerData().bans;
     for(let i in bans) {
-        if(bans[i].type == banType.subAcount) {
+        if(bans[i].type == AG_BANTYPE_SUBACCOUNT) {
             if(bans[i].detail == subAccountId) {
                 return true;
             }
@@ -230,7 +263,7 @@ function isSubAccountBanned(subAccountId) {
 function isIpAddressBanned(ipAddress) {
     let bans = getServerData().bans;
     for(let i in bans) {
-        if(bans[i].type == banType.ipAddress) {
+        if(bans[i].type == AG_BANTYPE_IPADDRESS) {
             if(bans[i].detail == ipAddress) {
                 return true;
             }

@@ -13,19 +13,7 @@ function initModerationScript() {
 
 // ---------------------------------------------------------------------------
 
-function kickClientCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
+function kickClientCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -43,25 +31,42 @@ function kickClientCommand(command, params, client) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been kicked from the server.");
+	messageAdminAction(`${targetClient.name} has been kicked from the server.`);
 	targetClient.disconnect();
 }
 
 // ---------------------------------------------------------------------------
 
-function muteClientCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+function setClientStaffTitleCommand(command, params, client) {	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
+	let splitParams = params.split(" ");
+	let targetClient = getClientFromParams(splitParams[0]);
+	let staffTitle = splitParams.slice(1).join(" ");
+
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+	}
+
+	// Prevent setting titles on staff with really high permissions
+    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
+		messageClientError(client, "You cannot set this person's staff title!");
+        return false;
+	}
+	
+	getClientData(targetClient).accountData.staffTitle = staffTitle;
+	messageClientSuccess(client, `You set ${targetClient.name}'s staff title to ${staffTitle}`);
+	messageClientAlert(client, `${client.name} set your staff title to ${staffTitle}`);
+	targetClient.disconnect();
+}
+
+// ---------------------------------------------------------------------------
+
+function muteClientCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -79,24 +84,13 @@ function muteClientCommand(command, params, client) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been muted!");
+	messageAdminAction(`${targetClient.name} has been muted by an admin!`);
 	setEntityData(targetClient, "ag.muted", true, false);
 }
 
 // ---------------------------------------------------------------------------
 
 function unMuteClientCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
 	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
@@ -115,25 +109,13 @@ function unMuteClientCommand(command, params, client) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been unmuted!");
+	messageAdminAction(`${targetClient.name} has been unmuted by an admin!`);
 	removeEntityData(targetClient, "ag.muted");
 }
 
 // ---------------------------------------------------------------------------
 
-function freezeClientCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
+function freezeClientCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -151,25 +133,13 @@ function freezeClientCommand(command, params, client) {
         return false;
 	}
 	
-	message("[#996600][ADMIN]: [#FFFFFF]" + toString(targetClient.name) + " has been frozen!");
+	messageAdminAction(`${toString(targetClient.name)} has been frozen by an admin!`);
 	triggerNetworkEvent("ag.frozen", client, true);
 }
 
 // ---------------------------------------------------------------------------
 
 function unFreezeClientCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -187,25 +157,84 @@ function unFreezeClientCommand(command, params, client) {
         return false;
 	}
 	
-	message(`[#996600][ADMIN]: [#FFFFFF]${toString(targetClient.name)} has been un-frozen!`);
+	messageAdminAction(`${toString(targetClient.name)} has been un-frozen by an admin!`);
 	triggerNetworkEvent("ag.frozen", client, false);
 }
 
 // ---------------------------------------------------------------------------
 
-function addStaffFlagCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+function gotoPlayerCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
+    let targetClient = getClientFromParams(params);
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+    }
+	
+	//message(`[#996600][ADMIN]: [#FFFFFF]${toString(targetClient.name)} has been un-frozen by an admin!`);
+	
+	triggerNetworkEvent("ag.position", client, getPosBehindPos(getPlayerPosition(targetClient), getPlayerHeading(targetClient), 2));
+	triggerNetworkEvent("ag.heading", client, getPlayerHeading(targetClient));
+	
+	if(isPlayerInAnyBusiness(targetClient)) {
+		let businessData = getBusinessData(getPlayerBusiness(targetClient));
+		triggerNetworkEvent("ag.interior", client, businessData.exitInterior);
+		//triggerNetworkEvent("ag.dimension", client, businessData.exitInterior);
+		client.player.dimension = businessData.exitDimension;
+	}
+
+	if(isPlayerInAnyHouse(targetClient)) {
+		let houseData = getHouseData(getPlayerHouse(targetClient));
+		triggerNetworkEvent("ag.interior", client, houseData.exitInterior);
+		//triggerNetworkEvent("ag.dimension", client, houseData.exitInterior);
+		client.player.dimension = houseData.exitDimension;
+	}
+	messageClientSuccess(client, `You teleported to ${targetClient.name}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function getPlayerCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+    let targetClient = getClientFromParams(params);
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+	}
+
+	triggerNetworkEvent("ag.removeFromVehicle", targetClient);
+	triggerNetworkEvent("ag.position", targetClient, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), 2));
+	triggerNetworkEvent("ag.heading", targetClient, getPlayerHeading(client));
+	
+	if(isPlayerInAnyBusiness(client)) {
+		let businessData = getBusinessData(getPlayerBusiness(client));
+		triggerNetworkEvent("ag.interior", targetClient, businessData.exitInterior);
+		//triggerNetworkEvent("ag.dimension", client, businessData.exitInterior);
+		targetClient.player.dimension = businessData.exitDimension;
+	}
+
+	if(isPlayerInAnyHouse(client)) {
+		let houseData = getHouseData(getPlayerHouse(client));
+		triggerNetworkEvent("ag.interior", targetClient, houseData.exitInterior);
+		//triggerNetworkEvent("ag.dimension", client, houseData.exitInterior);
+		targetClient.player.dimension = houseData.exitDimension;
+	}
+
+	messageClientSuccess(client, `You teleported ${targetClient.name} to you.`);
+	messageClientAlert(targetClient, `An admin has teleported you to their location`);
+}
+
+// ---------------------------------------------------------------------------
+
+function addStaffFlagCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -234,24 +263,12 @@ function addStaffFlagCommand(command, params, client) {
 	}
 
 	giveClientStaffFlag(targetClient, flagName);
-	messageClientSuccess(client, `You have given ${client.name} the ${flagName} staff flag!`);
+	messageClientSuccess(client, `You have given ${targetClient.name} the ${flagName} staff flag!`);
 }
 
 // ---------------------------------------------------------------------------
 
 function takeStaffFlagCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -286,18 +303,6 @@ function takeStaffFlagCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function clearStaffFlagsCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -359,10 +364,11 @@ function getStaffFlagsCommand(command, params, client) {
 	}
 	
 	let tempStaffFlags = [];
-	for(let i in getServerData().staffFlagKeys) {
-		let tempFlagValue = getStaffFlagValue(getServerData().staffFlagKeys[i]);
+	let serverBitFlagKeys = getServerBitFlagKeys();
+	for(let i in serverBitFlagKeys) {
+		let tempFlagValue = getStaffFlagValue(serverBitFlagKeys[i]);
 		if(doesClientHaveStaffPermission(client, tempFlagValue)) {
-			tempStaffFlags.push(getServerData().staffFlagKeys[i]);
+			tempStaffFlags.push(serverBitFlagKeys[i]);
 		}
 	}
 
@@ -371,19 +377,7 @@ function getStaffFlagsCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function allStaffFlagsCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-	
+function allStaffFlagsCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -398,7 +392,7 @@ function allStaffFlagsCommand(command, params, client) {
         return false;
 	}
 
-	messageClientInfo(client, `Staff flags: ${getServerData().staffFlagKeys.join(", ")}`);
+	messageClientInfo(client, `[#FFFFFF]Staff flags: [#AAAAAA]${getServerBitFlagKeys().join("[#FFFFFF], [#AAAAAA]")}`);
 }
 
 // ---------------------------------------------------------------------------

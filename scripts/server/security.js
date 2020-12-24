@@ -8,4 +8,4 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let accountSaltHash = "FGjD49yWqMrW"
+let accountSaltHash = "FGjD49yWqMrW";

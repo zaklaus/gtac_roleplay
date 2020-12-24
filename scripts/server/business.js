@@ -96,12 +96,17 @@ function loadBusinessLocationsFromDatabase(businessId) {
 // ---------------------------------------------------------------------------
 
 function createBusinessCommand(command, params, client) {
-	if(!isPlayerSpawned(client)) {
-		messageClientError("You must be spawned to use this command!");
-		return false;
-	}
+	//if(!isPlayerSpawned(client)) {
+	//	messageClientError(client, "You must be spawned to use this command!");
+	//	return false;
+	//}
 
 	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getServerConfig().pickupModels[getServerGame()].business, getServerConfig().blipSprites[getServerGame()].business, getPlayerInterior(client), getPlayerVirtualWorld(client));
+	console.log("Business data returned");
+	getServerData().businesses.push(tempBusinessData);
+	console.log("Business data pushed to server data business array");
+	
+	sendBusinessLabelToClients(getServerData().businesses.length-1);
 
 	messageClientSuccess(client, `Business [#0099FF]${tempBusinessData.name} [#FFFFFF]created!`);
 }
@@ -122,20 +127,22 @@ function createBusinessLocationCommand(command, params, client) {
 		return false;
 	}		
 
-	createBusinessLocation(locationType, businessId);
+	let tempBusinessLocationData = createBusinessLocation(locationType, businessId);
+	getServerData().businesses[businessId].push(tempBusinessLocationData);
+
 	messageClientSuccess(client, `Business location [#0099FF]${params} [#FFFFFF]created for business [#0099FF]${tempBusinessData.name}`);
 }
 
 // ---------------------------------------------------------------------------
 
-function createBusiness(name, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = 0, exitVirtualWorld = 0, exitPickupModel = -1, exitBlipModel = -1) {
+function createBusiness(name, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = -1, exitVirtualWorld = -1, exitPickupModel = -1, exitBlipModel = -1) {
+	/*
 	let dbConnection = connectToDatabase();
 	let escapedName = name;
 	
 	if(dbConnection) {
 		escapedName = escapeDatabaseString(dbConnection, escapedName)
 		let dbQuery = queryDatabase(dbConnection, `INSERT INTO biz_main (biz_server, biz_name, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_int, biz_entrance_vw, biz_entrance_pickup, biz_entrance_blip, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_int, biz_exit_vw, biz_exit_pickup, biz_exit_blip) VALUES (${serverId}, '${escapedName}', ${entrancePosition.x}, ${entrancePosition.y}, ${entrancePosition.z}, ${entranceInteriorId}, ${entranceVirtualWorld}, ${entrancePickupModel}, ${entranceBlipModel}, ${exitPosition.x}, ${exitPosition.y}, ${exitPosition.z}, ${exitInteriorId}, ${exitVirtualWorld}, ${exitPickupModel}, ${exitBlipModel})`);
-		disconnectFromDatabase(dbConnection);
 
 		let tempBusinessData = loadBusinessFromId(dbConnection.insertID);
 		if(tempBusinessData != false) {
@@ -150,8 +157,43 @@ function createBusiness(name, entrancePosition, exitPosition, entrancePickupMode
 			
 			getServerData().business.push(tempBusiness);
 		}
+		disconnectFromDatabase(dbConnection);
 	}
-	return true;
+	*/
+
+
+	let tempBusinessData = new serverClasses.businessData(false);
+	console.log("Empty business instance created");
+	tempBusinessData.name = name;
+	console.log("Basic data set");
+
+	tempBusinessData.entrancePosition = entrancePosition;
+	tempBusinessData.entranceRotation = 0.0;
+	tempBusinessData.entrancePickupModel = entrancePickupModel;
+	tempBusinessData.entranceBlipModel = entranceBlipModel;
+	tempBusinessData.entranceInterior = entranceInteriorId;
+	tempBusinessData.entranceDimension = entranceVirtualWorld;
+	console.log("Entrance data set");
+
+	tempBusinessData.exitPosition = exitPosition;
+	tempBusinessData.exitRotation = 0.0;
+	tempBusinessData.exitPickupModel = exitPickupModel;
+	tempBusinessData.exitBlipModel = exitBlipModel;
+	tempBusinessData.exitInterior = exitInteriorId;
+	tempBusinessData.exitDimension = exitVirtualWorld;	
+	console.log("Exit data set");
+
+	if(entrancePickupModel != -1) {
+		tempBusinessData.entrancePickup = gta.createPickup(entrancePickupModel, entrancePosition, getServerConfig().pickupTypes[getServerGame()].business);
+	}
+	console.log("Entrance pickup set");
+
+	if(entranceBlipModel != -1) {
+		tempBusinessData.entranceBlip = gta.createBlip(entrancePosition, entranceBlipModel, 1, getColourByName("lightPurple")); 
+	}		
+	console.log("Entrance blip set");
+
+	return tempBusinessData;
 }
 
 // ---------------------------------------------------------------------------
@@ -491,13 +533,14 @@ function saveBusinessToDatabase(businessId) {
 	console.log(`[Asshat.Business]: Saving business '${tempBusinessData.name}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let safeBusinessName = escapeDatabaseString(tempBusinessData.name);
+		let safeBusinessName = escapeDatabaseString(dbConnection, tempBusinessData.name);
 		if(tempBusinessData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO biz_main (biz_name, biz_owner_type, biz_owner_id, biz_locked, biz_entrance_fee, biz_till, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_rot_z, biz_entrance_int, biz_entrance_vw, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_rot_z, biz_exit_int, biz_exit_vw) VALUES ('${safeBusinessName}', ${tempBusinessData.ownerType}, ${tempBusinessData.ownerId}, ${boolToInt(tempBusinessData.locked)}, ${tempBusinessData.entranceFee}, ${tempBusinessData.till}, ${tempBusinessData.entrancePos.x}, ${tempBusinessData.entrancePos.y}, ${tempBusinessData.entrancePos.z}, ${tempBusinessData.entranceHeading}, ${tempBusinessData.entranceInterior}, ${tempBusinessData.entranceDimension}, ${tempBusinessData.exitPos.x}, ${tempBusinessData.exitPos.y}, ${tempBusinessData.exitPos.z}, ${tempBusinessData.exitHeading}, ${tempBusinessData.exitInterior}, ${tempBusinessData.exitDimension})`;
+			let dbQueryString = `INSERT INTO biz_main (biz_server, biz_name, biz_owner_type, biz_owner_id, biz_locked, biz_entrance_fee, biz_till, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_rot_z, biz_entrance_int, biz_entrance_vw, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_rot_z, biz_exit_int, biz_exit_vw) VALUES (${serverId}, '${safeBusinessName}', ${tempBusinessData.ownerType}, ${tempBusinessData.ownerId}, ${boolToInt(tempBusinessData.locked)}, ${tempBusinessData.entranceFee}, ${tempBusinessData.till}, ${tempBusinessData.entrancePosition.x}, ${tempBusinessData.entrancePosition.y}, ${tempBusinessData.entrancePosition.z}, ${tempBusinessData.entranceRotation}, ${tempBusinessData.entranceInterior}, ${tempBusinessData.entranceDimension}, ${tempBusinessData.exitPosition.x}, ${tempBusinessData.exitPosition.y}, ${tempBusinessData.exitPosition.z}, ${tempBusinessData.exitRotation}, ${tempBusinessData.exitInterior}, ${tempBusinessData.exitDimension})`;
+			console.log(dbQueryString);
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().businesses[businessId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE biz_main SET biz_name=${safeBusinessName}, biz_owner_type=${tempBusinessData.ownerType}, biz_owner_id=${tempBusinessData.ownerId}, biz_locked=${boolToInt(tempBusinessData.locked)}, biz_entrance_fee=${tempBusinessData.entranceFee}, biz_till=${tempBusinessData.till}, biz_entrance_pos_x=${tempBusinessData.entrancePosition.x}, biz_entrance_pos_y=${tempBusinessData.entrancePosition.y}, biz_entrance_pos_z=${tempBusinessData.entrancePosition.z}, biz_entrance_rot_z=${tempBusinessData.entranceHeading}, biz_entrance_int=${tempBusinessData.entranceInterior}, biz_entrance_vw=${tempBusinessData.entranceDimension}, biz_exit_pos_x=${tempBusinessData.exitPosition.x}, biz_exit_pos_y=${tempBusinessData.exitPosition.y}, biz_exit_pos_z=${tempBusinessData.exitPosition.z}, biz_exit_rot_z=${tempBusinessData.exitHeading}, biz_exit_int=${tempBusinessData.exitInterior}, biz_exit_vw=${tempBusinessData.exitDimension} WHERE biz_id=${tempBusinessData.databaseId}`;
+			let dbQueryString = `UPDATE biz_main SET biz_name=${safeBusinessName}, biz_owner_type=${tempBusinessData.ownerType}, biz_owner_id=${tempBusinessData.ownerId}, biz_locked=${boolToInt(tempBusinessData.locked)}, biz_entrance_fee=${tempBusinessData.entranceFee}, biz_till=${tempBusinessData.till}, biz_entrance_pos_x=${tempBusinessData.entrancePosition.x}, biz_entrance_pos_y=${tempBusinessData.entrancePosition.y}, biz_entrance_pos_z=${tempBusinessData.entrancePosition.z}, biz_entrance_rot_z=${tempBusinessData.entranceRotation}, biz_entrance_int=${tempBusinessData.entranceInterior}, biz_entrance_vw=${tempBusinessData.entranceDimension}, biz_exit_pos_x=${tempBusinessData.exitPosition.x}, biz_exit_pos_y=${tempBusinessData.exitPosition.y}, biz_exit_pos_z=${tempBusinessData.exitPosition.z}, biz_exit_rot_z=${tempBusinessData.exitRotation}, biz_exit_int=${tempBusinessData.exitInterior}, biz_exit_vw=${tempBusinessData.exitDimension} WHERE biz_id=${tempBusinessData.databaseId}`;
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -606,7 +649,7 @@ function getBusinessData(businessId) {
 // ---------------------------------------------------------------------------
 
 function doesBusinessHaveInterior(businessId) {
-	if(getBusinessData(businessId)) {
+	if(!getBusinessData(businessId)) {
 		return false;
 	}
 
@@ -617,13 +660,43 @@ function doesBusinessHaveInterior(businessId) {
 
 	if(businessData.exitDimension == businessData.entranceDimension) {
 		return false;
-	}	
+	}
 
-	if(businessData.exitDimension == 0) {
+	if(businessData.exitInterior == 0) {
+		return false;
+	}
+
+	if(businessData.exitInterior == -1) {
 		return false;
 	}	
 
 	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllBusinessLabelsToClient(client) {
+	let tempBusinessLabels = [];
+	for(let i in getServerData().businesses) {
+		//let tempBusinessLabel = {
+		//	labelId: i, 
+		//	position: getServerData().businesses[i].entrancePosition, 
+		//	height: getServerConfig().propertyLabelHeight[getServerGame()], 
+		//	name: getServerData().businesses[i].name, 
+		//	locked: getServerData().businesses[i].locked, 
+		//	hidden: false,
+		//};
+
+		tempBusinessLabels.push([i, getServerData().businesses[i].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().businesses[i].name, getServerData().businesses[i].locked, false]);
+	}
+		
+	triggerNetworkEvent("ag.bizlabel.all", client, tempBusinessLabels);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendBusinessLabelToClients(businessId) {
+	triggerNetworkEvent("ag.bizlabel.add", null, businessId, getServerData().businesses[businessId].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().businesses[businessId].name, getServerData().businesses[businessId].locked, false);
 }
 
 // ---------------------------------------------------------------------------

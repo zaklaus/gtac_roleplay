@@ -198,6 +198,103 @@ function gotoPlayerCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function teleportForwardCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	triggerNetworkEvent("ag.position", client, getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	
+	messageClientSuccess(client, `You teleported forward ${params} meters`);
+}
+
+// ---------------------------------------------------------------------------
+
+function teleportToVehicleCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(typeof getServerData().vehicles[toInteger(params)] == "undefined") {
+		messageClientError(client, "That vehicle ID doesn't exist!");
+	}
+
+	let vehicle = getServerData().vehicles[toInteger(params)].vehicle;
+	
+	triggerNetworkEvent("ag.position", client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
+	
+	messageClientSuccess(client, `You teleported to vehicle ${toInteger(params)}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function teleportBackwardCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	triggerNetworkEvent("ag.position", client, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	
+	messageClientSuccess(client, `You teleported backward ${params} meters`);
+}
+
+// ---------------------------------------------------------------------------
+
+function teleportLeftCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	triggerNetworkEvent("ag.position", client, getPosToLeftOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	
+	messageClientSuccess(client, `You teleported left ${params} meters`);
+}
+
+// ---------------------------------------------------------------------------
+
+function teleportUpCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	triggerNetworkEvent("ag.position", client, getPosAbovePos(getPlayerPosition(client), params));
+	
+	messageClientSuccess(client, `You teleported up ${params} meters`);
+}
+
+// ---------------------------------------------------------------------------
+
+function teleportDownCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	triggerNetworkEvent("ag.position", client, getPosBelowPos(getPlayerPosition(client), params));
+	
+	messageClientSuccess(client, `You teleported down ${params} meters`);
+}
+
+// ---------------------------------------------------------------------------
+
+function teleportRightCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	triggerNetworkEvent("ag.position", client, getPosToRightOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	
+	messageClientSuccess(client, `You teleported right ${params} meters`);
+}
+
+// ---------------------------------------------------------------------------
+
 function getPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));

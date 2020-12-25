@@ -26,9 +26,11 @@ function kickClientCommand(command, params, client) {
     }
 
 	// Prevent kicking admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		messageClientError(client, "You cannot kick this person!");
-        return false;
+	if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messageClientError(client, "You cannot kick this person!");
+			return false;
+		}
 	}
 	
 	messageAdminAction(`${targetClient.name} has been kicked from the server.`);
@@ -53,12 +55,14 @@ function setClientStaffTitleCommand(command, params, client) {
 	}
 
 	// Prevent setting titles on staff with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		messageClientError(client, "You cannot set this person's staff title!");
-        return false;
+	if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messageClientError(client, "You cannot set this person's staff title!");
+			return false;
+		}
 	}
 	
-	getClientData(targetClient).accountData.staffTitle = staffTitle;
+	getPlayerData(targetClient).accountData.staffTitle = staffTitle;
 	messageClientSuccess(client, `You set ${targetClient.name}'s staff title to ${staffTitle}`);
 	messageClientAlert(client, `${client.name} set your staff title to ${staffTitle}`);
 	targetClient.disconnect();
@@ -79,9 +83,11 @@ function muteClientCommand(command, params, client) {
     }
 
 	// Prevent muting admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		messageClientError(client, "You cannot mute this person!");
-        return false;
+	if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messageClientError(client, "You cannot mute this person!");
+			return false;
+		}
 	}
 	
 	messageAdminAction(`${targetClient.name} has been muted by an admin!`);
@@ -104,10 +110,12 @@ function unMuteClientCommand(command, params, client) {
     }
 
 	// Prevent unmuting admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		messageClientError(client, "You cannot unmute this person!");
-        return false;
-	}
+    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messageClientError(client, "You cannot unmute this person!");
+			return false;
+		}
+	}		
 	
 	messageAdminAction(`${targetClient.name} has been unmuted by an admin!`);
 	removeEntityData(targetClient, "ag.muted");
@@ -128,9 +136,11 @@ function freezeClientCommand(command, params, client) {
     }
 
 	// Prevent freeze admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		messageClientError(client, "You cannot freeze this person!");
-        return false;
+    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messageClientError(client, "You cannot freeze this person!");
+			return false;
+		}
 	}
 	
 	messageAdminAction(`${toString(targetClient.name)} has been frozen by an admin!`);
@@ -152,9 +162,11 @@ function unFreezeClientCommand(command, params, client) {
     }
 
 	// Prevent unfreezing admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		messageClientError(client, "You cannot freeze this person!");
-        return false;
+    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messageClientError(client, "You cannot freeze this person!");
+			return false;
+		}
 	}
 	
 	messageAdminAction(`${toString(targetClient.name)} has been un-frozen by an admin!`);
@@ -193,20 +205,7 @@ function gotoPlayerCommand(command, params, client) {
 		//triggerNetworkEvent("ag.dimension", client, houseData.exitInterior);
 		client.player.dimension = houseData.exitDimension;
 	}
-	messageClientSuccess(client, `You teleported to ${targetClient.name}`);
-}
-
-// ---------------------------------------------------------------------------
-
-function teleportForwardCommand(command, params, client) {
-	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
-	
-	triggerNetworkEvent("ag.position", client, getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
-	
-	messageClientSuccess(client, `You teleported forward ${params} meters`);
+	messageClientSuccess(client, `You teleported to [#AAAAAA]${targetClient.name}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -225,7 +224,20 @@ function teleportToVehicleCommand(command, params, client) {
 	
 	triggerNetworkEvent("ag.position", client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
 	
-	messageClientSuccess(client, `You teleported to vehicle ${toInteger(params)}`);
+	messageClientSuccess(client, `You teleported to vehicle [#AAAAAA]${toInteger(params)}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function teleportForwardCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	triggerNetworkEvent("ag.position", client, getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	
+	messageClientSuccess(client, `You teleported forward ${params} meters`);
 }
 
 // ---------------------------------------------------------------------------
@@ -238,7 +250,7 @@ function teleportBackwardCommand(command, params, client) {
 	
 	triggerNetworkEvent("ag.position", client, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
-	messageClientSuccess(client, `You teleported backward ${params} meters`);
+	messageClientSuccess(client, `You teleported backward [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
@@ -251,7 +263,7 @@ function teleportLeftCommand(command, params, client) {
 	
 	triggerNetworkEvent("ag.position", client, getPosToLeftOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
-	messageClientSuccess(client, `You teleported left ${params} meters`);
+	messageClientSuccess(client, `You teleported left [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
@@ -264,7 +276,7 @@ function teleportUpCommand(command, params, client) {
 	
 	triggerNetworkEvent("ag.position", client, getPosAbovePos(getPlayerPosition(client), params));
 	
-	messageClientSuccess(client, `You teleported up ${params} meters`);
+	messageClientSuccess(client, `You teleported up [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
@@ -277,7 +289,7 @@ function teleportDownCommand(command, params, client) {
 	
 	triggerNetworkEvent("ag.position", client, getPosBelowPos(getPlayerPosition(client), params));
 	
-	messageClientSuccess(client, `You teleported down ${params} meters`);
+	messageClientSuccess(client, `You teleported down [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
@@ -290,7 +302,7 @@ function teleportRightCommand(command, params, client) {
 	
 	triggerNetworkEvent("ag.position", client, getPosToRightOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
-	messageClientSuccess(client, `You teleported right ${params} meters`);
+	messageClientSuccess(client, `You teleported right [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
@@ -325,7 +337,7 @@ function getPlayerCommand(command, params, client) {
 		targetClient.player.dimension = houseData.exitDimension;
 	}
 
-	messageClientSuccess(client, `You teleported ${targetClient.name} to you.`);
+	messageClientSuccess(client, `You teleported [#AAAAAA]${targetClient.name} [#FFFFFF]to you.`);
 	messageClientAlert(targetClient, `An admin has teleported you to their location`);
 }
 
@@ -347,8 +359,8 @@ function addStaffFlagCommand(command, params, client) {
     }
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		if(!doesClientHaveStaffPermission(client, "manageServer") && !doesClientHaveStaffPermission(client, "developer")) {
+    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
 			messageClientError(client, "You cannot give staff flags to this person!");
 			return false;
 		}
@@ -356,11 +368,11 @@ function addStaffFlagCommand(command, params, client) {
 
 	if(!getStaffFlagValue(flagName)) {
 		messageClientError(client, "That staff flag doesn't exist!");
-        return false;		
+        return false;
 	}
 
 	giveClientStaffFlag(targetClient, flagName);
-	messageClientSuccess(client, `You have given ${targetClient.name} the ${flagName} staff flag!`);
+	messageClientSuccess(client, `You have ${getBoolRedGreenInlineColour(true)}given [#AAAAAA]${targetClient.name} [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag`);
 }
 
 // ---------------------------------------------------------------------------
@@ -381,8 +393,8 @@ function takeStaffFlagCommand(command, params, client) {
     }
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		if(!doesClientHaveStaffPermission(client, "manageServer") && !doesClientHaveStaffPermission(client, "developer")) {
+    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
 			messageClientError(client, "You cannot take staff flags from this person!");
 			return false;
 		}
@@ -394,7 +406,7 @@ function takeStaffFlagCommand(command, params, client) {
 	}
 
 	takeClientStaffFlag(targetClient, flagName);
-	messageClientSuccess(client, `You have taken the ${flagName} staff flag from ${targetClient.name}!`);
+	messageClientSuccess(client, `You have ${getBoolRedGreenInlineColour(false)}taken [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag from [#AAAAAA]${targetClient.name}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -415,8 +427,8 @@ function clearStaffFlagsCommand(command, params, client) {
     }
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "manageServer") || doesClientHaveStaffPermission(targetClient, "developer")) {
-		if(!doesClientHaveStaffPermission(client, "manageServer") && !doesClientHaveStaffPermission(client, "developer")) {
+	if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
 			messageClientError(client, "You cannot clear staff flags for this person!");
 			return false;
 		}
@@ -428,7 +440,7 @@ function clearStaffFlagsCommand(command, params, client) {
 	}
 
 	clearClientStaffFlags(targetClient);
-	messageClientSuccess(client, `You have cleared all staff flags off of ${targetClient.name}!`);
+	messageClientSuccess(client, `You have removed all staff flags from [#AAAAAA]${targetClient.name}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -469,7 +481,7 @@ function getStaffFlagsCommand(command, params, client) {
 		}
 	}
 
-	messageClientInfo(client, `${targetClient.name}'s staff flags: ${tempStaffFlags.join(", ")}`);
+	messageClientInfo(client, `[#FFFFFF]${targetClient.name}'s staff flags: [#AAAAAA]${tempStaffFlags.join("[#FFFFFF], [#AAAAAA]")}`);
 }
 
 // ---------------------------------------------------------------------------

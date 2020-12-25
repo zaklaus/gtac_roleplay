@@ -89,53 +89,73 @@ addEventHandler("OnPedEnterVehicle", function(event, ped, vehicle, seat) {
     //if(!getVehicleData(vehicle)) {
     //    return false;
     //}
+
+    if(ped.isType(ELEMENT_PLAYER)) {
+        let client = getClientFromPlayerElement(ped);
+
+        if(!getVehicleData(vehicle).engine) {
+            if(doesClientHaveVehicleKeys(client, vehicle)) {
+                messageClientAlert(client, `This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
+                if(doesPlayerHaveKeyBindForCommand(client, "lock")) {
+                    messageClientTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "lock").key)} [#FFFFFF]to lock and unlock vehicles.`);
+                }
+            } else {
+                messageClientAlert(client, `This ${getVehicleName(vehicle)} is locked and you don't have the keys to unlock it`);
+            }
+        } 
+    } 
 });
 
 // ---------------------------------------------------------------------------
 
-function playerEnteredVehicle(client, vehicle) {
-    console.log(`Vehicle: ${vehicle}`);
+function playerEnteredVehicle(client, vehicleId) {
+    setTimeout(function() {
+        let vehicle = client.player.vehicle;
+        //console.log(`Vehicle: ${vehicle}`);
 
-    if(!vehicle || vehicle == null) {
-        return false;
-    }
-    console.log(`Vehicle not null`);
+        //if(!vehicle || vehicle == null) {
+        //    return false;
+        //}
 
-    if(!getVehicleData(vehicle)) {
-        return false;
-    }
+        //if(!getVehicleData(vehicle)) {
+        //    return false;
+        //}
 
-    console.log(`Vehicle data found`);
+        if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
+            if(getVehicleData(vehicle).buyPrice > 0) {
+                messageClientAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: [#AAAAAA]$${getVehicleData(vehicle).buyPrice}`);
+                messageClientTip(client, `Use /vehbuy if you want to buy it.`);
+            } else if(getVehicleData(vehicle).rentPrice > 0) {
+                messageClientAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: [#AAAAAA]$${getVehicleData(vehicle).rentPrice} per minute`);
+                messageClientTip(client, `Use /vehrent if you want to rent it.`);
+            } else {
+                if(!getVehicleData(vehicle).engine) {
+                    if(doesClientHaveVehicleKeys(client, vehicle)) {
+                        messageClientAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
+                        if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
+                            messageClientTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} [#FFFFFF]to start and stop the engine.`);
+                        }
+                    } else {
+                        messageClientAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
+                    }
 
-    if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
-        if(getVehicleData(vehicle).buyPrice > 0) {
-            messageClientAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost $${getVehicleData(vehicle).buyPrice}`);
-            messageClientTip(client, `Use /vehbuy if you want to buy it.`);
-        } else if(getVehicleData(vehicle).rentPrice > 0) {
-            messageClientAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: $${getVehicleData(vehicle).rentPrice} per minute`);
-            messageClientTip(client, `Use /vehrent if you want to rent it.`);
-        }
-
-        if(!getVehicleData(vehicle).engine) {
-            messageClientTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
-            if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                messageClientTip(client, `You can also press ${getPlayerKeyBindForCommand(client, "engine")} to start and stop the engine.`);
-            }
-            triggerNetworkEvent("ag.control", client, false, false);
-        }
-    
-        let currentSubAccount = getClientCurrentSubAccount(client);
-    
-        if(isPlayerWorking(client)) {
-            if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
-                if(getVehicleData(vehicle).ownerId == getClientCurrentSubAccount(client).job) {
-                    //if(seat == 0) {
-                        getClientCurrentSubAccount(client).lastJobVehicle = vehicle;
-                    //}
+                    triggerNetworkEvent("ag.control", client, false, false);
                 }
             }
-        }        
-    }
+
+            let currentSubAccount = getClientCurrentSubAccount(client);
+        
+            if(isPlayerWorking(client)) {
+                if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
+                    if(getVehicleData(vehicle).ownerId == getClientCurrentSubAccount(client).job) {
+                        //if(seat == 0) {
+                            getClientCurrentSubAccount(client).lastJobVehicle = vehicle;
+                        //}
+                    }
+                }
+            }        
+        }
+    }, 1000);
 }
 
 // ---------------------------------------------------------------------------

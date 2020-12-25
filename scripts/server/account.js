@@ -35,11 +35,11 @@ function loginCommand(command, params, client) {
 function autoLoginByIPCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
 	
-	if(isAccountAutoIPLoginEnabled(getClientData(client).accountData)) {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messageClientSuccess(client, `You will not be automatically logged in via your current IP (${client.ip})`);
 	} else {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messageClientSuccess(client, `You will now be automatically logged in from your current IP (${client.ip})`);
 	}
 	return true;
@@ -51,10 +51,10 @@ function autoSelectLastCharacterCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
 	
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messageClientSuccess(client, `You will not be automatically spawned as your last used character`);
 	} else {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messageClientSuccess(client, `You will now be automatically spawned as your last used character`);
 	}
 	return true;
@@ -66,17 +66,17 @@ function toggleAccountGUICommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noGUI");
 	
 	if(!doesPlayerHaveGUIEnabled(client)) {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messageClientSuccess(client, `You will now be shown GUI (if enabled on current server)`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	} else {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messageClientSuccess(client, `You will not be shown GUI anymore. Any GUI stuff will be shown as messages in the chatbox instead.`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI for their account OFF.`);
 	}
 
 	if(!isClientLoggedIn(client)) {
-		if(getClientData().accountData.databaseId != 0) {
+		if(getPlayerData().accountData.databaseId != 0) {
 			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 				triggerNetworkEvent("ag.showLogin", client);
 				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login GUI`);
@@ -103,12 +103,12 @@ function toggleAccountServerLogoCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noServerLogo");
 	
 	if(!doesPlayerHaveLogoEnabled(client)) {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messageClientSuccess(client, `You will now be shown the server logo (if enabled on current server)`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled the server logo ON for their account`);
 		triggerNetworkEvent("ag.logo", client, true);
 	} else {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messageClientSuccess(client, `You will not be shown the server logo.`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled the server logo OFF for their account`);
 		triggerNetworkEvent("ag.logo", client, false);
@@ -124,24 +124,24 @@ function toggleAccountServerLogoCommand(command, params, client) {
 function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("twoStepAuth");
 	
-	if(getClientData(client).emailAddress != "") {
+	if(getPlayerData(client).emailAddress != "") {
 		messageClientError(client, "You need to add your email to your account to use two-factor authentication.");
 		messageClientTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add your email.");
 		return false;
 	}
 
-	if(!isValidEmailAddress(getClientData(client).emailAddress)) {
+	if(!isValidEmailAddress(getPlayerData(client).emailAddress)) {
 		messageClientError(client, "The email you previously added is not valid.");
 		messageClientTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add a valid email.");		
 		return false;
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings & ~flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messageClientSuccess(client, `[#FFFFFF]Use this code to add your account into your authenticator app: [#AAAAAA]${addtoAuthenticatorCode}`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
-		getClientData(client).accountData.settings = getClientData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messageClientSuccess(client, `You have turned off two-factor authentication for login.`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
@@ -162,7 +162,7 @@ function registerCommand(command, params, client) {
 	}
 	
 	checkRegistration(client, params);
-	//getClientData(client).accountData = accountData;
+	//getPlayerData(client).accountData = accountData;
 	//messageClientSuccess(client, "Your account has been created!");
 	//messageClientAlert(client, "To play on the server, you will need to make a character.");
 }
@@ -179,7 +179,7 @@ function changePasswordCommand(command, params, client) {
 	let oldPassword = splitParams[0];
 	let newPassword = splitParams[1];
 
-	if(isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, oldPassword))) {
+	if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(client.name, oldPassword))) {
 		messageClientError(client, "The old password is invalid!");
 		return false;
 	}
@@ -190,7 +190,7 @@ function changePasswordCommand(command, params, client) {
 		return false;
 	}
 	
-	getClientData(client).accountData.password = hashAccountPassword(getClientData(client).accountData.name, params);
+	getPlayerData(client).accountData.password = hashAccountPassword(getPlayerData(client).accountData.name, params);
 	messageClientSuccess(client, "Your password has been changed!");
 }
 
@@ -214,7 +214,7 @@ function setAccountEmailCommand(command, params, client) {
 	}
 	
 	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
-	//getClientData(client).accountData.emailAddress = emailAddress;
+	//getPlayerData(client).accountData.emailAddress = emailAddress;
 	messageClientSuccess(client, "Your password has been changed!");
 }
 
@@ -238,7 +238,7 @@ function setAccountDiscordCommand(command, params, client) {
 	}
 	
 	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
-	//getClientData(client).accountData.emailAddress = emailAddress;
+	//getPlayerData(client).accountData.emailAddress = emailAddress;
 	//messageClientSuccess(client, "Your discord account has been attached to your game account!");
 }
 
@@ -249,8 +249,8 @@ function isClientLoggedIn(client) {
 		return true;
 	}
 
-	if(getClientData(client) != null) {
-		return getClientData(client).loggedIn;
+	if(getPlayerData(client) != null) {
+		return getPlayerData(client).loggedIn;
 	}
 
 	return false;
@@ -263,8 +263,8 @@ function isClientRegistered(client) {
 		return true;
 	}
 
-	if(getClientData(client).accountData != false) {
-		if(getClientData(client).accountData.databaseId != 0) {
+	if(getPlayerData(client).accountData != false) {
+		if(getPlayerData(client).accountData.databaseId != 0) {
 			return true;
 		}
 	}
@@ -411,14 +411,14 @@ function saltAccountInfo(name, password) {
 
 function loginSuccess(client) {
 	console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} successfully logged in.`);
-	getClientData(client).loggedIn = true;
+	getPlayerData(client).loggedIn = true;
 
 	if(doesClientHaveStaffPermission(client, "developer") || doesClientHaveStaffPermission(client, "manageServer")) {
 		console.warn(`[Asshat.Account] ${getClientDisplayForConsole(client)} has needed permissions and is being given administrator access`);
 		client.administrator = true;
 	}
 
-	if(getClientData(client).subAccounts.length == 0) {
+	if(getPlayerData(client).subAccounts.length == 0) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No characters");
 			setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
@@ -431,7 +431,7 @@ function loginSuccess(client) {
 		showCharacterSelectToClient(client);
 	}
 	
-	getClientData(client).accountData.ipAddress = client.ip;
+	getPlayerData(client).accountData.ipAddress = client.ip;
 
 	sendRemovedWorldObjectsToPlayer(client);
 	sendAllBusinessLabelsToPlayer(client);
@@ -577,7 +577,7 @@ function checkLogin(client, password) {
 		return false;
 	}
 	
-	if(!isAccountPasswordCorrect(getClientData(client).accountData, hashAccountPassword(client.name, password))) {
+	if(!isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(client.name, password))) {
 		console.warn(`[Asshat.Account] ${getClientDisplayForConsole(client)} attempted to login but failed (wrong password). ${loginAttemptsRemaining} login attempts remaining`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);
@@ -679,8 +679,8 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		return false;
 	}
 
-	getClientData(client).accountData = accountData;
-	getClientData(client).loggedIn = true;
+	getPlayerData(client).accountData = accountData;
+	getPlayerData(client).loggedIn = true;
 
 	messageClientSuccess(client, "Your account has been created!");
 	messageClientAlert(client, "To play on the server, you will need to make a character.");
@@ -706,24 +706,24 @@ function isValidEmailAddress(emailAddress) {
 function saveAllClientsToDatabase() {
 	console.log("[Asshat.Account]: Saving all clients to database ...");
 	getClients().forEach(function(client) {
-		saveClientToDatabase(client);
+		savePlayerToDatabase(client);
 	});
 	console.log("[Asshat.Account]: All clients saved to database successfully!");
 }
 
 // ---------------------------------------------------------------------------
 
-function saveClientToDatabase(client) {
-	if(getClientData(client) == null) {
+function savePlayerToDatabase(client) {
+	if(getPlayerData(client) == null) {
 		return false;
 	}
 	
-	if(!getClientData(client).loggedIn) {
+	if(!getPlayerData(client).loggedIn) {
 		return false;
 	}
 
 	console.log(`[Asshat.Account]: Saving client ${client.name} to database ...`);
-	saveAccountToDatabase(getClientData(client).accountData);
+	saveAccountToDatabase(getPlayerData(client).accountData);
 
 	let subAccountData = getClientCurrentSubAccount(client);
 
@@ -758,7 +758,7 @@ function initClient(client) {
 		getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
 
 		if(tempAccountData != false) {
-			if(isAccountAutoIPLoginEnabled(tempAccountData) && getClientData(client).accountData.ipAddress == client.ip) {
+			if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {
 				messageClientAlert(client, "You have been automatically logged in via IP!");
 				loginSuccess(client);
 			} else {
@@ -930,7 +930,7 @@ addNetworkHandler("ag.clientReady", function(client) {
 // ---------------------------------------------------------------------------
 
 function doesPlayerHaveGUIEnabled(client) {
-	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("noGUI"))) {
+	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noGUI"))) {
 		return false;
 	}
 
@@ -940,7 +940,7 @@ function doesPlayerHaveGUIEnabled(client) {
 // ---------------------------------------------------------------------------
 
 function doesPlayerHaveLogoEnabled(client) {
-	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("noServerLogo"))) {
+	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noServerLogo"))) {
 		return false;
 	}
 
@@ -950,7 +950,7 @@ function doesPlayerHaveLogoEnabled(client) {
 // ---------------------------------------------------------------------------
 
 function doesPlayerHaveAutoLoginByIPEnabled(client) {
-	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
+	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
 		return true;
 	}
 
@@ -960,7 +960,7 @@ function doesPlayerHaveAutoLoginByIPEnabled(client) {
 // ---------------------------------------------------------------------------
 
 function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
-	if(hasBitFlag(getClientData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"))) {
+	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"))) {
 		return true;
 	}
 

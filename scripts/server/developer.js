@@ -196,7 +196,7 @@ function submitIdea(client, ideaText) {
 	if(client.console) {
 		databaseId = -1
 	} else {
-		databaseId = getClientData(client).accountData.databaseId;
+		databaseId = getPlayerData(client).accountData.databaseId;
 	}
 		
 	let dbConnection = connectToDatabase();
@@ -229,7 +229,7 @@ function submitBugReport(client, bugText) {
 	if(client.console) {
 		databaseId = -1
 	} else {
-		databaseId = getClientData(client).accountData.databaseId;
+		databaseId = getPlayerData(client).accountData.databaseId;
 	}
 
 	let dbConnection = connectToDatabase();

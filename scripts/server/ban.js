@@ -37,8 +37,8 @@ function accountBanCommand(command, params, client, fromDiscord) {
         return false;
 	}
 
-	messageAdminAction(`${getClientData(targetClient).accountData.name} has been banned from the server (account ban).`);
-	banAccount(getClientData(targetClient).accountData.databaseId, getClientData(client).accountData.databaseId, "");
+	messageAdminAction(`${getPlayerData(targetClient).accountData.name} has been banned from the server (account ban).`);
+	banAccount(getPlayerData(targetClient).accountData.databaseId, getPlayerData(client).accountData.databaseId, "");
 	targetClient.disconnect();
 }
 
@@ -60,8 +60,8 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
     let targetClient = getClientFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
-	messageAdminAction(`${getClientData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
-    banSubAccount(getClientData(targetClient).currentSubAccountData.databaseId, getClientData(client).accountData.databaseId, reason);
+	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
+    banSubAccount(getPlayerData(targetClient).currentSubAccountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
     targetClient.disconnect();
 }
 
@@ -84,7 +84,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
     let reason = splitParams.slice(1).join(" ");    
 
     messageAdminAction(`${targetClient.name} has been banned from the server (IP ban).`);
-    banIPAddress(targetClient.ip, getClientData(client).accountData.databaseId, reason);	
+    banIPAddress(targetClient.ip, getPlayerData(client).accountData.databaseId, reason);	
     server.banIP(targetClient.ip);
     targetClient.disconnect();
 }
@@ -109,7 +109,7 @@ function subNetBanCommand(command, params, client, fromDiscord) {
     let reason = splitParams.slice(2).join(" ");
 
 	messageAdminAction(`${targetClient.name} has been banned from the server (subnet ban).`);
-	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getClientData(client).accountData.databaseId, reason);	
+	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getPlayerData(client).accountData.databaseId, reason);	
 }
 
 // ---------------------------------------------------------------------------

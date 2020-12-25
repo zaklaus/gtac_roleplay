@@ -113,8 +113,8 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 
 function showCharacterSelectToClient(client) {
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
-		if(getClientData().subAccounts != null) {
-			if(getClientData().subAccounts.length > 0) {
+		if(getPlayerData().subAccounts != null) {
+			if(getPlayerData().subAccounts.length > 0) {
 				selectCharacter(client, getPlayerLastUsedSubAccount(client));
 				return true;
 			}
@@ -122,8 +122,8 @@ function showCharacterSelectToClient(client) {
 	}
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-		getClientData(client).currentSubAccount = 0;
-		let tempSubAccount = getClientData(client).subAccounts[0];
+		getPlayerData(client).currentSubAccount = 0;
+		let tempSubAccount = getPlayerData(client).subAccounts[0];
 		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {	
@@ -131,7 +131,7 @@ function showCharacterSelectToClient(client) {
 		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
 		//let emojiNumbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"];
 		messageClientNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
-		getClientData(client).subAccounts.forEach(function(subAccount, index) {
+		getPlayerData(client).subAccounts.forEach(function(subAccount, index) {
 			messageClientNormal(client, `${index+1} • [#AAAAAA]${subAccount.firstName} ${subAccount.lastName}`);
 		});
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
@@ -168,7 +168,7 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 		return false;
 	}
 
-	let subAccountData = createSubAccount(getClientData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
+	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
 	if(!subAccountData) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.newCharacterFailed", client, "Something went wrong. Your character could not be created!");
@@ -179,9 +179,9 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 		return false;
 	}
 
-	getClientData(client).subAccounts = loadSubAccountsFromAccount(getClientData(client).accountData.databaseId);
-	getClientData(client).currentSubAccount = 0;
-	let tempSubAccount = getClientData(client).subAccounts[0];
+	getPlayerData(client).subAccounts = loadSubAccountsFromAccount(getPlayerData(client).accountData.databaseId);
+	getPlayerData(client).currentSubAccount = 0;
+	let tempSubAccount = getPlayerData(client).subAccounts[0];
 	showCharacterSelectToClient(client);
 }
 addNetworkHandler("ag.checkNewCharacter", checkNewCharacter);
@@ -189,15 +189,15 @@ addNetworkHandler("ag.checkNewCharacter", checkNewCharacter);
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.previousCharacter", function(client) {
-	if(getClientData(client).subAccounts.length > 1) {
-		if(getClientData(client).currentSubAccount <= 0) {
-			getClientData(client).currentSubAccount = getClientData(client).subAccounts.length-1;
+	if(getPlayerData(client).subAccounts.length > 1) {
+		if(getPlayerData(client).currentSubAccount <= 0) {
+			getPlayerData(client).currentSubAccount = getPlayerData(client).subAccounts.length-1;
 		} else {
-			getClientData(client).currentSubAccount--;
+			getPlayerData(client).currentSubAccount--;
 		}
 
-		let subAccountId = getClientData(client).currentSubAccount;
-		let tempSubAccount = getClientData(client).subAccounts[subAccountId];
+		let subAccountId = getPlayerData(client).currentSubAccount;
+		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 		triggerNetworkEvent("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 });
@@ -205,15 +205,15 @@ addNetworkHandler("ag.previousCharacter", function(client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.nextCharacter", function(client) {
-	if(getClientData(client).subAccounts.length > 1) {
-		if(getClientData(client).currentSubAccount >= getClientData(client).subAccounts.length-1) {
-			getClientData(client).currentSubAccount = 0;
+	if(getPlayerData(client).subAccounts.length > 1) {
+		if(getPlayerData(client).currentSubAccount >= getPlayerData(client).subAccounts.length-1) {
+			getPlayerData(client).currentSubAccount = 0;
 		} else {
-			getClientData(client).currentSubAccount++;
+			getPlayerData(client).currentSubAccount++;
 		}
 
-		let subAccountId = getClientData(client).currentSubAccount;
-		let tempSubAccount = getClientData(client).subAccounts[subAccountId];
+		let subAccountId = getPlayerData(client).currentSubAccount;
+		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 		triggerNetworkEvent("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 });
@@ -226,7 +226,7 @@ function selectCharacter(client, characterId = -1) {
 	}
 
 	if(characterId != -1) {
-		getClientData(client).currentSubAccount = characterId;
+		getPlayerData(client).currentSubAccount = characterId;
 	}
 
 	let tempSubAccount = getClientCurrentSubAccount(client);
@@ -300,7 +300,7 @@ function useCharacterCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function getPlayerLastUsedSubAccount(client) {
-	let subAccounts = getClientData(client).subAccounts;
+	let subAccounts = getPlayerData(client).subAccounts;
 	lastUsed = 0;
 	for(let i in subAccounts) {
 		if(subAccounts[i].lastLogin > subAccounts[lastUsed].lastLogin) {

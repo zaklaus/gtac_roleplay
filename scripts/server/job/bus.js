@@ -110,12 +110,12 @@ function getRandomBusRoute(island) {
 // ---------------------------------------------------------------------------
 
 function getNextStopOnBusRoute(client) {
-    if(getClientData(client).busRoute && getClientData(client).lastBusStop) {
+    if(getPlayerData(client).busRoute && getPlayerData(client).lastBusStop) {
         if(!isGoingToLastStopOnBusRoute(client)) {
-            return busRoutes[getServerGame()][getClientData(client).busRoute].positions[getClientData(client).lastBusStop+1];
+            return busRoutes[getServerGame()][getPlayerData(client).busRoute].positions[getPlayerData(client).lastBusStop+1];
         } else {
-            let slot = busRoutes[getServerGame()][getClientData(client).busRoute].length-1;
-            return busRoutes[getServerGame()][getClientData(client).busRoute].positions[slot];
+            let slot = busRoutes[getServerGame()][getPlayerData(client).busRoute].length-1;
+            return busRoutes[getServerGame()][getPlayerData(client).busRoute].positions[slot];
         }
     }    
 }
@@ -123,8 +123,8 @@ function getNextStopOnBusRoute(client) {
 // ---------------------------------------------------------------------------
 
 function isGoingToLastStopOnBusRoute(client) {
-    if(getClientData(client).busRoute && getClientData(client).lastBusStop) {
-        if(getClientData(client).lastBusStop+1 == busRoutes[getServerGame()][getClientData(client).busRoute].length-1) {
+    if(getPlayerData(client).busRoute && getPlayerData(client).lastBusStop) {
+        if(getPlayerData(client).lastBusStop+1 == busRoutes[getServerGame()][getPlayerData(client).busRoute].length-1) {
             return true;
         }
     }

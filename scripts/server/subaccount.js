@@ -253,9 +253,6 @@ function selectCharacter(client, characterId = -1) {
 		setPlayerInterior(client, tempSubAccount.interior);
 		setPlayerVirtualWorld(client, tempSubAccount.dimension);
 	}, client.ping+1000);
-
-	sendAllBusinessLabelsToClient(client);
-	sendAllHouseLabelsToClient(client);
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 

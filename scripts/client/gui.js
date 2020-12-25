@@ -1157,7 +1157,6 @@ app.init = function()
 			textAlign: 0.5,
 		},
 	}, showRegistration);
-	console.log("LOGIN WINDOW ADDED");
 	
 	// ---------------------------------------------------------------------------------
 	
@@ -1349,7 +1348,6 @@ app.init = function()
 			textAlign: 0.5,
 		},
 	}, checkNewCharacter);
-	console.log("NEWCHAR WINDOW ADDED");
 	
 	// ---------------------------------------------------------------------------------
 	
@@ -1936,7 +1934,6 @@ bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showLogin", function() {
-	console.log("SHOWING LOGIN");
 	showLogin();
 });
 
@@ -1955,7 +1952,6 @@ addNetworkHandler("ag.showNewCharacter", function() {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showCharacterSelect", function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
-	console.log("SHOWING CHAR SELECT");
 	showCharacterSelect(firstName, lastName, placeOfOrigin, dateOfBirth, skinId);
 });
 
@@ -1974,7 +1970,6 @@ addNetworkHandler("ag.showError", function(errorMessage, errorTitle) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showPrompt", function(promptMessage, promptTitle) {
-	console.log("SHOWING PROMPT");
 	showYesNo(promptMessage, promptTitle);
 });
 
@@ -2018,10 +2013,8 @@ addNetworkHandler("ag.registrationFailed", function(errorMessage) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.guiColour", function(red, green, blue) {
-	console.log("NEW GUI COLOURS");
 	primaryColour = [red, green, blue];
 	app.init();
-	console.log("APP INIT");
 	closeAllWindows();
 });
 

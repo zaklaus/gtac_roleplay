@@ -57,7 +57,6 @@ addNetworkHandler("ag.runCode", function(code, returnTo) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("onPickupCollected", function(event, pickup, ped) {
-    console.log(`PICKUP COLLECTED: Ped ${ped.id}, ${pickup.id}`);
 });
 
 // ---------------------------------------------------------------------------
@@ -74,9 +73,34 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
         gta.setDefaultInteriors(false);
         gta.setCiviliansEnabled(false);
     }
+
+    addNetworkHandler("ag.passenger", enterVehicleAsPassenger);
 });
 
-// ---------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+bindEventHandler("OnResourceStop", thisResource, function(event, resource) {
+
+});
+
+// ----------------------------------------------------------------------------
+
+function enterVehicleAsPassenger() {
+	if(localPlayer.vehicle == null) {
+		let tempVehicle = getClosestVehicle(localPlayer.position);
+		if(tempVehicle != null) {
+			localPlayer.enterVehicle(tempVehicle, false);
+		}
+	}	
+}
+
+// ----------------------------------------------------------------------------
+
+function getClosestVehicle(pos) {
+    return getVehicles().reduce((i, j) => (i.position.distance(pos) < j.position.distance(pos)) ? i : j);
+}
+
+// ----------------------------------------------------------------------------
 
 addNetworkHandler("ag.clearWeapons", function() {
     localPlayer.clearWeapons();
@@ -241,12 +265,15 @@ addNetworkHandler("ag.dimension", function(dimension) {
 addNetworkHandler("ag.enterProperty", function(position, heading, interior, dimension) {
     gta.fadeCamera(false, 1.0);
     setTimeout(function() {
+        localPlayer.position = position;
+        localPlayer.heading = heading;
+
         localPlayer.interior = interior;
         gta.cameraInterior = interior;
 
         setTimeout(function() {
-            localPlayer.position = position;
-            localPlayer.heading = heading;
+            //localPlayer.position = position;
+            //localPlayer.heading = heading;
             gta.fadeCamera(true, 1.0);
         }, 1000);
     }, 1100);
@@ -306,15 +333,13 @@ function processEvent(event, deltaTime) {
         if(localPlayer.vehicle) {
             if(!inVehicle) {
                 inVehicle = localPlayer.vehicle;
-                triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
-                console.log(`Entered vehicle: ${inVehicle.id}`);
-                triggerNetworkEvent("ag.onPlayerEnterVehicle", localPlayer.vehicle);
+                //triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
+                triggerNetworkEvent("ag.onPlayerEnterVehicle");
             }
         } else {
             if(inVehicle) {
-                triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
-                console.log(`Exited vehicle: ${inVehicle.id}`);
-                triggerNetworkEvent("ag.onPlayerExitVehicle", inVehicle);
+                //triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
+                //triggerNetworkEvent("ag.onPlayerExitVehicle");
                 inVehicle = false;
             }           
         } 
@@ -485,6 +510,12 @@ addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
         snowing = fallingSnow;
         forceSnowing(groundSnow);
     }
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
+    gta.removeWorldObject(model, position, range);
 });
 
 // ---------------------------------------------------------------------------

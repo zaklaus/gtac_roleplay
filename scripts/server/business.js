@@ -12,6 +12,7 @@ function initBusinessScript() {
 	console.log("[Asshat.Business]: Initializing business script ...");
 	getServerData().businesses = loadBusinessesFromDatabase();
 	createAllBusinessPickups();
+	createAllBusinessBlips();
 	console.log("[Asshat.Business]: Business script initialized successfully!");
 	return true;
 }
@@ -184,9 +185,9 @@ function deleteBusinessLocationCommand(command, params, client) {
 function setBusinessNameCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
-	let newBusinessName = toString(splitParams[0]);
+	let newBusinessName = toString(params);
 
-	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!getBusinessData(businessId)) {
 		messageClientError("Business not found!");
@@ -202,8 +203,8 @@ function setBusinessNameCommand(command, params, client) {
 function setBusinessOwnerCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
-	let newBusinessOwner = getClientFromParams(splitParams[0]);
-	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let newBusinessOwner = getClientFromParams(params);
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!newBusinessOwner) {
 		messageClientError("Player not found!");
@@ -223,9 +224,7 @@ function setBusinessOwnerCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function lockBusinessCommand(command, params, client) {
-	let splitParams = params.split(" ");
-
-	let businessId = toInteger(splitParams[0]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 	
 	if(!getBusinessData(businessId)) {
 		messageClientError("Business not found!");
@@ -233,16 +232,14 @@ function lockBusinessCommand(command, params, client) {
 	}	
 
 	getBusinessData(businessId).locked = !getBusinessData(businessId).locked;
-	messageClientSuccess(client, "Business " + getBusinessData(businessId).name + " " + (getBusinessData(businessId).locked) ? "locked" : "unlocked" + "!");
+	messageClientSuccess(client, `Business ${getBusinessData(businessId).name} ${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
 }
 
 // ---------------------------------------------------------------------------
 
 function setBusinessEntranceFeeCommand(command, params, client) {
-	let splitParams = params.split(" ");
-
-	let entranceFee = toInteger(splitParams[0]) || 0;
-	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let entranceFee = toInteger(params) || 0;
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!getBusinessData(businessId)) {
 		messageClientError("Business not found!");
@@ -256,7 +253,7 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function getBusinessInfoCommand(command, params, client) {
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!areParamsEmpty(params)) {
 		businessId = toInteger(params);
@@ -293,10 +290,8 @@ function getBusinessInfoCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setBusinessPickupCommand(command, params, client) {
-	let splitParams = params.split(" ");
-
-	let typeParam = splitParams[0] || "business";
-	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let typeParam = params || "business";
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!getBusinessData(businessId)) {
 		messageClientError(client, "Business not found!");
@@ -335,7 +330,7 @@ function setBusinessBlipCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let typeParam = splitParams[0] || "business";
-	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!getBusinessData(businessId)) {
 		messageClientError(client, "Business not found!");
@@ -424,16 +419,45 @@ function depositIntoBusinessCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function viewBusinessTillAmountCommand(command, params, client) {
-	//if(areParamsEmpty(params)) {
-	//	messageClientSyntax(client, getCommandSyntaxText(command));
-	//	return false;
-	//}
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
-	let splitParams = params.split(" ");
+	messageClientSuccess(client, `Business '${getServerData().businesses[businessId].name}' till has $'${getServerData().businesses[businessId].till}'!`);
+}
 
-	let businessId = toInteger(splitParams[0]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+// ---------------------------------------------------------------------------
 
-	messageClientSuccess(client, `Business '${getServerData().businesses[businessId].name}''s till has $'${getServerData().businesses[businessId].till}'!`);
+function moveBusinessEntranceCommand(command, params, client) {
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
+	
+	getBusinessData(businessId).entrancePosition = getPlayerPosition(client);
+	getBusinessData(businessId).entranceDimension = getPlayerVirtualWorld(client);
+	getBusinessData(businessId).entranceInterior = getPlayerInterior(client);
+	
+	deleteBusinessEntranceBlip(businessId);
+	deleteBusinessEntrancePickup(businessId);
+
+	createBusinessEntranceBlip(businessId);
+	createBusinessEntrancePickup(businessId);
+
+	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' entrance has been moved to your position`);
+}
+
+// ---------------------------------------------------------------------------
+
+function moveBusinessExitCommand(command, params, client) {
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
+	
+	getBusinessData(businessId).exitPosition = getPlayerPosition(client);
+	getBusinessData(businessId).exitDimension = getPlayerVirtualWorld(client);
+	getBusinessData(businessId).exitInterior = getPlayerInterior(client);
+	
+	deleteBusinessExitBlip(businessId);
+	deleteBusinessExitPickup(businessId);
+	
+	createBusinessExitBlip(businessId);
+	createBusinessExitPickup(businessId);
+
+	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' exit has been moved to your position`);
 }
 
 // ---------------------------------------------------------------------------
@@ -515,20 +539,54 @@ function saveBusinessToDatabase(businessId) {
 
 function createAllBusinessPickups() {
 	for(let i in getServerData().businesses) {
-		if(getServerData().businesses[i].pickupModel != -1) {
-			let pickupModelId = getServerConfig().pickupModels[getServerGame()].business;
-
-			if(getServerData().businesses[i].entrancePickupModel != 0) {
-				pickupModelId = getServerData().businesses[i].entrancePickupModel;
-			}
-
-			getServerData().businesses[i].pickup = gta.createPickup(pickupModelId, getServerData().businesses[i].entrancePosition);
-			//getServerData().businesses[i].pickup.dimension = getServerData().businesses[i].entranceDimension;
-			//getServerData().businesses[i].pickup.interior = getServerData().businesses[i].entranceInterior;
-			getServerData().businesses[i].pickup.setData("ag.ownerType", AG_PICKUP_BUSINESS, true);
-			getServerData().businesses[i].pickup.setData("ag.ownerId", i, true);
-		}
+		createBusinessEntrancePickup(i);
+		createBusinessExitPickup(i);
 	}
+}
+
+// ---------------------------------------------------------------------------
+
+function createAllBusinessBlips() {
+	for(let i in getServerData().businesses) {
+		createBusinessEntranceBlip(i);
+		createBusinessExitBlip(i);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function createBusinessEntrancePickup(businessId) {
+	if(getServerData().businesses[businessId].pickupModel != -1) {
+		let pickupModelId = getServerConfig().pickupModels[getServerGame()].business;
+
+		if(getServerData().businesses[businessId].entrancePickupModel != 0) {
+			pickupModelId = getServerData().businesses[businessId].entrancePickupModel;
+		}
+
+		getServerData().businesses[businessId].entrancePickup = gta.createPickup(pickupModelId, getServerData().businesses[businessId].entrancePosition);
+		//getServerData().businesses[businessId].entrancePickup.dimension = getServerData().businesses[i].entranceDimension;
+		//getServerData().businesses[businessId].entrancePickup.interior = getServerData().businesses[i].entranceInterior;
+		getServerData().businesses[businessId].entrancePickup.setData("ag.ownerType", AG_PICKUP_BUSINESS, true);
+		getServerData().businesses[businessId].entrancePickup.setData("ag.ownerId", businessId, true);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function createBusinessEntranceBlip(businessId) {
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function createBusinessExitPickup(businessId) {
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function createBusinessExitBlip(businessId) {
+	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -540,14 +598,19 @@ function deleteBusiness(businessId) {
 	let dbQuery = null;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `UPDATE biz_main SET biz_deleted = 1 AND biz_who_deleted = ${getClientData(client).accountData.databaseId} AND biz_when_deleted = UNIX_TIMESTAMP() WHERE biz_id = ${tempBusinessData.databaseId} LIMIT 1`);
+		dbQuery = queryDatabase(dbConnection, `UPDATE biz_main SET biz_deleted = 1 AND biz_who_deleted = ${getPlayerData(client).accountData.databaseId} AND biz_when_deleted = UNIX_TIMESTAMP() WHERE biz_id = ${tempBusinessData.databaseId} LIMIT 1`);
 		if(dbQuery) {
 			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
 
-	destroyElement(tempBusinessData.pickup);
+	deleteBusinessEntrancePickup(businessId);
+	deleteBusinessExitPickup(businessId);
+
+	deleteBusinessEntranceBlip(businessId);
+	deleteBusinessExitBlip(businessId);	
+
 	removePlayersFromBusiness(businessId);
 }
 
@@ -614,13 +677,13 @@ function doesBusinessHaveInterior(businessId) {
 	//}
 
 	let businessData = getBusinessData(businessId);
-	if(businessData.exitPosition == toVector3(0.0, 0.0, 0.0)) {
-		return false;
-	}
+	//if(businessData.exitPosition == toVector3(0.0, 0.0, 0.0)) {
+	//	return false;
+	//}
 
-	if(businessData.exitDimension == businessData.entranceDimension) {
-		return false;
-	}
+	//if(businessData.exitInterior == businessData.exitInterior) {
+	//	return false;
+	//}
 
 	if(businessData.exitInterior == 0) {
 		return false;
@@ -648,6 +711,42 @@ function sendAllBusinessLabelsToPlayer(client) {
 
 function sendBusinessLabelToPlayers(businessId) {
 	triggerNetworkEvent("ag.bizlabel.add", null, businessId, getServerData().businesses[businessId].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().businesses[businessId].name, getServerData().businesses[businessId].locked, false);
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteBusinessEntrancePickup(businessId) {
+	if(getBusinessData(businessId).entrancePickup != null) {
+		destroyElement(getBusinessData(businessId).entrancePickup);
+		getBusinessData(businessId).entrancePickup = null;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteBusinessExitPickup(businessId) {
+	if(getBusinessData(businessId).exitPickup != null) {
+		destroyElement(getBusinessData(businessId).exitPickup);
+		getBusinessData(businessId).exitPickup = null;
+	}	
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteBusinessEntranceBlip(businessId) {
+	if(getBusinessData(businessId).entranceBlip != null) {
+		destroyElement(getBusinessData(businessId).entranceBlip);
+		getBusinessData(businessId).entranceBlip = null;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteBusinessExitBlip(businessId) {
+	if(getBusinessData(businessId).exitBlip != null) {
+		destroyElement(getBusinessData(businessId).exitBlip);
+		getBusinessData(businessId).exitBlip = null;
+	}	
 }
 
 // ---------------------------------------------------------------------------

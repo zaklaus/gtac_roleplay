@@ -117,6 +117,7 @@ function loadCommandData() {
             commandData("help", helpCommand, "", getStaffFlagValue("none"), false, false),
         ],
         house: [
+            commandData("addhouse", createHouseCommand, "<description>", getStaffFlagValue("manageHouses"), true, false),
             commandData("houseinfo", getHouseInfoCommand, "", getStaffFlagValue("none"), true, false),
             //commandData("housedesc", setHouseDescriptionCommand, "", getStaffFlagValue("none"), true, false),
             //commandData("houselock", lockUnlockHouseCommand, "", getStaffFlagValue("none"), true, false),
@@ -170,6 +171,14 @@ function loadCommandData() {
 			commandData("freeze", freezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
 			commandData("unmute", unMuteClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
             commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),			
+            commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("fr", teleportForwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("ba", teleportBackwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("lt", teleportLeftCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("rt", teleportRightCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("up", teleportUpCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
             
             commandData("addstaffflag", addStaffFlagCommand, "<player name/id> [flag name]", getStaffFlagValue("manageAdmins"), true, true),
             commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> [flag name]", getStaffFlagValue("manageAdmins"), true, true),
@@ -201,7 +210,7 @@ function loadCommandData() {
             commandData("vehjob", setVehicleJobCommand, "[job id/name]", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehdelowner", removeVehicleOwnerCommand, "", getStaffFlagValue("manageVehicles"), true, true),
 
-            commandData("vehinfo", getVehicleInfoCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehinfo", getVehicleInfoCommand, "", getStaffFlagValue("none"), true, true),
             commandData("vehpark", toggleVehicleSpawnLockCommand, "", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehrespawnall", respawnAllVehiclesCommand, "", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehreloadall", reloadAllVehiclesCommand, "", getStaffFlagValue("manageVehicles"), true, true),
@@ -212,6 +221,8 @@ function loadCommandData() {
             commandData("stoprent", stopRentingVehicleCommand, "", getStaffFlagValue("none"), true, true),
             commandData("vehbuy", buyVehicleCommand, "", getStaffFlagValue("none"), true, true),
             commandData("vehcolour", setVehicleColourCommand, "<colour1> <colour2>", getStaffFlagValue("none"), true, true),
+            commandData("vehrepair", vehicleRepairCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("passenger", enterVehicleAsPassengerCommand, "", getStaffFlagValue("none"), true, true),
         ],
     }
     return tempCommands;

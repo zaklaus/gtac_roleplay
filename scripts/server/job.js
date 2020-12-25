@@ -641,8 +641,6 @@ function jobRadioCommand(command, params, client) {
 		return false;
 	}
 
-
-
 	return true;
 }
 

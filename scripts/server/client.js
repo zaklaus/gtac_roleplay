@@ -124,7 +124,6 @@ addNetworkHandler("ag.heldKey", function(client, key) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.player.sync", function(client, position, heading) {
-    //console.log(`POS: ${position}, X: ${position.x}, Y: ${position.y}, Z: ${position.z}`);
     setEntityData(client, "ag.position", position, true);
     setEntityData(client, "ag.heading", heading, true);
 });

@@ -154,7 +154,7 @@ function createVehicleCommand(command, params, client) {
 	getServerData().vehicles.push(tempVehicleData);
 	getServerData().vehicles[vehicleDataSlot].syncId = vehicleDataSlot;
 
-	messageClientSuccess(client, `You created a ${getVehicleName(vehicle)}!`);
+	messageAdmins(client, `[#AAAAAA]${client.name} [#FFFFFF]created a [#AAAAAA]${getVehicleName(vehicle)}!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -186,7 +186,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 	getServerData().vehicles.push(tempVehicleData);
 	getServerData().vehicles[vehicleDataSlot].syncId = vehicleDataSlot;
 
-	messageClientSuccess(client, `You created a temporary ${getVehicleName(vehicle)}!`);
+	messageAdmins(client, `[#AAAAAA]${client.name} [#FFFFFF]created a temporary ${getVehicleName(vehicle)}!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -461,7 +461,7 @@ function doesClientHaveVehicleKeys(client, vehicle) {
 	}	
 
 	if(vehicleData.ownerType == AG_VEHOWNER_PLAYER) {
-		if(vehicleData.ownerId == getClientData(client).accountData.databaseId) {
+		if(vehicleData.ownerId == getPlayerData(client).accountData.databaseId) {
 			return true;
 		}
 	}
@@ -501,7 +501,7 @@ function doesClientOwnVehicle(client, vehicle) {
 	}
 
 	if(vehicleData.ownerType == AG_VEHOWNER_PLAYER) {
-		if(vehicleData.ownerId == getClientData(client).accountData.databaseId) {
+		if(vehicleData.ownerId == getPlayerData(client).accountData.databaseId) {
 			return true;
 		}
 	}
@@ -549,7 +549,7 @@ function setVehicleJobCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_JOB;
 	getVehicleData(vehicle).ownerId = jobId;
 
-	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s owner to the ${getJobData(jobId).name} job! (ID ${jobId})`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job! (Job ID ${jobId})`);
 }
 
 // ---------------------------------------------------------------------------
@@ -561,17 +561,17 @@ function setVehicleClanCommand(command, params, client) {
 	}
 	
 	let vehicle = getPlayerVehicle(client);
-	let clan = getClanFromParams(params);
+	let clanId = getClanFromParams(params);
 
-	if(!clan) {
+	if(!getClanData(clanId)) {
 		messageClientError(client, "That clan is invalid or doesn't exist!");
 		return false;
 	}
 
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_CLAN;
-	getVehicleData(vehicle).ownerId = clan.databaseId;
+	getVehicleData(vehicle).ownerId = getClanData(clanId).databaseId;
 
-	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s owner to the ${clan.name} clan!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#AAAAAA]${getClanData(clanId).name} [#FFFFFF]clan`);
 }
 
 // ---------------------------------------------------------------------------
@@ -590,7 +590,7 @@ function setVehicleToDealershipCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_DEALERSHIP;
 	getVehicleData(vehicle).ownerId = businessData.databaseId;
 
-	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s owner to the ${tempBusinessData.name} dealership business!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#AAAAAA]${tempBusinessData.name} [#FFFFFF]dealership business`);
 }
 
 // ---------------------------------------------------------------------------
@@ -612,7 +612,7 @@ function setVehicleOwnerCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_PLAYER;
 	getVehicleData(vehicle).ownerId = getClientCurrentSubAccount(client).databaseId;
 
-	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s owner to ${getClientSubAccountName(client)}!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to [#AAAAAA]${getClientSubAccountName(client)}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -635,7 +635,7 @@ function setVehicleRentPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).rentPrice = amount;
 
-	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s rent price to $${amount}!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]rent price to [#AAAAAA]$${amount}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -658,7 +658,7 @@ function setVehicleBuyPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).buyPrice = amount;
 
-	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s buy price to $${amount}!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)}'s buy price to $${amount}!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -680,7 +680,7 @@ function removeVehicleOwnerCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_NONE;
 	getVehicleData(vehicle).ownerId = 0;
 
-	messageClientSuccess(client, `You set the ${getVehicleName(vehicle)}'s owner to nobody!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to nobody!`);
 	messageClientInfo(client, `Nobody will be able to use this vehicle until it receives a new owner (either bought or set by admin).`);
 }
 
@@ -746,7 +746,7 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 		getVehicleData(vehicle).spawnLocked = spawnLocked;
 	}
 
-	messageClientInfo(client, `This ${getVehicleName(vehicle)} will now spawn ${(spawnLocked) ? "here" : "wherever a player leaves it."}`);
+	messageAdmins(client, `[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]to spawn [#AAAAAA]${(spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -783,8 +783,8 @@ function respawnAllVehiclesCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function stopRentingVehicle(client) {
-	let vehicleData = getClientData(client).rentingVehicle;
-	getClientData(client).rentingVehicle = false;
+	let vehicleData = getPlayerData(client).rentingVehicle;
+	getPlayerData(client).rentingVehicle = false;
 	vehicleData.rentedBy = false;	
 	respawnVehicle(vehicleData);
 }

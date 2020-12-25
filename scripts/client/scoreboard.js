@@ -11,10 +11,12 @@
 let titleFont = null;
 let listFont = null;
 
+let pausedColour = COLOUR_RED;
+
 // ----------------------------------------------------------------------------
 
 bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
-	titleFont = lucasFont.createDefaultFont(22.0, "Roboto", "Medium");
+	titleFont = lucasFont.createDefaultFont(22.0, "Roboto", "Regular");
 	listFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 });
 
@@ -64,14 +66,14 @@ addEventHandler("OnDrawnHUD", function (event) {
 				listFont.render(text, [game.width/2, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, colour, false, false, false, true);
 				
 				// Ping
-
+				text = ping;
 				size = listFont.measure(ping, 75, 0.0, 1.0, 10, false, false);
 				listFont.render(ping, [game.width/2+100, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, COLOUR_WHITE, false, false, false, true);							
 				
 				// PAUSED Status (depends on resource "afk")
 				if(paused == true) {
 					size = listFont.measure("PAUSED", 100, 0.0, 1.0, 10, false, false);
-					listFont.render("PAUSED", [game.width/2+200, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, COLOUR_RED, false, false, false, true);							
+					listFont.render("PAUSED", [game.width/2+200, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, pausedColour, false, false, false, true);							
 				}
 			}
 		}

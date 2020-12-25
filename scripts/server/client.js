@@ -151,3 +151,9 @@ addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
 });
 
 // ---------------------------------------------------------------------------
+
+function updatePlayerNameTag(client) {
+	triggerNetworkEvent("ag.nametag", null, client.name, getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
+}
+
+// ---------------------------------------------------------------------------

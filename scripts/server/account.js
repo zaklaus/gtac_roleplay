@@ -432,6 +432,10 @@ function loginSuccess(client) {
 	}
 	
 	getClientData(client).accountData.ipAddress = client.ip;
+
+	sendRemovedWorldObjectsToPlayer(client);
+	sendAllBusinessLabelsToPlayer(client);
+	sendAllHouseLabelsToPlayer(client);
 }
 
 // ---------------------------------------------------------------------------

@@ -723,6 +723,11 @@ function getClientFromName(clientName) {
 		if(toLowerCase(clients[i].name).indexOf(toLowerCase(clientName)) != -1) {
 			return clients[i];
 		}
+
+		let charName = `${getClientCurrentSubAccount(clients[i]).firstName} ${getClientCurrentSubAccount(clients[i]).lastName}`;
+		if(toLowerCase(charName).indexOf(toLowerCase(clientName)) != -1) {
+			return clients[i];
+		}
 	}
 	
 	return false;
@@ -749,6 +754,11 @@ function getPlayerFromParams(params, isServer) {
 		for(let i in clients) {
 			if(toLowerCase(clients[i].name).indexOf(toLowerCase(params)) != -1) {
 				return clients[i].player;
+			}
+
+			let charName = `${getClientCurrentSubAccount(clients[i]).firstName} ${getClientCurrentSubAccount(clients[i]).lastName}`;
+			if(toLowerCase(charName).indexOf(toLowerCase(clientName)) != -1) {
+				return clients[i];
 			}			
 		}
 	} else {
@@ -1147,7 +1157,7 @@ function getGameAreas(gameId) {
 
 // ---------------------------------------------------------------------------
 
-function getClientData(client) {
+function getPlayerData(client) {
 	if(client != null) {
 		return getServerData().clients[client.index];
 	}
@@ -1157,8 +1167,8 @@ function getClientData(client) {
 // ---------------------------------------------------------------------------
 
 function getClientCurrentSubAccount(client) {
-	let subAccountId = getClientData(client).currentSubAccount;
-	return getClientData(client).subAccounts[subAccountId];
+	let subAccountId = getPlayerData(client).currentSubAccount;
+	return getPlayerData(client).subAccounts[subAccountId];
 }
 
 // ---------------------------------------------------------------------------
@@ -1368,7 +1378,7 @@ function getPickupOwnerId(pickup) {
 // ---------------------------------------------------------------------------
 
 function canPlayerUseJobs(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.jobBanned) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.jobBanned) {
 		return false;
 	}
 
@@ -1378,7 +1388,7 @@ function canPlayerUseJobs(client) {
 // ---------------------------------------------------------------------------
 
 function canPlayerUsePoliceJob(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.policeBanned) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.policeBanned) {
 		return false;
 	}
 
@@ -1388,7 +1398,7 @@ function canPlayerUsePoliceJob(client) {
 // ---------------------------------------------------------------------------
 
 function canClientUseFireJob(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.fireBanned) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.fireBanned) {
 		return false;
 	}
 
@@ -1398,7 +1408,7 @@ function canClientUseFireJob(client) {
 // ---------------------------------------------------------------------------
 
 function canClientUseAmmunations(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.ammuBanned) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.ammuBanned) {
 		return false;
 	}
 
@@ -1408,7 +1418,7 @@ function canClientUseAmmunations(client) {
 // ---------------------------------------------------------------------------
 
 function canClientUseGuns(client) {
-	if(getClientData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.gunBanned) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.gunBanned) {
 		return false;
 	}
 
@@ -1505,7 +1515,7 @@ function processHoldVehicleEngineKey(client) {
 function getClientChatColour(client) {
 	let tempJob = getClientCurrentSubAccount(client).job;
 	if(tempJob != -1) {
-		if(getClientData(client).isWorking) {
+		if(getPlayerData(client).isWorking) {
 			return getJobData(tempJob).jobColour;
 		}
 	}
@@ -1564,8 +1574,8 @@ function getWeatherFromParams(params) {
 		}
 		return false;
 	} else {
-		if(typeof getGameData().weatherNames[getServerGame()][i] != "undefined") {
-			return i;
+		if(typeof getGameData().weatherNames[getServerGame()][params] != "undefined") {
+			return params;
 		}
 		return false;
 	}
@@ -1667,42 +1677,6 @@ function getClosestPoliceStation(position) {
 
 // ----------------------------------------------------------------------------
 
-function processPlayerDeath(client) {
-	removeEntityData(client.player, "ag.spawned", true);
-	
-	let closestHospital = getClosestHospital(getPlayerPosition(client));
-	triggerNetworkEvent("ag.control", client, false);
-	setTimeout(function() {
-		triggerNetworkEvent("ag.fadeCamera", client, false, 1.0);
-		setTimeout(function() {
-			client.despawnPlayer();
-			if(getClientCurrentSubAccount(client).inJail) {
-				let closestJail = getClosestJail(getPlayerPosition(client));
-				spawnPlayer(client, closestJail.position, closestJail.heading, getClientCurrentSubAccount(client).skin);
-			} else {
-				spawnPlayer(client, closestHospital.position, closestHospital.heading, getClientCurrentSubAccount(client).skin);
-			}
-			setTimeout(function() {
-				setEntityData(client.player, "ag.spawned", true, true);
-				triggerNetworkEvent("ag.fadeCamera", client, true, 1.0);
-				triggerNetworkEvent("ag.control", client, true);
-			}, 1000);
-		}, 2000);		
-	}, 1000);
-}
-
-// ----------------------------------------------------------------------------
-
-function isPlayerInAnyVehicle(client) {
-	if(client.player.vehicle) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-// ----------------------------------------------------------------------------
-
 function isGTAIV() {
 	return (getServerGame() == GAME_GTA_IV);
 }
@@ -1721,18 +1695,6 @@ function getClientDisplayForConsole(client) {
 
 // ----------------------------------------------------------------------------
 
-function getBoolRedGreenInlineColour(boolVal) {
-	return (!boolVal) ? "[#AA2222]" : "[#22AA22]";
-}
-
-// ----------------------------------------------------------------------------
-
-function updatePlayerNameTag(client) {
-	triggerNetworkEvent("ag.nametag", null, client.name, getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
-}
-
-// ----------------------------------------------------------------------------
-
 function getPlayerNameForNameTag(client) {
 	if(isPlayerSpawned(client)) {
 		return `${getClientCurrentSubAccount(client).firstName} ${getClientCurrentSubAccount(client).lastName}`;
@@ -1743,7 +1705,13 @@ function getPlayerNameForNameTag(client) {
 // ----------------------------------------------------------------------------
 
 function isPlayerSpawned(client) {
-	return (localPlayer != null);
+	return (client.player != null);
+}
+
+// ----------------------------------------------------------------------------
+
+function getLockedUnlockedFromBool(boolVal) {
+	return (boolVal) ? "locked" : "unlocked";
 }
 
 // ----------------------------------------------------------------------------

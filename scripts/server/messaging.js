@@ -180,7 +180,7 @@ function messageClientClanChat(client, clanChattingClient, messageText) {
 // ---------------------------------------------------------------------------
 
 function messageClientAdminChat(client, adminChattingClient, messageText) {
-    messageClientNormal(client, `[ADMIN CHAT] [#AAAAAA]${getClientData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getClientData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
+    messageClientNormal(client, `[ADMIN CHAT] [#AAAAAA]${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
 }
 
 // ---------------------------------------------------------------------------

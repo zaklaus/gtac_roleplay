@@ -190,14 +190,14 @@ function removeKeyBindCommand(command, params, client) {
 
 function addPlayerKeyBind(client, keyId, tempCommand, tempParams) {
     let keyBindData = new serverClasses.keyBindData(keyId, `${tempCommand} ${tempParams}`);
-    getClientData(client).accountData.keyBinds.push(keyBindData);
+    getPlayerData(client).accountData.keyBinds.push(keyBindData);
     sendAccountKeyBindToClient(client, getPlayerKeyBindForKey(client, keyId));
 }
 
 // ---------------------------------------------------------------------------
 
 function removePlayerKeyBind(client, keyId) {
-    quickDatabaseQuery(`DELETE FROM acct_hotkey WHERE acct_hotkey_acct = ${getClientData(client).accountData.databaseId} AND acct_hotkey_key = ${keyId}`);
+    quickDatabaseQuery(`DELETE FROM acct_hotkey WHERE acct_hotkey_acct = ${getPlayerData(client).accountData.databaseId} AND acct_hotkey_key = ${keyId}`);
     for(let i in accountKeyBinds) {
         if(accountKeyBinds[i].key == keyId) {
             accountKeyBinds.splice(i, 1);
@@ -209,7 +209,7 @@ function removePlayerKeyBind(client, keyId) {
 // ---------------------------------------------------------------------------
 
 function doesPlayerHaveKeyBindForCommand(client, command) {
-    let accountKeyBinds = getClientData(client).accountData.keyBinds;
+    let accountKeyBinds = getPlayerData(client).accountData.keyBinds;
     for(let i in accountKeyBinds) {
         if(toLowerCase(accountKeyBinds[i].commandString.split(" ")[0]) == toLowerCase(command)) {
             return true;
@@ -221,7 +221,7 @@ function doesPlayerHaveKeyBindForCommand(client, command) {
 // ---------------------------------------------------------------------------
 
 function getPlayerKeyBindForCommand(client, command) {
-    let accountKeyBinds = getClientData(client).accountData.keyBinds;
+    let accountKeyBinds = getPlayerData(client).accountData.keyBinds;
     for(let i in accountKeyBinds) {
         if(toLowerCase(accountKeyBinds[i].commandString.split(" ")[0]) == toLowerCase(command)) {
             return accountKeyBinds[i];
@@ -233,7 +233,7 @@ function getPlayerKeyBindForCommand(client, command) {
 // ---------------------------------------------------------------------------
 
 function doesPlayerHaveKeyBindForKey(client, key) {
-    let accountKeyBinds = getClientData(client).accountData.keyBinds;
+    let accountKeyBinds = getPlayerData(client).accountData.keyBinds;
     for(let i in accountKeyBinds) {
         if(accountKeyBinds[i].key == key) {
             return true;
@@ -245,7 +245,7 @@ function doesPlayerHaveKeyBindForKey(client, key) {
 // ---------------------------------------------------------------------------
 
 function getPlayerKeyBindForKey(client, key) {
-    let accountKeyBinds = getClientData(client).accountData.keyBinds;
+    let accountKeyBinds = getPlayerData(client).accountData.keyBinds;
     for(let i in accountKeyBinds) {
         if(accountKeyBinds[i].key == key) {
             return accountKeyBinds[i];
@@ -277,8 +277,8 @@ addNetworkHandler("ag.keybind.trig", playerUsedKeyBind);
 // ---------------------------------------------------------------------------
 
 function sendAccountKeyBindsToClient(client) {
-    for(let i in getClientData(client).accountData.keyBinds) {
-        sendAccountKeyBindToClient(client, getClientData(client).accountData.keyBinds[i].key, getClientData(client).accountData.keyBinds[i].keyState);
+    for(let i in getPlayerData(client).accountData.keyBinds) {
+        sendAccountKeyBindToClient(client, getPlayerData(client).accountData.keyBinds[i].key, getPlayerData(client).accountData.keyBinds[i].keyState);
     }
 }
 

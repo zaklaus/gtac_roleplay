@@ -211,7 +211,7 @@ function removePlayerKeyBind(client, keyId) {
 function doesPlayerHaveKeyBindForCommand(client, command) {
     let accountKeyBinds = getClientData(client).accountData.keyBinds;
     for(let i in accountKeyBinds) {
-        if(accountKeyBinds[i].command == command) {
+        if(toLowerCase(accountKeyBinds[i].commandString.split(" ")[0]) == toLowerCase(command)) {
             return true;
         }
     }
@@ -223,7 +223,7 @@ function doesPlayerHaveKeyBindForCommand(client, command) {
 function getPlayerKeyBindForCommand(client, command) {
     let accountKeyBinds = getClientData(client).accountData.keyBinds;
     for(let i in accountKeyBinds) {
-        if(accountKeyBinds[i].command == command) {
+        if(toLowerCase(accountKeyBinds[i].commandString.split(" ")[0]) == toLowerCase(command)) {
             return accountKeyBinds[i];
         }
     }
@@ -285,7 +285,6 @@ function sendAccountKeyBindsToClient(client) {
 // ---------------------------------------------------------------------------
 
 function sendAccountKeyBindToClient(client, key, keyState) {
-    console.log(key);
     triggerNetworkEvent("ag.keybinds.add", client, toInteger(key), (keyState) ? KEYSTATE_DOWN : KEYSTATE_UP);
 }
 

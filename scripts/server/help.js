@@ -22,6 +22,7 @@ let randomTips = [
     `[#FFFFFF]Don't go broke because of a hospital bill! Get insured today by visiting an insurance agency!`,
     `[#FFFFFF]Don't go broke because your car was destroyed. Visit an insurance agency today!`,
     `[#FFFFFF]You can find most businesses and locations by using [#AAAAAA]/gps`,
+    `[#FFFFFF]Use /notips if you don't want to see tips and extra information`,
 ];
 
 // ----------------------------------------------------------------------------
@@ -232,75 +233,75 @@ function showBindKeysHelpMessage(client) {
 // ----------------------------------------------------------------------------
 
 function showEnteredDriverSeatHasKeysHelpTip(client) {
-    if(getClientData(client).accountData.shownTips & !shownTipsFlags.enteredDriverSeat) {
+    if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.enteredDriverSeat) {
         messageClientInfo(client, `You can press K for engine, I for lights, and L to lock/unlock the car.`);
-        getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.enteredDriverSeat;
+        getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.enteredDriverSeat;
     }
 }
 
 // ----------------------------------------------------------------------------
 
 function showApproachJobWhileUnemployedTip(client) {
-    if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachJobWhileUnemployed) {
+    if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachJobWhileUnemployed) {
         messageClientTip(client, `Approach the icon and use /jobinfo to see details about this job.`);
-        getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachJobWhileUnemployed;
+        getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachJobWhileUnemployed;
     }  
 }
 
 // ----------------------------------------------------------------------------
 
 function showTakeNearbyJobTip(client) {
-    if(getClientData(client).accountData.shownTips & !shownTipsFlags.takeJobWhileUnemployed) {
+    if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.takeJobWhileUnemployed) {
         messageClientTip(client, `You are nearby a job location. Look for the spinning icon.`);
-        getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.takeJobWhileUnemployed;
+        getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.takeJobWhileUnemployed;
     }  
 }
 
 // ----------------------------------------------------------------------------
 
 function showApproachCurrentJobTip(client) {
-    if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
+    if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
         //messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to start working, or hold ${getServerConfig().keybindText.actionKey} to quit your job.`);
         messageClientTip(client, `This job location is for your job. You can use /startwork to start working.`);
-        getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachCurrentJob;
+        getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachCurrentJob;
     }
 }
 
 // ----------------------------------------------------------------------------
 
 function showApproachOtherJobTip(client) {
-    if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
+    if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
         //messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to start working, or hold ${getServerConfig().keybindText.actionKey} to quit your job.`);
         messageClientTip(client, `This job location belongs to another job. If you want this job, use /quitjob first.`);
-        getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachCurrentJob;
+        getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachCurrentJob;
     }
 }
 
 // ----------------------------------------------------------------------------
 
 function showStartedWorkingTip(client) {
-    if(getClientData(client).accountData.shownTips & !shownTipsFlags.startedWorking) {
+    if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.startedWorking) {
         //messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to change uniform, or hold ${getServerConfig().keybindText.actionKey} to stop working.`);
         messageClientTip(client, `Use /uniform to see job skins and /equip to see available jobs tools and weapons.`);
-        getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.startedWorking;
+        getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.startedWorking;
     }
 }
 
 // ----------------------------------------------------------------------------
 
 function showApproachOwnedVehicleTip(client) {
-    if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachOwnedVehicle) {
+    if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachOwnedVehicle) {
         messageClientTip(client, `This vehicle is owned by you.`);
-        getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachOwnedVehicle;
+        getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachOwnedVehicle;
     }
 }
 
 // ----------------------------------------------------------------------------
 
 function showApproachClanVehicleTip(client) {
-    if(getClientData(client).accountData.shownTips & !shownTipsFlags.approachAnyVehicle) {
+    if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachAnyVehicle) {
         messageClientTip(client, `Your clan owns this vehicle.`);
-        getClientData(client).accountData.shownTips = getClientData(client).accountData.shownTips | shownTipsFlags.approachAnyVehicle;
+        getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachAnyVehicle;
     }
 }
 

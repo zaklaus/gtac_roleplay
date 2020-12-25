@@ -41,7 +41,7 @@ let serverColours = {
 		firefighterRed: toColour(205, 92, 92, 255),
 		busDriverGreen: toColour(50, 205, 50, 255),
 		taxiDriverYellow: toColour(240, 230, 140, 255),
-		civilianWhite: toColour(255, 255, 255, 255),
+		civilianWhite: toColour(200, 200, 200, 255),
 		burntYellow: toColour(210, 210, 0, 255),
 		burntOrange: toColour(210, 120, 0, 255),
 		bankGreen: toColour(0, 150, 0, 255),
@@ -69,7 +69,7 @@ function getColourByName(colourName) {
 // ---------------------------------------------------------------------------
 
 function getPlayerColour(client) {
-	if(getClientData(client) != false) {
+	if(getPlayerData(client) != false) {
 		if(!isClientLoggedIn(client)) {
 			return getColourByName("darkGrey");
 		} else {
@@ -80,6 +80,12 @@ function getPlayerColour(client) {
 	}
 
 	return getColourByName("civilianWhite");
+}
+
+// ---------------------------------------------------------------------------
+
+function getBoolRedGreenInlineColour(boolVal) {
+	return (!boolVal) ? "[#AA2222]" : "[#22AA22]";
 }
 
 // ---------------------------------------------------------------------------

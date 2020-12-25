@@ -193,7 +193,8 @@ function createTemporaryVehicleCommand(command, params, client) {
 
 function vehicleLockCommand(command, params, client) {
 	let vehicle = getClosestVehicle(getPlayerPosition(client));
-	if(!getPlayerVehicle(client) && getVehiclePosition(vehicle).distance(getPlayerPosition(client)) > getServerConfig().vehicleLockDistance) {
+
+	if(!getPlayerVehicle(client) && getDistance(getVehiclePosition(vehicle), getPlayerPosition(client)) > getServerConfig().vehicleLockDistance) {
 		messageClientError(client, "You need to be in or near a vehicle!");
 		return false;
 	}
@@ -428,6 +429,12 @@ function rentVehicleCommand(command, params, client) {
 	
 	meActionToNearbyPlayers(client, `rents the ${getVehicleName(vehicle)} and receives a set of vehicle keys!`);
 	messageClientAlert(client, `You will be charged ${getVehicleData(vehicle).rentPrice} per minute to use this vehicle. To stop renting this vehicle, use /vehrent again.`);
+}
+
+// ---------------------------------------------------------------------------
+
+function enterVehicleAsPassengerCommand(command, params, client) {
+	triggerNetworkEvent("ag.passenger", client);
 }
 
 // ---------------------------------------------------------------------------

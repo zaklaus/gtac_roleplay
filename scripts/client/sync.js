@@ -34,7 +34,7 @@ addEventHandler("onProcess", function(event, deltaTime) {
                 if(localPlayer.vehicle) {
                     if(!inVehicle) {
                         inVehicle = localPlayer.vehicle;
-                        console.log(`Entered vehicle ${inVehicle}`);
+                        (`Entered vehicle ${inVehicle}`);
                         if(doesEntityDataExist(vehicle, "ag.syncId")) {
                             triggerNetworkEvent("ag.player.vehicle", getEntityData(localPlayer.vehicle, "ag.syncId"));
                             //localPlayer.setData("ag.vehicle", localPlayer.vehicle);

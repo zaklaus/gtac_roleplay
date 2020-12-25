@@ -169,7 +169,7 @@ function getVehicleHeading(vehicle) {
 // ---------------------------------------------------------------------------
 
 function getVehicleSyncer(vehicle) {
-    return vehicleData.vehicle.syncer;
+    return getClients()[vehicle.syncer];
 }
 
 // ---------------------------------------------------------------------------

@@ -179,18 +179,18 @@ let serverConfig = {
 
 		{ // GTA 3
 			business: 0,
-			house: 2,
-			bank: 2,
-			clothes: 2,
-			info: 2,
+			house: 0,
+			bank: 0,
+			clothes: 0,
+			info: 0,
 		},
 		
 		{ // GTA Vice City
-			business: 2,
-			house: 2,
-			bank: 2,
-			clothes: 2,
-			info: 2,
+			business: 0,
+			house: 0,
+			bank: 0,
+			clothes: 0,
+			info: 0,
 		},
 
 		{ // GTA San Andreas
@@ -221,6 +221,7 @@ let serverConfig = {
 		new serverClasses.keyBindData(false, SDLK_k, "lights"),
 		new serverClasses.keyBindData(false, SDLK_l, "lock"),
 		new serverClasses.keyBindData(false, SDLK_f, "enter"),
+		new serverClasses.keyBindData(false, SDLK_g, "passenger"),
 	],
 	exitPropertyDistance: 3.0,
 	enterPropertyDistance: 3.0,
@@ -237,6 +238,19 @@ let serverConfig = {
 		85,
 		85,
 	],
+
+	removedWorldObjects: [
+		false,
+		[
+			new serverClasses.removedWorldObjectData("fraightback04", new Vec3(1229.88, -84.8012, 13.4004), 10.0), // Truck trailer in Easy Credit Autos dealership parking lot
+			new serverClasses.removedWorldObjectData("fraightback03", new Vec3(1239.49, -68.0529, 11.6914), 10.0), // Truck trailer in Easy Credit Autos dealership parking lot
+		],
+		[],
+		[],
+		[],
+		[],
+		[],
+	]
 };
 
 // ----------------------------------------------------------------------------

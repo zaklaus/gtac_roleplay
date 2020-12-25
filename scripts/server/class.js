@@ -489,7 +489,6 @@ function initClassTable() {
 				this.keyState = false;
 
 				if(keyBindAssoc != null) {
-					console.log(keyBindAssoc["acct_hotkey_key"]);
 					this.databaseId = keyBindAssoc["acct_hotkey_id"];
 					this.key = toInteger(keyBindAssoc["acct_hotkey_key"]);
 					this.account = keyBindAssoc["acct_hotkey_acct"];
@@ -521,6 +520,13 @@ function initClassTable() {
 				this.enabled = intToBool(dbAssoc["ac_script_wl_enabled"]);
 				this.server = dbAssoc["ac_script_wl_server"];
 				this.scriptName = dbAssoc["ac_script_wl_name"];
+			}
+		},
+		removedWorldObjectData: class {
+			constructor(model, position, range) {
+				this.model = model;
+				this.position = position;
+				this.range = range;
 			}
 		},
 	}

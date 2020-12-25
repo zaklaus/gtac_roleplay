@@ -216,7 +216,7 @@ function giveClientStaffFlag(client, flagName) {
 		return false;
 	}
 
-	getClientData(client).accountData.flags.admin = getClientData(client).accountData.flags.admin | getStaffFlagValue(flagName);
+	getPlayerData(client).accountData.flags.admin = getPlayerData(client).accountData.flags.admin | getStaffFlagValue(flagName);
 	return true;
 }
 
@@ -227,7 +227,7 @@ function takeClientStaffFlag(client, flagName) {
 		return false;
 	}
 
-	getClientData(client).accountData.flags.admin = getClientData(client).accountData.flags.admin & ~getStaffFlagValue(flagName);
+	getPlayerData(client).accountData.flags.admin = getPlayerData(client).accountData.flags.admin & ~getStaffFlagValue(flagName);
 	return true;
 }
 
@@ -250,14 +250,14 @@ function takeClientStaffFlag(client, flagName) {
 		return false;
 	}
 
-	getClientData(client).accountData.flags.admin = getClientData(client).accountData.flags.admin & ~getStaffFlagValue(flagName);
+	getPlayerData(client).accountData.flags.admin = getPlayerData(client).accountData.flags.admin & ~getStaffFlagValue(flagName);
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function clearClientStaffFlags(client) {
-	getClientData(client).accountData.flags.admin = getStaffFlagValue("none");
+	getPlayerData(client).accountData.flags.admin = getStaffFlagValue("none");
 	return true;
 }
 

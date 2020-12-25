@@ -20,7 +20,7 @@ function policeTazerCommand(command, params, client) {
     }
 
     if(!isPlayerWorking(client)) {
-        messageClientError(client, "You are working! Use /startwork first.");
+        messageClientError(client, "You are not working! Use /startwork first.");
         return false;
     }
 
@@ -28,8 +28,6 @@ function policeTazerCommand(command, params, client) {
         messageClientError(client, "You don't have a police job.");
         return false;
     }
-
-    
 
 	return true;
 }
@@ -48,7 +46,7 @@ function policeCuffCommand(command, params, client) {
     }
 
     if(!isPlayerWorking(client)) {
-        messageClientError(client, "You are working! Use /startwork first.");
+        messageClientError(client, "You are not working! Use /startwork first.");
         return false;
     }
 
@@ -74,7 +72,7 @@ function policeArrestCommand(command, params, client) {
     }
 
     if(!isPlayerWorking(client)) {
-        messageClientError(client, "You are working! Use /startwork first.");
+        messageClientError(client, "You are not working! Use /startwork first.");
         return false;
     }
 
@@ -100,7 +98,7 @@ function policeSearchCommand(command, params, client) {
     }
 
     if(!isPlayerWorking(client)) {
-        messageClientError(client, "You are working! Use /startwork first.");
+        messageClientError(client, "You are not working! Use /startwork first.");
         return false;
     }
 
@@ -126,7 +124,7 @@ function policeDragCommand(command, params, client) {
     }
 
     if(!isPlayerWorking(client)) {
-        messageClientError(client, "You are working! Use /startwork first.");
+        messageClientError(client, "You are not working! Use /startwork first.");
         return false;
     }
 
@@ -152,7 +150,7 @@ function policeDetainCommand(command, params, client) {
     }
 
     if(!isPlayerWorking(client)) {
-        messageClientError(client, "You are working! Use /startwork first.");
+        messageClientError(client, "You are not working! Use /startwork first.");
         return false;
     }
 

@@ -38,11 +38,11 @@ addEventHandler("OnPlayerJoined", function(event, client) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
-    //console.log(`[Asshat.Event] Client disconnected (Name: ${client.name}, Reason: ${gameData.quitReasons[quitReasonId]})`);
-    saveClientToDatabase(client);
+    console.log(`[Asshat.Event] ${getClientDisplayForConsole(client)} disconnected (${gameData.quitReasons[quitReasonId]}[${quitReasonId}])`);
+    savePlayerToDatabase(client);
 
     getServerData().clients[client.index] = null;
-    //message(`${client.name} has left the server (${gameData.quitReasons[quitReasonId]})`);
+    message(`${client.name} has left the server (${gameData.quitReasons[quitReasonId]})`);
 });
 
 // ---------------------------------------------------------------------------
@@ -59,12 +59,12 @@ addEventHandler("OnPedSpawn", function(event, ped) {
 
 addEventHandler("onPlayerChat", function(event, client, messageText) {
     event.preventDefault();
-    if(!getClientData(client).loggedIn) {
+    if(!getPlayerData(client).loggedIn) {
         messageClientError(client, "You need to login before you can chat!");
         return false;
     }
 
-    message(`${getClientSubAccountName(client)}: [#FFFFFF]${messageText}`, getClientChatColour(client));
+    message(`${getClientSubAccountName(client)}: [#FFFFFF]${messageText}`, getPlayerColour(client));
 });
 
 // ---------------------------------------------------------------------------
@@ -162,8 +162,30 @@ function playerEnteredVehicle(client, vehicleId) {
 
 function playerExitedVehicle(client, vehicle) {
     //let vehicle = getElementFromId(vehicleId);
-
-
 }
 
 // ---------------------------------------------------------------------------
+
+function processPlayerDeath(client) {
+	removeEntityData(client.player, "ag.spawned", true);
+	
+	let closestHospital = getClosestHospital(getPlayerPosition(client));
+	triggerNetworkEvent("ag.control", client, false);
+	setTimeout(function() {
+		triggerNetworkEvent("ag.fadeCamera", client, false, 1.0);
+		setTimeout(function() {
+			client.despawnPlayer();
+			if(getClientCurrentSubAccount(client).inJail) {
+				let closestJail = getClosestJail(getPlayerPosition(client));
+				spawnPlayer(client, closestJail.position, closestJail.heading, getClientCurrentSubAccount(client).skin);
+			} else {
+				spawnPlayer(client, closestHospital.position, closestHospital.heading, getClientCurrentSubAccount(client).skin);
+			}
+			setTimeout(function() {
+				setEntityData(client.player, "ag.spawned", true, true);
+				triggerNetworkEvent("ag.fadeCamera", client, true, 1.0);
+				triggerNetworkEvent("ag.control", client, true);
+			}, 1000);
+		}, 2000);		
+	}, 1000);
+}

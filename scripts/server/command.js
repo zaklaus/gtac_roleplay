@@ -43,11 +43,12 @@ function loadCommandData() {
         business: [
             commandData("addbiz", createBusinessCommand, "<name>", getStaffFlagValue("manageBusinesses"), true, false),
             commandData("delbiz", deleteBusinessCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, true),
-            commandData("addloc", createBusinessLocationCommand, "<type> <business id> <name>", getStaffFlagValue("manageBusinesses"), true, false),
-            commandData("delloc", deleteBusinessLocationCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, false),
-            commandData("lockbiz", lockBusinessCommand, "", getStaffFlagValue("none"), true, true),
-            commandData("enterfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true),
-            commandData("till", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("addbizloc", createBusinessLocationCommand, "<type> <business id> <name>", getStaffFlagValue("manageBusinesses"), true, false),
+            commandData("delbizloc", deleteBusinessLocationCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, false),
+
+            commandData("bizlock", lockBusinessCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("bizfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true),
+            commandData("biztill", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true),
             commandData("bizwithdraw", withdrawFromBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
             commandData("bizdeposit", depositIntoBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
             commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("none"), true, true),
@@ -55,6 +56,8 @@ function loadCommandData() {
             commandData("bizblip", setBusinessBlipCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true),
             commandData("bizpickup", setBusinessPickupCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true),
             commandData("bizinfo", getBusinessInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
+            commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
+            commandData("bizexit", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
@@ -72,14 +75,11 @@ function loadCommandData() {
             commandData("delclan", deleteClanCommand, "<clan id>", getStaffFlagValue("manageClans"), true, true),  
 
             commandData("clanowner", setClanOwnerCommand, "<clan id> <player name/id>", getStaffFlagValue("none"), true, true),  
-
             commandData("clantag", setClanTagCommand, "<tag>", getStaffFlagValue("none"), true, true),
             commandData("clanranktag", setClanRankTagCommand, "<rank id> <tag>", getStaffFlagValue("none"), true, true),
             commandData("clanmembertag", setClanMemberTagCommand, "<player name/id> <tag>", getStaffFlagValue("none"), true, true),
-
             commandData("clanranktitle", setClanRankTitleCommand, "<rank id> <title>", getStaffFlagValue("none"), true, true),
             commandData("clanmembertitle", setClanMemberTitleCommand, "<player name/id> <title>", getStaffFlagValue("none"), true, true),
-            
             commandData("clanrankper", setClanRankFlagsCommand, "<rank id>", getStaffFlagValue("none"), true, true),
             commandData("clanmemberper", setClanMemberFlagsCommand, "<player name/id>", getStaffFlagValue("none"), true, true),            
         ],
@@ -87,10 +87,10 @@ function loadCommandData() {
         client: [],
         colour: [],
         command: [
-            commandData("cmd_enabletype", enableAllCommandsByType, "<type>", getStaffFlagValue("developer"), true, true),
-            commandData("cmd_disabletype", disableAllCommandsByType, "<type>", getStaffFlagValue("developer"), true, true),
-            commandData("cmd_enable", enableCommand, "<command>", getStaffFlagValue("developer"), true, true),
-            commandData("cmd_disable", disableCommand, "<command>", getStaffFlagValue("developer"), true, true),
+            commandData("cmdenabletype", enableAllCommandsByType, "<type>", getStaffFlagValue("developer"), true, true),
+            commandData("cmddisabletype", disableAllCommandsByType, "<type>", getStaffFlagValue("developer"), true, true),
+            commandData("cmdenable", enableCommand, "<command>", getStaffFlagValue("developer"), true, true),
+            commandData("cmddisable", disableCommand, "<command>", getStaffFlagValue("developer"), true, true),
         ],
         config: [
             commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("manageServer"), true, true),
@@ -118,11 +118,16 @@ function loadCommandData() {
         ],
         house: [
             commandData("addhouse", createHouseCommand, "<description>", getStaffFlagValue("manageHouses"), true, false),
+            commandData("delhouse", deleteHouseCommand, "", getStaffFlagValue("manageHouses"), true, false),
             commandData("houseinfo", getHouseInfoCommand, "", getStaffFlagValue("none"), true, false),
-            //commandData("housedesc", setHouseDescriptionCommand, "", getStaffFlagValue("none"), true, false),
-            //commandData("houselock", lockUnlockHouseCommand, "", getStaffFlagValue("none"), true, false),
-            //commandData("houseowner", setHouseOwnerCommand, "", getStaffFlagValue("none"), true, false),
-            
+            commandData("housedesc", setHouseDescriptionCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("houselock", lockUnlockHouseCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("houseowner", setHouseOwnerCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("houseblip", setHouseBlipCommand, "<type name/model id>", getStaffFlagValue("manageHouses"), true, true),
+            commandData("housepickup", setHousePickupCommand, "<type name/model id>", getStaffFlagValue("manageHouses"), true, true),
+            commandData("houseinfo", getHouseInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
+            commandData("houseentrance", moveHouseEntranceCommand, "", getStaffFlagValue("manageHouses"), true, true),
+            commandData("houseexit", moveHouseEntranceCommand, "", getStaffFlagValue("manageHouses"), true, true),            
         ],
         item: [],
         job: [
@@ -136,10 +141,11 @@ function loadCommandData() {
 
             commandData("radio", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
             commandData("r", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("department", jobDepartmentRadioCommand, "", getStaffFlagValue("none"), true, false),
             commandData("d", jobDepartmentRadioCommand, "", getStaffFlagValue("none"), true, false),
 
             // Taxi
-            commandData("fare", takeJobCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("fare", taxiSetFareCommand, "", getStaffFlagValue("none"), true, false),
 
             // Police
             commandData("tazer", policeTazerCommand, "", getStaffFlagValue("none"), true, false),

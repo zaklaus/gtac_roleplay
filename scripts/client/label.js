@@ -119,7 +119,6 @@ addNetworkHandler("ag.houselabel.all", function(tempHouseLabels) {
     for(let i in tempHouseLabels) {
         houseLabels.push(new houseLabelData(tempHouseLabels[i][0], tempHouseLabels[i][1], tempHouseLabels[i][2], tempHouseLabels[i][3], tempHouseLabels[i][4], tempHouseLabels[i][5]));
     }
-    
     return true;
 });
 

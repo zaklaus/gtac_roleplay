@@ -44,6 +44,48 @@ function loadHousesFromDatabase() {
 
 // ---------------------------------------------------------------------------
 
+function createHouseCommand(command, params, client) {
+	let tempHouseData = createHouse(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getServerConfig().pickupModels[getServerGame()].house, getServerConfig().blipSprites[getServerGame()].house, getPlayerInterior(client), getPlayerVirtualWorld(client));
+	getServerData().houses.push(tempHouseData);
+	
+	sendHouseLabelToPlayers(getServerData().houses.length-1);
+
+	messageClientSuccess(client, `House [#009900]${tempHouseData.description} [#FFFFFF]created!`);
+}
+
+// ---------------------------------------------------------------------------
+
+function createHouse(description, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = -1, exitVirtualWorld = -1, exitPickupModel = -1, exitBlipModel = -1) {
+	let tempHouseData = new serverClasses.houseData(false);
+	tempHouseData.description = description;
+
+	tempHouseData.entrancePosition = entrancePosition;
+	tempHouseData.entranceRotation = 0.0;
+	tempHouseData.entrancePickupModel = entrancePickupModel;
+	tempHouseData.entranceBlipModel = entranceBlipModel;
+	tempHouseData.entranceInterior = entranceInteriorId;
+	tempHouseData.entranceDimension = entranceVirtualWorld;
+
+	tempHouseData.exitPosition = exitPosition;
+	tempHouseData.exitRotation = 0.0;
+	tempHouseData.exitPickupModel = exitPickupModel;
+	tempHouseData.exitBlipModel = exitBlipModel;
+	tempHouseData.exitInterior = exitInteriorId;
+	tempHouseData.exitDimension = exitVirtualWorld;	
+
+	if(entrancePickupModel != -1) {
+		tempHouseData.entrancePickup = gta.createPickup(entrancePickupModel, entrancePosition, getServerConfig().pickupTypes[getServerGame()].house);
+	}
+
+	if(entranceBlipModel != -1) {
+		tempHouseData.entranceBlip = gta.createBlip(entrancePosition, entranceBlipModel, 1, getColourByName("lime")); 
+	}		
+
+	return tempHouseData;
+}
+
+// ---------------------------------------------------------------------------
+
 function getHouseDataFromDatabaseId(databaseId) {
 	let matchingHouses = getServerData().houses.filter(b => b.databaseId == databaseId)
 	if(matchingHouses.length == 1) {
@@ -91,9 +133,9 @@ function saveHouseToDatabase(houseId) {
 	console.log(`[Asshat.House]: Saving house '${tempHouseData.databaseId}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let safeHouseDescription = escapeDatabaseString(tempHouseData.description);
+		let safeHouseDescription = escapeDatabaseString(dbConnection, tempHouseData.description);
 		if(tempHouseData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw) VALUES ('${safeHouseDescription}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPos.x}, ${tempHouseData.exitPos.y}, ${tempHouseData.exitPos.z}, ${tempHouseData.exitHeading}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension})`;
+			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw) VALUES (${serverId}, '${safeHouseDescription}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPosition.x}, ${tempHouseData.exitPosition.y}, ${tempHouseData.exitPosition.z}, ${tempHouseData.exitRotation}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().houses[houseId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
@@ -103,7 +145,7 @@ function saveHouseToDatabase(houseId) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.Business]: Saved house '${tempHouseData.databaseId}' to database!`);
+	console.log(`[Asshat.Business]: Saved house '${tempHouseData.description}' to database!`);
 
 	return false;	
 }
@@ -196,9 +238,9 @@ function getHouseData(houseId) {
 // ---------------------------------------------------------------------------
 
 function doesHouseHaveInterior(houseId) {
-	if(!getHouseData(houseId)) {
-		return false;
-	}
+	//if(!getHouseData(houseId)) {
+	//	return false;
+	//}
 
 	let houseData = getHouseData(houseId);
 	if(houseData.exitPosition == toVector3(0.0, 0.0, 0.0)) {
@@ -222,18 +264,26 @@ function doesHouseHaveInterior(houseId) {
 
 // ---------------------------------------------------------------------------
 
-function sendAllHouseLabelsToClient(client) {
+function sendAllHouseLabelsToPlayer(client) {
 	let tempHouseLabels = [];
-	for(let i in getServerData().houses) {
-		tempHouseLabels.push([i, getServerData().houses[i].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().houses[i].description, getServerData().houses[i].locked, false]);
+	let totalHouses = getServerData().houses.length;
+	let housesPerNetworkEvent = 100;
+	let totalNetworkEvents = Math.ceil(totalHouses/housesPerNetworkEvent);
+	for(let i = 0 ; i < totalNetworkEvents ; i++) {
+		for(let j = 0 ; j < housesPerNetworkEvent ; j++) {
+			let tempHouseId = (i*housesPerNetworkEvent)+j;
+			if(typeof getServerData().houses[tempHouseId] != "undefined") {
+				tempHouseLabels.push([tempHouseId, getServerData().houses[tempHouseId].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().houses[tempHouseId].description, getServerData().houses[tempHouseId].locked, false]);
+			}
+		}
+		triggerNetworkEvent("ag.houselabel.all", client, tempHouseLabels);
+		tempHouseLabels = [];
 	}
-		
-	triggerNetworkEvent("ag.houselabel.all", client, tempHouseLabels);
 }
 
 // ---------------------------------------------------------------------------
 
-function sendHouseLabelToClients(houseId) {
+function sendHouseLabelToPlayers(houseId) {
 	triggerNetworkEvent("ag.houselabel.add", null, houseId, getServerData().houses[houseId].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().houses[houseId].description, getServerData().houses[houseId].locked, false);
 }
 

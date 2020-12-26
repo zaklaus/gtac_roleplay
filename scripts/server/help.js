@@ -21,8 +21,9 @@ let randomTips = [
     `[#FFFFFF]Tax is based on your total wealth. This includes money, vehicles, businesses and more.`,
     `[#FFFFFF]Don't go broke because of a hospital bill! Get insured today by visiting an insurance agency!`,
     `[#FFFFFF]Don't go broke because your car was destroyed. Visit an insurance agency today!`,
-    `[#FFFFFF]You can find most businesses and locations by using [#AAAAAA]/gps`,
+    `[#FFFFFF]You can find most locations by using [#AAAAAA]/gps`,
     `[#FFFFFF]Use /notips if you don't want to see tips and extra information`,
+    `[#FFFFFF]Want to advertise your business? Visit the news station and place an /ad today!`,
 ];
 
 // ----------------------------------------------------------------------------

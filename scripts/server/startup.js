@@ -83,7 +83,8 @@ function checkForAllRequiredModules() {
 
 // ---------------------------------------------------------------------------
 
-loadServerConfig();
+serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
+applyConfigToServer(serverConfig);
 initServerScripts();
 
 // ---------------------------------------------------------------------------

@@ -103,19 +103,19 @@ addNetworkHandler("ag.afk", function(client, afkState) {
 // Not implemented yet
 addNetworkHandler("ag.heldKey", function(client, key) {
     switch(key) {
-        case getServerConfig().keybinds.actionKey: 
+        case getGlobalConfig().keybinds.actionKey: 
             processHoldActionKey(client);
             break;
 
-        case getServerConfig().keybinds.vehicleLightsKey: 
+        case getGlobalConfig().keybinds.vehicleLightsKey: 
             processHoldVehicleLightsKey(client);
             break;
 
-        case getServerConfig().keybinds.vehicleLockKey: 
+        case getGlobalConfig().keybinds.vehicleLockKey: 
             processHoldVehicleLockKey(client);
             break;
 
-        case getServerConfig().keybinds.vehicleEngineKey: 
+        case getGlobalConfig().keybinds.vehicleEngineKey: 
             processHoldVehicleEngineKey(client);
             break;             
     }

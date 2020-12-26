@@ -136,7 +136,7 @@ function createVehicleCommand(command, params, client) {
 		return false;
 	}
 
-	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getServerConfig().spawnCarDistance);
+	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
 	let vehicleDataSlot = getServerData().vehicles.length;
 
 	let vehicle = gta.createVehicle(modelId, frontPos, getPlayerHeading(client));
@@ -167,7 +167,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 		return false;
 	}
 
-	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getServerConfig().spawnCarDistance);
+	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
 	let vehicleDataSlot = getServerData().vehicles.length;
 	
 	let vehicle = gta.createVehicle(modelId, frontPos, getPlayerHeading(client));
@@ -194,7 +194,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 function vehicleLockCommand(command, params, client) {
 	let vehicle = getClosestVehicle(getPlayerPosition(client));
 
-	if(!getPlayerVehicle(client) && getDistance(getVehiclePosition(vehicle), getPlayerPosition(client)) > getServerConfig().vehicleLockDistance) {
+	if(!getPlayerVehicle(client) && getDistance(getVehiclePosition(vehicle), getPlayerPosition(client)) > getGlobalConfig().vehicleLockDistance) {
 		messageClientError(client, "You need to be in or near a vehicle!");
 		return false;
 	}
@@ -335,8 +335,8 @@ function setVehicleColourCommand(command, params, client) {
 		}
 	}
 
-	if(getClientCurrentSubAccount(client).cash < getServerConfig().resprayVehicleCost) {
-		messageClientError(client, `You don't have enough money to respray the vehicle (need $${getServerConfig().resprayVehicleCost-getClientCurrentSubAccount(client).cash} more!)`);
+	if(getClientCurrentSubAccount(client).cash < getGlobalConfig().resprayVehicleCost) {
+		messageClientError(client, `You don't have enough money to respray the vehicle (need $${getGlobalConfig().resprayVehicleCost-getClientCurrentSubAccount(client).cash} more!)`);
 		return false;
 	}
 
@@ -344,7 +344,7 @@ function setVehicleColourCommand(command, params, client) {
 	let colour1 = toInteger(splitParams[0]) || 0;
 	let colour2 = toInteger(splitParams[1]) || 0;
 	
-	getClientCurrentSubAccount(client).cash -= getServerConfig().resprayVehicleCost;
+	getClientCurrentSubAccount(client).cash -= getGlobalConfig().resprayVehicleCost;
 	vehicle.colour1 = colour1;
 	vehicle.colour2 = colour2;
 	getVehicleData(vehicle).colour1 = colour1;
@@ -370,13 +370,13 @@ function vehicleRepairCommand(command, params, client) {
 		}
 	}
 
-	if(getClientCurrentSubAccount(client).cash < getServerConfig().repairVehicleCost) {
-		messageClientError(client, `You don't have enough money to repair the vehicle (need $${getServerConfig().resprayVehicleCost-getClientCurrentSubAccount(client).cash} more!)`);
+	if(getClientCurrentSubAccount(client).cash < getGlobalConfig().repairVehicleCost) {
+		messageClientError(client, `You don't have enough money to repair the vehicle (need $${getGlobalConfig().resprayVehicleCost-getClientCurrentSubAccount(client).cash} more!)`);
 		return false;
 	}
 
 	
-	getClientCurrentSubAccount(client).cash -= getServerConfig().repairVehicleCost;
+	getClientCurrentSubAccount(client).cash -= getGlobalConfig().repairVehicleCost;
 	repairVehicle(vehicle);
 	
 	meActionToNearbyPlayers(client, `repairs the ${getVehicleName(vehicle)}!`);
@@ -836,7 +836,7 @@ function spawnVehicle(vehicleData) {
 
 function isVehicleAtPayAndSpray(vehicle) {
 	for(let i in getServerData().payAndSprays[getServerGame()]) {
-		if(getDistance(getVehiclePosition(vehicle), getServerData().payAndSprays[getServerGame()][i].position) <= getServerConfig().payAndSprayDistance) {
+		if(getDistance(getVehiclePosition(vehicle), getServerData().payAndSprays[getServerGame()][i].position) <= getGlobalConfig().payAndSprayDistance) {
 			return true;
 		}
 	}

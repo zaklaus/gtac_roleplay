@@ -19,6 +19,74 @@ function initClassScript() {
 
 function initClassTable() {
 	let tempClasses = {
+		serverConfigData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.name = "";
+				this.password = "";
+
+				this.newCharacter = {
+					spawnPosition = false,
+					spawnHeading = 0.0,
+					money = 0,
+					bank = 0,
+					skin = 0,
+				};
+
+				this.connectCameraPosition = false;
+				this.connectCameraLookAt = false;
+				this.hour = 0;
+				this.minute = 0
+				this.weather = 0
+				this.fallingSnow = false;
+				this.groundSnow = false;
+				this.useGUI = false;
+				this.guiColour = [0, 0, 0];
+
+				this.antiCheat = {
+					enabled: false,
+					checkGameScripts: false,
+					gameScriptWhiteList: [],
+					gameScriptBlackList: [],
+				};
+
+				this.discordBotToken = "";
+				this.discordEnabled = false;				
+
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["svr_id"];
+					this.name = dbAssoc["svr_name"];
+					this.password = dbAssoc["svr_password"];
+					this.newCharacter = {
+						spawnPosition = toVector3(dbAssoc["svr_newchar_pos_x"], dbAssoc["svr_newchar_pos_y"], dbAssoc["svr_newchar_pos_z"]),
+						spawnHeading = dbAssoc["svr_newchar_rot_z"],
+						money = dbAssoc["svr_newchar_money"],
+						bank = dbAssoc["svr_newchar_bank"],
+						skin = dbAssoc["svr_newchar_skin"],
+					},
+	
+					this.connectCameraPosition = toVector3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
+					this.connectCameraLookAt = toVector3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
+					this.hour = toInteger(dbAssoc["svr_start_time_hour"]);
+					this.minute = toInteger(dbAssoc["svr_start_time_min"]);
+					this.weather = toInteger(dbAssoc["svr_start_weather"]);
+					this.fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
+					this.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
+					this.useGUI = intToBool(dbAssoc["svr_gui"]);
+					this.guiColour = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
+	
+					this.antiCheat = {
+						enabled: intToBool(dbAssoc["svr_ac_enabled"]),
+						checkGameScripts: intToBool(dbAssoc["svr_ac_check_scripts"]),
+						gameScriptWhiteList: [],
+						gameScriptBlackList: [],
+					};
+
+					this.discordBotToken = "";
+					this.discordEnabled = false;
+				}
+			}
+		},
 		clientData: class {
 			constructor(client, accountData, subAccounts) {
 				this.accountData = accountData;
@@ -130,6 +198,11 @@ function initClassTable() {
 				this.spawnPosition = toVector3(subAccountAssoc["sacct_pos_x"], subAccountAssoc["sacct_pos_y"], subAccountAssoc["sacct_pos_z"]);
 				this.spawnHeading = toFloat(subAccountAssoc["sacct_angle"]);
 				this.lastLogin = toInteger(subAccountAssoc["sacct_last_login"]);
+
+				this.clan = toInteger(subAccountAssoc["sacct_clan"]);
+				this.clanFlags = toInteger(subAccountAssoc["sacct_clan_flags"]);
+				this.clanRank = toInteger(subAccountAssoc["sacct_clan_rank"]);
+				this.clanTitle = toInteger(subAccountAssoc["sacct_clan_title"]);
 
 				this.isWorking = false;
 				this.jobUniform = this.skin;
@@ -547,3 +620,4 @@ function getClass(className) {
 }
 
 // ---------------------------------------------------------------------------
+

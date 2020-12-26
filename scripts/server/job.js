@@ -347,7 +347,7 @@ function takeJobCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(client.player.position);
 	let jobData = getJobData(closestJobLocation.job);
 
-	if(closestJobLocation.position.distance(client.player.position) > getServerConfig().takeJobDistance) {
+	if(closestJobLocation.position.distance(client.player.position) > getGlobalConfig().takeJobDistance) {
 		messageClientError(client, "There are no job points close enough!");
 		return false;       
 	}
@@ -372,7 +372,7 @@ function startWorkingCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(client.player.position);
 	let jobData = getJobData(closestJobLocation.job);
 
-	if(closestJobLocation.position.distance(client.player.position) > getServerConfig().startWorkingDistance) {
+	if(closestJobLocation.position.distance(client.player.position) > getGlobalConfig().startWorkingDistance) {
 		messageClientError(client, "There are no job points close enough!");
 		return false;       
 	}

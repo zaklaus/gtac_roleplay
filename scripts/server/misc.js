@@ -107,7 +107,7 @@ function submitBugReportCommand(command, params, client) {
 function enterExitPropertyCommand(command, params, client) {
 	if(isPlayerInAnyHouse(client)) {
 		let inHouse = getServerData().houses[getPlayerHouse(client)];
-		if(getDistance(inHouse.exitPosition, getPlayerPosition(client)) <= getServerConfig().exitPropertyDistance) {
+		if(getDistance(inHouse.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
 			if(inHouse.locked) {
 				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
 				return false;
@@ -122,7 +122,7 @@ function enterExitPropertyCommand(command, params, client) {
 
 	if(isPlayerInAnyBusiness(client)) {
 		let inBusiness = getServerData().businesses[getPlayerBusiness(client)];
-		if(getDistance(inBusiness.exitPosition, getPlayerPosition(client)) <= getServerConfig().exitPropertyDistance) {
+		if(getDistance(inBusiness.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
 			if(inBusiness.locked) {
 				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
 				return false;
@@ -138,7 +138,7 @@ function enterExitPropertyCommand(command, params, client) {
 	if(getServerData().businesses.length > 0) {
 		let closestBusinessId = getClosestBusinessEntrance(getPlayerPosition(client));
 		let closestBusiness = getBusinessData(closestBusinessId)
-		if(getDistance(closestBusiness.entrancePosition, getPlayerPosition(client)) <= getServerConfig().enterPropertyDistance) {
+		if(getDistance(closestBusiness.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
 			if(!doesBusinessHaveInterior(closestBusinessId)) {
 				messageClientAlert(client, "This business does not have an interior.");
 				messageClientTip(client, "You can use business commands at the door.");
@@ -151,7 +151,7 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 			
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
-			triggerNetworkEvent("ag.enterProperty", client, closestBusiness.exitPosition, closestBusiness.exitRotation, closestBusiness.exitInterior, closestBusinessId+getServerConfig().businessDimensionStart);
+			triggerNetworkEvent("ag.enterProperty", client, closestBusiness.exitPosition, closestBusiness.exitRotation, closestBusiness.exitInterior, closestBusinessId+getGlobalConfig().businessDimensionStart);
 			client.player.dimension = closestBusiness.exitDimension;
 			setEntityData(client, "ag.inBusiness", closestBusinessId);
 			return true;
@@ -162,7 +162,7 @@ function enterExitPropertyCommand(command, params, client) {
 		let closestHouseId = getClosestHouseEntrance(getPlayerPosition(client));
 		let closestHouse = getHouseData(closestHouseId);
 		//let distance = getDistance(closestHouse.entrancePosition, getPlayerPosition(client));
-		if(getDistance(closestHouse.entrancePosition, getPlayerPosition(client)) <= getServerConfig().enterPropertyDistance) {
+		if(getDistance(closestHouse.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
 			if(!doesHouseHaveInterior(closestHouseId)) {
 				messageClientAlert(client, "This house does not have an interior.");
 				messageClientTip(client, "You can use house commands at the door.");
@@ -175,7 +175,7 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
-			triggerNetworkEvent("ag.enterProperty", client, closestHouse.exitPosition, closestHouse.exitRotation, closestHouse.exitInterior, closestHouse+getServerConfig().houseDimensionStart);
+			triggerNetworkEvent("ag.enterProperty", client, closestHouse.exitPosition, closestHouse.exitRotation, closestHouse.exitInterior, closestHouse+getGlobalConfig().houseDimensionStart);
 			//client.player.dimension = closestHouse.exitDimension;
 			setEntityData(client, "ag.inHouse", closestHouseId);
 			return true;
@@ -190,9 +190,9 @@ function enterExitPropertyCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function sendRemovedWorldObjectsToPlayer(client) {
-	for(let i in getServerConfig().removedWorldObjects[getServerGame()]) {
-		console.log(`[Asshat.Misc] Sending removed world object ${i} (${getServerConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
-		triggerNetworkEvent("ag.removeWorldObject", client, getServerConfig().removedWorldObjects[getServerGame()][i].model, getServerConfig().removedWorldObjects[getServerGame()][i].position, getServerConfig().removedWorldObjects[getServerGame()][i].range);
+	for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
+		console.log(`[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
+		triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
 	}
 }
 

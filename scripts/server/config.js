@@ -8,31 +8,10 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let serverConfig = {
-	useGUI: true,
-	name: "Asshat Gaming Roleplay",
-	password: "LockedForStartup*128",
-	hour: 0,
-	minute: 0,
-	weather: 1,
-	fallingSnow: 0,
-	groundSnow: 0,
-	showLogo: true,	
-	guiColour: [200, 200, 200],
-	antiCheat: {
-		enabled: true,
-		checkGameScripts: true,
-		gameScriptBlackList: [],
-		gameScriptWhiteList: [],
-	},
+let serverConfig = {};
+
+let globalConfig = {
 	accountPasswordHash: "SHA512",
-	connectCameraPosition: false,
-	connectCameraLookAt: false,
-	newCharacter: {
-		spawnPosition: false,
-		spawnHeading: 0.0,
-		money: 0,
-	},
 	npcFarProximity: 100,
 	npcMediumProximity: 40,
 	npcCloseProximity: 12,
@@ -47,7 +26,21 @@ let serverConfig = {
 	takeJobDistance: 5,
 	stopWorkingDistance: 10,
 	spawnCarDistance: 5,
-	payAndSprayDistance: 5,
+	payAndSprayDistance: 5,	
+	defaultKeybinds: [
+		new serverClasses.keyBindData(false, SDLK_i, "engine"),
+		new serverClasses.keyBindData(false, SDLK_k, "lights"),
+		new serverClasses.keyBindData(false, SDLK_l, "lock"),
+		new serverClasses.keyBindData(false, SDLK_f, "enter"),
+		new serverClasses.keyBindData(false, SDLK_g, "passenger"),
+	],
+	exitPropertyDistance: 3.0,
+	enterPropertyDistance: 3.0,
+	businessDimensionStart: 1000,
+	houseDimensionStart: 3000,	
+};
+
+let gameConfig = {
 	blipSprites: [
 		false,
 		{	// GTA III
@@ -201,32 +194,6 @@ let serverConfig = {
 			info: 1,
 		}	
 	],
-	// Not implemented yet
-	keybindText: {
-		actionKey: "E",
-		vehicleEngineKey: "I",
-		vehicleLightsKey: "K",
-		vehicleLocksKey: "L",
-	},
-	keybinds: {
-		actionKey: SDLK_e,
-		vehicleEngineKey: SDLK_e,
-		vehicleLightsKey: SDLK_k,
-		vehicleLocksKey: SDLK_l,		
-	},
-	discordBotToken: "",
-	discordEnabled: false,
-	defaultKeybinds: [
-		new serverClasses.keyBindData(false, SDLK_i, "engine"),
-		new serverClasses.keyBindData(false, SDLK_k, "lights"),
-		new serverClasses.keyBindData(false, SDLK_l, "lock"),
-		new serverClasses.keyBindData(false, SDLK_f, "enter"),
-		new serverClasses.keyBindData(false, SDLK_g, "passenger"),
-	],
-	exitPropertyDistance: 3.0,
-	enterPropertyDistance: 3.0,
-	businessDimensionStart: 1000,
-	houseDimensionStart: 3000,
 
 	// THIS IS SCREEN HEIGHT, NOT ACTUAL DOOR POSITION IN THE WORLD
 	propertyLabelHeight: [
@@ -242,8 +209,8 @@ let serverConfig = {
 	removedWorldObjects: [
 		false,
 		[
-			new serverClasses.removedWorldObjectData("fraightback04", new Vec3(1229.88, -84.8012, 13.4004), 10.0), // Truck trailer in Easy Credit Autos dealership parking lot
-			new serverClasses.removedWorldObjectData("fraightback03", new Vec3(1239.49, -68.0529, 11.6914), 10.0), // Truck trailer in Easy Credit Autos dealership parking lot
+			new serverClasses.removedWorldObjectData("fraightback04", new Vec3(1229.88, -84.8012, 13.4004), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
+			new serverClasses.removedWorldObjectData("fraightback03", new Vec3(1239.49, -68.0529, 11.6914), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
 		],
 		[],
 		[],
@@ -257,48 +224,44 @@ let serverConfig = {
 
 function initConfigScript() {
 	console.log("[Asshat.Config]: Initializing config script ...");
+	serverConfig = loadServerConfig(server.game, server.port);
+	applyConfigToServer(serverConfig);
 	console.log("[Asshat.Config]: Config script initialized!");
 }
 
 // ---------------------------------------------------------------------------
 
-function loadServerConfig() {
+function loadServerConfigFromGameAndPort(gameId, port) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM svr_main WHERE svr_game = ${server.game} AND svr_port = ${server.port} LIMIT 1;`;
+		let dbQueryString = `SELECT * FROM svr_main WHERE svr_game = ${gameId} AND svr_port = ${port} LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 
-				serverId = dbAssoc["svr_id"];
-				getServerConfig().name = dbAssoc["svr_name"];
-				getServerConfig().password = dbAssoc["svr_password"];
-				getServerConfig().newCharacter.spawnPosition = toVector3(dbAssoc["svr_newchar_pos_x"], dbAssoc["svr_newchar_pos_y"], dbAssoc["svr_newchar_pos_z"]);
-				getServerConfig().newCharacter.spawnHeading = dbAssoc["svr_newchar_rot_z"];
-				getServerConfig().newCharacter.money = dbAssoc["svr_newchar_money"];
-				getServerConfig().newCharacter.bank = dbAssoc["svr_newchar_bank"];
-				getServerConfig().newCharacter.skin = dbAssoc["svr_newchar_skin"];
-
-				getServerConfig().connectCameraPosition = toVector3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
-				getServerConfig().connectCameraLookAt = toVector3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
-				getServerConfig().hour = toInteger(dbAssoc["svr_start_time_hour"]);
-				getServerConfig().minute = toInteger(dbAssoc["svr_start_time_min"]);
-				getServerConfig().weather = toInteger(dbAssoc["svr_start_weather"]);
-				getServerConfig().fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
-				getServerConfig().groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
-				getServerConfig().useGUI = intToBool(dbAssoc["svr_gui"]);
-				getServerConfig().guiColour = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
-
-				getServerConfig().antiCheat.enabled = intToBool(dbAssoc["svr_ac_enabled"]);
-				getServerConfig().antiCheat.checkGameScripts = intToBool(dbAssoc["svr_ac_check_scripts"]);
-
-				getServerConfig().antiCheat.gameScriptWhiteList = loadAntiCheatGameScriptWhiteListFromDatabase(serverId);
-				getServerConfig().antiCheat.gameScriptBlackList = loadAntiCheatGameScriptBlackListFromDatabase(serverId);
-
-				applyConfigToServer();
+				let tempServerConfigData = serverClasses.serverConfigData(dbAssoc);
 
 				freeDatabaseQuery(dbQuery);
+			}
+		}
+		disconnectFromDatabase(dbConnection);
+	}	
+}
+
+// ---------------------------------------------------------------------------
+
+function loadServerConfigFromId(tempServerId) {
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let dbQueryString = `SELECT * FROM svr_main WHERE svr_id = ${tempServerId} LIMIT 1;`;
+		let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				let dbAssoc = fetchQueryAssoc(dbQuery);
+				let tempServerConfigData = serverClasses.serverConfigData(dbAssoc);
+				freeDatabaseQuery(dbQuery);
+				return tempServerConfigData;
 			}
 		}
 		disconnectFromDatabase(dbConnection);
@@ -319,24 +282,42 @@ function applyConfigToServer() {
 
 // ----------------------------------------------------------------------------
 
-function saveServerConfigToDatabase() {
-	console.log(`[Asshat.Config]: Saving server configuration to database ...`);
+function saveServerConfigToDatabase(serverConfigData) {
+	console.log(`[Asshat.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) { 
-		let safeServerName = escapeDatabaseString(dbConnection, getServerConfig().name);
-		let safePassword = escapeDatabaseString(dbConnection, getServerConfig().password);
+		let safeServerName = escapeDatabaseString(dbConnection, serverConfigData.name);
+		let safePassword = escapeDatabaseString(dbConnection, serverConfigData.password);
 
-		let dbQueryString = `UPDATE svr_main SET svr_logo=${boolToInt(getServerConfig().showLogo)}, svr_gui=${boolToInt(getServerConfig().useGUI)}, svr_password='${safePassword}', svr_name='${safeServerName}', svr_start_time_hour=${getServerConfig().hour}, svr_start_time_min=${getServerConfig().minute}, svr_start_weather=${getServerConfig().weather}, svr_start_snow_falling=${boolToInt(getServerConfig().fallingSnow)}, svr_start_snow_ground=${boolToInt(getServerConfig().groundSnow)}, svr_newchar_pos_x=${getServerConfig().newCharacter.spawnPosition.x}, svr_newchar_pos_y=${getServerConfig().newCharacter.spawnPosition.y}, svr_newchar_pos_z=${getServerConfig().newCharacter.spawnPosition.z}, svr_newchar_rot_z=${getServerConfig().newCharacter.spawnHeading}, svr_newchar_money=${getServerConfig().newCharacter.money}, svr_newchar_skin=${getServerConfig().newCharacter.skin}, svr_gui_col1_r=${getServerConfig().guiColour[0]}, svr_gui_col1_g=${getServerConfig().guiColour[1]}, svr_gui_col1_b=${getServerConfig().guiColour[2]} WHERE svr_id = ${serverId}`;
+		let dbQueryString = `UPDATE svr_main SET svr_logo=${boolToInt(serverConfigData.showLogo)}, svr_gui=${boolToInt(getServerConfig().useGUI)}, svr_password='${safePassword}', svr_name='${safeServerName}', svr_start_time_hour=${serverConfigData.hour}, svr_start_time_min=${serverConfigData.minute}, svr_start_weather=${serverConfigData.weather}, svr_start_snow_falling=${boolToInt(serverConfigData.fallingSnow)}, svr_start_snow_ground=${boolToInt(serverConfigData.groundSnow)}, svr_newchar_pos_x=${serverConfigData.newCharacter.spawnPosition.x}, svr_newchar_pos_y=${serverConfigData.newCharacter.spawnPosition.y}, svr_newchar_pos_z=${serverConfigData.newCharacter.spawnPosition.z}, svr_newchar_rot_z=${serverConfigData.newCharacter.spawnHeading}, svr_newchar_money=${serverConfigData.newCharacter.money}, svr_newchar_skin=${serverConfigData.newCharacter.skin}, svr_gui_col1_r=${serverConfigData.guiColour[0]}, svr_gui_col1_g=${serverConfigData.guiColour[1]}, svr_gui_col1_b=${serverConfigData.guiColour[2]} WHERE svr_id = ${serverConfigData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		disconnectFromDatabase(dbConnection);
 	}
-	console.log(`[Asshat.Config]: Server configuration saved to database!`);
+	console.log(`[Asshat.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
 }
 
 // ----------------------------------------------------------------------------
 
 function getServerConfig() {
 	return serverConfig;
+}
+
+// ----------------------------------------------------------------------------
+
+function getGameConfig() {
+	return gameConfig;
+}
+
+// ----------------------------------------------------------------------------
+
+function getGlobalConfig() {
+	return globalConfig;
+}
+
+// ----------------------------------------------------------------------------
+
+function getServerId() {
+	return getServerConfig().databaseId;
 }
 
 // ----------------------------------------------------------------------------
@@ -408,9 +389,9 @@ function setWeatherCommand(command, params, client) {
 		return false;
     } 
     
-    gta.forceWeather(weatherId);
+    gta.forceWeather(toInteger(weatherId));
 
-    messageAdminAction(`${client.name} set the weather to [#AAAAAA]${weatherNames[server.game][weatherId]}`);
+    messageAdminAction(`${client.name} set the weather to [#AAAAAA]${weatherNames[server.game][toInteger(weatherId)]}`);
     updateServerRules();
 	return true;
 }

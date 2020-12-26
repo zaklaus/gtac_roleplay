@@ -52,7 +52,7 @@ function whisperCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function talkToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getServerConfig().talkDistance);
+	let clients = getClientsInRange(client.player.position, getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
 			messageClientTalk(getClientFromPlayerElement(clients[i]), client, messageText);
@@ -63,7 +63,7 @@ function talkToNearbyPlayers(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function whisperToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getServerConfig().talkDistance);
+	let clients = getClientsInRange(client.player.position, getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
 			messageClientWhisper(getClientFromPlayerElement(clients[i]), client, messageText);
@@ -74,7 +74,7 @@ function whisperToNearbyPlayers(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function shoutToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getServerConfig().shoutDistance);
+	let clients = getClientsInRange(client.player.position, getGlobalConfig().shoutDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
 			messageClientShout(getClientFromPlayerElement(clients[i]), client, messageText);
@@ -85,7 +85,7 @@ function shoutToNearbyPlayers(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function doActionToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getServerConfig().doActionDistance);
+	let clients = getClientsInRange(client.player.position, getGlobalConfig().doActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
 			messageClientDoAction(getClientFromPlayerElement(clients[i]), client, messageText);
@@ -96,7 +96,7 @@ function doActionToNearbyPlayers(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function meActionToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getServerConfig().meActionDistance);
+	let clients = getClientsInRange(client.player.position, getGlobalConfig().meActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
 			messageClientMeAction(getClientFromPlayerElement(clients[i]), client, messageText);

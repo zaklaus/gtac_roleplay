@@ -1192,9 +1192,9 @@ function createAllLocationBlips() {
 // ---------------------------------------------------------------------------
 
 function createAllPoliceStationBlips() {
-	if(getServerConfig().blipSprites[getServerGame()].policeStation != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].policeStation != -1) {
 		for(let i in getServerData().policeStations[getServerGame()]) {
-			getServerData().policeStations[getServerGame()][i].blip = createBlip(getServerConfig().blipSprites[getServerGame()].policeStation, getServerData().policeStations[getServerGame()][i].position);
+			getServerData().policeStations[getServerGame()][i].blip = createBlip(getGameConfig().blipSprites[getServerGame()].policeStation, getServerData().policeStations[getServerGame()][i].position);
 		}
 	}
 }
@@ -1202,9 +1202,9 @@ function createAllPoliceStationBlips() {
 // ---------------------------------------------------------------------------
 
 function createAllFireStationBlips() {
-	if(getServerConfig().blipSprites[getServerGame()].fireStation != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].fireStation != -1) {
 		for(let i in getServerData().fireStations[getServerGame()]) {
-			getServerData().fireStations[getServerGame()][i].blip = createBlip(getServerConfig().blipSprites[getServerGame()].fireStation, getServerData().fireStations[getServerGame()][i].position);
+			getServerData().fireStations[getServerGame()][i].blip = createBlip(getGameConfig().blipSprites[getServerGame()].fireStation, getServerData().fireStations[getServerGame()][i].position);
 		}
 	}
 }
@@ -1212,9 +1212,9 @@ function createAllFireStationBlips() {
 // ---------------------------------------------------------------------------
 
 function createAllHospitalBlips() {
-	if(getServerConfig().blipSprites[getServerGame()].hospital != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].hospital != -1) {
 		for(let i in getServerData().hospitals[getServerGame()]) {
-			getServerData().hospitals[getServerGame()][i].blip = createBlip(getServerConfig().blipSprites[getServerGame()].hospital, getServerData().hospitals[getServerGame()][i].position);
+			getServerData().hospitals[getServerGame()][i].blip = createBlip(getGameConfig().blipSprites[getServerGame()].hospital, getServerData().hospitals[getServerGame()][i].position);
 		}
 	}
 }
@@ -1222,9 +1222,9 @@ function createAllHospitalBlips() {
 // ---------------------------------------------------------------------------
 
 function createAllAmmunationBlips() {
-	if(getServerConfig().blipSprites[getServerGame()].ammunation != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].ammunation != -1) {
 		for(let i in getServerData().ammunations[getServerGame()]) {
-			getServerData().ammunations[getServerGame()][i].blip = createBlip(getServerConfig().blipSprites[getServerGame()].ammunation, getServerData().ammunations[getServerGame()][i].position);
+			getServerData().ammunations[getServerGame()][i].blip = createBlip(getGameConfig().blipSprites[getServerGame()].ammunation, getServerData().ammunations[getServerGame()][i].position);
 		}
 	}
 }
@@ -1232,9 +1232,9 @@ function createAllAmmunationBlips() {
 // ---------------------------------------------------------------------------
 
 function createAllPayAndSprayBlips() {
-	if(getServerConfig().blipSprites[getServerGame()].payAndSpray != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].payAndSpray != -1) {
 		for(let i in getServerData().payAndSprays[getServerGame()]) {
-			getServerData().payAndSprays[getServerGame()][i].blip = createBlip(getServerConfig().blipSprites[getServerGame()].payAndSpray, getServerData().payAndSprays[getServerGame()][i].position);
+			getServerData().payAndSprays[getServerGame()][i].blip = createBlip(getGameConfig().blipSprites[getServerGame()].payAndSpray, getServerData().payAndSprays[getServerGame()][i].position);
 		}
 	}
 }
@@ -1242,9 +1242,9 @@ function createAllPayAndSprayBlips() {
 // ---------------------------------------------------------------------------
 
 function createAllFuelStationBlips() {
-	if(getServerConfig().blipSprites[getServerGame()].fuelStation != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].fuelStation != -1) {
 		for(let i in getServerData().fuelStations[getServerGame()]) {
-			getServerData().fuelStations[getServerGame()][i].blip = createBlip(getServerConfig().blipSprites[getServerGame()].fuelStation, getServerData().fuelStations[getServerGame()][i].position, 2, getColourByName("burntOrange"));
+			getServerData().fuelStations[getServerGame()][i].blip = createBlip(getGameConfig().blipSprites[getServerGame()].fuelStation, getServerData().fuelStations[getServerGame()][i].position, 2, getColourByName("burntOrange"));
 		}
 	}
 }
@@ -1252,11 +1252,11 @@ function createAllFuelStationBlips() {
 // ---------------------------------------------------------------------------
 
 function sendAllPoliceStationBlips(client) {
-	if(getServerConfig().blipSprites[getServerGame()].policeStation != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].policeStation != -1) {
 		let tempBlips = [];
 		for(let i in getServerData().policeStations[getServerGame()]) {
 			tempBlips.push([
-				getServerConfig().blipSprites[getServerGame()].policeStation, 
+				getGameConfig().blipSprites[getServerGame()].policeStation, 
 				getServerData().policeStations[getServerGame()][i].position.x, 
 				getServerData().policeStations[getServerGame()][i].position.y, 
 				getServerData().policeStations[getServerGame()][i].position.z, 
@@ -1271,11 +1271,11 @@ function sendAllPoliceStationBlips(client) {
 // ---------------------------------------------------------------------------
 
 function sendAllFireStationBlips(client) {
-	if(getServerConfig().blipSprites[getServerGame()].fireStation != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].fireStation != -1) {
 		let tempBlips = [];
 		for(let i in getServerData().fireStations[getServerGame()]) {
 			tempBlips.push([
-				getServerConfig().blipSprites[getServerGame()].fireStation, 
+				getGameConfig().blipSprites[getServerGame()].fireStation, 
 				getServerData().fireStations[getServerGame()][i].position.x, 
 				getServerData().fireStations[getServerGame()][i].position.y, 
 				getServerData().fireStations[getServerGame()][i].position.z, 
@@ -1290,11 +1290,11 @@ function sendAllFireStationBlips(client) {
 // ---------------------------------------------------------------------------
 
 function sendAllHospitalBlips(client) {
-	if(getServerConfig().blipSprites[getServerGame()].hospital != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].hospital != -1) {
 		let tempBlips = [];
 		for(let i in getServerData().hospitals[getServerGame()]) {
 			tempBlips.push([
-				getServerConfig().blipSprites[getServerGame()].hospital, 
+				getGameConfig().blipSprites[getServerGame()].hospital, 
 				getServerData().hospitals[getServerGame()][i].position.x, 
 				getServerData().hospitals[getServerGame()][i].position.y, 
 				getServerData().hospitals[getServerGame()][i].position.z, 
@@ -1309,11 +1309,11 @@ function sendAllHospitalBlips(client) {
 // ---------------------------------------------------------------------------
 
 function sendAllAmmunationBlips(client) {
-	if(getServerConfig().blipSprites[getServerGame()].ammunation != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].ammunation != -1) {
 		let tempBlips = [];
 		for(let i in getServerData().ammunations[getServerGame()]) {
 			tempBlips.push([
-				getServerConfig().blipSprites[getServerGame()].ammunation, 
+				getGameConfig().blipSprites[getServerGame()].ammunation, 
 				getServerData().ammunations[getServerGame()][i].position.x, 
 				getServerData().ammunations[getServerGame()][i].position.y, 
 				getServerData().ammunations[getServerGame()][i].position.z, 
@@ -1328,11 +1328,11 @@ function sendAllAmmunationBlips(client) {
 // ---------------------------------------------------------------------------
 
 function sendAllPayAndSprayBlips(client) {
-	if(getServerConfig().blipSprites[getServerGame()].payAndSpray != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].payAndSpray != -1) {
 		let tempBlips = [];
 		for(let i in getServerData().payAndSprays[getServerGame()]) {
 			tempBlips.push([
-				getServerConfig().blipSprites[getServerGame()].payAndSpray, 
+				getGameConfig().blipSprites[getServerGame()].payAndSpray, 
 				getServerData().payAndSprays[getServerGame()][i].position.x, 
 				getServerData().payAndSprays[getServerGame()][i].position.y, 
 				getServerData().payAndSprays[getServerGame()][i].position.z, 
@@ -1347,11 +1347,11 @@ function sendAllPayAndSprayBlips(client) {
 // ---------------------------------------------------------------------------
 
 function sendAllFuelStationBlips(client) {
-	if(getServerConfig().blipSprites[getServerGame()].fuelStation != -1) {
+	if(getGameConfig().blipSprites[getServerGame()].fuelStation != -1) {
 		let tempBlips = [];
 		for(let i in getServerData().fuelStations[getServerGame()]) {
 			tempBlips.push([
-				getServerConfig().blipSprites[getServerGame()].fuelStation, 
+				getGameConfig().blipSprites[getServerGame()].fuelStation, 
 				getServerData().fuelStations[getServerGame()][i].position.x, 
 				getServerData().fuelStations[getServerGame()][i].position.y, 
 				getServerData().fuelStations[getServerGame()][i].position.z, 
@@ -1460,13 +1460,13 @@ function processHoldActionKey(client) {
 
 
 	if(getClientCurrentSubAccount(client).job == AG_JOB_NONE) {
-		if(jobData.position.distance(client.player.position) <= getServerConfig().takeJobDistance) {
+		if(jobData.position.distance(client.player.position) <= getGlobalConfig().takeJobDistance) {
 			takeJob(client, closestJobId);
 			messageClientSuccess(client, "You now have the " + toString(jobData.name) + " job");
 		}
 	} else {
 		if(jobData.jobType == getClientCurrentSubAccount(client).job) {
-			if(jobData.position.distance(client.player.position) <= getServerConfig().startWorkDistance) {
+			if(jobData.position.distance(client.player.position) <= getGlobalConfig().startWorkDistance) {
 				startWorking(client);
 				messageClientSuccess(client, "You are now working as a " + toString(jobData.name));
 				showStartedWorkingTip(client);
@@ -1486,7 +1486,7 @@ function processPressActionKey(client) {
 	let closestJob = getClosestJob(client.player.position);
 	
 	if(getClientCurrentSubAccount(client).job == AG_JOB_NONE) {
-		if(closestJob.position.distance(client.player.position) <= getServerConfig().takeJobDistance) {
+		if(closestJob.position.distance(client.player.position) <= getGlobalConfig().takeJobDistance) {
 			
 		}
 	}
@@ -1568,18 +1568,35 @@ function updateServerRules() {
 function getWeatherFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getGameData().weatherNames[getServerGame()]) {
-			if(toLowerCase(weatherNames[getServerGame()][i]).indexOf(toLowerCase(params)) != -1) {
+			if(toLowerCase(getGameData().weatherNames[getServerGame()][i]).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+		return 0;
+	} else {
+		if(typeof getGameData().weatherNames[getServerGame()][params] != "undefined") {
+			return toInteger(params);
+		}
+		return 0;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getClanFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().clans) {
+			if(toLowerCase(getServerData().clans[i].name).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
 		return false;
 	} else {
-		if(typeof getGameData().weatherNames[getServerGame()][params] != "undefined") {
-			return params;
+		if(typeof getServerData().clans[params] != "undefined") {
+			return toInteger(params);
 		}
 		return false;
 	}
-	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -1712,6 +1729,12 @@ function isPlayerSpawned(client) {
 
 function getLockedUnlockedFromBool(boolVal) {
 	return (boolVal) ? "locked" : "unlocked";
+}
+
+// ----------------------------------------------------------------------------
+
+function getLockedUnlockedEmojiFromBool(boolVal) {
+	return (boolVal) ? "🔒" : "🔓";
 }
 
 // ----------------------------------------------------------------------------

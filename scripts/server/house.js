@@ -46,7 +46,7 @@ function loadHousesFromDatabase() {
 // ---------------------------------------------------------------------------
 
 function createHouseCommand(command, params, client) {
-	let tempHouseData = createHouse(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getServerConfig().pickupModels[getServerGame()].house, getServerConfig().blipSprites[getServerGame()].house, getPlayerInterior(client), getPlayerVirtualWorld(client));
+	let tempHouseData = createHouse(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].house, getGameConfig().blipSprites[getServerGame()].house, getPlayerInterior(client), getPlayerVirtualWorld(client));
 	getServerData().houses.push(tempHouseData);
 	
 	sendHouseLabelToPlayers(getServerData().houses.length-1);
@@ -128,7 +128,6 @@ function setHouseClanCommand(command, params, client) {
 	messageClientSuccess(client, `House ${getHouseData(houseId).name} owner set to the [#AAAAAA]${getClanData(clanId).name} [#FFFFFF]clan!`);
 }
 
-
 // ---------------------------------------------------------------------------
 
 function setHousePickupCommand(command, params, client) {
@@ -141,13 +140,13 @@ function setHousePickupCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
-		if(isNull(getServerConfig().pickupModels[getServerGame()][typeParam])) {
+		if(isNull(getGameConfig().pickupModels[getServerGame()][typeParam])) {
 			messageClientError(client, "Invalid house type! Use a house type name or a pickup model ID");
-			messageClientInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getServerConfig().pickupModels[getServerGame()]).join(", ")}`)
+			messageClientInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
-		getHouseData(houseId).entrancePickupModel = getServerConfig().pickupModels[getServerGame()][typeParam];
+		getHouseData(houseId).entrancePickupModel = getGameConfig().pickupModels[getServerGame()][typeParam];
 	} else {
 		getHouseData(houseId).entrancePickupModel = toInteger(typeParam);
 	}
@@ -175,13 +174,13 @@ function setHouseBlipCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
-		if(isNull(getServerConfig().blipSprites[getServerGame()][typeParam])) {
+		if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
 			messageClientError(client, "Invalid house type! Use a house type name or a blip image ID");
-			messageClientInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getServerConfig().blipSprites[getServerGame()]).join(", ")}`)
+			messageClientInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
-		getHouseData(houseId).entranceBlipModel = getServerConfig().blipSprites[getServerGame()][typeParam];
+		getHouseData(houseId).entranceBlipModel = getGameConfig().blipSprites[getServerGame()][typeParam];
 	} else {
 		getHouseData(houseId).entranceBlipModel = toInteger(typeParam);
 	}
@@ -294,7 +293,7 @@ function createHouse(description, entrancePosition, exitPosition, entrancePickup
 	tempHouseData.exitDimension = exitVirtualWorld;	
 
 	if(entrancePickupModel != -1) {
-		tempHouseData.entrancePickup = gta.createPickup(entrancePickupModel, entrancePosition, getServerConfig().pickupTypes[getServerGame()].house);
+		tempHouseData.entrancePickup = gta.createPickup(entrancePickupModel, entrancePosition, getGameConfig().pickupTypes[getServerGame()].house);
 	}
 
 	if(entranceBlipModel != -1) {
@@ -392,7 +391,7 @@ function createAllHouseBlips() {
 
 function createHouseEntrancePickup(houseId) {
 	if(getServerData().houses[houseId].entrancePickupModel != -1) {
-		let pickupModelId = getServerConfig().pickupModels[getServerGame()].house;
+		let pickupModelId = getGameConfig().pickupModels[getServerGame()].house;
 
 		if(getServerData().houses[houseId].entrancePickupModel != 0) {
 			pickupModelId = getServerData().houses[houseId].entrancePickupModel;
@@ -435,8 +434,14 @@ function getHouseOwnerTypeText(ownerType) {
 			return "player";		
 
 		case AG_BIZOWNER_NONE:
-			return "not owned";			
+			return "not owned";
+
+		case AG_BIZOWNER_PUBLIC:
+			return "not owned";	
 			
+		case AG_BIZOWNER_JOB:
+			return "job";					
+		
 		default:
 			return "unknown";
 	}
@@ -462,14 +467,22 @@ function getHouseInfoCommand(command, params, client) {
 			ownerName = getClanData(getHouseData(houseId).ownerId).name;
 			break;
 
-		case AG_BIZOWNER_PLAYER:
+		case AG_HOUSEOWNER_PLAYER:
 			let accountData = loadAccountFromId(getHouseData(houseId).ownerId);
 			ownerName = `${accountData.name} [${accountData.databaseId}]`;
 			break;
 
-		case AG_BIZOWNER_NONE:
-			ownerName = "None"
+		case AG_HOUSEOWNER_NONE:
+			ownerName = "None";
 			break;
+
+		case AG_HOUSEOWNER_PUBLIC:
+			ownerName = "Public";
+			break;
+
+		case AG_HOUSEOWNER_JOB:
+			ownerName = getJobData(getHouseData(houseId).ownerId).name;
+			break;				
 	}	
 
 	messageClientNormal(client, `🏠 [#11CC11][House Info] [#FFFFFF]Description: [#AAAAAA]${getHouseData(houseId).description}, [#FFFFFF]Owner: [#AAAAAA]${ownerName} (${getHouseOwnerTypeText(getHouseData(houseId).ownerType)}), [#FFFFFF]Locked: [#AAAAAA]${getYesNoFromBool(intToBool(getHouseData(houseId).locked))}, [#FFFFFF]ID: [#AAAAAA]${houseId}/${getHouseData(houseId).databaseId}`);
@@ -527,7 +540,7 @@ function sendAllHouseLabelsToPlayer(client) {
 		for(let j = 0 ; j < housesPerNetworkEvent ; j++) {
 			let tempHouseId = (i*housesPerNetworkEvent)+j;
 			if(typeof getServerData().houses[tempHouseId] != "undefined") {
-				tempHouseLabels.push([tempHouseId, getServerData().houses[tempHouseId].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().houses[tempHouseId].description, getServerData().houses[tempHouseId].locked, false]);
+				tempHouseLabels.push([tempHouseId, getServerData().houses[tempHouseId].entrancePosition, getGlobalConfig().propertyLabelHeight[getServerGame()], getServerData().houses[tempHouseId].description, getServerData().houses[tempHouseId].locked, false]);
 			}
 		}
 		triggerNetworkEvent("ag.houselabel.all", client, tempHouseLabels);
@@ -538,7 +551,7 @@ function sendAllHouseLabelsToPlayer(client) {
 // ---------------------------------------------------------------------------
 
 function sendHouseLabelToPlayers(houseId) {
-	triggerNetworkEvent("ag.houselabel.add", null, houseId, getServerData().houses[houseId].entrancePosition, getServerConfig().propertyLabelHeight[getServerGame()], getServerData().houses[houseId].description, getServerData().houses[houseId].locked, false);
+	triggerNetworkEvent("ag.houselabel.add", null, houseId, getServerData().houses[houseId].entrancePosition, getGlobalConfig().propertyLabelHeight[getServerGame()], getServerData().houses[houseId].description, getServerData().houses[houseId].locked, false);
 }
 
 // ---------------------------------------------------------------------------

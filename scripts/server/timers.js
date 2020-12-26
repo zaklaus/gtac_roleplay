@@ -25,7 +25,7 @@ function saveAllServerDataToDatabase() {
 	saveAllHousesToDatabase();
 	saveAllBusinessesToDatabase();
 	saveAllClansToDatabase();
-	saveServerConfigToDatabase()
+	saveServerConfigToDatabase(getServerConfig());
 	console.log("[Asshat.Utilities]: Saved all server data to database!");
 }
 
@@ -34,7 +34,7 @@ function saveAllServerDataToDatabase() {
 function initTimers() {
     serverTimers.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
 	serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
-	serverTimers.updateNameTagsTimer = setInterval(updateNameTags, 5000);
+	serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
 	serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
 }
 
@@ -60,11 +60,11 @@ function vehicleRentCheck() {
 
 // ---------------------------------------------------------------------------
 
-function updateNameTags() {
+function updatePings() {
 	let clients = getClients();
 	for(let i in clients) {
 		if(!clients[i].console) {
-			updatePlayerNameTag(clients[i]);
+			updatePlayerPing(clients[i]);
 		}
 	}
 }

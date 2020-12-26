@@ -62,7 +62,7 @@ addEventHandler("onPickupCollected", function(event, pickup, ped) {
 // ---------------------------------------------------------------------------
 
 bindEventHandler("onResourceStart", thisResource, function(event, resource) {
-    triggerNetworkEvent("ag.clientReady");
+    triggerNetworkEvent("ag.clientStarted");
 
     addEvent("OnLocalPlayerEnterSphere", 1);
     addEvent("OnLocalPlayerExitSphere", 1);
@@ -76,6 +76,13 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
 
     addNetworkHandler("ag.passenger", enterVehicleAsPassenger);
 });
+
+// ---------------------------------------------------------------------------
+
+bindEventHandler("onResourceReady", thisResource, function(event, resource) {
+    triggerNetworkEvent("ag.clientReady");
+});
+
 
 // ----------------------------------------------------------------------------
 
@@ -150,8 +157,7 @@ function syncVehicle(vehicle) {
         }  
     }
 }
-addNetworkHandler("ag.veh.sync", syncVehicle)
-;
+addNetworkHandler("ag.veh.sync", syncVehicle);
 
 // ---------------------------------------------------------------------------
 
@@ -492,15 +498,6 @@ addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, ped
 addNetworkHandler("ag.showBusStop", function(position, colour) {
     busStopSphere = gta.createSphere(position, 3);
     busStopBlip = gta.createBlip(position, 0, 2, colour);
-
-    bindEventHandler("OnLocalPlayerEnterSphere", busStopSphere, function(event, sphere) {
-        triggerNetworkEvent("ag.arrivedAtBusStop");
-        unbindEventHandler("OnLocalPlayerEnterSphere", busStopSphere);
-        destroyElement(busStopSphere);
-        destroyElement(busStopBlip);
-        busStopSphere = null;
-        busStopBlip = null;
-    });
 });
 
 // ---------------------------------------------------------------------------
@@ -517,6 +514,18 @@ addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
 addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
     console.log(`Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
     gta.removeWorldObject(model, position, range);
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
+    if(sphere == busStopSphere) {
+        destroyElement(busStopSphere);
+        destroyElement(busStopBlip);
+        busStopSphere = null;
+        busStopBlip = null;
+        triggerNetworkEvent("ag.arrivedAtBusStop");
+    }
 });
 
 // ---------------------------------------------------------------------------

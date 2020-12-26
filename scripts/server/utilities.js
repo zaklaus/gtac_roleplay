@@ -41,6 +41,8 @@ let fireStations = [
 	],
 ];
 
+// ---------------------------------------------------------------------------
+
 let hospitals = [
 	[],
 	[ // GTA III
@@ -297,13 +299,13 @@ function getWeaponModelId(weaponId) {
 // ---------------------------------------------------------------------------
 
 function getIsland(position) {
-    if(thisGame == GAME_GTA_III) {
+    if(getServerGame() == GAME_GTA_III) {
 		if(position.x > 616) {        
-			return 1;
+			return 0;
 		} else if(position.x < -283) {
-			return 3;
+			return 2;
 		}
-		return 2;
+		return 1;
 	} else {
 		return 0;
 	}
@@ -465,7 +467,7 @@ function getClosestVehicle(position) {
 	let vehicles = getServerData().vehicles;
 	let closest = 0;
 	for(let i in vehicles) {
-		if(getDistance(getVehiclePosition(vehicles[i].vehicle, position)) < getDistance(getVehiclePosition(vehicles[closest].vehicle, position))) {
+		if(getDistance(getVehiclePosition(vehicles[i].vehicle), position) < getDistance(getVehiclePosition(vehicles[closest].vehicle), position)) {
 			closest = i;
 		}
 	}
@@ -1735,6 +1737,24 @@ function getLockedUnlockedFromBool(boolVal) {
 
 function getLockedUnlockedEmojiFromBool(boolVal) {
 	return (boolVal) ? "🔒" : "🔓";
+}
+
+// ----------------------------------------------------------------------------
+
+function getPlayerIsland(client) {
+	return getIsland(getPlayerPosition(client));
+}
+
+// ----------------------------------------------------------------------------
+
+function isAtPayAndSpray(position) {
+	for(let i in payAndSprays[getServerGame()]) {
+		if(getDistance(position, payAndSprays[getServerGame()][i]) <= getGlobalConfig().payAndSprayDistance) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 // ----------------------------------------------------------------------------

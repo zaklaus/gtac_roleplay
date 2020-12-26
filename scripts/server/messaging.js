@@ -42,6 +42,7 @@ function messageAdmins(client, messageText, colour = COLOUR_WHITE) {
 
     // 🛡️
 
+    let clients = getClients();
     for(let i in clients) {
         if(doesClientHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
             messageClient(`${messageText}`, client, colour);

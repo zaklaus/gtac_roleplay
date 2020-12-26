@@ -34,46 +34,48 @@ addEventHandler("OnDrawnHUD", function (event) {
 			
 			let clients = getClients();
 			for(let i in clients) {
-                let name = element.name;
-                let colour = COLOUR_WHITE;
-				let paused = false;     
-				let ping = "-1";   
-        
-                if(typeof playerNames[clients[i].name] != "undefined") {
-                    name = playerNames[clients[i].name];
-                }
-        
-                if(typeof playerPaused[clients[i].name] != "undefined") {
-                    paused = playerPaused[clients[i].name];
-                }
+				if(!clients[i].console) {
+					let name = clients[i].name;
+					let colour = COLOUR_WHITE;
+					let paused = false;     
+					let ping = "-1";   
+			
+					if(typeof playerNames[clients[i].name] != "undefined") {
+						name = playerNames[clients[i].name];
+					}
+			
+					if(typeof playerPaused[clients[i].name] != "undefined") {
+						paused = playerPaused[clients[i].name];
+					}
 
-                if(typeof playerColours[clients[i].name] != "undefined") {
-                    colour = playerColours[clients[i].name];
-				}
+					if(typeof playerColours[clients[i].name] != "undefined") {
+						colour = playerColours[clients[i].name];
+					}
 
-				if(typeof playerPing[element.name] != "undefined") {
-					ping = toString(playerPing[element.name]);
-				}				
-				
-				// Player ID
-				let text = String(clients[i].index);
-				let size = listFont.measure(text, 75, 0.0, 1.0, 10, false, false);
-				listFont.render(text, [game.width/2-100, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, COLOUR_WHITE, false, false, false, true);				
-				
-				// Player Name
-				text = name;
-				size = listFont.measure(text, 100, 0.0, 1.0, 10, false, false);
-				listFont.render(text, [game.width/2, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, colour, false, false, false, true);
-				
-				// Ping
-				text = ping;
-				size = listFont.measure(ping, 75, 0.0, 1.0, 10, false, false);
-				listFont.render(ping, [game.width/2+100, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, COLOUR_WHITE, false, false, false, true);							
-				
-				// PAUSED Status (depends on resource "afk")
-				if(paused == true) {
-					size = listFont.measure("PAUSED", 100, 0.0, 1.0, 10, false, false);
-					listFont.render("PAUSED", [game.width/2+200, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, pausedColour, false, false, false, true);							
+					if(typeof playerPing[clients[i].name] != "undefined") {
+						ping = toString(playerPing[clients[i].name]);
+					}				
+					
+					// Player ID
+					let text = String(clients[i].index);
+					let size = listFont.measure(text, 75, 0.0, 1.0, 10, false, false);
+					listFont.render(text, [game.width/2-100, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, COLOUR_WHITE, false, false, false, true);				
+					
+					// Player Name
+					text = name;
+					size = listFont.measure(text, 100, 0.0, 1.0, 10, false, false);
+					listFont.render(text, [game.width/2, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, colour, false, false, false, true);
+					
+					// Ping
+					text = ping;
+					size = listFont.measure(ping, 75, 0.0, 1.0, 10, false, false);
+					listFont.render(ping, [game.width/2+100, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, COLOUR_WHITE, false, false, false, true);							
+					
+					// PAUSED Status (depends on resource "afk")
+					if(paused == true) {
+						size = listFont.measure("PAUSED", 100, 0.0, 1.0, 10, false, false);
+						listFont.render("PAUSED", [game.width/2+200, scoreboardStart + (i*20)], 0, 0.5, 0.0, listFont.size, pausedColour, false, false, false, true);							
+					}
 				}
 			}
 		}

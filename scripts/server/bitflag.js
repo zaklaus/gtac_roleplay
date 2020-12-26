@@ -169,6 +169,36 @@ function doesClientHaveStaffPermission(client, requiredFlags) {
 
 // ---------------------------------------------------------------------------
 
+function doesClientHaveClanPermission(client, requiredFlags) {
+	if(client.console) {
+		return true;
+	}
+
+	if(requiredFlags == getClanFlagValue("none")) {
+		return true;
+	}
+
+	if(doesClientHaveStaffPermission(client, getStaffFlagValue("manageClans"))) {
+		return true;
+	}
+
+	let clanFlags = 0;
+	clanFlags = getClientCurrentSubAccount(client).clanFlags | getClanRankFlags(getClientCurrentSubAccount(client).clanRank);
+
+	// -1 is automatic override (having -1 for staff flags is basically god mode admin level)
+    if(clanFlags == getClanFlagValue("all")) {
+        return true;
+    }
+
+    if(clanFlags & requiredFlags) {
+        return true;
+    }
+
+    return false;
+}
+
+// ---------------------------------------------------------------------------
+
 function getStaffFlagValue(flagName) {
     if(flagName == "all") {
         return -1;
@@ -179,6 +209,20 @@ function getStaffFlagValue(flagName) {
 	}
 
 	return serverBitFlags.staffFlags[flagName];
+}
+
+// ---------------------------------------------------------------------------
+
+function getClanFlagValue(flagName) {
+    if(flagName == "all") {
+        return -1;
+	}
+	
+	if(typeof getServerBitFlags().clanFlags[flagName] === "undefined") {
+		return false;
+	}
+
+	return getServerBitFlags().clanFlags[flagName];
 }
 
 // ---------------------------------------------------------------------------

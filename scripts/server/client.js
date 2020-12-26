@@ -123,31 +123,8 @@ addNetworkHandler("ag.heldKey", function(client, key) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.player.sync", function(client, position, heading) {
-    setEntityData(client, "ag.position", position, true);
-    setEntityData(client, "ag.heading", heading, true);
-});
-
-// ---------------------------------------------------------------------------
-
 addNetworkHandler("ag.player.death", function(client, position, heading) {
     processPlayerDeath(client);
-});
-
-// ---------------------------------------------------------------------------
-
-//addNetworkHandler("ag.player.vehicle", function(client, vehicle) {
-//    clientEnteredVehicle(client, vehicle);
-//});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
-    //let vehicleData = getVehicleDataFromSyncId(syncId);
-    //if(vehicleData) {
-    //    vehicleData.syncPosition = position;
-    //    vehicleData.syncHeading = heading;
-    //}
 });
 
 // ---------------------------------------------------------------------------
@@ -155,5 +132,37 @@ addNetworkHandler("ag.veh.sync", function(client, syncId, position, heading) {
 function updatePlayerNameTag(client) {
 	triggerNetworkEvent("ag.nametag", null, client.name, getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
 }
+
+// ---------------------------------------------------------------------------
+
+function updatePlayerPing(client) {
+	triggerNetworkEvent("ag.ping", null, client.name, client.ping);
+}
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.arrivedAtBusStop", function(client) {
+    arrivedAtBusStop(client);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.clientReady", function(client) {
+	client.setData("ag.isReady", true, false);
+	console.log(`${getClientDisplayForConsole(client)}'s client resources are downloaded and ready!`);
+	if(client.getData("ag.isStarted") == true) {
+		initClient(client);
+	}
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.clientStarted", function(client) {
+	client.setData("ag.isStarted", true, false);
+	console.log(`${getClientDisplayForConsole(client)}'s client resources are started and running!`);
+	if(client.getData("ag.isReady") == true) {
+		initClient(client);
+	}	
+});
 
 // ---------------------------------------------------------------------------

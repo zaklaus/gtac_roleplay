@@ -515,6 +515,7 @@ addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
+    console.log(`Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
     gta.removeWorldObject(model, position, range);
 });
 

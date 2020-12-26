@@ -33,6 +33,7 @@ addEventHandler("OnPlayerJoined", function(event, client) {
     setTimeout(function() {
         initClient(client);
     }, 500);
+    message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 });
 
 // ---------------------------------------------------------------------------
@@ -42,7 +43,7 @@ addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
     savePlayerToDatabase(client);
 
     getServerData().clients[client.index] = null;
-    message(`${client.name} has left the server (${gameData.quitReasons[quitReasonId]})`);
+    message(`👋 ${client.name} has left the server (${gameData.quitReasons[quitReasonId]})`, getColourByName("softYellow"));
 });
 
 // ---------------------------------------------------------------------------
@@ -95,12 +96,12 @@ addEventHandler("OnPedEnterVehicle", function(event, ped, vehicle, seat) {
 
         if(!getVehicleData(vehicle).engine) {
             if(doesClientHaveVehicleKeys(client, vehicle)) {
-                messageClientAlert(client, `This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
+                messageClientNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
                 if(doesPlayerHaveKeyBindForCommand(client, "lock")) {
                     messageClientTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "lock").key)} [#FFFFFF]to lock and unlock vehicles.`);
                 }
             } else {
-                messageClientAlert(client, `This ${getVehicleName(vehicle)} is locked and you don't have the keys to unlock it`);
+                messageClientNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked and you don't have the keys to unlock it`);
             }
         } 
     } 

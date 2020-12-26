@@ -31,11 +31,17 @@ addEventHandler("OnResourceReady", function(event, resource) {
 
 // ----------------------------------------------------------------------------
 
-addNetworkHandler("ag.nametag", function(mainName, characterName, colour, paused, ping) {
-	playerNames[mainName] = characterName;
-	playerColours[mainName] = colour;
-	playerPaused[mainName] = paused;
-	playerPing[mainName] = ping;
+addNetworkHandler("ag.nametag", function(clientName, characterName, colour, paused, ping) {
+	playerNames[clientName] = characterName;
+	playerColours[clientName] = colour;
+	playerPaused[clientName] = paused;
+	playerPing[clientName] = ping;
+});
+
+// ----------------------------------------------------------------------------
+
+addNetworkHandler("ag.ping", function(clientName, ping) {
+	playerPing[clientName] = ping;
 });
 
 // ----------------------------------------------------------------------------

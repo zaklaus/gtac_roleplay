@@ -505,3 +505,14 @@ function allStaffFlagsCommand(command, params, client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function adminChatCommand(command, params, client) {	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	messageAdmins(`[#FFFF00](Admin Chat) [#AAAAAA]${client.name}[#FFFFFF]: ${params}`);
+}
+
+// ---------------------------------------------------------------------------

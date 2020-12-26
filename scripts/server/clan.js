@@ -25,7 +25,7 @@ function loadClansFromDatabase() {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		let dbQuery = queryDatabase(dbConnection, "SELECT * FROM `clan_main` WHERE `clan_deleted` = 0 AND `clan_server` = " + toString(serverId));
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM clan_main WHERE clan_deleted = 0 AND clan_server = ${getServerId()}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -41,7 +41,7 @@ function loadClansFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log("[Asshat.Clan]: " + toString(tempClans.length) + " clans loaded from database successfully!");
+	console.log(`[Asshat.Clan]: ${tempClans.length} clans loaded from database successfully!`);
 	return tempClans;
 }
 
@@ -150,11 +150,27 @@ function setClanRankTagCommand(command, params, client) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
+
+	let splitParams = params.split(" ");
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messageClientError(client, "Clan not found!");
+		return false;
+	}
+
+	let rankId = getClanRankFromParams(clanId, splitParams[0]);
+
+	if(!getClanRankData(clanId, rankId)) {
+		messageClientError(client, "Clan rank not found!");
+		return false;
+	}	
 }
 
 // ----------------------------------------------------------------------------
 
-function setClanMemberFlagsCommand(command, params, client) {
+function addClanMemberFlagCommand(command, params, client) {
 	if(!doesClientHaveClanPermission(client, getClanFlagValue("memberFlags"))) {
 		messageClientError(client, "You can not change a clan member's permissions!");
 		return false;
@@ -187,6 +203,43 @@ function setClanMemberFlagsCommand(command, params, client) {
 	let flagValue = getClanFlagValue(splitParams[1]);	
 	getClientCurrentSubAccount(client).clanFlags = getClientCurrentSubAccount(client).clanFlags | flagValue;
 	messageClientSuccess(client, `You added the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag to [#AAAAAA]${getCharacterFullName(client)}`);	
+}
+
+// ----------------------------------------------------------------------------
+
+function removeClanMemberFlagCommand(command, params, client) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("memberFlags"))) {
+		messageClientError(client, "You can not change a clan member's permissions!");
+		return false;
+	}	
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messageClientError(client, "Clan not found!");
+		return false;
+	}
+
+	let targetClient = getClientFromParams(splitParams[0]);
+
+	if(!targetClient) {
+		messageClientError(client, "Clan member not found!");
+		return false;
+	}
+
+	if(!getClanFlagValue(splitParams[1])) {
+		messageClientError(client, "Clan flag not found!");
+		return false;
+	}
+
+	let flagValue = getClanFlagValue(splitParams[1]);	
+	getClientCurrentSubAccount(client).clanFlags = getClientCurrentSubAccount(client).clanFlags & ~flagValue;
+	messageClientSuccess(client, `You removed the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag from [#AAAAAA]${getCharacterFullName(client)}`);	
 }
 
 // ----------------------------------------------------------------------------
@@ -333,12 +386,11 @@ function setClanRankTitleCommand(command, params, client) {
 
 function createClan(name) {
 	let dbConnection = connectToDatabase();
-	let serverId = getServerId();
 	let escapedName = name;
 	
 	if(dbConnection) {
 		escapedName = escapeDatabaseString(dbConnection, escapedName)
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO clan_main (clan_server, clan_name) VALUES (${serverId}, '${escapedName}')`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO clan_main (clan_server, clan_name) VALUES (${getServerId()}, '${escapedName}')`);
 		disconnectFromDatabase(dbConnection);
 
 		let tempClanData = loadClanFromDatabaseById(getDatabaseInsertId(dbConnection));

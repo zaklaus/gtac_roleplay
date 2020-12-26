@@ -8,7 +8,6 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let serverId = 0;
 let scriptVersion = "1.0";
 let serverStartTime = new Date().getTime();
 
@@ -532,12 +531,6 @@ function initServerData() {
 	let translationCacheFrom = new Array(global.getServerData().translation.languages.length);
 	translationCacheFrom.fill([]);
 	global.getServerData().translation.cache.fill(translationCacheFrom);
-}
-
-// ----------------------------------------------------------------------------
-
-function getServerId() {
-	return serverId;
 }
 
 // ----------------------------------------------------------------------------

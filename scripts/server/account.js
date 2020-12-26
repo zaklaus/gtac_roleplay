@@ -485,7 +485,7 @@ function saveAccountStaffNotesDatabase(staffNoteData) {
 	if(dbConnection) { 
 		let safeNoteContent = escapeDatabaseString(dbConnection, staffNoteData.note);
 		if(staffNoteData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO acct_note (acct_note_message, acct_note_who_added, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${serverId}, ${staffNoteData.account}`;
+			let dbQueryString = `INSERT INTO acct_note (acct_note_message, acct_note_who_added, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${getServerId()}, ${staffNoteData.account}`;
 			staffNoteData.databaseId = getDatabaseInsertId(dbConnection);
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			freeDatabaseQuery(dbQuery);
@@ -503,7 +503,7 @@ function saveAccountContactsDatabase(accountContactData) {
 	if(dbConnection) { 
 		let safeNoteContent = escapeDatabaseString(dbConnection, accountContactData.note);
 		if(accountContactData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO acct_contact (acct_contact_note, acct_contact_, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${serverId}, ${staffNoteData.account}`;
+			let dbQueryString = `INSERT INTO acct_contact (acct_contact_note, acct_contact_, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${getServerId()}, ${staffNoteData.account}`;
 			staffNoteData.databaseId = getDatabaseInsertId(dbConnection);
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			freeDatabaseQuery(dbQuery);
@@ -922,12 +922,6 @@ function isAccountAutoIPLoginEnabled(accountData) {
 	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
 	return hasBitFlag(accountSettings, flagValue);
 }
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.clientReady", function(client) {
-
-});
 
 // ---------------------------------------------------------------------------
 

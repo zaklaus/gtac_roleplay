@@ -59,7 +59,7 @@ function loadSubAccountsFromAccount(accountId) {
 	if(accountId > 0) {
 		let dbConnection = connectToDatabase();
 		if(dbConnection) {
-			let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_acct = ${accountId} AND sacct_server = ${serverId}`;
+			let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_acct = ${accountId} AND sacct_server = ${getServerId()}`;
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			if(dbQuery) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -99,7 +99,7 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 		let safePlaceOfOrigin = escapeDatabaseString(dbConnection, placeOfOrigin);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${serverId}, 100, UNIX_TIMESTAMP(), 0)`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
 		}
@@ -314,7 +314,7 @@ function getPlayerLastUsedSubAccount(client) {
 // ---------------------------------------------------------------------------
 
 function transferCharacterToServer(subAccountDatabaseId, newServerId) {
-	quickDatabaseQuery(`UPDATE sacct_main SET sacct_server = ${newServerId}, sacct_skin = ${getConfigForServer(newServerId).newCharacter.skin} WHERE sacct_id = ${subAccountDatabaseId} LIMIT 1;`);
+	quickDatabaseQuery(`UPDATE sacct_main SET sacct_server = ${newServerId}, sacct_skin = ${loadServerConfigFromId(newServerId).newCharacter.skin} WHERE sacct_id = ${subAccountDatabaseId} LIMIT 1;`);
 }
 
 // ---------------------------------------------------------------------------

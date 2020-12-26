@@ -46,7 +46,7 @@ function loadBusinessesFromDatabase() {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `SELECT * FROM biz_main WHERE biz_server = ${serverId}`);
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM biz_main WHERE biz_server = ${getServerId()}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -588,7 +588,7 @@ function saveBusinessToDatabase(businessId) {
 	if(dbConnection) {
 		let safeBusinessName = escapeDatabaseString(dbConnection, tempBusinessData.name);
 		if(tempBusinessData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO biz_main (biz_server, biz_name, biz_owner_type, biz_owner_id, biz_locked, biz_entrance_fee, biz_till, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_rot_z, biz_entrance_int, biz_entrance_vw, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_rot_z, biz_exit_int, biz_exit_vw) VALUES (${serverId}, '${safeBusinessName}', ${tempBusinessData.ownerType}, ${tempBusinessData.ownerId}, ${boolToInt(tempBusinessData.locked)}, ${tempBusinessData.entranceFee}, ${tempBusinessData.till}, ${tempBusinessData.entrancePosition.x}, ${tempBusinessData.entrancePosition.y}, ${tempBusinessData.entrancePosition.z}, ${tempBusinessData.entranceRotation}, ${tempBusinessData.entranceInterior}, ${tempBusinessData.entranceDimension}, ${tempBusinessData.exitPosition.x}, ${tempBusinessData.exitPosition.y}, ${tempBusinessData.exitPosition.z}, ${tempBusinessData.exitRotation}, ${tempBusinessData.exitInterior}, ${tempBusinessData.exitDimension})`;
+			let dbQueryString = `INSERT INTO biz_main (biz_server, biz_name, biz_owner_type, biz_owner_id, biz_locked, biz_entrance_fee, biz_till, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_rot_z, biz_entrance_int, biz_entrance_vw, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_rot_z, biz_exit_int, biz_exit_vw) VALUES (${getServerId()}, '${safeBusinessName}', ${tempBusinessData.ownerType}, ${tempBusinessData.ownerId}, ${boolToInt(tempBusinessData.locked)}, ${tempBusinessData.entranceFee}, ${tempBusinessData.till}, ${tempBusinessData.entrancePosition.x}, ${tempBusinessData.entrancePosition.y}, ${tempBusinessData.entrancePosition.z}, ${tempBusinessData.entranceRotation}, ${tempBusinessData.entranceInterior}, ${tempBusinessData.entranceDimension}, ${tempBusinessData.exitPosition.x}, ${tempBusinessData.exitPosition.y}, ${tempBusinessData.exitPosition.z}, ${tempBusinessData.exitRotation}, ${tempBusinessData.exitInterior}, ${tempBusinessData.exitDimension})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().businesses[businessId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {

@@ -8,7 +8,6 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-
 function initVehicleScript() {
 	console.log("[Asshat.Vehicle]: Initializing vehicle script ...");
 	getServerData().vehicles = loadVehiclesFromDatabase();
@@ -25,7 +24,7 @@ function loadVehiclesFromDatabase() {
 	let tempVehicles = [];
 	let dbAssoc;
 	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM veh_main WHERE veh_server = ${serverId} AND veh_deleted = 0`;
+		let dbQueryString = `SELECT * FROM veh_main WHERE veh_server = ${getServerId()} AND veh_deleted = 0`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -82,7 +81,7 @@ function saveVehicleToDatabase(vehicleData) {
 
 		// If vehicle hasn't been added to database, ID will be 0
 		if(vehicleData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server, veh_spawn_lock, veh_buy_price, veh_rent_price) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${serverId}, ${boolToInt(vehicleData.spawnLocked)}, ${vehicleData.buyPrice}, ${vehicleData.rentPrice})`;
+			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server, veh_spawn_lock, veh_buy_price, veh_rent_price) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${getServerId()}, ${boolToInt(vehicleData.spawnLocked)}, ${vehicleData.buyPrice}, ${vehicleData.rentPrice})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getVehicleData(vehicleData.vehicle).databaseId = getDatabaseInsertId(dbConnection);
 		} else {

@@ -26,7 +26,7 @@ function loadHousesFromDatabase() {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM house_main WHERE house_server = ${serverId}`);
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM house_main WHERE house_server = ${getServerId()}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -354,7 +354,7 @@ function saveHouseToDatabase(houseId) {
 	if(dbConnection) {
 		let safeHouseDescription = escapeDatabaseString(dbConnection, tempHouseData.description);
 		if(tempHouseData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw) VALUES (${serverId}, '${safeHouseDescription}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPosition.x}, ${tempHouseData.exitPosition.y}, ${tempHouseData.exitPosition.z}, ${tempHouseData.exitRotation}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension})`;
+			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw) VALUES (${getServerId()}, '${safeHouseDescription}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPosition.x}, ${tempHouseData.exitPosition.y}, ${tempHouseData.exitPosition.z}, ${tempHouseData.exitRotation}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().houses[houseId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
@@ -540,7 +540,7 @@ function sendAllHouseLabelsToPlayer(client) {
 		for(let j = 0 ; j < housesPerNetworkEvent ; j++) {
 			let tempHouseId = (i*housesPerNetworkEvent)+j;
 			if(typeof getServerData().houses[tempHouseId] != "undefined") {
-				tempHouseLabels.push([tempHouseId, getServerData().houses[tempHouseId].entrancePosition, getGlobalConfig().propertyLabelHeight[getServerGame()], getServerData().houses[tempHouseId].description, getServerData().houses[tempHouseId].locked, false]);
+				tempHouseLabels.push([tempHouseId, getServerData().houses[tempHouseId].entrancePosition, getGameConfig().propertyLabelHeight[getServerGame()], getServerData().houses[tempHouseId].description, getServerData().houses[tempHouseId].locked, false]);
 			}
 		}
 		triggerNetworkEvent("ag.houselabel.all", client, tempHouseLabels);
@@ -551,7 +551,7 @@ function sendAllHouseLabelsToPlayer(client) {
 // ---------------------------------------------------------------------------
 
 function sendHouseLabelToPlayers(houseId) {
-	triggerNetworkEvent("ag.houselabel.add", null, houseId, getServerData().houses[houseId].entrancePosition, getGlobalConfig().propertyLabelHeight[getServerGame()], getServerData().houses[houseId].description, getServerData().houses[houseId].locked, false);
+	triggerNetworkEvent("ag.houselabel.add", null, houseId, getServerData().houses[houseId].entrancePosition, getGameConfig().propertyLabelHeight[getServerGame()], getServerData().houses[houseId].description, getServerData().houses[houseId].locked, false);
 }
 
 // ---------------------------------------------------------------------------

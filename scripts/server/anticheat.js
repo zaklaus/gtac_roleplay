@@ -14,13 +14,13 @@ function initAntiCheatScript() {
 }
 // ---------------------------------------------------------------------------
 
-function loadAntiCheatGameScriptWhiteListFromDatabase(serverId) {
+function loadAntiCheatGameScriptWhiteListFromDatabase() {
     console.log(`[Asshat.AntiCheat] Loading whitelisted game scripts ...`);
     let dbConnection = connectToDatabase();
     let tempWhiteListedGameScripts = [];
 
 	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM ac_script_wl WHERE ac_script_wl_enabled = 1 AND ac_script_wl_server = ${serverId}`;
+		let dbQueryString = `SELECT * FROM ac_script_wl WHERE ac_script_wl_enabled = 1 AND ac_script_wl_server = ${getServerId()}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
@@ -39,13 +39,13 @@ function loadAntiCheatGameScriptWhiteListFromDatabase(serverId) {
 
 // ---------------------------------------------------------------------------
 
-function loadAntiCheatGameScriptBlackListFromDatabase(serverId) {
+function loadAntiCheatGameScriptBlackListFromDatabase() {
     console.log(`[Asshat.AntiCheat] Loading blacklisted game scripts ...`);
     let dbConnection = connectToDatabase();
     let tempBlackListedGameScripts = [];
 
 	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM ac_script_bl WHERE ac_script_bl_enabled = 1 AND ac_script_bl_server = ${serverId}`;
+		let dbQueryString = `SELECT * FROM ac_script_bl WHERE ac_script_bl_enabled = 1 AND ac_script_bl_server = ${getServerId()}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {

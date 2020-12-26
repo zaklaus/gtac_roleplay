@@ -67,11 +67,11 @@ function toggleAccountGUICommand(command, params, client) {
 	
 	if(!doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messageClientSuccess(client, `You will now be shown GUI (if enabled on current server)`);
+		messageClientNormal(client, `⚙️ You will now be shown GUI (if enabled on current server)`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messageClientSuccess(client, `You will not be shown GUI anymore. Any GUI stuff will be shown as messages in the chatbox instead.`);
+		messageClientNormal(client, `⚙️ You will not be shown GUI anymore. Any GUI stuff will be shown as messages in the chatbox instead.`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled GUI for their account OFF.`);
 	}
 
@@ -81,7 +81,7 @@ function toggleAccountGUICommand(command, params, client) {
 				triggerNetworkEvent("ag.showLogin", client);
 				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login GUI`);
 			} else {
-				messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
+				messageClient(`👋 Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
 				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
 			}
 		} else {
@@ -89,7 +89,7 @@ function toggleAccountGUICommand(command, params, client) {
 				triggerNetworkEvent("ag.showRegistration", client);
 				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register GUI`);
 			} else {
-				messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
+				messageClient(`👋 Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
 				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
 			}
 		}
@@ -104,12 +104,12 @@ function toggleAccountServerLogoCommand(command, params, client) {
 	
 	if(!doesPlayerHaveLogoEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messageClientSuccess(client, `You will now be shown the server logo (if enabled on current server)`);
+		messageClientNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now [#FFFFFF]be shown the server logo (if enabled on current server)`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled the server logo ON for their account`);
 		triggerNetworkEvent("ag.logo", client, true);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messageClientSuccess(client, `You will not be shown the server logo.`);
+		messageClientNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not [#FFFFFF]be shown the server logo.`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled the server logo OFF for their account`);
 		triggerNetworkEvent("ag.logo", client, false);
 	}
@@ -142,7 +142,7 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messageClientSuccess(client, `You have turned off two-factor authentication for login.`);
+		messageClientSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF [#FFFFFF]two-factor authentication for login.`);
 		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
 	return true;
@@ -436,6 +436,8 @@ function loginSuccess(client) {
 	sendRemovedWorldObjectsToPlayer(client);
 	sendAllBusinessLabelsToPlayer(client);
 	sendAllHouseLabelsToPlayer(client);
+
+	message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 }
 
 // ---------------------------------------------------------------------------
@@ -792,8 +794,8 @@ function saveSessionToDatabase(client) {
 // ---------------------------------------------------------------------------
 
 function createDefaultKeybindsForAccount(accountDatabaseId) {
-	for(let i in getServerConfig().defaultKeybinds) {
-		quickDatabaseQuery(`INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added) VALUES (${accountDatabaseId}, ${getServerConfig().defaultKeybinds[i].key}, '${getServerConfig().defaultKeybinds[i].commandString}', UNIX_TIMESTAMP())`);
+	for(let i in getGlobalConfig().defaultKeybinds) {
+		quickDatabaseQuery(`INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added) VALUES (${accountDatabaseId}, ${getGlobalConfig().defaultKeybinds[i].key}, '${getGlobalConfig().defaultKeybinds[i].commandString}', UNIX_TIMESTAMP())`);
 	}
 }
 

@@ -60,7 +60,7 @@ function createClanCommand(command, params, client) {
 
 	// Create clan without owner. Can set owner with /clanowner afterward
 	createClan(params);
-	messageClientSuccess(client, "The '" + params + "' clan has been created!");
+	messageClientSuccess(client, `The [#FF9900]${params} [#FFFFFF]clan has been created!`);
 }
 
 // ----------------------------------------------------------------------------
@@ -71,24 +71,21 @@ function deleteClanCommand(command, params, client) {
 		return false;
 	}
 
-	if(isNaN(params)) {
-		messageClientError(client, "The clan ID must be a number!");
-		return false;
-	}
+	let clanId = getClanFromParams(params);
 
-	if(!doesClanIDExist(toInteger(params))) {
+	if(!getClanData(clanId)) {
 		messageClientError(client, "That clan ID does not exist!");
 		return false;
 	}
 
-	messageClientSuccess(client, "The '" + getClanData(toInteger(params)).name + "' clan has been deleted!");
-	deleteClan(toInteger(params));
+	messageClientSuccess(client, `The [#FF9900]${getClanData(clanId).name} [#FFFFFF]clan has been deleted!`);
+	deleteClan(clanId);
 }
 
 // ----------------------------------------------------------------------------
 
 function setClanOwnerCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "owner")) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("owner"))) {
 		messageClientError(client, "You must be the clan owner to use this command!");
 		return false;
 	}	
@@ -102,7 +99,7 @@ function setClanOwnerCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanTagCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "clanTag")) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("clanTag"))) {
 		messageClientError(client, "You can not change the clan tag!");
 		return false;
 	}	
@@ -116,7 +113,7 @@ function setClanTagCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanNameCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "clanName")) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("clanName"))) {
 		messageClientError(client, "You can not change the clan name!");
 		return false;
 	}	
@@ -130,7 +127,7 @@ function setClanNameCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanMemberTagCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "memberTag")) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("memberTag"))) {
 		messageClientError(client, "You can not change a clan member's tag!");
 		return false;
 	}	
@@ -144,7 +141,7 @@ function setClanMemberTagCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanRankTagCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "rankTag")) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("rankTag"))) {
 		messageClientError(client, "You can not change a clan ranks's tag!");
 		return false;
 	}	
@@ -158,7 +155,7 @@ function setClanRankTagCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function setClanMemberFlagsCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "memberFlags")) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("memberFlags"))) {
 		messageClientError(client, "You can not change a clan member's permissions!");
 		return false;
 	}	
@@ -167,13 +164,36 @@ function setClanMemberFlagsCommand(command, params, client) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messageClientError(client, "Clan not found!");
+		return false;
+	}
+
+	let targetClient = getClientFromParams(splitParams[0]);
+
+	if(!targetClient) {
+		messageClientError(client, "Clan member not found!");
+		return false;
+	}
+
+	if(!getClanFlagValue(splitParams[1])) {
+		messageClientError(client, "Clan flag not found!");
+		return false;
+	}
+
+	let flagValue = getClanFlagValue(splitParams[1]);	
+	getClientCurrentSubAccount(client).clanFlags = getClientCurrentSubAccount(client).clanFlags | flagValue;
+	messageClientSuccess(client, `You added the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag to [#AAAAAA]${getCharacterFullName(client)}`);	
 }
 
 // ----------------------------------------------------------------------------
 
-function setClanRankFlagsCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "rankFlags")) {
-		messageClientError(client, "You can not change a clan ranks's permissions!");
+function addClanRankFlagCommand(command, params, client) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("rankFlags"))) {
+		messageClientError(client, "You can not change a clan rank's permissions!");
 		return false;
 	}	
 
@@ -181,12 +201,74 @@ function setClanRankFlagsCommand(command, params, client) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messageClientError(client, "Clan not found!");
+		return false;
+	}
+
+	let rankId = getClanRankFromParams(clanId, splitParams[0]);
+
+	if(!getClanRankData(clanId, rankId)) {
+		messageClientError(client, "Clan rank not found!");
+		return false;
+	}
+
+	if(!getClanFlagValue(splitParams[1])) {
+		messageClientError(client, "Clan flag not found!");
+		return false;
+	}	
+
+	let flagValue = getClanFlagValue(splitParams[1]);
+
+	getClanRankData(clanId, rankId).flags = getClanRankData(clanId, rankId).flags | flagValue;
+	messageClientSuccess(client, `You added the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag to rank [#AAAAAA]${getClanRankData(clanId, rankId).name}`);	
+}
+
+// ----------------------------------------------------------------------------
+
+function removeClanRankFlagCommand(command, params, client) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("rankFlags"))) {
+		messageClientError(client, "You can not change a clan rank's permissions!");
+		return false;
+	}	
+
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messageClientError(client, "Clan not found!");
+		return false;
+	}
+
+	let rankId = getClanRankFromParams(clanId, splitParams[0]);
+
+	if(!getClanRankData(clanId, rankId)) {
+		messageClientError(client, "Clan rank not found!");
+		return false;
+	}
+
+	if(!getClanFlagValue(splitParams[1])) {
+		messageClientError(client, "Clan flag not found!");
+		return false;
+	}
+
+	let flagValue = getClanFlagValue(splitParams[1]);
+
+	getClanRankData(clanId, rankId).flags = getClanRankData(clanId, rankId).flags & ~flagValue;
+	messageClientSuccess(client, `You removed the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag from rank [#AAAAAA]${getClanRankData(clanId, rankId).name}`);	
 }
 
 // ----------------------------------------------------------------------------
 
 function setClanMemberTitleCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "memberFlags")) {
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("memberTitle"))) {
 		messageClientError(client, "You can not change a clan member's title!");
 		return false;
 	}	
@@ -195,13 +277,31 @@ function setClanMemberTitleCommand(command, params, client) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messageClientError(client, "Clan not found!");
+		return false;
+	}
+
+	let rankId = getClanRankFromParams(clanId);
+
+	if(!getClanRankData(clanId, rankId)) {
+		messageClientError(client, "Clan rank not found!");
+		return false;
+	}
+
+	let oldMemberTitle = getClientCurrentSubAccount(client).clanTitle;
+	getClientCurrentSubAccount(client).clanTitle = params;
+	messageClientSuccess(client, `You changed the name of [#AAAAAA]${getCharacterFullName(client)} [#FFFFFF]from [#AAAAAA]${oldMemberTitle} [#FFFFFF]to [#AAAAAA]${params}`);	
 }
 
 // ----------------------------------------------------------------------------
 
 function setClanRankTitleCommand(command, params, client) {
-	if(!doesClientHaveClanPermission(client, "rankTitle")) {
-		messageClientError(client, "You can not change a clan ranks's title!");
+	if(!doesClientHaveClanPermission(client, getClanFlagValue("rankTitle"))) {
+		messageClientError(client, "You can not change your clan's rank titles!");
 		return false;
 	}	
 
@@ -209,6 +309,24 @@ function setClanRankTitleCommand(command, params, client) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messageClientError(client, "Clan not found!");
+		return false;
+	}
+
+	let rankId = getClanRankFromParams(clanId);
+
+	if(!getClanRankData(clanId, rankId)) {
+		messageClientError(client, "Clan rank not found!");
+		return false;
+	}
+
+	let oldRankName = getClanRankData(clanId, rankId).name;
+	getClanRankData(clanId, rankId).name = params;
+	messageClientSuccess(client, `You changed the name of rank ${rankId} from [#AAAAAA]${oldRankName} [#FFFFFF]to [#AAAAAA]${params}`);
 }
 
 // ----------------------------------------------------------------------------

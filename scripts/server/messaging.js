@@ -34,19 +34,21 @@ function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
 
 // ---------------------------------------------------------------------------
 
-function messageAdmins(client, messageText, colour = COLOUR_WHITE) {
-    if(client.console) {
-        console.log(`[Asshat.Messaging] (Admins only) ${messageText}`);
-        return true;
-    }
+function messageAdmins(messageText, colour = COLOUR_WHITE) {
+
 
     // 🛡️
 
     let clients = getClients();
     for(let i in clients) {
-        if(doesClientHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
-            messageClient(`${messageText}`, client, colour);
+        if(clients[i].console) {
+            console.log(`[Asshat.Messaging] 🛡️ ${messageText}`);
+        } else {
+            if(doesClientHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
+                messageClient(`${messageText}`, clients[i], colour);
+            }
         }
+
     }
 }
 

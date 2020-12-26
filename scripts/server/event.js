@@ -30,9 +30,6 @@ addEventHandler("OnPlayerConnect", function(event, ipAddress, port) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPlayerJoined", function(event, client) {
-    setTimeout(function() {
-        initClient(client);
-    }, 500);
     message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 });
 

@@ -32,7 +32,7 @@ function loadJobsFromDatabase() {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_main` WHERE `job_enabled` = 1 AND `job_server` = " + toString(serverId));
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM job_main WHERE job_enabled = 1 AND job_server = ${getServerId()}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -465,6 +465,7 @@ function startWorking(client) {
 			break;
 	}
 
+	updatePlayerNameTag(client);
 	//showStartedWorkingTip(client);
 }
 
@@ -554,6 +555,8 @@ function stopWorking(client) {
 		default:
 			break;
 	}
+
+	updatePlayerNameTag(client);
 }
 
 // ---------------------------------------------------------------------------
@@ -663,6 +666,12 @@ function getJobType(jobId) {
 
 // ---------------------------------------------------------------------------
 
+function doesPlayerHaveJobType(client, jobType) {
+	return (getJobType(getClientCurrentSubAccount(client).job) == jobType) ? true : false;
+}
+
+// ---------------------------------------------------------------------------
+
 function getJobData(jobId) {
 	for(let i in getServerData().jobs) {
 		if(getServerData().jobs[i].databaseId == jobId) {
@@ -757,6 +766,21 @@ function isPlayerInJobVehicle(client) {
 
 function isPlayerWorking(client) {
 	return getClientCurrentSubAccount(client).isWorking;
+}
+
+// ---------------------------------------------------------------------------
+
+function startJobRoute(client) {
+	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
+		let busRoute = getRandomBusRoute(getPlayerIsland(client));
+		getPlayerData(client).busRoute = busRoute;
+		getPlayerData(client).busRouteStop = 0;
+		getPlayerData(client).busRouteIsland = getPlayerIsland(client);
+		showCurrentBusStop(client);
+		getPlayerVehicle(client).colour1 = getBusRouteData(getPlayerIsland(client), busRoute).busColour;
+		getPlayerVehicle(client).colour2 = 1;
+		messageClientNormal(client, `🚌 You are now driving the [#AAAAAA]${getBusRouteData(getPlayerIsland(client), busRoute).name} [#FFFFFF]bus route! Drive to the green checkpoint.`);
+	}
 }
 
 // ---------------------------------------------------------------------------

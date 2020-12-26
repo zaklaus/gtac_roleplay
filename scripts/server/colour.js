@@ -45,6 +45,7 @@ let serverColours = {
 		burntYellow: toColour(210, 210, 0, 255),
 		burntOrange: toColour(210, 120, 0, 255),
 		bankGreen: toColour(0, 150, 0, 255),
+		softYellow: toColour(234, 198, 126, 255),
 	}
 };
 

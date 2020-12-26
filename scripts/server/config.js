@@ -224,8 +224,6 @@ let gameConfig = {
 
 function initConfigScript() {
 	console.log("[Asshat.Config]: Initializing config script ...");
-	serverConfig = loadServerConfig(server.game, server.port);
-	applyConfigToServer(serverConfig);
 	console.log("[Asshat.Config]: Config script initialized!");
 }
 
@@ -239,14 +237,14 @@ function loadServerConfigFromGameAndPort(gameId, port) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
-
-				let tempServerConfigData = serverClasses.serverConfigData(dbAssoc);
-
+				let tempServerConfigData = new serverClasses.serverConfigData(dbAssoc);
 				freeDatabaseQuery(dbQuery);
+				return tempServerConfigData;
 			}
 		}
 		disconnectFromDatabase(dbConnection);
 	}	
+	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -265,17 +263,18 @@ function loadServerConfigFromId(tempServerId) {
 			}
 		}
 		disconnectFromDatabase(dbConnection);
-	}	
+	}
+	return false;
 }
 
 // ----------------------------------------------------------------------------
 
-function applyConfigToServer() {
-	server.name = getServerConfig().name;
-	server.password = getServerConfig().password;
-	gta.time.hour = getServerConfig().hour;
-	gta.time.minute = getServerConfig().minute;
-	gta.forceWeather(getServerConfig().weather);
+function applyConfigToServer(tempServerConfig) {
+	server.name = tempServerConfig.name;
+	server.password = tempServerConfig.password;
+	gta.time.hour = tempServerConfig.hour;
+	gta.time.minute = tempServerConfig.minute;
+	gta.forceWeather(tempServerConfig.weather);
 
 	updateServerRules();
 }

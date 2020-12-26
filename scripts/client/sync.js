@@ -15,43 +15,12 @@ let inVehicle = null;
 // ---------------------------------------------------------------------------
 
 addEventHandler("onProcess", function(event, deltaTime) {
-    //if(gta.game == GAME_GTA_IV) {
-        //getVehicles().forEach(function(vehicle) {
-        //    if(vehicle.isSyncer && getEntityData(vehicle, "ag.syncId") != null) {
-        //        //console.log(`Syncing vehicle ${getEntityData(vehicle, "ag.syncId")} to server. Pos: ${vehicle.position.x}, ${vehicle.position.y}, ${vehicle.position.z}`);
-        //        triggerNetworkEvent("ag.veh.sync", getEntityData(vehicle, "ag.syncId"), vehicle.position, vehicle.heading.toFixed(2));
-        //    }
-        //});
-        
-        if(localPlayer != null && localPlayer.getData("ag.spawned") != null) {
-            if(localPlayer.health <= 0) {
-                localPlayer.clearWeapons();
-                triggerNetworkEvent("ag.player.death", localPlayer.position, localPlayer.heading.toFixed(2));
-            } else {
-                triggerNetworkEvent("ag.player.sync", localPlayer.position, localPlayer.heading.toFixed(2));
-
-                /*
-                if(localPlayer.vehicle) {
-                    if(!inVehicle) {
-                        inVehicle = localPlayer.vehicle;
-                        (`Entered vehicle ${inVehicle}`);
-                        if(doesEntityDataExist(vehicle, "ag.syncId")) {
-                            triggerNetworkEvent("ag.player.vehicle", getEntityData(localPlayer.vehicle, "ag.syncId"));
-                            //localPlayer.setData("ag.vehicle", localPlayer.vehicle);
-                        }
-                    }
-                } else {
-                    if(inVehicle != null) {
-                        console.log(`Exited vehicle ${inVehicle}`);
-                        triggerNetworkEvent("ag.player.vehicle", -1);
-                        //localPlayer.removeData("ag.vehicle", localPlayer.vehicle);
-                        inVehicle = null;
-                    }
-                }
-                */
-            }
+    if(localPlayer != null && localPlayer.getData("ag.spawned") != null) {
+        if(localPlayer.health <= 0) {
+            localPlayer.clearWeapons();
+            triggerNetworkEvent("ag.player.death", localPlayer.position, localPlayer.heading.toFixed(2));
         }
-    //}
+    }
 });
 
 // ---------------------------------------------------------------------------

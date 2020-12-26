@@ -26,11 +26,11 @@ function initClassTable() {
 				this.password = "";
 
 				this.newCharacter = {
-					spawnPosition = false,
-					spawnHeading = 0.0,
-					money = 0,
-					bank = 0,
-					skin = 0,
+					spawnPosition: false,
+					spawnHeading: 0.0,
+					money: 0,
+					bank: 0,
+					skin: 0,
 				};
 
 				this.connectCameraPosition = false;
@@ -58,11 +58,11 @@ function initClassTable() {
 					this.name = dbAssoc["svr_name"];
 					this.password = dbAssoc["svr_password"];
 					this.newCharacter = {
-						spawnPosition = toVector3(dbAssoc["svr_newchar_pos_x"], dbAssoc["svr_newchar_pos_y"], dbAssoc["svr_newchar_pos_z"]),
-						spawnHeading = dbAssoc["svr_newchar_rot_z"],
-						money = dbAssoc["svr_newchar_money"],
-						bank = dbAssoc["svr_newchar_bank"],
-						skin = dbAssoc["svr_newchar_skin"],
+						spawnPosition: toVector3(dbAssoc["svr_newchar_pos_x"], dbAssoc["svr_newchar_pos_y"], dbAssoc["svr_newchar_pos_z"]),
+						spawnHeading: dbAssoc["svr_newchar_rot_z"],
+						money: dbAssoc["svr_newchar_money"],
+						bank: dbAssoc["svr_newchar_bank"],
+						skin: dbAssoc["svr_newchar_skin"],
 					},
 	
 					this.connectCameraPosition = toVector3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
@@ -96,10 +96,12 @@ function initClassTable() {
 				this.loggedIn = false;
 
 				this.busRoute = null;
-				this.lastBusStop = null;
+				this.busRouteStop = null;
+				this.busRouteIsland = null;
 
 				this.garbageRoute = null;
-				this.lastGarbageStop = null;
+				this.garbageRouteStop = null;
+				this.garbageRouteIsland = null;
 				
 				this.spawned = false;
 			}
@@ -355,7 +357,7 @@ function initClassTable() {
 			constructor(vehicleAssoc = false, vehicle = false) {
 				// General Info
 				this.databaseId = 0;
-				this.server = serverId;
+				this.server = getServerId();
 				this.model = (vehicle != false) ? vehicle.modelIndex : 0;
 				this.vehicle = vehicle;
 				
@@ -620,4 +622,5 @@ function getClass(className) {
 }
 
 // ---------------------------------------------------------------------------
+
 

@@ -9,8 +9,8 @@
 // ===========================================================================
 
 function initSubAccountScript() {
-	console.log("[Asshat.SubAccount]: Initializing account script ...");
-	console.log("[Asshat.SubAccount]: Account script initialized!");
+	console.log("[Asshat.SubAccount]: Initializing subaccount script ...");
+	console.log("[Asshat.SubAccount]: SubAccount script initialized!");
 }
 
 // ---------------------------------------------------------------------------
@@ -254,6 +254,7 @@ function selectCharacter(client, characterId = -1) {
 		setPlayerVirtualWorld(client, tempSubAccount.dimension);
 	}, client.ping+1000);
 }
+
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 
 // ---------------------------------------------------------------------------
@@ -313,7 +314,13 @@ function getPlayerLastUsedSubAccount(client) {
 // ---------------------------------------------------------------------------
 
 function transferCharacterToServer(subAccountDatabaseId, newServerId) {
-	quickDatabaseQuery(`UPDATE sacct_main SET sacct_server = ${newServerId}, sacct_needs_setup = 1 WHERE sacct_id = ${subAccountDatabaseId} LIMIT 1;`);
+	quickDatabaseQuery(`UPDATE sacct_main SET sacct_server = ${newServerId}, sacct_skin = ${getConfigForServer(newServerId).newCharacter.skin} WHERE sacct_id = ${subAccountDatabaseId} LIMIT 1;`);
+}
+
+// ---------------------------------------------------------------------------
+
+function getCharacterFullName(client) {
+	return `${getClientCurrentSubAccount(client).firstName} ${getClientCurrentSubAccount(client).lastName}`;
 }
 
 // ---------------------------------------------------------------------------

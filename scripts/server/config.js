@@ -38,6 +38,7 @@ let globalConfig = {
 	enterPropertyDistance: 3.0,
 	businessDimensionStart: 1000,
 	houseDimensionStart: 3000,	
+	buyVehicleDriveAwayDistance: 25.0,
 };
 
 let gameConfig = {

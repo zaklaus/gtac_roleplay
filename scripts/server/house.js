@@ -468,8 +468,8 @@ function getHouseInfoCommand(command, params, client) {
 			break;
 
 		case AG_HOUSEOWNER_PLAYER:
-			let accountData = loadAccountFromId(getHouseData(houseId).ownerId);
-			ownerName = `${accountData.name} [${accountData.databaseId}]`;
+			let subAccountData = loadSubAccountFromId(getHouseData(houseId).ownerId);
+			ownerName = `${subAccountData.firstName} ${subAccountData.lastName} [${subAccountData.databaseId}]`;
 			break;
 
 		case AG_HOUSEOWNER_NONE:

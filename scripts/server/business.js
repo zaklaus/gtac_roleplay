@@ -339,8 +339,8 @@ function getBusinessInfoCommand(command, params, client) {
 			break;
 
 		case AG_BIZOWNER_PLAYER:
-			let accountData = loadAccountFromId(getBusinessData(businessId).ownerId);
-			ownerName = `${accountData.name} [${accountData.databaseId}]`;
+			let subAccountData = loadSubAccountFromId(getBusinessData(businessId).ownerId);
+			ownerName = `${subAccountData.firstName} ${subAccountData.lastName} [${subAccountData.databaseId}]`;
 			break;
 
 		case AG_BIZOWNER_NONE:

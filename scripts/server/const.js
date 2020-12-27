@@ -41,7 +41,7 @@ const AG_VEHOWNER_JOB = 2;
 const AG_VEHOWNER_CLAN = 3;
 const AG_VEHOWNER_FACTION = 4;
 const AG_VEHOWNER_PUBLIC = 5;
-const AG_VEHOWNER_DEALERSHIP = 6;
+const AG_VEHOWNER_BIZ = 6;
 
 // Business Owner Types
 const AG_BIZOWNER_NONE = 0;

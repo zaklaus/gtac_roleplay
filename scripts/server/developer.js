@@ -176,25 +176,13 @@ addNetworkHandler("ag.runCodeSuccess", function(client, returnTo, returnVal, cod
 // ---------------------------------------------------------------------------
 
 function submitIdea(client, ideaText) {
-	let position = toVector3(0.0, 0.0, 0.0);
-	let heading = 0.0;
+	let position = (getPlayerVehicle(client)) ? getVehiclePosition(getPlayerVehicle(client)) : getPlayerPosition(client);
+	let heading = (getPlayerVehicle(client)) ? getVehicleHeading(getPlayerVehicle(client)) : getPlayerHeading(client);
 	let session = 0;
 	let databaseId = 0;
 
-	if(getEntityData(client, "ag.position")) {
-		position = getEntityData(client, "ag.position");
-	}
-
-	if(getEntityData(client, "ag.heading")) {
-		heading = getEntityData(client, "ag.heading");
-	}
-
-	if(getEntityData(client, "ag.session")) {
-		session = getEntityData(client, "ag.session");
-	}
-
 	if(client.console) {
-		databaseId = -1
+		databaseId = -1;
 	} else {
 		databaseId = getPlayerData(client).accountData.databaseId;
 	}

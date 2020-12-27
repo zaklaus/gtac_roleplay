@@ -104,6 +104,8 @@ function initClassTable() {
 				this.garbageRouteIsland = null;
 				
 				this.spawned = false;
+
+				this.buyingVehicle = false;
 			}
 		},
 		accountData: class {
@@ -126,7 +128,7 @@ function initClassTable() {
 				this.discordAccount = accountAssoc["acct_discord"];
 				this.settings = accountAssoc["acct_settings"];
 				this.emailAddress = accountAssoc["acct_email"];
-				this.ipAddress = accountAssoc["acct_ip"];
+				this.ipAddress = accountAssoc["ip"];
 				
 				this.notes = [];
 				this.messages = [];

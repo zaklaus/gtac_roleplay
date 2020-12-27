@@ -322,7 +322,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 function loadAccountFromId(accountId, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM acct_main WHERE acct_id = ${accountId} LIMIT 1;`;
+		let dbQueryString = `SELECT *, INET_NTOA(acct_ip) AS ip FROM acct_main WHERE acct_id = ${accountId} LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
@@ -346,7 +346,7 @@ function loadAccountFromId(accountId, fullLoad = false) {
 // ---------------------------------------------------------------------------
 
 function getAccountHashingFunction() {
-	switch(toLowerCase(getServerConfig().accountPasswordHash)) {
+	switch(toLowerCase(getGlobalConfig().accountPasswordHash)) {
 		case "md5":
 			return module.hashing.md5;
 			
@@ -450,7 +450,7 @@ function saveAccountToDatabase(accountData) {
 		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
 		//let safeIRCAccount = dbConnection.escapetoString(accountData.ircAccount);
 
-		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_staff_title='${safeStaffTitle}', acct_mod_flags=${toString(accountData.flags.moderation)}, acct_discord=${toString(accountData.discordAccount)}, acct_email='${safeEmailAddress}', acct_ip='${accountData.ipAddress}' WHERE acct_id=${accountData.databaseId}`;
+		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_staff_title='${safeStaffTitle}', acct_mod_flags=${toString(accountData.flags.moderation)}, acct_discord=${toString(accountData.discordAccount)}, acct_email='${safeEmailAddress}', acct_ip=INET_ATON('${accountData.ipAddress}') WHERE acct_id=${accountData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);

@@ -516,3 +516,24 @@ function adminChatCommand(command, params, client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function givePlayerMoneyCommand(command, params, client) {	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	let splitParams = params.split(" ");
+	let targetClient = getClientFromParams(splitParams[0]);
+	let amount = toInteger(splitParams[1]);
+
+    if(!targetClient) {
+        messageClientError(client, "That player is not connected!");
+        return false;
+	}
+	
+	getClientCurrentSubAccount(targetClient).cash += amount;
+	updatePlayerCash(targetClient);
+	messageClientSuccess(client, `You gave [#AAAAAA]$${amount} [#FFFFFF]to [#AAAAAA]${getCharacterFullName(targetClient)}`);
+	messageClientAlert(client, `An admin gave you [#AAAAAA]$${amount}`);
+}

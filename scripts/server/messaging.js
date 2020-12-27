@@ -35,17 +35,13 @@ function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
 // ---------------------------------------------------------------------------
 
 function messageAdmins(messageText, colour = COLOUR_WHITE) {
-
-
-    // 🛡️
-
     let clients = getClients();
     for(let i in clients) {
         if(clients[i].console) {
             console.log(`[Asshat.Messaging] 🛡️ ${messageText}`);
         } else {
             if(doesClientHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
-                messageClient(`${messageText}`, clients[i], colour);
+                messageClient(`🛡️ ${messageText}`, clients[i], getColourByName("softRed"));
             }
         }
 

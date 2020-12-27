@@ -751,6 +751,33 @@ function jobStartRouteCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function jobStopRouteCommand(command, params, client) {
+    if(!canPlayerUseJobs(client)) { 
+		messageClientError(client, "You are not allowed to use jobs.");
+        return false;
+    }
+
+    if(!isPlayerWorking(client)) {
+		messageClientError(client, "You aren't working yet! Use /startwork first.");
+        return false;
+    }
+
+    if(!doesPlayerHaveJobType(client, AG_JOB_BUS) && !doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
+		messageClientError(client, "Your job doesn't use a route!");
+        return false;
+	}
+
+	if(!isPlayerOnJobRoute(client)) {
+		messageClientError(client, "You aren't on a job route!");
+        return false;		
+	}
+
+	stopJobRoute(client);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
 function isPlayerInJobVehicle(client) {
 	if(getPlayerVehicle(client)) {
 		let vehicle = getPlayerVehicle(client);
@@ -776,11 +803,57 @@ function startJobRoute(client) {
 		getPlayerData(client).busRoute = busRoute;
 		getPlayerData(client).busRouteStop = 0;
 		getPlayerData(client).busRouteIsland = getPlayerIsland(client);
-		showCurrentBusStop(client);
+		getPlayerData(client).busRouteVehicle = getPlayerVehicle(client);
 		getPlayerVehicle(client).colour1 = getBusRouteData(getPlayerIsland(client), busRoute).busColour;
 		getPlayerVehicle(client).colour2 = 1;
+		showCurrentBusStop(client);
 		messageClientNormal(client, `🚌 You are now driving the [#AAAAAA]${getBusRouteData(getPlayerIsland(client), busRoute).name} [#FFFFFF]bus route! Drive to the green checkpoint.`);
+	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
+		let garbageRoute = getRandomBusRoute(getPlayerIsland(client));
+		getPlayerData(client).garbageRoute = garbageRoute;
+		getPlayerData(client).garbageRouteStop = 0;
+		getPlayerData(client).garbageRouteIsland = getPlayerIsland(client);		
+		getPlayerData(client).garbageRouteVehicle = getPlayerVehicle(client);
+		getPlayerVehicle(client).colour1 = getGarbageRouteData(getPlayerIsland(client), garbageRoute).garbageTruckColour;
+		getPlayerVehicle(client).colour2 = 1;
+		showCurrentGarbageStop(client);
+		messageClientNormal(client, `🚌 You are now driving the [#AAAAAA]${getGarbageRouteData(getPlayerIsland(client), garbageRoute).name} [#FFFFFF]garbage route! Drive to the grey checkpoint.`);
 	}
+}
+
+// ---------------------------------------------------------------------------
+
+function stopJobRoute(client) {
+	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
+		respawnVehicle(getPlayerData(client).busRouteVehicle);
+		messageClientAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
+		getPlayerData(client).busRouteVehicle = false;
+		getPlayerData(client).busRoute = false;
+		getPlayerData(client).busRouteStop = false;
+		getPlayerData(client).busRouteIsland = false;
+	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
+		respawnVehicle(getPlayerData(client).garbageRouteVehicle);
+		messageClientAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).garbageRouteIsland, getPlayerData(client).garbageRoute).name} garbage route! Your trashmaster has been returned to the bus depot.`, getColourByName("yellow"));
+		getPlayerData(client).garbageRouteVehicle = false;
+		getPlayerData(client).garbageRoute = false;
+		getPlayerData(client).garbageRouteStop = false;
+		getPlayerData(client).garbageRouteIsland = false;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function isPlayerOnJobRoute(client) {
+	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
+		if(getPlayerData(client).busRoute) {
+			return true;
+		}
+	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
+		if(getPlayerData(client).garbageRoute) {
+			return true;
+		}
+	}
+	return false;
 }
 
 // ---------------------------------------------------------------------------

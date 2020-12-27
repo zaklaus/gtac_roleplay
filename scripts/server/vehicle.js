@@ -153,7 +153,7 @@ function createVehicleCommand(command, params, client) {
 	getServerData().vehicles.push(tempVehicleData);
 	getServerData().vehicles[vehicleDataSlot].syncId = vehicleDataSlot;
 
-	messageAdmins(client, `[#AAAAAA]${client.name} [#FFFFFF]created a [#AAAAAA]${getVehicleName(vehicle)}!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a [#AAAAAA]${getVehicleName(vehicle)}!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -185,7 +185,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 	getServerData().vehicles.push(tempVehicleData);
 	getServerData().vehicles[vehicleDataSlot].syncId = vehicleDataSlot;
 
-	messageAdmins(client, `[#AAAAAA]${client.name} [#FFFFFF]created a temporary ${getVehicleName(vehicle)}!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a temporary ${getVehicleName(vehicle)}!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -285,8 +285,8 @@ function vehicleEngineCommand(command, params, client) {
 	}
 
 	getVehicleData(vehicle).engine = !getVehicleData(vehicle).engine;
-
-	triggerNetworkEvent("ag.veh.engine", getVehicleSyncer(vehicle), getVehicleForNetworkEvent(vehicle), getVehicleData(vehicle).engine);
+	vehicle.engine = getVehicleData(vehicle).engine;
+	//triggerNetworkEvent("ag.veh.engine", null, getVehicleForNetworkEvent(vehicle), getVehicleData(vehicle).engine);
 
 	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s engine ${getOnOffFromBool(getVehicleData(vehicle).engine)}`);
 }
@@ -344,6 +344,7 @@ function setVehicleColourCommand(command, params, client) {
 	let colour2 = toInteger(splitParams[1]) || 0;
 	
 	getClientCurrentSubAccount(client).cash -= getGlobalConfig().resprayVehicleCost;
+	updatePlayerCash(client);
 	vehicle.colour1 = colour1;
 	vehicle.colour2 = colour2;
 	getVehicleData(vehicle).colour1 = colour1;
@@ -396,15 +397,21 @@ function buyVehicleCommand(command, params, client) {
 		return false;		
 	}
 
-	if(getClientCurrentSubAccount(client).cash < vehicleData.buyPrice) {
+	if(getClientCurrentSubAccount(client).cash < getVehicleData(vehicle).buyPrice) {
 		messageClientError(client, `You don't have enough money to buy this vehicle (need $${getVehicleData(vehicle).buyPrice-getClientCurrentSubAccount(client).cash} more!)`);
 		return false;
 	}
+
+	getPlayerData(client).buyingVehicle = vehicle;
 	
-	getClientCurrentSubAccount(client).cash -= getVehicleData(vehicle).buyPrice;
-	setVehicleOwner(AG_VEHOWNER_PLAYER, getClientCurrentSubAccount(client).databaseId);
+	//getClientCurrentSubAccount(client).cash -= getVehicleData(vehicle).buyPrice;
+	//getVehicleData(vehicle).buyPrice = 0;
+	//getVehicleData(vehicle).rentPrice = 0;
+	getVehicleData(vehicle).engine = true;
+	vehicle.engine = true;
 	
-	meActionToNearbyPlayers(client, `buys the ${getVehicleName(vehicle)} and receives a set of vehicle keys!`);
+	meActionToNearbyPlayers(client, `receives a set of keys to test drive the ${getVehicleName(vehicle)} and starts the engine`);
+	messageClientInfo(client, `Drive the vehicle away from the dealership to buy it, or get out to cancel.`);
 }
 
 // ---------------------------------------------------------------------------
@@ -582,14 +589,12 @@ function setVehicleToDealershipCommand(command, params, client) {
 	}
 	
 	let vehicle = getPlayerVehicle(client);
-	let businessId = toInteger(toInteger(params)) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = toInteger(isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
-	let tempBusinessData = getServerData().businesses.filter(b => b.databaseId == businessId)[0];
+	getVehicleData(vehicle).ownerType = AG_VEHOWNER_BIZ;
+	getVehicleData(vehicle).ownerId = getBusinessData(businessId).databaseId;
 
-	getVehicleData(vehicle).ownerType = AG_VEHOWNER_DEALERSHIP;
-	getVehicleData(vehicle).ownerId = businessData.databaseId;
-
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#AAAAAA]${tempBusinessData.name} [#FFFFFF]dealership business`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#AAAAAA]${getBusinessData(businessId).name} [#FFFFFF]business`);
 }
 
 // ---------------------------------------------------------------------------
@@ -715,10 +720,15 @@ function getVehicleInfoCommand(command, params, client) {
 			break;
 
 		case AG_VEHOWNER_PLAYER:
-			let accountData = loadAccountFromId(vehicleData.ownerId);
-			ownerName = `${accountData.name} [${accountData.databaseId}]`;
+			let subAccountData = loadSubAccountFromId(vehicleData.ownerId);
+			ownerName = `${subAccountData.firstName} ${subAccountData.lastName} [${subAccountData.databaseId}]`;
 			ownerType = "player";
 			break;
+
+		case AG_VEHOWNER_BIZ:
+			ownerName = getBusinessData(vehicleData.ownerId).name;
+			ownerType = "business";
+			break;			
 			
 		default:
 			break;
@@ -745,7 +755,7 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 		getVehicleData(vehicle).spawnLocked = spawnLocked;
 	}
 
-	messageAdmins(client, `[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]to spawn [#AAAAAA]${(spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]to spawn [#AAAAAA]${(spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -793,11 +803,11 @@ function stopRentingVehicle(client) {
 function respawnVehicle(vehicle) {
 	let vehicles = getServerData().vehicles;
 	for(let i in vehicles) {
-		if(vehicleData == vehicles[i]) {
+		if(vehicle == vehicles[i].vehicle) {
 			destroyElement(vehicle);
-			let vehicle = spawnVehicle(vehicles[i]);
-			vehicles[i].vehicle = vehicle;
-			setEntityData(vehicle, "ag.dataSlot", i, false);
+			let newVehicle = spawnVehicle(vehicles[i]);
+			vehicles[i].vehicle = newVehicle;
+			setEntityData(newVehicle, "ag.dataSlot", i, false);
 		}
 	}
 }
@@ -886,8 +896,8 @@ function getVehicleOwnerTypeText(ownerType) {
 		case AG_VEHOWNER_PLAYER:
 			return "player";
 
-		case AG_VEHOWNER_DEALERSHIP:
-			return "dealership";			
+		case AG_VEHOWNER_BIZ:
+			return "business";			
 			
 		default:
 			return "unknown";
@@ -901,6 +911,43 @@ function isVehicleOwnedByJob(vehicle, jobId) {
 		return (getVehicleData(vehicle).ownerId == jobId);
 	}
 	return false;
+}
+
+// ----------------------------------------------------------------------------
+
+async function getPlayerNewVehicle(client) {
+	while(true) {
+		if(client.player.vehicle != null) {
+			return client.player.vehicle;
+		}
+		await null;
+	}
+}
+
+// ----------------------------------------------------------------------------
+
+function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, dealershipId) {
+	let vehicleDataSlot = getServerData().vehicles.length;
+
+	let vehicle = gta.createVehicle(model, spawnPosition, spawnRotation);
+	if(!vehicle) {
+		return false;
+	}
+	vehicle.heading = spawnRotation;
+	addToWorld(vehicle);
+	
+	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
+	
+	tempVehicleData.buyPrice = price;
+	tempVehicleData.spawnLocked = true;
+	tempVehicleData.spawnPosition = spawnPosition;
+	tempVehicleData.spawnRotation = spawnRotation;
+	tempVehicleData.ownerType = AG_VEHOWNER_BIZ;
+	tempVehicleData.ownerId = dealershipId;
+
+	setEntityData(vehicle, "ag.dataSlot", vehicleDataSlot, true);
+
+	getServerData().vehicles.push(tempVehicleData);
 }
 
 // ----------------------------------------------------------------------------

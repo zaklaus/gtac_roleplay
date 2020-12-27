@@ -39,31 +39,14 @@ addNetworkHandler("ag.vehicle", function(syncId, model, position, heading, colou
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.veh.lock", function(syncId, lockState) {
-    if(isGTAIV()) {
-        getVehicleFromSyncId(syncId).locked = lockState;
-    } else {
-        getVehicleFromSyncId(syncId).carLock = lockState;
-    }
+addNetworkHandler("ag.veh.engine", function(vehicle, state) {
+    vehicle.engine = state;
 });
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.veh.lights", function(syncId, lightState) {
-    getVehicleFromSyncId(syncId).lights = lightState;
-});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.veh.engine", function(syncId, engineState) {
-    getVehicleFromSyncId(syncId).engine = engineState;
-});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.veh.colours", function(syncId, colour1, colour2) {
-    getVehicleFromSyncId(syncId).colour1 = colour1;
-    getVehicleFromSyncId(syncId).colour2 = colour2;
+addNetworkHandler("ag.veh.lights", function(vehicle, state) {
+    vehicle.lights = state;
 });
 
 // ---------------------------------------------------------------------------
@@ -71,37 +54,5 @@ addNetworkHandler("ag.veh.colours", function(syncId, colour1, colour2) {
 addNetworkHandler("ag.veh.repair", function(syncId) {
     getVehicleFromSyncId(syncId).fix();
 });
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.iv.syncPosition", function(state) {
-    syncPosition = state;
-});
-
-// ---------------------------------------------------------------------------
-
-function getVehicleFromIVSyncId(syncId) {
-    let vehicles = getVehicles();
-    for(let i in vehicles) {
-        if(getEntityData(vehicles[i], "ag.syncId")) {
-            if(getEntityData(vehicles[i], "ag.syncId") == syncId) {
-                return vehicles[i];
-            }
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------
-
-function getVehicleFromSyncId(syncId) {
-    let vehicles = getVehicles();
-    for(let i in vehicles) {
-        if(getEntityData(vehicles[i], "ag.syncId") != null) {
-            if(getEntityData(vehicles[i], "ag.syncId") == syncId) {
-                return vehicles[i];
-            }
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------

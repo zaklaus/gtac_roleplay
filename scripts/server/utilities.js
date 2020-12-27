@@ -1604,7 +1604,7 @@ function getClanFromParams(params) {
 // ---------------------------------------------------------------------------
 
 function updatePlayerCash(client) {
-	triggerNetworkEvent("ag.money", getClientCurrentSubAccount(client).cash);
+	triggerNetworkEvent("ag.money", client, getClientCurrentSubAccount(client).cash);
 }
 
 // ---------------------------------------------------------------------------
@@ -1758,3 +1758,16 @@ function isAtPayAndSpray(position) {
 }
 
 // ----------------------------------------------------------------------------
+
+async function waitUntil(condition) {
+    return new Promise((resolve) => {
+        let interval = setInterval(() => {
+            if (!condition()) {
+                return
+            }
+
+            clearInterval(interval);
+            resolve();
+        }, 1)
+    });
+}

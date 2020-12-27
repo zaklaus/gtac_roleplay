@@ -220,7 +220,7 @@ addNetworkHandler("ag.nextCharacter", function(client) {
 
 // ---------------------------------------------------------------------------
 
-function selectCharacter(client, characterId = -1) {
+async function selectCharacter(client, characterId = -1) {
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		triggerNetworkEvent("ag.characterSelectSuccess", client);
 	}
@@ -252,9 +252,13 @@ function selectCharacter(client, characterId = -1) {
 		setPlayerHeading(client, tempSubAccount.spawnHeading);
 		setPlayerInterior(client, tempSubAccount.interior);
 		setPlayerVirtualWorld(client, tempSubAccount.dimension);
+		setTimeout(function() {
+			updatePlayerCash(client);
+		}, 1000);		
 	}, client.ping+1000);
-}
 
+
+}
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 
 // ---------------------------------------------------------------------------

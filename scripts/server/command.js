@@ -158,6 +158,7 @@ function loadCommandData() {
             
             // Bus/Garbage
             commandData("startroute", jobStartRouteCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("stoproute", jobStopRouteCommand, "", getStaffFlagValue("none"), true, false),
         ],
         keybind: [
             commandData("bindkey", addKeyBindCommand, "<key id/name> <command> [params]", getStaffFlagValue("none"), true, false),
@@ -193,6 +194,8 @@ function loadCommandData() {
             commandData("getstaffflags", getStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true),
             commandData("clearstaffflags", clearStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true),
             commandData("staffflags", allStaffFlagsCommand, "", getStaffFlagValue("manageAdmins"), true, true),
+
+            commandData("givemoney", givePlayerMoneyCommand, "<player name/id> <amount>", getStaffFlagValue("manageAdmins"), true, true),
         ],
         security: [],
         startup: [],
@@ -211,6 +214,7 @@ function loadCommandData() {
             commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),	
             commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, false),	
             commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, false),	
+            commandData("lights", vehicleLightsCommand, "", getStaffFlagValue("none"), true, false),	
 
             commandData("vehowner", setVehicleOwnerCommand, "<player id/name>", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehclan", setVehicleClanCommand, "<clan id/name>", getStaffFlagValue("manageVehicles"), true, true),

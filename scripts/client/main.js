@@ -16,6 +16,29 @@ let showLogo = true;
 let busStopBlip = null;
 let busStopSphere = null;
 
+let smallGameMessageFont = null;
+let smallGameMessageText = "";
+let smallGameMessageColour = COLOUR_WHITE;
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnResourceStart", function(event, resource) {
+	if(resource == thisResource) {
+		let fontStream = openFile("files/fonts/pricedown.ttf");
+		if(fontStream != null) {
+            bigMessageFont = lucasFont.createFont(fontStream, 28.0);
+            smallGameMessageFont = lucasFont.createFont(fontStream, 20.0);
+			fontStream.close();
+		}
+		
+		let logoStream = openFile("files/images/main-logo.png");
+		if(logoStream != null) {
+			mainLogo = drawing.loadPNG(logoStream);
+			logoStream.close();
+		}
+    }
+});
+
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
@@ -141,7 +164,7 @@ function syncVehicle(vehicle) {
         if(lights != vehicle.lights) {
             vehicle.lights = lights;
         }
-    }  
+    }
 
     if(getEntityData(vehicle, "ag.engine") != null) {
         let engine = getEntityData(vehicle, "ag.engine");
@@ -348,7 +371,15 @@ function processEvent(event, deltaTime) {
                 //triggerNetworkEvent("ag.onPlayerExitVehicle");
                 inVehicle = false;
             }           
-        } 
+        }
+        
+        // Using vehicle.engine doesn't disable the vehicle. Need to find another way
+        if(localPlayer.vehicle != null) {
+            if(!localPlayer.vehicle.engine) {
+                localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
+                localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);   
+            }
+        }
     }
 }
 
@@ -383,30 +414,19 @@ addEventHandler("OnDrawnHUD", function (event) {
         */
     }
 
+    if(smallGameMessageFont != null) {
+        if(smallGameMessageFont != "") {
+            smallGameMessageFont.render(smallGameMessageText, [0, gta.height-50], gta.width, 0.5, 0.0, smallGameMessageFont.size, smallGameMessageColour, true, true, false, true);
+        }
+        return false;
+    }
+
     // Draw logo in corner of screen
     if(mainLogo != null && showLogo) {
         let logoPos = toVector2(gta.width-132, gta.height-132);
         let logoSize = toVector2(128, 128);
         drawing.drawRectangle(mainLogo, logoPos, logoSize);
     }
-});
-
-// ---------------------------------------------------------------------------
-
-addEventHandler("OnResourceStart", function(event, resource) {
-	if(resource == thisResource) {
-		let fontStream = openFile("files/fonts/pricedown.ttf");
-		if(fontStream != null) {
-			bigMessageFont = lucasFont.createFont(fontStream, 28.0);
-			fontStream.close();
-		}
-		
-		let logoStream = openFile("files/images/main-logo.png");
-		if(logoStream != null) {
-			mainLogo = drawing.loadPNG(logoStream);
-			logoStream.close();
-		}
-	}
 });
 
 // ---------------------------------------------------------------------------
@@ -497,6 +517,7 @@ addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, ped
 
 addNetworkHandler("ag.showBusStop", function(position, colour) {
     busStopSphere = gta.createSphere(position, 3);
+    busStopSphere.colour = colour;
     busStopBlip = gta.createBlip(position, 0, 2, colour);
 });
 
@@ -511,6 +532,12 @@ addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.money", function(amount) {
+    localPlayer.money = amount;
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
     console.log(`Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
     gta.removeWorldObject(model, position, range);
@@ -519,13 +546,25 @@ addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
+    console.log(sphere);
     if(sphere == busStopSphere) {
         destroyElement(busStopSphere);
         destroyElement(busStopBlip);
         busStopSphere = null;
         busStopBlip = null;
-        triggerNetworkEvent("ag.arrivedAtBusStop");
+        triggerNetworkEvent("ag.arrivedAtBusStop", true);
     }
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.smallGameMessage", function(text, colour, duration) {
+    smallGameMessageColour = colour;
+    smallGameMessageText = text;
+    setTimeout(function() {
+        smallGameMessageText = "";
+        smallGameMessageColour = COLOUR_WHITE;
+    }, duration);
 });
 
 // ---------------------------------------------------------------------------

@@ -780,7 +780,7 @@ function getPlayerFromParams(params) {
 	} else {
 		let playerId = toInteger(params) || 0;
 		if(typeof clients[playerId] != "undefined") {
-			return clients[playerId].player;
+			return clients[playerId];
 		}			
 	}
 	

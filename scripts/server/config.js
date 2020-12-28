@@ -33,6 +33,7 @@ let globalConfig = {
 		new serverClasses.keyBindData(false, toInteger(SDLK_l), "lock"),
 		new serverClasses.keyBindData(false, toInteger(SDLK_f), "enter"),
 		new serverClasses.keyBindData(false, toInteger(SDLK_g), "passenger"),
+		new serverClasses.keyBindData(false, toInteger(SDLK_m), "cursor"),
 	],
 	exitPropertyDistance: 3.0,
 	enterPropertyDistance: 3.0,
@@ -392,7 +393,7 @@ function setWeatherCommand(command, params, client) {
     
     gta.forceWeather(toInteger(weatherId));
 
-    messageAdminAction(`${client.name} set the weather to [#AAAAAA]${weatherNames[server.game][toInteger(weatherId)]}`);
+    messageAdminAction(`${client.name} set the weather to [#AAAAAA]${weatherNames[getServerGame()][toInteger(weatherId)]}`);
     updateServerRules();
 	return true;
 }

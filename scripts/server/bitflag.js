@@ -32,7 +32,8 @@ let serverBitFlagKeys = {
 		"manageClans", 
 		"manageServer", 
 		"manageAdmins",
-		"developer"
+		"manageJobs",
+		"developer",
 	],
 	moderationFlagKeys: [
 		"none", 

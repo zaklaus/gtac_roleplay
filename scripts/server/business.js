@@ -161,15 +161,15 @@ function createBusiness(name, entrancePosition, exitPosition, entrancePickupMode
 // ---------------------------------------------------------------------------
 
 function deleteBusinessCommand(command, params, client) {
-	let businessId = toInteger(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = toInteger(params) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messageClientError("Business not found!");
 		return false;
 	}		
 
-	deleteBusiness(businessId);
 	messageClientSuccess(client, `Business [#0099FF]${tempBusinessData.name} [#FFFFFF]deleted!`);
+	deleteBusiness(businessId, getPlayerData(client).accountData.databaseId);
 }
 
 // ---------------------------------------------------------------------------
@@ -203,7 +203,7 @@ function setBusinessNameCommand(command, params, client) {
 function setBusinessOwnerCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
-	let newBusinessOwner = getClientFromParams(params);
+	let newBusinessOwner = getPlayerFromParams(params);
 	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!newBusinessOwner) {
@@ -659,14 +659,14 @@ function createBusinessExitBlip(businessId) {
 
 // ---------------------------------------------------------------------------
 
-function deleteBusiness(businessId) {
+function deleteBusiness(businessId, deletedBy = 0) {
 	let tempBusinessData = getServerData().businesses[businessId];
 
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `UPDATE biz_main SET biz_deleted = 1 AND biz_who_deleted = ${getPlayerData(client).accountData.databaseId} AND biz_when_deleted = UNIX_TIMESTAMP() WHERE biz_id = ${tempBusinessData.databaseId} LIMIT 1`);
+		dbQuery = queryDatabase(dbConnection, `UPDATE biz_main SET biz_deleted = 1 AND biz_who_deleted = ${deletedBy} AND biz_when_deleted = UNIX_TIMESTAMP() WHERE biz_id = ${tempBusinessData.databaseId} LIMIT 1`);
 		if(dbQuery) {
 			freeDatabaseQuery(dbQuery);
 		}

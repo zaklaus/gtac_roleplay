@@ -81,7 +81,7 @@ function saveSubAccountToDatabase(subAccountData) {
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
-		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${getPlayerInterior(client)}, sacct_vw=${getPlayerVirtualWorld(client)} WHERE sacct_id=${subAccountData.databaseId}`;
+		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension} WHERE sacct_id=${subAccountData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);

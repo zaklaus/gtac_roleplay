@@ -45,6 +45,7 @@ function loadCommandData() {
             commandData("delbiz", deleteBusinessCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, true),
             commandData("addbizloc", createBusinessLocationCommand, "<type> <business id> <name>", getStaffFlagValue("manageBusinesses"), true, false),
             commandData("delbizloc", deleteBusinessLocationCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, false),
+            commandData("bizreloadall", reloadAllBusinessesCommand, "", getStaffFlagValue("manageBusinesses"), true, false),
 
             commandData("bizlock", lockBusinessCommand, "", getStaffFlagValue("none"), true, true),
             commandData("bizfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true),
@@ -127,6 +128,8 @@ function loadCommandData() {
         house: [
             commandData("addhouse", createHouseCommand, "<description>", getStaffFlagValue("manageHouses"), true, false),
             commandData("delhouse", deleteHouseCommand, "", getStaffFlagValue("manageHouses"), true, false),
+            commandData("housereloadall", reloadAllHousesCommand, "", getStaffFlagValue("manageHouses"), true, false),
+
             commandData("houseinfo", getHouseInfoCommand, "", getStaffFlagValue("none"), true, false),
             commandData("housedesc", setHouseDescriptionCommand, "", getStaffFlagValue("none"), true, false),
             commandData("houselock", lockUnlockHouseCommand, "", getStaffFlagValue("none"), true, false),
@@ -147,7 +150,6 @@ function loadCommandData() {
             commandData("quitjob", quitJobCommand, "", getStaffFlagValue("none"), true, false),
             commandData("uniform", jobUniformCommand, "[uniform]", getStaffFlagValue("none"), true, false),
             commandData("equip", jobEquipmentCommand, "[equipment]", getStaffFlagValue("none"), true, false),
-            commandData("reloadjobs", reloadAllJobsCommand, "", getStaffFlagValue("developer"), true, false),
 
             commandData("radio", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
             commandData("r", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
@@ -179,6 +181,7 @@ function loadCommandData() {
             commandData("jobaddplayerbl", addPlayerToJobBlackListCommand, "<player name/id> [job id]", getStaffFlagValue("manageJobs"), true, false),
             commandData("jobdelplayerbl", removePlayerFromJobBlackListCommand, "<player name/id> [job id]", getStaffFlagValue("manageJobs"), true, false),
             commandData("jobdelplayerbl", removePlayerFromJobWhiteListCommand, "<player name/id> [job id]", getStaffFlagValue("manageJobs"), true, false),
+            commandData("jobreloadall", reloadAllJobsCommand, "", getStaffFlagValue("manageJobs"), true, false),
         ],
         keybind: [
             commandData("bindkey", addKeyBindCommand, "<key id/name> <command> [params]", getStaffFlagValue("none"), true, false),

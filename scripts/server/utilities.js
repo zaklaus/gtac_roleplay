@@ -8,6 +8,20 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+let disconnectReasons = [
+	"Lost Connection",
+	"Disconnected",
+	"Unsupported Client",
+	"Wrong Game",
+	"Incorrect Password",
+	"Unsupported Executable",
+	"Disconnected",
+	"Banned",
+	"Failed",
+	"Invalid Name",
+	"Crashed"
+];
+
 // ---------------------------------------------------------------------------
 
 let policeStations = [
@@ -1771,3 +1785,20 @@ async function waitUntil(condition) {
         }, 1)
     });
 }
+
+// ----------------------------------------------------------------------------
+
+function resetClientStuff(client) {
+	if(isClientOnJobRoute(client)) {
+		stopJobRoute(client);
+	}
+
+	if(getClientData(client).rentingVehicle) {
+		stopRentingVehicle(client);
+	}
+
+	getClientData(client).lastVehicle = null;
+}
+
+// ----------------------------------------------------------------------------
+

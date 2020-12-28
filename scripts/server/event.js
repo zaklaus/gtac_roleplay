@@ -143,6 +143,10 @@ async function playerEnteredVehicle(client) {
     await waitUntil(() => client.player.vehicle != null);
     let vehicle = client.player.vehicle;
 
+    if(!getVehicleData(vehicle)) {
+        return false;
+    }
+
     console.log(`[Asshat.Event] ${getClientDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
     getPlayerData(client).lastVehicle = vehicle;
@@ -197,6 +201,10 @@ async function playerEnteredVehicle(client) {
 
 function playerExitedVehicle(client) {
     let vehicle = getPlayerData(client).lastVehicle;
+
+    if(!getVehicleData(vehicle)) {
+        return false;
+    }
 
     console.log(`[Asshat.Event] ${getClientDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 

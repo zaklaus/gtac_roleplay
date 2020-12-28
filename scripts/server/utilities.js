@@ -1782,7 +1782,7 @@ function isPlayerSpawned(client) {
 
 // ----------------------------------------------------------------------------
 
-function getLockedUnlockedFromBool(boolVal) {
+function getLockedUnlockedTextFromBool(boolVal) {
 	return (boolVal) ? "locked" : "unlocked";
 }
 

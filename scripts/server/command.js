@@ -193,6 +193,7 @@ function loadCommandData() {
             commandData("bug", submitBugReportCommand, "<message>", getStaffFlagValue("none"), true, true),
             commandData("enter", enterExitPropertyCommand, "", getStaffFlagValue("none"), true, true),
             commandData("exit", enterExitPropertyCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("cursor", toggleMouseCursorCommand, "", getStaffFlagValue("none"), true, false),
         ],
         moderation: [
             commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),

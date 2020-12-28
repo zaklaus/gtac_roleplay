@@ -131,6 +131,40 @@ addNetworkHandler("ag.bizlabel.all", function(tempBusinessLabels) {
 
 // ----------------------------------------------------------------------------
 
+addNetworkHandler("ag.joblabel.all", function(tempJobLabels) {
+    for(let i in tempJobLabels) {
+        jobLabels.push(new jobLabelData(tempJobLabels[i][0], tempJobLabels[i][1], tempJobLabels[i][2], tempJobLabels[i][3], tempJobLabels[i][4], tempJobLabels[i][5]));
+    }
+    return true;
+});
+
+// ----------------------------------------------------------------------------
+
+addNetworkHandler("ag.joblabel.add", function(labelId, position, height, name, locked, hidden) {
+    jobLabels.push(new jobLabelData(labelId, position, height, name, locked, hidden));
+    return true;
+});
+
+// ----------------------------------------------------------------------------
+
+addNetworkHandler("ag.joblabel.del", function(labelId) {
+    for(let i in jobLabels) {
+        if(jobLabels[i].labelId == labelId) {
+            jobLabels.splice(i, 1);
+        }
+    }
+    return true;
+});
+
+// ----------------------------------------------------------------------------
+
+addNetworkHandler("ag.joblabel.name", function(labelId, name) {
+    getJobLabelData(labelId).name = name;
+    return true;
+});
+
+// ----------------------------------------------------------------------------
+
 addNetworkHandler("ag.houselabel.add", function(labelId, position, height, name, locked, hidden) {
     houseLabels.push(new houseLabelData(labelId, position, height, name, locked, hidden));
     return true;
@@ -141,15 +175,6 @@ addNetworkHandler("ag.houselabel.add", function(labelId, position, height, name,
 addNetworkHandler("ag.houselabel.all", function(tempHouseLabels) {
     for(let i in tempHouseLabels) {
         houseLabels.push(new houseLabelData(tempHouseLabels[i][0], tempHouseLabels[i][1], tempHouseLabels[i][2], tempHouseLabels[i][3], tempHouseLabels[i][4], tempHouseLabels[i][5]));
-    }
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.joblabel.all", function(tempJobLabels) {
-    for(let i in tempJobLabels) {
-        jobLabels.push(new jobLabelData(tempJobLabels[i][0], tempJobLabels[i][1], tempJobLabels[i][2], tempJobLabels[i][3], tempJobLabels[i][4], tempJobLabels[i][5]));
     }
     return true;
 });
@@ -195,6 +220,16 @@ function getHouseLabelData(labelId) {
     for(let i in houseLabels) {
         if(houseLabels[i].labelId == labelId) {
             return houseLabels[i];
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
+
+function getJobLabelData(labelId) {
+    for(let i in jobLabels) {
+        if(jobLabels[i].labelId == labelId) {
+            return jobLabels[i];
         }
     }
 }

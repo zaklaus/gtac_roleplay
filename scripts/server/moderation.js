@@ -188,7 +188,7 @@ function gotoPlayerCommand(command, params, client) {
     }
 	
 	//message(`[#996600][ADMIN]: [#FFFFFF]${toString(targetClient.name)} has been un-frozen by an admin!`);
-	
+	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	triggerNetworkEvent("ag.position", client, getPosBehindPos(getPlayerPosition(targetClient), getPlayerHeading(targetClient), 2));
 	triggerNetworkEvent("ag.heading", client, getPlayerHeading(targetClient));
 	
@@ -222,6 +222,7 @@ function gotoVehicleCommand(command, params, client) {
 
 	let vehicle = getServerData().vehicles[toInteger(params)].vehicle;
 	
+	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	triggerNetworkEvent("ag.position", client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
 	
 	messageClientSuccess(client, `You teleported to vehicle [#AAAAAA]${toInteger(params)}`);
@@ -250,7 +251,8 @@ function gotoJobLocationCommand(command, params, client) {
 		messageClientError(client, `That location ID does not exist!`);
 		return false;
 	}	
-	
+
+	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	setPlayerPosition(client, getJobData(jobId).locations[jobLocationId].position);
 	setPlayerInterior(client, getJobData(jobId).locations[jobLocationId].interior);
 	setPlayerVirtualWorld(client, getJobData(jobId).locations[jobLocationId].dimension);
@@ -266,20 +268,21 @@ function gotoPositionCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
+	let splitParams = params.replace(",", "").split(" ");
 	let x = splitParams[0] || getPlayerPosition(client).x;
 	let y = splitParams[1] || getPlayerPosition(client).y;
 	let z = splitParams[2] || getPlayerPosition(client).z;
-	let int = splitParams[3] || getPlayerInterior(client).x;
+	let int = splitParams[3] || getPlayerInterior(client);
 	let vw = splitParams[4] || getPlayerVirtualWorld(client);
 
-	let newPosition = toVector3(x, y, z);
+	let newPosition = toVector3(Number(x), Number(y), Number(z));
 
 	let jobId = getJobFromParams(splitParams[0]) || getClosestJobLocation(getPlayerPosition(client)).job;
 
+	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	setPlayerPosition(client, newPosition);
-	setPlayerInterior(client, int);
-	setPlayerVirtualWorld(client, vw);
+	setPlayerInterior(client, Number(int));
+	setPlayerVirtualWorld(client, Number(vw));
 	
 	messageClientSuccess(client, `You teleported to coordinates [#AAAAAA]${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
 }
@@ -292,7 +295,7 @@ function teleportForwardCommand(command, params, client) {
 		return false;
 	}
 	
-	triggerNetworkEvent("ag.position", client, getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	setPlayerPosition(client, getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
 	messageClientSuccess(client, `You teleported forward ${params} meters`);
 }
@@ -305,7 +308,7 @@ function teleportBackwardCommand(command, params, client) {
 		return false;
 	}
 	
-	triggerNetworkEvent("ag.position", client, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	setPlayerPosition(client, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
 	messageClientSuccess(client, `You teleported backward [#AAAAAA]${params} [#FFFFFF]meters`);
 }
@@ -318,7 +321,7 @@ function teleportLeftCommand(command, params, client) {
 		return false;
 	}
 	
-	triggerNetworkEvent("ag.position", client, getPosToLeftOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	setPlayerPosition(client, getPosToLeftOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
 	messageClientSuccess(client, `You teleported left [#AAAAAA]${params} [#FFFFFF]meters`);
 }
@@ -331,7 +334,7 @@ function teleportUpCommand(command, params, client) {
 		return false;
 	}
 	
-	triggerNetworkEvent("ag.position", client, getPosAbovePos(getPlayerPosition(client), params));
+	setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), params));
 	
 	messageClientSuccess(client, `You teleported up [#AAAAAA]${params} [#FFFFFF]meters`);
 }

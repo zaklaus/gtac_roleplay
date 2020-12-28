@@ -13,12 +13,24 @@ let mainLogo = null;
 
 let showLogo = true;
 
-let busStopBlip = null;
-let busStopSphere = null;
+let jobRouteStopBlip = null;
+let jobRouteStopSphere = null;
 
 let smallGameMessageFont = null;
 let smallGameMessageText = "";
 let smallGameMessageColour = COLOUR_WHITE;
+let smallGameMessageTimer = null;
+
+let inSphere = false;
+
+let jobType = -1;
+
+// ---------------------------------------------------------------------------
+
+addEvent("OnLocalPlayerEnterSphere", 1);
+addEvent("OnLocalPlayerExitSphere", 1);
+addEvent("OnLocalPlayerEnterVehicle", 2);
+addEvent("OnLocalPlayerExitVehicle", 2); 
 
 // ---------------------------------------------------------------------------
 
@@ -85,12 +97,7 @@ addEventHandler("onPickupCollected", function(event, pickup, ped) {
 // ---------------------------------------------------------------------------
 
 bindEventHandler("onResourceStart", thisResource, function(event, resource) {
-    triggerNetworkEvent("ag.clientStarted");
-
-    addEvent("OnLocalPlayerEnterSphere", 1);
-    addEvent("OnLocalPlayerExitSphere", 1);
-    addEvent("OnLocalPlayerEnterVehicle", 2);
-    addEvent("OnLocalPlayerExitVehicle", 2);   
+    triggerNetworkEvent("ag.clientStarted");  
     
     if(gta.game == GAME_GTA_SA) {
         gta.setDefaultInteriors(false);
@@ -343,32 +350,45 @@ function initLocalPlayer(player) {
 
 function processEvent(event, deltaTime) {
     if(localPlayer != null) {
+        let position = localPlayer.position;
+        if(localPlayer.vehicle) {
+            position = localPlayer.vehicle.position;
+        }
+
         getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
-            if(localPlayer.position.distance(sphere.position) <= sphere.radius) {
-                if(localPlayer.getData("ag.inSphere") == null) {
-                    localPlayer.setData("ag.inSphere", sphere);
-                    triggerEvent("OnLocalPlayerEnterSphere", sphere, sphere);
-                    triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
+            if(position.distance(sphere.position) <= sphere.radius) {
+                if(!inSphere) {
+                    inSphere = sphere;
+                    triggerEvent("OnLocalPlayerEnterSphere", null, sphere);
+                    //triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
                 }
             } else {
-                if(localPlayer.getData("ag.inSphere") != null) {
-                    localPlayer.removeData("ag.inSphere");
-                    triggerEvent("OnLocalPlayerExitSphere", sphere, sphere);
-                    triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
+                if(inSphere) {
+                    inSphere = false;
+                    triggerEvent("OnLocalPlayerExitSphere", null, sphere);
+                    //triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
                 }           
             }
         });
 
+        if(gta.game == GAME_GTA_SA) {
+            if(jobRouteStopSphere != null) {
+                if(position.distance(jobRouteStopSphere.position) <= 2.0) { 
+                    enteredJobRouteSphere();
+                }
+            }
+        }
+
         if(localPlayer.vehicle) {
             if(!inVehicle) {
                 inVehicle = localPlayer.vehicle;
-                //triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
+                triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
                 triggerNetworkEvent("ag.onPlayerEnterVehicle");
             }
         } else {
             if(inVehicle) {
-                //triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
-                //triggerNetworkEvent("ag.onPlayerExitVehicle");
+                triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
+                triggerNetworkEvent("ag.onPlayerExitVehicle");
                 inVehicle = false;
             }           
         }
@@ -516,9 +536,16 @@ addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, ped
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showBusStop", function(position, colour) {
-    busStopSphere = gta.createSphere(position, 3);
-    busStopSphere.colour = colour;
-    busStopBlip = gta.createBlip(position, 0, 2, colour);
+    if(gta.game == GAME_GTA_SA) {
+        jobRouteStopSphere = gta.createPickup(1318, position, 1);    
+    } else {
+        jobRouteStopSphere = gta.createSphere(position, 3);
+        jobRouteStopSphere.colour = colour;
+    }
+
+
+    jobRouteStopBlip = gta.createBlip(position, 0, 2, colour);    
+
 });
 
 // ---------------------------------------------------------------------------
@@ -546,25 +573,58 @@ addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
-    console.log(sphere);
-    if(sphere == busStopSphere) {
-        destroyElement(busStopSphere);
-        destroyElement(busStopBlip);
-        busStopSphere = null;
-        busStopBlip = null;
-        triggerNetworkEvent("ag.arrivedAtBusStop", true);
+    if(sphere == jobRouteStopSphere) {
+        enteredJobRouteSphere();
     }
 });
 
 // ---------------------------------------------------------------------------
 
+//addEventHandler("OnPickupCollected", function(event, pickup, ped) {
+//    if(localPlayer != null) {
+//        if(ped == localPlayer) {
+//            if(pickup == jobRouteStopSphere) {
+//                triggerNetworkEvent("ag.arrivedAtBusStop");
+//                destroyElement(jobRouteStopSphere);
+//                destroyElement(jobRouteStopBlip);
+//                jobRouteStopSphere = null;
+//                jobRouteStopBlip = null;
+//            }
+//        }
+//    }
+//});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.smallGameMessage", function(text, colour, duration) {
+    if(smallGameMessageText != "") {
+        clearTimeout(smallGameMessageTimer);
+    }
+
     smallGameMessageColour = colour;
     smallGameMessageText = text;
-    setTimeout(function() {
+
+    smallGameMessageTimer = setTimeout(function() {
         smallGameMessageText = "";
         smallGameMessageColour = COLOUR_WHITE;
+        smallGameMessageTimer = null;
     }, duration);
+});
+
+// ---------------------------------------------------------------------------
+
+function enteredJobRouteSphere() {
+    triggerNetworkEvent("ag.arrivedAtBusStop");
+    destroyElement(jobRouteStopSphere);
+    destroyElement(jobRouteStopBlip);
+    jobRouteStopSphere = null;
+    jobRouteStopBlip = null;
+}
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.jobType", function(tempJobType) {
+    jobType = tempJobType;
 });
 
 // ---------------------------------------------------------------------------

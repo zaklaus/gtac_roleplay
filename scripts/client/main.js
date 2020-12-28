@@ -54,20 +54,14 @@ addEventHandler("OnResourceStart", function(event, resource) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
-    //if(gta.game < GAME_GTA_IV) {
-        gta.fadeCamera(true);
-        gta.setCameraLookAt(cameraPosition, cameraLookat, true);
-        //gta.setGenerateCarsAroundCamera(true);
-    //}
+    gta.fadeCamera(true);
+    gta.setCameraLookAt(cameraPosition, cameraLookat, true);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.restoreCamera", function() {
-    //if(gta.game < GAME_GTA_IV) {
-        gta.restoreCamera(true);
-        //gta.setGenerateCarsAroundCamera(false);
-    //}
+    gta.restoreCamera(true);
 });
 
 // ---------------------------------------------------------------------------
@@ -519,6 +513,12 @@ addNetworkHandler("ag.freeze", function(state) {
 
 addNetworkHandler("ag.control", function(controlState, cursorState = false) {
     gui.showCursor(cursorState, controlState);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.cursortoggle", function() {
+    gui.showCursor(!gui.cursorEnabled, false);
 });
 
 // ---------------------------------------------------------------------------

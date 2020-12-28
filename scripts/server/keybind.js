@@ -257,6 +257,14 @@ function getPlayerKeyBindForKey(client, key) {
 // ---------------------------------------------------------------------------
 
 function playerUsedKeyBind(client, key) {
+    if(!isClientLoggedIn(client)) {
+        return false;
+    }
+
+    if(!isPlayerSpawned(client)) {
+        return false;
+    }    
+
     console.log(`[Asshat.KeyBind] ${getClientDisplayForConsole(client)} used keybind ${sdl.getKeyName(key)} (${key})`);
     if(doesPlayerHaveKeyBindForKey(client, key)) {
         let keyBindData = getPlayerKeyBindForKey(client, key);
@@ -304,3 +312,5 @@ function getKeyIdFromParams(params) {
         }
     }
 }
+
+// ---------------------------------------------------------------------------

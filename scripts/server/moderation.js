@@ -210,7 +210,7 @@ function gotoPlayerCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function teleportToVehicleCommand(command, params, client) {
+function gotoVehicleCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -225,6 +225,63 @@ function teleportToVehicleCommand(command, params, client) {
 	triggerNetworkEvent("ag.position", client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
 	
 	messageClientSuccess(client, `You teleported to vehicle [#AAAAAA]${toInteger(params)}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function gotoJobLocationCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+
+	let jobId = getJobFromParams(splitParams[0]) || getClosestJobLocation(getPlayerPosition(client)).job;
+
+	if(!getJobData(jobId)) {
+		messageClientError(client, `That job does not exist!`);
+		return false;
+	}
+
+	let jobLocationId = splitParams[1] || 0;
+
+	if(typeof getJobData(jobId).locations[jobLocationId] == "undefined") {
+		messageClientError(client, `That location ID does not exist!`);
+		return false;
+	}	
+	
+	setPlayerPosition(client, getJobData(jobId).locations[jobLocationId].position);
+	setPlayerInterior(client, getJobData(jobId).locations[jobLocationId].interior);
+	setPlayerVirtualWorld(client, getJobData(jobId).locations[jobLocationId].dimension);
+	
+	messageClientSuccess(client, `You teleported to location [#AAAAAA]${jobLocationId} [#FFFFFF]for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
+function gotoPositionCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let x = splitParams[0] || getPlayerPosition(client).x;
+	let y = splitParams[1] || getPlayerPosition(client).y;
+	let z = splitParams[2] || getPlayerPosition(client).z;
+	let int = splitParams[3] || getPlayerInterior(client).x;
+	let vw = splitParams[4] || getPlayerVirtualWorld(client);
+
+	let newPosition = toVector3(x, y, z);
+
+	let jobId = getJobFromParams(splitParams[0]) || getClosestJobLocation(getPlayerPosition(client)).job;
+
+	setPlayerPosition(client, newPosition);
+	setPlayerInterior(client, int);
+	setPlayerVirtualWorld(client, vw);
+	
+	messageClientSuccess(client, `You teleported to coordinates [#AAAAAA]${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
 }
 
 // ---------------------------------------------------------------------------

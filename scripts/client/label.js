@@ -12,12 +12,17 @@
 
 let businessLabels = [];
 let houseLabels = [];
+let jobLabels = [];
 
 let propertyLabelNameFont = null;
 let propertyLabelLockedFont = null;
 
+let jobNameLabelFont = null;
+let jobHelpLabelFont = null;
+
 let unlockedColour = toColour(50, 205, 50, 255);
 let lockedColour = toColour(205, 92, 92, 255);
+let jobHelpColour = toColour(234, 198, 126, 255);
 
 // ----------------------------------------------------------------------------
 
@@ -54,14 +59,32 @@ class houseLabelData {
 
 // ----------------------------------------------------------------------------
 
+class jobLabelData {
+    constructor(labelId, position, height, name, tempJobType, hidden) {
+        this.labelId = labelId;
+        this.position = position;
+        this.height = height;
+        this.name = name;
+        this.jobType = tempJobType;
+        this.hidden = hidden;
+    }
+}
+
+
+// ----------------------------------------------------------------------------
+
 addEventHandler("OnDrawnHUD", function(event) {
 	for(let i in businessLabels) {
 		renderPropertyLabel(businessLabels[i], true);
     }
     
 	for(let i in houseLabels) {
-		renderPropertyLabel(houseLabels[i], true);
-    } 
+		renderPropertyLabel(houseLabels[i], false);
+    }
+
+	for(let i in jobLabels) {
+		renderJobLabel(jobLabels[i]);
+    }    
 });
 
 // ----------------------------------------------------------------------------
@@ -118,6 +141,15 @@ addNetworkHandler("ag.houselabel.add", function(labelId, position, height, name,
 addNetworkHandler("ag.houselabel.all", function(tempHouseLabels) {
     for(let i in tempHouseLabels) {
         houseLabels.push(new houseLabelData(tempHouseLabels[i][0], tempHouseLabels[i][1], tempHouseLabels[i][2], tempHouseLabels[i][3], tempHouseLabels[i][4], tempHouseLabels[i][5]));
+    }
+    return true;
+});
+
+// ----------------------------------------------------------------------------
+
+addNetworkHandler("ag.joblabel.all", function(tempJobLabels) {
+    for(let i in tempJobLabels) {
+        jobLabels.push(new jobLabelData(tempJobLabels[i][0], tempJobLabels[i][1], tempJobLabels[i][2], tempJobLabels[i][3], tempJobLabels[i][4], tempJobLabels[i][5]));
     }
     return true;
 });
@@ -207,6 +239,45 @@ function renderPropertyLabel(labelData, isBusiness) {
     text = labelData.name;
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
     propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);       
+}
+
+// ----------------------------------------------------------------------------
+
+function renderJobLabel(labelData) {
+    if(labelData.hidden) {
+        return false;
+    }
+
+    if(localPlayer == null) {
+        return false;
+    }
+
+	if(jobLabelNameFont == null) {
+		return false;
+    }
+    
+	if(jobLabelLockedFont == null) {
+		return false;
+	}
+    
+    if(localPlayer.position.distance(labelData.position) > 7.5) {
+        return false;
+    }
+
+    let tempPosition = labelData.position;
+    let screenPosition = getScreenFromWorldPosition(tempPosition);
+
+    screenPosition.y -= labelData.height;
+
+    let text = (labelData.jobType == jobType) ? "Use /startwork to go on duty" : "Use /takejob to work for this job";
+    let size = jobHelpLabelFont.measure(text, game.width, 0.0, 0.0, jobHelpLabelFont.size, true, true);
+    jobHelpLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobHelpLabelFont.size, COLOUR_YELLOW, false, true, false, true);       
+
+    screenPosition.y -= 18;
+
+    text = labelData.name;
+    size = jobNameLabelFont.measure(text, game.width, 0.0, 0.0, jobNameLabelFont.size, true, true);
+    jobNameLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobNameLabelFont.size, COLOUR_WHITE, false, true, false, true);       
 }
 
 // ----------------------------------------------------------------------------

@@ -92,7 +92,7 @@ function initClassTable() {
 				this.accountData = accountData;
 				this.subAccounts = subAccounts; // Characters
 				this.client = client;
-				this.currentSubAccount = 0;
+				this.currentSubAccount = -1;
 				this.loggedIn = false;
 
 				this.busRoute = null;
@@ -105,7 +105,13 @@ function initClassTable() {
 				
 				this.spawned = false;
 
+				this.rentingVehicle = false;
 				this.buyingVehicle = false;
+
+				this.lastVehicle = false;
+
+				this.returnToJobVehicleTick = 0;
+				this.returnToJobVehicleTimer = null;
 			}
 		},
 		accountData: class {
@@ -481,80 +487,147 @@ function initClassTable() {
 		},
 		jobData: class {
 			constructor(jobAssoc) {
-				if(!jobAssoc) {
-					return;
-				}
-
-				this.databaseId = jobAssoc["job_id"];
-				this.type = jobAssoc["job_type"];
-				this.name = jobAssoc["job_name"];
-				this.enabled = jobAssoc["job_enabled"];
-				this.blipModel = jobAssoc["job_blip"];
-				this.pickupModel = jobAssoc["job_pickup"];
-				this.colour = toColour(jobAssoc["job_colour_r"], jobAssoc["job_colour_g"], jobAssoc["job_colour_b"], 255);
-				this.whitelist = jobAssoc["job_whitelist"];
+				this.databaseId = 0;
+				this.type = AG_JOB_NONE;
+				this.name = "Unnamed";
+				this.enabled = true;
+				this.blipModel = -1
+				this.pickupModel = -1
+				this.colour = toColour(0, 0, 0, 255);
+				this.whiteListEnabled = false;
+				this.blackListEnabled = false;
 
 				this.equipment = [];
 				this.uniforms = [];
 				this.locations = [];
+				this.whiteList = [];
+				this.blackList = [];
+
+				if(jobAssoc) {
+					this.databaseId = jobAssoc["job_id"];
+					this.type = jobAssoc["job_type"];
+					this.name = jobAssoc["job_name"];
+					this.enabled = jobAssoc["job_enabled"];
+					this.blipModel = jobAssoc["job_blip"];
+					this.pickupModel = jobAssoc["job_pickup"];
+					this.colour = toColour(jobAssoc["job_colour_r"], jobAssoc["job_colour_g"], jobAssoc["job_colour_b"], 255);
+					this.whiteListEnabled = jobAssoc["job_whitelist"];
+					this.blackListEnabled = jobAssoc["job_blacklist"];
+	
+					this.equipment = [];
+					this.uniforms = [];
+					this.locations = [];
+					this.whiteList = [];
+					this.blackList = [];
+				}
 			}
 		},
 		jobEquipmentData: class {
 			constructor(jobEquipmentAssoc) {
-				if(!jobEquipmentAssoc) {
-					return;
-				}
+				this.databaseId = 0;
+				this.job = 0;
+				this.name = "Unnamed";
+				this.requiredRank = 0;
+				this.enabled = false;
 
-				this.databaseId = jobEquipmentAssoc["job_equip_id"];
-				this.job = jobEquipmentAssoc["job_equip_job"];
-				this.name = jobEquipmentAssoc["job_equip_name"];
-				this.requiredRank = jobEquipmentAssoc["job_equip_minrank"];
-				this.enabled = jobEquipmentAssoc["job_equip_enabled"];
+				if(jobEquipmentAssoc) {
+					this.databaseId = jobEquipmentAssoc["job_equip_id"];
+					this.job = jobEquipmentAssoc["job_equip_job"];
+					this.name = jobEquipmentAssoc["job_equip_name"];
+					this.requiredRank = jobEquipmentAssoc["job_equip_minrank"];
+					this.enabled = jobEquipmentAssoc["job_equip_enabled"];
+				}
 			}
 		},
 		jobEquipmentWeaponData: class {
 			constructor(jobEquipmentWeaponAssoc) {
-				if(!jobEquipmentWeaponAssoc) {
-					return;
-				}
+				this.databaseId = 0;
+				this.equipmentId = 0;
+				this.weaponId = 0;
+				this.ammo = 0;
+				this.enabled = false;
 
-				this.databaseId = jobEquipmentWeaponAssoc["job_equip_wep_id"];
-				this.equipmentId = jobEquipmentWeaponAssoc["job_equip_wep_equip"];
-				this.weaponId = jobEquipmentWeaponAssoc["job_equip_wep_wep"];
-				this.ammo = jobEquipmentWeaponAssoc["job_equip_wep_ammo"];
-				this.enabled = jobEquipmentWeaponAssoc["job_equip_wep_enabled"];
+				if(!jobEquipmentWeaponAssoc) {
+					this.databaseId = jobEquipmentWeaponAssoc["job_equip_wep_id"];
+					this.equipmentId = jobEquipmentWeaponAssoc["job_equip_wep_equip"];
+					this.weaponId = jobEquipmentWeaponAssoc["job_equip_wep_wep"];
+					this.ammo = jobEquipmentWeaponAssoc["job_equip_wep_ammo"];
+					this.enabled = jobEquipmentWeaponAssoc["job_equip_wep_enabled"];
+				}
 			}
 		},
 		jobUniformData: class {
 			constructor(jobUniformAssoc) {
-				if(!jobUniformAssoc) {
-					return;
-				}
+				this.databaseId = 0;
+				this.job = 0;
+				this.name = "Unnamed";
+				this.requiredRank = 0
+				this.skin = -1;
+				this.enabled = false;
 
-				this.databaseId = jobUniformAssoc["job_uniform_id"];
-				this.job = jobUniformAssoc["job_uniform_job"];
-				this.name = jobUniformAssoc["job_uniform_name"];
-				this.requiredRank = jobUniformAssoc["job_uniform_minrank"];
-				this.skin = jobUniformAssoc["job_uniform_skin"];
-				this.enabled = jobUniformAssoc["job_uniform_skin"];				
+				if(!jobUniformAssoc) {
+					this.databaseId = jobUniformAssoc["job_uniform_id"];
+					this.job = jobUniformAssoc["job_uniform_job"];
+					this.name = jobUniformAssoc["job_uniform_name"];
+					this.requiredRank = jobUniformAssoc["job_uniform_minrank"];
+					this.skin = jobUniformAssoc["job_uniform_skin"];
+					this.enabled = jobUniformAssoc["job_uniform_skin"];	
+				}			
 			}
 		},
 		jobLocationData: class {
 			constructor(jobLocationAssoc) {
-				if(!jobLocationAssoc) {
-					return;
-				}
-
-				this.databaseId = jobLocationAssoc["job_loc_id"];
-				this.job = jobLocationAssoc["job_loc_job"];
-				this.position = toVector3(jobLocationAssoc["job_loc_pos_x"], jobLocationAssoc["job_loc_pos_y"], jobLocationAssoc["job_loc_pos_z"]);
+				this.databaseId = 0;
+				this.job = 0;
+				this.position = toVector3(0.0, 0.0, 0.0);
 				//this.blipModel = jobAssoc["job_blip"];
 				//this.pickupModel = jobAssoc["job_pickup"];
 				this.blip = false;
 				this.pickup = false;
-				this.enabled = jobLocationAssoc["job_loc_enabled"];
+				this.enabled = false;
+
+				if(!jobLocationAssoc) {
+					this.databaseId = jobLocationAssoc["job_loc_id"];
+					this.job = jobLocationAssoc["job_loc_job"];
+					this.position = toVector3(jobLocationAssoc["job_loc_pos_x"], jobLocationAssoc["job_loc_pos_y"], jobLocationAssoc["job_loc_pos_z"]);
+					//this.blipModel = jobAssoc["job_blip"];
+					//this.pickupModel = jobAssoc["job_pickup"];
+					this.blip = false;
+					this.pickup = false;
+					this.enabled = jobLocationAssoc["job_loc_enabled"];
+				}
 			}
 		},
+		jobWhiteListData: class {
+			constructor(jobWhiteListAssoc) {
+				this.databaseId = 0;
+				this.job = 0;
+				this.subAccount = 0
+				this.enabled = false;
+
+				if(!jobWhiteListAssoc) {
+					this.databaseId = jobWhiteListAssoc["job_wl_id"];
+					this.job = jobWhiteListAssoc["job_wl_job"];
+					this.subAccount = jobWhiteListAssoc["job_wl_sacct"]
+					this.enabled = jobWhiteListAssoc["job_wl_enabled"];
+				}
+			}
+		},
+		jobBlackListData: class {
+			constructor(jobBlackListAssoc) {
+				this.databaseId = 0;
+				this.job = 0;
+				this.subAccount = 0
+				this.enabled = false;
+
+				if(!jobBlackListAssoc) {
+					this.databaseId = jobBlackListAssoc["job_bl_id"];
+					this.job = jobBlackListAssoc["job_bl_job"];
+					this.subAccount = jobBlackListAssoc["job_bl_sacct"]
+					this.enabled = jobBlackListAssoc["job_bl_enabled"];
+				}
+			}
+		},				
 		keyBindData: class {
 			constructor(keyBindAssoc, key = 0, commandString = "") {
 				this.databaseId = 0;
@@ -565,10 +638,10 @@ function initClassTable() {
 				this.enabled = true;
 				this.keyState = false;
 
-				if(keyBindAssoc != null) {
+				if(keyBindAssoc) {
 					this.databaseId = keyBindAssoc["acct_hotkey_id"];
 					this.key = toInteger(keyBindAssoc["acct_hotkey_key"]);
-					this.account = keyBindAssoc["acct_hotkey_acct"];
+					this.account = toInteger(keyBindAssoc["acct_hotkey_acct"]);
 					this.commandString = keyBindAssoc["acct_hotkey_cmdstr"];
 					this.whenAdded = keyBindAssoc["acct_hotkey_when_added"];
 					this.enabled = intToBool(keyBindAssoc["acct_hotkey_enabled"]);

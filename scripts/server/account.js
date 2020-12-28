@@ -436,8 +436,10 @@ function loginSuccess(client) {
 	sendRemovedWorldObjectsToPlayer(client);
 	sendAllBusinessLabelsToPlayer(client);
 	sendAllHouseLabelsToPlayer(client);
+	sendAllJobLabelsToPlayer(client);
+	sendAccountKeyBindsToClient(client);
 
-	message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
+	//message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 }
 
 // ---------------------------------------------------------------------------
@@ -727,14 +729,16 @@ function savePlayerToDatabase(client) {
 	console.log(`[Asshat.Account]: Saving client ${client.name} to database ...`);
 	saveAccountToDatabase(getPlayerData(client).accountData);
 
-	let subAccountData = getClientCurrentSubAccount(client);
+	if(getPlayerData(client).currentSubAccount != -1) {
+		let subAccountData = getClientCurrentSubAccount(client);
 
-	if(client.player != null) {
-		subAccountData.spawnPosition = getPlayerPosition(client);
-		subAccountData.spawnHeading = getPlayerHeading(client);
+		if(client.player != null) {
+			subAccountData.spawnPosition = getPlayerPosition(client);
+			subAccountData.spawnHeading = getPlayerHeading(client);
+		}
+
+		saveSubAccountToDatabase(subAccountData);
 	}
-
-	saveSubAccountToDatabase(subAccountData);
 	console.log(`[Asshat.Account]: Saved client ${getClientDisplayForConsole(client)} to database successfully!`);
 	return true;
 }
@@ -795,7 +799,10 @@ function saveSessionToDatabase(client) {
 
 function createDefaultKeybindsForAccount(accountDatabaseId) {
 	for(let i in getGlobalConfig().defaultKeybinds) {
-		quickDatabaseQuery(`INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added) VALUES (${accountDatabaseId}, ${getGlobalConfig().defaultKeybinds[i].key}, '${getGlobalConfig().defaultKeybinds[i].commandString}', UNIX_TIMESTAMP())`);
+		console.log(i);
+		let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${getGlobalConfig().defaultKeybinds[i].key}, '${getGlobalConfig().defaultKeybinds[i].commandString}', UNIX_TIMESTAMP(), ${boolToInt(getGlobalConfig().defaultKeybinds[i].keyState)})`;
+		console.log(dbQueryString);
+		quickDatabaseQuery(dbQueryString);
 	}
 }
 
@@ -964,3 +971,7 @@ function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function getPlayerStaffTitle(client) {
+	return getPlayerData(client).accountData.staffTitle;
+}

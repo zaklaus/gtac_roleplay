@@ -262,6 +262,8 @@ addNetworkHandler("ag.selectCharacter", selectCharacter);
 function switchCharacterCommand(command, params, client) {
 	getClientCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
 	getClientCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
+	getClientCurrentSubAccount(client).interior = getPlayerInterior(client);
+	getClientCurrentSubAccount(client).dimension = getPlayerVirtualWorld(client);
 
 	saveSubAccountToDatabase(getClientCurrentSubAccount(client));
 	

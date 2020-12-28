@@ -66,12 +66,6 @@ function agSetPedSkin(ped, skinId) {
 
 // ---------------------------------------------------------------------------
 
-function getServerGame() {
-    return server.game;
-}
-
-// ---------------------------------------------------------------------------
-
 function getPlayerPosition(client) {
     if(client.player != null) {
         return client.player.position;

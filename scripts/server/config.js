@@ -81,12 +81,18 @@ let gameConfig = {
 			ammunation: 6,
 			payAndSpray: 63,
 			vehicleDealership: 55,
-			restaurant: -1,
+			airplaneDealership: 5,
+			boatDealership: 9,
+			restaurant: 50,
 			fastFood: -1,
+			clothes: 45,
+			pizza: 29,
+			chicken: 14,
+			burger: 10,
 			bank: 52,
 			fuelStation: 0,
 			business: -1,
-			house: -1,			
+			house: 31,		
 		},
 		{	// GTA UG
 			policeStation: 8,
@@ -155,9 +161,9 @@ let gameConfig = {
 		},
 
 		{ // GTA San Andreas
-			policeStation: 1239,
-			fireStation: 1239,
-			hospital: 1239, 
+			policeStation: 1247,
+			fireStation: 1318,
+			hospital: 1240, 
 			ammunation: 1239,
 			payAndSpray: 1239,
 			vehicleDealership: 1239,
@@ -167,7 +173,7 @@ let gameConfig = {
 			fuelStation: 1239,
 			business: 1272,
 			house: 1273,
-			clothes: 1239,
+			clothes: 1275,
 		}
 	],
 	pickupTypes: [

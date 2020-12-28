@@ -764,15 +764,15 @@ function getClientFromPlayer(player) {
 
 // ---------------------------------------------------------------------------
 
-function getPlayerFromParams(params, isServer) {
+function getPlayerFromParams(params) {
 	let clients = getClients();
 	if(isNaN(params)) {
 		for(let i in clients) {
 			if(toLowerCase(clients[i].name).indexOf(toLowerCase(params)) != -1) {
-				return clients[i].player;
+				return clients[i];
 			}
 
-			let charName = `${getClientCurrentSubAccount(clients[i]).firstName} ${getClientCurrentSubAccount(clients[i]).lastName}`;
+			let charName = getCharacterFullName(clients[i]);
 			if(toLowerCase(charName).indexOf(toLowerCase(clientName)) != -1) {
 				return clients[i];
 			}			
@@ -781,29 +781,6 @@ function getPlayerFromParams(params, isServer) {
 		let playerId = toInteger(params) || 0;
 		if(typeof clients[playerId] != "undefined") {
 			return clients[playerId].player;
-		}			
-	}
-	
-	return false;
-}
-
-
-// ---------------------------------------------------------------------------
-
-function getClientFromParams(checkParams) {
-	let clients = getClients();
-	if(isNaN(checkParams)) {
-		checkParams = toLowerCase(checkParams);
-		for(let i in clients) {
-			let clientName = toLowerCase(clients[i].name);
-			if(clientName.indexOf(checkParams) != -1) {
-				return clients[i];
-			}
-		}
-	} else {
-		let clientId = toInteger(checkParams) || 0;
-		if(typeof clients[clientId] != "undefined") {
-			return clients[clientId];
 		}			
 	}
 	
@@ -1801,4 +1778,3 @@ function resetClientStuff(client) {
 }
 
 // ----------------------------------------------------------------------------
-

@@ -1594,6 +1594,60 @@ function getClanFromParams(params) {
 
 // ---------------------------------------------------------------------------
 
+function getJobFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().jobs) {
+			if(toLowerCase(getServerData().jobs[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+		return false;
+	} else {
+		if(typeof getServerData().jobs[params] != "undefined") {
+			return toInteger(params);
+		}
+		return false;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getBusinessFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().businesses) {
+			if(toLowerCase(getServerData().businesses[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+		return false;
+	} else {
+		if(typeof getServerData().businesses[params] != "undefined") {
+			return toInteger(params);
+		}
+		return false;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getHousesFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().houses) {
+			if(toLowerCase(getServerData().houses[i].description).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+		return false;
+	} else {
+		if(typeof getServerData().houses[params] != "undefined") {
+			return toInteger(params);
+		}
+		return false;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
 function updatePlayerCash(client) {
 	triggerNetworkEvent("ag.money", client, getClientCurrentSubAccount(client).cash);
 }

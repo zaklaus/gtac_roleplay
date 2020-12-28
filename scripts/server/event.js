@@ -36,11 +36,13 @@ addEventHandler("OnPlayerJoined", function(event, client) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
-    console.log(`[Asshat.Event] ${getClientDisplayForConsole(client)} disconnected (${gameData.quitReasons[quitReasonId]}[${quitReasonId}])`);
+    console.log(`[Asshat.Event] ${getClientDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
     savePlayerToDatabase(client);
 
+    resetClientStuff(client);
+
     getServerData().clients[client.index] = null;
-    message(`👋 ${client.name} has left the server (${gameData.quitReasons[quitReasonId]})`, getColourByName("softYellow"));
+    message(`👋 ${client.name} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
 });
 
 // ---------------------------------------------------------------------------
@@ -150,7 +152,10 @@ addEventHandler("OnPedEnterVehicle", function(event, ped, vehicle, seat) {
 async function playerEnteredVehicle(client) {
     await waitUntil(() => client.player.vehicle != null);
     let vehicle = client.player.vehicle;
-    console.log(vehicle);
+
+    console.log(`[Asshat.Event] ${getClientDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+
+    getPlayerData(client).lastVehicle = vehicle;
     
     if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
         vehicle.engine = getVehicleData(vehicle).engine;
@@ -186,14 +191,32 @@ async function playerEnteredVehicle(client) {
                     //}
                 }
             }
+        }
+
+        if(isPlayerWorking(client)) {
+            if(isPlayerOnJobRoute(client)) {
+                if(vehicle == getPlayerJobRouteVehicle(client)) {
+                    stopReturnToJobVehicleCountdown(client);
+                }
+            }
         }        
     }
 }
 
 // ---------------------------------------------------------------------------
 
-function playerExitedVehicle(client, vehicle) {
-    //let vehicle = getElementFromId(vehicleId);
+function playerExitedVehicle(client) {
+    let vehicle = getPlayerData(client).lastVehicle;
+
+    console.log(`[Asshat.Event] ${getClientDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+
+    if(isPlayerWorking(client)) {
+        if(isPlayerOnJobRoute(client)) {
+            if(vehicle == getPlayerJobRouteVehicle(client)) {
+                startReturnToJobVehicleCountdown(client);
+            }
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -221,3 +244,5 @@ function processPlayerDeath(client) {
 		}, 2000);		
 	}, 1000);
 }
+
+// ---------------------------------------------------------------------------

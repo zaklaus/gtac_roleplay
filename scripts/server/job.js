@@ -124,7 +124,7 @@ function loadJobLocationsFromDatabase(jobDatabaseId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempJobLocationData = new serverClasses.jobLocationData(dbAssoc);
 					tempJobLocations.push(tempJobLocationData);
-					console.log(`[Asshat.Job]: Job location '${tempJobLocationData.name}' loaded from database successfully!`);
+					console.log(`[Asshat.Job]: Job location '${tempJobLocationData.databaseId}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -321,41 +321,27 @@ function showJobInformationToPlayer(client, jobType) {
 
 function takeJobCommand(command, params, client) {
 	if(!canPlayerUseJobs(client)) {
-		messageClientError(client, "You are not allowed to use jobs!"); 
+		messageClientError(client, "You are not allowed to use any jobs!"); 
 		return false;
 	}
 
-	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You are not logged in!");
-			return false;
-		}
-	}
-
-	if(isClientFromDiscord(client)) {
-		if(!isCommandAllowedOnDiscord(command)) {
-			messageClientError(client, "That command isn't available on discord!");
-			return false;
-		}
-	}	
-
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
-	let closestJobLocation = getClosestJobLocation(client.player.position);
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 	let jobData = getJobData(closestJobLocation.job);
 
-	if(closestJobLocation.position.distance(client.player.position) > getGlobalConfig().takeJobDistance) {
+	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().takeJobDistance) {
 		messageClientError(client, "There are no job points close enough!");
-		return false;       
+		return false;
 	}
 
 	if(getClientCurrentSubAccount(client).job > AG_JOB_NONE) {
 		messageClientError(client, "You already have a job! Use /quitjob to quit your job.");
 		return false;      
 	}
+
+	if(!canPlayerUseJob(client, closestJobLocation.job)) {
+		messageClientError(client, "You can't use this job!");
+		return false;
+	}	
 	
 	takeJob(client, closestJobLocation.job);
 	messageClientSuccess(client, "You now have the " + toString(jobData.name) + " job");
@@ -369,10 +355,10 @@ function startWorkingCommand(command, params, client) {
 		return false;
 	}
 
-	let closestJobLocation = getClosestJobLocation(client.player.position);
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 	let jobData = getJobData(closestJobLocation.job);
 
-	if(closestJobLocation.position.distance(client.player.position) > getGlobalConfig().startWorkingDistance) {
+	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
 		messageClientError(client, "There are no job points close enough!");
 		return false;       
 	}
@@ -388,7 +374,6 @@ function startWorkingCommand(command, params, client) {
 		messageClientInfo(client, `If you want this job, use /quitjob to quit your current job.`);
 		return false;
 	}
-
 	
 	messageClientSuccess(client, "You are now working as a " + toString(jobData.name));
 	startWorking(client);
@@ -562,7 +547,6 @@ function stopWorking(client) {
 // ---------------------------------------------------------------------------
 
 function jobUniformCommand(command, params, client) {
-
 	let jobId = getClientCurrentSubAccount(client).job;
 	let uniforms = getJobData(jobId).uniforms;
 
@@ -595,7 +579,6 @@ function jobUniformCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function jobEquipmentCommand(command, params, client) {
-
 	let jobId = getClientCurrentSubAccount(client).job;
 	let equipments = getJobData(jobId).equipment;
 
@@ -715,6 +698,98 @@ function reloadAllJobsCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function createJobLocationCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let jobId = getJobFromParams(splitParams[0]);
+	
+	if(!getJobData(jobId)) {
+		messageClientError(client, "That job was not found!");
+		return false;
+	}
+
+	createJobLocation(jobId, getPlayerPosition(client));
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a location for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteJobLocationCommand(command, params, client) {
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+	let jobData = getJobData(closestJobLocation.job);
+
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(closestJobLocation.enabled)} location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+
+	deleteJobLocation(closestJobLocation);
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleJobLocationEnabledCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+	let jobData = getJobData(closestJobLocation.job);
+
+	closestJobLocation.enabled = !closestJobLocation.enabled;
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(closestJobLocation.enabled)} location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleJobEnabledCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+	let jobData = getJobData(closestJobLocation.job);
+
+	jobData.enabled = !jobData.enabled;
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.enabled)} [#FFFFFF]the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleJobWhiteListCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+	let jobData = getJobData(closestJobLocation.job);
+
+	jobData.whiteListEnabled = !jobData.whiteListEnabled;
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.whiteListEnabled)} [#FFFFFF]the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleJobBlackListCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+	let jobData = getJobData(closestJobLocation.job);
+
+	jobData.blackListEnabled = !jobData.blackListEnabled;
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.blackListEnabled)} [#FFFFFF]the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
 function forceAllPlayersToStopWorking() {
 	getClients().forEach(function(client) {
 		stopWorking(client);
@@ -823,7 +898,10 @@ function startJobRoute(client) {
 
 // ---------------------------------------------------------------------------
 
-function stopJobRoute(client) {
+function stopJobRoute(client, successful = false) {
+	stopReturnToJobVehicleCountdown(client);
+	triggerNetworkEvent("ag.stopJobRoute", client);
+
 	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
 		respawnVehicle(getPlayerData(client).busRouteVehicle);
 		messageClientAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
@@ -857,3 +935,103 @@ function isPlayerOnJobRoute(client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function getPlayerJobRouteVehicle(client) {
+	if(!isPlayerOnJobRoute(client)) {
+		return false;
+	}
+
+	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
+		return getPlayerData(client).busRouteVehicle;
+	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
+		return getPlayerData(client).garbageRouteVehicle;
+	}	
+}
+
+// ---------------------------------------------------------------------------
+
+function startReturnToJobVehicleCountdown(client) {
+	getPlayerData(client).returnToJobVehicleTick = getGlobalConfig().returnToJobVehicleTime;
+	getPlayerData(client).returnToJobVehicleTimer = setInterval(function() {
+		//console.log(getPlayerData(client).returnToJobVehicleTick);
+		if(getPlayerData(client).returnToJobVehicleTick > 0) {
+			getPlayerData(client).returnToJobVehicleTick = getPlayerData(client).returnToJobVehicleTick - 1;
+			//console.warn(`You have ${getPlayerData(client).returnToJobVehicleTick} seconds to return to your job vehicle!`);
+			showGameMessage(client, `You have ${getPlayerData(client).returnToJobVehicleTick} seconds to return to your job vehicle!`, getColourByName("softRed"), 1500);
+		} else {
+			clearInterval(getPlayerData(client).returnToJobVehicleTimer);
+			getPlayerData(client).returnToJobVehicleTimer = null;
+			getPlayerData(client).returnToJobVehicleTick = 0;
+			stopJobRoute(client, false);
+		}
+	}, 1000);
+}
+
+// ---------------------------------------------------------------------------
+
+function stopReturnToJobVehicleCountdown(client) {
+	if(getPlayerData(client).returnToJobVehicleTimer != null) {
+		clearInterval(getPlayerData(client).returnToJobVehicleTimer);
+		getPlayerData(client).returnToJobVehicleTimer = null;
+	}
+	
+	//getPlayerData(client).returnToJobVehicleTick = 0;
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAllJobLabelsToPlayer(client) {
+	let tempJobLocations = [];
+	for(let k in getServerData().jobs) {
+		for(m in getServerData().jobs[i].locations) {
+			tempJobLocations.push({
+				id: getServerData().jobs[i].locations[j].databaseId,
+				jobType: getServerData().jobs[i].jobType,
+				name: getServerData().jobs[i].name,
+				position: getServerData().jobs[i].locations[j].position,
+			});
+		}
+	}
+
+	let totalJobLocations = tempJobLocations.length;
+	let tempJobLabels = [];
+	let jobLocationsPerNetworkEvent = 100;
+	let totalNetworkEvents = Math.ceil(totalJobLocations/jobLocationsPerNetworkEvent);
+	for(let i = 0 ; i < totalNetworkEvents ; i++) {
+		for(let j = 0 ; j < jobLocationsPerNetworkEvent ; j++) {
+			let tempJobLocationId = (i*jobLocationsPerNetworkEvent)+j;
+			if(typeof getServerData().jobs[k] != "undefined") {
+				let tempJobLabels = [];
+				tempJobLabels.push([tempJobLocations[i].id, tempJobLocations[i].position, getGameConfig().propertyLabelHeight[getServerGame()], tempJobLocations[i].name, tempJobLocations[i].jobType, false]);
+			}
+		}
+		triggerNetworkEvent("ag.joblabel.all", client, tempJobLabels);
+		tempJobLabels = [];
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function canPlayerUseJob(client, jobId) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageJobs"))) {
+		return true;
+	}
+
+	if(!getJobData(jobId)) {
+		return false;
+	}
+
+	if(getJobData(jobId).whiteListEnabled) {
+		if(!isPlayerOnJobWhiteList(client, jobId)) {
+			return false
+		}
+	}	
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteJobLocation(jobLocationData) {
+	destroyElement(jobLocationData.pickup);
+	triggerNetworkEvent("ag.joblabel.del", jobLocationData.databaseId);
+
+}

@@ -450,49 +450,35 @@ function isLastStopOnBusRoute(island, busRoute, busRouteStop) {
 
 // ---------------------------------------------------------------------------
 
-function freezeBusForStop(client) {
-    getVehicleData(getPlayerVehicle(client)).engine = false;
-	getPlayerVehicle(client).engine = false;
-}
-
-// ---------------------------------------------------------------------------
-
-function unFreezeBusForStop(client) {
-    getVehicleData(getPlayerVehicle(client)).engine = true;
-	getPlayerVehicle(client).engine = true;
-}
-
-// ---------------------------------------------------------------------------
-
 function showNextBusStop(client) {
-    getPlayerData(client).busRouteStop = getNextStopOnBusRoute(getPlayerData(client).busRouteStop, getPlayerData(client).busRoute, getPlayerData(client).busRouteStop);
+    getPlayerData(client).jobRouteStop = getNextStopOnBusRoute(getPlayerData(client).jobRouteStop, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop);
     showCurrentBusStop(client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showCurrentBusStop(client) {
-    triggerNetworkEvent("ag.showBusStop", client, getBusRouteStopPosition(getPlayerIsland(client), getPlayerData(client).busRoute, getPlayerData(client).busRouteStop), getColourByName("busDriverGreen"));
+    triggerNetworkEvent("ag.showBusStop", client, getBusRouteStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop), getColourByName("busDriverGreen"));
 }
 
 // ---------------------------------------------------------------------------
 
 function arrivedAtBusStop(client) {
-    if(isLastStopOnBusRoute(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute, getPlayerData(client).busRouteStop)) {
-        respawnVehicle(getPlayerData(client).busRouteVehicle);
-        messageClientNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
-		getPlayerData(client).busRouteVehicle = false;
-		getPlayerData(client).busRoute = 0;
-		getPlayerData(client).busRouteStop = 0;
-		getPlayerData(client).busRouteIsland = 0;
+    if(isLastStopOnBusRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
+        respawnVehicle(getPlayerData(client).jobRouteVehicle);
+        messageClientNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
+		getPlayerData(client).jobRouteVehicle = false;
+		getPlayerData(client).jobRoute = 0;
+		getPlayerData(client).jobRouteStop = 0;
+		getPlayerData(client).jobRouteIsland = 0;
         return false;
     }
 
     showGameMessage(client, "⌛ Please wait a moment for passengers to get on and off the bus.", getColourByName("busDriverGreen"), 3500);
-    freezeBusForStop(client);
-    getPlayerData(client).busRouteStop = getNextStopOnBusRoute(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute, getPlayerData(client).busRouteStop);
+    freezeJobVehicleForRouteStop(client);
+    getPlayerData(client).jobRouteStop = getNextStopOnBusRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop);
     setTimeout(function() {
-        unFreezeBusForStop(client);
+        unFreezeJobVehicleForRouteStop(client);
         showCurrentBusStop(client);
         showGameMessage(client, "Proceed to the next stop (green checkpoint)", getColourByName("busDriverGreen"), 3500);
     }, 5000);

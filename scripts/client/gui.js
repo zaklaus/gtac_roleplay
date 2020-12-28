@@ -10,7 +10,7 @@
 
 var app = {};
 
-let robotoFont = "Tahoma";
+let robotoFont = "Roboto";
 
 let primaryColour = [200, 200, 200];
 
@@ -83,7 +83,7 @@ let characterSelect = {
 
 let skinNames = [
 	[],
-	[ // GTA III
+	[ 	// GTA III
 		//[0, "Claude", "Skin000.png"],
 		//[1, "Police Officer", "Skin001.png"],
 		//[2, "SWAT Officer", "Skin002.png"],
@@ -201,7 +201,7 @@ let skinNames = [
 		[120, "Darkel", "Skin120.png"],
 		//[121, "Chuff Security Officer", "Skin121.png"]
 	],
-	[ // GTA Vice City
+	[ 	// GTA Vice City
 		//[0, "Tommy Vercetti", false],
 		//[1, "Police Officer", false],
 		//[2, "SWAT Officer", false],
@@ -396,12 +396,7 @@ let skinNames = [
 		//[0, "Carl 'CJ' Johnson", false],
 		[1, "The Truth", false],
 		[2, "Maccer", false],
-		[3, "Andre", false],
-		[4, "Barry Big Bear Thorne", false],
-		[5, "Emmet", false],
 		[6, "Taxi Driver/Train Driver", false],
-		[7, "Janitor", false],
-		[8, "Unknown", false],
 		[9, "Normal Ped", false],
 		[10, "Old Woman", false],
 		[11, "Casino Croupier", false],
@@ -435,7 +430,6 @@ let skinNames = [
 		[39, "Normal Ped", false],
 		[40, "Normal Ped", false],
 		[41, "Normal Ped", false],
-		[42, "Jethro", false],
 		[43, "Normal Ped", false],
 		[44, "Normal Ped", false],
 		[45, "Beach Visitor", false],
@@ -458,7 +452,6 @@ let skinNames = [
 		[62, "Colonel Fuhrberger", false],
 		[63, "Prostitute", false],
 		[64, "Prostitute", false],
-		[65, "Kendl Johnson", false],
 		[66, "Pool Player", false],
 		[67, "Pool Player", false],
 		[68, "Priest/Preacher", false],
@@ -467,7 +460,6 @@ let skinNames = [
 		[71, "Security Guard", false],
 		[72, "Hippy", false],
 		[73, "Hippy", false],
-		[74, "INVALID", false],
 		[75, "Prostitute", false],
 		[76, "Stewardess", false],
 		[77, "Homeless", false],
@@ -479,7 +471,6 @@ let skinNames = [
 		[83, "White Elvis", false],
 		[84, "Blue Elvis", false],
 		[85, "Prostitute", false],
-		[86, "INVALID", false],
 		[87, "Stripper", false],
 		[88, "Normal Ped", false],
 		[89, "Normal Ped", false],
@@ -512,7 +503,6 @@ let skinNames = [
 		[116, "Varios Los Aztecas Gang Member", false],
 		[117, "Triad", false],
 		[118, "Triad", false],
-		[119, "Johhny Sindacco", false],
 		[120, "Triad Boss", false],
 		[121, "Da Nang Boy", false],
 		[122, "Da Nang Boy", false],
@@ -601,7 +591,6 @@ let skinNames = [
 		[205, "Burger Shot Cashier", false],
 		[206, "Cab Driver", false],
 		[207, "Prostitute", false],
-		[208, "Su Xi Mu (Suzie)", false],
 		[209, "Oriental Noodle Stand Vendor", false],
 		[210, "Oriental Boating School Instructor", false],
 		[211, "Clothes Shop Staff", false],
@@ -666,7 +655,6 @@ let skinNames = [
 		[270, "Sean Sweet Johnson", false],
 		[271, "Lance Ryder Wilson", false],
 		[272, "Mafia Boss", false],
-		[273, "T-Bone Mendez", false],
 		//[274, "Paramedic", false],
 		//[275, "Paramedic", false],
 		//[276, "Paramedic", false],
@@ -682,7 +670,6 @@ let skinNames = [
 		//[286, "Federal Agent", false],
 		//[287, "Army Soldier", false],
 		//[288, "Desert Sheriff", false],
-		[289, "Zero", false],
 		[290, "Ken Rosenberg", false],
 		[291, "Kent Paul", false],
 		[292, "Cesar Vialpando", false],
@@ -708,8 +695,12 @@ let skinNames = [
 		//[312, "Army Guy", false],
 		[313, "Barry Big Bear Thorne (Fat)", false],
 	],	
-	false,
-	[
+
+	[	// Underground
+		
+	], 
+
+	[	// GTA IV
 		[-2020305438,"Male Multiplayer",false],
 		[-641875910,"Female Multiplayer",false],
 		[-1370810922,"MODEL_SUPERLOD",false],
@@ -1081,7 +1072,10 @@ app.init = function()
 	//	robotoFont = lucasFont.createFont(fontStream, 10.0);
 	//	fontStream.close();
 	//}
+	//robotoFont = lucasFont.createDefaultFont(10.0, "Roboto", "Regular");
+	console.log(`[Asshat.GUI] Initializing GUI ...`);
 
+	console.log(`[Asshat.GUI] Creating login GUI ...`);
 	login.window = mexui.window(game.width/2-150, game.height/2-115, 300, 280, 'LOGIN', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
@@ -1157,8 +1151,12 @@ app.init = function()
 			textAlign: 0.5,
 		},
 	}, showRegistration);
-	
+
+	console.log(`[Asshat.GUI] Created login GUI.`);
+
 	// ---------------------------------------------------------------------------------
+
+	console.log(`[Asshat.GUI] Creating new character GUI ...`);
 	
 	newCharacter.window = mexui.window(game.width/2-215, game.height/2-83, 430, 166, 'New Character', {
 		main: {			
@@ -1319,7 +1317,8 @@ app.init = function()
 			textFont: robotoFont,	
 			width: 200,
 		},
-	}, function() {
+	});
+	// function() {
 		//let skinImagePath = skinNames[gta.game][this.selectedEntryIndex][2];
 		//if(newCharacter.skinImage != null) {
 		//	newCharacter.skinImage.remove();
@@ -1332,14 +1331,15 @@ app.init = function()
 		//}
 
 		//newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/none.png");
-	});
+	//}
+	
 	newCharacter.skinDropDown.axis.y.scrollBar.styles.innerBar.backgroundColour = toColour(255, 128, 0, 200);
 	newCharacter.skinDropDown.setScrollBarsManual(true);
 		
 	for(let i in skinNames[gta.game]) {
-		if(skinNames[gta.game][i] != "INVALID") {
+		//if(skinNames[gta.game][i] != "INVALID") {
 			newCharacter.skinDropDown.item(skinNames[gta.game][i][1]);
-		}
+		//}
 	}
 	//newCharacter.skinDropDown.selectedEntryIndex = 1;
 
@@ -1352,8 +1352,12 @@ app.init = function()
 			textAlign: 0.5,
 		},
 	}, checkNewCharacter);
-	
+
+	console.log(`[Asshat.GUI] Creating new character GUI.`);
+
 	// ---------------------------------------------------------------------------------
+
+	console.log(`[Asshat.GUI] Creating register GUI ...`);	
 	
 	register.window = mexui.window(game.width/2-130, game.height/2-140, 300, 260, 'Register', {
 		main: {
@@ -1471,8 +1475,12 @@ app.init = function()
 			textFont: robotoFont,
 		},
 	}, showLogin);
+
+	console.log(`[Asshat.GUI] Create register GUI ...`);		
 	
 	// ---------------------------------------------------------------------------------
+
+	console.log(`[Asshat.GUI] Creating error GUI ...`);			
 	
 	errorDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'ERROR', {
 		main: {
@@ -1818,10 +1826,12 @@ let showRegistration = function() {
 // ---------------------------------------------------------------------------
 
 let showLogin = function() {
+	console.log("login showing");
 	setChatWindowEnabled(false);
 	closeAllWindows();
 	mexui.setInput(true);
 	login.window.shown = true;
+	console.log("login shown");
 }
 
 // ---------------------------------------------------------------------------
@@ -1905,26 +1915,20 @@ let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfB
 	characterSelect.dateOfBirthText.text = "Born: " + toString(dateOfBirth);
 	characterSelect.placeOfOrigin.text = "From: " + toString(placeOfOrigin);
 
-	if(characterSelect.skinImage != null) {
-		characterSelect.skinImage.remove();
-	}
+	//if(characterSelect.skinImage != null) {
+	//	characterSelect.skinImage.remove();
+	//}
 
-	let skinImagePath = "Skin000.png";
-	for(let i in skinNames[gta.game]) {
-		if(skinNames[gta.game][i][0] == skinId) {
-			skinImagePath = skinNames[gta.game][i][2];
-		}
-	}
+	//let skinImagePath = "Skin000.png";
+	//for(let i in skinNames[gta.game]) {
+	//	if(skinNames[gta.game][i][0] == skinId) {
+	//		skinImagePath = skinNames[gta.game][i][2];
+	//	}
+	//}
 
-	characterSelect.skinImage = characterSelect.window.image(265, 30, 130, 85, "files/images/skins/gta3/" + toString(skinImagePath));
+	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 70, "files/images/skins/none.png");
 	characterSelect.window.shown = true;
 }
-
-// ---------------------------------------------------------------------------
-
-bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
-	
-});
 
 // ---------------------------------------------------------------------------
 
@@ -2008,6 +2012,7 @@ addNetworkHandler("ag.registrationFailed", function(errorMessage) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.guiColour", function(red, green, blue) {
+	console.log("New colours for GUI");
 	primaryColour = [red, green, blue];
 	app.init();
 	closeAllWindows();

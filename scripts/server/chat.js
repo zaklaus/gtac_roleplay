@@ -17,6 +17,11 @@ function initChatScript() {
 // ---------------------------------------------------------------------------
 
 function meActionCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	meActionToNearbyPlayers(client, params);
 	return true;
 }
@@ -24,6 +29,11 @@ function meActionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function doActionCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	doActionToNearbyPlayers(client, params);
 	return true;
 }
@@ -31,6 +41,11 @@ function doActionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function shoutCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	shoutToNearbyPlayers(client, params);
 	return true;
 }
@@ -38,6 +53,11 @@ function shoutCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function talkCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	talkToNearbyPlayers(client, params);
 	return true;
 }
@@ -45,8 +65,35 @@ function talkCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function whisperCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}	
+
 	whisperToNearbyPlayers(client, params);
 	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function adminChatCommand(command, params, client) {	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	messageAdmins(`[#FFFF00][Admin Chat] [#AAAAAA]${client.name} [#CCCCCC](${getPlayerStaffTitle(client)}) [#FFFFFF]:${params}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function clanChatCommand(command, params, client) {	
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	clanChat(client, params);
 }
 
 // ---------------------------------------------------------------------------

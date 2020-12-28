@@ -42,6 +42,7 @@ let busRoutes = [
                     toVector3(1309.2, -642.4, 12.3),
                     toVector3(1350.5, -845, 14.91),
                     toVector3(1322.2, -1025.3, 14.76),
+                    toVector3(1307.5, -995.54, 14.88),
                 ],
             },
             { // BLUE ROUTE (1)
@@ -69,12 +70,13 @@ let busRoutes = [
                     toVector3(1309.2, -642.4, 12.3),
                     toVector3(1350.5, -845, 14.91),
                     toVector3(1322.2, -1025.3, 14.76),
+                    toVector3(1307.5, -995.54, 14.88),
                 ],
             }, 
             { // YELLOW ROUTE (2)
                 name: "Portland Yellow Line", 
                 island: 0, 
-                busColour: 5,
+                busColour: 6,
                 positions: [
                     toVector3(1269, -1056.4, 14.75),
                     toVector3(1088.7, -968.8, 14.91),
@@ -96,6 +98,7 @@ let busRoutes = [
                     toVector3(1309.2, -642.4, 12.3),
                     toVector3(1350.5, -845, 14.91),
                     toVector3(1322.2, -1025.3, 14.76),
+                    toVector3(1307.5, -995.54, 14.88),
                 ],
             },                    
         ],
@@ -137,7 +140,7 @@ let busRoutes = [
             { // BLUE ROUTE (1)
                 name: "Staunton Blue Line", 
                 island: 1,
-                busColour: 3,
+                busColour: 2,
                 positions: [
                     toVector3(-1.11, -388.4, 16.11),
                     toVector3(-15.75, -735.3, 26.15),
@@ -170,7 +173,7 @@ let busRoutes = [
             { // YELLOW ROUTE (2)
                 name: "Staunton Yellow Line", 
                 island: 1,
-                busColour: 5,
+                busColour: 6,
                 positions: [
                     toVector3(-1.11, -388.4, 16.11),
                     toVector3(-15.75, -735.3, 26.15),
@@ -210,7 +213,200 @@ let busRoutes = [
 
     // GTA SA
     [
+        [ // LOS SANTOS ISLAND (0)
+            { // RED ROUTE (0)
+                /*
+                    Serves:
+                        * Southeastern Los Santos (Ganton, East Beach, Airport, Docks, Willowfield)
 
+                    Crossovers:
+                        * Unity Station (Yellow, Blue, Green)
+                        * Ganton (Green)
+                        * Airport Gate (Yellow)
+                        
+                    Notable Stops:
+                        * Docks
+                        * Airport Gate
+                */
+                name: "Los Santos Yellow Line", 
+                island: 0,
+                busColour: 6,
+                positions: [
+                    toVector3(1823.79, -1852.66, 13.5144),
+                    toVector3(1804.12, -1609.59, 13.4419),
+                    toVector3(1660.32, -1510.09, 13.4877),
+                    toVector3(1612.54, -1322.23, 17.4085),
+                    toVector3(1778.93, -1286.59, 13.5744),
+                    toVector3(1854.72, -1208.16, 20.9552),
+                    toVector3(1659.95, -1158.07, 23.8315),
+                    toVector3(1461.6, -1031.05, 23.7518),
+                    toVector3(1277.71, -1036.63, 31.6085),
+                    toVector3(1322.74, -1151.38, 23.7558),
+                    toVector3(1194.26, -1334.15, 13.4953),
+                    toVector3(1081.29, -1392.64, 13.7023),
+                    toVector3(1034.65, -1555.27, 13.4591),
+                    toVector3(1033.26, -1782.3, 13.6323),
+                    toVector3(1262.27, -1855, 13.4887),
+                    toVector3(1445.39, -1875.5, 13.4944),
+                    toVector3(1742.23, -2168.78, 13.557),
+                    toVector3(1943.35, -2169.25, 13.4741),
+                    toVector3(1963.51, -1969.6, 13.5867),
+                    toVector3(1824.2, -1886.48, 13.4287),
+                ]
+            },            
+            { // BLUE ROUTE (1)
+                /*
+                    Serves:
+                        * Northwestern Los Santos (Vinewood, Temple, Market, Rodeo)
+
+                    Crossovers:
+                        * Unity Station (Red, Yellow, Green)
+                        * Skate Park (Yellow, Green)
+                        * Glen Park (Yellow, Green)
+                        * Alhambra Club (Yellow, Green)
+                        * All Saints General Hospital (Yellow)
+                        
+                    Notable Stops:
+                        * Madd Doggs Mansion
+                        * All Saints General Hospital
+                        * Market Ammunation
+                        * Vinewood Blvd
+                        * Vinewood Hills
+                        * Santa Maria Beach/Pier
+                */                
+                name: "Los Santos Blue Line", 
+                island: 0,
+                busColour: 2,
+                positions: [        
+                    toVector3(1824.17, -1851.5, 13.5134),
+                    toVector3(1853.95, -1395.48, 13.4882),
+                    toVector3(1659.33, -1158.59, 23.8368),
+                    toVector3(1375.08, -1139.12, 23.7585),
+                    toVector3(1186.53, -1139.9, 23.8007),
+                    toVector3(1021.63, -1139.48, 23.7568),
+                    toVector3(965.119, -1100.04, 23.7962),
+                    toVector3(1058.53, -1042.64, 32.03),
+                    toVector3(1238.74, -1041.7, 31.8307),
+                    toVector3(1377.08, -977.352, 32.2744),
+                    toVector3(1461.71, -731.011, 93.5068),
+                    toVector3(1248.83, -729.438, 94.7962),
+                    toVector3(932.221, -828.904, 94.6709),
+                    toVector3(717.372, -982.938, 52.8477),
+                    toVector3(452.042, -1182.3, 66.3269),
+                    toVector3(287.664, -1221.08, 75.3682),
+                    toVector3(225.497, -1346.85, 51.5658),
+                    toVector3(438.728, -1720.92, 9.92785),
+                    toVector3(894.789, -1788.3, 13.5674),
+                    toVector3(919.419, -1592.92, 13.4843),
+                    toVector3(939.902, -1408.49, 13.3463),
+                    toVector3(1207.53, -1329.3, 13.5012),
+                    toVector3(1324.24, -1282.88, 13.4815),
+                    toVector3(1296.85, -1551.41, 13.4839),
+                    toVector3(1294.85, -1811.15, 13.4816),
+                    toVector3(1649.38, -1875.42, 13.4858),
+                    toVector3(1819.59, -1870.9, 13.4987),
+                ]
+            },
+            { // GREEN ROUTE (2)
+                /*
+                    Serves:
+                        * Northeastern Los Santos (Idlewood, Ganton, Jefferson, East Los Santos, East Beach)
+
+                    Crossovers:
+                        * Unity Station (Red, Blue, Yellow)
+                        * Skate Park (Blue, Yellow)
+                        * Glen Park (Blue, Yellow)
+                        * Ganton (Red)
+                        * Alhambra Club (Yellow, Blue)
+                        
+                    Notable Stops:
+                        * County General Hospital
+                        * Glen Park
+                        * Skate Park
+                        * Stadium
+                */
+                name: "Los Santos Green Line", 
+                island: 0,
+                busColour: 86,
+                positions: [    
+                    toVector3(1823.94, -1853.88, 13.5103),
+                    toVector3(1823.97, -1655.31, 13.4738),
+                    toVector3(1854.81, -1409.54, 13.4829),
+                    toVector3(1869.02, -1152.77, 23.8096),
+                    toVector3(1975.68, -1104.29, 25.5835),
+                    toVector3(2077.6, -985.15, 50.0375),
+                    toVector3(2161.61, -1022.78, 62.5533),
+                    toVector3(2173.38, -1148.91, 24.9203),
+                    toVector3(2166.28, -1267.17, 23.9138),
+                    toVector3(2087.27, -1298.99, 23.9193),
+                    toVector3(2008.67, -1338.34, 23.9207),
+                    toVector3(2026.04, -1468.12, 14.867),
+                    toVector3(2108.83, -1684.64, 13.4771),
+                    toVector3(2185.67, -1745.22, 13.4681),
+                    toVector3(2287.18, -1734.76, 13.4821),
+                    toVector3(2411.06, -1793.34, 13.4746),
+                    toVector3(2451.02, -1934.86, 13.4209),
+                    toVector3(2529.97, -1750.13, 13.479),
+                    toVector3(2685.6, -1659.48, 11.4476),
+                    toVector3(2739.7, -1524.93, 29.6406),
+                    toVector3(2739.95, -1278.48, 57.8435),
+                    toVector3(2683.93, -1068.66, 69.2199),
+                    toVector3(2578.78, -1045.36, 69.5098),
+                    toVector3(2326.9, -1128.69, 27.8126),
+                    toVector3(2367.83, -1270.92, 23.941),
+                    toVector3(2324.15, -1382.25, 23.9621),
+                    toVector3(2137.14, -1382.12, 23.9376),
+                    toVector3(2010.74, -1459.87, 13.4914),
+                    toVector3(1824.35, -1562.74, 13.4622),
+                    toVector3(1818.98, -1872.52, 13.5075),
+                ]
+            },
+            { // YELLOW ROUTE (3)
+                /*
+                    Serves:
+                        * Central Los Santos (Downtown, Commerce, Market)
+
+                    Crossovers:
+                        * Unity Station (Red, Blue, Green)
+                        * Skate Park (Blue, Green)
+                        * Glen Park (Blue, Green)
+                        * All Saints General Hospital (Blue)
+                        * Alhambra Club (Yellow, Blue)
+                        * Airport Gate (Red)
+                        
+                    Notable Stops:
+                        * All Saints General Hospital
+                        * Bank
+                        * Star Tower
+                        * Airport Gate
+                */
+                name: "Los Santos Red Line", 
+                island: 0,
+                busColour: 3,
+                positions: [
+                    toVector3(1823.79, -1852.66, 13.5144),
+                    toVector3(1804.12, -1609.59, 13.4419),
+                    toVector3(1660.32, -1510.09, 13.4877),
+                    toVector3(1612.54, -1322.23, 17.4085),
+                    toVector3(1778.93, -1286.59, 13.5744),
+                    toVector3(1854.72, -1208.16, 20.9552),
+                    toVector3(1659.95, -1158.07, 23.8315),
+                    toVector3(1461.6, -1031.05, 23.7518),
+                    toVector3(1277.71, -1036.63, 31.6085),
+                    toVector3(1322.74, -1151.38, 23.7558),
+                    toVector3(1194.26, -1334.15, 13.4953),
+                    toVector3(1081.29, -1392.64, 13.7023),
+                    toVector3(1034.65, -1555.27, 13.4591),
+                    toVector3(1033.26, -1782.3, 13.6323),
+                    toVector3(1262.27, -1855, 13.4887),
+                    toVector3(1445.39, -1875.5, 13.4944),
+                    toVector3(1742.23, -2168.78, 13.557),
+                    toVector3(1943.35, -2169.25, 13.4741),
+                    toVector3(1963.51, -1969.6, 13.5867),
+                    toVector3(1824.2, -1886.48, 13.4287),
+                ]
+            }                    
+        ],
     ],
 
     // GTA UG
@@ -255,13 +451,15 @@ function isLastStopOnBusRoute(island, busRoute, busRouteStop) {
 // ---------------------------------------------------------------------------
 
 function freezeBusForStop(client) {
-    triggerNetworkEvent("ag.control", client, false, false);
+    getVehicleData(getPlayerVehicle(client)).engine = false;
+	getPlayerVehicle(client).engine = false;
 }
 
 // ---------------------------------------------------------------------------
 
 function unFreezeBusForStop(client) {
-    triggerNetworkEvent("ag.control", client, true, false);
+    getVehicleData(getPlayerVehicle(client)).engine = true;
+	getPlayerVehicle(client).engine = true;
 }
 
 // ---------------------------------------------------------------------------
@@ -283,16 +481,20 @@ function arrivedAtBusStop(client) {
     if(isLastStopOnBusRoute(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute, getPlayerData(client).busRouteStop)) {
         respawnVehicle(getPlayerData(client).busRouteVehicle);
         messageClientNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
+		getPlayerData(client).busRouteVehicle = false;
+		getPlayerData(client).busRoute = 0;
+		getPlayerData(client).busRouteStop = 0;
+		getPlayerData(client).busRouteIsland = 0;
         return false;
     }
 
-    messageClientNormal(client, "⌛ Please wait a moment for passengers to get on and off the bus.", getColourByName("busDriverGreen"))
+    showGameMessage(client, "⌛ Please wait a moment for passengers to get on and off the bus.", getColourByName("busDriverGreen"), 3500);
     freezeBusForStop(client);
     getPlayerData(client).busRouteStop = getNextStopOnBusRoute(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute, getPlayerData(client).busRouteStop);
     setTimeout(function() {
         unFreezeBusForStop(client);
         showCurrentBusStop(client);
-        messageClientNormal(client, "Proceed to the next stop (green checkpoint)", getColourByName("busDriverGreen"))
+        showGameMessage(client, "Proceed to the next stop (green checkpoint)", getColourByName("busDriverGreen"), 3500);
     }, 5000);
 }
 

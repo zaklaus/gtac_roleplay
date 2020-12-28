@@ -769,11 +769,20 @@ function doesBusinessHaveInterior(businessId) {
 
 function sendAllBusinessLabelsToPlayer(client) {
 	let tempBusinessLabels = [];
-	for(let i in getServerData().businesses) {
-		tempBusinessLabels.push([i, getServerData().businesses[i].entrancePosition, getGameConfig().propertyLabelHeight[getServerGame()], getServerData().businesses[i].name, getServerData().businesses[i].locked, false]);
+	let totalBusinesses = getServerData().businesses.length;
+	let businessesPerNetworkEvent = 100;
+	let totalNetworkEvents = Math.ceil(totalBusinesses/businessesPerNetworkEvent);
+	for(let i = 0 ; i < totalNetworkEvents ; i++) {
+		for(let j = 0 ; j < businessesPerNetworkEvent ; j++) {
+			let tempBusinessId = (i*businessesPerNetworkEvent)+j;
+			if(typeof getServerData().businesses[tempBusinessId] != "undefined") {
+				let tempBusinessLabels = [];
+				tempBusinessLabels.push([tempBusinessId, getServerData().businesses[tempBusinessId].entrancePosition, getGameConfig().propertyLabelHeight[getServerGame()], getServerData().businesses[tempBusinessId].description, getServerData().businesses[tempBusinessId].locked, false]);
+			}
+		}
+		triggerNetworkEvent("ag.bizlabel.all", client, tempBusinessLabels);
+		tempBusinessLabels = [];
 	}
-		
-	triggerNetworkEvent("ag.bizlabel.all", client, tempBusinessLabels);
 }
 
 // ---------------------------------------------------------------------------

@@ -751,8 +751,8 @@ function toggleJobEnabledCommand(command, params, client) {
 		return false;
 	}
 
-	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
-	let jobData = getJobData(closestJobLocation.job);
+	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let jobData = getJobData(jobId);
 
 	jobData.enabled = !jobData.enabled;
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.enabled)} [#FFFFFF]the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
@@ -766,8 +766,8 @@ function toggleJobWhiteListCommand(command, params, client) {
 		return false;
 	}
 
-	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
-	let jobData = getJobData(closestJobLocation.job);
+	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let jobData = getJobData(jobId);
 
 	jobData.whiteListEnabled = !jobData.whiteListEnabled;
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.whiteListEnabled)} [#FFFFFF]the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
@@ -781,11 +781,131 @@ function toggleJobBlackListCommand(command, params, client) {
 		return false;
 	}
 
-	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
-	let jobData = getJobData(closestJobLocation.job);
+	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let jobData = getJobData(jobId);
 
 	jobData.blackListEnabled = !jobData.blackListEnabled;
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.blackListEnabled)} [#FFFFFF]the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
+function addPlayerToJobBlackListCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).job;
+
+	if(!targetClient) {
+		messagePlayerError(client, `That player was not found!`);
+		return false;
+	}
+
+	if(!getJobData(jobId)) {
+		messagePlayerError(client, `That job was not found!`);
+		return false;
+	}
+
+	if(isPlayerOnJobBlackList(targetClient, jobId)) {
+		messagePlayerError(client, `That player is already blacklisted from that job!`);
+		return false;
+	}
+
+	addPlayerToJobBlackList(targetClient, jobId);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]added ${getCharacterFullName(targetClient)} [#FFFFFF]to the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
+function removePlayerFromJobBlackListCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).job;
+
+	if(!targetClient) {
+		messagePlayerError(client, `That player was not found!`);
+		return false;
+	}
+
+	if(!getJobData(jobId)) {
+		messagePlayerError(client, `That job was not found!`);
+		return false;
+	}
+
+	if(!isPlayerOnJobBlackList(targetClient, jobId)) {
+		messagePlayerError(client, `That player is not blacklisted from that job!`);
+		return false;
+	}
+
+	removePlayerFromJobBlackList(targetClient, jobId);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]removed ${getCharacterFullName(targetClient)} [#FFFFFF]from the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
+function addPlayerToJobWhiteListCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).job;
+
+	if(!targetClient) {
+		messagePlayerError(client, `That player was not found!`);
+		return false;
+	}
+
+	if(!getJobData(jobId)) {
+		messagePlayerError(client, `That job was not found!`);
+		return false;
+	}
+
+	if(isPlayerOnJobWhiteList(targetClient, jobId)) {
+		messagePlayerError(client, `That player is already whitelisted from that job!`);
+		return false;
+	}
+
+	addPlayerToJobWhiteList(targetClient, jobId);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]added ${getCharacterFullName(targetClient)} [#FFFFFF]to the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+}
+
+// ---------------------------------------------------------------------------
+
+function removePlayerFromJobWhiteListCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).job;
+
+	if(!targetClient) {
+		messagePlayerError(client, `That player was not found!`);
+		return false;
+	}
+
+	if(!getJobData(jobId)) {
+		messagePlayerError(client, `That job was not found!`);
+		return false;
+	}
+
+	if(!isPlayerOnJobWhiteList(targetClient, jobId)) {
+		messagePlayerError(client, `That player is not whitelisted from that job!`);
+		return false;
+	}
+
+	removePlayerFromJobWhiteList(targetClient, jobId);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]removed ${getCharacterFullName(targetClient)} [#FFFFFF]from the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
 }
 
 // ---------------------------------------------------------------------------

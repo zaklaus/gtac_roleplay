@@ -47,16 +47,6 @@ addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnPedSpawn", function(event, ped) {
-    if(ped.isType(ELEMENT_PLAYER)) {
-        let client = getClientFromPlayerElement(ped);
-        //triggerNetworkEvent("ag.locations", client, getServerData().policeStations[getServerGame()], getServerData().fireStations[getServerGame()], getServerData().hospitals[getServerGame()], getServerData().payAndSprays[getServerGame()], getServerData().ammunations[getServerGame()], getServerData().jobs[getServerGame()]);
-        ped.setData("ag.name", getClientSubAccountName(client), true);
-    }
-});
-
-// ---------------------------------------------------------------------------
-
 addEventHandler("onPlayerChat", function(event, client, messageText) {
     event.preventDefault();
     if(!getPlayerData(client).loggedIn) {

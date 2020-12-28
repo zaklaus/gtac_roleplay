@@ -986,6 +986,9 @@ function isPlayerInJobVehicle(client) {
 // ---------------------------------------------------------------------------
 
 function isPlayerWorking(client) {
+	if(!getClientCurrentSubAccount(client)) {
+		return false;
+	}
 	return getClientCurrentSubAccount(client).isWorking;
 }
 
@@ -1102,12 +1105,12 @@ function stopReturnToJobVehicleCountdown(client) {
 function sendAllJobLabelsToPlayer(client) {
 	let tempJobLocations = [];
 	for(let k in getServerData().jobs) {
-		for(m in getServerData().jobs[i].locations) {
+		for(let m in getServerData().jobs[k].locations) {
 			tempJobLocations.push({
-				id: getServerData().jobs[i].locations[j].databaseId,
-				jobType: getServerData().jobs[i].jobType,
-				name: getServerData().jobs[i].name,
-				position: getServerData().jobs[i].locations[j].position,
+				id: getServerData().jobs[k].locations[m].databaseId,
+				jobType: getServerData().jobs[k].jobType,
+				name: getServerData().jobs[k].name,
+				position: getServerData().jobs[k].locations[m].position,
 			});
 		}
 	}
@@ -1119,10 +1122,10 @@ function sendAllJobLabelsToPlayer(client) {
 	for(let i = 0 ; i < totalNetworkEvents ; i++) {
 		for(let j = 0 ; j < jobLocationsPerNetworkEvent ; j++) {
 			let tempJobLocationId = (i*jobLocationsPerNetworkEvent)+j;
-			if(typeof getServerData().jobs[k] != "undefined") {
+			//if(typeof getServerData().jobs[i] != "undefined") {
 				let tempJobLabels = [];
 				tempJobLabels.push([tempJobLocations[i].id, tempJobLocations[i].position, getGameConfig().propertyLabelHeight[getServerGame()], tempJobLocations[i].name, tempJobLocations[i].jobType, false]);
-			}
+			//}
 		}
 		triggerNetworkEvent("ag.joblabel.all", client, tempJobLabels);
 		tempJobLabels = [];

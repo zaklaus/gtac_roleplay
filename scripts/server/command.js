@@ -232,6 +232,7 @@ function loadCommandData() {
             commandData("delveh", deleteVehicleCommand, "", getStaffFlagValue("manageVehicles"), true, false),
             
             commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),	
+            commandData("unlock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),	
             commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, false),	
             commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, false),	
             commandData("lights", vehicleLightsCommand, "", getStaffFlagValue("none"), true, false),	

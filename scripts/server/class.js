@@ -587,6 +587,8 @@ function initClassTable() {
 				this.blip = false;
 				this.pickup = false;
 				this.enabled = false;
+				this.interior = 0;
+				this.dimension = 0;
 
 				if(!jobLocationAssoc) {
 					this.databaseId = jobLocationAssoc["job_loc_id"];
@@ -597,6 +599,8 @@ function initClassTable() {
 					this.blip = false;
 					this.pickup = false;
 					this.enabled = jobLocationAssoc["job_loc_enabled"];
+					this.interior = jobLocationAssoc["job_loc_int"];
+					this.dimension = jobLocationAssoc["job_loc_vw"];
 				}
 			}
 		},

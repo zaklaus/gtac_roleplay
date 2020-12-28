@@ -142,6 +142,8 @@ function loadCommandData() {
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),
             commandData("startwork", startWorkingCommand, "", getStaffFlagValue("none"), true, false),
             commandData("stopwork", stopWorkingCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("startjob", startWorkingCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("stopjob", stopWorkingCommand, "", getStaffFlagValue("none"), true, false),            
             commandData("quitjob", quitJobCommand, "", getStaffFlagValue("none"), true, false),
             commandData("uniform", jobUniformCommand, "[uniform]", getStaffFlagValue("none"), true, false),
             commandData("equip", jobEquipmentCommand, "[equipment]", getStaffFlagValue("none"), true, false),

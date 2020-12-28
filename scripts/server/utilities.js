@@ -1160,7 +1160,15 @@ function getPlayerData(client) {
 // ---------------------------------------------------------------------------
 
 function getClientCurrentSubAccount(client) {
+	if(!getPlayerData(client)) {
+		return false;
+	}
+
 	let subAccountId = getPlayerData(client).currentSubAccount;
+	if(subAccountId == -1) {
+		return false;
+	}
+
 	return getPlayerData(client).subAccounts[subAccountId];
 }
 
@@ -1820,15 +1828,23 @@ async function waitUntil(condition) {
 // ----------------------------------------------------------------------------
 
 function resetClientStuff(client) {
-	if(isClientOnJobRoute(client)) {
+	if(isPlayerOnJobRoute(client)) {
 		stopJobRoute(client);
 	}
 
-	if(getClientData(client).rentingVehicle) {
+	if(getPlayerData(client).rentingVehicle) {
 		stopRentingVehicle(client);
 	}
 
-	getClientData(client).lastVehicle = null;
+	getPlayerData(client).lastVehicle = null;
+}
+
+// ----------------------------------------------------------------------------
+
+function sendAllLabelsToPlayer(client) {
+	sendAllBusinessLabelsToPlayer(client);
+	sendAllHouseLabelsToPlayer(client);
+	sendAllJobLabelsToPlayer(client);
 }
 
 // ----------------------------------------------------------------------------

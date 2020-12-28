@@ -1277,11 +1277,12 @@ app.init = function()
 	newCharacter.placeOfOrigin.axis.y.scrollBar.styles.innerBar.backgroundColour = toColour(primaryColour[0], primaryColour[1], primaryColour[2], 200);
 	newCharacter.placeOfOrigin.setScrollBarsManual(true);
 
-	if(gta.game == GAME_GTA_III) {
-		newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/gta3/Skin000.png");
-	} else {
-		newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/none.png");
-	}
+	//if(gta.game == GAME_GTA_III) {
+	//	newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/gta3/Skin000.png");
+	//} else {
+	//	newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/none.png");
+	//}
+	newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/none.png");
 	
 	newCharacter.skinDropDown = newCharacter.window.dropDown(220, 100, 200, 25, 'Choose Skin', {
 		main: {
@@ -1319,15 +1320,18 @@ app.init = function()
 			width: 200,
 		},
 	}, function() {
-		let skinImagePath = skinNames[gta.game][this.selectedEntryIndex][2];
-		if(newCharacter.skinImage != null) {
-			newCharacter.skinImage.remove();
-		}
-		if(gta.game == GAME_GTA_III) {
-			newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/gta3/" + toString(skinImagePath));
-		} else {
-			newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/none.png");
-		}
+		//let skinImagePath = skinNames[gta.game][this.selectedEntryIndex][2];
+		//if(newCharacter.skinImage != null) {
+		//	newCharacter.skinImage.remove();
+		//}
+
+		//if(gta.game == GAME_GTA_III) {
+		//	newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/gta3/" + toString(skinImagePath));
+		//} else {
+		//	newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/none.png");
+		//}
+
+		//newCharacter.skinImage = newCharacter.window.image(265, 30, 110, 70, "files/images/skins/none.png");
 	});
 	newCharacter.skinDropDown.axis.y.scrollBar.styles.innerBar.backgroundColour = toColour(255, 128, 0, 200);
 	newCharacter.skinDropDown.setScrollBarsManual(true);
@@ -1674,7 +1678,7 @@ app.init = function()
 		},
 	}, selectNextCharacter);
 	
-	characterSelect.skinImage = characterSelect.window.image(265, 30, 130, 85, "files/images/skins/gta3/Skin000.png");
+	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 70, "files/images/skins/none.png");
 	
 	// ---------------------------------------------------------------------------
 	
@@ -1713,9 +1717,7 @@ let checkRegistration = function() {
 // ---------------------------------------------------------------------------
 
 let checkNewCharacter = function() {
-	if(newCharacter.skinDropDown.selectedEntryIndex == -1) {
-		return false;
-	}
+	let skinId = false;	
 
 	if(newCharacter.firstNameInput.lines[0].length < 2) {
 		return false;
@@ -1723,10 +1725,14 @@ let checkNewCharacter = function() {
 	
 	if(newCharacter.lastNameInput.lines[0].length < 2) {
 		return false;
-	} 
+	}
+
+	if(newCharacter.skinDropDown.selectedEntryIndex != -1) {
+		skinId = skinNames[gta.game][newCharacter.skinDropDown.selectedEntryIndex][0];
+	}
 
 	if(newCharacter.placeOfOrigin.selectedEntryIndex == -1) {
-		return false;
+		placeOfOrigin = 0;
 	}
 
 	triggerNetworkEvent("ag.checkNewCharacter", 
@@ -1734,7 +1740,7 @@ let checkNewCharacter = function() {
 		newCharacter.lastNameInput.lines[0], 
 		toString(toString(newCharacter.dateOfBirth.day) + "/" + toString(newCharacter.dateOfBirth.month) + "/" + toString(newCharacter.dateOfBirth.year)),
 		placesOfOrigin[newCharacter.placeOfOrigin.selectedEntryIndex],
-		skinNames[gta.game][newCharacter.skinDropDown.selectedEntryIndex][0],
+		skinId,
 	);
 }
 
@@ -1828,19 +1834,8 @@ let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBir
 	characterSelect.nameText.text = lastName + ", " + firstName;
 	characterSelect.dateOfBirthText.text = "Born: " + toString(dateOfBirth);
 	characterSelect.placeOfOrigin.text = "From: " + toString(placeOfOrigin);
-
-	if(characterSelect.skinImage != null) {
-		characterSelect.skinImage.remove();
-	}
-
-	let skinImagePath = "Skin000.png";
-	for(let i in skinNames[gta.game]) {
-		if(skinNames[gta.game][i][0] == skinId) {
-			skinImagePath = skinNames[gta.game][i][2];
-		}
-	}
 	
-	characterSelect.skinImage = characterSelect.window.image(265, 30, 130, 85, "files/images/skins/gta3/" + toString(skinImagePath));
+	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 70, "files/images/skins/none.png");
 
 	characterSelect.window.shown = true;
 }

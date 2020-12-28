@@ -27,6 +27,13 @@ function getPositionCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function toggleMouseCursorCommand(command, params, client) {
+	triggerNetworkEvent("ag.cursortoggle", client);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
 function setNewCharacterSpawnPositionCommand(command, params, client) {
 	let position = client.player.position;
 	getServerConfig().newCharacter.spawnPosition = position;

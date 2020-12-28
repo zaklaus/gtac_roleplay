@@ -11,6 +11,7 @@
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.onPlayerEnterSphere", function(client, sphere) {
+    /*
     switch(sphere.getData("ag.type")) {
         case AG_SPHERE_HOUSE:
             client.player.setData("ag.atHouse", sphere.getData("ag.id"), false);
@@ -23,6 +24,7 @@ addNetworkHandler("ag.onPlayerEnterSphere", function(client, sphere) {
         default:
             break;
     }
+    */
 });
 
 // ---------------------------------------------------------------------------
@@ -135,6 +137,15 @@ function updatePlayerNameTag(client) {
 
 // ---------------------------------------------------------------------------
 
+function updateAllPlayerNameTags() {
+    let clients = getClients();
+	for(let i in clients) {
+        updatePlayerNameTag(clients[i]);
+    }
+}
+
+// ---------------------------------------------------------------------------
+
 function updatePlayerPing(client) {
 	triggerNetworkEvent("ag.ping", null, client.name, client.ping);
 }
@@ -142,6 +153,7 @@ function updatePlayerPing(client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.arrivedAtBusStop", function(client) {
+    console.log(client);
     arrivedAtBusStop(client);
 });
 
@@ -162,7 +174,14 @@ addNetworkHandler("ag.clientStarted", function(client) {
 	console.log(`${getClientDisplayForConsole(client)}'s client resources are started and running!`);
 	if(client.getData("ag.isReady") == true) {
 		initClient(client);
-	}	
+	}
 });
 
 // ---------------------------------------------------------------------------
+
+function showGameMessage(client, text, colour, duration) {
+    triggerNetworkEvent("ag.smallGameMessage", client, text, colour, duration);
+}
+
+// ---------------------------------------------------------------------------
+

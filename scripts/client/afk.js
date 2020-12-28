@@ -25,7 +25,7 @@ addEventHandler("OnFocus", function(event) {
     triggerNetworkEvent("ag.afk", false);
 	if(localPlayer != null) {
 		localPlayer.collisionsEnabled = true;
-		if(gta.game == GAME_GTA_SA) {
+		if(gta.game != GAME_GTA_SA) {
 			gta.setCiviliansEnabled(true);
 		}
         gta.setTrafficEnabled(true);		

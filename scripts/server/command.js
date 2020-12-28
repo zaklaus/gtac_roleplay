@@ -68,7 +68,13 @@ function loadCommandData() {
             commandData("local", talkCommand, "<message>", getStaffFlagValue("none"), true, false),
             commandData("l", talkCommand, "<message>", getStaffFlagValue("none"), true, false),
             commandData("w", whisperCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("whisper", whisperCommand, "<message>", getStaffFlagValue("none"), true, false),            
+            commandData("whisper", whisperCommand, "<message>", getStaffFlagValue("none"), true, false), 
+            commandData("clanchat", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false), 
+            commandData("clan", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false), 
+            commandData("c", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false), 
+            commandData("adminchat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("a", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("achat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
         ],
         clan: [
             commandData("addclan", createClanCommand, "<name>", getStaffFlagValue("manageClans"), true, true),  
@@ -159,6 +165,14 @@ function loadCommandData() {
             // Bus/Garbage
             commandData("startroute", jobStartRouteCommand, "", getStaffFlagValue("none"), true, false),
             commandData("stoproute", jobStopRouteCommand, "", getStaffFlagValue("none"), true, false),
+
+            // Admin Job Stuff
+            commandData("addjobloc", createJobLocationCommand, "<job name/id>", getStaffFlagValue("manageJobs"), true, false),
+            commandData("deljobloc", deleteJobLocationCommand, "", getStaffFlagValue("manageJobs"), true, false),
+            commandData("jobloctoggle", deleteJobLocationCommand, "", getStaffFlagValue("manageJobs"), true, false),
+            commandData("jobwhitelist", toggleJobWhiteListCommand, "[job id]", getStaffFlagValue("manageJobs"), true, false),
+            commandData("jobblacklist", toggleJobBlackListCommand, "[job id]", getStaffFlagValue("manageJobs"), true, false),
+            commandData("jobtoggle", toggleJobEnabledCommand, "[job id]", getStaffFlagValue("manageJobs"), true, false),
         ],
         keybind: [
             commandData("bindkey", addKeyBindCommand, "<key id/name> <command> [params]", getStaffFlagValue("none"), true, false),
@@ -195,7 +209,7 @@ function loadCommandData() {
             commandData("clearstaffflags", clearStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true),
             commandData("staffflags", allStaffFlagsCommand, "", getStaffFlagValue("manageAdmins"), true, true),
 
-            commandData("givemoney", givePlayerMoneyCommand, "<player name/id> <amount>", getStaffFlagValue("manageAdmins"), true, true),
+            commandData("givemoney", givePlayerMoneyCommand, "<player name/id> <amount>", getStaffFlagValue("giveMoney"), true, true),
         ],
         security: [],
         startup: [],
@@ -440,5 +454,15 @@ addCommandHandler("cmd", function(command, params, client) {
 
     getCommand(newCommand).handlerFunction(newCommand, newParams, client);
 });
+
+// ---------------------------------------------------------------------------
+
+function listAllCommands() {
+    for(let i in serverCommands) {
+        for(let j in serverCommands[i]) {
+            console.log(serverCommands[i][j].command);
+        }
+    }
+}
 
 // ---------------------------------------------------------------------------

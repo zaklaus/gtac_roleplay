@@ -218,8 +218,10 @@ function createAllJobPickups() {
 			for(let j in getServerData().jobs[i].locations) {
 				pickupCount++;
 				getServerData().jobs[i].locations[j].pickup = gta.createPickup(getServerData().jobs[i].pickupModel, getServerData().jobs[i].locations[j].position);
-				getServerData().jobs[i].locations[j].pickup.setData("ag.ownerType", AG_PICKUP_JOB, true);
-				getServerData().jobs[i].locations[j].pickup.setData("ag.ownerId", i, true);			
+				getServerData().jobs[i].locations[j].pickup.setData("ag.ownerType", AG_PICKUP_JOB, false);
+				getServerData().jobs[i].locations[j].pickup.setData("ag.ownerId", i, false);
+				getServerData().jobs[i].locations[j].pickup.interior = getServerData().jobs[i].locations[j].interior;
+				getServerData().jobs[i].locations[j].pickup.dimension = getServerData().jobs[i].locations[j].dimension;
 				addToWorld(getServerData().jobs[i].locations[j].pickup);
 
 				console.log(`[Asshat.Job] Job '${getServerData().jobs[i].name}' location pickup ${j} spawned!`);
@@ -691,6 +693,11 @@ function reloadAllJobsCommand(command, params, client) {
 	getServerData().jobs = loadJobsFromDatabase();
 	createAllJobPickups();
 	createAllJobBlips();
+
+	let clients = getClients();
+	for(let i in clients) {
+		sendAllJobLabelsToPlayer(clients[i]);
+	}	
 
 	messageAdminAction(`All server jobs have been reloaded by an admin!`);
 }

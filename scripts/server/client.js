@@ -10,32 +10,6 @@
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.onPlayerEnterSphere", function(client, sphere) {
-    /*
-    switch(sphere.getData("ag.type")) {
-        case AG_SPHERE_HOUSE:
-            client.player.setData("ag.atHouse", sphere.getData("ag.id"), false);
-            break;
-
-        case AG_SPHERE_BUSINESS:
-            client.player.setData("ag.atBusiness", sphere.getData("ag.id"), false);
-            break;            
-        
-        default:
-            break;
-    }
-    */
-});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.onPlayerExitSphere", function(client, sphere) {
-    client.player.removeData("ag.atHouse");
-    client.player.removeData("ag.atBusiness");
-});
-
-// ---------------------------------------------------------------------------
-
 addNetworkHandler("ag.promptAnswerNo", function(client) {
     if(!getEntityData(client, "ag.prompt")) {
         return false;

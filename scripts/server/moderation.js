@@ -506,17 +506,6 @@ function allStaffFlagsCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function adminChatCommand(command, params, client) {	
-	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
-
-	messageAdmins(`[#FFFF00](Admin Chat) [#AAAAAA]${client.name}[#FFFFFF]: ${params}`);
-}
-
-// ---------------------------------------------------------------------------
-
 function givePlayerMoneyCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
@@ -537,3 +526,5 @@ function givePlayerMoneyCommand(command, params, client) {
 	messageClientSuccess(client, `You gave [#AAAAAA]$${amount} [#FFFFFF]to [#AAAAAA]${getCharacterFullName(targetClient)}`);
 	messageClientAlert(client, `An admin gave you [#AAAAAA]$${amount}`);
 }
+
+// ---------------------------------------------------------------------------

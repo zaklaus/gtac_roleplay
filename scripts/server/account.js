@@ -434,9 +434,7 @@ function loginSuccess(client) {
 	getPlayerData(client).accountData.ipAddress = client.ip;
 
 	sendRemovedWorldObjectsToPlayer(client);
-	sendAllBusinessLabelsToPlayer(client);
-	sendAllHouseLabelsToPlayer(client);
-	sendAllJobLabelsToPlayer(client);
+	sendAllLabelsToPlayer(client);
 	sendAccountKeyBindsToClient(client);
 
 	//message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
@@ -735,6 +733,8 @@ function savePlayerToDatabase(client) {
 		if(client.player != null) {
 			subAccountData.spawnPosition = getPlayerPosition(client);
 			subAccountData.spawnHeading = getPlayerHeading(client);
+			subAccountData.interior = getPlayerInterior(client);
+			subAccountData.dimension = getPlayerVirtualWorld(client);
 		}
 
 		saveSubAccountToDatabase(subAccountData);
@@ -746,6 +746,10 @@ function savePlayerToDatabase(client) {
 // ---------------------------------------------------------------------------
 
 function initClient(client) {
+	if(client.console) {
+		return false;
+	}
+
 	triggerNetworkEvent("ag.guiColour", client, getServerConfig().guiColour[0], getServerConfig().guiColour[1], getServerConfig().guiColour[2]);
 	triggerNetworkEvent("ag.logo", client, getServerConfig().showLogo);
 	triggerNetworkEvent("ag.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
@@ -769,23 +773,23 @@ function initClient(client) {
 				loginSuccess(client);
 			} else {
 				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+					console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login GUI.`);
 					triggerNetworkEvent("ag.showLogin", client);
 				} else {
+					console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
 					messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
 				}
 			}
 		} else {
 			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register GUI.`);
 				triggerNetworkEvent("ag.showRegistration", client);
 			} else {
+				console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
 				messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
 			}
 		}
 	}, 2500);
-
-	//if(server.game < GAME_GTA_IV) {
-	//	sendAllBlips(client);
-	//}
 }
 
 // ---------------------------------------------------------------------------

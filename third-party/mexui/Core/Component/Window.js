@@ -3,15 +3,15 @@ mexui.Component.Window = function(x, y, w, h, title, styles)
 	mexui.Entity.Component.call(this, true);
 	mexui.Entity.StyleableEntity.call(this, this.linkComponentStyles('Window', styles));
 	
-	this.position				= toVector2(x, y);
-	this.size					= toVector2(w, h);
+	this.position				= new Vec2(x, y);
+	this.size					= new Vec2(w, h);
 	this.title					= title || '';
 	
 	this.controls				= [];
 	this.titleBarShown			= true;
 	this.titleBarHeight			= 30;
 	this.titleBarIconShown		= true;
-	this.titleBarIconSize		= toVector2(30, 30);
+	this.titleBarIconSize		= new Vec2(30, 30);
 };
 mexui.util.extend(mexui.Component.Window, mexui.Entity.Component);
 
@@ -133,8 +133,8 @@ mexui.Component.Window.prototype.render = function()
 	if(this.titleBarShown)
 	{
 		// window title bar
-		mexui.native.drawRectangle(this.position, toVector2(this.size.x, this.titleBarHeight), this.getStyles('title'));
-		mexui.native.drawText(this.position, toVector2(this.size.x, this.titleBarHeight), this.title, this.getStyles('title'));
+		mexui.native.drawRectangle(this.position, new Vec2(this.size.x, this.titleBarHeight), this.getStyles('title'));
+		mexui.native.drawText(this.position, new Vec2(this.size.x, this.titleBarHeight), this.title, this.getStyles('title'));
 		
 		if(this.titleBarIconShown)
 		{
@@ -211,7 +211,7 @@ mexui.Component.Window.prototype.isCursorOverCloseIcon = function()
 
 mexui.Component.Window.prototype.getCloseIconPosition = function()
 {
-	return toVector2(this.position.x + (this.size.x - this.titleBarIconSize.x), this.position.y);
+	return new Vec2(this.position.x + (this.size.x - this.titleBarIconSize.x), this.position.y);
 };
 
 mexui.Component.Window.prototype.triggerEvent = function(eventName, e, data, callBaseMethodFirst)
@@ -365,14 +365,14 @@ mexui.Component.Window.prototype.line			= function(x, y, w, h, styles, callback)
 mexui.Component.Window.prototype.list			= function(x, y, w, h, styles, callback)		{	return this.addControl(new mexui.Control.List(this, x, y, w, h, styles, callback));					};
 mexui.Component.Window.prototype.minute			= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.Minute(this, x, y, w, h, text, styles, callback));			};
 mexui.Component.Window.prototype.month			= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.Month(this, x, y, w, h, text, styles, callback));			};
-mexui.Component.Window.prototype.number			= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.toInteger(this, x, y, w, h, text, styles, callback));			};
+mexui.Component.Window.prototype.number			= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.Number(this, x, y, w, h, text, styles, callback));			};
 mexui.Component.Window.prototype.password		= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.Password(this, x, y, w, h, text, styles, callback));		};
 mexui.Component.Window.prototype.positiveInteger	= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.PositiveInteger(this, x, y, w, h, text, styles, callback));	};
-mexui.Component.Window.prototype.positiveNumber		= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.PositivetoInteger(this, x, y, w, h, text, styles, callback));		};
+mexui.Component.Window.prototype.positiveNumber		= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.PositiveNumber(this, x, y, w, h, text, styles, callback));		};
 mexui.Component.Window.prototype.progressBar	= function(x, y, w, h, text, styles)			{	return this.addControl(new mexui.Control.ProgressBar(this, x, y, w, h, text, styles));				};
 mexui.Component.Window.prototype.radioButton	= function(x, y, w, h, text, groupId, styles, callback)		{	return this.addControl(new mexui.Control.RadioButton(this, x, y, w, h, text, groupId, styles, callback));		};
 mexui.Component.Window.prototype.rangedInteger	= function(x, y, w, h, text, min, max, styles, callback)	{	return this.addControl(new mexui.Control.RangedInteger(this, x, y, w, h, text, min, max, styles, callback));	};
-mexui.Component.Window.prototype.rangedNumber	= function(x, y, w, h, text, min, max, styles, callback)	{	return this.addControl(new mexui.Control.RangedtoInteger(this, x, y, w, h, text, min, max, styles, callback));		};
+mexui.Component.Window.prototype.rangedNumber	= function(x, y, w, h, text, min, max, styles, callback)	{	return this.addControl(new mexui.Control.RangedNumber(this, x, y, w, h, text, min, max, styles, callback));		};
 mexui.Component.Window.prototype.rectangle		= function(x, y, w, h, styles, callback)		{	return this.addControl(new mexui.Control.Rectangle(this, x, y, w, h, styles, callback));			};
 mexui.Component.Window.prototype.scrollBar		= function(x, y, w, h, isVertical, styles, callback)		{	return this.addControl(new mexui.Control.ScrollBar(this, x, y, w, h, isVertical, styles, callback));			};
 mexui.Component.Window.prototype.second			= function(x, y, w, h, text, styles, callback)	{	return this.addControl(new mexui.Control.Second(this, x, y, w, h, text, styles, callback));			};

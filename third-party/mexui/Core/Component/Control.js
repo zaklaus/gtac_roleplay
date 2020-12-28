@@ -4,8 +4,8 @@ mexui.Component.Control = function(window, x, y, w, h, styles, callback)
 	mexui.Entity.StyleableEntity.call(this, this.linkComponentStyles('Control', styles));
 	
 	this.window		= window;
-	this.position	= toVector2(x, y);
-	this.size		= toVector2(w, h);
+	this.position	= new Vec2(x, y);
+	this.size		= new Vec2(w, h);
 	this.callback	= callback;
 	
 	this.boundTo	= null;
@@ -87,7 +87,7 @@ mexui.Component.Control.prototype.getScreenPosition = function()
 {
 	var pos = mexui.util.addVec2(this.window.position, this.position);
 	if(this.boundTo)
-		pos = mexui.util.addVec2(pos, toVector2(-this.boundTo.axis.x.getScrolledOffsetFixedStart(), -this.boundTo.axis.y.getScrolledOffsetFixedStart()));
+		pos = mexui.util.addVec2(pos, new Vec2(-this.boundTo.axis.x.getScrolledOffsetFixedStart(), -this.boundTo.axis.y.getScrolledOffsetFixedStart()));
 	return pos;
 };
 
@@ -112,7 +112,7 @@ mexui.Component.Control.prototype.isInsideBoundControl = function()
 mexui.Component.Control.prototype.isInsideBoundControlEntries = function()
 {
 	var boundToControlPosition = mexui.util.addVec2(this.boundTo.getScreenPosition(), this.boundTo.entriesPositionOffset);
-	var boundToControlSize = toVector2(this.boundTo.size.x, this.boundTo.axis.y.getDisplayedEntriesLength());
+	var boundToControlSize = new Vec2(this.boundTo.size.x, this.boundTo.axis.y.getDisplayedEntriesLength());
 	return mexui.util.isRectangleInsideRectangle(this.getScreenPosition(), this.size, boundToControlPosition, boundToControlSize);
 };
 

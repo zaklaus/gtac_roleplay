@@ -1,9 +1,9 @@
 mexui.Entity.ControlWithEntries = function(entriesOutsideControl, manualScrollBar, entriesPositionOffset, entrySize, entriesSizeOffset)
 {
 	this.entriesOutsideControl	= entriesOutsideControl;
-	this.entriesPositionOffset	= entriesPositionOffset	|| toVector2(0, 0);
-	this.entrySize				= entrySize				|| toVector2(this.size.x, 25);
-	this.entriesSizeOffset		= entriesSizeOffset		|| toVector2(0, 0);
+	this.entriesPositionOffset	= entriesPositionOffset	|| new Vec2(0, 0);
+	this.entrySize				= entrySize				|| new Vec2(this.size.x, 25);
+	this.entriesSizeOffset		= entriesSizeOffset		|| new Vec2(0, 0);
 	
 	this.axis					= {};
 	this.axis.x					= new mexui.Entity.ControlAxis(this, false, manualScrollBar, entriesPositionOffset);

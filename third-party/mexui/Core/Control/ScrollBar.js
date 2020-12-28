@@ -99,7 +99,7 @@ mexui.Control.ScrollBar.prototype.clampScrolledRatio = function()
 mexui.Control.ScrollBar.prototype.getInnerBarPosition = function()
 {
 	var screenPos = this.getScreenPosition();
-	var pos = toVector2(screenPos.x, screenPos.y);
+	var pos = new Vec2(screenPos.x, screenPos.y);
 	
 	var minPos = pos[this.axisIndex] + 1;
 	var maxPos = pos[this.axisIndex] + this.size[this.axisIndex] - 2;
@@ -110,7 +110,7 @@ mexui.Control.ScrollBar.prototype.getInnerBarPosition = function()
 
 mexui.Control.ScrollBar.prototype.getInnerBarSize = function()
 {
-	var size = toVector2(this.size.x, this.size.y);
+	var size = new Vec2(this.size.x, this.size.y);
 	size[this.axisIndex] = this.barHigherLength;
 	size[this.otherAxisIndex] -= 2;
 	return size;

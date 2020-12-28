@@ -7,8 +7,8 @@ mexui.util.createControlConstructor('Date', false, function(window, x, y, w, h, 
 	this.year					= 2019;
 	
 	this.inputShown				= false;
-	this.valueBoxSize			= toVector2(50, 30);
-	this.arrowBoxSize			= toVector2(25, 22);
+	this.valueBoxSize			= new Vec2(50, 30);
+	this.arrowBoxSize			= new Vec2(25, 22);
 	
 	this.maxYearOffset			= 10;
 	this.minYearCallback		= ()=>{ return 1900; };
@@ -92,7 +92,7 @@ mexui.Control.Date.prototype.renderAfter = function()
 	
 	var screenPos = this.getScreenPosition();
 	
-	var pos = toVector2(screenPos.x, screenPos.y);
+	var pos = new Vec2(screenPos.x, screenPos.y);
 	for(var i=0; i<3; i++)
 	{
 		mexui.native.drawRectangle(pos, this.valueBoxSize, this.getStyles('main'));
@@ -101,7 +101,7 @@ mexui.Control.Date.prototype.renderAfter = function()
 		pos.x += this.valueBoxSize.x;
 	}
 	
-	pos = toVector2(screenPos.x, screenPos.y);
+	pos = new Vec2(screenPos.x, screenPos.y);
 	pos.y += this.valueBoxSize.y;
 	for(var i=0; i<3; i++)
 	{
@@ -168,8 +168,8 @@ mexui.Control.Date.prototype.getArrowIndexByCursor = function()
 	var cursorPos = gui.cursorPosition;
 	
 	var screenPos = this.getScreenPosition();
-	var firstArrowStartPos = toVector2(screenPos.x, screenPos.y + this.valueBoxSize.y);
-	var lastArrowEndPos = toVector2(screenPos.x + (this.arrowBoxSize.x * 6), screenPos.y + this.valueBoxSize.y + this.arrowBoxSize.y);
+	var firstArrowStartPos = new Vec2(screenPos.x, screenPos.y + this.valueBoxSize.y);
+	var lastArrowEndPos = new Vec2(screenPos.x + (this.arrowBoxSize.x * 6), screenPos.y + this.valueBoxSize.y + this.arrowBoxSize.y);
 	
 	if(cursorPos.x >= firstArrowStartPos.x && cursorPos.y >= firstArrowStartPos.y && cursorPos.x <= lastArrowEndPos.x && cursorPos.y <= lastArrowEndPos.y)
 	{

@@ -35,8 +35,8 @@ mexui.Control.TabPanel.prototype.onMouseDown = function(e)
 		{
 			var tab = this.axis.x.entries[i];
 			
-			var tabPos = toVector2(tabX, pos.y);
-			var tabSize = toVector2(mexui.native.getTextWidth(tab.text, this.getStyles('tab')) + 10, 25);
+			var tabPos = new Vec2(tabX, pos.y);
+			var tabSize = new Vec2(mexui.native.getTextWidth(tab.text, this.getStyles('tab')) + 10, 25);
 			
 			if(mexui.util.isCursorInRectangle(tabPos, tabSize))
 			{
@@ -67,8 +67,8 @@ mexui.Control.TabPanel.prototype.render = function()
 	{
 		var tab = this.axis.x.entries[i];
 		
-		var tabPos = toVector2(tabX, pos.y);
-		var tabSize = toVector2(mexui.native.getTextWidth(tab.text, this.getStyles('tab')) + 10, 25);
+		var tabPos = new Vec2(tabX, pos.y);
+		var tabSize = new Vec2(mexui.native.getTextWidth(tab.text, this.getStyles('tab')) + 10, 25);
 		mexui.native.drawRectangle(tabPos, tabSize, this.getStyles('tab'));
 		mexui.native.drawText(tabPos, tabSize, tab.text, this.getStyles('tab'));
 		
@@ -76,7 +76,7 @@ mexui.Control.TabPanel.prototype.render = function()
 	}
 	
 	if(this.isFocused())
-		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('focused'));
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
 };
 
 // model

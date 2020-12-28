@@ -1,7 +1,7 @@
 mexui.util.createControlConstructor('DropDown', true, function(window, x, y, w, h, text, styles, callback)
 {
 	mexui.Component.Control.call(this, window, x, y, w, h, this.linkControlStyles('DropDown', styles), callback);
-	mexui.Entity.ControlWithEntries.call(this, true, true, toVector2(0, h), toVector2(w + 120, 25));
+	mexui.Entity.ControlWithEntries.call(this, true, true, new Vec2(0, h), new Vec2(w + 120, 25));
 	
 	this.axis.y.entriesShown	= false;
 	
@@ -89,14 +89,14 @@ mexui.Control.DropDown.prototype.render = function()
 	
 	if(this.arrowShown)
 	{
-		var pos2 = toVector2(pos.x + this.size.x - (25 + 3), pos.y + 0);
-		mexui.native.drawImage(pos2, toVector2(25, 25), mexui.images.downArrow, this.getStyles('main'));
+		var pos2 = new Vec2(pos.x + this.size.x - (25 + 3), pos.y + 0);
+		mexui.native.drawImage(pos2, new Vec2(25, 25), mexui.images.downArrow, this.getStyles('main'));
 	}
 	
 	mexui.Entity.ControlWithEntries.prototype.render.call(this);
 	
 	if(this.isFocused())
-		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,toVector2(2,2)), mexui.util.addVec2(this.size,toVector2(3,3)), this.getStyles('focused'));
+		mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos,new Vec2(2,2)), mexui.util.addVec2(this.size,new Vec2(3,3)), this.getStyles('focused'));
 };
 
 mexui.Control.DropDown.prototype.renderAfter = function()
@@ -104,7 +104,7 @@ mexui.Control.DropDown.prototype.renderAfter = function()
 	if(this.axis.y.entriesShown)
 	{
 		var pos = this.getScreenPosition();
-		var pos2 = toVector2(pos.x, pos.y);
+		var pos2 = new Vec2(pos.x, pos.y);
 		
 		pos.x += this.entriesPositionOffset.x;
 		pos.y += this.entriesPositionOffset.y;
@@ -127,7 +127,7 @@ mexui.Control.DropDown.prototype.renderAfter = function()
 		}
 		
 		if(this.isFocused())
-			mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,toVector2(2,2)), mexui.util.addVec2(toVector2(this.entrySize.x,this.axis.y.getDisplayedEntriesLength()),toVector2(3,3)), this.getStyles('focused'));
+			mexui.native.drawRectangleBorder(mexui.util.subtractVec2(pos2,new Vec2(2,2)), mexui.util.addVec2(new Vec2(this.entrySize.x,this.axis.y.getDisplayedEntriesLength()),new Vec2(3,3)), this.getStyles('focused'));
 	}
 	
 	mexui.Entity.ControlWithEntries.prototype.renderAfter.call(this);

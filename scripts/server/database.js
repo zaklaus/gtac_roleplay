@@ -104,9 +104,9 @@ function quickDatabaseQuery(queryString) {
 	if(dbConnection) {
 		let dbQuery = queryDatabase(dbConnection, queryString);
 		if(dbQuery) {
-			dbQuery.free();
+			freeDatabaseQuery(dbQuery);
 		}
-		disconnectFromDatabase();
+		disconnectFromDatabase(dbConnection);
 	}
 }
 

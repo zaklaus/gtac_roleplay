@@ -22,6 +22,7 @@ function getPositionCommand(command, params, client) {
 	let position = client.player.position;
 
 	messageClientNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
+	console.log(`${getClientDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
 	return true;
 }
 

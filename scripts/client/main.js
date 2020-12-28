@@ -273,6 +273,12 @@ addNetworkHandler("ag.skin", function(skin) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.pedskin", function(ped, skin) {
+    ped.skin = skin;
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.position", function(position) {
     localPlayer.position = position;
 });

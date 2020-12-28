@@ -606,7 +606,7 @@ function setVehicleOwnerCommand(command, params, client) {
 	}
 	
 	let vehicle = getPlayerVehicle(client);
-	let targetClient = getClientFromParams(params);
+	let targetClient = getPlayerFromParams(params);
 
 	if(!targetClient) {
 		messageClientError(client, "That player is invalid or isn't connected!");
@@ -674,7 +674,7 @@ function removeVehicleOwnerCommand(command, params, client) {
 	}
 	
 	let vehicle = getPlayerVehicle(client);
-	let targetClient = getClientFromParams(params);
+	let targetClient = getPlayerFromParams(params);
 
 	if(!targetClient) {
 		messageClientError(client, "That player is invalid or isn't connected!");

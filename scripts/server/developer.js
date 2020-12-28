@@ -107,7 +107,7 @@ function executeClientCodeCommand(command, params, client) {
 	}
 
 	let splitParams = params.split(" ");
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 	let targetCode = splitParams.slice(1).join(" ");
 
 	if(!targetClient) {
@@ -151,7 +151,7 @@ function restartGameModeCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.runCodeFail", function(client, returnTo, code) {
-	let returnClient = getClientFromParams(returnTo);
+	let returnClient = getPlayerFromParams(returnTo);
 	if(!returnClient) {
 		return false;
 	}
@@ -163,7 +163,7 @@ addNetworkHandler("ag.runCodeFail", function(client, returnTo, code) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.runCodeSuccess", function(client, returnTo, returnVal, code) {
-	let returnClient = getClientFromParams(returnTo);
+	let returnClient = getPlayerFromParams(returnTo);
 	if(!returnClient) {
 		return false;
 	}

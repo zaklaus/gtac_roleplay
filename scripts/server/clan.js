@@ -188,7 +188,7 @@ function addClanMemberFlagCommand(command, params, client) {
 		return false;
 	}
 
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 
 	if(!targetClient) {
 		messageClientError(client, "Clan member not found!");
@@ -225,7 +225,7 @@ function removeClanMemberFlagCommand(command, params, client) {
 		return false;
 	}
 
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 
 	if(!targetClient) {
 		messageClientError(client, "Clan member not found!");

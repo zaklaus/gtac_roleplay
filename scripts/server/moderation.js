@@ -19,7 +19,7 @@ function kickClientCommand(command, params, client) {
 		return false;
 	}
 	
-    let targetClient = getClientFromParams(params);
+    let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
         messageClientError(client, "That player is not connected!");
         return false;
@@ -46,7 +46,7 @@ function setClientStaffTitleCommand(command, params, client) {
 	}
 	
 	let splitParams = params.split(" ");
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 	let staffTitle = splitParams.slice(1).join(" ");
 
     if(!targetClient) {
@@ -76,7 +76,7 @@ function muteClientCommand(command, params, client) {
 		return false;
 	}
 	
-    let targetClient = getClientFromParams(params);
+    let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
         messageClientError(client, "That player is not connected!");
         return false;
@@ -103,7 +103,7 @@ function unMuteClientCommand(command, params, client) {
 		return false;
 	}
 	
-    let targetClient = getClientFromParams(params);
+    let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
         messageClientError(client, "That player is not connected!");
         return false;
@@ -129,7 +129,7 @@ function freezeClientCommand(command, params, client) {
 		return false;
 	}
 	
-    let targetClient = getClientFromParams(params);
+    let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
         messageClientError(client, "That player is not connected!");
         return false;
@@ -155,7 +155,7 @@ function unFreezeClientCommand(command, params, client) {
 		return false;
 	}
 	
-    let targetClient = getClientFromParams(params);
+    let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
         messageClientError(client, "That player is not connected!");
         return false;
@@ -181,7 +181,7 @@ function gotoPlayerCommand(command, params, client) {
 		return false;
 	}
 	
-    let targetClient = getClientFromParams(params);
+    let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
         messageClientError(client, "That player is not connected!");
         return false;
@@ -370,7 +370,7 @@ function getPlayerCommand(command, params, client) {
 		return false;
 	}
 	
-    let targetClient = getClientFromParams(params);
+    let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
         messageClientError(client, "That player is not connected!");
         return false;
@@ -407,7 +407,7 @@ function addStaffFlagCommand(command, params, client) {
 	}
 	
 	let splitParams = params.split("");
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
@@ -441,7 +441,7 @@ function takeStaffFlagCommand(command, params, client) {
 	}
 	
 	let splitParams = params.split("");
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
@@ -475,7 +475,7 @@ function clearStaffFlagsCommand(command, params, client) {
 	}
 	
 	let splitParams = params.split("");
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
@@ -521,7 +521,7 @@ function getStaffFlagsCommand(command, params, client) {
 	}
 	
 	let splitParams = params.split("");
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
@@ -550,7 +550,7 @@ function allStaffFlagsCommand(command, params, client) {
 	}
 	
 	let splitParams = params.split("");
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
@@ -570,7 +570,7 @@ function givePlayerMoneyCommand(command, params, client) {
 	}
 	
 	let splitParams = params.split(" ");
-	let targetClient = getClientFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(splitParams[0]);
 	let amount = toInteger(splitParams[1]);
 
     if(!targetClient) {

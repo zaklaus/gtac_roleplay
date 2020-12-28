@@ -88,7 +88,7 @@ function setHouseDescriptionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setHouseOwnerCommand(command, params, client) {
-	let newHouseOwner = getClientFromParams(params);
+	let newHouseOwner = getPlayerFromParams(params);
 	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
 
 	if(!newHouseOwner) {
@@ -243,20 +243,20 @@ function deleteHouseCommand(command, params, client) {
 	}
 	tempHouseData = getHouseData(houseId);
 
-	deleteHouse(houseId);
 	messageClientSuccess(client, `House '${tempHouseData.description}' deleted!`);
+	deleteHouse(houseId, getPlayerData(client).accountData.databaseId);
 }
 
 // ---------------------------------------------------------------------------
 
-function deleteHouse(houseId) {
+function deleteHouse(houseId, whoDeleted = 0) {
 	let tempHouseData = getServerData().houses[houseId];
 
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `UPDATE house_main SET house_deleted = 1 AND house_who_deleted = ${getPlayerData(client).accountData.databaseId} AND house_when_deleted = UNIX_TIMESTAMP() WHERE house_id = ${tempHouseData.databaseId} LIMIT 1`);
+		dbQuery = queryDatabase(dbConnection, `UPDATE house_main SET house_deleted = 1 AND house_who_deleted = ${whoDeleted} AND house_when_deleted = UNIX_TIMESTAMP() WHERE house_id = ${tempHouseData.databaseId} LIMIT 1`);
 		if(dbQuery) {
 			freeDatabaseQuery(dbQuery);
 		}

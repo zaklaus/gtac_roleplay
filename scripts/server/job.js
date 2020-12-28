@@ -573,7 +573,7 @@ function jobUniformCommand(command, params, client) {
 	}
 
 	messageClientSuccess(client, `You put on the ${uniforms[uniformId-1].name} uniform`);
-	triggerNetworkEvent("ag.skin", client, uniforms[uniformId-1].skin);
+	triggerNetworkEvent("ag.pedskin", null, client.player, uniforms[uniformId-1].skin);
 }
 
 // ---------------------------------------------------------------------------

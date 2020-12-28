@@ -40,8 +40,9 @@ function initClassTable() {
 				this.weather = 0
 				this.fallingSnow = false;
 				this.groundSnow = false;
-				this.useGUI = false;
-				this.guiColour = [0, 0, 0];
+				this.useGUI = true;
+				this.guiColour = [200, 200, 200];
+				this.showLogo = true;
 
 				this.antiCheat = {
 					enabled: false,
@@ -51,7 +52,7 @@ function initClassTable() {
 				};
 
 				this.discordBotToken = "";
-				this.discordEnabled = false;				
+				this.discordEnabled = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["svr_id"];
@@ -74,6 +75,7 @@ function initClassTable() {
 					this.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
 					this.useGUI = intToBool(dbAssoc["svr_gui"]);
 					this.guiColour = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
+					this.showLogo = intToBool(dbAssoc["svr_logo"]);
 	
 					this.antiCheat = {
 						enabled: intToBool(dbAssoc["svr_ac_enabled"]),

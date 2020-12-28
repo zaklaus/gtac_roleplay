@@ -251,12 +251,15 @@
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Month.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Number.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Password.js" />
+	<script language="javascript" type="client" src="third-party/mexui/Core/Control/PositiveInteger.js" />
+	<script language="javascript" type="client" src="third-party/mexui/Core/Control/PositiveNumber.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/RangedInteger.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/RangedNumber.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Second.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/TextArea.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Time.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Week.js" />
+	<script language="javascript" type="client" src="third-party/mexui/Core/Control/WeekDay.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Year.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Init.js" />	
+	<script language="javascript" type="client" src="third-party/mexui/Core/Init.js" />
 </meta>

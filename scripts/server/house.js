@@ -274,6 +274,14 @@ function deleteHouse(houseId, whoDeleted = 0) {
 
 // ---------------------------------------------------------------------------
 
+function removePlayerFromHouses(client) {
+	if(isPlayerInAnyHouse(client)) {
+		exitHouse(client);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
 function createHouse(description, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = -1, exitVirtualWorld = -1, exitPickupModel = -1, exitBlipModel = -1) {
 	let tempHouseData = new serverClasses.houseData(false);
 	tempHouseData.description = description;
@@ -398,10 +406,10 @@ function createHouseEntrancePickup(houseId) {
 		}
 		
 		getServerData().houses[houseId].pickup = gta.createPickup(pickupModelId, getServerData().houses[houseId].entrancePosition);
-		//getServerData().houses[i].pickup.dimension = getServerData().houses[houseId].entranceDimension;
-		//getServerData().houses[i].pickup.interior = getServerData().houses[houseId].entranceInterior;			
-		getServerData().houses[houseId].pickup.setData("ag.ownerType", AG_PICKUP_HOUSE, true);
-		getServerData().houses[houseId].pickup.setData("ag.ownerId", houseId, true);
+		getServerData().houses[houseId].pickup.dimension = getServerData().houses[houseId].entranceDimension;
+		getServerData().houses[houseId].pickup.interior = getServerData().houses[houseId].entranceInterior;			
+		getServerData().houses[houseId].pickup.setData("ag.ownerType", AG_PICKUP_HOUSE, false);
+		getServerData().houses[houseId].pickup.setData("ag.ownerId", houseId, false);
 	}
 }
 
@@ -588,6 +596,47 @@ function deleteHouseExitBlip(houseId) {
 		destroyElement(getHouseData(houseId).exitBlip);
 		getHouseData(houseId).exitBlip = null;
 	}	
+}
+
+// ---------------------------------------------------------------------------
+
+function reloadAllHousesCommand(command, params, client) {
+	let clients = getClients();
+	for(let i in clients) {
+		if(isPlayerInAnyHouse(clients[i])) {
+			removePlayerFromHouses(clients[i]);
+		}
+	}
+
+	for(let i in getServerData().houses) {
+		deleteHouseExitBlip(i);
+		deleteHouseEntranceBlip(i);
+		deleteHouseExitPickup(i);
+		deleteHouseEntrancePickup(i);
+	}
+	
+	getServerData().houses = null;
+	getServerData().houses = loadHouseFromDatabase();
+	createAllHousePickups();
+	createAllHouseBlips();
+
+	for(let i in clients) {
+		sendAllHouseLabelsToPlayer(clients[i]);
+	}
+
+	messageAdminAction(`All houses have been reloaded by an admin!`);
+}
+
+// ---------------------------------------------------------------------------
+
+function exitHouse(client) {
+	let houseId = getPlayerHouse(client);
+	if(isPlayerSpawned(client)) {
+		triggerNetworkEvent("ag.interior", client, getServerData().house[houseId].entranceInterior);
+		triggerNetworkEvent("ag.dimension", client, getServerData().house[houseId].entranceDimension);
+		triggerNetworkEvent("ag.position", client, getServerData().house[houseId].entrancePosition);
+	}
+	removeEntityData(client, "ag.inHouse");
 }
 
 // ---------------------------------------------------------------------------

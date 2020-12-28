@@ -453,7 +453,7 @@ function toggleServerLogoCommand(command, params, client) {
 	
 	triggerNetworkEvent("ag.logo", null, intToBool(getServerConfig().useLogo));
 
-    messageAdminAction(`${client.name} turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toLowerCase(getOnOffFromBool(getServerConfig().useLogo))}`);
+    messageAdminAction(`${client.name} turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);
     updateServerRules();
 	return true;
 }

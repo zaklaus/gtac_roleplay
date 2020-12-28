@@ -875,20 +875,20 @@ function isPlayerWorking(client) {
 function startJobRoute(client) {
 	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
 		let busRoute = getRandomBusRoute(getPlayerIsland(client));
-		getPlayerData(client).busRoute = busRoute;
-		getPlayerData(client).busRouteStop = 0;
-		getPlayerData(client).busRouteIsland = getPlayerIsland(client);
-		getPlayerData(client).busRouteVehicle = getPlayerVehicle(client);
+		getPlayerData(client).jobRoute = busRoute;
+		getPlayerData(client).jobRouteStop = 0;
+		getPlayerData(client).jobRouteIsland = getPlayerIsland(client);
+		getPlayerData(client).jobRouteVehicle = getPlayerVehicle(client);
 		getPlayerVehicle(client).colour1 = getBusRouteData(getPlayerIsland(client), busRoute).busColour;
 		getPlayerVehicle(client).colour2 = 1;
 		showCurrentBusStop(client);
 		messageClientNormal(client, `🚌 You are now driving the [#AAAAAA]${getBusRouteData(getPlayerIsland(client), busRoute).name} [#FFFFFF]bus route! Drive to the green checkpoint.`);
 	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
 		let garbageRoute = getRandomBusRoute(getPlayerIsland(client));
-		getPlayerData(client).garbageRoute = garbageRoute;
-		getPlayerData(client).garbageRouteStop = 0;
-		getPlayerData(client).garbageRouteIsland = getPlayerIsland(client);		
-		getPlayerData(client).garbageRouteVehicle = getPlayerVehicle(client);
+		getPlayerData(client).jobRoute = garbageRoute;
+		getPlayerData(client).jobRouteStop = 0;
+		getPlayerData(client).jobRouteIsland = getPlayerIsland(client);		
+		getPlayerData(client).jobRouteVehicle = getPlayerVehicle(client);
 		getPlayerVehicle(client).colour1 = getGarbageRouteData(getPlayerIsland(client), garbageRoute).garbageTruckColour;
 		getPlayerVehicle(client).colour2 = 1;
 		showCurrentGarbageStop(client);
@@ -1033,5 +1033,20 @@ function canPlayerUseJob(client, jobId) {
 function deleteJobLocation(jobLocationData) {
 	destroyElement(jobLocationData.pickup);
 	triggerNetworkEvent("ag.joblabel.del", jobLocationData.databaseId);
-
 }
+
+// ---------------------------------------------------------------------------
+
+function freezeJobVehicleForRouteStop(client) {
+    getVehicleData(getPlayerVehicle(client)).engine = false;
+	getPlayerVehicle(client).engine = false;
+}
+
+// ---------------------------------------------------------------------------
+
+function unFreezeJobVehicleForRouteStop(client) {
+    getVehicleData(getPlayerVehicle(client)).engine = true;
+	getPlayerVehicle(client).engine = true;
+}
+
+// ---------------------------------------------------------------------------

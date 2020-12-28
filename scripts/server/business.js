@@ -102,6 +102,11 @@ function createBusinessCommand(command, params, client) {
 	
 	sendBusinessLabelToPlayers(getServerData().businesses.length-1);
 
+	createBusinessEntrancePickup(getServerData().businesses.length-1);
+	createBusinessExitPickup(getServerData().businesses.length-1);
+	createBusinessEntranceBlip(getServerData().businesses.length-1);
+	createBusinessExitBlip(getServerData().businesses.length-1);	
+
 	messageClientSuccess(client, `Business [#0099FF]${tempBusinessData.name} [#FFFFFF]created!`);
 }
 
@@ -147,14 +152,6 @@ function createBusiness(name, entrancePosition, exitPosition, entrancePickupMode
 	tempBusinessData.exitInterior = exitInteriorId;
 	tempBusinessData.exitDimension = exitVirtualWorld;	
 
-	if(entrancePickupModel != -1) {
-		tempBusinessData.entrancePickup = gta.createPickup(entrancePickupModel, entrancePosition, getGameConfig().pickupTypes[getServerGame()].business);
-	}
-
-	if(entranceBlipModel != -1) {
-		tempBusinessData.entranceBlip = gta.createBlip(entrancePosition, entranceBlipModel, 1, getColourByName("lightPurple")); 
-	}
-
 	return tempBusinessData;
 }
 
@@ -168,7 +165,7 @@ function deleteBusinessCommand(command, params, client) {
 		return false;
 	}		
 
-	messageClientSuccess(client, `Business [#0099FF]${tempBusinessData.name} [#FFFFFF]deleted!`);
+	messageClientSuccess(client, `Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]deleted!`);
 	deleteBusiness(businessId, getPlayerData(client).accountData.databaseId);
 }
 
@@ -378,16 +375,10 @@ function setBusinessPickupCommand(command, params, client) {
 		getBusinessData(businessId).entrancePickupModel = toInteger(typeParam);
 	}
 
-	if(getBusinessData(businessId).entrancePickupModel != -1) {
-		if(getBusinessData(businessId).entrancePickup != null) {
-			destroyElement(getBusinessData(businessId).entrancePickup);
-			getBusinessData(businessId).entrancePickup = null;
-		}
-
-		getBusinessData(businessId).entrancePickup = gta.createPickup(getBusinessData(businessId).entrancePickupModel, getBusinessData(businessId).entrancePosition);
-		getBusinessData(businessId).pickup.setData("ag.ownerType", AG_PICKUP_BUSINESS, true);
-		getBusinessData(businessId).pickup.setData("ag.ownerId", i, true);
-	}	
+	deleteBusinessEntrancePickup(businessId);
+	deleteBusinessExitPickup(businessId);
+	createBusinessEntrancePickup(businessId);
+	createBusinessExitPickup(businessId);
 
 	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' pickup display set to '${toLowerCase(typeParam)}'!`);
 }
@@ -417,14 +408,10 @@ function setBusinessBlipCommand(command, params, client) {
 		getBusinessData(businessId).entranceBlipModel = toInteger(typeParam);
 	}
 
-	if(getBusinessData(businessId).entranceBlipModel != -1) {
-		if(getBusinessData(businessId).entranceBlip != null) {
-			destroyElement(getBusinessData(businessId).entranceBlip);
-			getBusinessData(businessId).entranceBlip = null;
-		}
-
-		getBusinessData(businessId).entranceBlip = gta.createPickup(getBusinessData(businessId).entranceBlipModel, getBusinessData(businessId).entrancePosition);
-	}	
+	deleteBusinessEntranceBlip(businessId);
+	deleteBusinessExitBlip(businessId);
+	createBusinessEntranceBlip(businessId);
+	createBusinessExitBlip(businessId);
 
 	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' blip display set to '${toLowerCase(typeParam)}'!`);
 }
@@ -632,10 +619,12 @@ function createBusinessEntrancePickup(businessId) {
 		}
 
 		getServerData().businesses[businessId].entrancePickup = gta.createPickup(pickupModelId, getServerData().businesses[businessId].entrancePosition);
-		//getServerData().businesses[businessId].entrancePickup.dimension = getServerData().businesses[i].entranceDimension;
-		//getServerData().businesses[businessId].entrancePickup.interior = getServerData().businesses[i].entranceInterior;
-		getServerData().businesses[businessId].entrancePickup.setData("ag.ownerType", AG_PICKUP_BUSINESS, true);
-		getServerData().businesses[businessId].entrancePickup.setData("ag.ownerId", businessId, true);
+		getServerData().businesses[businessId].entrancePickup.onAllDimensions = false;
+		getServerData().businesses[businessId].entrancePickup.dimension = getServerData().businesses[i].entranceDimension;
+		getServerData().businesses[businessId].entrancePickup.interior = getServerData().businesses[i].entranceInterior;
+		//getServerData().pickups[getServerData().businesses[businessId].entrancePickup.id] = new serverClasses.pickupData(getServerData().pickups[getServerData().businesses[businessId].entrancePickup, AG_PICKUP_BUSINESS, businessId
+		getServerData().businesses[businessId].entrancePickup.setData("ag.ownerType", AG_PICKUP_BUSINESS, false);
+		getServerData().businesses[businessId].entrancePickup.setData("ag.ownerId", businessId, false);
 	}
 }
 
@@ -698,6 +687,14 @@ function removePlayersFromBusiness(businessId) {
 
 // ---------------------------------------------------------------------------
 
+function removePlayerFromBusinesses(client) {
+	if(isPlayerInAnyBusiness(client)) {
+		exitBusiness(client);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
 function exitBusiness(client) {
 	let businessId = getEntityData(client, "ag.inBusiness");
 	if(isPlayerSpawned(client)) {
@@ -705,6 +702,7 @@ function exitBusiness(client) {
 		triggerNetworkEvent("ag.dimension", client, getServerData().businesses[businessId].entranceDimension);
 		triggerNetworkEvent("ag.position", client, getServerData().businesses[businessId].entrancePosition);
 	}
+	removeEntityData(client, "ag.inBusiness");
 }
 
 // ---------------------------------------------------------------------------
@@ -825,6 +823,36 @@ function deleteBusinessExitBlip(businessId) {
 		destroyElement(getBusinessData(businessId).exitBlip);
 		getBusinessData(businessId).exitBlip = null;
 	}	
+}
+
+// ---------------------------------------------------------------------------
+
+function reloadAllBusinessesCommand(command, params, client) {
+	let clients = getClients();
+	for(let i in clients) {
+		if(isPlayerInAnyBusiness(clients[i])) {
+			removePlayerFromBusinesses(clients[i]);
+		}
+	}
+
+	for(let i in getServerData().businesses) {
+		deleteBusinessExitBlip(i);
+		deleteBusinessEntranceBlip(i);
+		deleteBusinessExitPickup(i);
+		deleteBusinessEntrancePickup(i);
+	}
+	
+	//forceAllPlayersToStopWorking();
+	getServerData().businesses = null;
+	getServerData().businesses = loadBusinessesFromDatabase();
+	createAllBusinessPickups();
+	createAllBusinessBlips();
+
+	for(let i in clients) {
+		sendAllBusinessLabelsToPlayer(clients[i]);
+	}	
+
+	messageAdminAction(`All businesses have been reloaded by an admin!`);
 }
 
 // ---------------------------------------------------------------------------

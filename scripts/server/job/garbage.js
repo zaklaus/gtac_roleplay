@@ -100,49 +100,34 @@ function isLastStopOnGarbageRoute(island, garbageRoute, garbageRouteStop) {
 
 // ---------------------------------------------------------------------------
 
-function freezeGarbageForStop(client) {
-    getVehicleData(getPlayerVehicle(client)).engine = false;
-	getPlayerVehicle(client).engine = false;
-}
-
-// ---------------------------------------------------------------------------
-
-function unFreezeGarbageForStop(client) {
-    getVehicleData(getPlayerVehicle(client)).engine = true;
-	getPlayerVehicle(client).engine = true;
-}
-
-// ---------------------------------------------------------------------------
-
 function showNextGarbageStop(client) {
-    getPlayerData(client).garbageRouteStop = getNextStopOnGarbageRoute(getPlayerData(client).garbageRouteStop, getPlayerData(client).garbageRoute, getPlayerData(client).garbageRouteStop);
+    getPlayerData(client).jobRouteStop = getNextStopOnGarbageRoute(getPlayerData(client).jobRouteStop, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop);
     showCurrentGarbageStop(client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showCurrentGarbageStop(client) {
-    triggerNetworkEvent("ag.showGarbageStop", client, getGarbageRouteStopPosition(getPlayerIsland(client), getPlayerData(client).garbageRoute, getPlayerData(client).garbageRouteStop), getColourByName("garbageDriverGreen"));
+    triggerNetworkEvent("ag.showGarbageStop", client, getGarbageRouteStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop), getColourByName("garbageDriverGreen"));
 }
 
 // ---------------------------------------------------------------------------
 
 function arrivedAtGarbageStop(client) {
-    if(isLastStopOnGarbageRoute(getPlayerData(client).garbageRouteIsland, getPlayerData(client).garbageRoute, getPlayerData(client).garbageRouteStop)) {
-        respawnVehicle(getPlayerData(client).garbageRouteVehicle);
-        messageClientNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).garbageRouteIsland, getPlayerData(client).garbageRoute).name} garbage route! Your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
-		getPlayerData(client).garbageRouteVehicle = false;
-		getPlayerData(client).garbageRoute = 0;
-		getPlayerData(client).garbageRouteStop = 0;
-		getPlayerData(client).garbageRouteIsland = 0;
+    if(isLastStopOnGarbageRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
+        respawnVehicle(getPlayerData(client).jobRouteVehicle);
+        messageClientNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! Your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
+		getPlayerData(client).jobRouteVehicle = false;
+		getPlayerData(client).jobRoute = 0;
+		getPlayerData(client).jobRouteStop = 0;
+		getPlayerData(client).jobRouteIsland = 0;
         return false;
     }
 
     showGameMessage(client, "⌛ Please wait a moment while the garbage is loaded into your truck.", getColourByName("mediumGrey"), 3500);
     freezeGarbageForStop(client);
-    getPlayerData(client).garbageRouteStop = getNextStopOnGarbageRoute(getPlayerData(client).garbageRouteIsland, getPlayerData(client).garbageRoute, getPlayerData(client).garbageRouteStop);
+    getPlayerData(client).jobRouteStop = getNextStopOnGarbageRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop);
     setTimeout(function() {
-        unFreezeGarbageForStop(client);
         showCurrentGarbageStop(client);
         showGameMessage(client, "Proceed to the next stop (grey checkpoint)", getColourByName("mediumGrey"), 3500);
     }, 5000);

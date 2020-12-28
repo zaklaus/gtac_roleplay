@@ -614,7 +614,6 @@ function quitJobCommand(command, params, client) {
 		return false;
 	}
 
-
 	quitJob(client);
 	messageClientSuccess(client, "You are now unemployed!");
 	return true;

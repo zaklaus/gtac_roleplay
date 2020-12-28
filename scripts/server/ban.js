@@ -57,7 +57,7 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
     }
     
     let splitParams = params.split(" ");
-    let targetClient = getClientFromParams(splitParams[0]);
+    let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
 	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
@@ -80,7 +80,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
     }    
     
     let splitParams = params.split(" ");
-    let targetClient = getClientFromParams(splitParams[0]);
+    let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");    
 
     messageAdminAction(`${targetClient.name} has been banned from the server (IP ban).`);
@@ -104,7 +104,7 @@ function subNetBanCommand(command, params, client, fromDiscord) {
     }
     
     let splitParams = params.split(" ");
-    let targetClient = getClientFromParams(splitParams[0]);
+    let targetClient = getPlayerFromParams(splitParams[0]);
     let octetAmount = Number(splitParams[1]);
     let reason = splitParams.slice(2).join(" ");
 

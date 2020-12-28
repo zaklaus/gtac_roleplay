@@ -74,9 +74,9 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 	if(health > 0.0) {
 		let hx = x-width/2;
 		let hy = y-10/2;
-		let colourB = toColour(0, 0, 0, Math.floor(255.0*alpha)); // Background colour (black)
+		let colourB = createColour(0, 0, 0, Math.floor(255.0*alpha)); // Background colour (black)
 		drawing.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
-		let colour = toColour(Math.floor(255.0*alpha), Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0); // Health bar colour (varies, depending on health)
+		let colour = createColour(Math.floor(255.0*alpha), Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0); // Health bar colour (varies, depending on health)
 		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*health, 10-6], colour, colour, colour, colour);
 	}
     
@@ -87,9 +87,9 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		y -= 10;		
 		let hx = x-width/2;
 		let hy = y-10/2;
-		let colourB = toColour(Math.floor(255.0*alpha), 0, 0, 0); // Background colour (black)
+		let colourB = toColour(255, 0, 0, 0); // Background colour (black)
 		drawing.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
-		let colour = toColour(Math.floor(255.0*alpha), 255, 255, 255); // Armour bar colour (white)
+		let colour = toColour(255, 255, 255, 255); // Armour bar colour (white)
 		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*armour, 10-6], colour, colour, colour, colour);
 	}
     
@@ -189,5 +189,11 @@ addEventHandler("OnDrawnHUD", function(event) {
 		}
 	});
 });
+
+// ----------------------------------------------------------------------------
+
+function createColour(alpha, red, green, blue) {
+	return alpha << 24 | red << 16 | green << 8 | blue;
+}
 
 // ----------------------------------------------------------------------------

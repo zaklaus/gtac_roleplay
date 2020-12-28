@@ -122,6 +122,7 @@ addNetworkHandler("ag.bizlabel.add", function(labelId, position, height, name, l
 // ----------------------------------------------------------------------------
 
 addNetworkHandler("ag.bizlabel.all", function(tempBusinessLabels) {
+    businessLabels = [];
     for(let i in tempBusinessLabels) {
         businessLabels.push(new businessLabelData(tempBusinessLabels[i][0], tempBusinessLabels[i][1], tempBusinessLabels[i][2], tempBusinessLabels[i][3], tempBusinessLabels[i][4], tempBusinessLabels[i][5]));
     }
@@ -132,6 +133,7 @@ addNetworkHandler("ag.bizlabel.all", function(tempBusinessLabels) {
 // ----------------------------------------------------------------------------
 
 addNetworkHandler("ag.joblabel.all", function(tempJobLabels) {
+    jobLabels = [];
     for(let i in tempJobLabels) {
         jobLabels.push(new jobLabelData(tempJobLabels[i][0], tempJobLabels[i][1], tempJobLabels[i][2], tempJobLabels[i][3], tempJobLabels[i][4], tempJobLabels[i][5]));
     }
@@ -173,6 +175,7 @@ addNetworkHandler("ag.houselabel.add", function(labelId, position, height, name,
 // ----------------------------------------------------------------------------
 
 addNetworkHandler("ag.houselabel.all", function(tempHouseLabels) {
+    houseLabels = [];
     for(let i in tempHouseLabels) {
         houseLabels.push(new houseLabelData(tempHouseLabels[i][0], tempHouseLabels[i][1], tempHouseLabels[i][2], tempHouseLabels[i][3], tempHouseLabels[i][4], tempHouseLabels[i][5]));
     }

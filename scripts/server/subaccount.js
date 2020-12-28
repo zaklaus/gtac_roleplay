@@ -81,7 +81,7 @@ function saveSubAccountToDatabase(subAccountData) {
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
-		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension} WHERE sacct_id=${subAccountData.databaseId}`;
+		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${getPlayerInterior(client)}, sacct_vw=${getPlayerVirtualWorld(client)} WHERE sacct_id=${subAccountData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
@@ -163,9 +163,8 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 		return false;
 	}
 
-	if(areParamsEmpty(skinId)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Invalid skin!");
-		return false;
+	if(!skinId) {
+		skinId = getServerConfig().newCharacter.skin;
 	}
 
 	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
@@ -234,9 +233,6 @@ async function selectCharacter(client, characterId = -1) {
 
 	tempSubAccount.lastLogin = new Date().getTime();
 
-	updatePlayerNameTag(client);
-	sendAccountKeyBindsToClient(client);
-
 	messageClientAlert(client, `You are now playing as: [#0099FF]${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
 	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
 	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
@@ -257,7 +253,7 @@ async function selectCharacter(client, characterId = -1) {
 		}, 1000);		
 	}, client.ping+1000);
 
-
+	updateAllPlayerNameTags();
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 
@@ -269,6 +265,8 @@ function switchCharacterCommand(command, params, client) {
 
 	saveSubAccountToDatabase(getClientCurrentSubAccount(client));
 	
+	resetClientStuff(client);
+
 	client.despawnPlayer();
 	showConnectCameraToPlayer(client);
 	showCharacterSelectToClient(client);
@@ -312,7 +310,7 @@ function getPlayerLastUsedSubAccount(client) {
 			lastUsed = i;
 		}
 	}
-	return lastUsed
+	return lastUsed;
 }
 
 // ---------------------------------------------------------------------------

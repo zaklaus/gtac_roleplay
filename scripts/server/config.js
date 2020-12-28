@@ -28,17 +28,18 @@ let globalConfig = {
 	spawnCarDistance: 5,
 	payAndSprayDistance: 5,	
 	defaultKeybinds: [
-		new serverClasses.keyBindData(false, SDLK_i, "engine"),
-		new serverClasses.keyBindData(false, SDLK_k, "lights"),
-		new serverClasses.keyBindData(false, SDLK_l, "lock"),
-		new serverClasses.keyBindData(false, SDLK_f, "enter"),
-		new serverClasses.keyBindData(false, SDLK_g, "passenger"),
+		new serverClasses.keyBindData(false, toInteger(SDLK_i), "engine"),
+		new serverClasses.keyBindData(false, toInteger(SDLK_k), "lights"),
+		new serverClasses.keyBindData(false, toInteger(SDLK_l), "lock"),
+		new serverClasses.keyBindData(false, toInteger(SDLK_f), "enter"),
+		new serverClasses.keyBindData(false, toInteger(SDLK_g), "passenger"),
 	],
 	exitPropertyDistance: 3.0,
 	enterPropertyDistance: 3.0,
 	businessDimensionStart: 1000,
 	houseDimensionStart: 3000,	
 	buyVehicleDriveAwayDistance: 25.0,
+	returnToJobVehicleTime: 30,
 };
 
 let gameConfig = {

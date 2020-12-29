@@ -434,10 +434,9 @@ function loginSuccess(client) {
 	getPlayerData(client).accountData.ipAddress = client.ip;
 
 	sendRemovedWorldObjectsToPlayer(client);
-	sendAllLabelsToPlayer(client);
 	sendAccountKeyBindsToClient(client);
 
-	//message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
+	message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 }
 
 // ---------------------------------------------------------------------------

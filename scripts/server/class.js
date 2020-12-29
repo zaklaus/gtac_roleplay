@@ -114,6 +114,8 @@ function initClassTable() {
 
 				this.returnToJobVehicleTick = 0;
 				this.returnToJobVehicleTimer = null;
+				
+				this.switchingCharacter = false;
 			}
 		},
 		accountData: class {
@@ -233,7 +235,8 @@ function initClassTable() {
 				this.databaseId = 0;
 				this.name = "";
 				this.ownerType = AG_BIZOWNER_NONE;
-				this.ownerId = 0
+				this.ownerId = 0;
+				this.buyPrice = 0;
 				this.locked = false
 
 				this.entrancePosition = false;
@@ -257,11 +260,12 @@ function initClassTable() {
 				this.entranceFee = 0;
 				this.till = 0
 
-				if(businessAssoc != false) {
+				if(businessAssoc) {
 					this.databaseId = toInteger(businessAssoc["biz_id"]);
 					this.name = toString(businessAssoc["biz_name"]);
 					this.ownerType = toInteger(businessAssoc["biz_owner_type"]);
 					this.ownerId = toInteger(businessAssoc["biz_owner_id"]);
+					this.buyPrice = toInteger(businessAssoc["biz_buy_price"]);
 					this.locked = intToBool(toInteger(businessAssoc["biz_locked"]));
 	
 					this.entrancePosition = toVector3(toFloat(businessAssoc["biz_entrance_pos_x"]), toFloat(businessAssoc["biz_entrance_pos_y"]), toFloat(businessAssoc["biz_entrance_pos_z"]));
@@ -309,7 +313,8 @@ function initClassTable() {
 				this.databaseId = 0
 				this.description = "";
 				this.ownerType = AG_HOUSEOWNER_NONE;
-				this.ownerId = 0
+				this.ownerId = 0;
+				this.buyPrice = 0;
 				this.locked = false;
 	
 				this.entrancePosition = false;
@@ -335,6 +340,7 @@ function initClassTable() {
 					this.description = toString(houseAssoc["house_description"]);
 					this.ownerType = toInteger(houseAssoc["house_owner_type"]);
 					this.ownerId = toInteger(houseAssoc["house_owner_id"]);
+					this.buyPrice = toInteger(houseAssoc["house_buy_price"]);
 					this.locked = intToBool(toInteger(houseAssoc["house_locked"]));
 		
 					this.entrancePosition = toVector3(toFloat(houseAssoc["house_entrance_pos_x"]), toFloat(houseAssoc["house_entrance_pos_y"]), toFloat(houseAssoc["house_entrance_pos_z"]));
@@ -549,7 +555,7 @@ function initClassTable() {
 				this.ammo = 0;
 				this.enabled = false;
 
-				if(!jobEquipmentWeaponAssoc) {
+				if(jobEquipmentWeaponAssoc) {
 					this.databaseId = jobEquipmentWeaponAssoc["job_equip_wep_id"];
 					this.equipmentId = jobEquipmentWeaponAssoc["job_equip_wep_equip"];
 					this.weaponId = jobEquipmentWeaponAssoc["job_equip_wep_wep"];
@@ -567,7 +573,7 @@ function initClassTable() {
 				this.skin = -1;
 				this.enabled = false;
 
-				if(!jobUniformAssoc) {
+				if(jobUniformAssoc) {
 					this.databaseId = jobUniformAssoc["job_uniform_id"];
 					this.job = jobUniformAssoc["job_uniform_job"];
 					this.name = jobUniformAssoc["job_uniform_name"];
@@ -582,20 +588,16 @@ function initClassTable() {
 				this.databaseId = 0;
 				this.job = 0;
 				this.position = toVector3(0.0, 0.0, 0.0);
-				//this.blipModel = jobAssoc["job_blip"];
-				//this.pickupModel = jobAssoc["job_pickup"];
 				this.blip = false;
 				this.pickup = false;
 				this.enabled = false;
 				this.interior = 0;
 				this.dimension = 0;
 
-				if(!jobLocationAssoc) {
+				if(jobLocationAssoc) {
 					this.databaseId = jobLocationAssoc["job_loc_id"];
 					this.job = jobLocationAssoc["job_loc_job"];
 					this.position = toVector3(jobLocationAssoc["job_loc_pos_x"], jobLocationAssoc["job_loc_pos_y"], jobLocationAssoc["job_loc_pos_z"]);
-					//this.blipModel = jobAssoc["job_blip"];
-					//this.pickupModel = jobAssoc["job_pickup"];
 					this.blip = false;
 					this.pickup = false;
 					this.enabled = jobLocationAssoc["job_loc_enabled"];
@@ -611,7 +613,7 @@ function initClassTable() {
 				this.subAccount = 0
 				this.enabled = false;
 
-				if(!jobWhiteListAssoc) {
+				if(jobWhiteListAssoc) {
 					this.databaseId = jobWhiteListAssoc["job_wl_id"];
 					this.job = jobWhiteListAssoc["job_wl_job"];
 					this.subAccount = jobWhiteListAssoc["job_wl_sacct"]
@@ -626,7 +628,7 @@ function initClassTable() {
 				this.subAccount = 0
 				this.enabled = false;
 
-				if(!jobBlackListAssoc) {
+				if(jobBlackListAssoc) {
 					this.databaseId = jobBlackListAssoc["job_bl_id"];
 					this.job = jobBlackListAssoc["job_bl_job"];
 					this.subAccount = jobBlackListAssoc["job_bl_sacct"]

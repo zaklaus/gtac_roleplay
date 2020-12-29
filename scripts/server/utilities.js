@@ -420,23 +420,18 @@ function getPosBehindPos(pos, angle, distance) {
 // ---------------------------------------------------------------------------
 
 function getPosAbovePos(pos, distance) {
-	let z = pos.z+distance;
-	
-	return toVector3(pos.x, pos.y, z);
+	return toVector3(pos.x, pos.y, pos.z+distancez);
 }
 
 // ---------------------------------------------------------------------------
 
 function getPosBelowPos(pos, distance) {
-	let z = pos.z-distance;
-	
-	return toVector3(pos.x, pos.y, z);
+	return toVector3(pos.x, pos.y, pos.z-distance);
 }
 
 // ---------------------------------------------------------------------------
 
 function getHeadingFromPosToPos(pos1, pos2) {
-	
 	let x = pos2.x-pos1.x;
 	let y = pos2.y-pos1.y;
 	let rad = Math.atan2(y, x);
@@ -768,19 +763,19 @@ function getPlayerFromParams(params) {
 	let clients = getClients();
 	if(isNaN(params)) {
 		for(let i in clients) {
-			if(toLowerCase(clients[i].name).indexOf(toLowerCase(params)) != -1) {
-				return clients[i];
-			}
+			if(!clients[i].console) {
+				if(toLowerCase(clients[i].name).indexOf(toLowerCase(params)) != -1) {
+					return clients[i];
+				}
 
-			let charName = getCharacterFullName(clients[i]);
-			if(toLowerCase(charName).indexOf(toLowerCase(clientName)) != -1) {
-				return clients[i];
-			}			
+				if(toLowerCase(getCharacterFullName(clients[i])).indexOf(toLowerCase(params)) != -1) {
+					return clients[i];
+				}
+			}	
 		}
 	} else {
-		let playerId = toInteger(params) || 0;
-		if(typeof clients[playerId] != "undefined") {
-			return clients[playerId];
+		if(typeof clients[toInteger(params)] != "undefined") {
+			return clients[toInteger(params)];
 		}			
 	}
 	
@@ -1573,13 +1568,12 @@ function getWeatherFromParams(params) {
 				return i;
 			}
 		}
-		return 0;
 	} else {
 		if(typeof getGameData().weatherNames[getServerGame()][params] != "undefined") {
 			return toInteger(params);
 		}
-		return 0;
 	}
+	return 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -1591,12 +1585,10 @@ function getClanFromParams(params) {
 				return i;
 			}
 		}
-		return false;
 	} else {
 		if(typeof getServerData().clans[params] != "undefined") {
 			return toInteger(params);
 		}
-		return false;
 	}
 }
 
@@ -1609,13 +1601,13 @@ function getJobFromParams(params) {
 				return i;
 			}
 		}
-		return false;
 	} else {
 		if(typeof getServerData().jobs[params] != "undefined") {
 			return toInteger(params);
 		}
-		return false;
 	}
+
+	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -1627,31 +1619,29 @@ function getBusinessFromParams(params) {
 				return i;
 			}
 		}
-		return false;
 	} else {
 		if(typeof getServerData().businesses[params] != "undefined") {
 			return toInteger(params);
 		}
-		return false;
 	}
+	return false;
 }
 
 // ---------------------------------------------------------------------------
 
-function getHousesFromParams(params) {
+function getHouseFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getServerData().houses) {
 			if(toLowerCase(getServerData().houses[i].description).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
-		return false;
 	} else {
 		if(typeof getServerData().houses[params] != "undefined") {
 			return toInteger(params);
 		}
-		return false;
 	}
+	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -1837,14 +1827,6 @@ function resetClientStuff(client) {
 	}
 
 	getPlayerData(client).lastVehicle = null;
-}
-
-// ----------------------------------------------------------------------------
-
-function sendAllLabelsToPlayer(client) {
-	sendAllBusinessLabelsToPlayer(client);
-	sendAllHouseLabelsToPlayer(client);
-	sendAllJobLabelsToPlayer(client);
 }
 
 // ----------------------------------------------------------------------------

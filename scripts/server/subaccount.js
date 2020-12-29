@@ -112,6 +112,8 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 // ---------------------------------------------------------------------------
 
 function showCharacterSelectToClient(client) {
+	getPlayerData(client).switchingCharacter = true;
+
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
 		if(getPlayerData().subAccounts != null) {
 			if(getPlayerData().subAccounts.length > 0) {
@@ -254,6 +256,9 @@ async function selectCharacter(client, characterId = -1) {
 	}, client.ping+1000);
 
 	updateAllPlayerNameTags();
+
+	getPlayerData(client).switchingCharacter = false;
+	triggerNetworkEvent("ag.jobType", client, tempSubAccount.job);
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 
@@ -292,6 +297,11 @@ function newCharacterCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function useCharacterCommand(command, params, client) {
+	if(!getPlayerData(client).switchingCharacter) {
+		messagePlayerError(client, "Use /switchchar to save this character and return to the characters screen first!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;

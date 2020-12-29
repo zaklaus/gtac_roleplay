@@ -1686,7 +1686,7 @@ app.init = function()
 		},
 	}, selectNextCharacter);
 	
-	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 70, "files/images/skins/none.png");
+	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 97, "files/images/skins/none.png");
 	
 	// ---------------------------------------------------------------------------
 	
@@ -1845,7 +1845,7 @@ let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBir
 	characterSelect.dateOfBirthText.text = "Born: " + toString(dateOfBirth);
 	characterSelect.placeOfOrigin.text = "From: " + toString(placeOfOrigin);
 	
-	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 70, "files/images/skins/none.png");
+	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 97, "files/images/skins/none.png");
 
 	characterSelect.window.shown = true;
 }
@@ -1915,18 +1915,7 @@ let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfB
 	characterSelect.dateOfBirthText.text = "Born: " + toString(dateOfBirth);
 	characterSelect.placeOfOrigin.text = "From: " + toString(placeOfOrigin);
 
-	//if(characterSelect.skinImage != null) {
-	//	characterSelect.skinImage.remove();
-	//}
-
-	//let skinImagePath = "Skin000.png";
-	//for(let i in skinNames[gta.game]) {
-	//	if(skinNames[gta.game][i][0] == skinId) {
-	//		skinImagePath = skinNames[gta.game][i][2];
-	//	}
-	//}
-
-	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 70, "files/images/skins/none.png");
+	characterSelect.skinImage = characterSelect.window.image(265, 30, 110, 97, "files/images/skins/none.png");
 	characterSelect.window.shown = true;
 }
 

@@ -185,9 +185,3 @@ function isPlayerInFrontVehicleSeat(client) {
 }
 
 // ---------------------------------------------------------------------------
-
-function getDistance(vec1, vec2) {
-    return vec1.distance(vec2);
-}
-
-// ---------------------------------------------------------------------------

@@ -30,7 +30,7 @@ addEventHandler("OnPlayerConnect", function(event, ipAddress, port) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPlayerJoined", function(event, client) {
-    message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
+    //message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 });
 
 // ---------------------------------------------------------------------------
@@ -140,6 +140,10 @@ addEventHandler("OnPedEnterVehicle", function(event, ped, vehicle, seat) {
 // ---------------------------------------------------------------------------
 
 async function playerEnteredVehicle(client) {
+    if(client.player == null) {
+        return false;
+    }
+
     await waitUntil(() => client.player.vehicle != null);
     let vehicle = client.player.vehicle;
 

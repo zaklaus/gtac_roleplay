@@ -16,6 +16,7 @@ let jobLabels = [];
 
 let propertyLabelNameFont = null;
 let propertyLabelLockedFont = null;
+let propertyLabelHeight = 1.0;
 
 let jobNameLabelFont = null;
 let jobHelpLabelFont = null;
@@ -29,221 +30,14 @@ let jobHelpColour = toColour(234, 198, 126, 255);
 bindEventHandler("onResourceReady", thisResource, function(event, resource) {
     propertyLabelNameFont = lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
     propertyLabelLockedFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
+
+    jobNameLabelFont = lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
+    jobHelpLabelFont = lucasFont.createDefaultFont(10.0, "Roboto", "Light");
 });
 
 // ----------------------------------------------------------------------------
 
-class businessLabelData {
-    constructor(labelId, position, height, name, locked, hidden) {
-        this.labelId = labelId;
-        this.position = position;
-        this.height = height;
-        this.name = name;
-        this.locked = locked;
-        this.hidden = hidden;
-    }
-}
-
-// ----------------------------------------------------------------------------
-
-class houseLabelData {
-    constructor(labelId, position, height, name, locked, hidden) {
-        this.labelId = labelId;
-        this.position = position;
-        this.height = height;
-        this.name = name;
-        this.locked = locked;
-        this.hidden = hidden;
-    }
-}
-
-// ----------------------------------------------------------------------------
-
-class jobLabelData {
-    constructor(labelId, position, height, name, tempJobType, hidden) {
-        this.labelId = labelId;
-        this.position = position;
-        this.height = height;
-        this.name = name;
-        this.jobType = tempJobType;
-        this.hidden = hidden;
-    }
-}
-
-
-// ----------------------------------------------------------------------------
-
-addEventHandler("OnDrawnHUD", function(event) {
-	for(let i in businessLabels) {
-		renderPropertyLabel(businessLabels[i], true);
-    }
-    
-	for(let i in houseLabels) {
-		renderPropertyLabel(houseLabels[i], false);
-    }
-
-	for(let i in jobLabels) {
-		renderJobLabel(jobLabels[i]);
-    }    
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.bizlabel.name", function(labelId, name) {
-    getBusinessLabelData(labelId).name = name;
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.bizlabel.del", function(labelId) {
-    for(let i in businessLabels) {
-        if(businessLabels[i].labelId == labelId) {
-            businessLabels.splice(i, 1);
-        }
-    }
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.bizlabel.locked", function(labelId, state) {
-    getBusinessLabelData(labelId).locked = state;
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.bizlabel.add", function(labelId, position, height, name, locked, hidden) {
-    businessLabels.push(new businessLabelData(labelId, position, height, name, locked, hidden));
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.bizlabel.all", function(tempBusinessLabels) {
-    businessLabels = [];
-    for(let i in tempBusinessLabels) {
-        businessLabels.push(new businessLabelData(tempBusinessLabels[i][0], tempBusinessLabels[i][1], tempBusinessLabels[i][2], tempBusinessLabels[i][3], tempBusinessLabels[i][4], tempBusinessLabels[i][5]));
-    }
-    
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.joblabel.all", function(tempJobLabels) {
-    jobLabels = [];
-    for(let i in tempJobLabels) {
-        jobLabels.push(new jobLabelData(tempJobLabels[i][0], tempJobLabels[i][1], tempJobLabels[i][2], tempJobLabels[i][3], tempJobLabels[i][4], tempJobLabels[i][5]));
-    }
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.joblabel.add", function(labelId, position, height, name, locked, hidden) {
-    jobLabels.push(new jobLabelData(labelId, position, height, name, locked, hidden));
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.joblabel.del", function(labelId) {
-    for(let i in jobLabels) {
-        if(jobLabels[i].labelId == labelId) {
-            jobLabels.splice(i, 1);
-        }
-    }
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.joblabel.name", function(labelId, name) {
-    getJobLabelData(labelId).name = name;
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.houselabel.add", function(labelId, position, height, name, locked, hidden) {
-    houseLabels.push(new houseLabelData(labelId, position, height, name, locked, hidden));
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.houselabel.all", function(tempHouseLabels) {
-    houseLabels = [];
-    for(let i in tempHouseLabels) {
-        houseLabels.push(new houseLabelData(tempHouseLabels[i][0], tempHouseLabels[i][1], tempHouseLabels[i][2], tempHouseLabels[i][3], tempHouseLabels[i][4], tempHouseLabels[i][5]));
-    }
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.houselabel.name", function(labelId, name) {
-    getHouseLabelData(labelId).name = name;
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.houselabel.del", function(labelId) {
-    for(let i in houseLabels) {
-        if(houseLabels[i].labelId == labelId) {
-            houseLabels.splice(i, 1);
-        }
-    }
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-addNetworkHandler("ag.houselabel.locked", function(labelId, state) {
-    getHouseLabelData(labelId).locked = state;
-    return true;
-});
-
-// ----------------------------------------------------------------------------
-
-function getBusinessLabelData(labelId) {
-    for(let i in businessLabels) {
-        if(businessLabels[i].labelId == labelId) {
-            return businessLabels[i];
-        }
-    }
-}
-
-// ----------------------------------------------------------------------------
-
-function getHouseLabelData(labelId) {
-    for(let i in houseLabels) {
-        if(houseLabels[i].labelId == labelId) {
-            return houseLabels[i];
-        }
-    }
-}
-
-// ----------------------------------------------------------------------------
-
-function getJobLabelData(labelId) {
-    for(let i in jobLabels) {
-        if(jobLabels[i].labelId == labelId) {
-            return jobLabels[i];
-        }
-    }
-}
-
-// ----------------------------------------------------------------------------
-
-function renderPropertyLabel(labelData, isBusiness) {
-    if(labelData.hidden) {
-        return false;
-    }
-
+function renderPropertyLabel(name, position, locked, isBusiness, price) {
     if(localPlayer == null) {
         return false;
     }
@@ -256,66 +50,114 @@ function renderPropertyLabel(labelData, isBusiness) {
 		return false;
 	}
     
-    if(localPlayer.position.distance(labelData.position) > 7.5) {
+    if(localPlayer.position.distance(position) > 7.5) {
         return false;
     }
 
-    let tempPosition = labelData.position;
+    let tempPosition = position;
+    tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
-    screenPosition.y -= labelData.height;
-
-    let text = (labelData.locked) ? "LOCKED" : "UNLOCKED";
-    if(isBusiness) {
-        text = (labelData.locked) ? "CLOSED" : "OPEN";
+    let text = "";
+    if(price > 0) {
+        text = `For sale: $${price}`;
+        let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
+        propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(0, 150, 0, 255), false, true, false, true);       
+    
+        screenPosition.y -= 18;        
     }
+
+    text = (locked) ? "LOCKED" : "UNLOCKED";
+    if(isBusiness) {
+        text = (locked) ? "CLOSED" : "OPEN";
+    }
+
     let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
-    propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, (labelData.locked) ? lockedColour : unlockedColour, false, true, false, true);       
+    propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, (locked) ? lockedColour : unlockedColour, false, true, false, true);       
 
-    screenPosition.y -= 18;
+    screenPosition.y -= 22;
 
-    text = labelData.name;
+    text = name;
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
     propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);       
 }
 
 // ----------------------------------------------------------------------------
 
-function renderJobLabel(labelData) {
-    if(labelData.hidden) {
-        return false;
-    }
-
+function renderJobLabel(name, position, jobType) {
     if(localPlayer == null) {
         return false;
     }
 
-	if(jobLabelNameFont == null) {
+	if(jobNameLabelFont == null) {
 		return false;
     }
     
-	if(jobLabelLockedFont == null) {
+	if(jobHelpLabelFont == null) {
 		return false;
 	}
     
-    if(localPlayer.position.distance(labelData.position) > 7.5) {
+    if(localPlayer.position.distance(position) > 7.5) {
         return false;
     }
 
-    let tempPosition = labelData.position;
+    let tempPosition = position;
+    tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
-    screenPosition.y -= labelData.height;
+    let text = "";
+    if(jobType == localPlayerJobType) {
+        if(localPlayerWorking) {
+            text = "Use /uniform and /equip for job stuff, or /stopwork to go off duty";
+        } else {
+            text = "Use /startwork to go on duty";
+        }
+    } else {
+        if(localPlayerJobType == 0) {
+            text = "Use /takejob to work here";
+        } else {
+            text = "You already have a job. Use /quitjob if you want this one";
+        }
+    }
 
-    let text = (labelData.jobType == jobType) ? "Use /startwork to go on duty" : "Use /takejob to work for this job";
     let size = jobHelpLabelFont.measure(text, game.width, 0.0, 0.0, jobHelpLabelFont.size, true, true);
     jobHelpLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobHelpLabelFont.size, COLOUR_YELLOW, false, true, false, true);       
 
     screenPosition.y -= 18;
 
-    text = labelData.name;
+    text = name + " Job";
     size = jobNameLabelFont.measure(text, game.width, 0.0, 0.0, jobNameLabelFont.size, true, true);
-    jobNameLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobNameLabelFont.size, COLOUR_WHITE, false, true, false, true);       
+    jobNameLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobNameLabelFont.size, COLOUR_WHITE, false, true, false, true);        
 }
+
+// ----------------------------------------------------------------------------
+
+addEventHandler("OnDrawnHUD", function (event) {
+    let pickups = getElementsByType(ELEMENT_PICKUP);
+    for(let i in pickups) {
+        if(pickups[i].getData("ag.label.type") != null) {
+            if(getDistance(localPlayer.position, pickups[i].position)) {
+                let price = 0;
+                if(pickups[i].getData("ag.label.price") != null) {
+                    price = pickups[i].getData("ag.label.price");
+                }
+
+                switch(pickups[i].getData("ag.label.type")) {
+                    case AG_LABEL_BUSINESS:
+                        renderPropertyLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
+                        break;
+
+                    case AG_LABEL_HOUSE:
+                        renderPropertyLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
+                        break;
+                        
+                    case AG_LABEL_JOB:
+                        renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
+                        break;      
+                }
+            }
+        }
+    }
+});
 
 // ----------------------------------------------------------------------------

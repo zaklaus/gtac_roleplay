@@ -8,6 +8,10 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
+setErrorMode(RESOURCEERRORMODE_STRICT);
+
+// ---------------------------------------------------------------------------
+
 let bigMessageFont = null;
 let mainLogo = null;
 
@@ -23,7 +27,12 @@ let smallGameMessageTimer = null;
 
 let inSphere = false;
 
-let jobType = -1;
+let localPlayerJobType = 0;
+let localPlayerWorking = false;
+
+let mouseCameraEnabled = false;
+
+let isWalking = false;
 
 // ---------------------------------------------------------------------------
 
@@ -49,6 +58,10 @@ addEventHandler("OnResourceStart", function(event, resource) {
 			logoStream.close();
 		}
     }
+
+    //if(gta.standardControls) {
+    //    mouseCameraEnabled = true;
+    //}
 });
 
 // ---------------------------------------------------------------------------
@@ -267,7 +280,7 @@ addNetworkHandler("ag.skin", function(skin) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.pedskin", function(ped, skin) {
+addNetworkHandler("ag.pedSkin", function(ped, skin) {
     ped.skin = skin;
 });
 
@@ -529,12 +542,6 @@ addNetworkHandler("ag.fadeCamera", function(state, time) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.removeFromVehicle", function() {
-    localPlayer.removeFromVehicle();
-});
-
-// ---------------------------------------------------------------------------
-
 addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, pedPiece) {
     wastedPed.clearWeapons();
 });
@@ -630,7 +637,21 @@ function enteredJobRouteSphere() {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.jobType", function(tempJobType) {
-    jobType = tempJobType;
+    localPlayerJobType = tempJobType;
 });
 
 // ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.working", function(tempWorking) {
+    localPlayerWorking = tempWorking;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.mouseCamera", function(state) {
+    mouseCameraEnabled = !mouseCameraEnabled;
+    SetStandardControlsEnabled(!mouseCameraEnabled);
+});
+
+// ---------------------------------------------------------------------------
+

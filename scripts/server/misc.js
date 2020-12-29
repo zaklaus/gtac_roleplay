@@ -29,7 +29,14 @@ function getPositionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function toggleMouseCursorCommand(command, params, client) {
-	triggerNetworkEvent("ag.cursortoggle", client);
+	triggerNetworkEvent("ag.cursorToggle", client);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleMouseCameraCommand(command, params, client) {
+	triggerNetworkEvent("ag.mouseCamera", client);
 	return true;
 }
 

@@ -16,7 +16,7 @@ function initDeveloperScript() {
 
 // ---------------------------------------------------------------------------
 
-function simulatePlayerCommand(command, params, client) {
+function simulateCommandForPlayer(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isClientLoggedIn(client)) {
 			messageClientError(client, "You must be logged in to use this command!");
@@ -29,13 +29,15 @@ function simulatePlayerCommand(command, params, client) {
 		return false;
 	}
 
-	if(areParamsEmpty(params) || !areThereEnoughParams(params, 3)) {
+	if(areParamsEmpty(params) || !areThereEnoughParams(params, 2)) {
 		messageClientSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
+	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(splitParams[0]);
 	let tempCommand = splitParams[1];
+	tempCommand.replace("/", "");
 	let tempParams = splitParams.slice(2).join(" ");
 
 	if(!targetClient) {
@@ -48,7 +50,48 @@ function simulatePlayerCommand(command, params, client) {
 		return false;
 	}
 
-	onPlayerCommand(tempCommand, tempParams, targetClient);
+	getCommand(toLowerCase(tempCommand)).handlerFunction(tempCommand, tempParams, targetClient);
+	messageClientSuccess(client, `The command string [#AAAAAA]/${tempCommand} ${tempParams}[#FFFFFF] has been simulated for [#AAAAAA]${targetClient.name}`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function simulateCommandForAllPlayers(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isClientLoggedIn(client)) {
+			messageClientError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messageClientError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(areParamsEmpty(params) || !areThereEnoughParams(params, 2)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let tempCommand = splitParams[0];
+	tempCommand.replace("/", "");
+	let tempParams = splitParams.slice(1).join(" ");
+
+	if(!getCommand(tempCommand)) {
+		messageClientError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+		return false;
+	}
+
+	let clients = getClients();
+	for(let i in clients) {
+		if(!clients[i].console) {
+			getCommand(toLowerCase(tempCommand)).handlerFunction(tempCommand, tempParams, clients[i]);
+		}
+	}
+	messageClientSuccess(client, `The command string [#AAAAAA]/${tempCommand} ${tempParams}[#FFFFFF] has been simulated for all players!`);
 	return true;
 }
 
@@ -120,7 +163,7 @@ function executeClientCodeCommand(command, params, client) {
 		return false;		
 	}
 
-	triggerNetworkEvent("ag.runCode", targetClient, targetCode);
+	triggerNetworkEvent("ag.runCode", targetClient, targetCode, client.index);
 
 	messageClientSuccess(client, "Executing client code for " + toString(targetClient.name) + "!");
 	messageClientNormal(client, "Code: " + targetCode);
@@ -130,19 +173,16 @@ function executeClientCodeCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function saveAllServerDataCommand(command, params, client) {
-
-
-	messageClientInfo(client, `[#FF9900]Saving all server data to database ...`);
+	messageAdmins(`[#FF9900]Saving all server data to database ...`);
 	saveAllServerDataToDatabase();
-	messageClientSuccess(client, `[#FF9900]All server data saved to database!`);
+	messageAdmins(`[#FF9900]All server data saved to database!`);
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function restartGameModeCommand(command, params, client) {
-
-
+	message(`[#FF9900]The server game mode is restarting!`, getColourByName("orange"));
 	consoleCommand("refresh");
 	thisResource.restart();
 	return true;
@@ -225,6 +265,12 @@ function submitBugReport(client, bugText) {
 		let safeBugMessage = escapeDatabaseString(dbConnection, bugText);
 		queryDatabase(dbConnection, `INSERT INTO bug_main (bug_server, bug_script_ver, bug_who_added, bug_when_added, bug_message, bug_pos_x, bug_pos_y, bug_pos_z, bug_rot_z, bug_svr_start, bug_session) VALUES (${getServerId()}, '${scriptVersion}', ${databaseId}, UNIX_TIMESTAMP(), '${safeBugMessage}', ${position.x}, ${position.y}, ${position.z}, ${heading}, ${serverStartTime}, ${session})`);
 	}
+}
+
+// ---------------------------------------------------------------------------
+
+function isDevelopmentServer() {
+	return intToBool(server.getCVar("devserver"));
 }
 
 // ---------------------------------------------------------------------------

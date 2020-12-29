@@ -223,9 +223,63 @@ function gotoVehicleCommand(command, params, client) {
 	let vehicle = getServerData().vehicles[toInteger(params)].vehicle;
 	
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
-	triggerNetworkEvent("ag.position", client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
+	setTimeout(function() {
+		setPlayerPosition(client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
+		setPlayerInterior(client, 0);
+		setPlayerVirtualWorld(client, vehicle.dimension);
+	}, 500);
 	
-	messageClientSuccess(client, `You teleported to vehicle [#AAAAAA]${toInteger(params)}`);
+	messageClientSuccess(client, `You teleported to a [#CC22CC]${getVehicleName(vehicle)} [#AAAAAA](ID ${vehicle.id})`);
+}
+
+// ---------------------------------------------------------------------------
+
+function gotoBusinessCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let businessId = getBusinessFromParams(params)
+
+	if(!getBusinessData(businessId)) {
+		messageClientError(client, "That business doesn't exist!");
+		return false;
+	}
+	
+	client.player.velocity = toVector3(0.0, 0.0, 0.0);
+	setTimeout(function() {
+		setPlayerPosition(client, getBusinessData(businessId).entrancePosition);
+		setPlayerInterior(client, getBusinessData(businessId).entranceInterior);
+		setPlayerVirtualWorld(client, getBusinessData(businessId).entranceDimension);
+	}, 500);
+	
+	messageClientSuccess(client, `You teleported to business [#0099FF]${getBusinessData(businessId).name} [#AAAAAA](ID ${businessId})`);
+}
+
+// ---------------------------------------------------------------------------
+
+function gotoHouseCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messageClientSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let houseId = getHouseFromParams(params)
+
+	if(!getHouseData(houseId)) {
+		messageClientError(client, "That house doesn't exist!");
+		return false;
+	}
+	
+	client.player.velocity = toVector3(0.0, 0.0, 0.0);
+	setTimeout(function() {
+		setPlayerPosition(client, getHouseData(houseId).entrancePosition);
+		setPlayerInterior(client, getHouseData(houseId).entranceInterior);
+		setPlayerVirtualWorld(client, getHouseData(houseId).entranceDimension);
+	}, 500);
+	
+	messageClientSuccess(client, `You teleported to business [#0099FF]${getHouseData(houseId).description} [#AAAAAA](ID ${houseId})`);
 }
 
 // ---------------------------------------------------------------------------

@@ -127,16 +127,16 @@ function showCharacterSelectToClient(client) {
 		getPlayerData(client).currentSubAccount = 0;
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
 		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
-		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the character select GUI`);
+		console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {	
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
 		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
 		//let emojiNumbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"];
-		messageClientNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
+		messagePlayerNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
 		getPlayerData(client).subAccounts.forEach(function(subAccount, index) {
-			messageClientNormal(client, `${index+1} • [#AAAAAA]${subAccount.firstName} ${subAccount.lastName}`);
+			messagePlayerNormal(client, `${index+1} • [#AAAAAA]${subAccount.firstName} ${subAccount.lastName}`);
 		});
-		console.log(`[Asshat.Account] ${getClientDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
+		console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
 	}
 }
 
@@ -174,9 +174,9 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.newCharacterFailed", client, "Something went wrong. Your character could not be created!");
 		} else {
-			messageClientAlert(client, "Something went wrong. Your character could not be created!");
+			messagePlayerAlert(client, "Something went wrong. Your character could not be created!");
 		}
-		messageClientAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
+		messagePlayerAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
 		return false;
 	}
 
@@ -230,14 +230,14 @@ async function selectCharacter(client, characterId = -1) {
 		getPlayerData(client).currentSubAccount = characterId;
 	}
 
-	let tempSubAccount = getClientCurrentSubAccount(client);
+	let tempSubAccount = getPlayerCurrentSubAccount(client);
 	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
 
 	tempSubAccount.lastLogin = new Date().getTime();
 
-	messageClientAlert(client, `You are now playing as: [#0099FF]${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
-	messageClientNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
-	messageClientNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
+	messagePlayerAlert(client, `You are now playing as: [#0099FF]${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
+	messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
+	messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 	
 	triggerNetworkEvent("ag.restoreCamera", client);
 	setEntityData(client, "ag.spawned", true, true);
@@ -265,12 +265,12 @@ addNetworkHandler("ag.selectCharacter", selectCharacter);
 // ---------------------------------------------------------------------------
 
 function switchCharacterCommand(command, params, client) {
-	getClientCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
-	getClientCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
-	getClientCurrentSubAccount(client).interior = getPlayerInterior(client);
-	getClientCurrentSubAccount(client).dimension = getPlayerVirtualWorld(client);
+	getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
+	getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
+	getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
+	getPlayerCurrentSubAccount(client).dimension = getPlayerVirtualWorld(client);
 
-	saveSubAccountToDatabase(getClientCurrentSubAccount(client));
+	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
 	
 	resetClientStuff(client);
 
@@ -283,7 +283,7 @@ function switchCharacterCommand(command, params, client) {
 
 function newCharacterCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -303,7 +303,7 @@ function useCharacterCommand(command, params, client) {
 	}
 
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -334,7 +334,7 @@ function transferCharacterToServer(subAccountDatabaseId, newServerId) {
 // ---------------------------------------------------------------------------
 
 function getCharacterFullName(client) {
-	return `${getClientCurrentSubAccount(client).firstName} ${getClientCurrentSubAccount(client).lastName}`;
+	return `${getPlayerCurrentSubAccount(client).firstName} ${getPlayerCurrentSubAccount(client).lastName}`;
 }
 
 // ---------------------------------------------------------------------------

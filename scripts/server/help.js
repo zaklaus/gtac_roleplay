@@ -114,128 +114,128 @@ function helpCommand(command, params, client) {
 // ----------------------------------------------------------------------------
 
 function showMainHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Help [#FF9900]=================================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Use /help <category> for commands and info. Example: [#AAAAAA]/help vehicle");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Help Categories: [#A9A9A9]account, command, vehicle, job, chat, rules, website, anim");
-    messageClientNormal(client, "[#FF9900]• [#A9A9A9]ammunation, skins, mechanic, dealership, discord, colours, keys");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Help [#FF9900]=================================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Use /help <category> for commands and info. Example: [#AAAAAA]/help vehicle");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Help Categories: [#A9A9A9]account, command, vehicle, job, chat, rules, website, anim");
+    messagePlayerNormal(client, "[#FF9900]• [#A9A9A9]ammunation, skins, mechanic, dealership, discord, colours, keys");
 }
 
 // ----------------------------------------------------------------------------
 
 function showAccountHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Account Help [#FF9900]=============================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Do not share your password with anybody else.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Use [#AAAAAA]/changepass[#FFFFFF] to change your password.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Some settings you can use: [#AAAAAA]/gui, /logo, /iplogin, /autolastchar, /2fa, /loginalert");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Account Help [#FF9900]=============================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Do not share your password with anybody else.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Use [#AAAAAA]/changepass[#FFFFFF] to change your password.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some settings you can use: [#AAAAAA]/gui, /logo, /iplogin, /autolastchar, /2fa, /loginalert");
 }
 
 // ----------------------------------------------------------------------------
 
 function showVehicleHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Vehicle Help [#FF9900]=============================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Visit dealerships to buy new vehicles (Use [#AAAAAA]/help dealership [#FFFFFF]for more info.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Some commands: [#AAAAAA]/lock, /engine, /lights, /trunk, /rentveh, /buyveh, /rentprice, /buyprice");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Your personal vehicles will save wherever you or somebody else leaves them!");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Visit a mechanic garage to repair, colour, and tune up your car! [#AAAAAA]/help mechanic [#FFFFFF] for info");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Don't forget to register and insure your vehicle! Use [#AAAAAA]/gps [#FFFFFF]to find a DMV for this.");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Vehicle Help [#FF9900]=============================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Visit dealerships to buy new vehicles (Use [#AAAAAA]/help dealership [#FFFFFF]for more info.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some commands: [#AAAAAA]/lock, /engine, /lights, /trunk, /rentveh, /buyveh, /rentprice, /buyprice");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Your personal vehicles will save wherever you or somebody else leaves them!");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Visit a mechanic garage to repair, colour, and tune up your car! [#AAAAAA]/help mechanic [#FFFFFF] for info");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Don't forget to register and insure your vehicle! Use [#AAAAAA]/gps [#FFFFFF]to find a DMV for this.");
 }
 
 // ----------------------------------------------------------------------------
 
 function showVehicleDealershipHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Vehicle Dealerships [#FF9900]======================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Visit a vehicle dealer to buy new vehicles. Use [#AAAAAA]/gps [#FFFFFF]to find one.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]At the dealer, simply enter a car you want to buy, and the price will be shown to you");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]If you want to buy the vehicle and have enough money, use [#AAAAAA]/buyveh [#FFFFFF]and you will be given keys");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]A new car for sale will appear when you drive away from the dealer.");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Vehicle Dealerships [#FF9900]======================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Visit a vehicle dealer to buy new vehicles. Use [#AAAAAA]/gps [#FFFFFF]to find one.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]At the dealer, simply enter a car you want to buy, and the price will be shown to you");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]If you want to buy the vehicle and have enough money, use [#AAAAAA]/buyveh [#FFFFFF]and you will be given keys");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]A new car for sale will appear when you drive away from the dealer.");
 }
 
 // ----------------------------------------------------------------------------
 
 function showJobHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Job Help [#FF9900]=================================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Visit job locations get a job and earn money. Look for yellow spots on the map");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]At a job location, use [#AAAAAA]/takejob [#FFFFFF]to get the job. Use [#AAAAAA]/quitjob [#FFFFFF]to quit your job");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Use [#AAAAAA]/startwork [#FFFFFF]to begin working. You can also get a job [#AAAAAA]/uniform and [#AAAAAA]/equipment");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Most job vehicles are locked. Use [#AAAAAA]/lock [#FFFFFF]near one to enter it.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]When entering a job vehicle, information on how to do the job will be shown to you.");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Job Help [#FF9900]=================================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Visit job locations get a job and earn money. Look for yellow spots on the map");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]At a job location, use [#AAAAAA]/takejob [#FFFFFF]to get the job. Use [#AAAAAA]/quitjob [#FFFFFF]to quit your job");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Use [#AAAAAA]/startwork [#FFFFFF]to begin working. You can also get a job [#AAAAAA]/uniform and [#AAAAAA]/equipment");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Most job vehicles are locked. Use [#AAAAAA]/lock [#FFFFFF]near one to enter it.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]When entering a job vehicle, information on how to do the job will be shown to you.");
 }
 
 // ----------------------------------------------------------------------------
 
 function showChatHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Chat Help [#FF9900]================================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]There are two main types of chat: out-of-character (OOC) and in-character (IC)");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Mixing these two types is not proper roleplay. See [#AAAAAA]/rules [#FFFFFF]for info.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Some chat commands: [#AAAAAA]/dm /whisper /talk /shout /me.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Some have shorter names available ([#AAAAAA]/t [#FFFFFF]for talk, [#AAAAAA]/s [#FFFFFF]for shout, etc)");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Chat Help [#FF9900]================================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]There are two main types of chat: out-of-character (OOC) and in-character (IC)");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Mixing these two types is not proper roleplay. See [#AAAAAA]/rules [#FFFFFF]for info.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some chat commands: [#AAAAAA]/dm /whisper /talk /shout /me.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some have shorter names available ([#AAAAAA]/t [#FFFFFF]for talk, [#AAAAAA]/s [#FFFFFF]for shout, etc)");
 }
 
 // ----------------------------------------------------------------------------
 
 function showRulesHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Server Rules [#FF9900]=============================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Unrealistic actions (powergaming) are not allowed. You aren't superman.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]No terrorist or terrorism roleplay is allowed.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Always follow instructions given by moderators and admins.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Do not mix the chats (metagaming). You can't use info in IC that was received OOC");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Keep English in main chats. If you aren't good at English, use [#AAAAAA]/help [#FFFFFF]language");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Server Rules [#FF9900]=============================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Unrealistic actions (powergaming) are not allowed. You aren't superman.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]No terrorist or terrorism roleplay is allowed.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Always follow instructions given by moderators and admins.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Do not mix the chats (metagaming). You can't use info in IC that was received OOC");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Keep English in main chats. If you aren't good at English, use [#AAAAAA]/help [#FFFFFF]language");
 }
 
 // ----------------------------------------------------------------------------
 
 function showWebsiteHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Website [#FF9900]=============================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]The website is [#AAAAAA]https://asshatgaming.com");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Website [#FF9900]=============================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]The website is [#AAAAAA]https://asshatgaming.com");
 }
 
 // ----------------------------------------------------------------------------
 
 function showDiscordHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Discord [#FF9900]=============================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Join our discord! [#AAAAAA]https://discord.gg/4TQ3TGB529");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Discord [#FF9900]=============================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Join our discord! [#AAAAAA]https://discord.gg/4TQ3TGB529");
 }
 
 // ----------------------------------------------------------------------------
 
 function showAnimationHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Animations [#FF9900]===============================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Animations are not yet available.");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Animations [#FF9900]===============================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Animations are not yet available.");
 }
 
 // ----------------------------------------------------------------------------
 
 function showAmmunationHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Ammunation [#FF9900]===============================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Visit an ammunation to buy weapons. Use [#AAAAAA]/gps [#FFFFFF]to find one.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Buying a weapon requires a weapon license.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Weapon licenses are managed by the police department. Apply there to get one.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Weapons can also be purchased illegally from weapon dealers and clans.");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Ammunation [#FF9900]===============================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Visit an ammunation to buy weapons. Use [#AAAAAA]/gps [#FFFFFF]to find one.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Buying a weapon requires a weapon license.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Weapon licenses are managed by the police department. Apply there to get one.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Weapons can also be purchased illegally from weapon dealers and clans.");
 }
 
 // ----------------------------------------------------------------------------
 
 function showClothesHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Clothes [#FF9900]==================================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]To change your skin, use [#AAAAAA]/gps [#FFFFFF]to find a clothing store");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]At a clothing store, use [#AAAAAA]/buyclothes [#FFFFFF]to choose a skin");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Some skins are restricted to jobs, clans, or for other reasons.");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Clothes [#FF9900]==================================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]To change your skin, use [#AAAAAA]/gps [#FFFFFF]to find a clothing store");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]At a clothing store, use [#AAAAAA]/buyclothes [#FFFFFF]to choose a skin");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some skins are restricted to jobs, clans, or for other reasons.");
 }
 
 // ----------------------------------------------------------------------------
 
 function showBindKeysHelpMessage(client) {
-    messageClientInfo(client, "[#FF9900]== [#FFFF00]Bindable Keys [#FF9900]============================");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]You can set your own keys binds. Use [#AAAAAA]/keybinds [#FFFFFF]to add, remove, or change your keys.");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Default keys are: [#0066FF]K [#FFFFFF]for engine, [#0066FF]I [#FFFFFF]for lights, and [#0066FF]L [#FFFFFF]for lock/unlock");
-    messageClientNormal(client, "[#FF9900]• [#FFFFFF]Your keybinds will automatically be usable on all servers");
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Bindable Keys [#FF9900]============================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]You can set your own keys binds. Use [#AAAAAA]/keybinds [#FFFFFF]to add, remove, or change your keys.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Default keys are: [#0066FF]K [#FFFFFF]for engine, [#0066FF]I [#FFFFFF]for lights, and [#0066FF]L [#FFFFFF]for lock/unlock");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Your keybinds will automatically be usable on all servers");
 }
 
 // ----------------------------------------------------------------------------
 
 function showEnteredDriverSeatHasKeysHelpTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.enteredDriverSeat) {
-        messageClientInfo(client, `You can press K for engine, I for lights, and L to lock/unlock the car.`);
+        messagePlayerInfo(client, `You can press K for engine, I for lights, and L to lock/unlock the car.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.enteredDriverSeat;
     }
 }
@@ -244,7 +244,7 @@ function showEnteredDriverSeatHasKeysHelpTip(client) {
 
 function showApproachJobWhileUnemployedTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachJobWhileUnemployed) {
-        messageClientTip(client, `Approach the icon and use /jobinfo to see details about this job.`);
+        messagePlayerTip(client, `Approach the icon and use /jobinfo to see details about this job.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachJobWhileUnemployed;
     }  
 }
@@ -253,7 +253,7 @@ function showApproachJobWhileUnemployedTip(client) {
 
 function showTakeNearbyJobTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.takeJobWhileUnemployed) {
-        messageClientTip(client, `You are nearby a job location. Look for the spinning icon.`);
+        messagePlayerTip(client, `You are nearby a job location. Look for the spinning icon.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.takeJobWhileUnemployed;
     }  
 }
@@ -262,8 +262,8 @@ function showTakeNearbyJobTip(client) {
 
 function showApproachCurrentJobTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
-        //messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to start working, or hold ${getServerConfig().keybindText.actionKey} to quit your job.`);
-        messageClientTip(client, `This job location is for your job. You can use /startwork to start working.`);
+        //messagePlayerTip(client, `Press ${getServerConfig().keybindText.actionKey} to start working, or hold ${getServerConfig().keybindText.actionKey} to quit your job.`);
+        messagePlayerTip(client, `This job location is for your job. You can use /startwork to start working.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachCurrentJob;
     }
 }
@@ -272,8 +272,8 @@ function showApproachCurrentJobTip(client) {
 
 function showApproachOtherJobTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
-        //messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to start working, or hold ${getServerConfig().keybindText.actionKey} to quit your job.`);
-        messageClientTip(client, `This job location belongs to another job. If you want this job, use /quitjob first.`);
+        //messagePlayerTip(client, `Press ${getServerConfig().keybindText.actionKey} to start working, or hold ${getServerConfig().keybindText.actionKey} to quit your job.`);
+        messagePlayerTip(client, `This job location belongs to another job. If you want this job, use /quitjob first.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachCurrentJob;
     }
 }
@@ -282,8 +282,8 @@ function showApproachOtherJobTip(client) {
 
 function showStartedWorkingTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.startedWorking) {
-        //messageClientTip(client, `Press ${getServerConfig().keybindText.actionKey} to change uniform, or hold ${getServerConfig().keybindText.actionKey} to stop working.`);
-        messageClientTip(client, `Use /uniform to see job skins and /equip to see available jobs tools and weapons.`);
+        //messagePlayerTip(client, `Press ${getServerConfig().keybindText.actionKey} to change uniform, or hold ${getServerConfig().keybindText.actionKey} to stop working.`);
+        messagePlayerTip(client, `Use /uniform to see job skins and /equip to see available jobs tools and weapons.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.startedWorking;
     }
 }
@@ -292,7 +292,7 @@ function showStartedWorkingTip(client) {
 
 function showApproachOwnedVehicleTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachOwnedVehicle) {
-        messageClientTip(client, `This vehicle is owned by you.`);
+        messagePlayerTip(client, `This vehicle is owned by you.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachOwnedVehicle;
     }
 }
@@ -301,7 +301,7 @@ function showApproachOwnedVehicleTip(client) {
 
 function showApproachClanVehicleTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachAnyVehicle) {
-        messageClientTip(client, `Your clan owns this vehicle.`);
+        messagePlayerTip(client, `Your clan owns this vehicle.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachAnyVehicle;
     }
 }

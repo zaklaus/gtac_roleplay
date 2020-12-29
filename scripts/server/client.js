@@ -135,7 +135,7 @@ addNetworkHandler("ag.arrivedAtBusStop", function(client) {
 
 addNetworkHandler("ag.clientReady", function(client) {
 	client.setData("ag.isReady", true, false);
-	console.log(`${getClientDisplayForConsole(client)}'s client resources are downloaded and ready!`);
+	console.log(`${getPlayerDisplayForConsole(client)}'s client resources are downloaded and ready!`);
 	if(client.getData("ag.isStarted") == true) {
 		initClient(client);
 	}
@@ -145,7 +145,7 @@ addNetworkHandler("ag.clientReady", function(client) {
 
 addNetworkHandler("ag.clientStarted", function(client) {
 	client.setData("ag.isStarted", true, false);
-	console.log(`${getClientDisplayForConsole(client)}'s client resources are started and running!`);
+	console.log(`${getPlayerDisplayForConsole(client)}'s client resources are started and running!`);
 	if(client.getData("ag.isReady") == true) {
 		initClient(client);
 	}

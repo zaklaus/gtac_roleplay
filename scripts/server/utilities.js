@@ -735,7 +735,7 @@ function getClientFromName(clientName) {
 			return clients[i];
 		}
 
-		let charName = `${getClientCurrentSubAccount(clients[i]).firstName} ${getClientCurrentSubAccount(clients[i]).lastName}`;
+		let charName = `${getPlayerCurrentSubAccount(clients[i]).firstName} ${getPlayerCurrentSubAccount(clients[i]).lastName}`;
 		if(toLowerCase(charName).indexOf(toLowerCase(clientName)) != -1) {
 			return clients[i];
 		}
@@ -1154,7 +1154,7 @@ function getPlayerData(client) {
 
 // ---------------------------------------------------------------------------
 
-function getClientCurrentSubAccount(client) {
+function getPlayerCurrentSubAccount(client) {
 	if(!getPlayerData(client)) {
 		return false;
 	}
@@ -1170,7 +1170,7 @@ function getClientCurrentSubAccount(client) {
 // ---------------------------------------------------------------------------
 
 function getClientSubAccountName(client) {
-	let subAccountData = getClientCurrentSubAccount(client);
+	let subAccountData = getPlayerCurrentSubAccount(client);
 	return `${subAccountData.firstName} ${subAccountData.lastName}`;
 }
 
@@ -1455,22 +1455,22 @@ function processHoldActionKey(client) {
 	let jobData = getJobData(closestJobId);
 
 
-	if(getClientCurrentSubAccount(client).job == AG_JOB_NONE) {
+	if(getPlayerCurrentSubAccount(client).job == AG_JOB_NONE) {
 		if(jobData.position.distance(client.player.position) <= getGlobalConfig().takeJobDistance) {
 			takeJob(client, closestJobId);
-			messageClientSuccess(client, "You now have the " + toString(jobData.name) + " job");
+			messagePlayerSuccess(client, "You now have the " + toString(jobData.name) + " job");
 		}
 	} else {
-		if(jobData.jobType == getClientCurrentSubAccount(client).job) {
+		if(jobData.jobType == getPlayerCurrentSubAccount(client).job) {
 			if(jobData.position.distance(client.player.position) <= getGlobalConfig().startWorkDistance) {
 				startWorking(client);
-				messageClientSuccess(client, "You are now working as a " + toString(jobData.name));
+				messagePlayerSuccess(client, "You are now working as a " + toString(jobData.name));
 				showStartedWorkingTip(client);
 				return true;
 			}
 		} else {
-			messageClientError(client, "This is not your job!");
-			messageClientInfo(client, `Use /quitjob to quit your current job.`);
+			messagePlayerError(client, "This is not your job!");
+			messagePlayerInfo(client, `Use /quitjob to quit your current job.`);
 		}
 	}
 }
@@ -1481,7 +1481,7 @@ function processPressActionKey(client) {
 	// Check job stuff
 	let closestJob = getClosestJob(client.player.position);
 	
-	if(getClientCurrentSubAccount(client).job == AG_JOB_NONE) {
+	if(getPlayerCurrentSubAccount(client).job == AG_JOB_NONE) {
 		if(closestJob.position.distance(client.player.position) <= getGlobalConfig().takeJobDistance) {
 			
 		}
@@ -1509,7 +1509,7 @@ function processHoldVehicleEngineKey(client) {
 // ---------------------------------------------------------------------------
 
 function getClientChatColour(client) {
-	let tempJob = getClientCurrentSubAccount(client).job;
+	let tempJob = getPlayerCurrentSubAccount(client).job;
 	if(tempJob != -1) {
 		if(getPlayerData(client).isWorking) {
 			return getJobData(tempJob).jobColour;
@@ -1647,7 +1647,7 @@ function getHouseFromParams(params) {
 // ---------------------------------------------------------------------------
 
 function updatePlayerCash(client) {
-	triggerNetworkEvent("ag.money", client, getClientCurrentSubAccount(client).cash);
+	triggerNetworkEvent("ag.money", client, getPlayerCurrentSubAccount(client).cash);
 }
 
 // ---------------------------------------------------------------------------
@@ -1751,7 +1751,7 @@ function arrayBufferToString(arrayBuffer) {
 
 // ----------------------------------------------------------------------------
 
-function getClientDisplayForConsole(client) {
+function getPlayerDisplayForConsole(client) {
 	return `${client.name}[${client.index}]`;
 }
 
@@ -1759,7 +1759,7 @@ function getClientDisplayForConsole(client) {
 
 function getPlayerNameForNameTag(client) {
 	if(isPlayerSpawned(client)) {
-		return `${getClientCurrentSubAccount(client).firstName} ${getClientCurrentSubAccount(client).lastName}`;
+		return `${getPlayerCurrentSubAccount(client).firstName} ${getPlayerCurrentSubAccount(client).lastName}`;
 	}
 	return client.name;
 }

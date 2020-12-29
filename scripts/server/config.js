@@ -332,19 +332,19 @@ function getServerId() {
 
 function setTimeCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -353,12 +353,12 @@ function setTimeCommand(command, params, client) {
 	let minute = toInteger(splitParams[1]) || 0;
 
 	if(hour > 23 || hour < 0) {
-		messageClientError(client, "The hour must be between 0 and 23!");
+		messagePlayerError(client, "The hour must be between 0 and 23!");
 		return false;		
     }
 
 	if(minute > 59 || minute < 0) {
-		messageClientError(client, "The minute must be between 0 and 59!");
+		messagePlayerError(client, "The minute must be between 0 and 59!");
 		return false;		
     }    
     
@@ -373,19 +373,19 @@ function setTimeCommand(command, params, client) {
 
 function setWeatherCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -393,7 +393,7 @@ function setWeatherCommand(command, params, client) {
 	let weatherId = getWeatherFromParams(splitParams[0]);
 
 	if(!weatherId) {
-		messageClientError(client, `That weather ID or name is invalid!`);
+		messagePlayerError(client, `That weather ID or name is invalid!`);
 		return false;
     } 
     
@@ -408,19 +408,19 @@ function setWeatherCommand(command, params, client) {
 
 function setSnowingCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -445,14 +445,14 @@ function setSnowingCommand(command, params, client) {
 
 function toggleServerLogoCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
@@ -469,14 +469,14 @@ function toggleServerLogoCommand(command, params, client) {
 
 function toggleServerGUICommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 

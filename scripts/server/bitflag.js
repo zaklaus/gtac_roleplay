@@ -140,8 +140,8 @@ function hasBitFlag(allFlags, checkForFlag) {
 
 // ---------------------------------------------------------------------------
 
-function doesClientHaveStaffPermission(client, requiredFlags) {
-	if(client.console) {
+function doesPlayerHaveStaffPermission(client, requiredFlags) {
+	if(isConsole(client)) {
 		return true;
 	}
 
@@ -171,7 +171,7 @@ function doesClientHaveStaffPermission(client, requiredFlags) {
 // ---------------------------------------------------------------------------
 
 function doesClientHaveClanPermission(client, requiredFlags) {
-	if(client.console) {
+	if(isConsole(client)) {
 		return true;
 	}
 
@@ -179,12 +179,12 @@ function doesClientHaveClanPermission(client, requiredFlags) {
 		return true;
 	}
 
-	if(doesClientHaveStaffPermission(client, getStaffFlagValue("manageClans"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageClans"))) {
 		return true;
 	}
 
 	let clanFlags = 0;
-	clanFlags = getClientCurrentSubAccount(client).clanFlags | getClanRankFlags(getClientCurrentSubAccount(client).clanRank);
+	clanFlags = getPlayerCurrentSubAccount(client).clanFlags | getClanRankFlags(getPlayerCurrentSubAccount(client).clanRank);
 
 	// -1 is automatic override (having -1 for staff flags is basically god mode admin level)
     if(clanFlags == getClanFlagValue("all")) {
@@ -256,7 +256,7 @@ function getAccountFlagsFlagValue(flagName) {
 
 // ---------------------------------------------------------------------------
 
-function giveClientStaffFlag(client, flagName) {
+function givePlayerStaffFlag(client, flagName) {
 	if(!getStaffFlagValue(flagName)) {
 		return false;
 	}
@@ -267,7 +267,7 @@ function giveClientStaffFlag(client, flagName) {
 
 // ---------------------------------------------------------------------------
 
-function takeClientStaffFlag(client, flagName) {
+function takePlayerStaffFlag(client, flagName) {
 	if(!getStaffFlagValue(flagName)) {
 		return false;
 	}
@@ -290,7 +290,7 @@ function removeBitFlag(allFlags, flagValue) {
 
 // ---------------------------------------------------------------------------
 
-function takeClientStaffFlag(client, flagName) {
+function takePlayerStaffFlag(client, flagName) {
 	if(!getStaffFlagValue(flagName)) {
 		return false;
 	}
@@ -301,7 +301,7 @@ function takeClientStaffFlag(client, flagName) {
 
 // ---------------------------------------------------------------------------
 
-function clearClientStaffFlags(client) {
+function clearPlayerStaffFlags(client) {
 	getPlayerData(client).accountData.flags.admin = getStaffFlagValue("none");
 	return true;
 }

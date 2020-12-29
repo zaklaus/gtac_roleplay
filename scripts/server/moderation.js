@@ -15,20 +15,20 @@ function initModerationScript() {
 
 function kickClientCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 
 	// Prevent kicking admins with really high permissions
-	if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot kick this person!");
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot kick this person!");
 			return false;
 		}
 	}
@@ -41,7 +41,7 @@ function kickClientCommand(command, params, client) {
 
 function setClientStaffTitleCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
@@ -50,21 +50,21 @@ function setClientStaffTitleCommand(command, params, client) {
 	let staffTitle = splitParams.slice(1).join(" ");
 
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
 	}
 
 	// Prevent setting titles on staff with really high permissions
-	if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot set this person's staff title!");
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot set this person's staff title!");
 			return false;
 		}
 	}
 	
 	getPlayerData(targetClient).accountData.staffTitle = staffTitle;
-	messageClientSuccess(client, `You set ${targetClient.name}'s staff title to ${staffTitle}`);
-	messageClientAlert(client, `${client.name} set your staff title to ${staffTitle}`);
+	messagePlayerSuccess(client, `You set ${targetClient.name}'s staff title to ${staffTitle}`);
+	messagePlayerAlert(client, `${client.name} set your staff title to ${staffTitle}`);
 	targetClient.disconnect();
 }
 
@@ -72,20 +72,20 @@ function setClientStaffTitleCommand(command, params, client) {
 
 function muteClientCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 
 	// Prevent muting admins with really high permissions
-	if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot mute this person!");
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot mute this person!");
 			return false;
 		}
 	}
@@ -99,20 +99,20 @@ function muteClientCommand(command, params, client) {
 function unMuteClientCommand(command, params, client) {
 	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 
 	// Prevent unmuting admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot unmute this person!");
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot unmute this person!");
 			return false;
 		}
 	}		
@@ -125,20 +125,20 @@ function unMuteClientCommand(command, params, client) {
 
 function freezeClientCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 
 	// Prevent freeze admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot freeze this person!");
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot freeze this person!");
 			return false;
 		}
 	}
@@ -151,20 +151,20 @@ function freezeClientCommand(command, params, client) {
 
 function unFreezeClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 
 	// Prevent unfreezing admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot freeze this person!");
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot freeze this person!");
 			return false;
 		}
 	}
@@ -177,20 +177,20 @@ function unFreezeClientCommand(command, params, client) {
 
 function gotoPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 	
 	//message(`[#996600][ADMIN]: [#FFFFFF]${toString(targetClient.name)} has been un-frozen by an admin!`);
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
-	triggerNetworkEvent("ag.position", client, getPosBehindPos(getPlayerPosition(targetClient), getPlayerHeading(targetClient), 2));
-	triggerNetworkEvent("ag.heading", client, getPlayerHeading(targetClient));
+	setPlayerPosition(client, getPosBehindPos(getPlayerPosition(targetClient), getPlayerHeading(targetClient), 2));
+	setPlayerHeading(client, getPlayerHeading(targetClient));
 	
 	if(isPlayerInAnyBusiness(targetClient)) {
 		let businessData = getBusinessData(getPlayerBusiness(targetClient));
@@ -205,19 +205,19 @@ function gotoPlayerCommand(command, params, client) {
 		//triggerNetworkEvent("ag.dimension", client, houseData.exitInterior);
 		client.player.dimension = houseData.exitDimension;
 	}
-	messageClientSuccess(client, `You teleported to [#AAAAAA]${targetClient.name}`);
+	messagePlayerSuccess(client, `You teleported to [#AAAAAA]${targetClient.name}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function gotoVehicleCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	if(typeof getServerData().vehicles[toInteger(params)] == "undefined") {
-		messageClientError(client, "That vehicle ID doesn't exist!");
+		messagePlayerError(client, "That vehicle ID doesn't exist!");
 	}
 
 	let vehicle = getServerData().vehicles[toInteger(params)].vehicle;
@@ -229,21 +229,21 @@ function gotoVehicleCommand(command, params, client) {
 		setPlayerVirtualWorld(client, vehicle.dimension);
 	}, 500);
 	
-	messageClientSuccess(client, `You teleported to a [#CC22CC]${getVehicleName(vehicle)} [#AAAAAA](ID ${vehicle.id})`);
+	messagePlayerSuccess(client, `You teleported to a [#CC22CC]${getVehicleName(vehicle)} [#AAAAAA](ID ${vehicle.id})`);
 }
 
 // ---------------------------------------------------------------------------
 
 function gotoBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	let businessId = getBusinessFromParams(params)
 
 	if(!getBusinessData(businessId)) {
-		messageClientError(client, "That business doesn't exist!");
+		messagePlayerError(client, "That business doesn't exist!");
 		return false;
 	}
 	
@@ -254,21 +254,21 @@ function gotoBusinessCommand(command, params, client) {
 		setPlayerVirtualWorld(client, getBusinessData(businessId).entranceDimension);
 	}, 500);
 	
-	messageClientSuccess(client, `You teleported to business [#0099FF]${getBusinessData(businessId).name} [#AAAAAA](ID ${businessId})`);
+	messagePlayerSuccess(client, `You teleported to business [#0099FF]${getBusinessData(businessId).name} [#AAAAAA](ID ${businessId})`);
 }
 
 // ---------------------------------------------------------------------------
 
 function gotoHouseCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	let houseId = getHouseFromParams(params)
 
 	if(!getHouseData(houseId)) {
-		messageClientError(client, "That house doesn't exist!");
+		messagePlayerError(client, "That house doesn't exist!");
 		return false;
 	}
 	
@@ -279,14 +279,14 @@ function gotoHouseCommand(command, params, client) {
 		setPlayerVirtualWorld(client, getHouseData(houseId).entranceDimension);
 	}, 500);
 	
-	messageClientSuccess(client, `You teleported to business [#0099FF]${getHouseData(houseId).description} [#AAAAAA](ID ${houseId})`);
+	messagePlayerSuccess(client, `You teleported to business [#0099FF]${getHouseData(houseId).description} [#AAAAAA](ID ${houseId})`);
 }
 
 // ---------------------------------------------------------------------------
 
 function gotoJobLocationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -295,14 +295,14 @@ function gotoJobLocationCommand(command, params, client) {
 	let jobId = getJobFromParams(splitParams[0]) || getClosestJobLocation(getPlayerPosition(client)).job;
 
 	if(!getJobData(jobId)) {
-		messageClientError(client, `That job does not exist!`);
+		messagePlayerError(client, `That job does not exist!`);
 		return false;
 	}
 
 	let jobLocationId = splitParams[1] || 0;
 
 	if(typeof getJobData(jobId).locations[jobLocationId] == "undefined") {
-		messageClientError(client, `That location ID does not exist!`);
+		messagePlayerError(client, `That location ID does not exist!`);
 		return false;
 	}	
 
@@ -311,14 +311,14 @@ function gotoJobLocationCommand(command, params, client) {
 	setPlayerInterior(client, getJobData(jobId).locations[jobLocationId].interior);
 	setPlayerVirtualWorld(client, getJobData(jobId).locations[jobLocationId].dimension);
 	
-	messageClientSuccess(client, `You teleported to location [#AAAAAA]${jobLocationId} [#FFFFFF]for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
+	messagePlayerSuccess(client, `You teleported to location [#AAAAAA]${jobLocationId} [#FFFFFF]for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
 // ---------------------------------------------------------------------------
 
 function gotoPositionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -338,128 +338,126 @@ function gotoPositionCommand(command, params, client) {
 	setPlayerInterior(client, Number(int));
 	setPlayerVirtualWorld(client, Number(vw));
 	
-	messageClientSuccess(client, `You teleported to coordinates [#AAAAAA]${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
+	messagePlayerSuccess(client, `You teleported to coordinates [#AAAAAA]${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function teleportForwardCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
 	setPlayerPosition(client, getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
-	messageClientSuccess(client, `You teleported forward ${params} meters`);
+	messagePlayerSuccess(client, `You teleported forward ${params} meters`);
 }
 
 // ---------------------------------------------------------------------------
 
 function teleportBackwardCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
 	setPlayerPosition(client, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
-	messageClientSuccess(client, `You teleported backward [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported backward [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
 
 function teleportLeftCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
 	setPlayerPosition(client, getPosToLeftOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
-	messageClientSuccess(client, `You teleported left [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported left [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
 
 function teleportUpCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
 	setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), params));
 	
-	messageClientSuccess(client, `You teleported up [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported up [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
 
 function teleportDownCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
 	triggerNetworkEvent("ag.position", client, getPosBelowPos(getPlayerPosition(client), params));
 	
-	messageClientSuccess(client, `You teleported down [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported down [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
 
 function teleportRightCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
-	triggerNetworkEvent("ag.position", client, getPosToRightOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	setPlayerPosition(client, getPosToRightOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 	
-	messageClientSuccess(client, `You teleported right [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported right [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
 // ---------------------------------------------------------------------------
 
 function getPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
 	}
 
-	triggerNetworkEvent("ag.removeFromVehicle", targetClient);
-	triggerNetworkEvent("ag.position", targetClient, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), 2));
-	triggerNetworkEvent("ag.heading", targetClient, getPlayerHeading(client));
+	removePlayerFromVehicle(targetClient);
+	setPlayerPosition(targetClient, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), 2));
+	setPlayerHeading(targetClient, getPlayerHeading(client));
 	
 	if(isPlayerInAnyBusiness(client)) {
 		let businessData = getBusinessData(getPlayerBusiness(client));
-		triggerNetworkEvent("ag.interior", targetClient, businessData.exitInterior);
-		//triggerNetworkEvent("ag.dimension", client, businessData.exitInterior);
-		targetClient.player.dimension = businessData.exitDimension;
+		setPlayerInterior(targetClient, businessData.exitInterior);
+		setPlayerVirtualWorld(targetClient, businessData.exitDimension);
 	}
 
 	if(isPlayerInAnyHouse(client)) {
 		let houseData = getHouseData(getPlayerHouse(client));
-		triggerNetworkEvent("ag.interior", targetClient, houseData.exitInterior);
-		//triggerNetworkEvent("ag.dimension", client, houseData.exitInterior);
-		targetClient.player.dimension = houseData.exitDimension;
+		setPlayerInterior(targetClient, houseData.exitInterior);
+		setPlayerVirtualWorld(client, houseData.exitDimension);
 	}
 
-	messageClientSuccess(client, `You teleported [#AAAAAA]${targetClient.name} [#FFFFFF]to you.`);
-	messageClientAlert(targetClient, `An admin has teleported you to their location`);
+	messagePlayerSuccess(client, `You teleported [#AAAAAA]${targetClient.name} [#FFFFFF]to you.`);
+	messagePlayerAlert(targetClient, `An admin has teleported you to their location`);
 }
 
 // ---------------------------------------------------------------------------
 
 function addStaffFlagCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
@@ -468,32 +466,32 @@ function addStaffFlagCommand(command, params, client) {
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot give staff flags to this person!");
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot give staff flags to this person!");
 			return false;
 		}
 	}
 
 	if(!getStaffFlagValue(flagName)) {
-		messageClientError(client, "That staff flag doesn't exist!");
+		messagePlayerError(client, "That staff flag doesn't exist!");
         return false;
 	}
 
-	giveClientStaffFlag(targetClient, flagName);
-	messageClientSuccess(client, `You have ${getBoolRedGreenInlineColour(true)}given [#AAAAAA]${targetClient.name} [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag`);
+	givePlayerStaffFlag(targetClient, flagName);
+	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(true)}given [#AAAAAA]${targetClient.name} [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag`);
 }
 
 // ---------------------------------------------------------------------------
 
 function takeStaffFlagCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
@@ -502,32 +500,32 @@ function takeStaffFlagCommand(command, params, client) {
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot take staff flags from this person!");
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot take staff flags from this person!");
 			return false;
 		}
 	}
 
 	if(!getStaffFlagValue(flagName)) {
-		messageClientError(client, "That staff flag doesn't exist!");
+		messagePlayerError(client, "That staff flag doesn't exist!");
         return false;		
 	}
 
-	takeClientStaffFlag(targetClient, flagName);
-	messageClientSuccess(client, `You have ${getBoolRedGreenInlineColour(false)}taken [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag from [#AAAAAA]${targetClient.name}`);
+	takePlayerStaffFlag(targetClient, flagName);
+	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(false)}taken [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag from [#AAAAAA]${targetClient.name}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function clearStaffFlagsCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
@@ -536,44 +534,44 @@ function clearStaffFlagsCommand(command, params, client) {
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
     }
 
 	// Prevent setting flags on admins with really high permissions
-	if(doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesClientHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesClientHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesClientHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
-			messageClientError(client, "You cannot clear staff flags for this person!");
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+			messagePlayerError(client, "You cannot clear staff flags for this person!");
 			return false;
 		}
 	}
 
 	if(!getStaffFlagValue(flagName)) {
-		messageClientError(client, "That staff flag doesn't exist!");
+		messagePlayerError(client, "That staff flag doesn't exist!");
         return false;		
 	}
 
-	clearClientStaffFlags(targetClient);
-	messageClientSuccess(client, `You have removed all staff flags from [#AAAAAA]${targetClient.name}`);
+	clearPlayerStaffFlags(targetClient);
+	messagePlayerSuccess(client, `You have removed all staff flags from [#AAAAAA]${targetClient.name}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function getStaffFlagsCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
@@ -582,7 +580,7 @@ function getStaffFlagsCommand(command, params, client) {
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
 	}
 	
@@ -590,19 +588,19 @@ function getStaffFlagsCommand(command, params, client) {
 	let serverBitFlagKeys = getServerBitFlagKeys();
 	for(let i in serverBitFlagKeys) {
 		let tempFlagValue = getStaffFlagValue(serverBitFlagKeys[i]);
-		if(doesClientHaveStaffPermission(client, tempFlagValue)) {
+		if(doesPlayerHaveStaffPermission(client, tempFlagValue)) {
 			tempStaffFlags.push(serverBitFlagKeys[i]);
 		}
 	}
 
-	messageClientInfo(client, `[#FFFFFF]${targetClient.name}'s staff flags: [#AAAAAA]${tempStaffFlags.join("[#FFFFFF], [#AAAAAA]")}`);
+	messagePlayerInfo(client, `[#FFFFFF]${targetClient.name}'s staff flags: [#AAAAAA]${tempStaffFlags.join("[#FFFFFF], [#AAAAAA]")}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function allStaffFlagsCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
@@ -611,18 +609,18 @@ function allStaffFlagsCommand(command, params, client) {
 	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
 	}
 
-	messageClientInfo(client, `[#FFFFFF]Staff flags: [#AAAAAA]${getServerBitFlagKeys().join("[#FFFFFF], [#AAAAAA]")}`);
+	messagePlayerInfo(client, `[#FFFFFF]Staff flags: [#AAAAAA]${getServerBitFlagKeys().join("[#FFFFFF], [#AAAAAA]")}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function givePlayerMoneyCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 	
@@ -631,14 +629,14 @@ function givePlayerMoneyCommand(command, params, client) {
 	let amount = toInteger(splitParams[1]);
 
     if(!targetClient) {
-        messageClientError(client, "That player is not connected!");
+        messagePlayerError(client, "That player is not connected!");
         return false;
 	}
 	
-	getClientCurrentSubAccount(targetClient).cash += amount;
+	getPlayerCurrentSubAccount(targetClient).cash += amount;
 	updatePlayerCash(targetClient);
-	messageClientSuccess(client, `You gave [#AAAAAA]$${amount} [#FFFFFF]to [#AAAAAA]${getCharacterFullName(targetClient)}`);
-	messageClientAlert(client, `An admin gave you [#AAAAAA]$${amount}`);
+	messagePlayerSuccess(client, `You gave [#AAAAAA]$${amount} [#FFFFFF]to [#AAAAAA]${getCharacterFullName(targetClient)}`);
+	messagePlayerAlert(client, `An admin gave you [#AAAAAA]$${amount}`);
 }
 
 // ---------------------------------------------------------------------------

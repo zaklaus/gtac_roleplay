@@ -16,6 +16,8 @@ const triggerSource = {
     house,
 };
 
+// ---------------------------------------------------------------------------
+
 const NPC = {
     Trigger: {
         farProximity,               // Comes within a far distance of NPC
@@ -108,6 +110,10 @@ const NPC = {
     }
 };
 
+// ---------------------------------------------------------------------------
+
 function npcTrigger(triggerName, triggerSource) {
 
 }
+
+// ---------------------------------------------------------------------------

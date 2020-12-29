@@ -19,8 +19,8 @@ function messageAdminAction(messageText) {
 
 // ---------------------------------------------------------------------------
 
-function messageClientNormal(client, messageText, colour = COLOUR_WHITE) {
-    if(client.console) {
+function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
+    if(isConsole(client)) {
         console.log(`[Asshat.Messaging] ${messageText}`);
         return true;
     }
@@ -40,7 +40,7 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
         if(clients[i].console) {
             console.log(`[Asshat.Messaging] 🛡️ ${messageText}`);
         } else {
-            if(doesClientHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
+            if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
                 messageClient(`🛡️ ${messageText}`, clients[i], getColourByName("softRed"));
             }
         }
@@ -50,14 +50,14 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
 
 // ---------------------------------------------------------------------------
 
-function messageClientError(client, messageText) {
-    if(client.console) {
+function messagePlayerError(client, messageText) {
+    if(isConsole(client)) {
         console.log(`[Asshat.Messaging] ERROR:  ${messageText}`);
         return true;
     }
 
     if(!isClientFromDiscord(client)) {
-        messageClientNormal(client, `🚫 ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `🚫 ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:no_entry_sign: ${messageText}`);
     }
@@ -65,14 +65,14 @@ function messageClientError(client, messageText) {
 
 // ---------------------------------------------------------------------------
 
-function messageClientSyntax(client, messageText) {
-    if(client.console) {
+function messagePlayerSyntax(client, messageText) {
+    if(isConsole(client)) {
         console.log(`[Asshat.Messaging] USAGE:  ${messageText}`);
         return true;
     }
 
     if(!isClientFromDiscord(client)) {
-        messageClientNormal(client, `⌨️ USAGE: [#FFFFFF] ${messageText}`, getColourByType("syntaxMessage"));
+        messagePlayerNormal(client, `⌨️ USAGE: [#FFFFFF] ${messageText}`, getColourByType("syntaxMessage"));
     } else {
         messageDiscordUser(client, `:keyboard: ${messageText}`);
     }
@@ -80,14 +80,14 @@ function messageClientSyntax(client, messageText) {
 
 // ---------------------------------------------------------------------------
 
-function messageClientAlert(client, messageText) {
-    if(client.console) {
+function messagePlayerAlert(client, messageText) {
+    if(isConsole(client)) {
         console.log(`[Asshat.Messaging] ALERT: ${messageText}`);
         return true;
     }
 
     if(!isClientFromDiscord(client)) {
-        messageClientNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:warning: ${messageText}`);
     }
@@ -95,14 +95,14 @@ function messageClientAlert(client, messageText) {
 
 // ---------------------------------------------------------------------------
 
-function messageClientSuccess(client, messageText) {
-    if(client.console) {
+function messagePlayerSuccess(client, messageText) {
+    if(isConsole(client)) {
         console.log(`[Asshat.Messaging] SUCCESS: ${messageText}`);
         return true;
     }
 
     if(!isClientFromDiscord(client)) {
-        messageClientNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:thumbsup: ${messageText}`);
     }
@@ -110,14 +110,14 @@ function messageClientSuccess(client, messageText) {
 
 // ---------------------------------------------------------------------------
 
-function messageClientInfo(client, messageText) {
-    if(client.console) {
+function messagePlayerInfo(client, messageText) {
+    if(isConsole(client)) {
         console.log(`[INFO] ${messageText}`);
         return true;
     }
         
     if(!isClientFromDiscord(client)) {
-        messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:information_source: ${messageText}`);
     }
@@ -125,14 +125,14 @@ function messageClientInfo(client, messageText) {
 
 // ---------------------------------------------------------------------------
 
-function messageClientTip(client, messageText) {
-    if(client.console) {
+function messagePlayerTip(client, messageText) {
+    if(isConsole(client)) {
         console.log(`[TIP] ${messageText}`);
         return true;
     }
         
     if(!isClientFromDiscord(client)) {
-        messageClientNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:information_source: ${messageText}`);
     }
@@ -140,46 +140,46 @@ function messageClientTip(client, messageText) {
 
 // ---------------------------------------------------------------------------
 
-function messageClientTalk(client, talkingClient, messageText) {
-    messageClientNormal(client, `${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
+function messagePlayerTalk(client, talkingClient, messageText) {
+    messagePlayerNormal(client, `${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientWhisper(client, whisperingClient, messageText) {
-    messageClientNormal(client, `${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
+function messagePlayerWhisper(client, whisperingClient, messageText) {
+    messagePlayerNormal(client, `${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientShout(client, shoutingClient, messageText) {
-    messageClientNormal(client, `${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
+function messagePlayerShout(client, shoutingClient, messageText) {
+    messagePlayerNormal(client, `${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientDoAction(client, doingActionClient, messageText) {
+function messagePlayerDoAction(client, doingActionClient, messageText) {
     if(!isClientFromDiscord(client)) {
-        messageClientNormal(client, `${messageText} * (${getClientSubAccountName(doingActionClient)})`, getColourByType("doActionMessage"));
+        messagePlayerNormal(client, `${messageText} * (${getClientSubAccountName(doingActionClient)})`, getColourByType("doActionMessage"));
     }
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientMeAction(client, doingActionClient, messageText) {
-    messageClientNormal(client, `${getClientSubAccountName(doingActionClient)} ${messageText}`, getColourByType("meActionMessage"));
+function messagePlayerMeAction(client, doingActionClient, messageText) {
+    messagePlayerNormal(client, `${getClientSubAccountName(doingActionClient)} ${messageText}`, getColourByType("meActionMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientClanChat(client, clanChattingClient, messageText) {
-    messageClientNormal(client, `(${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
+function messagePlayerClanChat(client, clanChattingClient, messageText) {
+    messagePlayerNormal(client, `(${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
 }
 
 // ---------------------------------------------------------------------------
 
-function messageClientAdminChat(client, adminChattingClient, messageText) {
-    messageClientNormal(client, `[ADMIN CHAT] [#AAAAAA]${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
+function messagePlayerAdminChat(client, adminChattingClient, messageText) {
+    messagePlayerNormal(client, `[ADMIN CHAT] [#AAAAAA]${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
 }
 
 // ---------------------------------------------------------------------------

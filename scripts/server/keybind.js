@@ -143,24 +143,24 @@ function addKeyBindCommand(command, params, client) {
     let tempParams = (splitParams.length > 2) ? splitParams.slice(2).join(" ") : "";
 
     if(!keyId) {
-        messageClientError(client, "The key ID or name you input is invalid!");
-        messageClientTip(client, "Use simple key names, letters, or numbers. Don't add spaces.");
-        messageClientInfo(client, "Examples: [#AAAAAA]1, 2, a, b, numplus, num1, f1, f2, pageup, delete, insert, rightshift, leftctrl");
+        messagePlayerError(client, "The key ID or name you input is invalid!");
+        messagePlayerTip(client, "Use simple key names, letters, or numbers. Don't add spaces.");
+        messagePlayerInfo(client, "Examples: [#AAAAAA]1, 2, a, b, numplus, num1, f1, f2, pageup, delete, insert, rightshift, leftctrl");
         return false;
     }
 
     if(!keyId) {
-        messageClientError(client, "That key name/id is invalid!");
+        messagePlayerError(client, "That key name/id is invalid!");
         return false;
     }
 
     if(areParamsEmpty(tempCommand)) {
-        messageClientSyntax(client, getCommandSyntaxText(command));
+        messagePlayerSyntax(client, getCommandSyntaxText(command));
         return false;
     }
 
     addPlayerKeyBind(keyId, tempCommand, tempParams);
-    messageClientSuccess(client, `You binded the [#AAAAAA]${sdl.getKeyName(keyId)} [#FFFFFF]key to command: [#AAAAAA]/${tempCommand} ${tempParams}`);
+    messagePlayerSuccess(client, `You binded the [#AAAAAA]${sdl.getKeyName(keyId)} [#FFFFFF]key to command: [#AAAAAA]/${tempCommand} ${tempParams}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -171,19 +171,19 @@ function removeKeyBindCommand(command, params, client) {
     let keyId = getKeyIdFromParams(splitParams[0]);
 
     if(!keyId) {
-        messageClientError(client, "The key ID or name you input is invalid!");
-        messageClientTip(client, "Use simple key names, letters, or numbers. Don't add spaces.");
-        messageClientInfo(client, "Examples: [#AAAAAA]1, 2, a, b, numplus, num1, f1, f2, pageup, delete, insert, rightshift, leftctrl");
+        messagePlayerError(client, "The key ID or name you input is invalid!");
+        messagePlayerTip(client, "Use simple key names, letters, or numbers. Don't add spaces.");
+        messagePlayerInfo(client, "Examples: [#AAAAAA]1, 2, a, b, numplus, num1, f1, f2, pageup, delete, insert, rightshift, leftctrl");
         return false;
     }
 
     if(!keyId) {
-        messageClientError(client, "That key name/id is invalid!");
+        messagePlayerError(client, "That key name/id is invalid!");
         return false;
     }
 
     removePlayerKeyBind(client, keyId);
-    messageClientSuccess(client, `You removed the keybind for the [#AAAAAA]${sdl.getKeyName(keyId)} [#FFFFFF]key`);
+    messagePlayerSuccess(client, `You removed the keybind for the [#AAAAAA]${sdl.getKeyName(keyId)} [#FFFFFF]key`);
 }
 
 // ---------------------------------------------------------------------------
@@ -257,7 +257,7 @@ function getPlayerKeyBindForKey(client, key) {
 // ---------------------------------------------------------------------------
 
 function playerUsedKeyBind(client, key) {
-    if(!isClientLoggedIn(client)) {
+    if(!isPlayerLoggedIn(client)) {
         return false;
     }
 
@@ -265,7 +265,7 @@ function playerUsedKeyBind(client, key) {
         return false;
     }    
 
-    console.log(`[Asshat.KeyBind] ${getClientDisplayForConsole(client)} used keybind ${sdl.getKeyName(key)} (${key})`);
+    console.log(`[Asshat.KeyBind] ${getPlayerDisplayForConsole(client)} used keybind ${sdl.getKeyName(key)} (${key})`);
     if(doesPlayerHaveKeyBindForKey(client, key)) {
         let keyBindData = getPlayerKeyBindForKey(client, key);
         if(keyBindData.enabled) {

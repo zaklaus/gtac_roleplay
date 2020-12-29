@@ -21,8 +21,8 @@ function initMiscScript() {
 function getPositionCommand(command, params, client) {
 	let position = client.player.position;
 
-	messageClientNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
-	console.log(`${getClientDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
+	messagePlayerNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
+	console.log(`${getPlayerDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
 	return true;
 }
 
@@ -47,7 +47,7 @@ function setNewCharacterSpawnPositionCommand(command, params, client) {
 	getServerConfig().newCharacter.spawnPosition = position;
 	getServerConfig().newCharacter.spawnHeading = client.player.heading;
 
-    messageClientNormal(client, `The new character spawn position has been set to ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`)
+    messagePlayerNormal(client, `The new character spawn position has been set to ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`)
 	return true;
 }
 
@@ -55,7 +55,7 @@ function setNewCharacterSpawnPositionCommand(command, params, client) {
 
 function setNewCharacterMoneyCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -64,7 +64,7 @@ function setNewCharacterMoneyCommand(command, params, client) {
 
 	getServerConfig().newCharacter.cash = skinId;
 
-    messageClientNormal(client, `The new character money has been set to $${amount}`);
+    messagePlayerNormal(client, `The new character money has been set to $${amount}`);
 	return true;
 }
 
@@ -72,7 +72,7 @@ function setNewCharacterMoneyCommand(command, params, client) {
 
 function setNewCharacterSkinCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -85,7 +85,7 @@ function setNewCharacterSkinCommand(command, params, client) {
 
 	getServerConfig().newCharacter.skin = skinId;
 
-    messageClientNormal(client, `The new character skin has been set to ${getSkinNameFromId(skinId)} (ID ${skinId})`);
+    messagePlayerNormal(client, `The new character skin has been set to ${getSkinNameFromId(skinId)} (ID ${skinId})`);
 	return true;
 }
 
@@ -93,13 +93,13 @@ function setNewCharacterSkinCommand(command, params, client) {
 
 function submitIdeaCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	submitIdea(client, params);
 
-    messageClientNormal(client, `Your suggestion/idea has been sent to the developers!`);
+    messagePlayerNormal(client, `Your suggestion/idea has been sent to the developers!`);
 	return true;
 }
 
@@ -107,13 +107,13 @@ function submitIdeaCommand(command, params, client) {
 
 function submitBugReportCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	submitBugReport(client, params);
 
-    messageClientNormal(client, `Your bug report has been sent to the developers!`);
+    messagePlayerNormal(client, `Your bug report has been sent to the developers!`);
 	return true;
 }
 
@@ -155,8 +155,8 @@ function enterExitPropertyCommand(command, params, client) {
 		let closestBusiness = getBusinessData(closestBusinessId)
 		if(getDistance(closestBusiness.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
 			if(!doesBusinessHaveInterior(closestBusinessId)) {
-				messageClientAlert(client, "This business does not have an interior.");
-				messageClientTip(client, "You can use business commands at the door.");
+				messagePlayerAlert(client, "This business does not have an interior.");
+				messagePlayerTip(client, "You can use business commands at the door.");
 				return false;
 			}
 
@@ -179,8 +179,8 @@ function enterExitPropertyCommand(command, params, client) {
 		//let distance = getDistance(closestHouse.entrancePosition, getPlayerPosition(client));
 		if(getDistance(closestHouse.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
 			if(!doesHouseHaveInterior(closestHouseId)) {
-				messageClientAlert(client, "This house does not have an interior.");
-				messageClientTip(client, "You can use house commands at the door.");
+				messagePlayerAlert(client, "This house does not have an interior.");
+				messagePlayerTip(client, "You can use house commands at the door.");
 				return false;
 			}
 
@@ -197,7 +197,7 @@ function enterExitPropertyCommand(command, params, client) {
 		}
 	}
 
-	//messageClientError(client, "You aren't close enough to a door!");
+	//messagePlayerError(client, "You aren't close enough to a door!");
 	
 	return true;
 }

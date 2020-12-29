@@ -18,7 +18,7 @@ function initChatScript() {
 
 function meActionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -30,7 +30,7 @@ function meActionCommand(command, params, client) {
 
 function doActionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -42,7 +42,7 @@ function doActionCommand(command, params, client) {
 
 function shoutCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -54,7 +54,7 @@ function shoutCommand(command, params, client) {
 
 function talkCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -66,7 +66,7 @@ function talkCommand(command, params, client) {
 
 function whisperCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}	
 
@@ -78,7 +78,7 @@ function whisperCommand(command, params, client) {
 
 function adminChatCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -89,7 +89,7 @@ function adminChatCommand(command, params, client) {
 
 function clanChatCommand(command, params, client) {	
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -102,7 +102,7 @@ function talkToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
-			messageClientTalk(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerTalk(getClientFromPlayerElement(clients[i]), client, messageText);
 		//}
 	}
 }
@@ -113,7 +113,7 @@ function whisperToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
-			messageClientWhisper(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerWhisper(getClientFromPlayerElement(clients[i]), client, messageText);
 		//}
 	}	
 }
@@ -124,7 +124,7 @@ function shoutToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().shoutDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messageClientShout(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerShout(getClientFromPlayerElement(clients[i]), client, messageText);
 		//}
 	}
 }
@@ -135,7 +135,7 @@ function doActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().doActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messageClientDoAction(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerDoAction(getClientFromPlayerElement(clients[i]), client, messageText);
 		//}
 	}
 }
@@ -146,7 +146,7 @@ function meActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().meActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messageClientMeAction(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerMeAction(getClientFromPlayerElement(clients[i]), client, messageText);
 		//}
 	}
 }
@@ -156,7 +156,7 @@ function meActionToNearbyPlayers(client, messageText) {
 function clanChat(client, messageText) {
 	let clients = getClients();
 	for(let i in clients) {
-		if(getClientCurrentSubAccount(client).clan != getClientCurrentSubAccount(clients[i]).clan) {
+		if(getPlayerCurrentSubAccount(client).clan != getPlayerCurrentSubAccount(clients[i]).clan) {
 			messageClientClanChat(getClientFromPlayerElement(clients[i]), client, messageText);
 		}
 	}

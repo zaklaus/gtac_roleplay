@@ -46,6 +46,9 @@ let serverColours = {
 		burntOrange: toColour(210, 120, 0, 255),
 		bankGreen: toColour(0, 150, 0, 255),
 		softYellow: toColour(234, 198, 126, 255),
+		businessBlue: toColour(0, 153, 255, 255),
+		houseGreen: toColour(17, 204, 17, 255),
+		clanOrange: toColour(255, 153, 0, 255),
 	}
 };
 
@@ -71,11 +74,11 @@ function getColourByName(colourName) {
 
 function getPlayerColour(client) {
 	if(getPlayerData(client) != false) {
-		if(!isClientLoggedIn(client)) {
+		if(!isPlayerLoggedIn(client)) {
 			return getColourByName("darkGrey");
 		} else {
 			if(isPlayerWorking(client)) {
-				return getJobData(getClientCurrentSubAccount(client).job).colour;
+				return getJobData(getPlayerCurrentSubAccount(client).job).colour;
 			}
 		}
 	}

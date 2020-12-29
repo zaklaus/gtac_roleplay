@@ -329,19 +329,19 @@ function isCommandAllowedOnDiscord(command) {
 
 function disableCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
     }
     
     params = toLowerCase(params);
 
     if(!getCommand(params)) {
-        messageClientError(client, `The command [#AAAAAA]/${params} [#FFFFFF] does not exist!`);
+        messagePlayerError(client, `The command [#AAAAAA]/${params} [#FFFFFF] does not exist!`);
         return false;
     }    
 
     getCommand(params).enabled = false;
-	messageClientSuccess(client, `Command [#AAAAAA]/${params} [#FFFFFF]has been disabled!`);
+	messagePlayerSuccess(client, `Command [#AAAAAA]/${params} [#FFFFFF]has been disabled!`);
 	return true;
 }
 
@@ -349,19 +349,19 @@ function disableCommand(command, params, client) {
 
 function enableCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
     }
     
     params = toLowerCase(params);
 
     if(!getCommand(params)) {
-        messageClientError(client, `The command [#AAAAAA]/${params} [#FFFFFF] does not exist!`);
+        messagePlayerError(client, `The command [#AAAAAA]/${params} [#FFFFFF] does not exist!`);
         return false;
     }    
 
     getCommand(params).enabled = true;
-	messageClientSuccess(client, `Command [#AAAAAA]/${params} [#FFFFFF]has been enabled!`);
+	messagePlayerSuccess(client, `Command [#AAAAAA]/${params} [#FFFFFF]has been enabled!`);
 	return true;
 }
 
@@ -369,14 +369,14 @@ function enableCommand(command, params, client) {
 
 function disableAllCommandsByType(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
     params = toLowerCase(params);
     
     if(isNull(getServerData().commands[params])) {
-        messageClientError(client, `Command type [#AAAAAA]${params} [#FFFFFF]does not exist!`);
+        messagePlayerError(client, `Command type [#AAAAAA]${params} [#FFFFFF]does not exist!`);
         return false;
     }    
 
@@ -384,7 +384,7 @@ function disableAllCommandsByType(command, params, client) {
         getServerData().commands[params][i].enabled = false;
     }
 
-	messageClientSuccess(client, `[#FF9900]All [#AAAAAA]${params} [#FFFFFF]commands have been disabled!`);
+	messagePlayerSuccess(client, `[#FF9900]All [#AAAAAA]${params} [#FFFFFF]commands have been disabled!`);
 	return true;
 }
 
@@ -392,14 +392,14 @@ function disableAllCommandsByType(command, params, client) {
 
 function enableAllCommandsByType(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
     }
         
     params = toLowerCase(params);
     
     if(isNull(getServerData().commands[params])) {
-        messageClientError(client, `Command type [#AAAAAA]${params} [#FFFFFF]does not exist!`);
+        messagePlayerError(client, `Command type [#AAAAAA]${params} [#FFFFFF]does not exist!`);
         return false;
     }
 
@@ -407,7 +407,7 @@ function enableAllCommandsByType(command, params, client) {
         getServerData().commands[params][i].enabled = true;
     }
 
-	messageClientSuccess(client, `[#FF9900]All [#AAAAAA]${params} [#FFFFFF]commands have been enabled!`);
+	messagePlayerSuccess(client, `[#FF9900]All [#AAAAAA]${params} [#FFFFFF]commands have been enabled!`);
 	return true;
 }
 
@@ -422,40 +422,40 @@ function onPlayerCommand(event, client, command, params) {
     }
 
     if(!commandData) {
-        console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
-        messageClientError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
+        messagePlayerError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
         return false;
     }
 
     if(!commandData.enabled) {
-        console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (command is disabled): /${command} ${paramsDisplay}`);
-        messageClientError(client, `The command [#AAAAAA]/${command} [#FFFFFF]is disabled!`);
+        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (command is disabled): /${command} ${paramsDisplay}`);
+        messagePlayerError(client, `The command [#AAAAAA]/${command} [#FFFFFF]is disabled!`);
         return false;
     }
 
 	if(doesCommandRequireLogin(command)) {
-		if(!isClientLoggedIn(client)) {
-            console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (requires login first): /${command} ${paramsDisplay}`);
-			messageClientError(client, `You must be logged in to use the [#AAAAAA]/${command} [#FFFFFF]command!`);
+		if(!isPlayerLoggedIn(client)) {
+            console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (requires login first): /${command} ${paramsDisplay}`);
+			messagePlayerError(client, `You must be logged in to use the [#AAAAAA]/${command} [#FFFFFF]command!`);
 			return false;
 		}
 	}
 
 	//if(isClientFromDiscord(client)) {
 	//	if(!isCommandAllowedOnDiscord(command)) {
-    //        console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
-	//		messageClientError(client, `The [#AAAAAA]/${command} [#FFFFFF] command isn't available on discord!`);
+    //        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
+	//		messagePlayerError(client, `The [#AAAAAA]/${command} [#FFFFFF] command isn't available on discord!`);
 	//		return false;
 	//	}		
 	//}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-        console.warn(`[Asshat.Command] ${getClientDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);
-		messageClientError(client, `You do not have permission to use the [#AAAAAA]/${command} [#FFFFFF]command!`);
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);
+		messagePlayerError(client, `You do not have permission to use the [#AAAAAA]/${command} [#FFFFFF]command!`);
 		return false;
     }
     
-    console.log(`[Asshat.Command] ${getClientDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
+    console.log(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
     commandData.handlerFunction(command, params, client);
 }
 addEventHandler("OnPlayerCommand", onPlayerCommand);
@@ -463,7 +463,7 @@ addEventHandler("OnPlayerCommand", onPlayerCommand);
 // ---------------------------------------------------------------------------
 
 addCommandHandler("cmd", function(command, params, client) {
-    if(!client.console) {
+    if(!isConsole(client)) {
         return false;
     }
 

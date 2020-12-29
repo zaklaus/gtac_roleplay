@@ -18,19 +18,19 @@ function initDeveloperScript() {
 
 function simulateCommandForPlayer(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
 	if(areParamsEmpty(params) || !areThereEnoughParams(params, 2)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -41,17 +41,17 @@ function simulateCommandForPlayer(command, params, client) {
 	let tempParams = splitParams.slice(2).join(" ");
 
 	if(!targetClient) {
-		messageClientError(client, "Invalid player name or ID");
+		messagePlayerError(client, "Invalid player name or ID");
 		return false;
 	}
 
 	if(!getCommand(tempCommand)) {
-		messageClientError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+		messagePlayerError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
 		return false;
 	}
 
 	getCommand(toLowerCase(tempCommand)).handlerFunction(tempCommand, tempParams, targetClient);
-	messageClientSuccess(client, `The command string [#AAAAAA]/${tempCommand} ${tempParams}[#FFFFFF] has been simulated for [#AAAAAA]${targetClient.name}`);
+	messagePlayerSuccess(client, `The command string [#AAAAAA]/${tempCommand} ${tempParams}[#FFFFFF] has been simulated for [#AAAAAA]${targetClient.name}`);
 	return true;
 }
 
@@ -59,19 +59,19 @@ function simulateCommandForPlayer(command, params, client) {
 
 function simulateCommandForAllPlayers(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
 	if(areParamsEmpty(params) || !areThereEnoughParams(params, 2)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -81,7 +81,7 @@ function simulateCommandForAllPlayers(command, params, client) {
 	let tempParams = splitParams.slice(1).join(" ");
 
 	if(!getCommand(tempCommand)) {
-		messageClientError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+		messagePlayerError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
 		return false;
 	}
 
@@ -91,7 +91,7 @@ function simulateCommandForAllPlayers(command, params, client) {
 			getCommand(toLowerCase(tempCommand)).handlerFunction(tempCommand, tempParams, clients[i]);
 		}
 	}
-	messageClientSuccess(client, `The command string [#AAAAAA]/${tempCommand} ${tempParams}[#FFFFFF] has been simulated for all players!`);
+	messagePlayerSuccess(client, `The command string [#AAAAAA]/${tempCommand} ${tempParams}[#FFFFFF] has been simulated for all players!`);
 	return true;
 }
 
@@ -99,19 +99,19 @@ function simulateCommandForAllPlayers(command, params, client) {
 
 function executeServerCodeCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -119,13 +119,13 @@ function executeServerCodeCommand(command, params, client) {
 	try {
 		returnVal = eval("(" + params + ")");
 	} catch(error) {
-		messageClientError(client, "The code could not be executed!");
+		messagePlayerError(client, "The code could not be executed!");
 		return false;
 	}
 
-	messageClientSuccess(client, "Server code executed!");
-	messageClientNormal(client, `Code: ${params}`);
-	messageClientNormal(client, `Returns: ${returnVal}`);
+	messagePlayerSuccess(client, "Server code executed!");
+	messagePlayerNormal(client, `Code: ${params}`);
+	messagePlayerNormal(client, `Returns: ${returnVal}`);
 	return true;
 }
 
@@ -133,19 +133,19 @@ function executeServerCodeCommand(command, params, client) {
 
 function executeClientCodeCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
-		if(!isClientLoggedIn(client)) {
-			messageClientError(client, "You must be logged in to use this command!");
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
 			return false;
 		}
 	}
 
-	if(!doesClientHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messageClientError(client, "You do not have permission to use this command!");
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
 		return false;
 	}
 
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -154,19 +154,19 @@ function executeClientCodeCommand(command, params, client) {
 	let targetCode = splitParams.slice(1).join(" ");
 
 	if(!targetClient) {
-		messageClientError(client, "That player was not found!");
+		messagePlayerError(client, "That player was not found!");
 		return false;		
 	}
 
 	if(targetCode == "") {
-		messageClientError(client, "You didn't enter any code!");
+		messagePlayerError(client, "You didn't enter any code!");
 		return false;		
 	}
 
 	triggerNetworkEvent("ag.runCode", targetClient, targetCode, client.index);
 
-	messageClientSuccess(client, "Executing client code for " + toString(targetClient.name) + "!");
-	messageClientNormal(client, "Code: " + targetCode);
+	messagePlayerSuccess(client, "Executing client code for " + toString(targetClient.name) + "!");
+	messagePlayerNormal(client, "Code: " + targetCode);
 	return true;
 }
 
@@ -196,8 +196,8 @@ addNetworkHandler("ag.runCodeFail", function(client, returnTo, code) {
 		return false;
 	}
 
-	messageClientError(returnClient, `Client code failed to execute for ${client.name}!`);
-	messageClientNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
+	messagePlayerError(returnClient, `Client code failed to execute for ${client.name}!`);
+	messagePlayerNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
 });
 
 // ---------------------------------------------------------------------------
@@ -208,9 +208,9 @@ addNetworkHandler("ag.runCodeSuccess", function(client, returnTo, returnVal, cod
 		return false;
 	}
 
-	messageClientSuccess(returnClient, `Client code executed for ${client.name}!`);
-	messageClientNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
-	messageClientNormal(returnClient, `Returns: ${returnVal}`, getColourByName("yellow"));
+	messagePlayerSuccess(returnClient, `Client code executed for ${client.name}!`);
+	messagePlayerNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
+	messagePlayerNormal(returnClient, `Returns: ${returnVal}`, getColourByName("yellow"));
 });
 
 // ---------------------------------------------------------------------------
@@ -221,7 +221,7 @@ function submitIdea(client, ideaText) {
 	let session = 0;
 	let databaseId = 0;
 
-	if(client.console) {
+	if(isConsole(client)) {
 		databaseId = -1;
 	} else {
 		databaseId = getPlayerData(client).accountData.databaseId;
@@ -237,25 +237,13 @@ function submitIdea(client, ideaText) {
 // ---------------------------------------------------------------------------
 
 function submitBugReport(client, bugText) {
-	let position = toVector3(0.0, 0.0, 0.0);
-	let heading = 0.0;
+	let position = (getPlayerVehicle(client)) ? getVehiclePosition(getPlayerVehicle(client)) : getPlayerPosition(client);
+	let heading = (getPlayerVehicle(client)) ? getVehicleHeading(getPlayerVehicle(client)) : getPlayerHeading(client);
 	let session = 0;
 	let databaseId = 0;
 
-	if(getEntityData(client, "ag.position")) {
-		position = getEntityData(client, "ag.position");
-	}
-
-	if(getEntityData(client, "ag.heading")) {
-		heading = getEntityData(client, "ag.heading");
-	}
-
-	if(getEntityData(client, "ag.session")) {
-		session = getEntityData(client, "ag.session");
-	}
-
-	if(client.console) {
-		databaseId = -1
+	if(isConsole(client)) {
+		databaseId = -1;
 	} else {
 		databaseId = getPlayerData(client).accountData.databaseId;
 	}

@@ -10,22 +10,22 @@
 
 function taxiSetFareCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) { 
-        messageClientError(client, "You are not allowed to use jobs.");
+        messagePlayerError(client, "You are not allowed to use jobs.");
         return false;
     }
 
     if(!canPlayerUseTaxiJob(client)) { 
-        messageClientError(client, "You are not allowed to use the taxi job.");
+        messagePlayerError(client, "You are not allowed to use the taxi job.");
         return false;
     }
 
     if(!isPlayerWorking(client)) {
-        messageClientError(client, "You are not working! Use /startwork first.");
+        messagePlayerError(client, "You are not working! Use /startwork first.");
         return false;
     }
 
     if(!doesPlayerHaveJobType(client, AG_JOB_TAXI)) {
-        messageClientError(client, "You don't have a taxi job.");
+        messagePlayerError(client, "You don't have a taxi job.");
         return false;
     }
 

@@ -242,8 +242,8 @@ function showJobInformationToPlayer(client, jobType) {
 		return false;
 	}
 
-	if(jobType == getClientCurrentSubAccount(client).job) {
-		messageClientInfo("Welcome back to your job. Use /startwork to begin.");
+	if(jobType == getPlayerCurrentSubAccount(client).job) {
+		messagePlayerInfo("Welcome back to your job. Use /startwork to begin.");
 		return false;
 	}
 
@@ -253,63 +253,63 @@ function showJobInformationToPlayer(client, jobType) {
 				return false;
 			}
 
-			messageClientInfo(client, "== Job Help =================================");
-			messageClientInfo(client, "- Police Officers are enforcers of the law."); 
-			messageClientInfo(client, "- Use /startwork at a police station to work as a Police Officer.");
-			messageClientInfo(client, "- Use /laws to see a list of laws.");
-			messageClientInfo(client, "- Commands are: /cuff, /drag, /detain, /arrest, /search /tazer /radio");
-			messageClientInfo(client, "- When finished, use /stopwork to stop working.");       
+			messagePlayerInfo(client, "== Job Help =================================");
+			messagePlayerInfo(client, "- Police Officers are enforcers of the law."); 
+			messagePlayerInfo(client, "- Use /startwork at a police station to work as a Police Officer.");
+			messagePlayerInfo(client, "- Use /laws to see a list of laws.");
+			messagePlayerInfo(client, "- Commands are: /cuff, /drag, /detain, /arrest, /search /tazer /radio");
+			messagePlayerInfo(client, "- When finished, use /stopwork to stop working.");       
 			break;
 
 		case AG_JOB_MEDICAL:
-			messageClientInfo(client, "== Job Help =================================");
-			messageClientInfo(client, "- Paramedics help people by healing them.");
-			messageClientInfo(client, "- Use /startwork at the hospital to work as a Paramedic.");
-			messageClientInfo(client, "- People can enter your ambulance to get healed.");
-			messageClientInfo(client,  "- The pay depends on the player's health before healing them.");
-			messageClientInfo(client, "- When finished, use /stopwork to stop working.");
+			messagePlayerInfo(client, "== Job Help =================================");
+			messagePlayerInfo(client, "- Paramedics help people by healing them.");
+			messagePlayerInfo(client, "- Use /startwork at the hospital to work as a Paramedic.");
+			messagePlayerInfo(client, "- People can enter your ambulance to get healed.");
+			messagePlayerInfo(client,  "- The pay depends on the player's health before healing them.");
+			messagePlayerInfo(client, "- When finished, use /stopwork to stop working.");
 			break;
 
 		case AG_JOB_FIRE:
 			if(!canClientUseFireJob(client)){ 
 				return false;
 			}            
-			messageClientInfo(client, "== Job Help ================================="); 
-			messageClientInfo(client, "- Firefighters put out vehicle and building fires.");
-			messageClientInfo(client, "- Use /startwork at the fire station to work as a Firefighter.");
-			messageClientInfo(client, "- Get in a firetruck and you will be told where to go.");
-			messageClientInfo(client, "- Use the firetruck hose to put out fires");
-			messageClientInfo(client, "- When finished, use /stopwork to stop working.");
+			messagePlayerInfo(client, "== Job Help ================================="); 
+			messagePlayerInfo(client, "- Firefighters put out vehicle and building fires.");
+			messagePlayerInfo(client, "- Use /startwork at the fire station to work as a Firefighter.");
+			messagePlayerInfo(client, "- Get in a firetruck and you will be told where to go.");
+			messagePlayerInfo(client, "- Use the firetruck hose to put out fires");
+			messagePlayerInfo(client, "- When finished, use /stopwork to stop working.");
 			break;
 
 		case AG_JOB_BUS:
-			messageClientInfo(client, "== Job Help =================================");
-			messageClientInfo(client, "- Bus Drivers transport people around the city on a route");
-			messageClientInfo(client, "- Use /startwork at the bus depot to work as a Bus Driver.");
-			messageClientInfo(client, "- Passengers can get on/off at any stop on your route");
-			messageClientInfo(client, "- Stay on your assigned route. You will be paid when finished.");
-			messageClientInfo(client, "- When finished, use /stopwork to stop working.");
+			messagePlayerInfo(client, "== Job Help =================================");
+			messagePlayerInfo(client, "- Bus Drivers transport people around the city on a route");
+			messagePlayerInfo(client, "- Use /startwork at the bus depot to work as a Bus Driver.");
+			messagePlayerInfo(client, "- Passengers can get on/off at any stop on your route");
+			messagePlayerInfo(client, "- Stay on your assigned route. You will be paid when finished.");
+			messagePlayerInfo(client, "- When finished, use /stopwork to stop working.");
 			break;
 
 		case AG_JOB_TAXI:
-			messageClientInfo(client, "== Job Help =================================");
-			messageClientInfo(client, "- Taxi Drivers transport people around the city");
-			messageClientInfo(client, "- Use /startwork at the taxi depot to work as a Taxi Driver.");
-			messageClientInfo(client, "- Use /fare to set a fare. Fares start when a player gets in.");
-			messageClientInfo(client, "- The meter will run until the player exits the vehicle.");
-			messageClientInfo(client, "- You will automatically receive the fare money");
-			messageClientInfo(client, "- When finished, use /stopwork to stop working.");   
+			messagePlayerInfo(client, "== Job Help =================================");
+			messagePlayerInfo(client, "- Taxi Drivers transport people around the city");
+			messagePlayerInfo(client, "- Use /startwork at the taxi depot to work as a Taxi Driver.");
+			messagePlayerInfo(client, "- Use /fare to set a fare. Fares start when a player gets in.");
+			messagePlayerInfo(client, "- The meter will run until the player exits the vehicle.");
+			messagePlayerInfo(client, "- You will automatically receive the fare money");
+			messagePlayerInfo(client, "- When finished, use /stopwork to stop working.");   
 			break;
 
 		case AG_JOB_GARBAGE:
-			messageClientInfo(client, "== Job Help =================================");
-			messageClientInfo(client, "- Garbage Collectors pick up the trash around the city.");
-			messageClientInfo(client, "- Use /startwork at the garbage depot to work as a Garbage Collector.");
-			messageClientInfo(client, "- Drive up to a garbage can or dumpster, and right click to grab a bag.");
-			messageClientInfo(client, "- Walk up to the back of your truck and right click again to throw the bag in.");
-			messageClientInfo(client, "- Your truck can hold 25 trashbags. Each bag is worth $25");
-			messageClientInfo(client, "- Drive to the garbage depot again to deliver trash");
-			messageClientInfo(client, "- When finished, use /stopwork to stop working.");
+			messagePlayerInfo(client, "== Job Help =================================");
+			messagePlayerInfo(client, "- Garbage Collectors pick up the trash around the city.");
+			messagePlayerInfo(client, "- Use /startwork at the garbage depot to work as a Garbage Collector.");
+			messagePlayerInfo(client, "- Drive up to a garbage can or dumpster, and right click to grab a bag.");
+			messagePlayerInfo(client, "- Walk up to the back of your truck and right click again to throw the bag in.");
+			messagePlayerInfo(client, "- Your truck can hold 25 trashbags. Each bag is worth $25");
+			messagePlayerInfo(client, "- Drive to the garbage depot again to deliver trash");
+			messagePlayerInfo(client, "- When finished, use /stopwork to stop working.");
 			break;
 
 		case AG_JOB_WEAPON:
@@ -327,7 +327,7 @@ function showJobInformationToPlayer(client, jobType) {
 
 function takeJobCommand(command, params, client) {
 	if(!canPlayerUseJobs(client)) {
-		messageClientError(client, "You are not allowed to use any jobs!"); 
+		messagePlayerError(client, "You are not allowed to use any jobs!"); 
 		return false;
 	}
 
@@ -335,22 +335,22 @@ function takeJobCommand(command, params, client) {
 	let jobData = getJobData(closestJobLocation.job);
 
 	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().takeJobDistance) {
-		messageClientError(client, "There are no job points close enough!");
+		messagePlayerError(client, "There are no job points close enough!");
 		return false;
 	}
 
-	if(getClientCurrentSubAccount(client).job > AG_JOB_NONE) {
-		messageClientError(client, "You already have a job! Use /quitjob to quit your job.");
+	if(getPlayerCurrentSubAccount(client).job > AG_JOB_NONE) {
+		messagePlayerError(client, "You already have a job! Use /quitjob to quit your job.");
 		return false;      
 	}
 
 	if(!canPlayerUseJob(client, closestJobLocation.job)) {
-		messageClientError(client, "You can't use this job!");
+		messagePlayerError(client, "You can't use this job!");
 		return false;
 	}	
 	
 	takeJob(client, closestJobLocation.job);
-	messageClientSuccess(client, "You now have the " + toString(jobData.name) + " job");
+	messagePlayerSuccess(client, "You now have the " + toString(jobData.name) + " job");
 	return true;
 }
 
@@ -365,23 +365,23 @@ function startWorkingCommand(command, params, client) {
 	let jobData = getJobData(closestJobLocation.job);
 
 	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
-		messageClientError(client, "There are no job points close enough!");
+		messagePlayerError(client, "There are no job points close enough!");
 		return false;       
 	}
 
-	if(getClientCurrentSubAccount(client).job == AG_JOB_NONE) {
-		messageClientError(client, "You don't have a job!");
-		messageClientInfo(client, "You can get a job by going the yellow points on the map.");
+	if(getPlayerCurrentSubAccount(client).job == AG_JOB_NONE) {
+		messagePlayerError(client, "You don't have a job!");
+		messagePlayerInfo(client, "You can get a job by going the yellow points on the map.");
 		return false;
 	}
 
-	if(getClientCurrentSubAccount(client).job != closestJobLocation.job) {
-		messageClientError(client, "This is not your job!");
-		messageClientInfo(client, `If you want this job, use /quitjob to quit your current job.`);
+	if(getPlayerCurrentSubAccount(client).job != closestJobLocation.job) {
+		messagePlayerError(client, "This is not your job!");
+		messagePlayerInfo(client, `If you want this job, use /quitjob to quit your current job.`);
 		return false;
 	}
 	
-	messageClientSuccess(client, `You are now working as a ${jobData.name}`);
+	messagePlayerSuccess(client, `You are now working as a ${jobData.name}`);
 	startWorking(client);
 	//showStartedWorkingTip(client);
 	return true;
@@ -395,17 +395,17 @@ function stopWorkingCommand(command, params, client) {
 	}
 
 	if(!isPlayerWorking(client)) {
-		messageClientError(client, "You are not working!");
+		messagePlayerError(client, "You are not working!");
 		return false;
 	}
 
-	//if(getClientCurrentSubAccount(client).job != closestJob.jobType) {
-	//    messageClientError(client, "This is not your job!");
-	//    messageClientInfo(client, "Use /quitjob if you want to quit your current job and take this one.");
+	//if(getPlayerCurrentSubAccount(client).job != closestJob.jobType) {
+	//    messagePlayerError(client, "This is not your job!");
+	//    messagePlayerInfo(client, "Use /quitjob if you want to quit your current job and take this one.");
 	//    break;
 	//}
 
-	messageClientSuccess(client, "You have stopped working!");
+	messagePlayerSuccess(client, "You have stopped working!");
 	stopWorking(client);
 	//showApproachCurrentJobTip(client);
 	return true;
@@ -418,32 +418,32 @@ function startWorking(client) {
 		return false;
 	}
 
-	getClientCurrentSubAccount(client).isWorking = true;
+	getPlayerCurrentSubAccount(client).isWorking = true;
 
-	let jobId = getClientCurrentSubAccount(client).job;
+	let jobId = getPlayerCurrentSubAccount(client).job;
 	switch(getJobType(jobId)) {
 		case AG_JOB_POLICE:
-			messageClientInfo(client, "Use /uniform and /equip to get your equipment.");
+			messagePlayerInfo(client, "Use /uniform and /equip to get your equipment.");
 			break;
 
 		case AG_JOB_MEDICAL:
-			messageClientInfo(client, "Use /uniform and /equip to get your equipment.");
+			messagePlayerInfo(client, "Use /uniform and /equip to get your equipment.");
 			break;
 
 		case AG_JOB_FIRE:
-			messageClientInfo(client, "Use /uniform and /equip to get your equipment.");
+			messagePlayerInfo(client, "Use /uniform and /equip to get your equipment.");
 			break;
 
 		case AG_JOB_BUS:
-			messageClientInfo(client, "Get in a bus to get started.");
+			messagePlayerInfo(client, "Get in a bus to get started.");
 			break;
 
 		case AG_JOB_TAXI:
-			messageClientInfo(client, "Get in a taxi to get started.");
+			messagePlayerInfo(client, "Get in a taxi to get started.");
 			break;
 
 		case AG_JOB_GARBAGE:
-			messageClientInfo(client, "Get in a trash truck to get started.");
+			messagePlayerInfo(client, "Get in a trash truck to get started.");
 			break;
 
 		case AG_JOB_WEAPON:
@@ -468,7 +468,7 @@ function givePlayerJobEquipment(client, equipmentId) {
 		return false;
 	}
 
-	let jobId = getClientCurrentSubAccount(client).job;
+	let jobId = getPlayerCurrentSubAccount(client).job;
 	let equipments = getJobData(jobId).equipment;
 
 	for(let i in equipments[equipmentId].weapons) {
@@ -487,14 +487,14 @@ function stopWorking(client) {
 		return false;
 	}
 
-	getClientCurrentSubAccount(client).isWorking = false;
+	getPlayerCurrentSubAccount(client).isWorking = false;
 
-	triggerNetworkEvent("ag.skin", client, getClientCurrentSubAccount(client).skin);
+	triggerNetworkEvent("ag.skin", client, getPlayerCurrentSubAccount(client).skin);
 
-	let jobVehicle = getClientCurrentSubAccount(client).lastJobVehicle;
+	let jobVehicle = getPlayerCurrentSubAccount(client).lastJobVehicle;
 	if(jobVehicle) {
 		if(client.player.vehicle) {
-			triggerNetworkEvent("ag.removeFromVehicle", client);
+			removePlayerFromVehicle(client);
 			//client.player.removeFromVehicle();
 		}
 
@@ -507,35 +507,35 @@ function stopWorking(client) {
 		setEntityData(jobVehicle, "ag.engine", false, true);
 		setEntityData(jobVehicle, "ag.siren", false, true);
 
-		getClientCurrentSubAccount(client).lastJobVehicle = false;
+		getPlayerCurrentSubAccount(client).lastJobVehicle = false;
 	}
 	
 	triggerNetworkEvent("ag.clearWeapons", client);    
 
-	let jobId = getClientCurrentSubAccount(client).job;
+	let jobId = getPlayerCurrentSubAccount(client).job;
 	switch(getJobType(jobId)) {
 		case AG_JOB_POLICE:
-			messageClientInfo(client, "Your uniform, equipment, and police car have been returned to the police station");
+			messagePlayerInfo(client, "Your uniform, equipment, and police car have been returned to the police station");
 			break;
 
 		case AG_JOB_MEDICAL:
-			messageClientInfo(client, "Your uniform and ambulance have been returned to the hospital");
+			messagePlayerInfo(client, "Your uniform and ambulance have been returned to the hospital");
 			break;
 
 		case AG_JOB_FIRE:
-			messageClientInfo(client, "Your uniform and fire truck have been returned to the fire station");
+			messagePlayerInfo(client, "Your uniform and fire truck have been returned to the fire station");
 			break;
 
 		case AG_JOB_BUS:
-			messageClientInfo(client, "Your bus has been returned to the bus depot");
+			messagePlayerInfo(client, "Your bus has been returned to the bus depot");
 			break;
 
 		case AG_JOB_TAXI:
-			messageClientInfo(client, "Your taxi has been returned to the taxi depot");
+			messagePlayerInfo(client, "Your taxi has been returned to the taxi depot");
 			break;
 
 		case AG_JOB_GARBAGE:
-			messageClientInfo(client, "Your trash truck has been returned to the city landfill");
+			messagePlayerInfo(client, "Your trash truck has been returned to the city landfill");
 			break;
 
 		case AG_JOB_WEAPON:
@@ -555,46 +555,46 @@ function stopWorking(client) {
 // ---------------------------------------------------------------------------
 
 function jobUniformCommand(command, params, client) {
-	let jobId = getClientCurrentSubAccount(client).job;
+	let jobId = getPlayerCurrentSubAccount(client).job;
 	let uniforms = getJobData(jobId).uniforms;
 
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
-		messageClientNormal(client, `0: No uniform (sets you back to your main skin)`);
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		messagePlayerNormal(client, `0: No uniform (sets you back to your main skin)`);
 		
 		for(let i in uniforms) {
-			messageClientNormal(client, `${toInteger(i)+1}: ${uniforms[i].name} (Requires rank ${uniforms[i].requiredRank})`);
+			messagePlayerNormal(client, `${toInteger(i)+1}: ${uniforms[i].name} (Requires rank ${uniforms[i].requiredRank})`);
 		}
 		return false;
 	}
 
 	let uniformId = toInteger(params) || 1;
 	if(uniformId == 0) {
-		triggerNetworkEvent("ag.pedSkin", client, getClientCurrentSubAccount(client).skin);
-		messageClientSuccess(client, "You changed your uniform to (none)");
+		triggerNetworkEvent("ag.pedSkin", client, getPlayerCurrentSubAccount(client).skin);
+		messagePlayerSuccess(client, "You changed your uniform to (none)");
 		return true;
 	}
 
 	if(uniformId < 1 || uniformId > uniforms.length) {
-		messageClientError(client, "That uniform ID is invalid!");
+		messagePlayerError(client, "That uniform ID is invalid!");
 		return false;
 	}
 
-	messageClientSuccess(client, `You put on the ${uniforms[uniformId-1].name} uniform`);
+	messagePlayerSuccess(client, `You put on the ${uniforms[uniformId-1].name} uniform`);
 	triggerNetworkEvent("ag.pedSkin", null, client.player, uniforms[uniformId-1].skin);
 }
 
 // ---------------------------------------------------------------------------
 
 function jobEquipmentCommand(command, params, client) {
-	let jobId = getClientCurrentSubAccount(client).job;
+	let jobId = getPlayerCurrentSubAccount(client).job;
 	let equipments = getJobData(jobId).equipment;
 
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
-		messageClientNormal(client, `0: No equipment`);
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		messagePlayerNormal(client, `0: No equipment`);
 		for(let i in equipments) {
-			messageClientNormal(client, `${toInteger(i)+1}: ${equipments[i].name} (Requires rank ${equipments[i].requiredRank})`);
+			messagePlayerNormal(client, `${toInteger(i)+1}: ${equipments[i].name} (Requires rank ${equipments[i].requiredRank})`);
 		}
 		return false;
 	}
@@ -602,17 +602,17 @@ function jobEquipmentCommand(command, params, client) {
 	let equipmentId = toInteger(params) || 1;
 
 	if(equipmentId == 0) {
-		messageClientSuccess(client, "You put your equipment away");
+		messagePlayerSuccess(client, "You put your equipment away");
 		return true;
 	}
 
 	if(equipmentId < 1 || equipmentId > equipments.length) {
-		messageClientError(client, "That equipment ID is invalid!");
+		messagePlayerError(client, "That equipment ID is invalid!");
 		return false;
 	}
 		
 	givePlayerJobEquipment(client, equipmentId-1);
-	messageClientSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
+	messagePlayerSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
 }
 
 // ---------------------------------------------------------------------------
@@ -623,7 +623,7 @@ function quitJobCommand(command, params, client) {
 	}
 
 	quitJob(client);
-	messageClientSuccess(client, "You are now unemployed!");
+	messagePlayerSuccess(client, "You are now unemployed!");
 	return true;
 }
 
@@ -657,7 +657,7 @@ function getJobType(jobId) {
 // ---------------------------------------------------------------------------
 
 function doesPlayerHaveJobType(client, jobType) {
-	return (getJobType(getClientCurrentSubAccount(client).job) == jobType) ? true : false;
+	return (getJobType(getPlayerCurrentSubAccount(client).job) == jobType) ? true : false;
 }
 
 // ---------------------------------------------------------------------------
@@ -675,14 +675,14 @@ function getJobData(jobId) {
 
 function quitJob(client) {
 	stopWorking(client);
-	getClientCurrentSubAccount(client).job = AG_JOB_NONE;
+	getPlayerCurrentSubAccount(client).job = AG_JOB_NONE;
 	triggerNetworkEvent("ag.jobType", client, AG_JOB_NONE);
 }
 
 // ---------------------------------------------------------------------------
 
 function takeJob(client, jobId) {
-	getClientCurrentSubAccount(client).job = jobId;
+	getPlayerCurrentSubAccount(client).job = jobId;
 	triggerNetworkEvent("ag.jobType", client, jobId);
 }
 
@@ -714,7 +714,7 @@ function reloadAllJobsCommand(command, params, client) {
 
 function createJobLocationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -722,7 +722,7 @@ function createJobLocationCommand(command, params, client) {
 	let jobId = getJobFromParams(splitParams[0]);
 	
 	if(!getJobData(jobId)) {
-		messageClientError(client, "That job was not found!");
+		messagePlayerError(client, "That job was not found!");
 		return false;
 	}
 
@@ -746,7 +746,7 @@ function deleteJobLocationCommand(command, params, client) {
 
 function toggleJobLocationEnabledCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -761,7 +761,7 @@ function toggleJobLocationEnabledCommand(command, params, client) {
 
 function toggleJobEnabledCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -776,7 +776,7 @@ function toggleJobEnabledCommand(command, params, client) {
 
 function toggleJobWhiteListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -791,7 +791,7 @@ function toggleJobWhiteListCommand(command, params, client) {
 
 function toggleJobBlackListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -806,7 +806,7 @@ function toggleJobBlackListCommand(command, params, client) {
 
 function addPlayerToJobBlackListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -836,7 +836,7 @@ function addPlayerToJobBlackListCommand(command, params, client) {
 
 function removePlayerFromJobBlackListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -866,7 +866,7 @@ function removePlayerFromJobBlackListCommand(command, params, client) {
 
 function addPlayerToJobWhiteListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -896,7 +896,7 @@ function addPlayerToJobWhiteListCommand(command, params, client) {
 
 function removePlayerFromJobWhiteListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
@@ -934,22 +934,22 @@ function forceAllPlayersToStopWorking() {
 
 function jobStartRouteCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) { 
-		messageClientError(client, "You are not allowed to use jobs.");
+		messagePlayerError(client, "You are not allowed to use jobs.");
         return false;
     }
 
     if(!isPlayerWorking(client)) {
-		messageClientError(client, "You aren't working yet! Use /startwork first.");
+		messagePlayerError(client, "You aren't working yet! Use /startwork first.");
         return false;
     }
 
     if(!doesPlayerHaveJobType(client, AG_JOB_BUS) && !doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
-		messageClientError(client, "Your job doesn't use a route!");
+		messagePlayerError(client, "Your job doesn't use a route!");
         return false;
 	}
 
 	if(!isPlayerInJobVehicle(client)) {
-		messageClientError(client, "You need to be in a vehicle that belongs to your job!");
+		messagePlayerError(client, "You need to be in a vehicle that belongs to your job!");
         return false;		
 	}
 	
@@ -962,22 +962,22 @@ function jobStartRouteCommand(command, params, client) {
 
 function jobStopRouteCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) { 
-		messageClientError(client, "You are not allowed to use jobs.");
+		messagePlayerError(client, "You are not allowed to use jobs.");
         return false;
     }
 
     if(!isPlayerWorking(client)) {
-		messageClientError(client, "You aren't working yet! Use /startwork first.");
+		messagePlayerError(client, "You aren't working yet! Use /startwork first.");
         return false;
     }
 
     if(!doesPlayerHaveJobType(client, AG_JOB_BUS) && !doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
-		messageClientError(client, "Your job doesn't use a route!");
+		messagePlayerError(client, "Your job doesn't use a route!");
         return false;
 	}
 
 	if(!isPlayerOnJobRoute(client)) {
-		messageClientError(client, "You aren't on a job route!");
+		messagePlayerError(client, "You aren't on a job route!");
         return false;		
 	}
 
@@ -990,7 +990,7 @@ function jobStopRouteCommand(command, params, client) {
 function isPlayerInJobVehicle(client) {
 	if(getPlayerVehicle(client)) {
 		let vehicle = getPlayerVehicle(client);
-		if(isVehicleOwnedByJob(vehicle, getClientCurrentSubAccount(client).job)) {
+		if(isVehicleOwnedByJob(vehicle, getPlayerCurrentSubAccount(client).job)) {
 			return true;
 		}
 	}
@@ -1001,10 +1001,10 @@ function isPlayerInJobVehicle(client) {
 // ---------------------------------------------------------------------------
 
 function isPlayerWorking(client) {
-	if(!getClientCurrentSubAccount(client)) {
+	if(!getPlayerCurrentSubAccount(client)) {
 		return false;
 	}
-	return getClientCurrentSubAccount(client).isWorking;
+	return getPlayerCurrentSubAccount(client).isWorking;
 }
 
 // ---------------------------------------------------------------------------
@@ -1019,7 +1019,7 @@ function startJobRoute(client) {
 		getPlayerVehicle(client).colour1 = getBusRouteData(getPlayerIsland(client), busRoute).busColour;
 		getPlayerVehicle(client).colour2 = 1;
 		showCurrentBusStop(client);
-		messageClientNormal(client, `🚌 You are now driving the [#AAAAAA]${getBusRouteData(getPlayerIsland(client), busRoute).name} [#FFFFFF]bus route! Drive to the green checkpoint.`);
+		messagePlayerNormal(client, `🚌 You are now driving the [#AAAAAA]${getBusRouteData(getPlayerIsland(client), busRoute).name} [#FFFFFF]bus route! Drive to the green checkpoint.`);
 	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
 		let garbageRoute = getRandomBusRoute(getPlayerIsland(client));
 		getPlayerData(client).jobRoute = garbageRoute;
@@ -1029,7 +1029,7 @@ function startJobRoute(client) {
 		getPlayerVehicle(client).colour1 = getGarbageRouteData(getPlayerIsland(client), garbageRoute).garbageTruckColour;
 		getPlayerVehicle(client).colour2 = 1;
 		showCurrentGarbageStop(client);
-		messageClientNormal(client, `🚌 You are now driving the [#AAAAAA]${getGarbageRouteData(getPlayerIsland(client), garbageRoute).name} [#FFFFFF]garbage route! Drive to the grey checkpoint.`);
+		messagePlayerNormal(client, `🚌 You are now driving the [#AAAAAA]${getGarbageRouteData(getPlayerIsland(client), garbageRoute).name} [#FFFFFF]garbage route! Drive to the grey checkpoint.`);
 	}
 }
 
@@ -1041,14 +1041,14 @@ function stopJobRoute(client, successful = false) {
 
 	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
 		respawnVehicle(getPlayerData(client).busRouteVehicle);
-		messageClientAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
+		messagePlayerAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
 		getPlayerData(client).busRouteVehicle = false;
 		getPlayerData(client).busRoute = false;
 		getPlayerData(client).busRouteStop = false;
 		getPlayerData(client).busRouteIsland = false;
 	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
 		respawnVehicle(getPlayerData(client).garbageRouteVehicle);
-		messageClientAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).garbageRouteIsland, getPlayerData(client).garbageRoute).name} garbage route! Your trashmaster has been returned to the bus depot.`, getColourByName("yellow"));
+		messagePlayerAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).garbageRouteIsland, getPlayerData(client).garbageRoute).name} garbage route! Your trashmaster has been returned to the bus depot.`, getColourByName("yellow"));
 		getPlayerData(client).garbageRouteVehicle = false;
 		getPlayerData(client).garbageRoute = false;
 		getPlayerData(client).garbageRouteStop = false;
@@ -1150,7 +1150,7 @@ function sendAllJobLabelsToPlayer(client) {
 // ---------------------------------------------------------------------------
 
 function canPlayerUseJob(client, jobId) {
-	if(doesClientHaveStaffPermission(client, getStaffFlagValue("manageJobs"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageJobs"))) {
 		return true;
 	}
 

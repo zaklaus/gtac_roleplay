@@ -12,17 +12,17 @@ addEventHandler("OnDiscordCommand", function(command, params, discordUser) {
     let commandData = getCommand(command);
 
     if(!commandData) {
-        messageClientError(discordUser, "That command does not exist!");
+        messagePlayerError(discordUser, "That command does not exist!");
         return false;
     }
 
     if(isCommandAllowedOnDiscord(command)) {
-        messageClientError(discordUser, "That command can not be used on Discord!");
+        messagePlayerError(discordUser, "That command can not be used on Discord!");
         return false;
     }
 
     if(doesClientHavePermission(discordUser, getCommandRequiredPermissions(command))) {
-        messageClientError(discordUser, "You do not have permission to use that command!");
+        messagePlayerError(discordUser, "You do not have permission to use that command!");
         return false;
     }
 

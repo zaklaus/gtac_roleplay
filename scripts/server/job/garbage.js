@@ -116,7 +116,7 @@ function showCurrentGarbageStop(client) {
 function arrivedAtGarbageStop(client) {
     if(isLastStopOnGarbageRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
         respawnVehicle(getPlayerData(client).jobRouteVehicle);
-        messageClientNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! Your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
+        messagePlayerNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! Your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
 		getPlayerData(client).jobRouteVehicle = false;
 		getPlayerData(client).jobRoute = 0;
 		getPlayerData(client).jobRouteStop = 0;

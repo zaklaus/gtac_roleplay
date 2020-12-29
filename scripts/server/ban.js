@@ -27,13 +27,13 @@ function initBanScript() {
 
 function accountBanCommand(command, params, client, fromDiscord) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	// Prevent banning admins with really high permissions
-    if(doesClientHaveStaffPermission(targetClient, "ManageServer") || doesClientHaveStaffPermission(targetClient, "Developer")) {
-		messageClientError(client, "You cannot ban this person!");
+    if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
+		messagePlayerError(client, "You cannot ban this person!");
         return false;
 	}
 
@@ -46,13 +46,13 @@ function accountBanCommand(command, params, client, fromDiscord) {
 
 function subAccountBanCommand(command, params, client, fromDiscord) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	// Prevent banning admins with really high permissions
-	if(doesClientHaveStaffPermission(targetClient, "ManageServer") || doesClientHaveStaffPermission(targetClient, "Developer")) {
-		messageClientError(client, "You cannot ban this person!");
+	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
+		messagePlayerError(client, "You cannot ban this person!");
 		return false;
     }
     
@@ -69,13 +69,13 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 
 function ipBanCommand(command, params, client, fromDiscord) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
     }
 
 	// Prevent banning admins with really high permissions
-	if(doesClientHaveStaffPermission(targetClient, "ManageServer") || doesClientHaveStaffPermission(targetClient, "Developer")) {
-		messageClientError(client, "You cannot ban this person!");
+	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
+		messagePlayerError(client, "You cannot ban this person!");
 		return false;
     }    
     
@@ -93,13 +93,13 @@ function ipBanCommand(command, params, client, fromDiscord) {
 
 function subNetBanCommand(command, params, client, fromDiscord) {
 	if(areParamsEmpty(params)) {
-		messageClientSyntax(client, getCommandSyntaxText(command));
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
     }
 
 	// Prevent banning admins with really high permissions
-	if(doesClientHaveStaffPermission(targetClient, "ManageServer") || doesClientHaveStaffPermission(targetClient, "Developer")) {
-		messageClientError(client, "You cannot ban this person!");
+	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
+		messagePlayerError(client, "You cannot ban this person!");
 		return false;
     }
     

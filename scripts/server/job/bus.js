@@ -553,7 +553,7 @@ function showCurrentBusStop(client) {
 function arrivedAtBusStop(client) {
     if(isLastStopOnBusRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
         respawnVehicle(getPlayerData(client).jobRouteVehicle);
-        messageClientNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
+        messagePlayerNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
 		getPlayerData(client).jobRouteVehicle = false;
 		getPlayerData(client).jobRoute = 0;
 		getPlayerData(client).jobRouteStop = 0;

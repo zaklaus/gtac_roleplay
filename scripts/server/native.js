@@ -145,7 +145,7 @@ function getPlayerVehicleSeat(client) {
 // ---------------------------------------------------------------------------
 
 function isPlayerSpawned(client) {
-    return client.player
+    return (client.player != null);
 }
 
 // ---------------------------------------------------------------------------
@@ -175,13 +175,24 @@ function getVehicleForNetworkEvent(vehicle) {
 // ---------------------------------------------------------------------------
 
 function deleteGameElement(element) {
-    destroyElement(element);
+    if(element != null) {
+        destroyElement(element);
+        return true;
+    }
+    return false;
 }
 
 // ---------------------------------------------------------------------------
 
 function isPlayerInFrontVehicleSeat(client) {
     return (getPlayerVehicleSeat(client) == 0 || getPlayerVehicleSeat(client) == 1);
+}
+
+// ---------------------------------------------------------------------------
+
+function removePlayerFromVehicle(client) {
+    triggerNetworkEvent("ag.removeFromVehicle", client);
+    return true;
 }
 
 // ---------------------------------------------------------------------------

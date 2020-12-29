@@ -36,7 +36,7 @@ let accents = [
 // ---------------------------------------------------------------------------
 
 function getPlayerAccentText(client) {
-    return getClientCurrentSubAccount(client).accent;
+    return getPlayerCurrentSubAccount(client).accent;
 }
 
 // ---------------------------------------------------------------------------

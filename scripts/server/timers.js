@@ -20,22 +20,24 @@ function updateTimeRule() {
 
 function saveAllServerDataToDatabase() {
 	console.log("[Asshat.Utilities]: Saving all server data to database ...");
-	saveAllClientsToDatabase();
-	saveAllVehiclesToDatabase();
+	saveAllClansToDatabase();
 	saveAllHousesToDatabase();
 	saveAllBusinessesToDatabase();
-	saveAllClansToDatabase();
 	saveServerConfigToDatabase(getServerConfig());
+	saveAllVehiclesToDatabase();	
+	saveAllClientsToDatabase();
 	console.log("[Asshat.Utilities]: Saved all server data to database!");
 }
 
 // ---------------------------------------------------------------------------
 
 function initTimers() {
-    serverTimers.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
-	serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
-	serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
-	serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
+	if(!isDevelopmentServer()) {
+		serverTimers.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
+		serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
+		serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
+		serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
+	}
 }
 
 // ---------------------------------------------------------------------------

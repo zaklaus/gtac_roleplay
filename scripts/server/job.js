@@ -218,9 +218,13 @@ function createAllJobPickups() {
 			for(let j in getServerData().jobs[i].locations) {
 				pickupCount++;
 				getServerData().jobs[i].locations[j].pickup = gta.createPickup(getServerData().jobs[i].pickupModel, getServerData().jobs[i].locations[j].position);
-				getServerData().jobs[i].locations[j].pickup.setData("ag.ownerType", AG_PICKUP_JOB, false);
-				getServerData().jobs[i].locations[j].pickup.setData("ag.ownerId", i, false);
-				getServerData().jobs[i].locations[j].pickup.interior = getServerData().jobs[i].locations[j].interior;
+				getServerData().jobs[i].locations[j].pickup.onAllDimensions = false;
+				getServerData().jobs[i].locations[j].pickup.setData("ag.owner.type", AG_PICKUP_JOB, false);
+				getServerData().jobs[i].locations[j].pickup.setData("ag.owner.id", i, false);
+				getServerData().jobs[i].locations[j].pickup.setData("ag.label.type", AG_LABEL_JOB, true);
+				getServerData().jobs[i].locations[j].pickup.setData("ag.label.name", getServerData().jobs[i].name, true);
+				getServerData().jobs[i].locations[j].pickup.setData("ag.label.jobType", getServerData().jobs[i].databaseId, true);
+				//getServerData().jobs[i].locations[j].pickup.interior = getServerData().jobs[i].locations[j].interior;
 				getServerData().jobs[i].locations[j].pickup.dimension = getServerData().jobs[i].locations[j].dimension;
 				addToWorld(getServerData().jobs[i].locations[j].pickup);
 
@@ -377,7 +381,7 @@ function startWorkingCommand(command, params, client) {
 		return false;
 	}
 	
-	messageClientSuccess(client, "You are now working as a " + toString(jobData.name));
+	messageClientSuccess(client, `You are now working as a ${jobData.name}`);
 	startWorking(client);
 	//showStartedWorkingTip(client);
 	return true;
@@ -453,6 +457,7 @@ function startWorking(client) {
 	}
 
 	updatePlayerNameTag(client);
+	triggerNetworkEvent("ag.working", client, true);
 	//showStartedWorkingTip(client);
 }
 
@@ -544,6 +549,7 @@ function stopWorking(client) {
 	}
 
 	updatePlayerNameTag(client);
+	triggerNetworkEvent("ag.working", client, false); 
 }
 
 // ---------------------------------------------------------------------------
@@ -564,7 +570,7 @@ function jobUniformCommand(command, params, client) {
 
 	let uniformId = toInteger(params) || 1;
 	if(uniformId == 0) {
-		triggerNetworkEvent("ag.skin", client, getClientCurrentSubAccount(client).skin);
+		triggerNetworkEvent("ag.pedSkin", client, getClientCurrentSubAccount(client).skin);
 		messageClientSuccess(client, "You changed your uniform to (none)");
 		return true;
 	}
@@ -575,7 +581,7 @@ function jobUniformCommand(command, params, client) {
 	}
 
 	messageClientSuccess(client, `You put on the ${uniforms[uniformId-1].name} uniform`);
-	triggerNetworkEvent("ag.pedskin", null, client.player, uniforms[uniformId-1].skin);
+	triggerNetworkEvent("ag.pedSkin", null, client.player, uniforms[uniformId-1].skin);
 }
 
 // ---------------------------------------------------------------------------
@@ -670,12 +676,14 @@ function getJobData(jobId) {
 function quitJob(client) {
 	stopWorking(client);
 	getClientCurrentSubAccount(client).job = AG_JOB_NONE;
+	triggerNetworkEvent("ag.jobType", client, AG_JOB_NONE);
 }
 
 // ---------------------------------------------------------------------------
 
 function takeJob(client, jobId) {
 	getClientCurrentSubAccount(client).job = jobId;
+	triggerNetworkEvent("ag.jobType", client, jobId);
 }
 
 // ---------------------------------------------------------------------------
@@ -1142,7 +1150,7 @@ function sendAllJobLabelsToPlayer(client) {
 // ---------------------------------------------------------------------------
 
 function canPlayerUseJob(client, jobId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageJobs"))) {
+	if(doesClientHaveStaffPermission(client, getStaffFlagValue("manageJobs"))) {
 		return true;
 	}
 

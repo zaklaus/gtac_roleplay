@@ -51,7 +51,7 @@ function createHouseCommand(command, params, client) {
 	
 	sendHouseLabelToPlayers(getServerData().houses.length-1);
 
-	messageClientSuccess(client, `House [#009900]${tempHouseData.description} [#FFFFFF]created!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created house [#11CC11]${tempHouseData.description}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -65,6 +65,7 @@ function lockUnlockHouseCommand(command, params, client) {
 	}	
 
 	getHouseData(houseId).locked = !getHouseData(houseId).locked;
+	getHouseData(houseId).entrancePickup.setData("ag.label.locked", getHouseData(houseId).locked, true);
 	messageClientSuccess(client, `House '${getHouseData(houseId).description}' ${getLockedUnlockedTextFromBool((getHouseData(houseId).locked))}!`);
 }
 
@@ -82,7 +83,8 @@ function setHouseDescriptionCommand(command, params, client) {
 
 	let oldDescription = getHouseData(houseId).description;
 	getHouseData(houseId).description = newHouseDescription;
-	messageClientSuccess(client, `House '${oldDescription}' description set to '${newHouseDescription}'!`);
+	getHouseData(houseId).entrancePickup.setData("ag.label.name", getHouseData(houseId).description, true);
+	messageAdmins(`${client.name} renamed house [#11CC11]${oldBusinessName} [#FFFFFF]to [#11CC11]${newBusinessName}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -103,7 +105,7 @@ function setHouseOwnerCommand(command, params, client) {
 
 	getHouseData(houseId).ownerType = AG_HOUSEOWNER_PLAYER;
 	getHouseData(houseId).ownerId = getServerData().clients[newHouseOwner.index].accountData.databaseId;
-	messageClientSuccess(client, `House '${getHouseData(houseId).name}' owner set to '${newHouseOwner.name}'!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]owner to [#AAAAAA]${newHouseOwner.name}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -125,7 +127,7 @@ function setHouseClanCommand(command, params, client) {
 
 	getHouseData(houseId).ownerType = AG_HOUSEOWNER_CLAN;
 	getHouseData(houseId).ownerId = getClanData(clanId).databaseId;
-	messageClientSuccess(client, `House ${getHouseData(houseId).name} owner set to the [#AAAAAA]${getClanData(clanId).name} [#FFFFFF]clan!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]owner to the [#FF9900]${getClanData(clanId).name} [#FFFFFF]clan!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -159,7 +161,7 @@ function setHousePickupCommand(command, params, client) {
 		createHouseEntrancePickup(houseId);
 	}	
 
-	messageClientSuccess(client, `House '${getHouseData(houseId).description}' pickup display set to '${toLowerCase(typeParam)}'!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]pickup display to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -193,7 +195,7 @@ function setHouseBlipCommand(command, params, client) {
 		createHouseEntranceBlip(houseId);
 	}	
 
-	messageClientSuccess(client, `House '${getHouseData(houseId).description}' blip display set to '${toLowerCase(typeParam)}'!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -211,7 +213,7 @@ function moveHouseEntranceCommand(command, params, client) {
 	createHouseEntranceBlip(houseId);
 	createHouseEntrancePickup(houseId);	
 
-	messageClientSuccess(client, `House '${getHouseData(houseId).description}' entrance has been moved to your position`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]entrance to their position`);
 }
 
 // ---------------------------------------------------------------------------
@@ -229,7 +231,7 @@ function moveHouseExitCommand(command, params, client) {
 	createHouseExitBlip(houseId);
 	createHouseExitPickup(houseId);
 
-	messageClientSuccess(client, `House '${getHouseData(houseId).description}' exit has been moved to your position`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).name} [#FFFFFF]exit to their position`);
 }
 
 // ---------------------------------------------------------------------------
@@ -243,7 +245,7 @@ function deleteHouseCommand(command, params, client) {
 	}
 	tempHouseData = getHouseData(houseId);
 
-	messageClientSuccess(client, `House '${tempHouseData.description}' deleted!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted house [#11CC11]${getHouseData(houseId).description}`);
 	deleteHouse(houseId, getPlayerData(client).accountData.databaseId);
 }
 
@@ -398,18 +400,24 @@ function createAllHouseBlips() {
 // ---------------------------------------------------------------------------
 
 function createHouseEntrancePickup(houseId) {
-	if(getServerData().houses[houseId].entrancePickupModel != -1) {
+	if(getHouseData(houseId).entrancePickupModel != -1) {
 		let pickupModelId = getGameConfig().pickupModels[getServerGame()].house;
 
-		if(getServerData().houses[houseId].entrancePickupModel != 0) {
-			pickupModelId = getServerData().houses[houseId].entrancePickupModel;
+		if(getHouseData(houseId).entrancePickupModel != 0) {
+			pickupModelId = getHouseData(houseId).entrancePickupModel;
 		}
 		
-		getServerData().houses[houseId].pickup = gta.createPickup(pickupModelId, getServerData().houses[houseId].entrancePosition);
-		getServerData().houses[houseId].pickup.dimension = getServerData().houses[houseId].entranceDimension;
-		getServerData().houses[houseId].pickup.interior = getServerData().houses[houseId].entranceInterior;			
-		getServerData().houses[houseId].pickup.setData("ag.ownerType", AG_PICKUP_HOUSE, false);
-		getServerData().houses[houseId].pickup.setData("ag.ownerId", houseId, false);
+		getHouseData(houseId).entrancePickup = gta.createPickup(pickupModelId, getHouseData(houseId).entrancePosition);
+		getHouseData(houseId).entrancePickup.dimension = getHouseData(houseId).entranceDimension;
+		//getHouseData(houseId).pickup.interior = getHouseData(houseId).entranceInterior;			
+		getHouseData(houseId).entrancePickup.setData("ag.owner.type", AG_PICKUP_HOUSE, false);
+		getHouseData(houseId).entrancePickup.setData("ag.owner.id", houseId, false);
+		getHouseData(houseId).entrancePickup.setData("ag.label.type", AG_LABEL_HOUSE, true);
+		getHouseData(houseId).entrancePickup.setData("ag.label.name", getHouseData(houseId).description, true);
+		getHouseData(houseId).entrancePickup.setData("ag.label.locked", getHouseData(houseId).locked, true);
+		if(getHouseData(houseId).buyPrice > 0) {
+			getBusinessData(businessId).entrancePickup.setData("ag.label.price", getHouseData(houseId), true);
+		}
 	}
 }
 

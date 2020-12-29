@@ -107,7 +107,7 @@ function createBusinessCommand(command, params, client) {
 	createBusinessEntranceBlip(getServerData().businesses.length-1);
 	createBusinessExitBlip(getServerData().businesses.length-1);	
 
-	messageClientSuccess(client, `Business [#0099FF]${tempBusinessData.name} [#FFFFFF]created!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created business [#0099FF]${tempBusinessData.name}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -129,7 +129,7 @@ function createBusinessLocationCommand(command, params, client) {
 	let tempBusinessLocationData = createBusinessLocation(locationType, businessId);
 	getServerData().businesses[businessId].push(tempBusinessLocationData);
 
-	messageClientSuccess(client, `Business location [#0099FF]${params} [#FFFFFF]created for business [#0099FF]${tempBusinessData.name}`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created location [#0099FF]${params} [#FFFFFF]for business [#0099FF]${tempBusinessData.name}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -165,7 +165,7 @@ function deleteBusinessCommand(command, params, client) {
 		return false;
 	}		
 
-	messageClientSuccess(client, `Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]deleted!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted business [#0099FF]${getBusinessData(businessId).name}`);
 	deleteBusiness(businessId, getPlayerData(client).accountData.databaseId);
 }
 
@@ -191,8 +191,10 @@ function setBusinessNameCommand(command, params, client) {
 		return false;
 	}	
 
+	let oldBusinessName = getBusinessData(businessId).name;
 	getBusinessData(businessId).name = newBusinessName;
-	messageClientSuccess(client, `Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]renamed to '${newBusinessName}'!`);
+	getBusinessData(businessId).entrancePickup.setData("ag.label.name", getBusinessData(businessId).name, true);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]renamed business [#0099FF]${oldBusinessName} [#FFFFFF]to [#0099FF]${newBusinessName}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -215,7 +217,7 @@ function setBusinessOwnerCommand(command, params, client) {
 
 	getBusinessData(businessId).ownerType = AG_BIZOWNER_PLAYER;
 	getBusinessData(businessId).ownerId = getServerData().clients[newBusinessOwner.index].accountData.databaseId;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner set to '${newBusinessOwner.name}'!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner to [#AAAAAA]${newBusinessOwner.name}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -236,7 +238,7 @@ function setBusinessClanCommand(command, params, client) {
 
 	getBusinessData(businessId).ownerType = AG_BIZOWNER_CLAN;
 	getBusinessData(businessId).ownerId = getClanData(clanId).databaseId;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner set to [#AAAAAA]${getClanData(clanId).name} [#FFFFFF]clan`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner to the [#FF9900]${getClanData(clanId).name} [#FFFFFF]clan`);
 }
 
 // ---------------------------------------------------------------------------
@@ -263,9 +265,8 @@ function setBusinessJobCommand(command, params, client) {
 
 	getBusinessData(businessId).ownerType = AG_BIZOWNER_JOB;
 	getBusinessData(businessId).ownerId = getJobData(jobId).databaseId;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner set to the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner to the [#FFFF00]${getJobData(jobId).name} [#FFFFFF]job`);
 }
-
 
 // ---------------------------------------------------------------------------
 
@@ -293,6 +294,7 @@ function lockBusinessCommand(command, params, client) {
 	}	
 
 	getBusinessData(businessId).locked = !getBusinessData(businessId).locked;
+	getBusinessData(businessId).entrancePickup.setData("ag.label.locked", getBusinessData(businessId).locked, true);
 	messageClientSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
 }
 
@@ -308,7 +310,7 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).entranceFee = entranceFee;
-	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' entrance fee to $'${entranceFee}'!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]entrance fee to [#AAAAAAA]$${entranceFee}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -380,7 +382,7 @@ function setBusinessPickupCommand(command, params, client) {
 	createBusinessEntrancePickup(businessId);
 	createBusinessExitPickup(businessId);
 
-	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' pickup display set to '${toLowerCase(typeParam)}'!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]pickup display to [#AAAAAA]${toLowerCase(typeParam)}'!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -413,7 +415,7 @@ function setBusinessBlipCommand(command, params, client) {
 	createBusinessEntranceBlip(businessId);
 	createBusinessExitBlip(businessId);
 
-	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' blip display set to '${toLowerCase(typeParam)}'!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -494,7 +496,7 @@ function moveBusinessEntranceCommand(command, params, client) {
 	createBusinessEntranceBlip(businessId);
 	createBusinessEntrancePickup(businessId);
 
-	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' entrance has been moved to your position`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]entrance to their position`);
 }
 
 // ---------------------------------------------------------------------------
@@ -512,7 +514,7 @@ function moveBusinessExitCommand(command, params, client) {
 	createBusinessExitBlip(businessId);
 	createBusinessExitPickup(businessId);
 
-	messageClientSuccess(client, `Business '${getBusinessData(businessId).name}' exit has been moved to your position`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]exit to their position`);
 }
 
 // ---------------------------------------------------------------------------
@@ -611,20 +613,25 @@ function createAllBusinessBlips() {
 // ---------------------------------------------------------------------------
 
 function createBusinessEntrancePickup(businessId) {
-	if(getServerData().businesses[businessId].pickupModel != -1) {
+	if(getBusinessData(businessId).pickupModel != -1) {
 		let pickupModelId = getGameConfig().pickupModels[getServerGame()].business;
 
 		if(getServerData().businesses[businessId].entrancePickupModel != 0) {
-			pickupModelId = getServerData().businesses[businessId].entrancePickupModel;
+			pickupModelId = getBusinessData(businessId).entrancePickupModel;
 		}
 
-		getServerData().businesses[businessId].entrancePickup = gta.createPickup(pickupModelId, getServerData().businesses[businessId].entrancePosition);
-		getServerData().businesses[businessId].entrancePickup.onAllDimensions = false;
-		getServerData().businesses[businessId].entrancePickup.dimension = getServerData().businesses[i].entranceDimension;
-		getServerData().businesses[businessId].entrancePickup.interior = getServerData().businesses[i].entranceInterior;
-		//getServerData().pickups[getServerData().businesses[businessId].entrancePickup.id] = new serverClasses.pickupData(getServerData().pickups[getServerData().businesses[businessId].entrancePickup, AG_PICKUP_BUSINESS, businessId
-		getServerData().businesses[businessId].entrancePickup.setData("ag.ownerType", AG_PICKUP_BUSINESS, false);
-		getServerData().businesses[businessId].entrancePickup.setData("ag.ownerId", businessId, false);
+		getBusinessData(businessId).entrancePickup = gta.createPickup(pickupModelId, getBusinessData(businessId).entrancePosition);
+		getBusinessData(businessId).entrancePickup.onAllDimensions = false;
+		getBusinessData(businessId).entrancePickup.dimension = getBusinessData(businessId).entranceDimension;
+		//getBusinessData(businessId).entrancePickup.interior = getBusinessData(businessId).entranceInterior;
+		getBusinessData(businessId).entrancePickup.setData("ag.owner.type", AG_PICKUP_BUSINESS, false);
+		getBusinessData(businessId).entrancePickup.setData("ag.owner.id", businessId, false);
+		getBusinessData(businessId).entrancePickup.setData("ag.label.type", AG_LABEL_BUSINESS, true);
+		getBusinessData(businessId).entrancePickup.setData("ag.label.name", getBusinessData(businessId).name, true);
+		getBusinessData(businessId).entrancePickup.setData("ag.label.locked", getBusinessData(businessId).locked, true);
+		if(getBusinessData(businessId).buyPrice > 0) {
+			getBusinessData(businessId).entrancePickup.setData("ag.label.price", getBusinessData(businessId).buyPrice, true);
+		}
 	}
 }
 

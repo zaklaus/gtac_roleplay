@@ -37,7 +37,7 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
 
 // ----------------------------------------------------------------------------
 
-function renderPropertyLabel(name, position, locked, isBusiness, price) {
+function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) {
     if(localPlayer == null) {
         return false;
     }
@@ -77,9 +77,37 @@ function renderPropertyLabel(name, position, locked, isBusiness, price) {
 
     screenPosition.y -= 22;
 
-    text = name;
+    text = name || " ";
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
     propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, (isBusiness) ? toColour(0, 153, 255, 255) : toColour(17, 204, 17, 255), false, true, false, true);       
+}
+
+// ----------------------------------------------------------------------------
+
+function renderPropertyExitLabel(position) {
+    if(localPlayer == null) {
+        return false;
+    }
+
+	if(propertyLabelNameFont == null) {
+		return false;
+    }
+    
+	if(propertyLabelLockedFont == null) {
+		return false;
+	}
+    
+    if(localPlayer.position.distance(position) > 7.5) {
+        return false;
+    }
+
+    let tempPosition = position;
+    tempPosition.z = tempPosition.z + propertyLabelHeight;
+    let screenPosition = getScreenFromWorldPosition(tempPosition);
+
+    let text = "EXIT";
+    size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
+    propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);       
 }
 
 // ----------------------------------------------------------------------------
@@ -133,28 +161,40 @@ function renderJobLabel(name, position, jobType) {
 // ----------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function (event) {
-    let pickups = getElementsByType(ELEMENT_PICKUP);
-    for(let i in pickups) {
-        if(pickups[i].getData("ag.label.type") != null) {
-            if(getDistance(localPlayer.position, pickups[i].position)) {
-                let price = 0;
-                if(pickups[i].getData("ag.label.price") != null) {
-                    price = pickups[i].getData("ag.label.price");
-                }
+    if(localPlayer != null) {
+        let pickups = getElementsByType(ELEMENT_PICKUP);
+        for(let i in pickups) {
+            if(pickups[i].getData("ag.label.type") != null) {
+                //if(pickups[i].isOnScreen) {
+                    if(getDistance(localPlayer.position, pickups[i].position)) {
+                        //if(pickups[i].interior == localPlayer.interior) {
+                            //if(pickups[i].dimension == localPlayer.dimension) {
+                                let price = 0;
+                                if(pickups[i].getData("ag.label.price") != null) {
+                                    price = pickups[i].getData("ag.label.price");
+                                }
 
-                switch(pickups[i].getData("ag.label.type")) {
-                    case AG_LABEL_BUSINESS:
-                        renderPropertyLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
-                        break;
+                                switch(pickups[i].getData("ag.label.type")) {
+                                    case AG_LABEL_BUSINESS:
+                                        renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
+                                        break;
 
-                    case AG_LABEL_HOUSE:
-                        renderPropertyLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
-                        break;
-                        
-                    case AG_LABEL_JOB:
-                        renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
-                        break;      
-                }
+                                    case AG_LABEL_HOUSE:
+                                        renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
+                                        break;
+                                        
+                                    case AG_LABEL_JOB:
+                                        renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
+                                        break;
+
+                                    case AG_LABEL_EXIT:
+                                        renderPropertyExitLabel(pickups[i].position);
+                                        break;                        
+                                }
+                            //}
+                        //}
+                    }
+                //}
             }
         }
     }

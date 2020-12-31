@@ -38,8 +38,8 @@ addNetworkHandler("ag.promptAnswerYes", function(client) {
     switch(getEntityData(client, "ag.prompt")) {
         case AG_PROMPT_CREATEFIRSTCHAR:
             triggerNetworkEvent("ag.showNewCharacter", client);
-            break;
-        S   
+            break;   
+            
         default:
             break;
     }

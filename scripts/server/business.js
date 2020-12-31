@@ -53,7 +53,7 @@ function loadBusinessesFromDatabase() {
 					let tempBusinessData = new serverClasses.businessData(dbAssoc);
 					tempBusinessData.locations = loadBusinessLocationsFromDatabase(tempBusinessData.databaseId);
 					tempBusinesses.push(tempBusinessData);
-					console.log(`[Asshat.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully!`);
+					console.log(`[Asshat.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -68,7 +68,7 @@ function loadBusinessesFromDatabase() {
 // ---------------------------------------------------------------------------
 
 function loadBusinessLocationsFromDatabase(businessId) {
-	//console.log("[Asshat.Business]: Loading locations from database ...");
+	console.log(`[Asshat.Business]: Loading locations for business '${getBusinessData(businessId).name}' from database ...`);
 
 	let tempBusinessLocations = [];
 	let dbConnection = connectToDatabase();
@@ -76,13 +76,13 @@ function loadBusinessLocationsFromDatabase(businessId) {
 	let dbAssoc;
 	
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `biz_loc` WHERE `biz_loc_biz` = " + toString(businessId));
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM biz_loc WHERE biz_loc_biz=${businessId}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempBusinessLocationData = new serverClasses.businessLocationData(dbAssoc);
 					tempBusinessLocations.push(tempBusinessLocationData);
-					//console.log(`[Asshat.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
+					console.log(`[Asshat.Business]: Location for business '${getBusinessData(businessId).name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -90,7 +90,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	//console.log(`[Asshat.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
+	console.log(`[Asshat.Business]: ${tempBusinessLocations.length} locations for business '${getBusinessData(businessId).name}' loaded from database successfully`);
 	return tempBusinessLocations;
 }
 
@@ -644,8 +644,10 @@ function saveBusinessToDatabase(businessId) {
 
 function createAllBusinessPickups() {
 	for(let i in getServerData().businesses) {
-		createBusinessEntrancePickup(i);
-		createBusinessExitPickup(i);
+		for(let j in getServerData().businesses[i].locations) {
+			createBusinessLocationEntrancePickup(i, j);
+			createBusinessLocationExitPickup(i, j);
+		}
 	}
 }
 
@@ -653,98 +655,97 @@ function createAllBusinessPickups() {
 
 function createAllBusinessBlips() {
 	for(let i in getServerData().businesses) {
-		createBusinessEntranceBlip(i);
-		createBusinessExitBlip(i);
+		for(let j in getServerData().businesses[i].locations) {
+			createBusinessLocationEntranceBlip(i, j);
+			createBusinessLocationExitBlip(i, j);
+		}
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function createBusinessEntrancePickup(businessId) {
-	if(getBusinessData(businessId).entrancePickupModel != -1) {
+function createBusinessLocationEntrancePickup(businessId, locationId) {
+	if(getBusinessData(businessId).locations[locationId].entrancePickupModel != -1) {
 		let pickupModelId = getGameConfig().pickupModels[getServerGame()].business;
 
-		if(getServerData().businesses[businessId].entrancePickupModel != 0) {
-			pickupModelId = getBusinessData(businessId).entrancePickupModel;
+		if(getServerData().businesses[businessId].locations[locationId].entrancePickupModel != 0) {
+			pickupModelId = getBusinessData(businessId).locations[locationId].entrancePickupModel;
 		}
 
-		getBusinessData(businessId).entrancePickup = gta.createPickup(pickupModelId, getBusinessData(businessId).entrancePosition);
-		getBusinessData(businessId).entrancePickup.onAllDimensions = false;
-		getBusinessData(businessId).entrancePickup.dimension = getBusinessData(businessId).entranceDimension;
-		//getBusinessData(businessId).entrancePickup.interior = getBusinessData(businessId).entranceInterior;
-		getBusinessData(businessId).entrancePickup.setData("ag.owner.type", AG_PICKUP_BUSINESS_ENTRANCE, false);
-		getBusinessData(businessId).entrancePickup.setData("ag.owner.id", businessId, false);
-		getBusinessData(businessId).entrancePickup.setData("ag.label.type", AG_LABEL_BUSINESS, true);
-		getBusinessData(businessId).entrancePickup.setData("ag.label.name", getBusinessData(businessId).name, true);
-		getBusinessData(businessId).entrancePickup.setData("ag.label.locked", getBusinessData(businessId).locked, true);
+		getBusinessData(businessId).locations[locationId].entrancePickup = gta.createPickup(pickupModelId, getBusinessData(businessId).locations[locationId].entrancePosition);
+		getBusinessData(businessId).locations[locationId].entrancePickup.onAllDimensions = false;
+		getBusinessData(businessId).locations[locationId].entrancePickup.dimension = getBusinessData(businessId).locations[locationId].entranceDimension;
+		getBusinessData(businessId).locations[locationId].entrancePickup.setData("ag.owner.type", AG_PICKUP_BUSINESS_ENTRANCE, false);
+		getBusinessData(businessId).locations[locationId].entrancePickup.setData("ag.owner.id", businessId, false);
+		getBusinessData(businessId).locations[locationId].entrancePickup.setData("ag.label.type", AG_LABEL_BUSINESS, true);
+		getBusinessData(businessId).locations[locationId].entrancePickup.setData("ag.label.name", getBusinessData(businessId).name, true);
+		getBusinessData(businessId).locations[locationId].entrancePickup.setData("ag.label.locked", getBusinessData(businessId).locked, true);
 		if(getBusinessData(businessId).buyPrice > 0) {
-			getBusinessData(businessId).entrancePickup.setData("ag.label.price", getBusinessData(businessId).buyPrice, true);
+			getBusinessData(businessId).locations[locationId].entrancePickup.setData("ag.label.price", getBusinessData(businessId).buyPrice, true);
 		}
-		addToWorld(getBusinessData(businessId).entrancePickup);
+		addToWorld(getBusinessData(businessId).locations[locationId].entrancePickup);
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function createBusinessEntranceBlip(businessId) {
-	if(getBusinessData(businessId).entranceBlipModel != -1) {
+function createBusinessLocationEntranceBlip(businessId, locationId) {
+	if(getBusinessData(businessId).locations[locationId].entranceBlipModel != -1) {
 		let blipModelId = getGameConfig().blipSprites[getServerGame()].business;
 
 		if(getServerData().businesses[businessId].entranceBlipModel != 0) {
-			blipModelId = getBusinessData(businessId).entranceBlipModel;
+			blipModelId = getBusinessData(businessId).locations[locationId].entranceBlipModel;
 		}
 
-		getBusinessData(businessId).entranceBlip = gta.createBlip(getBusinessData(businessId).entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
-		getBusinessData(businessId).entranceBlip.onAllDimensions = false;
-		getBusinessData(businessId).entranceBlip.dimension = getBusinessData(businessId).entranceDimension;
-		//getBusinessData(businessId).entranceBlip.interior = getBusinessData(businessId).entranceInterior;
-		getBusinessData(businessId).entranceBlip.setData("ag.owner.type", AG_BLIP_BUSINESS_ENTRANCE, false);
-		getBusinessData(businessId).entranceBlip.setData("ag.owner.id", businessId, false);
-		addToWorld(getBusinessData(businessId).entranceBlip);
+		getBusinessData(businessId).locations[locationId].entranceBlip = gta.createBlip(getBusinessData(businessId).locations[locationId].entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
+		getBusinessData(businessId).locations[locationId].entranceBlip.onAllDimensions = false;
+		getBusinessData(businessId).locations[locationId].entranceBlip.dimension = getBusinessData(businessId).locations[locationId].entranceDimension;
+		getBusinessData(businessId).locations[locationId].entranceBlip.setData("ag.owner.type", AG_BLIP_BUSINESS_ENTRANCE, false);
+		getBusinessData(businessId).locations[locationId].entranceBlip.setData("ag.owner.id", businessId, false);
+		addToWorld(getBusinessData(businessId).locations[locationId].entranceBlip);
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function createBusinessExitPickup(businessId) {
+function createBusinessLocationExitPickup(businessId, locationId) {
 	if(getBusinessData(businessId).hasInterior) {
-		if(getBusinessData(businessId).exitPickupModel != -1) {
+		if(getBusinessData(businessId).locations[locationId].exitPickupModel != -1) {
 			let pickupModelId = getGameConfig().pickupModels[getServerGame()].exit;
 
-			if(getServerData().businesses[businessId].exitPickupModel != 0) {
-				pickupModelId = getBusinessData(businessId).exitPickupModel;
+			if(getServerData().businesses[businessId].locations[locationId].exitPickupModel != 0) {
+				pickupModelId = getBusinessData(businessId).locations[locationId].exitPickupModel;
 			}
 
-			getBusinessData(businessId).exitPickup = gta.createPickup(pickupModelId, getBusinessData(businessId).exitPosition);
-			getBusinessData(businessId).exitPickup.onAllDimensions = false;
-			getBusinessData(businessId).exitPickup.dimension = getBusinessData(businessId).exitDimension;
-			//getBusinessData(businessId).exitPickup.interior = getBusinessData(businessId).exitInterior;
-			getBusinessData(businessId).exitPickup.setData("ag.owner.type", AG_PICKUP_BUSINESS_EXIT, false);
-			getBusinessData(businessId).exitPickup.setData("ag.owner.id", businessId, false);			
-			getBusinessData(businessId).exitPickup.setData("ag.label.type", AG_LABEL_EXIT, true);
-			addToWorld(getBusinessData(businessId).exitPickup);
+			getBusinessData(businessId).locations[locationId].exitPickup = gta.createPickup(pickupModelId, getBusinessData(businessId).locations[locationId].exitPosition);
+			getBusinessData(businessId).locations[locationId].exitPickup.onAllDimensions = false;
+			getBusinessData(businessId).locations[locationId].exitPickup.dimension = getBusinessData(businessId).locations[locationId].exitDimension;
+			getBusinessData(businessId).locations[locationId].exitPickup.setData("ag.owner.type", AG_PICKUP_BUSINESS_EXIT, false);
+			getBusinessData(businessId).locations[locationId].exitPickup.setData("ag.owner.id", businessId, false);			
+			getBusinessData(businessId).locations[locationId].exitPickup.setData("ag.label.type", AG_LABEL_EXIT, true);
+			addToWorld(getBusinessData(businessId).locations[locationId].exitPickup);
 		}
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function createBusinessExitBlip(businessId) {
+function createBusinessLocationExitBlip(businessId, locationId) {
 	if(getBusinessData(businessId).hasInterior) {
-		if(getBusinessData(businessId).exitBlipModel != -1) {
+		if(getBusinessData(businessId).locations[locationId].exitBlipModel != -1) {
 			let blipModelId = getGameConfig().blipSprites[getServerGame()].business;
 
-			if(getServerData().businesses[businessId].exitBlipModel != 0) {
-				blipModelId = getBusinessData(businessId).exitBlipModel;
+			if(getServerData().businesses[businessId].locations[locationId].exitBlipModel != 0) {
+				blipModelId = getBusinessData(businessId).locations[locationId].exitBlipModel;
 			}
 
-			getBusinessData(businessId).exitBlip = gta.createBlip(getBusinessData(businessId).exitPosition, blipModelId, 1, getColourByName("businessBlue"));
-			getBusinessData(businessId).exitBlip.onAllDimensions = false;
-			getBusinessData(businessId).exitBlip.dimension = getBusinessData(businessId).entranceDimension;
+			getBusinessData(businessId).locations[locationId].exitBlip = gta.createBlip(getBusinessData(businessId).locations[locationId].exitPosition, blipModelId, 1, getColourByName("businessBlue"));
+			getBusinessData(businessId).locations[locationId].exitBlip.onAllDimensions = false;
+			getBusinessData(businessId).locations[locationId].exitBlip.dimension = getBusinessData(businessId).locations[locationId].entranceDimension;
 			//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
-			getBusinessData(businessId).exitBlip.setData("ag.owner.type", AG_BLIP_BUSINESS_EXIT, false);
-			getBusinessData(businessId).exitBlip.setData("ag.owner.id", businessId, false);
-			addToWorld(getBusinessData(businessId).exitBlip);
+			getBusinessData(businessId).locations[locationId].exitBlip.setData("ag.owner.type", AG_BLIP_BUSINESS_EXIT, false);
+			getBusinessData(businessId).locations[locationId].exitBlip.setData("ag.owner.id", businessId, false);
+			addToWorld(getBusinessData(businessId).locations[locationId].exitBlip);
 		}
 	}
 }
@@ -762,14 +763,19 @@ function deleteBusiness(businessId, deletedBy = 0) {
 		if(dbQuery) {
 			freeDatabaseQuery(dbQuery);
 		}
+
+		dbQuery = queryDatabase(dbConnection, `DELETE FROM biz_loc WHERE biz_loc_biz = ${tempBusinessData.databaseId}`);
+		if(dbQuery) {
+			freeDatabaseQuery(dbQuery);
+		}
 		disconnectFromDatabase(dbConnection);
 	}
 
-	deleteBusinessEntrancePickup(businessId);
-	deleteBusinessExitPickup(businessId);
+	deleteBusinessEntrancePickups(businessId);
+	deleteBusinessExitPickups(businessId);
 
-	deleteBusinessEntranceBlip(businessId);
-	deleteBusinessExitBlip(businessId);	
+	deleteBusinessEntranceBlips(businessId);
+	deleteBusinessExitBlips(businessId);	
 
 	removePlayersFromBusiness(businessId);
 
@@ -849,63 +855,69 @@ function doesBusinessHaveInterior(businessId) {
 
 // ---------------------------------------------------------------------------
 
-function sendAllBusinessLabelsToPlayer(client) {
-	let tempBusinessLabels = [];
-	let totalBusinesses = getServerData().businesses.length;
-	let businessesPerNetworkEvent = 100;
-	let totalNetworkEvents = Math.ceil(totalBusinesses/businessesPerNetworkEvent);
-	for(let i = 0 ; i < totalNetworkEvents ; i++) {
-		for(let j = 0 ; j < businessesPerNetworkEvent ; j++) {
-			let tempBusinessId = (i*businessesPerNetworkEvent)+j;
-			if(typeof getServerData().businesses[tempBusinessId] != "undefined") {
-				let tempBusinessLabels = [];
-				tempBusinessLabels.push([tempBusinessId, getServerData().businesses[tempBusinessId].entrancePosition, getGameConfig().propertyLabelHeight[getServerGame()], getServerData().businesses[tempBusinessId].description, getServerData().businesses[tempBusinessId].locked, false]);
-			}
-		}
-		triggerNetworkEvent("ag.bizlabel.all", client, tempBusinessLabels);
-		tempBusinessLabels = [];
+function deleteBusinessEntrancePickups(businessId) {
+	for(let i in getServerData().businesses[businessId].locations) {
+		deleteBusinessLocationEntrancePickup(businessId, i);
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function sendBusinessLabelToPlayers(businessId) {
-	triggerNetworkEvent("ag.bizlabel.add", null, businessId, getServerData().businesses[businessId].entrancePosition, getGameConfig().propertyLabelHeight[getServerGame()], getServerData().businesses[businessId].name, getServerData().businesses[businessId].locked, false);
-}
-
-// ---------------------------------------------------------------------------
-
-function deleteBusinessEntrancePickup(businessId) {
-	if(getBusinessData(businessId).entrancePickup) {
-		destroyElement(getBusinessData(businessId).entrancePickup);
-		getBusinessData(businessId).entrancePickup = false;
+function deleteBusinessEntranceBlips(businessId) {
+	for(let i in getServerData().businesses[businessId].locations) {
+		deleteBusinessLocationEntranceBlip(businessId, i);
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function deleteBusinessExitPickup(businessId) {
-	if(getBusinessData(businessId).exitPickup) {
-		destroyElement(getBusinessData(businessId).exitPickup);
-		getBusinessData(businessId).exitPickup = false;
+function deleteBusinessExitPickups(businessId) {
+	for(let i in getServerData().businesses[businessId].locations) {
+		deleteBusinessLocationExitPickup(businessId, i);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteBusinessExitBlips(businessId) {
+	for(let i in getServerData().businesses[businessId].locations) {
+		deleteBusinessLocationExitBlip(businessId, i);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteBusinessLocationEntrancePickup(businessId, locationId) {
+	if(getBusinessData(businessId).locations[locationId].entrancePickup) {
+		destroyElement(getBusinessData(businessId).locations[locationId].entrancePickup);
+		getBusinessData(businessId).locations[locationId].entrancePickup = false;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteBusinessLocationExitPickup(businessId, locationId) {
+	if(getBusinessData(businessId).locations[locationId].exitPickup) {
+		destroyElement(getBusinessData(businessId).locations[locationId].exitPickup);
+		getBusinessData(businessId).locations[locationId].exitPickup = false;
 	}	
 }
 
 // ---------------------------------------------------------------------------
 
-function deleteBusinessEntranceBlip(businessId) {
-	if(getBusinessData(businessId).entranceBlip) {
-		destroyElement(getBusinessData(businessId).entranceBlip);
-		getBusinessData(businessId).entranceBlip = false;
+function deleteBusinessLocationEntranceBlip(businessId, locationId) {
+	if(getBusinessData(businessId).locations[locationId].entranceBlip) {
+		destroyElement(getBusinessData(businessId).locations[locationId].entranceBlip);
+		getBusinessData(businessId).locations[locationId].entranceBlip = false;
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function deleteBusinessExitBlip(businessId) {
-	if(getBusinessData(businessId).exitBlip) {
-		destroyElement(getBusinessData(businessId).exitBlip);
-		getBusinessData(businessId).exitBlip = false;
+function deleteBusinessLocationExitBlip(businessId, locationId) {
+	if(getBusinessData(businessId).locations[locationId].exitBlip) {
+		destroyElement(getBusinessData(businessId).locations[locationId].exitBlip);
+		getBusinessData(businessId).locations[locationId].exitBlip = false;
 	}	
 }
 

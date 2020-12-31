@@ -25,6 +25,7 @@ function saveAllServerDataToDatabase() {
 	saveAllBusinessesToDatabase();
 	saveServerConfigToDatabase(getServerConfig());
 	saveAllVehiclesToDatabase();	
+	saveAllJobsToDatabase();
 	saveAllClientsToDatabase();
 	console.log("[Asshat.Utilities]: Saved all server data to database!");
 }

@@ -1243,9 +1243,38 @@ function createJobLocation(job, position, interior, dimension) {
 
 // ---------------------------------------------------------------------------
 
+function saveJobToDatabase(jobData) {
+	if(jobData == null) {
+		// Invalid job data
+		return false;
+	}
+
+	console.log(`[Asshat.Job]: Saving job ${jobData.name} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, jobData.name);
+		// If job hasn't been added to database, ID will be 0
+		if(jobData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO job_main (job_name, job_enabled, job_pickup, job_blip, job_type, job_colour_r, job_colour_g, job_colour_b, job_whitelist, job_blacklist) VALUES ('${safeName}', ${boolToInt(jobData.enabled)}, ${jobData.pickupModel}, ${jobData.blipModel}, ${jobData.type}, ${jobData.colourArray[0]}, ${jobData.colourArray[1]}, ${jobData.colourArray[2]})`;
+			queryDatabase(dbConnection, dbQueryString);
+			jobData.databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let dbQueryString = `UPDATE job_main SET job_name='${safeName}', job_enabled=${boolToInt(jobData.enabled)}, job_pickup=${jobData.pickupModel}, job_blip=${jobData.blipModel}, job_type=${jobData.type}, job_colour_r=${jobData.colourArray[0]}, job_colour_g=${jobData.colourArray[1]}, job_colour_b=${jobData.colourArray[2]} WHERE job_id=${jobData.databaseId}`;
+			queryDatabase(dbConnection, dbQueryString);
+		}
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	console.log(`[Asshat.Job]: Saved job ${jobData.name} to database!`);
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
 function saveJobLocationToDatabase(jobLocationData) {
 	if(jobLocationData == null) {
-		// Invalid vehicle data
+		// Invalid job location data
 		return false;
 	}
 
@@ -1253,20 +1282,130 @@ function saveJobLocationToDatabase(jobLocationData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		// If job location hasn't been added to database, ID will be 0
-		if(vehicleData.databaseId == 0) {
+		if(jobLocationData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO job_loc (job_loc_job, job_loc_enabled, job_loc_pos_x, job_loc_pos_y, job_loc_pos_z, job_loc_int, job_loc_vw) VALUES (${jobLocationData.job}, ${boolToInt(jobLocationData.enabled)}, ${jobLocationData.position.x}, ${jobLocationData.position.y}, ${jobLocationData.position.z}, ${jobLocationData.interior}, ${jobLocationData.dimension})`;
 			queryDatabase(dbConnection, dbQueryString);
 			jobLocationData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE job_loc SET job_loc_job=${jobLocationData.job}, job_loc_enabled=${boolToInt(jobLocationData.enabled)}, job_loc_pos_x=${jobLocationData.position.x}, job_loc_pos_y=${jobLocationData.jobLocationData.y}, job_loc_pos_z=${jobLocationData.jobLocationData.z}, job_loc_int=${jobLocationData.interior}, job_loc_vw=${jobLocationData.dimension} WHERE job_loc_id=${jobLocationData.databaseId}`;
+			let dbQueryString = `UPDATE job_loc SET job_loc_job=${jobLocationData.job}, job_loc_enabled=${boolToInt(jobLocationData.enabled)}, job_loc_pos_x=${jobLocationData.position.x}, job_loc_pos_y=${jobLocationData.position.y}, job_loc_pos_z=${jobLocationData.position.z}, job_loc_int=${jobLocationData.interior}, job_loc_vw=${jobLocationData.dimension} WHERE job_loc_id=${jobLocationData.databaseId}`;
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.Job]: Saved job location ${jobLocationData.vehicle.id} to database!`);
+	console.log(`[Asshat.Job]: Saved job location ${jobLocationData.databaseId} to database`);
 
 	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function saveJobEquipmentToDatabase(jobEquipmentData) {
+	if(jobEquipmentData == null) {
+		// Invalid job equipment data
+		return false;
+	}
+
+	console.log(`[Asshat.Job]: Saving job equipment ${jobEquipmentData.databaseId} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, jobEquipmentData.name);
+		// If job equipment hasn't been added to database, ID will be 0
+		if(jobEquipmentData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO job_equip (job_equip_job, job_equip_enabled, job_equip_minrank, job_equip_name) VALUES (${jobEquipmentData.job}, ${boolToInt(jobEquipmentData.enabled)}, ${jobEquipmentData.requiredRank}, '${safeName}')`;
+			queryDatabase(dbConnection, dbQueryString);
+			jobEquipmentData.databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let dbQueryString = `UPDATE job_equip SET job_equip_job=${jobEquipmentData.job}, job_equip_enabled=${boolToInt(jobEquipmentData.enabled)}, job_equip_minrank=${jobEquipmentData.requiredRank}, job_equip_name='${safeName}' WHERE job_equip_id=${jobEquipmentData.databaseId}`;
+			queryDatabase(dbConnection, dbQueryString);
+		}
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	console.log(`[Asshat.Job]: Saved job equipment ${jobEquipmentData.databaseId} to database`);
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function saveJobEquipmentWeaponToDatabase(jobEquipmentWeaponData) {
+	if(jobEquipmentWeaponData == null) {
+		// Invalid job equipment weapon data
+		return false;
+	}
+
+	console.log(`[Asshat.Job]: Saving job equipment weapon ${jobEquipmentWeaponData.databaseId} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		// If job equipment weapon hasn't been added to database, ID will be 0
+		if(jobEquipmentWeaponData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO job_equip_wep (job_equip_wep_equip, job_equip_wep_enabled, job_equip_wep_wep, job_equip_wep_ammo) VALUES (${jobEquipmentWeaponData.equipmentId}, ${boolToInt(jobEquipmentWeaponData.enabled)}, ${jobEquipmentWeaponData.weaponId}, ${jobEquipmentWeaponData.ammo})`;
+			queryDatabase(dbConnection, dbQueryString);
+			jobEquipmentWeaponData.databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let dbQueryString = `UPDATE job_equip_wep SET job_equip_wep_equip=${jobEquipmentWeaponData.equipmentId}, job_equip_wep_enabled=${boolToInt(jobEquipmentWeaponData.enabled)}, job_equip_wep_wep=${jobEquipmentWeaponData.weaponId}, job_equip_wep_ammo=${jobEquipmentWeaponData.ammo} WHERE job_equip_wep_id=${jobEquipmentWeaponData.databaseId}`;
+			queryDatabase(dbConnection, dbQueryString);
+		}
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	console.log(`[Asshat.Job]: Saved job equipment weapon ${jobEquipmentWeaponData.databaseId} to database`);
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function saveJobUniformToDatabase(jobUniformData) {
+	if(jobUniformData == null) {
+		// Invalid job uniform data
+		return false;
+	}
+
+	console.log(`[Asshat.Job]: Saving job uniform ${jobUniformData.databaseId} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, jobUniformData.name);
+		// If job uniform hasn't been added to database, ID will be 0
+		if(jobUniformData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO job_uniform (job_uniform_job, job_uniform_enabled, job_uniform_minrank, job_uniform_name) VALUES (${jobUniformData.job}, ${boolToInt(jobUniformData.enabled)}, ${jobUniformData.requiredRank}, '${safeName}')`;
+			queryDatabase(dbConnection, dbQueryString);
+			jobUniformData.databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let dbQueryString = `UPDATE job_uniform SET job_uniform_job=${jobUniformData.job}, job_uniform_enabled=${boolToInt(jobUniformData.enabled)}, job_uniform_minrank=${jobUniformData.requiredRank}, job_uniform_name='${safeName}', job_uniform_skin=${jobUniformData.skin} WHERE job_uniform_id=${jobUniformData.databaseId}`;
+			queryDatabase(dbConnection, dbQueryString);
+		}
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	console.log(`[Asshat.Job]: Saved job uniform ${jobUniformData.databaseId} to database`);
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function saveAllJobsToDatabase() {
+	for(let i in getServerData().jobs) {
+		saveJobToDatabase(getServerData().jobs[i]);
+
+		for(let j in getServerData().jobs[i].locations) {
+			saveJobLocationToDatabase(getServerData().jobs[i].locations[j]);
+		}
+
+		for(let k in getServerData().jobs[i].uniforms) {
+			saveJobUniformToDatabase(getServerData().jobs[i].uniforms[k]);
+		}
+		
+		for(let m in getServerData().jobs[i].equipment) {
+			saveJobEquipmentToDatabase(getServerData().jobs[i].equipment[m]);
+
+			for(let n in getServerData().jobs[i].equipment[m].weapons) {
+				saveJobEquipmentWeaponToDatabase(getServerData().jobs[i].equipment[m].weapons[n]);
+			}
+		}
+	}
 }
 
 // ---------------------------------------------------------------------------

@@ -165,7 +165,7 @@ function setClanRankTagCommand(command, params, client) {
 	if(!getClanRankData(clanId, rankId)) {
 		messagePlayerError(client, "Clan rank not found!");
 		return false;
-	}	
+	}
 }
 
 // ----------------------------------------------------------------------------

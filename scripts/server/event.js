@@ -29,6 +29,12 @@ addEventHandler("OnPlayerConnect", function(event, ipAddress, port) {
 
 // ---------------------------------------------------------------------------
 
+addEventHandler("OnPlayerJoin", function(event, client) {
+    fadeCamera(client, true, 1.0);
+});
+
+// ---------------------------------------------------------------------------
+
 addEventHandler("OnPlayerJoined", function(event, client) {
     //message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 });

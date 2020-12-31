@@ -141,12 +141,13 @@ let gameConfig = {
 			house: 1361,
 			clothes: 1361,
 			misc: 1361,
+			exit: 1361
 		},
 		
 		{ // GTA Vice City
-			policeStation: 406,
+			policeStation: 375,
 			fireStation: 406,
-			hospital: 406, 
+			hospital: 366, 
 			ammunation: 406,
 			payAndSpray: 406,
 			vehicleDealership: 406,
@@ -157,7 +158,8 @@ let gameConfig = {
 			business: 406,
 			house: 407,
 			clothes: 409,
-			misc: 1361,
+			misc: 406,
+			exit: 406,
 		},
 
 		{ // GTA San Andreas
@@ -174,6 +176,8 @@ let gameConfig = {
 			business: 1272,
 			house: 1273,
 			clothes: 1275,
+			misc: 1239,
+			exit: 1247,
 		}
 	],
 	pickupTypes: [

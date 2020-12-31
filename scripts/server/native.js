@@ -105,7 +105,11 @@ function getPlayerVirtualWorld(client) {
 // ---------------------------------------------------------------------------
 
 function getPlayerInterior(client) {
-    return client.player.interior;
+    if(getPlayerData(client)) {
+        if(getPlayerCurrentSubAccount(client)) {
+            return getPlayerCurrentSubAccount(client).interior;
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -118,6 +122,7 @@ function setPlayerVirtualWorld(client, dimension) {
 
 function setPlayerInterior(client, interior) {
     triggerNetworkEvent("ag.interior", client, interior);
+    getPlayerCurrentSubAccount(client).interior = interior;
 }
 
 // ---------------------------------------------------------------------------

@@ -58,7 +58,7 @@ function loadCommandData() {
             commandData("bizpickup", setBusinessPickupCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true),
             commandData("bizinfo", getBusinessInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
             commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
-            commandData("bizexit", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
+            commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
@@ -109,7 +109,9 @@ function loadCommandData() {
             commandData("setgui", toggleServerGUICommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),   
             commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("manageServer"), true, true),
-            commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),                     
+            commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),     
+            commandData("jobinfo", getJobInfoCommand, "", getStaffFlagValue("none"), true, true),                
+            commandData("joblocinfo", getJobLocationInfoCommand, "", getStaffFlagValue("none"), true, true),                
         ],
         core: [],
         database: [],
@@ -139,7 +141,7 @@ function loadCommandData() {
             commandData("housepickup", setHousePickupCommand, "<type name/model id>", getStaffFlagValue("manageHouses"), true, true),
             commandData("houseinfo", getHouseInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
             commandData("houseentrance", moveHouseEntranceCommand, "", getStaffFlagValue("manageHouses"), true, true),
-            commandData("houseexit", moveHouseEntranceCommand, "", getStaffFlagValue("manageHouses"), true, true),            
+            commandData("houseexit", moveHouseExitCommand, "", getStaffFlagValue("manageHouses"), true, true),            
         ],
         item: [],
         job: [
@@ -174,7 +176,7 @@ function loadCommandData() {
             // Admin Job Stuff
             commandData("addjobloc", createJobLocationCommand, "<job name/id>", getStaffFlagValue("manageJobs"), true, false),
             commandData("deljobloc", deleteJobLocationCommand, "", getStaffFlagValue("manageJobs"), true, false),
-            commandData("jobloctoggle", deleteJobLocationCommand, "", getStaffFlagValue("manageJobs"), true, false),
+            //commandData("jobloctoggle", toggleJobLocationCommand, "", getStaffFlagValue("manageJobs"), true, false),
             commandData("jobwhitelist", toggleJobWhiteListCommand, "[job id]", getStaffFlagValue("manageJobs"), true, false),
             commandData("jobblacklist", toggleJobBlackListCommand, "[job id]", getStaffFlagValue("manageJobs"), true, false),
             commandData("jobtoggle", toggleJobEnabledCommand, "[job id]", getStaffFlagValue("manageJobs"), true, false),
@@ -220,6 +222,8 @@ function loadCommandData() {
             commandData("rt", teleportRightCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
             commandData("up", teleportUpCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
             commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("int", playerInteriorCommand, "<interior id>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("vw", playerVirtualWorldCommand, "<virtual world id>", getStaffFlagValue("basicModeration"), true, true),
             
             commandData("addstaffflag", addStaffFlagCommand, "<player name/id> [flag name]", getStaffFlagValue("manageAdmins"), true, true),
             commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> [flag name]", getStaffFlagValue("manageAdmins"), true, true),
@@ -251,9 +255,10 @@ function loadCommandData() {
 
             commandData("vehowner", setVehicleOwnerCommand, "<player id/name>", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehclan", setVehicleClanCommand, "<clan id/name>", getStaffFlagValue("manageVehicles"), true, true),
-            commandData("vehdealer", setVehicleToDealershipCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehbiz", setVehicleToBusinessCommand, "", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehjob", setVehicleJobCommand, "[job id/name]", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehdelowner", removeVehicleOwnerCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehrank", setVehicleRankCommand, "<rank id/name>", getStaffFlagValue("none"), true, true),
 
             commandData("vehinfo", getVehicleInfoCommand, "", getStaffFlagValue("none"), true, true),
             commandData("vehpark", toggleVehicleSpawnLockCommand, "", getStaffFlagValue("manageVehicles"), true, true),
@@ -268,6 +273,7 @@ function loadCommandData() {
             commandData("vehcolour", setVehicleColourCommand, "<colour1> <colour2>", getStaffFlagValue("none"), true, true),
             commandData("vehrepair", vehicleRepairCommand, "", getStaffFlagValue("none"), true, true),
             commandData("passenger", enterVehicleAsPassengerCommand, "", getStaffFlagValue("none"), true, true),
+
         ],
     }
     return tempCommands;

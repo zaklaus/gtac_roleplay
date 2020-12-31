@@ -128,8 +128,16 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
-			triggerNetworkEvent("ag.exitProperty", client, inHouse.entrancePosition, inHouse.entranceRotation, inHouse.entranceInterior, inHouse.entranceDimension);
-			client.player.dimension = inHouse.entranceDimension;
+			fadeCamera(client, false, 1.0);
+			setTimeout(function() {
+				setPlayerPosition(client, inHouse.entrancePosition);
+				setPlayerHeading(client, inHouse.entranceRotation);
+				setPlayerVirtualWorld(client, inHouse.entranceDimension);
+				setPlayerInterior(client, inHouse.entranceInterior);
+				setTimeout(function() {
+					fadeCamera(client, true, 1.0);
+				}, 1000);
+			}, 1100);
 			removeEntityData(client, "ag.inHouse");
 		}
 		return true;
@@ -143,8 +151,16 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}					
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
-			triggerNetworkEvent("ag.exitProperty", client, inBusiness.entrancePosition, inBusiness.entranceRotation, inBusiness.entranceInterior, inBusiness.entranceDimension);
-			client.player.dimension = inBusiness.entranceDimension;
+			fadeCamera(client, false, 1.0);
+			setTimeout(function() {
+				setPlayerPosition(client, inBusiness.entrancePosition);
+				setPlayerHeading(client, inBusiness.entranceRotation);
+				setPlayerVirtualWorld(client, inBusiness.entranceDimension);
+				setPlayerInterior(client, inBusiness.entranceInterior);
+				setTimeout(function() {
+					fadeCamera(client, true, 1.0);
+				}, 1000);
+			}, 1100);
 			removeEntityData(client, "ag.inBusiness");
 		}
 		return true;	
@@ -166,8 +182,17 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 			
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
-			triggerNetworkEvent("ag.enterProperty", client, closestBusiness.exitPosition, closestBusiness.exitRotation, closestBusiness.exitInterior, closestBusinessId+getGlobalConfig().businessDimensionStart);
-			client.player.dimension = closestBusiness.exitDimension;
+
+			fadeCamera(client, false, 1.0);
+			setTimeout(function() {
+				setPlayerPosition(client, closestBusiness.exitPosition);
+				setPlayerHeading(client, closestBusiness.exitRotation);
+				setPlayerVirtualWorld(client, closestBusiness.exitDimension);
+				setPlayerInterior(client, closestBusiness.exitInterior);
+				setTimeout(function() {
+					fadeCamera(client, true, 1.0);
+				}, 1000);
+			}, 1100);
 			setEntityData(client, "ag.inBusiness", closestBusinessId);
 			return true;
 		}
@@ -190,9 +215,20 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
-			triggerNetworkEvent("ag.enterProperty", client, closestHouse.exitPosition, closestHouse.exitRotation, closestHouse.exitInterior, closestHouse+getGlobalConfig().houseDimensionStart);
-			//client.player.dimension = closestHouse.exitDimension;
+			
+
+			fadeCamera(client, false, 1.0);
+			setTimeout(function() {
+				setPlayerPosition(client, closestHouse.exitPosition);
+				setPlayerHeading(client, closestHouse.exitRotation);
+				setPlayerVirtualWorld(client, closestHouse.exitDimension);
+				setPlayerInterior(client, closestHouse.exitInterior);
+				setTimeout(function() {
+					fadeCamera(client, true, 1.0);
+				}, 1000);
+			}, 1100);
 			setEntityData(client, "ag.inHouse", closestHouseId);
+
 			return true;
 		}
 	}
@@ -209,6 +245,21 @@ function sendRemovedWorldObjectsToPlayer(client) {
 		console.log(`[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
 		triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
 	}
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function loadGameFixesResource() {
+	switch(getServerGame()) {
+		case GAME_GTA_III:
+			findResourceByName("asshat-gta3").start();
+			break;
+
+		default:
+			break;
+	}
+	return true;
 }
 
 // ---------------------------------------------------------------------------

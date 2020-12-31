@@ -237,7 +237,8 @@ function initClassTable() {
 				this.ownerType = AG_BIZOWNER_NONE;
 				this.ownerId = 0;
 				this.buyPrice = 0;
-				this.locked = false
+				this.locked = false;
+				this.hasInterior = false;
 
 				this.entrancePosition = false;
 				this.entranceRotation = 0.0;
@@ -267,6 +268,7 @@ function initClassTable() {
 					this.ownerId = toInteger(businessAssoc["biz_owner_id"]);
 					this.buyPrice = toInteger(businessAssoc["biz_buy_price"]);
 					this.locked = intToBool(toInteger(businessAssoc["biz_locked"]));
+					this.hasInterior = intToBool(toInteger(businessAssoc["biz_has_interior"]));
 	
 					this.entrancePosition = toVector3(toFloat(businessAssoc["biz_entrance_pos_x"]), toFloat(businessAssoc["biz_entrance_pos_y"]), toFloat(businessAssoc["biz_entrance_pos_z"]));
 					this.entranceRotation = toInteger(businessAssoc["biz_entrance_rot_z"]);
@@ -316,6 +318,7 @@ function initClassTable() {
 				this.ownerId = 0;
 				this.buyPrice = 0;
 				this.locked = false;
+				this.hasInterior = false;
 	
 				this.entrancePosition = false;
 				this.entranceRotation = 0.0;
@@ -342,6 +345,7 @@ function initClassTable() {
 					this.ownerId = toInteger(houseAssoc["house_owner_id"]);
 					this.buyPrice = toInteger(houseAssoc["house_buy_price"]);
 					this.locked = intToBool(toInteger(houseAssoc["house_locked"]));
+					this.hasInterior = intToBool(toInteger(houseAssoc["house_has_interior"]));
 		
 					this.entrancePosition = toVector3(toFloat(houseAssoc["house_entrance_pos_x"]), toFloat(houseAssoc["house_entrance_pos_y"]), toFloat(houseAssoc["house_entrance_pos_z"]));
 					this.entranceRotation = toFloat(houseAssoc["house_entrance_rot_z"]);
@@ -504,6 +508,7 @@ function initClassTable() {
 				this.colour = toColour(0, 0, 0, 255);
 				this.whiteListEnabled = false;
 				this.blackListEnabled = false;
+				this.id = -1;
 
 				this.equipment = [];
 				this.uniforms = [];

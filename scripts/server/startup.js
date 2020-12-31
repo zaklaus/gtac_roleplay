@@ -39,6 +39,8 @@ function initServerScripts() {
 	//gta.forceWeather(getServerConfig().startup.weather);
 
 	initAllClients();
+
+	loadGameFixesResource();
 }
 
 // ---------------------------------------------------------------------------

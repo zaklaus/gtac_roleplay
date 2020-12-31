@@ -420,7 +420,7 @@ function getPosBehindPos(pos, angle, distance) {
 // ---------------------------------------------------------------------------
 
 function getPosAbovePos(pos, distance) {
-	return toVector3(pos.x, pos.y, pos.z+distancez);
+	return toVector3(pos.x, pos.y, pos.z+distance);
 }
 
 // ---------------------------------------------------------------------------
@@ -1594,16 +1594,32 @@ function getClanFromParams(params) {
 
 // ---------------------------------------------------------------------------
 
-function getJobFromParams(params) {
+function getClanRankFromParams(clanId, params) {
 	if(isNaN(params)) {
-		for(let i in getServerData().jobs) {
-			if(toLowerCase(getServerData().jobs[i].name).indexOf(toLowerCase(params)) != -1) {
+		for(let i in getClanData(clanId).ranks) {
+			if(toLowerCase(getClanData(clanId).ranks[i].name).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
 	} else {
-		if(typeof getServerData().jobs[params] != "undefined") {
+		if(typeof getClanData(clanId).ranks[params] != "undefined") {
 			return toInteger(params);
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getJobFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().jobs) {
+			if(toLowerCase(getServerData().jobs[i].name).indexOf(toLowerCase(params)) != -1) {
+				return getServerData().jobs[i].databaseId;
+			}
+		}
+	} else {
+		if(typeof getServerData().jobs[params] != "undefined") {
+			return getServerData().jobs[params].databaseId;
 		}
 	}
 

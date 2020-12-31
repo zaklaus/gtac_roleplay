@@ -421,6 +421,56 @@ function teleportRightCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function playerInteriorCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	if(!targetClient) {
+		messagePlayerError(client, "Player not found!");
+		return false;
+	}
+
+	if(getParamsCount(params, " ") == 1) {
+		messagePlayerInfo(client, `${targetClient.name}'s interior is [#AAAAAA]${getPlayerInterior(targetClient)}`);
+		return false;
+	}
+
+	let interiorId = splitParams[1];
+	setPlayerInterior(targetClient, Number(interiorId));
+	messagePlayerSuccess(client, `You set ${targetClient.name}'s interior to [#AAAAAA]${interiorId}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function playerVirtualWorldCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	if(!targetClient) {
+		messagePlayerError(client, "Player not found!");
+		return false;
+	}
+
+	if(getParamsCount(params, " ") == 1) {
+		messagePlayerInfo(client, `[#AAAAAA]${targetClient.name}'s [#FFFFFF]virtual world is [#AAAAAA]${getPlayerVirtualWorld(targetClient)}`);
+		return false;
+	}
+
+	let dimensionId = splitParams[1];
+	setPlayerVirtualWorld(targetClient, Number(dimensionId));
+	messagePlayerSuccess(client, `You set [#AAAAAA]${targetClient.name}'s [#FFFFFF]virtual world to [#AAAAAA]${dimensionId}`);
+}
+
+// ---------------------------------------------------------------------------
+
 function getPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));

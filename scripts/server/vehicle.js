@@ -560,6 +560,37 @@ function setVehicleJobCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function setVehicleRankCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+	
+	if(!isPlayerInAnyVehicle(client)) {
+		messagePlayerError(client, "You need to be in a vehicle!");
+		return false;		
+	}
+	
+	let vehicle = getPlayerVehicle(client);	
+
+	let rankId = params;
+
+	if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_CLAN) {
+		rankId = getClanRankFromParams(getVehicleData(vehicle).ownerId, params);
+		if(!getClanRankData(getVehicleData(vehicle).ownerId, rankId)) {
+			messagePlayerError(client, "Clan rank not found!");
+			return false;
+		}
+		getVehicleData(vehicle).rank = getClanRankData(getVehicleData(vehicle).ownerId, rankId).databaseId;
+		messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]rank to [#AAAAAA]${getClanRankData(getVehicleData(vehicle).ownerId, rankId).name} [#FFFFFF]of the [#FF9900]${getClanData(getVehicleData(vehicle).ownerId).name} [#FFFFFFclan!`);
+	} else if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
+		getVehicleData(vehicle).rank = rankId;
+		messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]rank to [#AAAAAA]${rankId} [#FFFFFF]of the [#FFFF00]${getJobData(getVehicleData(vehicle).ownerId).name} [#FFFFFF]job!`);		
+	}
+}
+
+// ---------------------------------------------------------------------------
+
 function setVehicleClanCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
@@ -582,7 +613,7 @@ function setVehicleClanCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function setVehicleToDealershipCommand(command, params, client) {
+function setVehicleToBusinessCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
 		return false;		

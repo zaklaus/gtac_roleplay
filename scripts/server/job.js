@@ -12,6 +12,7 @@ function initJobScript() {
 	console.log("[Asshat.Job]: Initializing job script ...");
 	getServerData().jobs = loadJobsFromDatabase();
 
+	setAllJobDataIndexes();
 	createAllJobPickups();
 	createAllJobBlips();
 
@@ -463,6 +464,27 @@ function startWorking(client) {
 
 // ---------------------------------------------------------------------------
 
+function getJobInfoCommand(command, params, client) {
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+
+	messagePlayerInfo(client, `[#FFFF00][Job Info] [#FFFFFF]Name: [#AAAAAA]${getJobData(closestJobLocation.job).name}, [#FFFFFF]Enabled: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).enabled))}, [#FFFFFF]Whitelisted: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).whiteListEnabled))}, [#FFFFFF]Blacklisted: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).blackListEnabled))}, [#FFFFFF]ID: [#AAAAAA]${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function getJobLocationInfoCommand(command, params, client) {
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+
+	//if(!getJobData(getJobIdFromDatabaseId(closestJobLocation.job))) {
+	//	messagePlayerError(client, "Job not found!");
+	//	return false;
+	//}	
+
+	messagePlayerInfo(client, `[#FFFF00][Job Location Info] [#FFFFFF]Job: [#AAAAAA]${getJobData(closestJobLocation.job).name} (${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}), [#FFFFFF]Enabled: [#AAAAAA]${getYesNoFromBool(closestJobLocation.enabled)}, [#FFFFFF]Database ID: [#AAAAAA]${closestJobLocation.databaseId}`);
+}
+
+// ---------------------------------------------------------------------------
+
 function givePlayerJobEquipment(client, equipmentId) {
 	if(!canPlayerUseJobs(client)) {
 		return false;
@@ -718,8 +740,7 @@ function createJobLocationCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let jobId = getJobFromParams(splitParams[0]);
+	let jobId = getJobFromParams(params);
 	
 	if(!getJobData(jobId)) {
 		messagePlayerError(client, "That job was not found!");
@@ -1184,6 +1205,68 @@ function freezeJobVehicleForRouteStop(client) {
 function unFreezeJobVehicleForRouteStop(client) {
     getVehicleData(getPlayerVehicle(client)).engine = true;
 	getPlayerVehicle(client).engine = true;
+}
+
+// ---------------------------------------------------------------------------
+
+function getJobIdFromDatabaseId(databaseId) {
+	for(let i in getServerData().jobs) {
+		if(getServerData().jobs[i].databaseId == databaseId) {
+			return i;
+		}
+	}
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function setAllJobDataIndexes() {
+	for(let i in getServerData().jobs) {
+		getServerData().jobs[i].id = i;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function createJobLocation(job, position, interior, dimension) {
+	let jobLocationData = serverClasses.jobLocationData(false);
+	jobLocationData.position = position;
+	jobLocationData.job = job;
+	jobLocationData.interior = interior;
+	jobLocationData.dimension = dimension;
+	jobLocationData.enabled = true;
+
+	getServerData().jobs[job].locations.push(jobLocationData);
+
+	saveJobLocationToDatabase(jobLocationData);
+}
+
+// ---------------------------------------------------------------------------
+
+function saveJobLocationToDatabase(jobLocationData) {
+	if(jobLocationData == null) {
+		// Invalid vehicle data
+		return false;
+	}
+
+	console.log(`[Asshat.Job]: Saving job location ${jobLocationData.databaseId} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		// If job location hasn't been added to database, ID will be 0
+		if(vehicleData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO job_loc (job_loc_job, job_loc_enabled, job_loc_pos_x, job_loc_pos_y, job_loc_pos_z, job_loc_int, job_loc_vw) VALUES (${jobLocationData.job}, ${boolToInt(jobLocationData.enabled)}, ${jobLocationData.position.x}, ${jobLocationData.position.y}, ${jobLocationData.position.z}, ${jobLocationData.interior}, ${jobLocationData.dimension})`;
+			queryDatabase(dbConnection, dbQueryString);
+			jobLocationData.databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let dbQueryString = `UPDATE job_loc SET job_loc_job=${jobLocationData.job}, job_loc_enabled=${boolToInt(jobLocationData.enabled)}, job_loc_pos_x=${jobLocationData.position.x}, job_loc_pos_y=${jobLocationData.jobLocationData.y}, job_loc_pos_z=${jobLocationData.jobLocationData.z}, job_loc_int=${jobLocationData.interior}, job_loc_vw=${jobLocationData.dimension} WHERE job_loc_id=${jobLocationData.databaseId}`;
+			queryDatabase(dbConnection, dbQueryString);
+		}
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	console.log(`[Asshat.Job]: Saved job location ${jobLocationData.vehicle.id} to database!`);
+
+	return false;
 }
 
 // ---------------------------------------------------------------------------

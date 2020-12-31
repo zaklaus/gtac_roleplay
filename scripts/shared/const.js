@@ -12,3 +12,4 @@
 const AG_LABEL_JOB = 1;
 const AG_LABEL_BUSINESS = 2;
 const AG_LABEL_HOUSE = 3;
+const AG_LABEL_EXIT = 3;

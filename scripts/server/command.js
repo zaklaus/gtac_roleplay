@@ -37,7 +37,7 @@ function loadCommandData() {
         ban: [
             commandData("aban", accountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true),
             commandData("saban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true),
-            commandData("ipban", ipBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true), 
+            commandData("ipban", ipBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true),
         ],
         bitFlag: [],
         business: [
@@ -59,6 +59,7 @@ function loadCommandData() {
             commandData("bizinfo", getBusinessInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
             commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
             commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
+            commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageBusinesses"), true, true),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
@@ -69,19 +70,19 @@ function loadCommandData() {
             commandData("local", talkCommand, "<message>", getStaffFlagValue("none"), true, false),
             commandData("l", talkCommand, "<message>", getStaffFlagValue("none"), true, false),
             commandData("w", whisperCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("whisper", whisperCommand, "<message>", getStaffFlagValue("none"), true, false), 
-            commandData("clanchat", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false), 
-            commandData("clan", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false), 
-            commandData("c", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false), 
+            commandData("whisper", whisperCommand, "<message>", getStaffFlagValue("none"), true, false),
+            commandData("clanchat", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false),
+            commandData("clan", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false),
+            commandData("c", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false),
             commandData("adminchat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
             commandData("a", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
             commandData("achat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
         ],
         clan: [
-            commandData("addclan", createClanCommand, "<name>", getStaffFlagValue("manageClans"), true, true),  
-            commandData("delclan", deleteClanCommand, "<clan id>", getStaffFlagValue("manageClans"), true, true),  
+            commandData("addclan", createClanCommand, "<name>", getStaffFlagValue("manageClans"), true, true),
+            commandData("delclan", deleteClanCommand, "<clan id>", getStaffFlagValue("manageClans"), true, true),
 
-            commandData("clanowner", setClanOwnerCommand, "<clan id> <player name/id>", getStaffFlagValue("none"), true, true),  
+            commandData("clanowner", setClanOwnerCommand, "<clan id> <player name/id>", getStaffFlagValue("none"), true, true),
             commandData("clantag", setClanTagCommand, "<tag>", getStaffFlagValue("none"), true, true),
             commandData("clanranktag", setClanRankTagCommand, "<rank id> <tag>", getStaffFlagValue("none"), true, true),
             commandData("clanmembertag", setClanMemberTagCommand, "<player name/id> <tag>", getStaffFlagValue("none"), true, true),
@@ -89,8 +90,8 @@ function loadCommandData() {
             commandData("clanmembertitle", setClanMemberTitleCommand, "<player name/id> <title>", getStaffFlagValue("none"), true, true),
             commandData("addrankflag", addClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true),
             commandData("delrankflag", removeClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true),
-            commandData("addmemberflag", addClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true),            
-            commandData("delmemberflag", removeClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true),  
+            commandData("addmemberflag", addClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true),
+            commandData("delmemberflag", removeClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true),
         ],
         class: [],
         client: [],
@@ -105,18 +106,18 @@ function loadCommandData() {
             commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("manageServer"), true, true),
             commandData("setweather", setWeatherCommand, "<weather id/name>", getStaffFlagValue("manageServer"), true, true),
             commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("manageServer"), true, true),
-            commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),   
-            commandData("setgui", toggleServerGUICommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),   
+            commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),
+            commandData("setgui", toggleServerGUICommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("manageServer"), true, true),
-            commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),     
-            commandData("jobinfo", getJobInfoCommand, "", getStaffFlagValue("none"), true, true),                
-            commandData("joblocinfo", getJobLocationInfoCommand, "", getStaffFlagValue("none"), true, true),                
+            commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),
+            commandData("jobinfo", getJobInfoCommand, "", getStaffFlagValue("none"), true, true),
+            commandData("joblocinfo", getJobLocationInfoCommand, "", getStaffFlagValue("none"), true, true),
         ],
         core: [],
         database: [],
         developer: [
-            commandData("scode", executeServerCodeCommand, "<code>", getStaffFlagValue("developer"), true, true), 
+            commandData("scode", executeServerCodeCommand, "<code>", getStaffFlagValue("developer"), true, true),
             commandData("ccode", executeClientCodeCommand, "<code>", getStaffFlagValue("developer"), true, true),
             commandData("gmx", restartGameModeCommand, "", getStaffFlagValue("developer"), true, true),
             commandData("saveall", saveAllServerDataCommand, "", getStaffFlagValue("developer"), true, true),
@@ -141,7 +142,8 @@ function loadCommandData() {
             commandData("housepickup", setHousePickupCommand, "<type name/model id>", getStaffFlagValue("manageHouses"), true, true),
             commandData("houseinfo", getHouseInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
             commandData("houseentrance", moveHouseEntranceCommand, "", getStaffFlagValue("manageHouses"), true, true),
-            commandData("houseexit", moveHouseExitCommand, "", getStaffFlagValue("manageHouses"), true, true),            
+            commandData("houseexit", moveHouseExitCommand, "", getStaffFlagValue("manageHouses"), true, true),
+            commandData("houseinttype", setHouseInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageHouses"), true, true),
         ],
         item: [],
         job: [
@@ -149,7 +151,7 @@ function loadCommandData() {
             commandData("startwork", startWorkingCommand, "", getStaffFlagValue("none"), true, false),
             commandData("stopwork", stopWorkingCommand, "", getStaffFlagValue("none"), true, false),
             commandData("startjob", startWorkingCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("stopjob", stopWorkingCommand, "", getStaffFlagValue("none"), true, false),            
+            commandData("stopjob", stopWorkingCommand, "", getStaffFlagValue("none"), true, false),
             commandData("quitjob", quitJobCommand, "", getStaffFlagValue("none"), true, false),
             commandData("uniform", jobUniformCommand, "[uniform]", getStaffFlagValue("none"), true, false),
             commandData("equip", jobEquipmentCommand, "[equipment]", getStaffFlagValue("none"), true, false),
@@ -168,7 +170,7 @@ function loadCommandData() {
             commandData("detain", policeDetainCommand, "", getStaffFlagValue("none"), true, false),
             commandData("drag", policeDragCommand, "", getStaffFlagValue("none"), true, false),
             commandData("search", policeSearchCommand, "", getStaffFlagValue("none"), true, false),
-            
+
             // Bus/Garbage
             commandData("startroute", jobStartRouteCommand, "", getStaffFlagValue("none"), true, false),
             commandData("stoproute", jobStopRouteCommand, "", getStaffFlagValue("none"), true, false),
@@ -207,24 +209,24 @@ function loadCommandData() {
 			commandData("mute", muteClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
 			commandData("freeze", freezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
 			commandData("unmute", unMuteClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
-            commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),			
-            commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true),	
-            commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true),	
-            commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
+            commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("basicModeration"), true, true),
             commandData("gotoveh", gotoVehicleCommand, "<vehicle id>", getStaffFlagValue("basicModeration"), true, true),
             commandData("gotobiz", gotoBusinessCommand, "<business id/name>", getStaffFlagValue("basicModeration"), true, true),
             commandData("gotohouse", gotoHouseCommand, "<house id/name>", getStaffFlagValue("basicModeration"), true, true),
             commandData("gotojob", gotoJobLocationCommand, "<job id/name> <location id>", getStaffFlagValue("basicModeration"), true, true),
             //commandData("gotoloc", gotoLocationCommand, "<location name>", getStaffFlagValue("basicModeration"), true, true),
             commandData("fr", teleportForwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("ba", teleportBackwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
-            commandData("lt", teleportLeftCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
-            commandData("rt", teleportRightCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
-            commandData("up", teleportUpCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
-            commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),	
+            commandData("ba", teleportBackwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("lt", teleportLeftCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("rt", teleportRightCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("up", teleportUpCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
             commandData("int", playerInteriorCommand, "<interior id>", getStaffFlagValue("basicModeration"), true, true),
             commandData("vw", playerVirtualWorldCommand, "<virtual world id>", getStaffFlagValue("basicModeration"), true, true),
-            
+
             commandData("addstaffflag", addStaffFlagCommand, "<player name/id> [flag name]", getStaffFlagValue("manageAdmins"), true, true),
             commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> [flag name]", getStaffFlagValue("manageAdmins"), true, true),
             commandData("getstaffflags", getStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true),
@@ -238,20 +240,20 @@ function loadCommandData() {
         subAccount: [
             commandData("switchchar", switchCharacterCommand, "", getStaffFlagValue("none"), true, false),
             commandData("newchar", newCharacterCommand, "<first name> <last name>", getStaffFlagValue("none"), true, false),
-            commandData("usechar", useCharacterCommand, "<character id>", getStaffFlagValue("none"), true, false),            
+            commandData("usechar", useCharacterCommand, "<character id>", getStaffFlagValue("none"), true, false),
         ],
         translate: [],
         utilities: [],
         vehicle: [
-            commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, false),	
+            commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, false),
             commandData("tempveh", createTemporaryVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, false),
             commandData("delveh", deleteVehicleCommand, "", getStaffFlagValue("manageVehicles"), true, false),
-            
-            commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),	
-            commandData("unlock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),	
-            commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, false),	
-            commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, false),	
-            commandData("lights", vehicleLightsCommand, "", getStaffFlagValue("none"), true, false),	
+
+            commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("unlock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("engine", vehicleEngineCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("siren", vehicleSirenCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("lights", vehicleLightsCommand, "", getStaffFlagValue("none"), true, false),
 
             commandData("vehowner", setVehicleOwnerCommand, "<player id/name>", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehclan", setVehicleClanCommand, "<clan id/name>", getStaffFlagValue("manageVehicles"), true, true),
@@ -338,13 +340,13 @@ function disableCommand(command, params, client) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
     }
-    
+
     params = toLowerCase(params);
 
     if(!getCommand(params)) {
         messagePlayerError(client, `The command [#AAAAAA]/${params} [#FFFFFF] does not exist!`);
         return false;
-    }    
+    }
 
     getCommand(params).enabled = false;
 	messagePlayerSuccess(client, `Command [#AAAAAA]/${params} [#FFFFFF]has been disabled!`);
@@ -358,13 +360,13 @@ function enableCommand(command, params, client) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
     }
-    
+
     params = toLowerCase(params);
 
     if(!getCommand(params)) {
         messagePlayerError(client, `The command [#AAAAAA]/${params} [#FFFFFF] does not exist!`);
         return false;
-    }    
+    }
 
     getCommand(params).enabled = true;
 	messagePlayerSuccess(client, `Command [#AAAAAA]/${params} [#FFFFFF]has been enabled!`);
@@ -380,11 +382,11 @@ function disableAllCommandsByType(command, params, client) {
 	}
 
     params = toLowerCase(params);
-    
+
     if(isNull(getServerData().commands[params])) {
         messagePlayerError(client, `Command type [#AAAAAA]${params} [#FFFFFF]does not exist!`);
         return false;
-    }    
+    }
 
     for(let i in getServerData().commands[params]) {
         getServerData().commands[params][i].enabled = false;
@@ -401,9 +403,9 @@ function enableAllCommandsByType(command, params, client) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
     }
-        
+
     params = toLowerCase(params);
-    
+
     if(isNull(getServerData().commands[params])) {
         messagePlayerError(client, `Command type [#AAAAAA]${params} [#FFFFFF]does not exist!`);
         return false;
@@ -452,7 +454,7 @@ function onPlayerCommand(event, client, command, params) {
     //        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
 	//		messagePlayerError(client, `The [#AAAAAA]/${command} [#FFFFFF] command isn't available on discord!`);
 	//		return false;
-	//	}		
+	//	}
 	//}
 
 	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
@@ -460,7 +462,7 @@ function onPlayerCommand(event, client, command, params) {
 		messagePlayerError(client, `You do not have permission to use the [#AAAAAA]/${command} [#FFFFFF]command!`);
 		return false;
     }
-    
+
     console.log(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
     commandData.handlerFunction(command, params, client);
 }

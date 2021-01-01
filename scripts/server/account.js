@@ -20,12 +20,12 @@ function loginCommand(command, params, client) {
 		messagePlayerError(client, "Your name is not registered! Use /register to make an account.");
 		return false;
 	}
-	
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
-	
+
 	checkLogin(client, params);
 	return true;
 }
@@ -34,7 +34,7 @@ function loginCommand(command, params, client) {
 
 function autoLoginByIPCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
-	
+
 	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerSuccess(client, `You will not be automatically logged in via your current IP (${client.ip})`);
@@ -49,7 +49,7 @@ function autoLoginByIPCommand(command, params, client) {
 
 function autoSelectLastCharacterCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
-	
+
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerSuccess(client, `You will not be automatically spawned as your last used character`);
@@ -64,7 +64,7 @@ function autoSelectLastCharacterCommand(command, params, client) {
 
 function toggleAccountGUICommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noGUI");
-	
+
 	if(!doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerNormal(client, `⚙️ You will now be shown GUI (if enabled on current server)`);
@@ -101,7 +101,7 @@ function toggleAccountGUICommand(command, params, client) {
 
 function toggleAccountServerLogoCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noServerLogo");
-	
+
 	if(!doesPlayerHaveLogoEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now [#FFFFFF]be shown the server logo (if enabled on current server)`);
@@ -113,7 +113,7 @@ function toggleAccountServerLogoCommand(command, params, client) {
 		console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo OFF for their account`);
 		triggerNetworkEvent("ag.logo", client, false);
 	}
-	
+
 	return true;
 }
 
@@ -123,7 +123,7 @@ function toggleAccountServerLogoCommand(command, params, client) {
 // TO-DO: Make GUI, add command to generate code to add to auth app and command to input code returned by auth app
 function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("twoStepAuth");
-	
+
 	if(getPlayerData(client).emailAddress != "") {
 		messagePlayerError(client, "You need to add your email to your account to use two-factor authentication.");
 		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add your email.");
@@ -132,7 +132,7 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 
 	if(!isValidEmailAddress(getPlayerData(client).emailAddress)) {
 		messagePlayerError(client, "The email you previously added is not valid.");
-		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add a valid email.");		
+		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add a valid email.");
 		return false;
 	}
 
@@ -155,12 +155,12 @@ function registerCommand(command, params, client) {
 		messagePlayerError(client, "Your name is already registered!");
 		return false;
 	}
-	
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
-	
+
 	checkRegistration(client, params);
 	//getPlayerData(client).accountData = accountData;
 	//messagePlayerSuccess(client, "Your account has been created!");
@@ -183,13 +183,13 @@ function changePasswordCommand(command, params, client) {
 		messagePlayerError(client, "The old password is invalid!");
 		return false;
 	}
-	
+
 	if(!doesPasswordMeetRequirements(newPassword)) {
 		messagePlayerError(client, "The new password must meet the requirements!");
 		messagePlayerInfo(client, "Passwords must have at least one capital letter, one lowercase letter, and one number!");
 		return false;
 	}
-	
+
 	getPlayerData(client).accountData.password = hashAccountPassword(getPlayerData(client).accountData.name, params);
 	messagePlayerSuccess(client, "Your password has been changed!");
 }
@@ -207,12 +207,12 @@ function setAccountEmailCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 	let emailAddress = splitParams[0];
-	
+
 	if(!isValidEmailAddress(emailAddress)) {
 		messagePlayerError(client, `The email '${emailAddress} is not valid!`);
 		return false;
 	}
-	
+
 	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
 	//getPlayerData(client).accountData.emailAddress = emailAddress;
 	messagePlayerSuccess(client, "Your password has been changed!");
@@ -231,12 +231,12 @@ function setAccountDiscordCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 	let discordName = splitParams[0];
-	
+
 	if(!isValidEmailAddress(emailAddress)) {
 		messagePlayerError(client, `The discord '${discordName} is not valid!`);
 		return false;
 	}
-	
+
 	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
 	//getPlayerData(client).accountData.emailAddress = emailAddress;
 	//messagePlayerSuccess(client, "Your discord account has been attached to your game account!");
@@ -268,7 +268,7 @@ function isPlayerRegistered(client) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -285,7 +285,7 @@ function isAccountPasswordCorrect(accountData, password) {
 	if(accountData.password == password) {
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -295,7 +295,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		accountName = escapeDatabaseString(dbConnection, accountName);
-		let dbQueryString = `SELECT * FROM acct_main WHERE acct_name = '${accountName}' LIMIT 1;`;
+		let dbQueryString = `SELECT *, INET_NTOA(acct_ip) AS ipstring FROM acct_main WHERE acct_name = '${accountName}' LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
@@ -313,7 +313,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 		}
 		disconnectFromDatabase(dbConnection);
 	}
-	
+
 	return false;
 }
 
@@ -322,7 +322,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 function loadAccountFromId(accountId, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = `SELECT *, INET_NTOA(acct_ip) AS ip FROM acct_main WHERE acct_id = ${accountId} LIMIT 1;`;
+		let dbQueryString = `SELECT *, INET_NTOA(acct_ip) AS ipstring FROM acct_main WHERE acct_id = ${accountId} LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
@@ -339,7 +339,7 @@ function loadAccountFromId(accountId, fullLoad = false) {
 		}
 		disconnectFromDatabase(dbConnection);
 	}
-	
+
 	return false;
 }
 
@@ -349,27 +349,27 @@ function getAccountHashingFunction() {
 	switch(toLowerCase(getGlobalConfig().accountPasswordHash)) {
 		case "md5":
 			return module.hashing.md5;
-			
+
 		case "sha1":
 			return module.hashing.sha1;
 
 		case "sha224":
-			return module.hashing.sha224;		
-			
+			return module.hashing.sha224;
+
 		case "sha256":
-			return module.hashing.sha256;	
+			return module.hashing.sha256;
 
 		case "sha384":
-			return module.hashing.sha384;	
+			return module.hashing.sha384;
 
 		case "sha512":
-			return module.hashing.sha512;	
+			return module.hashing.sha512;
 
 		case "ripemd128":
-			return module.hashing.ripemd128;	
+			return module.hashing.ripemd128;
 
 		case "ripemd160":
-			return module.hashing.ripemd160;		
+			return module.hashing.ripemd160;
 
 		case "ripemd256":
 			return module.hashing.ripemd256;
@@ -378,7 +378,7 @@ function getAccountHashingFunction() {
 			return module.hashing.ripemd320;
 
 		case "whirlpool":
-			return module.hashing.whirlpool;			
+			return module.hashing.whirlpool;
 	}
 }
 
@@ -389,7 +389,7 @@ function isNameRegistered(name) {
 	if(accountData.databaseId > 0) {
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -430,7 +430,7 @@ function loginSuccess(client) {
 	} else {
 		showCharacterSelectToClient(client);
 	}
-	
+
 	getPlayerData(client).accountData.ipAddress = client.ip;
 
 	sendRemovedWorldObjectsToPlayer(client);
@@ -443,7 +443,7 @@ function loginSuccess(client) {
 
 function saveAccountToDatabase(accountData) {
 	let dbConnection = connectToDatabase();
-	if(dbConnection) { 
+	if(dbConnection) {
 		let safePassword = escapeDatabaseString(dbConnection, accountData.password);
 		let safeStaffTitle = escapeDatabaseString(dbConnection, accountData.staffTitle);
 		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
@@ -460,7 +460,7 @@ function saveAccountToDatabase(accountData) {
 
 function saveAccountKeyBindsDatabase(keyBindData) {
 	let dbConnection = connectToDatabase();
-	if(dbConnection) { 
+	if(dbConnection) {
 		let safeCommandString = escapeDatabaseString(dbConnection, keyBindData.commandString);
 		if(keyBindData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_cmdstr, acct_hotkey_key, acct_hotkey_down, acct_hotkey_enabled) VALUES ('${safeCommandString}', ${keyBindData.key}, ${boolToInt(keyBindData.keyState)}, ${boolToInt(keyBindData.enabled)}, ${keyBindData.account}`;
@@ -470,7 +470,7 @@ function saveAccountKeyBindsDatabase(keyBindData) {
 		} else {
 			let dbQueryString = `UPDATE acct_hotkey SET acct_hotkey_cmdstr='${safeCommandString}', acct_hotkey_key=${keyBindData.key}, acct_hotkey_down=${boolToInt(keyBindData.keyState)}, acct_hotkey_enabled=${boolToInt(keyBindData.enabled)} WHERE acct_hotkey_id=${keyBindData.databaseId}`;
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
-			freeDatabaseQuery(dbQuery);			
+			freeDatabaseQuery(dbQuery);
 		}
 
 		disconnectFromDatabase(dbConnection);
@@ -481,7 +481,7 @@ function saveAccountKeyBindsDatabase(keyBindData) {
 
 function saveAccountStaffNotesDatabase(staffNoteData) {
 	let dbConnection = connectToDatabase();
-	if(dbConnection) { 
+	if(dbConnection) {
 		let safeNoteContent = escapeDatabaseString(dbConnection, staffNoteData.note);
 		if(staffNoteData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO acct_note (acct_note_message, acct_note_who_added, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${getServerId()}, ${staffNoteData.account}`;
@@ -499,7 +499,7 @@ function saveAccountStaffNotesDatabase(staffNoteData) {
 /*
 function saveAccountContactsDatabase(accountContactData) {
 	let dbConnection = connectToDatabase();
-	if(dbConnection) { 
+	if(dbConnection) {
 		let safeNoteContent = escapeDatabaseString(dbConnection, accountContactData.note);
 		if(accountContactData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO acct_contact (acct_contact_note, acct_contact_, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${getServerId()}, ${staffNoteData.account}`;
@@ -509,7 +509,7 @@ function saveAccountContactsDatabase(accountContactData) {
 		}// else {
 		//	let dbQueryString = `UPDATE acct_hotkey SET acct_hotkey_cmdstr='${safeCommandString}', acct_hotkey_key=${keyBindData.key}, acct_hotkey_down=${boolToInt(keyBindData.keyState)}, acct_hotkey_enabled=${boolToInt(keyBindData.enabled)} WHERE acct_hotkey_id=${keyBindData.databaseId}`;
 		//	let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		//	freeDatabaseQuery(dbQuery);			
+		//	freeDatabaseQuery(dbQuery);
 		//}
 
 		disconnectFromDatabase(dbConnection);
@@ -544,16 +544,16 @@ function checkLogin(client, password) {
 	let loginAttemptsRemaining = getEntityData(client, "ag.loginAttemptsRemaining")-1;
 
 	if(isPlayerLoggedIn(client)) {
+		console.warn(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is already logged in`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			triggerNetworkEvent("ag.loginSuccess", client);
-			console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} has successfully logged in`);
 		} else {
 			messagePlayerError(client, "You are already logged in!");
-			console.warn(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is already logged in`);
 		}
+
 		return false;
 	}
-	
+
 	if(!isPlayerRegistered(client)) {
 		console.warn(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is not registered`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -562,22 +562,22 @@ function checkLogin(client, password) {
 		} else {
 			messagePlayerError(client, "Your name is not registered! Use /register to make an account.");
 			console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
-		}		
+		}
 		return false;
 	}
 
 	if(areParamsEmpty(password)) {
 		console.warn(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (empty password). ${loginAttemptsRemaining} login attempts remaining`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);	
-			console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${loginAttemptsRemaining} login attempts remaining alert.`);	
+			triggerNetworkEvent("ag.loginFailed", client, `Invalid password! ${loginAttemptsRemaining} tries remaining.`);
+			console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${loginAttemptsRemaining} login attempts remaining alert.`);
 		} else {
 			messagePlayerError(client, `You must enter a password! ${loginAttemptsRemaining} tries remaining.`);
 			console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${loginAttemptsRemaining} login attempts remaining alert.`);
 		}
 		return false;
 	}
-	
+
 	if(!isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(client.name, password))) {
 		console.warn(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (wrong password). ${loginAttemptsRemaining} login attempts remaining`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -589,7 +589,7 @@ function checkLogin(client, password) {
 		}
 		return false;
 	}
-	
+
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		triggerNetworkEvent("ag.loginSuccess", client);
 	}
@@ -650,7 +650,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 			return false;
 		}
 	}
-	
+
 	if(!doesPasswordMeetRequirements(password)) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			// Work on this later. Function should return true by default anyway for now.
@@ -675,7 +675,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		} else {
 			messagePlayerAlert(client, "Something went wrong. Your account could not be created!");
 		}
-		
+
 		messagePlayerAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
 		return false;
 	}
@@ -685,7 +685,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	messagePlayerSuccess(client, "Your account has been created!");
 	messagePlayerAlert(client, "To play on the server, you will need to make a character.");
-	
+
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		triggerNetworkEvent("ag.registrationSuccess", client);
 		triggerNetworkEvent("ag.showPrompt", client, "You have no characters. Would you like to make one?", "No Characters");
@@ -718,7 +718,7 @@ function savePlayerToDatabase(client) {
 	if(getPlayerData(client) == null) {
 		return false;
 	}
-	
+
 	if(!getPlayerData(client).loggedIn) {
 		return false;
 	}
@@ -755,7 +755,7 @@ function initClient(client) {
 
 	showConnectCameraToPlayer(client);
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
-	
+
 	setTimeout(function() {
 		let sessionId = saveSessionToDatabase(client);
 		setEntityData(client, "ag.session", sessionId, false);
@@ -763,7 +763,7 @@ function initClient(client) {
 		clearChatBox(client);
 		let tempAccountData = loadAccountFromName(client.name, true);
 		let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
-		
+
 		getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
 
 		if(tempAccountData != false) {
@@ -818,7 +818,7 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
 	let dbAssoc;
-	
+
 	if(dbConnection) {
 		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID}`);
 		if(dbQuery) {
@@ -847,7 +847,7 @@ function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
 	let dbAssoc;
-	
+
 	if(dbConnection) {
 		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `acct_note` WHERE `acct_note_deleted` = 0 AND `acct_note_acct` = " + toString(accountDatabaseID));
 		if(dbQuery) {
@@ -876,7 +876,7 @@ function loadAccountContactsFromDatabase(accountDatabaseID) {
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
 	let dbAssoc;
-	
+
 	if(dbConnection) {
 		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `acct_contact` WHERE `acct_contact_deleted` = 0 AND `acct_contact_acct` = " + toString(accountDatabaseID));
 		if(dbQuery) {
@@ -905,7 +905,7 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
 	let dbAssoc;
-	
+
 	if(dbConnection) {
 		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `acct_msg` WHERE `acct_msg_deleted` = 0 AND `acct_msg_acct` = " + toString(accountDatabaseID));
 		if(dbQuery) {

@@ -11,10 +11,10 @@
 // ----------------------------------------------------------------------------
 
 let databaseConfig = {
-	host: "158.69.238.64",
-	user: "db24053",
-	pass: "G3At3d7BsA",
-	name: "db24053",
+	host: "127.0.0.1",
+	user: "gtac-main",
+	pass: "QaH2rOP7BOBAkuX5V74EsOFi4uh5XO",
+	name: "gtac_main",
 	port: 3306,
 	usePersistentConnection: true,
 }
@@ -41,7 +41,7 @@ function connectToDatabase() {
 		}
 
 		console.log("[Asshat.Database] Database connection successful!");
-		return persistentDatabaseConnection;	
+		return persistentDatabaseConnection;
 	} else {
 		//console.log("[Asshat.Database] Using existing database connection.");
 		return persistentDatabaseConnection;

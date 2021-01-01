@@ -14,13 +14,14 @@
 
 let busRoutes = [
     false,
-    
+
     [ // GTA 3 (1)
         [ // PORTLAND ISLAND (0)
             { // RED ROUTE (0)
-                name: "Portland Red Line", 
-                island: 0, 
+                name: "Portland Red Line",
+                island: 0,
                 busColour: 3,
+                payout: 175,
                 positions: [
                     toVector3(1269, -1056.4, 14.75),
                     toVector3(1088.7, -968.8, 14.91),
@@ -45,135 +46,14 @@ let busRoutes = [
                     toVector3(1307.5, -995.54, 14.88),
                 ],
             },
-            { // BLUE ROUTE (1)
-                name: "Portland Blue Line", 
-                island: 0, 
-                busColour: 2,
-                positions: [
-                    toVector3(1269, -1056.4, 14.75),
-                    toVector3(1088.7, -968.8, 14.91),
-                    toVector3(1059.1, -870.9, 14.91),
-                    toVector3(917.6, -815.9, 14.91),
-                    toVector3(851.1, -766.1, 14.91),
-                    toVector3(838.8, -598.7, 14.91),
-                    toVector3(959.3, -581.6, 14.91),
-                    toVector3(853.1, -485.9, 14.91),
-                    toVector3(838.8, -312.68, 6.8),
-                    toVector3(913.9, -177.4, 4.91),
-                    toVector3(1123.3, -67.74, 7.41),
-                    toVector3(1043.6, -191.63, 4.91),
-                    toVector3(1213.2, -281.3, 25.76),
-                    toVector3(1193.3, -474.3, 24.98),
-                    toVector3(1335.4, -499.7, 45.28),
-                    toVector3(1220.3, -341.4, 26.38),
-                    toVector3(1122.6, -475.6, 19.91),
-                    toVector3(1309.2, -642.4, 12.3),
-                    toVector3(1350.5, -845, 14.91),
-                    toVector3(1322.2, -1025.3, 14.76),
-                    toVector3(1307.5, -995.54, 14.88),
-                ],
-            }, 
-            { // YELLOW ROUTE (2)
-                name: "Portland Yellow Line", 
-                island: 0, 
-                busColour: 6,
-                positions: [
-                    toVector3(1269, -1056.4, 14.75),
-                    toVector3(1088.7, -968.8, 14.91),
-                    toVector3(1059.1, -870.9, 14.91),
-                    toVector3(917.6, -815.9, 14.91),
-                    toVector3(851.1, -766.1, 14.91),
-                    toVector3(838.8, -598.7, 14.91),
-                    toVector3(959.3, -581.6, 14.91),
-                    toVector3(853.1, -485.9, 14.91),
-                    toVector3(838.8, -312.68, 6.8),
-                    toVector3(913.9, -177.4, 4.91),
-                    toVector3(1123.3, -67.74, 7.41),
-                    toVector3(1043.6, -191.63, 4.91),
-                    toVector3(1213.2, -281.3, 25.76),
-                    toVector3(1193.3, -474.3, 24.98),
-                    toVector3(1335.4, -499.7, 45.28),
-                    toVector3(1220.3, -341.4, 26.38),
-                    toVector3(1122.6, -475.6, 19.91),
-                    toVector3(1309.2, -642.4, 12.3),
-                    toVector3(1350.5, -845, 14.91),
-                    toVector3(1322.2, -1025.3, 14.76),
-                    toVector3(1307.5, -995.54, 14.88),
-                ],
-            },                    
         ],
 
         [ // STAUNTON ISLAND (1)
             { // RED ROUTE (0)
-                name: "Staunton Red Line", 
+                name: "Staunton Red Line",
                 island: 1,
                 busColour: 3,
-                positions: [
-                    toVector3(-1.11, -388.4, 16.11),
-                    toVector3(-15.75, -735.3, 26.15),
-                    toVector3(33.63, -1029.4, 26.11),
-                    toVector3(-53.92, -1233.4, 26.11),
-                    toVector3(126.58, -1323.7, 26.11),
-                    toVector3(189.39, -1285.6, 26.11),
-                    toVector3(266.9, -1179.1, 26.11),
-                    toVector3(283.93, -1370.2, 26.11),
-                    toVector3(144.44, -1455.5, 26.11),
-                    toVector3(34.5, -1511.7, 26.11),
-                    toVector3(325.31, -1579, 26.03),
-                    toVector3(302.33, -1417.7, 26.11),
-                    toVector3(309.76, -1290, 26.11),
-                    toVector3(378.5, -1235.1, 26.11),
-                    toVector3(404, -1376.3, 26.11),
-                    toVector3(189.07, -1159.3, 26.11),
-                    toVector3(189.44, -956.9, 26.11),
-                    toVector3(254.18, -722.3, 26.11),
-                    toVector3(383.4, -704.2, 26.11),
-                    toVector3(429.3, -420.6, 22.04),
-                    toVector3(570.9, -336.4, 19.71),
-                    toVector3(267.46, 91.12, 15.96),
-                    toVector3(99.13, -31.96, 16.11),
-                    toVector3(243.94, -187.01, 21.31),
-                    toVector3(99.17, -263.44, 16.11),
-                    toVector3(-26.92, -283.73, 16.11),
-                ],
-            },
-            { // BLUE ROUTE (1)
-                name: "Staunton Blue Line", 
-                island: 1,
-                busColour: 2,
-                positions: [
-                    toVector3(-1.11, -388.4, 16.11),
-                    toVector3(-15.75, -735.3, 26.15),
-                    toVector3(33.63, -1029.4, 26.11),
-                    toVector3(-53.92, -1233.4, 26.11),
-                    toVector3(126.58, -1323.7, 26.11),
-                    toVector3(189.39, -1285.6, 26.11),
-                    toVector3(266.9, -1179.1, 26.11),
-                    toVector3(283.93, -1370.2, 26.11),
-                    toVector3(144.44, -1455.5, 26.11),
-                    toVector3(34.5, -1511.7, 26.11),
-                    toVector3(325.31, -1579, 26.03),
-                    toVector3(302.33, -1417.7, 26.11),
-                    toVector3(309.76, -1290, 26.11),
-                    toVector3(378.5, -1235.1, 26.11),
-                    toVector3(404, -1376.3, 26.11),
-                    toVector3(189.07, -1159.3, 26.11),
-                    toVector3(189.44, -956.9, 26.11),
-                    toVector3(254.18, -722.3, 26.11),
-                    toVector3(383.4, -704.2, 26.11),
-                    toVector3(429.3, -420.6, 22.04),
-                    toVector3(570.9, -336.4, 19.71),
-                    toVector3(267.46, 91.12, 15.96),
-                    toVector3(99.13, -31.96, 16.11),
-                    toVector3(243.94, -187.01, 21.31),
-                    toVector3(99.17, -263.44, 16.11),
-                    toVector3(-26.92, -283.73, 16.11),
-                ],
-            },    
-            { // YELLOW ROUTE (2)
-                name: "Staunton Yellow Line", 
-                island: 1,
-                busColour: 6,
+                payout: 175,
                 positions: [
                     toVector3(-1.11, -388.4, 16.11),
                     toVector3(-15.75, -735.3, 26.15),
@@ -206,13 +86,14 @@ let busRoutes = [
         ],
     ],
 
-    
+
     [ // GTA VC
         [ // WESTERN ISLAND (0)
             { // RED ROUTE (0)
-                name: "Vice City Red Line", 
+                name: "Vice City Red Line",
                 island: 0,
                 busColour: 3,
+                payout: 100,
                 positions: [
                     toVector3(-997.698, 175.8, 10.704),
                     toVector3(-607.007, 659.024, 10.9994),
@@ -228,9 +109,10 @@ let busRoutes = [
                 ],
             },
             { // GREEN ROUTE (1)
-                name: "Vice City Green Line", 
+                name: "Vice City Green Line",
                 island: 0,
                 busColour: 46,
+                payout: 250,
                 positions: [
                     toVector3(-1106.57, -300.12, 11.189),
                     toVector3(-1012.97, -372.445, 10.8688),
@@ -259,46 +141,13 @@ let busRoutes = [
                     toVector3(-748.054, 198.243, 11.2455),
                     toVector3(-850, -110.625, 11.0203),
                     toVector3(-898.862, -280.373, 10.6645),
-                    toVector3(-1082.1, -294.416, 11.2065),                    
-                ],
-            },    
-            { // YELLOW ROUTE (2)
-                name: "Staunton Yellow Line", 
-                island: 1,
-                busColour: 6,
-                positions: [
-                    toVector3(-1.11, -388.4, 16.11),
-                    toVector3(-15.75, -735.3, 26.15),
-                    toVector3(33.63, -1029.4, 26.11),
-                    toVector3(-53.92, -1233.4, 26.11),
-                    toVector3(126.58, -1323.7, 26.11),
-                    toVector3(189.39, -1285.6, 26.11),
-                    toVector3(266.9, -1179.1, 26.11),
-                    toVector3(283.93, -1370.2, 26.11),
-                    toVector3(144.44, -1455.5, 26.11),
-                    toVector3(34.5, -1511.7, 26.11),
-                    toVector3(325.31, -1579, 26.03),
-                    toVector3(302.33, -1417.7, 26.11),
-                    toVector3(309.76, -1290, 26.11),
-                    toVector3(378.5, -1235.1, 26.11),
-                    toVector3(404, -1376.3, 26.11),
-                    toVector3(189.07, -1159.3, 26.11),
-                    toVector3(189.44, -956.9, 26.11),
-                    toVector3(254.18, -722.3, 26.11),
-                    toVector3(383.4, -704.2, 26.11),
-                    toVector3(429.3, -420.6, 22.04),
-                    toVector3(570.9, -336.4, 19.71),
-                    toVector3(267.46, 91.12, 15.96),
-                    toVector3(99.13, -31.96, 16.11),
-                    toVector3(243.94, -187.01, 21.31),
-                    toVector3(99.17, -263.44, 16.11),
-                    toVector3(-26.92, -283.73, 16.11),
+                    toVector3(-1082.1, -294.416, 11.2065),
                 ],
             },
         ],
     ],
 
-    
+
     [ // GTA SA
         [ // LOS SANTOS ISLAND (0)
             { // RED ROUTE (0)
@@ -310,14 +159,15 @@ let busRoutes = [
                         * Unity Station (Yellow, Blue, Green)
                         * Ganton (Green)
                         * Airport Gate (Yellow)
-                        
+
                     Notable Stops:
                         * Docks
                         * Airport Gate
                 */
-                name: "Los Santos Yellow Line", 
+                name: "Los Santos Yellow Line",
                 island: 0,
                 busColour: 6,
+                payout: 200,
                 positions: [
                     toVector3(1823.79, -1852.66, 13.5144),
                     toVector3(1804.12, -1609.59, 13.4419),
@@ -340,7 +190,7 @@ let busRoutes = [
                     toVector3(1963.51, -1969.6, 13.5867),
                     toVector3(1824.2, -1886.48, 13.4287),
                 ]
-            },            
+            },
             { // BLUE ROUTE (1)
                 /*
                     Serves:
@@ -352,7 +202,7 @@ let busRoutes = [
                         * Glen Park (Yellow, Green)
                         * Alhambra Club (Yellow, Green)
                         * All Saints General Hospital (Yellow)
-                        
+
                     Notable Stops:
                         * Madd Doggs Mansion
                         * All Saints General Hospital
@@ -360,11 +210,12 @@ let busRoutes = [
                         * Vinewood Blvd
                         * Vinewood Hills
                         * Santa Maria Beach/Pier
-                */                
-                name: "Los Santos Blue Line", 
+                */
+                name: "Los Santos Blue Line",
                 island: 0,
                 busColour: 2,
-                positions: [        
+                payout: 250,
+                positions: [
                     toVector3(1824.17, -1851.5, 13.5134),
                     toVector3(1853.95, -1395.48, 13.4882),
                     toVector3(1659.33, -1158.59, 23.8368),
@@ -405,17 +256,18 @@ let busRoutes = [
                         * Glen Park (Blue, Yellow)
                         * Ganton (Red)
                         * Alhambra Club (Yellow, Blue)
-                        
+
                     Notable Stops:
                         * County General Hospital
                         * Glen Park
                         * Skate Park
                         * Stadium
                 */
-                name: "Los Santos Green Line", 
+                name: "Los Santos Green Line",
                 island: 0,
                 busColour: 86,
-                positions: [    
+                payout: 175,
+                positions: [
                     toVector3(1823.94, -1853.88, 13.5103),
                     toVector3(1823.97, -1655.31, 13.4738),
                     toVector3(1854.81, -1409.54, 13.4829),
@@ -460,16 +312,17 @@ let busRoutes = [
                         * All Saints General Hospital (Blue)
                         * Alhambra Club (Yellow, Blue)
                         * Airport Gate (Red)
-                        
+
                     Notable Stops:
                         * All Saints General Hospital
                         * Bank
                         * Star Tower
                         * Airport Gate
                 */
-                name: "Los Santos Red Line", 
+                name: "Los Santos Red Line",
                 island: 0,
                 busColour: 3,
+                payout: 150,
                 positions: [
                     toVector3(1823.79, -1852.66, 13.5144),
                     toVector3(1804.12, -1609.59, 13.4419),
@@ -492,7 +345,7 @@ let busRoutes = [
                     toVector3(1963.51, -1969.6, 13.5867),
                     toVector3(1824.2, -1886.48, 13.4287),
                 ]
-            }                    
+            }
         ],
     ],
 
@@ -504,7 +357,7 @@ let busRoutes = [
     // GTA IV
     [
 
-    ], 
+    ],
 ];
 
 // ---------------------------------------------------------------------------
@@ -523,7 +376,7 @@ function getNextStopOnBusRoute(island, busRoute, busRouteStop) {
         return busRouteStop+1;
     } else {
         return busRoutes[getServerGame()][island][busRoute].positions.length-1;
-    }  
+    }
 }
 
 // ---------------------------------------------------------------------------

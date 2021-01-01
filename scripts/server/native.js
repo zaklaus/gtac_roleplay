@@ -12,30 +12,6 @@
 
 // ---------------------------------------------------------------------------
 
-function agSpawnPlayer(client, subAccountData) {
-    return spawnPlayer(client, subAccountData.spawnPosition, subAccountData.spawnRotation, subAccountData.skin);
-}
-
-// ---------------------------------------------------------------------------
-
-function agCreateVehicle(vehicleData) {
-    return createVehicle(vehicleData.model, vehicleData.spawnPosition);
-}
-
-// ---------------------------------------------------------------------------
-
-function agSetVehiclePosition(vehicle, position) {
-    vehicle.position = position;
-}
-
-// ---------------------------------------------------------------------------
-
-function agSetVehicleRotation(vehicle, heading) {
-    vehicle.heading = heading;
-}
-
-// ---------------------------------------------------------------------------
-
 function getServerGame() {
 	return server.game;
 }
@@ -198,6 +174,12 @@ function isPlayerInFrontVehicleSeat(client) {
 function removePlayerFromVehicle(client) {
     triggerNetworkEvent("ag.removeFromVehicle", client);
     return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function setPlayerSkin(client, skin) {
+    client.player.modelIndex = skin;
 }
 
 // ---------------------------------------------------------------------------

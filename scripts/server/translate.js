@@ -12,7 +12,7 @@
 
 function translateMessage(messageText, fromLanguageId, toLanguageId) {
 	let translatedText = "";
-	
+
 	let thisTranslationURL = formatTranslationURL(messageText, fromLanguageId, toLanguageId);
 	httpGet(
 		thisTranslationURL,
@@ -27,7 +27,7 @@ function translateMessage(messageText, fromLanguageId, toLanguageId) {
 		function(data) {
 		}
 	);
-	
+
 	return this.translatedText;
 }
 

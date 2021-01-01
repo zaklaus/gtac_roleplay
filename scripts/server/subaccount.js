@@ -221,7 +221,7 @@ addNetworkHandler("ag.nextCharacter", function(client) {
 
 // ---------------------------------------------------------------------------
 
-async function selectCharacter(client, characterId = -1) {
+function selectCharacter(client, characterId = -1) {
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		triggerNetworkEvent("ag.characterSelectSuccess", client);
 	}
@@ -230,51 +230,28 @@ async function selectCharacter(client, characterId = -1) {
 		getPlayerData(client).currentSubAccount = characterId;
 	}
 
-	let tempSubAccount = getPlayerCurrentSubAccount(client);
-	spawnPlayer(client, tempSubAccount.spawnPosition, tempSubAccount.spawnHeading, tempSubAccount.skin);
+	console.log(`[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} with skin ${getPlayerCurrentSubAccount(client).skin}`);
+	spawnPlayer(client, getPlayerCurrentSubAccount(client).spawnPosition, getPlayerCurrentSubAccount(client).spawnHeading, getPlayerCurrentSubAccount(client).skin);
 
-	tempSubAccount.lastLogin = new Date().getTime();
-
-	messagePlayerAlert(client, `You are now playing as: [#0099FF]${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
-	messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
-	messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
-	
-	triggerNetworkEvent("ag.restoreCamera", client);
-	setEntityData(client, "ag.spawned", true, true);
-	while(client.player == null) {};
-	
-	setTimeout(function() {
-		setEntityData(client.player, "ag.spawned", true, true);
-		//triggerNetworkEvent("ag.restoreCamera", client);
-		setPlayerPosition(client, tempSubAccount.spawnPosition);
-		setPlayerHeading(client, tempSubAccount.spawnHeading);
-		setPlayerInterior(client, tempSubAccount.interior);
-		setPlayerVirtualWorld(client, tempSubAccount.dimension);
-		setTimeout(function() {
-			updatePlayerCash(client);
-		}, 1000);		
-	}, client.ping+1000);
-
-	updateAllPlayerNameTags();
-
-	getPlayerData(client).switchingCharacter = false;
-	triggerNetworkEvent("ag.jobType", client, tempSubAccount.job);
+	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 
 // ---------------------------------------------------------------------------
 
 function switchCharacterCommand(command, params, client) {
-	getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
-	getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
-	//getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
-	//getPlayerCurrentSubAccount(client).dimension = getPlayerVirtualWorld(client);
+	if(isPlayerSpawned(client)) {
+		getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
+		getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
+		//getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
+		//getPlayerCurrentSubAccount(client).dimension = getPlayerVirtualWorld(client);
 
-	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
-	
-	resetClientStuff(client);
+		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
+		
+		resetClientStuff(client);
 
-	client.despawnPlayer();
+		client.despawnPlayer();
+	}
 	showConnectCameraToPlayer(client);
 	showCharacterSelectToClient(client);
 }

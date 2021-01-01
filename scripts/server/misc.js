@@ -149,7 +149,7 @@ function enterExitPropertyCommand(command, params, client) {
 			if(inBusiness.locked) {
 				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
 				return false;
-			}					
+			}
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
 			fadeCamera(client, false, 1.0);
 			setTimeout(function() {
@@ -163,7 +163,7 @@ function enterExitPropertyCommand(command, params, client) {
 			}, 1100);
 			removeEntityData(client, "ag.inBusiness");
 		}
-		return true;	
+		return true;
 	}
 
 	if(getServerData().businesses.length > 0) {
@@ -180,7 +180,7 @@ function enterExitPropertyCommand(command, params, client) {
 				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
 				return false;
 			}
-			
+
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
 
 			fadeCamera(client, false, 1.0);
@@ -215,7 +215,7 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
-			
+
 
 			fadeCamera(client, false, 1.0);
 			setTimeout(function() {
@@ -234,7 +234,7 @@ function enterExitPropertyCommand(command, params, client) {
 	}
 
 	//messagePlayerError(client, "You aren't close enough to a door!");
-	
+
 	return true;
 }
 

@@ -68,7 +68,7 @@ function whisperCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
-	}	
+	}
 
 	whisperToNearbyPlayers(client, params);
 	return true;
@@ -76,7 +76,7 @@ function whisperCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function adminChatCommand(command, params, client) {	
+function adminChatCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -87,7 +87,7 @@ function adminChatCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function clanChatCommand(command, params, client) {	
+function clanChatCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -115,7 +115,7 @@ function whisperToNearbyPlayers(client, messageText) {
 		//if(clients[i] != client) {
 			messagePlayerWhisper(getClientFromPlayerElement(clients[i]), client, messageText);
 		//}
-	}	
+	}
 }
 
 // ---------------------------------------------------------------------------

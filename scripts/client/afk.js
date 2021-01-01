@@ -28,7 +28,7 @@ addEventHandler("OnFocus", function(event) {
 		if(gta.game != GAME_GTA_SA) {
 			gta.setCiviliansEnabled(true);
 		}
-        gta.setTrafficEnabled(true);		
+        gta.setTrafficEnabled(true);
 	}
 });
 

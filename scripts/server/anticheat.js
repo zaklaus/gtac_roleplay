@@ -26,7 +26,7 @@ function loadAntiCheatGameScriptWhiteListFromDatabase() {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
                 let tempWhiteListedGameScriptData = new serverClasses.whiteListedGameScriptData(dbAssoc);
-                
+
                 tempWhiteListedGameScripts.push(tempWhiteListedGameScriptData);
                 console.log(`[Asshat.AntiCheat] Whitelisted game script '${tempWhiteListedGameScriptData.scriptName}' loaded successfully!`);
             }
@@ -51,7 +51,7 @@ function loadAntiCheatGameScriptBlackListFromDatabase() {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
                 let tempBlackListedGameScriptData = new serverClasses.blackListedGameScriptData(dbAssoc);
-                
+
                 tempBlackListedGameScripts.push(tempBlackListedGameScriptData);
                 console.log(`[Asshat.AntiCheat] Blacklisted game script '${tempBlackListedGameScriptData.scriptName}' loaded successfully!`);
             }

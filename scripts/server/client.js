@@ -17,10 +17,10 @@ addNetworkHandler("ag.promptAnswerNo", function(client) {
 
     switch(getEntityData(client, "ag.prompt")) {
         case AG_PROMPT_CREATEFIRSTCHAR:
-            triggerNetworkEvent("ag.showError", client, "You don't have a character to play. Goodbye!", "No Characters");            
+            triggerNetworkEvent("ag.showError", client, "You don't have a character to play. Goodbye!", "No Characters");
             setTimeout(function() { client.disconnect(); }, 5000);
             break;
-        
+
         default:
             break;
     }
@@ -38,8 +38,8 @@ addNetworkHandler("ag.promptAnswerYes", function(client) {
     switch(getEntityData(client, "ag.prompt")) {
         case AG_PROMPT_CREATEFIRSTCHAR:
             triggerNetworkEvent("ag.showNewCharacter", client);
-            break;   
-            
+            break;
+
         default:
             break;
     }
@@ -79,28 +79,28 @@ addNetworkHandler("ag.afk", function(client, afkState) {
 // Not implemented yet
 addNetworkHandler("ag.heldKey", function(client, key) {
     switch(key) {
-        case getGlobalConfig().keybinds.actionKey: 
+        case getGlobalConfig().keybinds.actionKey:
             processHoldActionKey(client);
             break;
 
-        case getGlobalConfig().keybinds.vehicleLightsKey: 
+        case getGlobalConfig().keybinds.vehicleLightsKey:
             processHoldVehicleLightsKey(client);
             break;
 
-        case getGlobalConfig().keybinds.vehicleLockKey: 
+        case getGlobalConfig().keybinds.vehicleLockKey:
             processHoldVehicleLockKey(client);
             break;
 
-        case getGlobalConfig().keybinds.vehicleEngineKey: 
+        case getGlobalConfig().keybinds.vehicleEngineKey:
             processHoldVehicleEngineKey(client);
-            break;             
+            break;
     }
 });
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.player.death", function(client, position, heading) {
-    processPlayerDeath(client);
+addNetworkHandler("ag.player.death", function(client, position) {
+    processPlayerDeath(client, position);
 });
 
 // ---------------------------------------------------------------------------
@@ -139,6 +139,13 @@ addNetworkHandler("ag.clientReady", function(client) {
 	if(client.getData("ag.isStarted") == true) {
 		initClient(client);
 	}
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.guiReady", function(client) {
+	client.setData("ag.guiReady", true, false);
+    console.log(`${getPlayerDisplayForConsole(client)}'s client GUI is initialized and ready!`);
 });
 
 // ---------------------------------------------------------------------------

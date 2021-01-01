@@ -263,7 +263,7 @@ function playerUsedKeyBind(client, key) {
 
     if(!isPlayerSpawned(client)) {
         return false;
-    }    
+    }
 
     console.log(`[Asshat.KeyBind] ${getPlayerDisplayForConsole(client)} used keybind ${sdl.getKeyName(key)} (${key})`);
     if(doesPlayerHaveKeyBindForKey(client, key)) {

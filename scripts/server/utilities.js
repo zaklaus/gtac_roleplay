@@ -31,11 +31,11 @@ let policeStations = [
 		[340.25, -1123.375, 25.98],		// Staunton Island
 		[-1253.0, -138.1875, 58.75],	// Shoreside Vale
 	],
-	
+
 	[ // GTA Vice City
 		[399.77, -468.90, 11.73],		// Washington Beach
 		[508.96, 512.07, 12.10],		// Vice Point
-		[-657.43, 762.31, 11.59],		// Downtown	
+		[-657.43, 762.31, 11.59],		// Downtown
 		[-885.08, -470.44, 13.11],		// Little Havana
 	],
 ];
@@ -49,7 +49,7 @@ let fireStations = [
 		[-78.48, -436.80, 16.17], 		// Staunton Island
 		[-1202.10, -14.67, 53.20],		// Shoreside Vale
 	],
-	
+
 	[ // GTA Vice City
 		[-695.15, 912.58, 11.08],		// Downtown
 	],
@@ -60,9 +60,9 @@ let fireStations = [
 let hospitals = [
 	[],
 	[ // GTA III
-		
+
 	],
-	
+
 	[ // GTA Vice City
 		[-822.57, 1152.82, 12.41],		// Downtown (Shuman Health Care Center)
 		[-885.08, -470.44, 13.11],		// Little Havana (West Haven Community Health Care Center)
@@ -78,7 +78,7 @@ let payAndSprays = [
 		[925.4, -360.3, 10.83], 		// Portland
 		[-1142.4, 35.01, 58.61],		// Shoreside Vale
 	],
-	
+
 	[ // GTA Vice City
 		[-869.95, -119.06, 10.63],		// Little Haiti
 		[-910.82, -1265.96, 11.79],		// Viceport
@@ -93,7 +93,7 @@ let ammuNations = [
 		[1068.3, -400.9, 15.24], 		// Portland
 		[348.2, -717.9, 26.43], 		// Staunton Island
 	],
-	
+
 	[ // GTA Vice City
 		[-676.32, 1204.98, 11.10],		// Downtown
 	],
@@ -103,27 +103,27 @@ let ammuNations = [
 
 let hiddenPackages = [
 	[
-		[1105.25, -1020, 25.0625], 
-		[877.562, -788, 27.5625],  
-		[1254, -611.188, 22.75],   
-		[1045.75, -967.062, 16],   
+		[1105.25, -1020, 25.0625],
+		[877.562, -788, 27.5625],
+		[1254, -611.188, 22.75],
+		[1045.75, -967.062, 16],
 		[942.062, -793.375, 14.875],
-		[934, -718.875, 14.75],    
-		[898.062, -414.688, 26.5], 
+		[934, -718.875, 14.75],
+		[898.062, -414.688, 26.5],
 		[846.875, -442.5, 23.1875],
 		[927.062, -404.375, 29.0625],
-		[864.25, -171.5, 3.5],     
+		[864.25, -171.5, 3.5],
 		[1538.25, -174.375, 19.1875],
 		[1213.06, -127.062, 15.0625],
-		[753.562, 137, 3.5],       
-		[1162, -101.75, 12],       
-		[1155.56, -191.5, 14.375], 
-		[1285.5, -247.5, 42.375],  
+		[753.562, 137, 3.5],
+		[1162, -101.75, 12],
+		[1155.56, -191.5, 14.375],
+		[1285.5, -247.5, 42.375],
 		[1007.19, -219.562, 6.6875],
-		[1138.19, -250, 24.25],    
+		[1138.19, -250, 24.25],
 		[1023.56, -423.688, 14.875],
 		[1237.5, -854.062, 20.5625],
-		[1478.25, -1150.69, 12],   
+		[1478.25, -1150.69, 12],
 		[1018.88, -56.75, 21],
 		[1465.69, -166.5, 55.5],
 		[1120.19, -926.188, 16],
@@ -211,29 +211,29 @@ let hiddenPackages = [
 // ---------------------------------------------------------------------------
 
 let weekDays = [
-	"Sunday", 
-	"Monday", 
-	"Tuesday", 
-	"Wednesday", 
-	"Thursday", 
-	"Friday", 
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
 	"Saturday"
 ];
 
 // ---------------------------------------------------------------------------
 
 let months = [
-	"January", 
-	"February", 
-	"March", 
-	"April", 
-	"May", 
-	"June", 
-	"July", 
-	"August", 
-	"September", 
-	"October", 
-	"November", 
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
 	"December"
 ];
 
@@ -241,13 +241,13 @@ let months = [
 
 let cardinalDirections = [
 	"North",
-	"Northeast", 
-	"East", 
-	"Southeast", 
-	"South", 
-	"Southwest", 
-	"West", 
-	"Northwest", 
+	"Northeast",
+	"East",
+	"Southeast",
+	"South",
+	"Southwest",
+	"West",
+	"Northwest",
 	"Unknown"
 ];
 
@@ -257,7 +257,7 @@ function areParamsEmpty(params) {
 	if(!params || params == "" || params.length == 0 || typeof params == "undefined") {
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -314,7 +314,7 @@ function getWeaponModelId(weaponId) {
 
 function getIsland(position) {
     if(getServerGame() == GAME_GTA_III) {
-		if(position.x > 616) {        
+		if(position.x > 616) {
 			return 0;
 		} else if(position.x < -283) {
 			return 2;
@@ -352,12 +352,12 @@ function makeReadableTime(hour, minute) {
 	let hourStr = toString(hour);
 	let minuteStr = toString(minute);
 	let meridianStr = "AM";
-	
+
 	if(hour < 10) {
 		hourStr = "0" + toString(hour);
 		meridianStr = "AM";
 	}
-	
+
 	if(hour > 12) {
 		let actualHour = hour-12;
 		if(actualHour < 10) {
@@ -367,11 +367,11 @@ function makeReadableTime(hour, minute) {
 		}
 		meridianStr = "PM";
 	}
-	
+
 	if(minute < 10) {
 		minuteStr = "0" + toString(minute);
 	}
-	
+
 	return hourStr + ":" + minuteStr + " " + meridianStr;
 }
 
@@ -380,9 +380,9 @@ function makeReadableTime(hour, minute) {
 function getPosToRightOfPos(pos, angle, distance) {
 	let x = (pos.x+((Math.cos((-angle+1.57)+(Math.PI/2)))*distance));
 	let y = (pos.y+((Math.sin((-angle+1.57)+(Math.PI/2)))*distance));
-	
+
 	let rightPos = toVector3(x, y, pos.z);
-	
+
 	return rightPos;
 }
 
@@ -391,9 +391,9 @@ function getPosToRightOfPos(pos, angle, distance) {
 function getPosToLeftOfPos(pos, angle, distance) {
 	let x = (pos.x+((Math.cos((angle+1.57)+(Math.PI/2)))*distance));
 	let y = (pos.y+((Math.sin((angle+1.57)+(Math.PI/2)))*distance));
-	
+
 	let leftPos = toVector3(x, y, pos.z);
-	
+
 	return leftPos;
 }
 
@@ -403,7 +403,7 @@ function getPosInFrontOfPos(pos, angle, distance) {
 	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
 	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
 	let z = pos.z;
-	
+
 	return toVector3(x, y, z);
 }
 
@@ -413,7 +413,7 @@ function getPosBehindPos(pos, angle, distance) {
 	let x = (pos.x+((Math.cos(angle-(Math.PI/2)))*distance));
 	let y = (pos.y+((Math.sin(angle-(Math.PI/2)))*distance));
 	let z = pos.z;
-	
+
 	return toVector3(x,y,z);
 }
 
@@ -458,7 +458,7 @@ function radToDeg(rad) {
 function getAngleInCircleFromCenter(center, total, current) {
 	let gap = 360 / total;
 	let deg = Math.floor(gap*current);
-	
+
 	if(deg <= 0) {
 		deg = 1;
 	} else {
@@ -466,7 +466,7 @@ function getAngleInCircleFromCenter(center, total, current) {
 			deg = 359;
 		}
 	}
-	
+
 	return degToRad(deg);
 }
 
@@ -586,15 +586,15 @@ function isParamsInvalid(params) {
 	if(params == null) {
 		return true;
 	}
-	
+
 	if(params == "") {
 		return true;
 	}
-	
+
 	if(params.length == 0) {
-		return true;	
+		return true;
 	}
-	
+
 	return false;
 }
 
@@ -605,22 +605,22 @@ function isValidVehicleModel(modelId) {
 		if(modelId < 90 || modelId > 150) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	if(getServerGame() == GAME_GTA_VC) {
 		if(modelId < 130 || modelId > 236) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	if(getServerGame() == GAME_GTA_SA) {
 		return true;
 	}
-	
+
 	if(getServerGame() == GAME_GTA_IV) {
 		return true;
 	}
@@ -633,24 +633,24 @@ function isValidVehicleModel(modelId) {
 function getVehicleModelIdFromParams(params) {
 	if(isNaN(params)) {
 		let modelId = getVehicleModelIdFromName(params);
-		
+
 		if(!modelId) {
 			return false;
 		}
-		
+
 		if(isValidVehicleModel(toInteger(modelId))) {
 			return toInteger(modelId);
 		}
-		
-		return false;		
+
+		return false;
 	} else {
 		if(isValidVehicleModel(toInteger(params))) {
 			return toInteger(params);
 		}
-		
+
 		return false;
 	}
-	
+
 	return false;
 }
 
@@ -662,15 +662,15 @@ function getVehicleModelIdFromName(params) {
 			if(toLowerCase(getGameData().gtaivVehicleModels[i][0]).indexOf(toLowerCase(params)) != -1) {
 				return getGameData().gtaivVehicleModels[i][1];
 			}
-		}	
+		}
 	} else {
 		let vehicleNames = getGameData().vehicleNames[getServerGame()];
 		for(let i in vehicleNames) {
 			if(toLowerCase(vehicleNames[i]).indexOf(toLowerCase(params)) != -1) {
 				return toInteger(i)+toInteger(getGameData().vehicleModelIdStart[getServerGame()]);
 			}
-		}		
-	}	
+		}
+	}
 
 	return false;
 }
@@ -685,11 +685,11 @@ function doesWordStartWithVowel(word) {
 		case "o":
 		case "u":
 			return true;
-		
+
 		default:
 			return false;
 	}
-	
+
 	return false;
 }
 
@@ -740,7 +740,7 @@ function getClientFromName(clientName) {
 			return clients[i];
 		}
 	}
-	
+
 	return false;
 }
 
@@ -753,7 +753,7 @@ function getClientFromPlayer(player) {
 			return clients[i];
 		}
 	}
-	
+
 	return false;
 }
 
@@ -771,14 +771,14 @@ function getPlayerFromParams(params) {
 				if(toLowerCase(getCharacterFullName(clients[i])).indexOf(toLowerCase(params)) != -1) {
 					return clients[i];
 				}
-			}	
+			}
 		}
 	} else {
 		if(typeof clients[toInteger(params)] != "undefined") {
 			return clients[toInteger(params)];
-		}			
+		}
 	}
-	
+
 	return false;
 }
 
@@ -792,7 +792,7 @@ function getFirstEmptyEffectSlot(isServer = false) {
 			}
 		}
 	}
-	
+
 	return false;
 }
 
@@ -826,7 +826,7 @@ function createBitwiseTable(tableKeys) {
 	let bitVal = 0;
 	let bitTable = {};
 	let incVal = 1;
-	
+
 	for(let i in tableKeys) {
 		let key = tableKeys[i];
 		bitTable[key] = bitVal;
@@ -860,11 +860,11 @@ function getCardinalDirection(pos1, pos2) {
 	let a = pos1.x - pos2.x;
 	let b = pos1.y - pos2.y;
 	let c = pos1.z - pos2.z;
-	
+
 	let x = Math.abs(a);
 	let y = Math.abs(b);
 	let z = Math.abs(c);
-	
+
 	let no = 0;
 	let ne = 1;
 	let ea = 2;
@@ -874,7 +874,7 @@ function getCardinalDirection(pos1, pos2) {
 	let we = 6;
 	let nw = 7;
 	let na = 8;
-	
+
 	if(b < 0 && a < 0){
 		if(x < (y/2)){
 			return no;
@@ -921,19 +921,19 @@ function getTimeDifferenceDisplay(unixTimeOne, unixTimeTwo) {
     let minutes = floor(timeDifference/60);
     let hourString = "";
 	let minuteString = "";
-	
+
     if(hours == 1) {
         hourString = "1 hour";
     } else {
         hourString = toString(hours) + " hours";
     }
-    
+
     if(minutes == 1) {
         minuteString = "1 minute";
     } else {
         minuteString = toString(minutes) + " minute";
     }
-    
+
     return hourString + " and " + minuteString;
 }
 
@@ -1027,16 +1027,16 @@ function getRandomRGB() {
 function breakText(text, maxLength) {
 	let lines = [];
 	let j = Math.floor(text.length / maxLength);
-	
+
 	for(let i = 0; i < j; i++) {
 		lines.push(text.substr(i*maxLength,maxLength));
 	}
-	
+
 	let line = text.substr(j*maxLength, text.length % maxLength);
 	if(line.length > 0) {
 		lines.push(line);
 	}
-	
+
 	return lines;
 }
 
@@ -1059,7 +1059,7 @@ function getArrayOfElementId(elements) {
 	for(let i in elements) {
 		tempArray.push(elements[i].id);
 	}
-	
+
 	return tempArray;
 }
 
@@ -1082,7 +1082,7 @@ function isValidSkin(skin, game = GAME_GTA_III) {
 		switch(skin) {
 			case 111:
 				return false;
-			
+
 			default:
 				return true;
 		}
@@ -1252,11 +1252,11 @@ function sendAllPoliceStationBlips(client) {
 		let tempBlips = [];
 		for(let i in getServerData().policeStations[getServerGame()]) {
 			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].policeStation, 
-				getServerData().policeStations[getServerGame()][i].position.x, 
-				getServerData().policeStations[getServerGame()][i].position.y, 
-				getServerData().policeStations[getServerGame()][i].position.z, 
-				3, 
+				getGameConfig().blipSprites[getServerGame()].policeStation,
+				getServerData().policeStations[getServerGame()][i].position.x,
+				getServerData().policeStations[getServerGame()][i].position.y,
+				getServerData().policeStations[getServerGame()][i].position.z,
+				3,
 				getColourByName("policeBlue"),
 			]);
 		}
@@ -1271,11 +1271,11 @@ function sendAllFireStationBlips(client) {
 		let tempBlips = [];
 		for(let i in getServerData().fireStations[getServerGame()]) {
 			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].fireStation, 
-				getServerData().fireStations[getServerGame()][i].position.x, 
-				getServerData().fireStations[getServerGame()][i].position.y, 
-				getServerData().fireStations[getServerGame()][i].position.z, 
-				3, 
+				getGameConfig().blipSprites[getServerGame()].fireStation,
+				getServerData().fireStations[getServerGame()][i].position.x,
+				getServerData().fireStations[getServerGame()][i].position.y,
+				getServerData().fireStations[getServerGame()][i].position.z,
+				3,
 				getColourByName("firefighterRed"),
 			]);
 		}
@@ -1290,11 +1290,11 @@ function sendAllHospitalBlips(client) {
 		let tempBlips = [];
 		for(let i in getServerData().hospitals[getServerGame()]) {
 			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].hospital, 
-				getServerData().hospitals[getServerGame()][i].position.x, 
-				getServerData().hospitals[getServerGame()][i].position.y, 
-				getServerData().hospitals[getServerGame()][i].position.z, 
-				3, 
+				getGameConfig().blipSprites[getServerGame()].hospital,
+				getServerData().hospitals[getServerGame()][i].position.x,
+				getServerData().hospitals[getServerGame()][i].position.y,
+				getServerData().hospitals[getServerGame()][i].position.z,
+				3,
 				getColourByName("medicPink"),
 			]);
 		}
@@ -1309,11 +1309,11 @@ function sendAllAmmunationBlips(client) {
 		let tempBlips = [];
 		for(let i in getServerData().ammunations[getServerGame()]) {
 			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].ammunation, 
-				getServerData().ammunations[getServerGame()][i].position.x, 
-				getServerData().ammunations[getServerGame()][i].position.y, 
-				getServerData().ammunations[getServerGame()][i].position.z, 
-				3, 
+				getGameConfig().blipSprites[getServerGame()].ammunation,
+				getServerData().ammunations[getServerGame()][i].position.x,
+				getServerData().ammunations[getServerGame()][i].position.y,
+				getServerData().ammunations[getServerGame()][i].position.z,
+				3,
 				0
 			]);
 		}
@@ -1328,11 +1328,11 @@ function sendAllPayAndSprayBlips(client) {
 		let tempBlips = [];
 		for(let i in getServerData().payAndSprays[getServerGame()]) {
 			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].payAndSpray, 
-				getServerData().payAndSprays[getServerGame()][i].position.x, 
-				getServerData().payAndSprays[getServerGame()][i].position.y, 
-				getServerData().payAndSprays[getServerGame()][i].position.z, 
-				3, 
+				getGameConfig().blipSprites[getServerGame()].payAndSpray,
+				getServerData().payAndSprays[getServerGame()][i].position.x,
+				getServerData().payAndSprays[getServerGame()][i].position.y,
+				getServerData().payAndSprays[getServerGame()][i].position.z,
+				3,
 				0
 			]);
 		}
@@ -1347,11 +1347,11 @@ function sendAllFuelStationBlips(client) {
 		let tempBlips = [];
 		for(let i in getServerData().fuelStations[getServerGame()]) {
 			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].fuelStation, 
-				getServerData().fuelStations[getServerGame()][i].position.x, 
-				getServerData().fuelStations[getServerGame()][i].position.y, 
-				getServerData().fuelStations[getServerGame()][i].position.z, 
-				3, 
+				getGameConfig().blipSprites[getServerGame()].fuelStation,
+				getServerData().fuelStations[getServerGame()][i].position.x,
+				getServerData().fuelStations[getServerGame()][i].position.y,
+				getServerData().fuelStations[getServerGame()][i].position.z,
+				3,
 				getColourByName("burntOrange"),
 			]);
 		}
@@ -1480,10 +1480,10 @@ function processHoldActionKey(client) {
 function processPressActionKey(client) {
 	// Check job stuff
 	let closestJob = getClosestJob(client.player.position);
-	
+
 	if(getPlayerCurrentSubAccount(client).job == AG_JOB_NONE) {
 		if(closestJob.position.distance(client.player.position) <= getGlobalConfig().takeJobDistance) {
-			
+
 		}
 	}
 }
@@ -1503,7 +1503,7 @@ function processHoldVehicleLockKey(client) {
 // ---------------------------------------------------------------------------
 
 function processHoldVehicleEngineKey(client) {
-	
+
 }
 
 // ---------------------------------------------------------------------------
@@ -1522,7 +1522,7 @@ function getClientChatColour(client) {
 
 function showConnectCameraToPlayer(client) {
 	triggerNetworkEvent("ag.connectCamera", client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
-	//triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);	
+	//triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 }
 
 // ---------------------------------------------------------------------------
@@ -1732,7 +1732,7 @@ function getSkinIdFromName(params, gameId = getServerGame()) {
 function getClosestHospital(position) {
 	let closest = 0;
 	for(let i in getServerData().hospitals[getServerGame()]) {
-		if(getServerData().hospitals[getServerGame()][i].position.distance(position) < getServerData().hospitals[getServerGame()][closest].position) {
+		if(getDistance(getServerData().hospitals[getServerGame()][i].position, position) < getDistance(getServerData().hospitals[getServerGame()][closest].position, position)) {
 			closest = i;
 		}
 	}

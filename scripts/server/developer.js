@@ -155,12 +155,12 @@ function executeClientCodeCommand(command, params, client) {
 
 	if(!targetClient) {
 		messagePlayerError(client, "That player was not found!");
-		return false;		
+		return false;
 	}
 
 	if(targetCode == "") {
 		messagePlayerError(client, "You didn't enter any code!");
-		return false;		
+		return false;
 	}
 
 	triggerNetworkEvent("ag.runCode", targetClient, targetCode, client.index);
@@ -226,7 +226,7 @@ function submitIdea(client, ideaText) {
 	} else {
 		databaseId = getPlayerData(client).accountData.databaseId;
 	}
-		
+
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeIdeaMessage = escapeDatabaseString(dbConnection, ideaText);

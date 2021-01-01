@@ -41,37 +41,37 @@ function helpCommand(command, params, client) {
 
         case "vehicle":
             showVehicleHelpMessage(client);
-            break; 
+            break;
 
         case "dealership":
             showVehicleDealershipHelpMessage(client);
-            break;    
-            
+            break;
+
         case "job":
             showJobHelpMessage(client);
-            break;             
-            
+            break;
+
         case "chat":
             showChatHelpMessage(client);
-            break; 
+            break;
 
         case "rules":
             showRulesHelpMessage(client);
-            break; 
-                
+            break;
+
         case "website":
             showWebsiteHelpMessage(client);
             break;
-            
+
         case "discord":
             showDiscordHelpMessage(client);
             break;
-            
+
         case "anim":
         case "animation":
             showAnimationHelpMessage(client);
             break;
-            
+
         case "ammunation":
         case "ammu":
             showAmmunationHelpMessage(client);
@@ -81,8 +81,8 @@ function helpCommand(command, params, client) {
         case "clothes":
             showClothesHelpMessage(client);
             break;
-        
-        case "key":            
+
+        case "key":
         case "keys":
         case "keybinds":
         case "bindkey":
@@ -133,7 +133,7 @@ function showAccountHelpMessage(client) {
 
 function showVehicleHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Vehicle Help [#FF9900]=============================");
-    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Visit dealerships to buy new vehicles (Use [#AAAAAA]/help dealership [#FFFFFF]for more info.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Visit dealerships to buy new vehicles (Use [#AAAAAA]/help dealership [#FFFFFF]for more info.)");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some commands: [#AAAAAA]/lock, /engine, /lights, /trunk, /rentveh, /buyveh, /rentprice, /buyprice");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Your personal vehicles will save wherever you or somebody else leaves them!");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Visit a mechanic garage to repair, colour, and tune up your car! [#AAAAAA]/help mechanic [#FFFFFF] for info");
@@ -179,7 +179,7 @@ function showRulesHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]No terrorist or terrorism roleplay is allowed.");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Always follow instructions given by moderators and admins.");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Do not mix the chats (metagaming). You can't use info in IC that was received OOC");
-    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Keep English in main chats. If you aren't good at English, use [#AAAAAA]/help [#FFFFFF]language");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Keep English in main chats. If you aren't good at English, use [#AAAAAA]/help language");
 }
 
 // ----------------------------------------------------------------------------
@@ -246,7 +246,7 @@ function showApproachJobWhileUnemployedTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachJobWhileUnemployed) {
         messagePlayerTip(client, `Approach the icon and use /jobinfo to see details about this job.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.approachJobWhileUnemployed;
-    }  
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -255,7 +255,7 @@ function showTakeNearbyJobTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.takeJobWhileUnemployed) {
         messagePlayerTip(client, `You are nearby a job location. Look for the spinning icon.`);
         getPlayerData(client).accountData.shownTips = getPlayerData(client).accountData.shownTips | shownTipsFlags.takeJobWhileUnemployed;
-    }  
+    }
 }
 
 // ----------------------------------------------------------------------------

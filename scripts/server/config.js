@@ -26,7 +26,7 @@ let globalConfig = {
 	takeJobDistance: 5,
 	stopWorkingDistance: 10,
 	spawnCarDistance: 5,
-	payAndSprayDistance: 5,	
+	payAndSprayDistance: 5,
 	defaultKeybinds: [
 		new serverClasses.keyBindData(false, toInteger(SDLK_i), "engine"),
 		new serverClasses.keyBindData(false, toInteger(SDLK_k), "lights"),
@@ -37,8 +37,8 @@ let globalConfig = {
 	],
 	exitPropertyDistance: 3.0,
 	enterPropertyDistance: 3.0,
-	businessDimensionStart: 1000,
-	houseDimensionStart: 3000,	
+	businessDimensionStart: 5000,
+	houseDimensionStart: 100,
 	buyVehicleDriveAwayDistance: 25.0,
 	returnToJobVehicleTime: 30,
 };
@@ -49,7 +49,7 @@ let gameConfig = {
 		{	// GTA III
 			policeStation: 8,
 			fireStation: 9,
-			hospital: 12, 
+			hospital: 12,
 			ammunation: 20,
 			payAndSpray: 18,
 			vehicleDealership: 6,
@@ -63,7 +63,7 @@ let gameConfig = {
 		{	// GTA VC
 			policeStation: 0,
 			fireStation: 0,
-			hospital: 0, 
+			hospital: 0,
 			ammunation: 16,
 			payAndSpray: 27,
 			vehicleDealership: 7,
@@ -72,12 +72,12 @@ let gameConfig = {
 			bank: 0,
 			fuelStation: -1,
 			business: -1,
-			house: -1,			
+			house: -1,
 		},
 		{	// GTA SA
 			policeStation: 30,
 			fireStation: 20,
-			hospital: 22, 
+			hospital: 22,
 			ammunation: 6,
 			payAndSpray: 63,
 			vehicleDealership: 55,
@@ -92,12 +92,12 @@ let gameConfig = {
 			bank: 52,
 			fuelStation: 0,
 			business: -1,
-			house: 31,		
+			house: 31,
 		},
 		{	// GTA UG
 			policeStation: 8,
 			fireStation: 9,
-			hospital: 12, 
+			hospital: 12,
 			ammunation: 20,
 			payAndSpray: 18,
 			vehicleDealership: 6,
@@ -106,12 +106,12 @@ let gameConfig = {
 			bank: 52,
 			fuelStation: 0,
 			business: -1,
-			house: -1,			
+			house: -1,
 		},
 		{	// GTA IV
 			policeStation: 8,
 			fireStation: 9,
-			hospital: 12, 
+			hospital: 12,
 			ammunation: 20,
 			payAndSpray: 18,
 			vehicleDealership: 6,
@@ -120,8 +120,8 @@ let gameConfig = {
 			bank: 52,
 			fuelStation: 0,
 			business: -1,
-			house: -1,			
-		},						
+			house: -1,
+		},
 	],
 	pickupModels: [
 		{},
@@ -129,7 +129,7 @@ let gameConfig = {
 		{ // GTA 3
 			policeStation: 1361,
 			fireStation: 1361,
-			hospital: 1361, 
+			hospital: 1361,
 			ammunation: 1361,
 			payAndSpray: 1361,
 			vehicleDealership: 1361,
@@ -143,11 +143,11 @@ let gameConfig = {
 			misc: 1361,
 			exit: 1361
 		},
-		
+
 		{ // GTA Vice City
 			policeStation: 375,
 			fireStation: 406,
-			hospital: 366, 
+			hospital: 366,
 			ammunation: 406,
 			payAndSpray: 406,
 			vehicleDealership: 406,
@@ -165,7 +165,7 @@ let gameConfig = {
 		{ // GTA San Andreas
 			policeStation: 1247,
 			fireStation: 1318,
-			hospital: 1240, 
+			hospital: 1240,
 			ammunation: 1239,
 			payAndSpray: 1239,
 			vehicleDealership: 1239,
@@ -190,7 +190,7 @@ let gameConfig = {
 			clothes: 0,
 			info: 0,
 		},
-		
+
 		{ // GTA Vice City
 			business: 0,
 			house: 0,
@@ -205,7 +205,7 @@ let gameConfig = {
 			bank: 1,
 			clothes: 1,
 			info: 1,
-		}	
+		}
 	],
 
 	// THIS IS SCREEN HEIGHT, NOT ACTUAL DOOR POSITION IN THE WORLD
@@ -222,21 +222,48 @@ let gameConfig = {
 	removedWorldObjects: [
 		false,
 		[
-			new serverClasses.removedWorldObjectData("fraightback04", new Vec3(1229.88, -84.8012, 13.4004), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
-			new serverClasses.removedWorldObjectData("fraightback03", new Vec3(1239.49, -68.0529, 11.6914), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
+			new serverClasses.removedWorldObjectData("fraightback04", toVector3(1229.88, -84.8012, 13.4004), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
+			new serverClasses.removedWorldObjectData("fraightback03", toVector3(1239.49, -68.0529, 11.6914), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
 		],
 		[],
 		[],
 		[],
 		[],
 		[],
-	]
+	],
+
+	interiorTemplates: [
+		false,
+		{ // GTA 3
+
+		},
+		{ // GTA VC
+			mall: new serverClasses.interiorTemplateData(toVector3(379.62, 1007.00, 19.22), 4),
+			malibuClub: new serverClasses.interiorTemplateData(toVector3(489.83, -76.49, 11.48), 17),
+			policeStation: new serverClasses.interiorTemplateData(toVector3(396.38, -472.96, 12.34), 12),
+			apartment: new serverClasses.interiorTemplateData(toVector3(26.67, -1328.89, 13.00), 11),
+			hotel: new serverClasses.interiorTemplateData(toVector3(228.53, -1277.12, 12.07), 1),
+			bikerBar: new serverClasses.interiorTemplateData(toVector3(-597.41, 651.84, 11.30), 11),
+			mansion: new serverClasses.interiorTemplateData(toVector3(-379.14, -551.65, 19.32), 2),
+			ammunationRange: new serverClasses.interiorTemplateData(toVector3(-667.79, 1217.51, 11.10), 10),
+			bank: new serverClasses.interiorTemplateData(toVector3(-894.52, -341.16, 13.45), 3),
+			stripClub: new serverClasses.interiorTemplateData(toVector3(97.53, -1472.06, 10.43), 5),
+			office: new serverClasses.interiorTemplateData(toVector3(120.82, -827.98, 10.62), 6),
+			arena: new serverClasses.interiorTemplateData(toVector3(-1080.49, 1331.16, 13.91), 15),
+			ghettoShack: new serverClasses.interiorTemplateData(toVector3(-962.72, 146.11, 9.395), 12),
+		},
+		{ // GTA SA
+
+		}
+	],
 };
 
 // ----------------------------------------------------------------------------
 
 function initConfigScript() {
 	console.log("[Asshat.Config]: Initializing config script ...");
+	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
+	applyConfigToServer(serverConfig);
 	console.log("[Asshat.Config]: Config script initialized!");
 }
 
@@ -256,7 +283,7 @@ function loadServerConfigFromGameAndPort(gameId, port) {
 			}
 		}
 		disconnectFromDatabase(dbConnection);
-	}	
+	}
 	return false;
 }
 
@@ -297,7 +324,7 @@ function applyConfigToServer(tempServerConfig) {
 function saveServerConfigToDatabase(serverConfigData) {
 	console.log(`[Asshat.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
 	let dbConnection = connectToDatabase();
-	if(dbConnection) { 
+	if(dbConnection) {
 		let safeServerName = escapeDatabaseString(dbConnection, serverConfigData.name);
 		let safePassword = escapeDatabaseString(dbConnection, serverConfigData.password);
 
@@ -358,14 +385,14 @@ function setTimeCommand(command, params, client) {
 
 	if(hour > 23 || hour < 0) {
 		messagePlayerError(client, "The hour must be between 0 and 23!");
-		return false;		
+		return false;
     }
 
 	if(minute > 59 || minute < 0) {
 		messagePlayerError(client, "The minute must be between 0 and 59!");
-		return false;		
-    }    
-    
+		return false;
+    }
+
     gta.time.hour = hour;
     gta.time.minute = minute;
 
@@ -399,8 +426,8 @@ function setWeatherCommand(command, params, client) {
 	if(!weatherId) {
 		messagePlayerError(client, `That weather ID or name is invalid!`);
 		return false;
-    } 
-    
+    }
+
     gta.forceWeather(toInteger(weatherId));
 
     messageAdminAction(`${client.name} set the weather to [#AAAAAA]${weatherNames[getServerGame()][toInteger(weatherId)]}`);
@@ -431,7 +458,7 @@ function setSnowingCommand(command, params, client) {
 	let splitParams = params.split();
     let fallingSnow = Number(splitParams[0]) || !getServerConfig().fallingSnow;
 	let groundSnow = Number(splitParams[1]) || !getServerConfig().groundSnow;
-	
+
 	fallingSnow = intToBool(toInteger(fallingSnow));
 	groundSnow = intToBool(toInteger(groundSnow));
 
@@ -461,7 +488,7 @@ function toggleServerLogoCommand(command, params, client) {
 	}
 
 	getServerConfig().useLogo = !getServerConfig().useLogo;
-	
+
 	triggerNetworkEvent("ag.logo", null, intToBool(getServerConfig().useLogo));
 
     messageAdminAction(`${client.name} turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);

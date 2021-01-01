@@ -12,6 +12,8 @@ function initServerScripts() {
 
 	checkForAllRequiredModules();
 
+	initConfigScript();
+
 	initClassScript();
 	initDatabaseScript();
 	initBitFlagScript();
@@ -27,7 +29,6 @@ function initServerScripts() {
 	initJobScript();
 	initVehicleScript();
 	initDeveloperScript();
-	initConfigScript();
 	initKeyBindScript();
 	initEventScript();
 	initAntiCheatScript();
@@ -46,7 +47,7 @@ function initServerScripts() {
 // ---------------------------------------------------------------------------
 
 function checkForHashingModule() {
-	if(module.hashing == "undefined") {
+	if(typeof module.hashing == "undefined") {
 		return false;
 	}
 	return true;
@@ -55,10 +56,10 @@ function checkForHashingModule() {
 // ---------------------------------------------------------------------------
 
 function checkForMySQLModule() {
-	if(module.mysql == "undefined") {
+	if(typeof module.mysql == "undefined") {
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -72,7 +73,7 @@ function checkForAllRequiredModules() {
 		console.warn("[Asshat.Startup]: This resource will now shutdown.");
 		thisResource.stop();
 	}
-	
+
 	if(!checkForMySQLModule()) {
 		console.warn("[Asshat.Startup]: MySQL module is not loaded!");
 		console.warn("[Asshat.Startup]: This resource will now shutdown.");
@@ -85,8 +86,6 @@ function checkForAllRequiredModules() {
 
 // ---------------------------------------------------------------------------
 
-serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
-applyConfigToServer(serverConfig);
 initServerScripts();
 
 // ---------------------------------------------------------------------------

@@ -23,22 +23,22 @@ let serverBitFlags = {
 
 let serverBitFlagKeys = {
 	staffFlagKeys: [
-		"none", 
-		"basicModeration", 
-		"manageHouses", 
-		"manageVehicles", 
-		"manageBusinesses", 
-		"manageFactions", 
-		"manageClans", 
-		"manageServer", 
+		"none",
+		"basicModeration",
+		"manageHouses",
+		"manageVehicles",
+		"manageBusinesses",
+		"manageFactions",
+		"manageClans",
+		"manageServer",
 		"manageAdmins",
 		"manageJobs",
 		"developer",
 	],
 	moderationFlagKeys: [
-		"none", 
-		"muted", 
-		"frozen", 
+		"none",
+		"muted",
+		"frozen",
 		"hackerBox",
 		"jobBanned",
 		"ammuBanned",
@@ -47,47 +47,47 @@ let serverBitFlagKeys = {
 		"gunBanned",
 	],
 	factionFlagKeys: [
-		"none", 
-		"police", 
-		"medical", 
-		"fire", 
+		"none",
+		"police",
+		"medical",
+		"fire",
 		"government"
 	],
 	clanFlagKeys: [
-		"none", 
-		"illegal", 
-		"legal", 
-		"mafia", 
-		"streetGang", 
-		"weapons", 
-		"drugs", 
-		"humanTrafficking", 
-		"vigilante", 
+		"none",
+		"illegal",
+		"legal",
+		"mafia",
+		"streetGang",
+		"weapons",
+		"drugs",
+		"humanTrafficking",
+		"vigilante",
 		"hitContracts"
 	],
 	clanPermissionFlagKeys: [
-		"none", 
-		"inviteMember", 
-		"removeMember", 
-		"memberRank", 
-		"memberFlags", 
-		"memberTag", 
-		"memberTitle", 
-		"rankFlags", 
-		"rankTag", 
+		"none",
+		"inviteMember",
+		"removeMember",
+		"memberRank",
+		"memberFlags",
+		"memberTag",
+		"memberTitle",
+		"rankFlags",
+		"rankTag",
 		"rankTitle",
 		"clanTag",
-		"clanName", 
+		"clanName",
 		"manageVehicles",
 		"manageHouses",
 		"manageBusinesses",
 		"owner",
 	],
 	accountSettingsFlagKeys: [
-		"none", 
-		"useWhiteList", 
-		"useBlackList", 
-		"twoStepAuth", 
+		"none",
+		"useWhiteList",
+		"useBlackList",
+		"twoStepAuth",
 		"authAttemptAlert",
 		"noGUI",
 		"autoLoginIP",
@@ -122,14 +122,14 @@ function createBitFlagTable(keyNames) {
 	let bitVal = 0;
 	let bitTable = {};
 	let incVal = 1;
-	
+
 	for(let i in keyNames) {
 		let key = keyNames[i];
 		bitTable[key] = bitVal;
 		bitVal = 1 << incVal;
 		incVal++;
 	}
-	return bitTable;	
+	return bitTable;
 }
 
 // ---------------------------------------------------------------------------
@@ -204,7 +204,7 @@ function getStaffFlagValue(flagName) {
     if(flagName == "all") {
         return -1;
 	}
-	
+
 	if(typeof serverBitFlags.staffFlags[flagName] === "undefined") {
 		return false;
 	}
@@ -218,7 +218,7 @@ function getClanFlagValue(flagName) {
     if(flagName == "all") {
         return -1;
 	}
-	
+
 	if(typeof getServerBitFlags().clanFlags[flagName] === "undefined") {
 		return false;
 	}
@@ -232,7 +232,7 @@ function getAccountSettingsFlagValue(flagName) {
     if(flagName == "all") {
         return -1;
 	}
-	
+
 	if(typeof serverBitFlags.accountSettingsFlags[flagName] === "undefined") {
 		return false;
 	}
@@ -246,7 +246,7 @@ function getAccountFlagsFlagValue(flagName) {
     if(flagName == "all") {
         return -1;
 	}
-	
+
 	if(typeof serverBitFlags.accountFlags[flagName] === "undefined") {
 		return false;
 	}

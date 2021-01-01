@@ -24,7 +24,7 @@ function loadHousesFromDatabase() {
 	let tempHouses = [];
 	let dbConnection = connectToDatabase();
 	let dbAssoc;
-	
+
 	if(dbConnection) {
 		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM house_main WHERE house_server = ${getServerId()}`);
 		if(dbQuery) {
@@ -52,7 +52,7 @@ function createHouseCommand(command, params, client) {
 	createHouseEntrancePickup(getServerData().houses.length-1);
 	createHouseExitPickup(getServerData().houses.length-1);
 	createHouseEntranceBlip(getServerData().houses.length-1);
-	createHouseExitBlip(getServerData().houses.length-1);	
+	createHouseExitBlip(getServerData().houses.length-1);
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created house [#11CC11]${tempHouseData.description}`);
 }
@@ -61,11 +61,11 @@ function createHouseCommand(command, params, client) {
 
 function lockUnlockHouseCommand(command, params, client) {
 	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
-	
+
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
 		return false;
-	}	
+	}
 
 	getHouseData(houseId).locked = !getHouseData(houseId).locked;
 	getHouseData(houseId).entrancePickup.setData("ag.label.locked", getHouseData(houseId).locked, true);
@@ -82,7 +82,7 @@ function setHouseDescriptionCommand(command, params, client) {
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
 		return false;
-	}	
+	}
 
 	let oldDescription = getHouseData(houseId).description;
 	getHouseData(houseId).description = newHouseDescription;
@@ -162,9 +162,59 @@ function setHousePickupCommand(command, params, client) {
 		}
 
 		createHouseEntrancePickup(houseId);
-	}	
+	}
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]pickup display to [#AAAAAA]${toLowerCase(typeParam)}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function setHouseInteriorTypeCommand(command, params, client) {
+	let splitParams = params.split(" ");
+	let typeParam = splitParams[0] || "none";
+	let houseId = getHouseFromParams(splitParams[1]) || (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+
+	if(!getHouseData(houseId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(isNaN(typeParam)) {
+		if(toLowerCase(typeParam) == "none") {
+			getHouseData(houseId).exitPosition = toVector3(0.0, 0.0, 0.0);
+			getHouseData(houseId).exitInterior = -1;
+			getHouseData(houseId).hasInterior = false;
+			messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]remove house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]interior`);
+			return false;
+		}
+
+		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
+			messagePlayerError(client, "Invalid interior type! Use an interior type name or an existing house database ID");
+			messagePlayerInfo(client, `Interior Types: [#AAAAAA]${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
+			return false;
+		}
+
+		getHouseData(houseId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitPosition;
+		getHouseData(houseId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitInterior;
+		getHouseData(houseId).exitDimension = getHouseData(houseId).databaseId+getGlobalConfig().houseDimensionStart;
+		getHouseData(houseId).hasInterior = true;
+	} else {
+		if(!getHouseData(houseId)) {
+			messagePlayerError(client, "Business ID not found!");
+			return false;
+		}
+		getHouseData(houseId).exitPosition = getHouseData(houseId).exitPosition;
+		getHouseData(houseId).exitInterior = getHouseData(houseId).exitInterior;
+		getHouseData(houseId).exitDimension = getHouseData(houseId).databaseId+getGlobalConfig().houseDimensionStart;
+		getHouseData(houseId).hasInterior = true;
+	}
+
+	deleteHouseEntrancePickup(houseId);
+	deleteHouseExitPickup(houseId);
+	createHouseEntrancePickup(houseId);
+	createHouseExitPickup(houseId);
+
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]interior type to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -196,7 +246,7 @@ function setHouseBlipCommand(command, params, client) {
 		}
 
 		createHouseEntranceBlip(houseId);
-	}	
+	}
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
@@ -205,16 +255,16 @@ function setHouseBlipCommand(command, params, client) {
 
 function moveHouseEntranceCommand(command, params, client) {
 	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
-	
+
 	getHouseData(houseId).entrancePosition = getPlayerPosition(client);
 	getHouseData(houseId).entranceDimension = getPlayerVirtualWorld(client);
 	getHouseData(houseId).entranceInterior = getPlayerInterior(client);
 
 	deleteHouseEntranceBlip(houseId);
 	deleteHouseEntrancePickup(houseId);
-	
+
 	createHouseEntranceBlip(houseId);
-	createHouseEntrancePickup(houseId);	
+	createHouseEntrancePickup(houseId);
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]entrance to their position`);
 }
@@ -223,14 +273,14 @@ function moveHouseEntranceCommand(command, params, client) {
 
 function moveHouseExitCommand(command, params, client) {
 	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
-	
+
 	getHouseData(houseId).entrancePosition = getPlayerPosition(client);
 	getHouseData(houseId).entranceDimension = getPlayerVirtualWorld(client);
 	getHouseData(houseId).entranceInterior = getPlayerInterior(client);
-	
+
 	deleteHouseExitBlip(houseId);
 	deleteHouseExitPickup(houseId);
-	
+
 	createHouseExitBlip(houseId);
 	createHouseExitPickup(houseId);
 
@@ -259,7 +309,7 @@ function deleteHouse(houseId, whoDeleted = 0) {
 
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
-	
+
 	if(dbConnection) {
 		dbQuery = queryDatabase(dbConnection, `DELETE FROM house_main WHERE house_id = ${tempHouseData.databaseId}`);
 		if(dbQuery) {
@@ -272,7 +322,7 @@ function deleteHouse(houseId, whoDeleted = 0) {
 	deleteHouseExitPickup(houseId);
 
 	deleteHouseEntranceBlip(houseId);
-	deleteHouseExitBlip(houseId);	
+	deleteHouseExitBlip(houseId);
 
 	removePlayersFromHouse(houseId);
 
@@ -305,7 +355,7 @@ function createHouse(description, entrancePosition, exitPosition, entrancePickup
 	tempHouseData.exitPickupModel = exitPickupModel;
 	tempHouseData.exitBlipModel = exitBlipModel;
 	tempHouseData.exitInterior = exitInteriorId;
-	tempHouseData.exitDimension = exitVirtualWorld;		
+	tempHouseData.exitDimension = exitVirtualWorld;
 
 	return tempHouseData;
 }
@@ -361,11 +411,11 @@ function saveHouseToDatabase(houseId) {
 	if(dbConnection) {
 		let safeHouseDescription = escapeDatabaseString(dbConnection, tempHouseData.description);
 		if(tempHouseData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw) VALUES (${getServerId()}, '${safeHouseDescription}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPosition.x}, ${tempHouseData.exitPosition.y}, ${tempHouseData.exitPosition.z}, ${tempHouseData.exitRotation}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension})`;
+			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw, house_has_interior) VALUES (${getServerId()}, '${safeHouseDescription}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPosition.x}, ${tempHouseData.exitPosition.y}, ${tempHouseData.exitPosition.z}, ${tempHouseData.exitRotation}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension}, ${boolToInt(tempHouseData.hasInterior)})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().houses[houseId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE house_main SET house_description='${safeHouseDescription}', house_owner_type=${tempHouseData.ownerType}, house_owner_id=${tempHouseData.ownerId}, house_locked=${boolToInt(tempHouseData.locked)}, house_entrance_pos_x=${tempHouseData.entrancePosition.x}, house_entrance_pos_y=${tempHouseData.entrancePosition.y}, house_entrance_pos_z=${tempHouseData.entrancePosition.z}, house_entrance_rot_z=${tempHouseData.entranceRotation}, house_entrance_int=${tempHouseData.entranceInterior}, house_entrance_vw=${tempHouseData.entranceDimension}, house_exit_pos_x=${tempHouseData.exitPosition.x}, house_exit_pos_y=${tempHouseData.exitPosition.y}, house_exit_pos_z=${tempHouseData.exitPosition.z}, house_exit_rot_z=${tempHouseData.exitRotation}, house_exit_int=${tempHouseData.exitInterior}, house_exit_vw=${tempHouseData.exitDimension} WHERE house_id=${tempHouseData.databaseId}`;
+			let dbQueryString = `UPDATE house_main SET house_description='${safeHouseDescription}', house_owner_type=${tempHouseData.ownerType}, house_owner_id=${tempHouseData.ownerId}, house_locked=${boolToInt(tempHouseData.locked)}, house_entrance_pos_x=${tempHouseData.entrancePosition.x}, house_entrance_pos_y=${tempHouseData.entrancePosition.y}, house_entrance_pos_z=${tempHouseData.entrancePosition.z}, house_entrance_rot_z=${tempHouseData.entranceRotation}, house_entrance_int=${tempHouseData.entranceInterior}, house_entrance_vw=${tempHouseData.entranceDimension}, house_exit_pos_x=${tempHouseData.exitPosition.x}, house_exit_pos_y=${tempHouseData.exitPosition.y}, house_exit_pos_z=${tempHouseData.exitPosition.z}, house_exit_rot_z=${tempHouseData.exitRotation}, house_exit_int=${tempHouseData.exitInterior}, house_exit_vw=${tempHouseData.exitDimension}, house_has_interior=${boolToInt(tempHouseData.hasInterior)} WHERE house_id=${tempHouseData.databaseId}`;
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -373,7 +423,7 @@ function saveHouseToDatabase(houseId) {
 	}
 	console.log(`[Asshat.house]: Saved house '${tempHouseData.description}' to database!`);
 
-	return false;	
+	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -456,7 +506,7 @@ function createHouseExitPickup(houseId) {
 			getHouseData(houseId).exitPickup.dimension = getHouseData(houseId).exitDimension;
 			//getHouseData(houseId).exitPickup.interior = getHouseData(houseId).exitInterior;
 			getHouseData(houseId).exitPickup.setData("ag.owner.type", AG_PICKUP_HOUSE_EXIT, false);
-			getHouseData(houseId).exitPickup.setData("ag.owner.id", houseId, false);			
+			getHouseData(houseId).exitPickup.setData("ag.owner.id", houseId, false);
 			getHouseData(houseId).exitPickup.setData("ag.label.type", AG_LABEL_EXIT, true);
 			addToWorld(getHouseData(houseId).exitPickup);
 		}
@@ -493,17 +543,17 @@ function getHouseOwnerTypeText(ownerType) {
 			return "clan";
 
 		case AG_HOUSEOWNER_PLAYER:
-			return "player";		
+			return "player";
 
 		case AG_BIZOWNER_NONE:
 			return "not owned";
 
 		case AG_BIZOWNER_PUBLIC:
-			return "not owned";	
-			
+			return "not owned";
+
 		case AG_BIZOWNER_JOB:
-			return "job";					
-		
+			return "job";
+
 		default:
 			return "unknown";
 	}
@@ -544,8 +594,8 @@ function getHouseInfoCommand(command, params, client) {
 
 		case AG_HOUSEOWNER_JOB:
 			ownerName = getJobData(getHouseData(houseId).ownerId).name;
-			break;				
-	}	
+			break;
+	}
 
 	messagePlayerNormal(client, `🏠 [#11CC11][House Info] [#FFFFFF]Description: [#AAAAAA]${getHouseData(houseId).description}, [#FFFFFF]Owner: [#AAAAAA]${ownerName} (${getHouseOwnerTypeText(getHouseData(houseId).ownerType)}), [#FFFFFF]Locked: [#AAAAAA]${getYesNoFromBool(intToBool(getHouseData(houseId).locked))}, [#FFFFFF]ID: [#AAAAAA]${houseId}/${getHouseData(houseId).databaseId}`);
 }
@@ -572,33 +622,9 @@ function doesHouseHaveInterior(houseId) {
 
 // ---------------------------------------------------------------------------
 
-function sendAllHouseLabelsToPlayer(client) {
-	let tempHouseLabels = [];
-	let totalHouses = getServerData().houses.length;
-	let housesPerNetworkEvent = 100;
-	let totalNetworkEvents = Math.ceil(totalHouses/housesPerNetworkEvent);
-	for(let i = 0 ; i < totalNetworkEvents ; i++) {
-		for(let j = 0 ; j < housesPerNetworkEvent ; j++) {
-			let tempHouseId = (i*housesPerNetworkEvent)+j;
-			if(typeof getServerData().houses[tempHouseId] != "undefined") {
-				tempHouseLabels.push([tempHouseId, getServerData().houses[tempHouseId].entrancePosition, getGameConfig().propertyLabelHeight[getServerGame()], getServerData().houses[tempHouseId].description, getServerData().houses[tempHouseId].locked, false]);
-			}
-		}
-		triggerNetworkEvent("ag.houselabel.all", client, tempHouseLabels);
-		tempHouseLabels = [];
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function sendHouseLabelToPlayers(houseId) {
-	triggerNetworkEvent("ag.houselabel.add", null, houseId, getServerData().houses[houseId].entrancePosition, getGameConfig().propertyLabelHeight[getServerGame()], getServerData().houses[houseId].description, getServerData().houses[houseId].locked, false);
-}
-
-// ---------------------------------------------------------------------------
-
 function deleteHouseEntrancePickup(houseId) {
 	if(getHouseData(houseId).entrancePickup != null) {
+		removeFromWorld(getHouseData(houseId).entrancePickup);
 		destroyElement(getHouseData(houseId).entrancePickup);
 		getHouseData(houseId).entrancePickup = null;
 	}
@@ -608,15 +634,17 @@ function deleteHouseEntrancePickup(houseId) {
 
 function deleteHouseExitPickup(houseId) {
 	if(getHouseData(houseId).exitPickup != null) {
+		removeFromWorld(getHouseData(houseId).exitPickup);
 		destroyElement(getHouseData(houseId).exitPickup);
 		getHouseData(houseId).exitPickup = null;
-	}	
+	}
 }
 
 // ---------------------------------------------------------------------------
 
 function deleteHouseEntranceBlip(houseId) {
 	if(getHouseData(houseId).entranceBlip != null) {
+		removeFromWorld(getHouseData(houseId).entranceBlip);
 		destroyElement(getHouseData(houseId).entranceBlip);
 		getHouseData(houseId).entranceBlip = null;
 	}
@@ -626,9 +654,10 @@ function deleteHouseEntranceBlip(houseId) {
 
 function deleteHouseExitBlip(houseId) {
 	if(getHouseData(houseId).exitBlip != null) {
+		removeFromWorld(getHouseData(houseId).exitBlip);
 		destroyElement(getHouseData(houseId).exitBlip);
 		getHouseData(houseId).exitBlip = null;
-	}	
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -647,15 +676,11 @@ function reloadAllHousesCommand(command, params, client) {
 		deleteHouseExitPickup(i);
 		deleteHouseEntrancePickup(i);
 	}
-	
+
 	getServerData().houses = null;
 	getServerData().houses = loadHouseFromDatabase();
 	createAllHousePickups();
 	createAllHouseBlips();
-
-	for(let i in clients) {
-		sendAllHouseLabelsToPlayer(clients[i]);
-	}
 
 	messageAdminAction(`All houses have been reloaded by an admin!`);
 }

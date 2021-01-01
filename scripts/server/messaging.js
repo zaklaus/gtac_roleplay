@@ -115,7 +115,7 @@ function messagePlayerInfo(client, messageText) {
         console.log(`[INFO] ${messageText}`);
         return true;
     }
-        
+
     if(!isClientFromDiscord(client)) {
         messagePlayerNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {
@@ -130,7 +130,7 @@ function messagePlayerTip(client, messageText) {
         console.log(`[TIP] ${messageText}`);
         return true;
     }
-        
+
     if(!isClientFromDiscord(client)) {
         messagePlayerNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
     } else {

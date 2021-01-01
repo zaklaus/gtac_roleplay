@@ -45,11 +45,11 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
 	if(propertyLabelNameFont == null) {
 		return false;
     }
-    
+
 	if(propertyLabelLockedFont == null) {
 		return false;
 	}
-    
+
     if(localPlayer.position.distance(position) > 7.5) {
         return false;
     }
@@ -62,9 +62,9 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
     if(price > 0) {
         text = `For sale: $${price}`;
         let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
-        propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(0, 150, 0, 255), false, true, false, true);       
-    
-        screenPosition.y -= 18;        
+        propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(0, 150, 0, 255), false, true, false, true);
+
+        screenPosition.y -= 18;
     }
 
     text = (locked) ? "LOCKED" : "UNLOCKED";
@@ -73,13 +73,13 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
     }
 
     let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
-    propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, (locked) ? lockedColour : unlockedColour, false, true, false, true);       
+    propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, (locked) ? lockedColour : unlockedColour, false, true, false, true);
 
     screenPosition.y -= 22;
 
     text = name || " ";
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
-    propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, (isBusiness) ? toColour(0, 153, 255, 255) : toColour(17, 204, 17, 255), false, true, false, true);       
+    propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, (isBusiness) ? toColour(0, 153, 255, 255) : toColour(17, 204, 17, 255), false, true, false, true);
 }
 
 // ----------------------------------------------------------------------------
@@ -92,11 +92,11 @@ function renderPropertyExitLabel(position) {
 	if(propertyLabelNameFont == null) {
 		return false;
     }
-    
+
 	if(propertyLabelLockedFont == null) {
 		return false;
 	}
-    
+
     if(localPlayer.position.distance(position) > 7.5) {
         return false;
     }
@@ -107,7 +107,7 @@ function renderPropertyExitLabel(position) {
 
     let text = "EXIT";
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
-    propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);       
+    propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);
 }
 
 // ----------------------------------------------------------------------------
@@ -120,11 +120,11 @@ function renderJobLabel(name, position, jobType) {
 	if(jobNameLabelFont == null) {
 		return false;
     }
-    
+
 	if(jobHelpLabelFont == null) {
 		return false;
 	}
-    
+
     if(localPlayer.position.distance(position) > 7.5) {
         return false;
     }
@@ -149,13 +149,13 @@ function renderJobLabel(name, position, jobType) {
     }
 
     let size = jobHelpLabelFont.measure(text, game.width, 0.0, 0.0, jobHelpLabelFont.size, true, true);
-    jobHelpLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobHelpLabelFont.size, COLOUR_YELLOW, false, true, false, true);       
+    jobHelpLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobHelpLabelFont.size, COLOUR_YELLOW, false, true, false, true);
 
     screenPosition.y -= 18;
 
     text = name + " Job";
     size = jobNameLabelFont.measure(text, game.width, 0.0, 0.0, jobNameLabelFont.size, true, true);
-    jobNameLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobNameLabelFont.size, COLOUR_WHITE, false, true, false, true);        
+    jobNameLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobNameLabelFont.size, COLOUR_WHITE, false, true, false, true);
 }
 
 // ----------------------------------------------------------------------------
@@ -182,14 +182,14 @@ addEventHandler("OnDrawnHUD", function (event) {
                                     case AG_LABEL_HOUSE:
                                         renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
                                         break;
-                                        
+
                                     case AG_LABEL_JOB:
                                         renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
                                         break;
 
                                     case AG_LABEL_EXIT:
                                         renderPropertyExitLabel(pickups[i].position);
-                                        break;                        
+                                        break;
                                 }
                             //}
                         //}

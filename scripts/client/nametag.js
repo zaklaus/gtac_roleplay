@@ -50,16 +50,16 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 	if(nametagFont == null) {
 		return false;
 	}
-	
+
 	alpha *= 0.75;
 	let width = nametagWidth;
 	health = Math.max(0.0, Math.min(1.0, health));
     armour = Math.max(0.0, Math.min(1.0, armour));
-    
+
     // Starts at bottom and works it's way up
     // -------------------------------------------
     // Health Bar
-	
+
 	if(gta.game == GAME_GTA_III) {
 		// Mickey Hamfists is ridiculously tall. Raise the nametag for him a bit
 		if(skin == 109) {
@@ -70,7 +70,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 	} else {
 		y -= 5;
 	}
-	
+
 	if(health > 0.0) {
 		let hx = x-width/2;
 		let hy = y-10/2;
@@ -79,12 +79,12 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		let colour = createColour(Math.floor(255.0*alpha), Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0); // Health bar colour (varies, depending on health)
 		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*health, 10-6], colour, colour, colour, colour);
 	}
-    
+
     // Armour Bar
 	if (armour > 0.0)
 	{
 		// Go up 10 pixels to draw the next part
-		y -= 10;		
+		y -= 10;
 		let hx = x-width/2;
 		let hy = y-10/2;
 		let colourB = toColour(255, 0, 0, 0); // Background colour (black)
@@ -92,18 +92,18 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		let colour = toColour(255, 255, 255, 255); // Armour bar colour (white)
 		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*armour, 10-6], colour, colour, colour, colour);
 	}
-    
+
 	y -= 20;
-    
+
     // Nametag
 	if(nametagFont != null) {
 		let size = nametagFont.measure(text, game.width, 0.0, 0.0, nametagFont.size, false, false);
 		nametagFont.render(text, [x-size[0]/2, y-size[1]/2], game.width, 0.0, 0.0, nametagFont.size, colour, false, false, false, true);
 	}
-	
+
     // Go up another 10 pixels for the next part
-    y -= 20;	
-	
+    y -= 20;
+
     // AFK Status
 	if(afkStatusFont != null) {
 		if(afk) {
@@ -119,34 +119,34 @@ function updateNametags(element) {
 	if(localPlayer != null) {
 		let playerPos = localPlayer.position;
 		let elementPos = element.position;
-        let client = getClientFromPlayerElement(element);       
-		
+        let client = getClientFromPlayerElement(element);
+
 		elementPos[2] += 0.9;
-		
+
 		let screenPos = getScreenFromWorldPosition(elementPos);
 		if (screenPos[2] >= 0.0) {
 			let health = element.health/100.0;
 			if(health > 1.0) {
 				health = 1.0;
 			}
-			
+
 			let armour = element.armour/100.0;
 			if(armour > 1.0) {
-				armour = 1.0; 
+				armour = 1.0;
 			}
-			
+
 			let distance = playerPos.distance(elementPos);
 			if(distance <= nametagDistance) {
 				if(element.type == ELEMENT_PLAYER) {
                     let name = element.name;
                     let colour = COLOUR_WHITE;
-					let paused = false;     
-					let ping = -1;   
-            
+					let paused = false;
+					let ping = -1;
+
                     if(typeof playerNames[element.name] != "undefined") {
                         name = playerNames[element.name];
                     }
-            
+
                     if(typeof playerPaused[element.name] != "undefined") {
                         paused = playerPaused[element.name];
                     }
@@ -154,10 +154,10 @@ function updateNametags(element) {
                     if(typeof playerColours[element.name] != "undefined") {
                         colour = playerColours[element.name];
 					}
-					
+
                     if(typeof playerPing[element.name] != "undefined") {
                         ping = playerPing[element.name];
-                    }			
+                    }
 
 					drawNametag(screenPos[0], screenPos[1], health, armour, name, ping, 1.0-distance/nametagDistance, distance, colour, paused, element.skin);
 				}
@@ -182,7 +182,7 @@ addEventHandler("OnDrawnHUD", function(event) {
 	if(gta.game >= GAME_GTA_IV) {
 		return false;
 	}
-	
+
 	getElementsByType(ELEMENT_PLAYER).forEach(function(player) {
 		if(player != localPlayer) {
 			updateNametags(player);

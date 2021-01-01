@@ -33,13 +33,13 @@ addEventHandler("OnDiscordCommand", function(command, params, discordUser) {
 
 function messageDiscordUser(discordUser, messageText) {
     let socketData = JSON.stringify({
-		type: "chat.message.text", 
+		type: "chat.message.text",
 		payload: {
 			author: discordUser.name,
 			text: messageText,
 		}
 	});
-	sendDiscordSocketData(socketData);	
+	sendDiscordSocketData(socketData);
 }
 
 // ---------------------------------------------------------------------------
@@ -48,7 +48,7 @@ function sendDiscordSocketData(socketData) {
     if(!getDiscordSocket()) {
         return false;
     }
-    
+
     getDiscordSocket().send(module.hash.encodeBase64(socketData) + "\r\n");
 }
 

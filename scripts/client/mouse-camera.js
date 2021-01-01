@@ -429,14 +429,14 @@ addEventHandler("OnProcess", (event, deltaTime) =>
 	if(!localPlayer) {
 		return false;
 	}
-	
+
 	if(gta.game >= GAME_GTA_SA) {
 		// We don't need this for GTA SA+
 		return false;
 	}
 
     /*
-	if(localPlayer.vehicle == null) {			
+	if(localPlayer.vehicle == null) {
 		let newAngle = 0.0;
 		let moveKeyHeld = false;
 		if(isKeyDown(SDLK_w)) {
@@ -462,15 +462,15 @@ addEventHandler("OnProcess", (event, deltaTime) =>
 			newAngle = Math.PI/2;
 			moveKeyHeld = true;
 		}
-		
+
 		if(moveKeyHeld && !gui.cursorEnabled) {
-			localPlayer.heading = cameraAngle + newAngle;		
+			localPlayer.heading = cameraAngle + newAngle;
 		}
-		
+
 		if(sdl.getModState()&KMOD_ALT && !gui.cursorEnabled) {
 			if(moveKeyHeld) {
 				let position = getPosInFrontOfPos(localPlayer.position, localPlayer.heading, 1.0);
-				localPlayer.walkTo(vec3ToVec2(position));				
+				localPlayer.walkTo(vec3ToVec2(position));
 				isWalking = true;
 				triggerNetworkEvent("ag.walk", true);
 			} else {
@@ -479,7 +479,7 @@ addEventHandler("OnProcess", (event, deltaTime) =>
 			}
 		} else {
 			isWalking = false;
-			triggerNetworkEvent("ag.walk", false);		
+			triggerNetworkEvent("ag.walk", false);
 		}
     }
     */
@@ -490,7 +490,7 @@ let IdleTime = 0;//2019 Lucas was here!
 function processReturnToRestRotation()
 {
 	//resetCameraRotation();//2019 Lucas was here!
-	
+
 	//2019 Lucas was here!
 	let Target = getCameraTarget();
 	if (!ShouldReturnToRestRotation(Target))
@@ -652,7 +652,7 @@ function update()
 				positionX += normalX*Distance;
 				positionY += normalY*Distance;
 				positionZ += normalZ*Distance;
-				
+
 				cameraMatrix.m41 = positionX;
 				cameraMatrix.m42 = positionY;
 				cameraMatrix.m43 = positionZ;
@@ -680,7 +680,7 @@ function getPosInFrontOfPos(pos, angle, distance) {
 	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
 	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
 	let z = pos.z;
-	
+
 	return new Vec3(x,y,z);
 }
 

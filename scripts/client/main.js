@@ -72,6 +72,9 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
         gta.setCiviliansEnabled(false);
     }
 
+    // Run garbage collector every minute
+    garbageCollectorInterval = setInterval(collectAllGarbage, 1000*60);
+
     addNetworkHandler("ag.passenger", enterVehicleAsPassenger);
 });
 
@@ -338,6 +341,12 @@ function processEvent(event, deltaTime) {
             }
         });
 
+        getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
+            if(pickup.owner != -1) {
+                destroyElement(pickup);
+            }
+        });
+
         if(gta.game == GAME_GTA_SA) {
             if(jobRouteStopSphere != null) {
                 if(position.distance(jobRouteStopSphere.position) <= 2.0) { 
@@ -381,10 +390,12 @@ addEventHandler("OnDrawnHUD", function (event) {
     }
 
     // Draw logo in corner of screen
-    if(mainLogo != null && showLogo) {
-        let logoPos = toVector2(gta.width-132, gta.height-132);
-        let logoSize = toVector2(128, 128);
-        drawing.drawRectangle(mainLogo, logoPos, logoSize);
+    if(mainLogo != null) {
+        if(showLogo) {
+            let logoPos = toVector2(gta.width-132, gta.height-132);
+            let logoSize = toVector2(128, 128);
+            drawing.drawRectangle(mainLogo, logoPos, logoSize);
+        }
     }
 });
 
@@ -482,9 +493,7 @@ addNetworkHandler("ag.showBusStop", function(position, colour) {
         jobRouteStopSphere.colour = colour;
     }
 
-
     jobRouteStopBlip = gta.createBlip(position, 0, 2, colour);    
-
 });
 
 // ---------------------------------------------------------------------------

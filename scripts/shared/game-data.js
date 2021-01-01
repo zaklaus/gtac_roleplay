@@ -275,7 +275,7 @@ let gameData = {
 		COLOUR_ORANGE,					// GTA San Andreas
 		COLOUR_ORANGE,					// GTA Underground
 		COLOUR_SILVER,				    // GTA IV
-		COLOUR_SILVER					// GTA IV (EFLC)		
+		COLOUR_SILVER					// GTA IV (EFLC)
 	],
 	weatherNames: [
 		["Unknown"],
@@ -360,26 +360,26 @@ let gameData = {
 			"Thunderstorm",
 			"Extra Sunny",
 			"Sunny/Windy",
-		],		
+		],
 	],
 	gameNames: [
-		"Unknown", 
-		"GTA III", 
-		"GTA Vice City", 
-		"GTA San Andreas", 
+		"Unknown",
+		"GTA III",
+		"GTA Vice City",
+		"GTA San Andreas",
 		"GTA Underground",
 		"GTA IV",
 		"GTA IV: Episodes from Liberty City",
 	],
 	vehicleWheelStateNames: [
-		"normal", 
-		"flat", 
+		"normal",
+		"flat",
 		"gone"
 	],
 	vehicleDoorStateNames: [
-		"closed", 
 		"closed",
-		"swinging", 
+		"closed",
+		"swinging",
 		"open"
 	],
 	vehicleWheelNames: [
@@ -400,7 +400,7 @@ let gameData = {
 			"Head Radio",
 			"Double Cleff FM",
 			"Jah Radio",
-			"Rise FM", 
+			"Rise FM",
 			"Lips 106",
 			"Flashback FM",
 			"Chatterbox 109",
@@ -410,7 +410,7 @@ let gameData = {
 			"Wildstyle",
 			"Flash FM",
 			"K CHAT",
-			"Fever 105", 
+			"Fever 105",
 			"VROCK",
 			"VCPR",
 			"Espantoso",
@@ -422,7 +422,7 @@ let gameData = {
 			"KROSE",
 			"KDST",
 			"Bounce FM",
-			"SFUR", 
+			"SFUR",
 			"Radio Los Santos",
 			"Radio X",
 			"CSR Radio",
@@ -433,7 +433,7 @@ let gameData = {
 		]
 	],
 	vehicleModelIdStart: [
-		0, 
+		0,
 		90, 	// GTA III
 		130, 	// GTA Vice City
 		400, 	// GTA San Andreas
@@ -502,7 +502,7 @@ let gameData = {
 			"Escape",
 			"Borgnine Taxi",
 			"Toyz Van",
-			"Ghost"	
+			"Ghost"
 		],
 		[ // GTA Vice City
 			"Landstalker",
@@ -611,7 +611,7 @@ let gameData = {
 			"Hotring Racer 3",
 			"Bloodring Banger 1",
 			"Bloodring Banger 2",
-			"VCPD Cheetah"		
+			"VCPD Cheetah"
 		],
 		[ // GTA San Andreas
 			"Landstalker",
@@ -1153,7 +1153,7 @@ let gameData = {
 			"#1B376D",
 			"#EC6AAE",
 			"#000000"
-		],	
+		],
 		[ // GTA Underground
 			"#000000",
 			"#F5F5F5",
@@ -1931,45 +1931,45 @@ let gameData = {
 			292
 		],
 		[ // GTA San Andreas
-			
+
 		],
 	],
 	locations: [
 		[],
-		
+
 		[ // GTA III
 			// Police Stations
 			["Portland Police Station", [1143.875, -675.1875, 14.97], 0.0],
 			["Staunton Island Police Station", [340.25, -1123.375, 25.98], 0.0],
 			["Shoreside Vale Police Station", [-1253.0, -138.1875, 58.75], 0.0],
-			
+
 			// Hospitals
 			["Portland Hospital", [1144.25, -596.875, 14.97], 0.0],
 			["Staunton Island Hospital", [183.5, -17.75, 16.21], 0.0],
 			["Shoreside Vale Hospital", [-1259.5, -44.5, 58.89], 0.0],
-			
+
 			// Fire Stations
 			["Portland Fire Station", [1103.70, -52.45, 7.49], 0.0],
 			["Staunton Island Fire Station", [-78.48, -436.80, 16.17], 0.0],
-			["Shoreside Vale Fire Station", [-1202.10, -14.67, 53.20], 0.0],		
-			
+			["Shoreside Vale Fire Station", [-1202.10, -14.67, 53.20], 0.0],
+
 			// Pay and Sprays
-			["Portland Pay and Spray", [925.4, -360.3, 10.83], 0.0],		
-			["Staunton Island Pay and Spray", [381.8, -493.8, 25.95], 0.0],		
-			["Shoreside Vale Pay and Spray", [-1142.4, 35.01, 58.61], 0.0],	
+			["Portland Pay and Spray", [925.4, -360.3, 10.83], 0.0],
+			["Staunton Island Pay and Spray", [381.8, -493.8, 25.95], 0.0],
+			["Shoreside Vale Pay and Spray", [-1142.4, 35.01, 58.61], 0.0],
 
 			// Ammunations
-			["Portland Ammunation", [1068.3, -400.9, 15.24], 0.0],		
-			["Staunton Island Ammunation", [348.2, -717.9, 26.43], 0.0],	
-			
+			["Portland Ammunation", [1068.3, -400.9, 15.24], 0.0],
+			["Staunton Island Ammunation", [348.2, -717.9, 26.43], 0.0],
+
 			// Train Stations
 			["Bedford Point Train Station", [178.52, -1551.40, 26.162], -3.105],
 			["Francis International Airport Train Station", [-633.42, -760.06, 18.919], 1.586],
 			["Rockford Train Station", [225.66, -69.07, 20.998], -3.115],
 			["Saint Marks Train Station", [1306.69, -512.38, 40.078], -2.458],
 			["Hepburn Heights Train Station", [1029.07, -164.18, 4.972], 0.005],
-			["Chinatown Train Station", [775.27, -622.28, 14.747], 0.006],		
-			
+			["Chinatown Train Station", [775.27, -622.28, 14.747], 0.006],
+
 			// Safehouses
 			["Portland Safehouse", [885.52, -308.47, 8.615], -1.532],
 
@@ -1993,44 +1993,44 @@ let gameData = {
 			["Fuzz Ball", [1000.03, -877.82, 14.547], -3.136],
 			["Portland Docks Entrance", [1360.55, -818.08, 14.415], -1.574],
 			["Punk Noodle Diner", [1040.10, -653.10, 14.973], 1.551],
-			["Greasy Joe's Diner", [864.45, -999.86, 4.646], -0.020],		
+			["Greasy Joe's Diner", [864.45, -999.86, 4.646], -0.020],
 		],
-		
+
 		[ // GTA VC
 			// Police Stations
 			["Washington Beach Police Station", [399.77, -468.90, 11.73], 0.0],
 			["Vice Point Police Station", [508.96, 512.07, 12.10], 0.0],
 			["Downtown Police Station", [-657.43, 762.31, 11.59], 0.0],
 			["Little Havana Police Station", [-885.08, -470.44, 13.11], 0.0],
-			
-			// Hospitals	
+
+			// Hospitals
 			["Downtown Hospital", [-822.57, 1152.82, 12.41], 0.0],
 			["Little Havana Medical Center", [-885.08, -470.44, 13.11], 0.0],
 			["Ocean Beach Hospital", [-133.19, -980.76, 10.46], 0.0],
-		],	
-		
+		],
+
 		[ // GTA SA
 			// Coming Soon!
-		],	
-		
+		],
+
 		[ // GTA UG
 			// Coming Soon!
-		],	
-		
+		],
+
 		[ // GTA IV
 			// Police Stations
 			["Broker Police Station", [894.99, -357.39, 18.185], 2.923],
 			["South Bohan Police Station", [435.40, 1592.29, 17.353], 3.087],
-			["Northern Gardens Police Station", [974.93, 1870.45, 23.073], -1.621],	
+			["Northern Gardens Police Station", [974.93, 1870.45, 23.073], -1.621],
 			["South Slopes Police Station", [1233.25, -89.13, 28.034], 1.568],
 			["Middle Part East Police Station", [50.12, 679.88, 15.316], 1.569],
-			["East Holland Police Station", [85.21, 1189.82, 14.755], 3.127],	
+			["East Holland Police Station", [85.21, 1189.82, 14.755], 3.127],
 			["Francis International Airport Police Station", [2170.87, 448.87, 6.085], 1.501],
 			["Chinatown Police Station", [213.12, -211.70, 10.752], 0.200],
 			["Acter Police Station", [-1714.95, 276.31, 22.134], 1.127],
 			["Port Tudor Police Station", [-1220.73, -231.53, 3.024], 2.210],
-			["Leftwood Police Station", [-927.66, 1263.63, 24.587], -0.913],	
-			
+			["Leftwood Police Station", [-927.66, 1263.63, 24.587], -0.913],
+
 			// Fire Stations
 			["Broker Fire Station", [953.13, 95.90, 35.004], 1.595],
 			["Northwood Fire Station", [-271.02, 1542.15, 20.420], -1.160],
@@ -2039,53 +2039,53 @@ let gameData = {
 			["Chinatown Fire Station", [295.40, -336.88, 4.963], 2.887],
 			["Berchem Fire Station", [-1574.90, 546.54, 25.449], -0.509],
 			["Tudor Fire Station", [-2144.97, 164.15, 12.051], -2.149],
-			
+
 			// Safehouses
 			["Hove Beach Safehouse Parking", [904.27, -498.00, 14.522], 3.127],
 			["South Bohan Safehouse", [589.42, 1402.15, 10.364], 0.007],
-			
+
 			// Hospitals
 			["Schottler Medical Center", [1199.59, 196.78, 33.554], 1.633],
 			["Northern Gardens Medical Center", [980.71, 1831.61, 23.898], -0.049],
 			["Leftwood Hospital", [-1317.27, 1277.20, 22.370], 2.246],
-			["Acter Medical Center", [-1538.43, 344.58, 20.943], -0.156],	
-			
+			["Acter Medical Center", [-1538.43, 344.58, 20.943], -0.156],
+
 			// Fuel Stations
 			["Hove Beach Fuel Station", [1128.51, -359.55, 18.441], -0.052],
 			["Lancaster Fuel Station", [108.37, 1135.13, 13.975], 0.007],
-			["The Meat Quarter Fuel Station", [-434.30, -19.47, 9.864], 1.469],	
+			["The Meat Quarter Fuel Station", [-434.30, -19.47, 9.864], 1.469],
 			["Cerveza Heights Fuel Station", [1123.50, 328.84, 29.245], -0.154],
-			["Tudor Fuel Station", [-1389.91, 29.19, 6.875], 0.982],	
-			
+			["Tudor Fuel Station", [-1389.91, 29.19, 6.875], 0.982],
+
 			// Restaurants
 			["Star Junction Burger Shot", [-174.00, 276.96, 14.818], -0.029],
 			["South Bohan Burger Shot", [441.95, 1516.64, 16.289], -2.682],
 			["Industrial Burger Shot", [1096.93, 1598.33, 16.721], -2.289],
-			
+
 			// Night Clubs/Strip Clubs/Bars
 			["Perestroika Club", [957.58, -292.58, 19.644], -0.009],
 			["Triangle Club", [1210.90, 1718.18, 16.667], 1.819],
-			
+
 			// TW@ Cafes
 			["Outlook Internet Cafe", [977.42, -169.11, 24.013], 1.844],
 			["Berchem Internet Cafe", [-1584.46, 466.05, 25.398], -2.441],
-			
+
 			// Pay-n-Sprays
 			["Hove Beach Pay-n-Spray", [1058.57, -282.58, 20.760], -3.135],
 			["Leftwood Pay-n-Spray", [-1148.69, 1171.52, 16.457], -0.059],
-			
+
 			// Clothes Shops
 			["Hove Beach Russian Clothes Shop", [896.31, -442.59, 15.888], 1.500],
-			
+
 			// Car Wash
 			["Willis Car Wash", [1831.02, 360.20, 22.061], -1.515],
 			["Tudor Car Wash", [-1371.68, 35.13, 7.028], 1.029],
-			
+
 			// Gun Shops
 			["Downtown Broker Gun Shop", [1054.11, 86.84, 33.408], -1.574],
 			["Chinatown Gun Shop", [65.43, -342.36, 14.767], -1.589],
-			["Port Tudor Gun Shop", [-1338.77, 307.61, 13.378], -1.530],	
-			
+			["Port Tudor Gun Shop", [-1338.77, 307.61, 13.378], -1.530],
+
 			// Train Stations
 			["Hove Beach Train Station", [1000.41, -544.82, 14.854], -1.576],
 			["Schottler Train Station", [1303.93, -37.75, 28.377], 3.065],
@@ -2112,7 +2112,7 @@ let gameData = {
 			["San Quentin Ave Train Station", [373.12, 1625.93, 16.347], -2.249],
 			["Windmill Street Train Station", [749.97, 1447.44, 14.252], -0.120],
 			["Francis International Airport Train Station", [2297.57, 474.62, 6.086], 0.066],
-			
+
 			// Misc
 			["Hove Beach Laundromat", [1011.74, -325.33, 20.339], -1.402],
 			["The Exchange Docks", [-354.68, -661.62, 4.791], 2.066],
@@ -2122,24 +2122,24 @@ let gameData = {
 			["Alderney State Correctional Facility", [-1155.21, -374.34, 2.885], -1.680],
 			["Chinatown Bank of Liberty", [-34.92, -466.80, 14.75], -1.52],
 			["Suffolk Church", [-274.30, -281.63, 14.36], 1.56],
-			
+
 			// More will be added soon!
-		], 
-		
+		],
+
 		[ // GTA EFLC
 			// Police Stations
 			["Broker Police Station", [894.99, -357.39, 18.185], 2.923],
 			["South Bohan Police Station", [435.40, 1592.29, 17.353], 3.087],
-			["Northern Gardens Police Station", [974.93, 1870.45, 23.073], -1.621],	
+			["Northern Gardens Police Station", [974.93, 1870.45, 23.073], -1.621],
 			["South Slopes Police Station", [1233.25, -89.13, 28.034], 1.568],
 			["Middle Part East Police Station", [50.12, 679.88, 15.316], 1.569],
-			["East Holland Police Station", [85.21, 1189.82, 14.755], 3.127],	
+			["East Holland Police Station", [85.21, 1189.82, 14.755], 3.127],
 			["Francis International Airport Police Station", [2170.87, 448.87, 6.085], 1.501],
 			["Chinatown Police Station", [213.12, -211.70, 10.752], 0.200],
 			["Acter Police Station", [-1714.95, 276.31, 22.134], 1.127],
 			["Port Tudor Police Station", [-1220.73, -231.53, 3.024], 2.210],
-			["Leftwood Police Station", [-927.66, 1263.63, 24.587], -0.913],	
-			
+			["Leftwood Police Station", [-927.66, 1263.63, 24.587], -0.913],
+
 			// Fire Stations
 			["Broker Fire Station", [953.13, 95.90, 35.004], 1.595],
 			["Northwood Fire Station", [-271.02, 1542.15, 20.420], -1.160],
@@ -2148,53 +2148,53 @@ let gameData = {
 			["Chinatown Fire Station", [295.40, -336.88, 4.963], 2.887],
 			["Berchem Fire Station", [-1574.90, 546.54, 25.449], -0.509],
 			["Tudor Fire Station", [-2144.97, 164.15, 12.051], -2.149],
-			
+
 			// Safehouses
 			["Hove Beach Safehouse Parking", [904.27, -498.00, 14.522], 3.127],
 			["South Bohan Safehouse", [589.42, 1402.15, 10.364], 0.007],
-			
+
 			// Hospitals
 			["Schottler Medical Center", [1199.59, 196.78, 33.554], 1.633],
 			["Northern Gardens Medical Center", [980.71, 1831.61, 23.898], -0.049],
 			["Leftwood Hospital", [-1317.27, 1277.20, 22.370], 2.246],
-			["Acter Medical Center", [-1538.43, 344.58, 20.943], -0.156],	
-			
+			["Acter Medical Center", [-1538.43, 344.58, 20.943], -0.156],
+
 			// Fuel Stations
 			["Hove Beach Fuel Station", [1128.51, -359.55, 18.441], -0.052],
 			["Lancaster Fuel Station", [108.37, 1135.13, 13.975], 0.007],
-			["The Meat Quarter Fuel Station", [-434.30, -19.47, 9.864], 1.469],	
+			["The Meat Quarter Fuel Station", [-434.30, -19.47, 9.864], 1.469],
 			["Cerveza Heights Fuel Station", [1123.50, 328.84, 29.245], -0.154],
-			["Tudor Fuel Station", [-1389.91, 29.19, 6.875], 0.982],	
-			
+			["Tudor Fuel Station", [-1389.91, 29.19, 6.875], 0.982],
+
 			// Restaurants
 			["Star Junction Burger Shot", [-174.00, 276.96, 14.818], -0.029],
 			["South Bohan Burger Shot", [441.95, 1516.64, 16.289], -2.682],
 			["Industrial Burger Shot", [1096.93, 1598.33, 16.721], -2.289],
-			
+
 			// Night Clubs/Strip Clubs/Bars
 			["Perestroika Club", [957.58, -292.58, 19.644], -0.009],
 			["Triangle Club", [1210.90, 1718.18, 16.667], 1.819],
-			
+
 			// TW@ Cafes
 			["Outlook Internet Cafe", [977.42, -169.11, 24.013], 1.844],
 			["Berchem Internet Cafe", [-1584.46, 466.05, 25.398], -2.441],
-			
+
 			// Pay-n-Sprays
 			["Hove Beach Pay-n-Spray", [1058.57, -282.58, 20.760], -3.135],
 			["Leftwood Pay-n-Spray", [-1148.69, 1171.52, 16.457], -0.059],
-			
+
 			// Clothes Shops
 			["Hove Beach Russian Clothes Shop", [896.31, -442.59, 15.888], 1.500],
-			
+
 			// Car Wash
 			["Willis Car Wash", [1831.02, 360.20, 22.061], -1.515],
 			["Tudor Car Wash", [-1371.68, 35.13, 7.028], 1.029],
-			
+
 			// Gun Shops
 			["Downtown Broker Gun Shop", [1054.11, 86.84, 33.408], -1.574],
 			["Chinatown Gun Shop", [65.43, -342.36, 14.767], -1.589],
-			["Port Tudor Gun Shop", [-1338.77, 307.61, 13.378], -1.530],	
-			
+			["Port Tudor Gun Shop", [-1338.77, 307.61, 13.378], -1.530],
+
 			// Train Stations
 			["Hove Beach Train Station", [1000.41, -544.82, 14.854], -1.576],
 			["Schottler Train Station", [1303.93, -37.75, 28.377], 3.065],
@@ -2221,7 +2221,7 @@ let gameData = {
 			["San Quentin Ave Train Station", [373.12, 1625.93, 16.347], -2.249],
 			["Windmill Street Train Station", [749.97, 1447.44, 14.252], -0.120],
 			["Francis International Airport Train Station", [2297.57, 474.62, 6.086], 0.066],
-			
+
 			// Misc
 			["Hove Beach Laundromat", [1011.74, -325.33, 20.339], -1.402],
 			["The Exchange Docks", [-354.68, -661.62, 4.791], 2.066],
@@ -2231,9 +2231,9 @@ let gameData = {
 			["Alderney State Correctional Facility", [-1155.21, -374.34, 2.885], -1.680],
 			["Chinatown Bank of Liberty", [-34.92, -466.80, 14.75], -1.52],
 			["Suffolk Church", [-274.30, -281.63, 14.36], 1.56],
-			
+
 			// More will be added soon!
-		], 	
+		],
 	],
 	gtaivSkinModels: [
 		//["Nico Bellic", 1862763509],
@@ -2711,7 +2711,7 @@ let gameData = {
 		["Cablecar", -960289747],
 		["Subway", 800869680],
 		["El Train", -1953988645],
-	]	
+	]
 };
 
 // ---------------------------------------------------------------------------

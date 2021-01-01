@@ -55,7 +55,7 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 		messagePlayerError(client, "You cannot ban this person!");
 		return false;
     }
-    
+
     let splitParams = params.split(" ");
     let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
@@ -77,14 +77,14 @@ function ipBanCommand(command, params, client, fromDiscord) {
 	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
 		messagePlayerError(client, "You cannot ban this person!");
 		return false;
-    }    
-    
+    }
+
     let splitParams = params.split(" ");
     let targetClient = getPlayerFromParams(splitParams[0]);
-    let reason = splitParams.slice(1).join(" ");    
+    let reason = splitParams.slice(1).join(" ");
 
     messageAdminAction(`${targetClient.name} has been banned from the server (IP ban).`);
-    banIPAddress(targetClient.ip, getPlayerData(client).accountData.databaseId, reason);	
+    banIPAddress(targetClient.ip, getPlayerData(client).accountData.databaseId, reason);
     server.banIP(targetClient.ip);
     targetClient.disconnect();
 }
@@ -102,14 +102,14 @@ function subNetBanCommand(command, params, client, fromDiscord) {
 		messagePlayerError(client, "You cannot ban this person!");
 		return false;
     }
-    
+
     let splitParams = params.split(" ");
     let targetClient = getPlayerFromParams(splitParams[0]);
     let octetAmount = Number(splitParams[1]);
     let reason = splitParams.slice(2).join(" ");
 
 	messageAdminAction(`${targetClient.name} has been banned from the server (subnet ban).`);
-	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getPlayerData(client).accountData.databaseId, reason);	
+	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getPlayerData(client).accountData.databaseId, reason);
 }
 
 // ---------------------------------------------------------------------------
@@ -254,7 +254,7 @@ function isSubAccountBanned(subAccountId) {
             }
         }
     }
-    
+
     return false;
 }
 
@@ -269,7 +269,7 @@ function isIpAddressBanned(ipAddress) {
             }
         }
     }
-    
+
     return false;
 }
 

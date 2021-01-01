@@ -90,7 +90,7 @@ function createHouseCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function lockUnlockHouseCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 	
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -107,7 +107,7 @@ function lockUnlockHouseCommand(command, params, client) {
 function setHouseDescriptionCommand(command, params, client) {
 	let newHouseDescription = toString(params);
 
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -124,7 +124,7 @@ function setHouseDescriptionCommand(command, params, client) {
 
 function setHouseOwnerCommand(command, params, client) {
 	let newHouseOwner = getPlayerFromParams(params);
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 
 	if(!newHouseOwner) {
 		messagePlayerError("Player not found!");
@@ -144,7 +144,7 @@ function setHouseOwnerCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setHouseClanCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 
 	let clan = getClanFromParams(params);
 
@@ -167,46 +167,50 @@ function setHouseClanCommand(command, params, client) {
 
 function setHousePickupCommand(command, params, client) {
 	let typeParam = params || "house";
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError(client, "House not found!");
 		return false;
 	}
 
+	let entrancePickupModel = getGameConfig().pickupModels[getServerGame()].house;
+
 	if(isNaN(typeParam)) {
 		if(isNull(getGameConfig().pickupModels[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid house type! Use a house type name or a pickup model ID");
-			messagePlayerInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`)
+			messagePlayerInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`);
 			return false;
 		}
 
-		getHouseData(houseId).entrancePickupModel = getGameConfig().pickupModels[getServerGame()][typeParam];
+		entrancePickupModel = getGameConfig().pickupModels[getServerGame()][typeParam];
 	} else {
-		getHouseData(houseId).entrancePickupModel = toInteger(typeParam);
+		entrancePickupModel = toInteger(typeParam);
 	}
 
-	if(getHouseData(houseId).entrancePickupModel != -1) {
-		if(getHouseData(houseId).entrancePickup != null) {
-			destroyElement(getHouseData(houseId).entrancePickup);
+	for(let i in getHouseData(houseId).locations) {
+		getHouseData(houseId).locations[i].entrancePickupModel = entrancePickupModel;
+		deleteHouseLocationEntrancePickup(houseId, i);
+		if(getHouseData(houseId).locations[i].entrancePickupModel != -1) {
+			createHouseLocationEntrancePickup(houseId, i);
 		}
+	}
 
-		createHouseEntrancePickup(houseId);
-	}	
-
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]pickup display to [#AAAAAA]${toLowerCase(typeParam)}`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]pickup display to [#AAAAAA]${entrancePickupModel}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function setHouseBlipCommand(command, params, client) {
 	let typeParam = params || "house";
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError(client, "House not found!");
 		return false;
 	}
+
+	let entranceBlipModel = getGameConfig().blipSprites[getServerGame()].house;
 
 	if(isNaN(typeParam)) {
 		if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
@@ -215,26 +219,26 @@ function setHouseBlipCommand(command, params, client) {
 			return false;
 		}
 
-		getHouseData(houseId).entranceBlipModel = getGameConfig().blipSprites[getServerGame()][typeParam];
+		entranceBlipModel = getGameConfig().blipSprites[getServerGame()][typeParam];
 	} else {
-		getHouseData(houseId).entranceBlipModel = toInteger(typeParam);
+		entranceBlipModel = toInteger(typeParam);
 	}
 
-	if(getHouseData(houseId).entranceBlipModel != -1) {
-		if(getHouseData(houseId).entranceBlip != null) {
-			destroyElement(getHouseData(houseId).entranceBlip);
+	for(let i in getHouseData(houseId).locations) {
+		getHouseData(houseId).locations[i].entranceBlipModel = entranceBlipModel;
+		deleteHouseLocationEntranceBlip(houseId, i);
+		if(getHouseData(houseId).locations[i].entranceBlipModel != -1) {
+			createHouseLocationEntranceBlip(houseId, i);
 		}
+	}
 
-		createHouseEntranceBlip(houseId);
-	}	
-
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]blip display to [#AAAAAA]${entranceBlipModel}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function moveHouseEntranceCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 	
 	getHouseData(houseId).entrancePosition = getPlayerPosition(client);
 	getHouseData(houseId).entranceDimension = getPlayerVirtualWorld(client);
@@ -252,7 +256,7 @@ function moveHouseEntranceCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function moveHouseExitCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 	
 	getHouseData(houseId).entrancePosition = getPlayerPosition(client);
 	getHouseData(houseId).entranceDimension = getPlayerVirtualWorld(client);
@@ -270,7 +274,7 @@ function moveHouseExitCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function deleteHouseCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -353,11 +357,12 @@ function getHouseDataFromDatabaseId(databaseId) {
 // ---------------------------------------------------------------------------
 
 function getClosestHouseEntrance(position) {
-	let houses = getServerData().houses;
-	let closest = 0;
+	let closest = getServerData().houses[0].locations[0];
 	for(let i in houses) {
-		if(getDistance(houses[i].entrancePosition, position) <= getDistance(houses[closest].entrancePosition, position)) {
-			closest = i;
+		for(let j in getServerData().houses[i].locations) {
+			if(getDistance(position, houses[i].locations[j].entrancePosition) <= getDistance(position, closest.entrancePosition)) {
+				closest = getServerData().houses[i].locations[j];
+			}
 		}
 	}
 	return closest;
@@ -566,7 +571,7 @@ function getHouseOwnerTypeText(ownerType) {
 // ---------------------------------------------------------------------------
 
 function getHouseInfoCommand(command, params, client) {
-	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
 
 	if(!areParamsEmpty(params)) {
 		houseId = toInteger(params);

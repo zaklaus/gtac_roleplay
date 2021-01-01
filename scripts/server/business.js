@@ -68,7 +68,7 @@ function loadBusinessesFromDatabase() {
 // ---------------------------------------------------------------------------
 
 function loadBusinessLocationsFromDatabase(businessId) {
-	console.log(`[Asshat.Business]: Loading locations for business '${getBusinessData(businessId).name}' from database ...`);
+	console.log(`[Asshat.Business]: Loading locations for business ${businessId} from database ...`);
 
 	let tempBusinessLocations = [];
 	let dbConnection = connectToDatabase();
@@ -82,7 +82,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempBusinessLocationData = new serverClasses.businessLocationData(dbAssoc);
 					tempBusinessLocations.push(tempBusinessLocationData);
-					console.log(`[Asshat.Business]: Location for business '${getBusinessData(businessId).name}' loaded from database successfully!`);
+					console.log(`[Asshat.Business]: Location for business '${businessId}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -90,7 +90,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Business]: ${tempBusinessLocations.length} locations for business '${getBusinessData(businessId).name}' loaded from database successfully`);
+	console.log(`[Asshat.Business]: ${tempBusinessLocations.length} locations for business ${businessId} loaded from database successfully`);
 	return tempBusinessLocations;
 }
 
@@ -117,7 +117,7 @@ function createBusinessLocationCommand(command, params, client) {
 	}
 
 	let locationType = toString(splitParams[0]);
-	let businessId = (isPlayerInAnyBusiness(splitParams[1])) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(splitParams[1])) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -160,7 +160,7 @@ function createBusiness(name, entrancePosition, exitPosition, entrancePickupMode
 // ---------------------------------------------------------------------------
 
 function deleteBusinessCommand(command, params, client) {
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -188,7 +188,7 @@ function deleteBusinessLocationCommand(command, params, client) {
 function setBusinessNameCommand(command, params, client) {
 	let newBusinessName = toString(params);
 
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError("Business not found!");
@@ -205,7 +205,7 @@ function setBusinessNameCommand(command, params, client) {
 
 function setBusinessOwnerCommand(command, params, client) {
 	let newBusinessOwner = getPlayerFromParams(params);
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!newBusinessOwner) {
 		messagePlayerError("Player not found!");
@@ -226,7 +226,7 @@ function setBusinessOwnerCommand(command, params, client) {
 
 function setBusinessClanCommand(command, params, client) {
 	let clanId = getClanFromParams(params);
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError("Business not found!");
@@ -246,7 +246,7 @@ function setBusinessClanCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setBusinessJobCommand(command, params, client) {
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -277,7 +277,7 @@ function setBusinessJobCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setBusinessPublicCommand(command, params, client) {
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -296,7 +296,7 @@ function setBusinessPublicCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function lockBusinessCommand(command, params, client) {
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -317,7 +317,7 @@ function lockBusinessCommand(command, params, client) {
 function setBusinessEntranceFeeCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let entranceFee = toInteger(splitParams[0]) || 0;
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError("Business not found!");
@@ -374,7 +374,7 @@ function getBusinessInfoCommand(command, params, client) {
 function setBusinessPickupCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let typeParam = splitParams[0] || "business";
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -407,7 +407,8 @@ function setBusinessBlipCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let typeParam = splitParams[0] || "business";
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let closestEntrance = getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : closestEntrance.business;
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -426,10 +427,10 @@ function setBusinessBlipCommand(command, params, client) {
 		getBusinessData(businessId).entranceBlipModel = toInteger(typeParam);
 	}
 
-	deleteBusinessEntranceBlip(businessId);
-	deleteBusinessExitBlip(businessId);
-	createBusinessEntranceBlip(businessId);
-	createBusinessExitBlip(businessId);
+	deleteBusinessLocationEntranceBlip(businessId, closestEntrance.index);
+	deleteBusinessLocationExitBlip(businessId, closestEntrance.index);
+	createBusinessLocationEntranceBlip(businessId, closestEntrance.index);
+	createBusinessLocationExitBlip(businessId, closestEntrance.index);
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
@@ -445,7 +446,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let amount = toInteger(splitParams[0]) || 0;
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError("Business not found!");
@@ -476,7 +477,7 @@ function depositIntoBusinessCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let amount = toInteger(splitParams[0]) || 0;
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -497,7 +498,7 @@ function depositIntoBusinessCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function viewBusinessTillAmountCommand(command, params, client) {
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -514,7 +515,7 @@ function viewBusinessTillAmountCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function moveBusinessEntranceCommand(command, params, client) {
-	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -541,7 +542,7 @@ function moveBusinessEntranceCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function moveBusinessExitCommand(command, params, client) {
-	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)).business;
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -578,11 +579,12 @@ function getBusinessDataFromDatabaseId(databaseId) {
 // ---------------------------------------------------------------------------
 
 function getClosestBusinessEntrance(position) {
-	let closest = 0;
-	let businesses = getServerData().businesses;
+	let closest = getServerData().businesses[0].locations[0];
 	for(let i in businesses) {
-		if(getDistance(position, businesses[i].entrancePosition) <= getDistance(position, businesses[closest].entrancePosition)) {
-			closest = i;
+		for(let j in getServerData().businesses[i].locations) {
+			if(getDistance(position, businesses[i].locations[j].entrancePosition) <= getDistance(position, closest.entrancePosition)) {
+				closest = getServerData().businesses[i].locations[j];
+			}
 		}
 	}
 	return closest;

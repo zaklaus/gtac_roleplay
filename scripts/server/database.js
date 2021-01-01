@@ -11,10 +11,10 @@
 // ----------------------------------------------------------------------------
 
 let databaseConfig = {
-	host: "158.69.238.64",
-	user: "db24053",
-	pass: "G3At3d7BsA",
-	name: "db24053",
+	host: "127.0.0.1",
+	user: "gtac-main",
+	pass: "nEs38AWo4IQEvatEmOteMoruzeREQe",
+	name: "gtac_main",
 	port: 3306,
 	usePersistentConnection: true,
 }

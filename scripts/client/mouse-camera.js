@@ -1,4 +1,16 @@
-// CREDITS TO LUCASC190 FOR MAKING THIS
+
+// ===========================================================================
+// Asshat-Gaming Roleplay
+// https://github.com/VortrexFTW/gtac_asshat_rp
+// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// ---------------------------------------------------------------------------
+// FILE: mouse-camera.js
+// DESC: Provides a freelook camera similar to SA for III and VC
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
+// CREDITS TO LUCASC190 FOR MAKING THE MOUSE CAMERA
+// WALKING CODE ADDED BY VORTREX
 
 function SetStandardControlsEnabled(bEnabled)
 {

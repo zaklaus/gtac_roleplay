@@ -42,6 +42,8 @@ function initServerScripts() {
 	initAllClients();
 
 	loadGameFixesResource();
+
+	serverStartTime = new Date().getTime()/1000;
 }
 
 // ---------------------------------------------------------------------------

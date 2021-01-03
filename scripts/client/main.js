@@ -8,8 +8,6 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-setErrorMode(RESOURCEERRORMODE_STRICT);
-
 // ---------------------------------------------------------------------------
 
 let bigMessageFont = null;
@@ -39,7 +37,7 @@ let isWalking = false;
 addEvent("OnLocalPlayerEnterSphere", 1);
 addEvent("OnLocalPlayerExitSphere", 1);
 addEvent("OnLocalPlayerEnterVehicle", 2);
-addEvent("OnLocalPlayerExitVehicle", 2); 
+addEvent("OnLocalPlayerExitVehicle", 2);
 
 // ---------------------------------------------------------------------------
 
@@ -51,7 +49,7 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
             smallGameMessageFont = lucasFont.createFont(fontStream, 20.0);
 			fontStream.close();
 		}
-		
+
 		let logoStream = openFile("files/images/main-logo.png");
 		if(logoStream != null) {
 			mainLogo = drawing.loadPNG(logoStream);
@@ -65,8 +63,8 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
 // ---------------------------------------------------------------------------
 
 bindEventHandler("onResourceStart", thisResource, function(event, resource) {
-    triggerNetworkEvent("ag.clientStarted");  
-    
+    triggerNetworkEvent("ag.clientStarted");
+
     if(gta.game == GAME_GTA_SA) {
         gta.setDefaultInteriors(false);
         gta.setCiviliansEnabled(false);
@@ -89,13 +87,37 @@ addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.restoreCamera", function() {
+    console.log(`[Asshat.Main] Camera restored`);
     gta.restoreCamera(true);
 });
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.clearPeds", function() {
+    console.log(`[Asshat.Main] Clearing all self-owned peds ...`);
+    getElementsByType(ELEMENT_CIVILIAN).forEach(function(ped) {
+        if(ped.isOwner) {
+            destroyElement(ped);
+        }
+    });
+    console.log(`[Asshat.Main] All self-owned peds cleared`);
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.logo", function(state) {
+    console.log(`[Asshat.Main] Server logo ${(state) ? "enabled" : "disabled"}`);
     showLogo = state;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.ambience", function(state) {
+    console.log(`[Asshat.Main] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
+    gta.setTrafficEnabled(state);
+    if(gta.game != GAME_GTA_SA) {
+        gta.setCiviliansEnabled(state);
+    }
 });
 
 // ---------------------------------------------------------------------------
@@ -111,17 +133,6 @@ addNetworkHandler("ag.runCode", function(code, returnTo) {
     triggerNetworkEvent("ag.runCodeSuccess", returnTo, returnVal, code);
 });
 
-// ---------------------------------------------------------------------------
-
-addEventHandler("onPickupCollected", function(event, pickup, ped) {
-});
-
-// ----------------------------------------------------------------------------
-
-bindEventHandler("OnResourceStop", thisResource, function(event, resource) {
-
-});
-
 // ----------------------------------------------------------------------------
 
 function enterVehicleAsPassenger() {
@@ -130,7 +141,7 @@ function enterVehicleAsPassenger() {
 		if(tempVehicle != null) {
 			localPlayer.enterVehicle(tempVehicle, false);
 		}
-	}	
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -142,61 +153,18 @@ function getClosestVehicle(pos) {
 // ----------------------------------------------------------------------------
 
 addNetworkHandler("ag.clearWeapons", function() {
+    console.log(`[Asshat.Main] Clearing weapons`);
     localPlayer.clearWeapons();
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
+    console.log(`[Asshat.Main] Giving weapon ${weaponId} with ${ammo} ammo`);
     localPlayer.giveWeapon(weaponId, ammo, active);
 });
 
-// ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.showRegisterMessage", function() {
-    showRegisterMessage = true;
-    showLoginMessage = false;
-});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.showLoginMessage", function() {
-    showLoginMessage = true;
-    showRegisterMessage = false;
-});
-
-// ---------------------------------------------------------------------------
-
-function syncVehicle(vehicle) {
-    if(getEntityData(vehicle, "ag.lights") != null) {
-        let lights = getEntityData(vehicle, "ag.lights");
-        if(lights != vehicle.lights) {
-            vehicle.lights = lights;
-        }
-    }
-
-    if(getEntityData(vehicle, "ag.engine") != null) {
-        let engine = getEntityData(vehicle, "ag.engine");
-        if(engine != vehicle.engine) {
-            vehicle.engine = engine;
-        }
-    }
-
-    if(getEntityData(vehicle, "ag.siren") != null) {
-        let siren = getEntityData(vehicle, "ag.siren");
-        if(siren != vehicle.siren) {
-            vehicle.siren = siren;
-        }  
-    }
-}
-addNetworkHandler("ag.veh.sync", syncVehicle);
-
-// ---------------------------------------------------------------------------
-
-function syncCivilian(civilian) {
-
-}
-addNetworkHandler("ag.civ.sync", syncCivilian);
 
 // ---------------------------------------------------------------------------
 
@@ -240,14 +208,14 @@ function showIslandBlips() {
 function getIslandFromPosition(position) {
     switch(gta.game) {
         case GAME_GTA_III:
-            if(position.x > 616) {        
+            if(position.x > 616) {
                 return 1;
             } else if(position.x < -283) {
                 return 3;
             }
             return 2;
 
-        default: 
+        default:
             return 0;
     }
 }
@@ -313,17 +281,25 @@ addNetworkHandler("ag.removeFromVehicle", function() {
 // ---------------------------------------------------------------------------
 
 function initLocalPlayer(player) {
-    addEventHandler("onProcess", processEvent); 
+    addEventHandler("onProcess", processEvent);
 }
 
 // ---------------------------------------------------------------------------
 
 function processEvent(event, deltaTime) {
     if(localPlayer != null) {
+        localPlayer.wantedLevel = 0;
+
         let position = localPlayer.position;
         if(localPlayer.vehicle) {
             position = localPlayer.vehicle.position;
         }
+
+        getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
+            if(pickup.isOwner) {
+                destroyElement(pickup);
+            }
+        });
 
         getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
             if(position.distance(sphere.position) <= sphere.radius) {
@@ -337,19 +313,13 @@ function processEvent(event, deltaTime) {
                     inSphere = false;
                     triggerEvent("OnLocalPlayerExitSphere", null, sphere);
                     //triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
-                }           
-            }
-        });
-
-        getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
-            if(pickup.owner != -1) {
-                destroyElement(pickup);
+                }
             }
         });
 
         if(gta.game == GAME_GTA_SA) {
             if(jobRouteStopSphere != null) {
-                if(position.distance(jobRouteStopSphere.position) <= 2.0) { 
+                if(position.distance(jobRouteStopSphere.position) <= 2.0) {
                     enteredJobRouteSphere();
                 }
             }
@@ -357,27 +327,40 @@ function processEvent(event, deltaTime) {
 
         if(localPlayer.vehicle) {
             if(!inVehicle) {
-                inVehicle = localPlayer.vehicle;
                 triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
                 triggerNetworkEvent("ag.onPlayerEnterVehicle");
+                inVehicle = localPlayer.vehicle;
             }
         } else {
             if(inVehicle) {
                 triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
                 triggerNetworkEvent("ag.onPlayerExitVehicle");
                 inVehicle = false;
-            }           
-        }
-        
-        // Using vehicle.engine doesn't disable the vehicle. Need to find another way
-        if(localPlayer.vehicle != null) {
-            if(!localPlayer.vehicle.engine) {
-                localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
-                localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);   
             }
         }
     }
 }
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnRender", function(event) {
+    // OnProcess was allowing vehicles to slide slowly. This shouldn't.
+    if(inVehicle) {
+        if(!localPlayer.vehicle.engine) {
+            localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
+            localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
+            if(vehicleParkedPosition) {
+                localPlayer.vehicle.position = parkedVehiclePosition;
+                localPlayer.vehicle.heading = parkedVehicleHeading;
+            }
+        } else {
+            if(vehicleParkedPosition) {
+                parkedVehiclePosition = false;
+                parkedVehicleHeading = false;
+            }
+        }
+    }
+});
 
 // ---------------------------------------------------------------------------
 
@@ -408,19 +391,19 @@ function openAllGarages() {
                 openGarage(i);
             }
             break;
-        
+
         case GAME_GTA_VC:
             for(let i=0;i<=32;i++) {
                 openGarage(i);
-            }            
+            }
             break;
 
         case GAME_GTA_SA:
             for(let i=0;i<=44;i++) {
                 openGarage(i);
-            }            
-            break; 
-            
+            }
+            break;
+
         default:
             break;
     }
@@ -435,19 +418,19 @@ function closeAllGarages() {
                 closeGarage(i);
             }
             break;
-        
+
         case GAME_GTA_VC:
             for(let i=0;i<=32;i++) {
                 closeGarage(i);
-            }            
+            }
             break;
 
         case GAME_GTA_SA:
             for(let i=0;i<=44;i++) {
                 closeGarage(i);
-            }            
-            break; 
-            
+            }
+            break;
+
         default:
             break;
     }
@@ -487,13 +470,13 @@ addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, ped
 
 addNetworkHandler("ag.showBusStop", function(position, colour) {
     if(gta.game == GAME_GTA_SA) {
-        jobRouteStopSphere = gta.createPickup(1318, position, 1);    
+        jobRouteStopSphere = gta.createPickup(1318, position, 1);
     } else {
         jobRouteStopSphere = gta.createSphere(position, 3);
         jobRouteStopSphere.colour = colour;
     }
 
-    jobRouteStopBlip = gta.createBlip(position, 0, 2, colour);    
+    jobRouteStopBlip = gta.createBlip(position, 0, 2, colour);
 });
 
 // ---------------------------------------------------------------------------
@@ -523,6 +506,16 @@ addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
 addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
     if(sphere == jobRouteStopSphere) {
         enteredJobRouteSphere();
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnLocalPlayerEnterVehicle", function(event, vehicle) {
+    localPlayer.vehicle.engine = false;
+    if(!localPlayer.vehicle.engine) {
+        parkedVehiclePosition = vehicle.position;
+        parkedVehicleHeading = vehicle.position;
     }
 });
 

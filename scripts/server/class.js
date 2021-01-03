@@ -705,7 +705,7 @@ function initClassTable() {
 			}
 		},
 		keyBindData: class {
-			constructor(keyBindAssoc, key = 0, commandString = "") {
+			constructor(dbAssoc, key = 0, commandString = "") {
 				this.databaseId = 0;
 				this.key = key;
 				this.account = 0;

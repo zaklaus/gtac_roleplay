@@ -13,6 +13,8 @@ function initHouseScript() {
 	getServerData().houses = loadHousesFromDatabase();
 	createAllHousePickups();
 	createAllHouseBlips();
+
+	setAllHouseIndexes();
 	console.log("[Asshat.House]: House script initialized successfully!");
 	return true;
 }
@@ -695,6 +697,14 @@ function exitHouse(client) {
 		setPlayerPosition(client, getServerData().house[houseId].entrancePosition);
 	}
 	removeEntityData(client, "ag.inHouse");
+}
+
+// ---------------------------------------------------------------------------
+
+function setAllHouseIndexes() {
+	for(let i in getServerData().houses) {
+		getServerData().houses[i].index = i;
+	}
 }
 
 // ---------------------------------------------------------------------------

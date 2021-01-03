@@ -96,6 +96,7 @@ function initClassTable() {
 				this.client = client;
 				this.currentSubAccount = -1;
 				this.loggedIn = false;
+				this.index = -1;
 
 				this.busRoute = null;
 				this.busRouteStop = null;
@@ -217,38 +218,68 @@ function initClassTable() {
 		},
 		subAccountData: class {
 			constructor(subAccountAssoc) {
-				if(!subAccountAssoc) {
-					return;
-				}
+				this.databaseId = 0;
+				this.server = 0;
+				this.firstName = "John";
+				this.lastName = "Doe";
+				this.account = 0;
+				this.skin = 0;
+				this.cash = 0;
+				this.placeOfOrigin = "";
+				this.dateOfBirth = "";
+				this.spawnPosition = toVector3(0.0, 0.0, 0.0);
+				this.spawnHeading = 0.0;
+				this.lastLogin = 0;
 
-				this.databaseId = subAccountAssoc["sacct_id"];
-				this.server = subAccountAssoc["sacct_server"];
-				this.firstName = subAccountAssoc["sacct_name_first"];
-				this.lastName = subAccountAssoc["sacct_name_last"];
-				this.account = subAccountAssoc["sacct_acct"];
-				this.skin = subAccountAssoc["sacct_skin"];
-				this.cash = subAccountAssoc["sacct_cash"];
-				this.placeOfOrigin = subAccountAssoc["sacct_origin"];
-				this.dateOfBirth = subAccountAssoc["sacct_when_born"];
-				this.spawnPosition = toVector3(subAccountAssoc["sacct_pos_x"], subAccountAssoc["sacct_pos_y"], subAccountAssoc["sacct_pos_z"]);
-				this.spawnHeading = toFloat(subAccountAssoc["sacct_angle"]);
-				this.lastLogin = toInteger(subAccountAssoc["sacct_last_login"]);
-
-				this.clan = toInteger(subAccountAssoc["sacct_clan"]);
-				this.clanFlags = toInteger(subAccountAssoc["sacct_clan_flags"]);
-				this.clanRank = toInteger(subAccountAssoc["sacct_clan_rank"]);
-				this.clanTitle = toInteger(subAccountAssoc["sacct_clan_title"]);
+				this.clan = 0;
+				this.clanFlags = 0;
+				this.clanRank = 0;
+				this.clanTitle = 0;
 
 				this.isWorking = false;
 				this.jobUniform = this.skin;
 				this.lastJobVehicle = null;
-				this.job = subAccountAssoc["sacct_job"];
+				this.job = 0;
 
 				this.weapons = [];
 				this.inJail = false;
 
 				this.interior = 0;
 				this.dimension = 0;
+
+				if(subAccountAssoc) {
+					this.databaseId = subAccountAssoc["sacct_id"];
+					this.server = subAccountAssoc["sacct_server"];
+					this.firstName = subAccountAssoc["sacct_name_first"];
+					this.lastName = subAccountAssoc["sacct_name_last"];
+					this.account = subAccountAssoc["sacct_acct"];
+					this.skin = subAccountAssoc["sacct_skin"];
+					this.cash = subAccountAssoc["sacct_cash"];
+					this.placeOfOrigin = subAccountAssoc["sacct_origin"];
+					this.dateOfBirth = subAccountAssoc["sacct_when_born"];
+					this.spawnPosition = toVector3(subAccountAssoc["sacct_pos_x"], subAccountAssoc["sacct_pos_y"], subAccountAssoc["sacct_pos_z"]);
+					this.spawnHeading = toFloat(subAccountAssoc["sacct_angle"]);
+					this.lastLogin = toInteger(subAccountAssoc["sacct_last_login"]);
+
+					this.clan = toInteger(subAccountAssoc["sacct_clan"]);
+					this.clanFlags = toInteger(subAccountAssoc["sacct_clan_flags"]);
+					this.clanRank = toInteger(subAccountAssoc["sacct_clan_rank"]);
+					this.clanTitle = toInteger(subAccountAssoc["sacct_clan_title"]);
+
+					this.isWorking = false;
+					this.jobUniform = this.skin;
+					this.lastJobVehicle = null;
+					this.job = subAccountAssoc["sacct_job"];
+
+					this.weapons = [];
+					this.inJail = false;
+
+					this.interior = subAccountAssoc["sacct_int"];
+					this.dimension = subAccountAssoc["sacct_vw"];
+					return;
+				}
+
+
 			}
 		},
 		businessData: class {
@@ -260,6 +291,7 @@ function initClassTable() {
 				this.buyPrice = 0;
 				this.locked = false;
 				this.hasInterior = false;
+				this.index = -1;
 
 				this.entrancePosition = false;
 				this.entranceRotation = 0.0;
@@ -311,20 +343,30 @@ function initClassTable() {
 			}
 		},
 		businessLocationData: class {
-			constructor(businessLocationAssoc) {
-				if(!businessLocationAssoc) {
-					return;
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.name = "";
+				this.type = 0;
+				this.business = 0;
+				this.enabled = false;
+				this.index = -1;
+
+				this.position = toVector3(0.0, 0.0, 0.0);
+				this.interior = 0;
+				this.dimension = 0;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc("biz_loc_id"));
+					this.name = toString(dbAssoc("biz_loc_name"));
+					this.type = toInteger(dbAssoc("biz_loc_type"));
+					this.business = toInteger(dbAssoc("biz_loc_biz"));
+					this.enabled = intToBool(toInteger(dbAssoc("biz_loc_enabled")));
+					this.index = -1;
+
+					this.position = toVector3(toFloat(dbAssoc("biz_loc_pos_x")), toFloat(dbAssoc("biz_loc_pos_y")), toFloat(dbAssoc("biz_loc_pos_z")));
+					this.interior = toInteger(dbAssoc["biz_loc_int"]);
+					this.dimension = toInteger(dbAssoc["biz_loc_vw"]);
 				}
-
-				this.databaseId = toInteger(businessLocationAssoc("biz_loc_id"));
-				this.name = toString(businessLocationAssoc("biz_loc_name"));
-				this.type = toInteger(businessLocationAssoc("biz_loc_type"));
-				this.business = toInteger(businessLocationAssoc("biz_loc_biz"));
-				this.enabled = intToBool(toInteger(businessLocationAssoc("biz_loc_enabled")));
-
-				this.position = toVector3(toFloat(businessLocationAssoc("biz_loc_pos_x")), toFloat(businessLocationAssoc("biz_loc_pos_y")), toFloat(businessLocationAssoc("biz_loc_pos_z")));
-				this.interior = toInteger(businessLocationAssoc["biz_loc_int"]);
-				this.dimension = toInteger(businessLocationAssoc["biz_loc_vw"]);
 			}
 		},
 		houseData: class {
@@ -336,6 +378,7 @@ function initClassTable() {
 				this.buyPrice = 0;
 				this.locked = false;
 				this.hasInterior = false;
+				this.index = -1;
 
 				this.entrancePosition = false;
 				this.entranceRotation = 0.0;
@@ -393,6 +436,7 @@ function initClassTable() {
 				this.server = getServerId();
 				this.model = (vehicle != false) ? vehicle.modelIndex : 0;
 				this.vehicle = vehicle;
+				this.index = -1;
 
 				// Ownership
 				this.ownerType = AG_VEHOWNER_NONE;
@@ -511,7 +555,7 @@ function initClassTable() {
 			}
 		},
 		jobData: class {
-			constructor(jobAssoc) {
+			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.type = AG_JOB_NONE;
 				this.name = "Unnamed";
@@ -521,7 +565,7 @@ function initClassTable() {
 				this.colour = toColour(0, 0, 0, 255);
 				this.whiteListEnabled = false;
 				this.blackListEnabled = false;
-				this.id = -1;
+				this.index = -1;
 
 				this.equipment = [];
 				this.uniforms = [];
@@ -529,16 +573,16 @@ function initClassTable() {
 				this.whiteList = [];
 				this.blackList = [];
 
-				if(jobAssoc) {
-					this.databaseId = jobAssoc["job_id"];
-					this.type = jobAssoc["job_type"];
-					this.name = jobAssoc["job_name"];
-					this.enabled = jobAssoc["job_enabled"];
-					this.blipModel = jobAssoc["job_blip"];
-					this.pickupModel = jobAssoc["job_pickup"];
-					this.colour = toColour(jobAssoc["job_colour_r"], jobAssoc["job_colour_g"], jobAssoc["job_colour_b"], 255);
-					this.whiteListEnabled = jobAssoc["job_whitelist"];
-					this.blackListEnabled = jobAssoc["job_blacklist"];
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["job_id"];
+					this.type = dbAssoc["job_type"];
+					this.name = dbAssoc["job_name"];
+					this.enabled = dbAssoc["job_enabled"];
+					this.blipModel = dbAssoc["job_blip"];
+					this.pickupModel = dbAssoc["job_pickup"];
+					this.colour = toColour(dbAssoc["job_colour_r"], dbAssoc["job_colour_g"], dbAssoc["job_colour_b"], 255);
+					this.whiteListEnabled = dbAssoc["job_whitelist"];
+					this.blackListEnabled = dbAssoc["job_blacklist"];
 
 					this.equipment = [];
 					this.uniforms = [];
@@ -549,60 +593,63 @@ function initClassTable() {
 			}
 		},
 		jobEquipmentData: class {
-			constructor(jobEquipmentAssoc) {
+			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.name = "Unnamed";
 				this.requiredRank = 0;
 				this.enabled = false;
+				this.index = -1;
 
-				if(jobEquipmentAssoc) {
-					this.databaseId = jobEquipmentAssoc["job_equip_id"];
-					this.job = jobEquipmentAssoc["job_equip_job"];
-					this.name = jobEquipmentAssoc["job_equip_name"];
-					this.requiredRank = jobEquipmentAssoc["job_equip_minrank"];
-					this.enabled = jobEquipmentAssoc["job_equip_enabled"];
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["job_equip_id"];
+					this.job = dbAssoc["job_equip_job"];
+					this.name = dbAssoc["job_equip_name"];
+					this.requiredRank = dbAssoc["job_equip_minrank"];
+					this.enabled = dbAssoc["job_equip_enabled"];
 				}
 			}
 		},
 		jobEquipmentWeaponData: class {
-			constructor(jobEquipmentWeaponAssoc) {
+			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.equipmentId = 0;
 				this.weaponId = 0;
 				this.ammo = 0;
 				this.enabled = false;
+				this.index = -1;
 
-				if(jobEquipmentWeaponAssoc) {
-					this.databaseId = jobEquipmentWeaponAssoc["job_equip_wep_id"];
-					this.equipmentId = jobEquipmentWeaponAssoc["job_equip_wep_equip"];
-					this.weaponId = jobEquipmentWeaponAssoc["job_equip_wep_wep"];
-					this.ammo = jobEquipmentWeaponAssoc["job_equip_wep_ammo"];
-					this.enabled = jobEquipmentWeaponAssoc["job_equip_wep_enabled"];
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["job_equip_wep_id"];
+					this.equipmentId = dbAssoc["job_equip_wep_equip"];
+					this.weaponId = dbAssoc["job_equip_wep_wep"];
+					this.ammo = dbAssoc["job_equip_wep_ammo"];
+					this.enabled = dbAssoc["job_equip_wep_enabled"];
 				}
 			}
 		},
 		jobUniformData: class {
-			constructor(jobUniformAssoc) {
+			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.name = "Unnamed";
 				this.requiredRank = 0
 				this.skin = -1;
 				this.enabled = false;
+				this.index = -1;
 
-				if(jobUniformAssoc) {
-					this.databaseId = jobUniformAssoc["job_uniform_id"];
-					this.job = jobUniformAssoc["job_uniform_job"];
-					this.name = jobUniformAssoc["job_uniform_name"];
-					this.requiredRank = jobUniformAssoc["job_uniform_minrank"];
-					this.skin = jobUniformAssoc["job_uniform_skin"];
-					this.enabled = jobUniformAssoc["job_uniform_skin"];
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["job_uniform_id"];
+					this.job = dbAssoc["job_uniform_job"];
+					this.name = dbAssoc["job_uniform_name"];
+					this.requiredRank = dbAssoc["job_uniform_minrank"];
+					this.skin = dbAssoc["job_uniform_skin"];
+					this.enabled = dbAssoc["job_uniform_skin"];
 				}
 			}
 		},
 		jobLocationData: class {
-			constructor(jobLocationAssoc) {
+			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.position = toVector3(0.0, 0.0, 0.0);
@@ -611,46 +658,49 @@ function initClassTable() {
 				this.enabled = false;
 				this.interior = 0;
 				this.dimension = 0;
+				this.index = -1;
 
-				if(jobLocationAssoc) {
-					this.databaseId = jobLocationAssoc["job_loc_id"];
-					this.job = jobLocationAssoc["job_loc_job"];
-					this.position = toVector3(jobLocationAssoc["job_loc_pos_x"], jobLocationAssoc["job_loc_pos_y"], jobLocationAssoc["job_loc_pos_z"]);
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["job_loc_id"];
+					this.job = dbAssoc["job_loc_job"];
+					this.position = toVector3(dbAssoc["job_loc_pos_x"], dbAssoc["job_loc_pos_y"], dbAssoc["job_loc_pos_z"]);
 					this.blip = false;
 					this.pickup = false;
-					this.enabled = jobLocationAssoc["job_loc_enabled"];
-					this.interior = jobLocationAssoc["job_loc_int"];
-					this.dimension = jobLocationAssoc["job_loc_vw"];
+					this.enabled = dbAssoc["job_loc_enabled"];
+					this.interior = dbAssoc["job_loc_int"];
+					this.dimension = dbAssoc["job_loc_vw"];
 				}
 			}
 		},
 		jobWhiteListData: class {
-			constructor(jobWhiteListAssoc) {
+			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.subAccount = 0
 				this.enabled = false;
+				this.index = -1;
 
-				if(jobWhiteListAssoc) {
-					this.databaseId = jobWhiteListAssoc["job_wl_id"];
-					this.job = jobWhiteListAssoc["job_wl_job"];
-					this.subAccount = jobWhiteListAssoc["job_wl_sacct"]
-					this.enabled = jobWhiteListAssoc["job_wl_enabled"];
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["job_wl_id"];
+					this.job = dbAssoc["job_wl_job"];
+					this.subAccount = dbAssoc["job_wl_sacct"]
+					this.enabled = dbAssoc["job_wl_enabled"];
 				}
 			}
 		},
 		jobBlackListData: class {
-			constructor(jobBlackListAssoc) {
+			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.subAccount = 0
 				this.enabled = false;
+				this.index = -1;
 
-				if(jobBlackListAssoc) {
-					this.databaseId = jobBlackListAssoc["job_bl_id"];
-					this.job = jobBlackListAssoc["job_bl_job"];
-					this.subAccount = jobBlackListAssoc["job_bl_sacct"]
-					this.enabled = jobBlackListAssoc["job_bl_enabled"];
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["job_bl_id"];
+					this.job = dbAssoc["job_bl_job"];
+					this.subAccount = dbAssoc["job_bl_sacct"]
+					this.enabled = dbAssoc["job_bl_enabled"];
 				}
 			}
 		},
@@ -663,39 +713,49 @@ function initClassTable() {
 				this.whenAdded = 0;
 				this.enabled = true;
 				this.keyState = false;
+				this.index = -1;
 
-				if(keyBindAssoc) {
-					this.databaseId = keyBindAssoc["acct_hotkey_id"];
-					this.key = toInteger(keyBindAssoc["acct_hotkey_key"]);
-					this.account = toInteger(keyBindAssoc["acct_hotkey_acct"]);
-					this.commandString = keyBindAssoc["acct_hotkey_cmdstr"];
-					this.whenAdded = keyBindAssoc["acct_hotkey_when_added"];
-					this.enabled = intToBool(keyBindAssoc["acct_hotkey_enabled"]);
-					this.keyState = intToBool(keyBindAssoc["acct_hotkey_down"]);
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["acct_hotkey_id"];
+					this.key = toInteger(dbAssoc["acct_hotkey_key"]);
+					this.account = toInteger(dbAssoc["acct_hotkey_acct"]);
+					this.commandString = dbAssoc["acct_hotkey_cmdstr"];
+					this.whenAdded = dbAssoc["acct_hotkey_when_added"];
+					this.enabled = intToBool(dbAssoc["acct_hotkey_enabled"]);
+					this.keyState = intToBool(dbAssoc["acct_hotkey_down"]);
 				}
 			}
 		},
 		blackListedGameScriptData: class {
 			constructor(dbAssoc) {
-				if(!dbAssoc) {
-					return;
+				this.databaseId = 0;
+				this.enabled = false
+				this.server = 0;
+				this.scriptName = "";
+				this.index = -1;
+
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["ac_script_bl_id"];
+					this.enabled = intToBool(dbAssoc["ac_script_bl_enabled"]);
+					this.server = dbAssoc["ac_script_bl_server"];
+					this.scriptName = dbAssoc["ac_script_bl_name"];
 				}
-				this.databaseId = dbAssoc["ac_script_bl_id"];
-				this.enabled = intToBool(dbAssoc["ac_script_bl_enabled"]);
-				this.server = dbAssoc["ac_script_bl_server"];
-				this.scriptName = dbAssoc["ac_script_bl_name"];
 			}
 		},
 		whiteListedGameScriptData: class {
 			constructor(dbAssoc) {
-				if(!dbAssoc) {
-					return;
-				}
+				this.databaseId = 0;
+				this.enabled = false
+				this.server = 0;
+				this.scriptName = "";
+				this.index = -1;
 
-				this.databaseId = dbAssoc["ac_script_wl_id"];
-				this.enabled = intToBool(dbAssoc["ac_script_wl_enabled"]);
-				this.server = dbAssoc["ac_script_wl_server"];
-				this.scriptName = dbAssoc["ac_script_wl_name"];
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["ac_script_wl_id"];
+					this.enabled = intToBool(dbAssoc["ac_script_wl_enabled"]);
+					this.server = dbAssoc["ac_script_wl_server"];
+					this.scriptName = dbAssoc["ac_script_wl_name"];
+				}
 			}
 		},
 		removedWorldObjectData: class {
@@ -706,9 +766,9 @@ function initClassTable() {
 			}
 		},
 		interiorTemplateData: class {
-			constructor(exitPosition, interior) {
+			constructor(exitPosition, exitInterior) {
 				this.exitPosition = exitPosition;
-				this.interior = interior;
+				this.exitInterior = exitInterior;
 			}
 		},
 	}

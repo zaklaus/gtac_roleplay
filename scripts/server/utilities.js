@@ -1668,6 +1668,27 @@ function updatePlayerCash(client) {
 
 // ---------------------------------------------------------------------------
 
+function setPlayerCash(client, amount) {
+	getPlayerCurrentSubAccount(client).cash = amount;
+	updatePlayerCash(client);
+}
+
+// ---------------------------------------------------------------------------
+
+function givePlayerCash(client, amount) {
+	getPlayerCurrentSubAccount(client).cash += amount;
+	updatePlayerCash(client);
+}
+
+// ---------------------------------------------------------------------------
+
+function takePlayerCash(client, amount) {
+	getPlayerCurrentSubAccount(client).cash -= amount;
+	updatePlayerCash(client);
+}
+
+// ---------------------------------------------------------------------------
+
 function clearChatBox(client) {
 	//gta.messages.clear();
 	for(let i = 0; i <= 20; i++) {
@@ -1834,6 +1855,12 @@ async function waitUntil(condition) {
 // ----------------------------------------------------------------------------
 
 function resetClientStuff(client) {
+	console.log(`[Asshat.Utilities] Resetting client data for ${getPlayerDisplayForConsole(client)}`);
+
+	if(!getPlayerData(client)) {
+		return false;
+	}
+
 	if(isPlayerOnJobRoute(client)) {
 		stopJobRoute(client);
 	}

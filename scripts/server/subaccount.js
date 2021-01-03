@@ -29,7 +29,7 @@ function loadSubAccountFromName(firstName, lastName) {
 		}
 		disconnectFromDatabase(dbConnection);
 	}
-	
+
 	return false;
 }
 
@@ -47,7 +47,7 @@ function loadSubAccountFromId(subAccountId) {
 		}
 		disconnectFromDatabase(dbConnection);
 	}
-	
+
 	return false;
 }
 
@@ -71,7 +71,7 @@ function loadSubAccountsFromAccount(accountId) {
 			disconnectFromDatabase(dbConnection);
 		}
 	}
-	
+
 	return tempSubAccounts;
 }
 
@@ -128,7 +128,7 @@ function showCharacterSelectToClient(client) {
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
 		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 		console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
-	} else {	
+	} else {
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
 		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
 		//let emojiNumbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"];
@@ -247,7 +247,7 @@ function switchCharacterCommand(command, params, client) {
 		//getPlayerCurrentSubAccount(client).dimension = getPlayerVirtualWorld(client);
 
 		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
-		
+
 		resetClientStuff(client);
 
 		client.despawnPlayer();
@@ -268,7 +268,7 @@ function newCharacterCommand(command, params, client) {
 	let firstName = splitParams[0];
 	let lastName = splitParams[1];
 
-	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", getServerConfig().newCharacter.skin);	
+	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", getServerConfig().newCharacter.skin);
 }
 
 // ---------------------------------------------------------------------------
@@ -312,6 +312,12 @@ function transferCharacterToServer(subAccountDatabaseId, newServerId) {
 
 function getCharacterFullName(client) {
 	return `${getPlayerCurrentSubAccount(client).firstName} ${getPlayerCurrentSubAccount(client).lastName}`;
+}
+
+// ---------------------------------------------------------------------------
+
+function isPlayerSwitchingCharacter(client) {
+	return getPlayerData(client).switchingCharacter;
 }
 
 // ---------------------------------------------------------------------------

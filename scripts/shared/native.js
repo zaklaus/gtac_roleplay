@@ -8,6 +8,9 @@
 // TYPE: Shared (JavaScript)
 // ===========================================================================
 
+"use strict";
+setErrorMode(RESOURCEERRORMODE_STRICT);
+
 // ---------------------------------------------------------------------------
 
 function toInteger(val) {

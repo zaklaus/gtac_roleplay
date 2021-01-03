@@ -1448,12 +1448,9 @@ function createJobLocationPickup(jobId, locationId) {
 			pickupModelId = getJobData(jobId).pickupModel;
 		}
 
-		getJobData(jobId).locations[locationId].pickup = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position);
+		getJobData(jobId).locations[locationId].blip = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
 		getJobData(jobId).locations[locationId].pickup.onAllDimensions = false;
 		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
-		getJobData(jobId).locations[locationId].pickup.setData("ag.owner.type", AG_PICKUP_JOB, false);
-		getJobData(jobId).locations[locationId].pickup.setData("ag.owner.id", jobId, false);
-		getJobData(jobId).locations[locationId].pickup.setData("ag.label.type", AG_LABEL_JOB, true);
 		addToWorld(getJobData(jobId).locations[locationId].pickup);
 	}
 }
@@ -1469,9 +1466,9 @@ function createJobLocationBlip(jobId, locationId) {
 		}
 
 		getJobData(jobId).locations[locationId].blip = gta.createBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
-		getJobData(jobId).locations[locationId].pickup.onAllDimensions = false;
-		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
-		addToWorld(getJobData(jobId).locations[locationId].pickup);
+		getJobData(jobId).locations[locationId].blip.onAllDimensions = false;
+		getJobData(jobId).locations[locationId].blip.dimension = getJobData(jobId).locations[locationId].dimension;
+		addToWorld(getJobData(jobId).locations[locationId].blip);
 	}
 }
 

@@ -171,11 +171,11 @@ addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
 addEventHandler("onElementStreamIn", function(event, element) {
     switch(element.type) {
         case ELEMENT_VEHICLE:
-            syncVehicle(element);
+            syncVehicleProperties(element);
             break;
 
         case ELEMENT_CIVILIAN:
-            syncCivilian(element);
+            syncCivilianProperties(element);
             break;
 
         default:

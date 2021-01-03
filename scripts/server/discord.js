@@ -8,6 +8,7 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+/*
 addEventHandler("OnDiscordCommand", function(command, params, discordUser) {
     let commandData = getCommand(command);
 
@@ -28,6 +29,7 @@ addEventHandler("OnDiscordCommand", function(command, params, discordUser) {
 
     commandData.handlerFunction(command, params, discordUser);
 });
+*/
 
 // ---------------------------------------------------------------------------
 

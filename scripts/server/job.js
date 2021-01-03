@@ -709,18 +709,19 @@ function takeJob(client, jobId) {
 // ---------------------------------------------------------------------------
 
 function reloadAllJobsCommand(command, params, client) {
-	for(let i in getServerData().jobs) {
-		for(let j in getServerData().jobs[i].locations) {
-			destroyElement(getServerData().jobs[i].locations[j].blip);
-			destroyElement(getServerData().jobs[i].locations[j].pickup);
-		}
-	}
+	forceAllPlayersToStopWorking();
 
-	//forceAllPlayersToStopWorking();
 	getServerData().jobs = null;
 	getServerData().jobs = loadJobsFromDatabase();
-	createAllJobPickups();
-	createAllJobBlips();
+
+	for(let i in getServerData().jobs) {
+		for(let j in getServerData().jobs[i].locations) {
+			deleteJobLocationPickup(i, j);
+			deleteJobLocationBlip(i, j);
+			createJobLocationPickup(i, j);
+			createJobLocationBlip(i, j);
+		}
+	}
 
 	messageAdminAction(`All server jobs have been reloaded by an admin!`);
 }
@@ -753,6 +754,7 @@ function deleteJobLocationCommand(command, params, client) {
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
 
+	quickDatabaseQuery(`DELETE FROM job_loc WHERE job_loc_id = ${closestJobLocation.databaseId}`);
 	deleteJobLocation(closestJobLocation);
 	getJobData(closestJobLocation.job).locations.splice(getClosestJobLocation.index, 1);
 }
@@ -1237,7 +1239,7 @@ function setAllJobDataIndexes() {
 // ---------------------------------------------------------------------------
 
 function createJobLocation(job, position, interior, dimension) {
-	let jobLocationData = serverClasses.jobLocationData(false);
+	let jobLocationData = new serverClasses.jobLocationData(false);
 	jobLocationData.position = position;
 	jobLocationData.job = job;
 	jobLocationData.interior = interior;
@@ -1413,6 +1415,63 @@ function saveAllJobsToDatabase() {
 				saveJobEquipmentWeaponToDatabase(getServerData().jobs[i].equipment[m].weapons[n]);
 			}
 		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteJobLocationBlip(jobId, locationId) {
+	if(getJobData(jobId).locations[locationId].blip != null) {
+		removeFromWorld(getJobData(jobId).locations[locationId].blip);
+		destroyElement(getJobData(jobId).locations[locationId].blip);
+		getJobData(jobId).locations[locationId].blip = null;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteJobLocationPickup(jobId, locationId) {
+	if(getJobData(jobId).locations[locationId].pickup != null) {
+		removeFromWorld(getJobData(jobId).locations[locationId].pickup);
+		destroyElement(getJobData(jobId).locations[locationId].pickup);
+		getJobData(jobId).locations[locationId].pickup = null;
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function createJobLocationPickup(jobId, locationId) {
+	if(getJobData(jobId).pickupModel != -1) {
+		let pickupModelId = getGameConfig().pickupModels[getServerGame()].job;
+
+		if(getJobData(jobId).pickupModel != 0) {
+			pickupModelId = getJobData(jobId).pickupModel;
+		}
+
+		getJobData(jobId).locations[locationId].pickup = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position);
+		getJobData(jobId).locations[locationId].pickup.onAllDimensions = false;
+		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
+		getJobData(jobId).locations[locationId].pickup.setData("ag.owner.type", AG_PICKUP_JOB, false);
+		getJobData(jobId).locations[locationId].pickup.setData("ag.owner.id", jobId, false);
+		getJobData(jobId).locations[locationId].pickup.setData("ag.label.type", AG_LABEL_JOB, true);
+		addToWorld(getJobData(jobId).locations[locationId].pickup);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function createJobLocationBlip(jobId, locationId) {
+	if(getJobData(jobId).blipModel != -1) {
+		let blipModelId = getGameConfig().blipSprites[getServerGame()].job;
+
+		if(getJobData(jobId).blipModel != 0) {
+			blipModelId = getJobData(jobId).blipModel;
+		}
+
+		getJobData(jobId).locations[locationId].blip = gta.createBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
+		getJobData(jobId).locations[locationId].pickup.onAllDimensions = false;
+		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
+		addToWorld(getJobData(jobId).locations[locationId].pickup);
 	}
 }
 

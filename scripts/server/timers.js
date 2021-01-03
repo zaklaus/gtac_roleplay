@@ -37,6 +37,7 @@ function initTimers() {
 		serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
 		serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
 		serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
+		serverTimers.garbageCollectorTimer = setInterval(collectAllGarbage, 60000);
 	}
 }
 

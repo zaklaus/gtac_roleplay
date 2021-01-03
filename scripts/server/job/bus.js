@@ -406,11 +406,13 @@ function showCurrentBusStop(client) {
 function arrivedAtBusStop(client) {
     if(isLastStopOnBusRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
         respawnVehicle(getPlayerData(client).jobRouteVehicle);
-        messagePlayerNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
+        messagePlayerNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route! You earned $${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout} and your bus has been returned to the bus depot.`, getColourByName("yellow"));
+        getPlayerCurrentSubAccount(client).cash += getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout;
+        updatePlayerCash(client);
 		getPlayerData(client).jobRouteVehicle = false;
 		getPlayerData(client).jobRoute = 0;
 		getPlayerData(client).jobRouteStop = 0;
-		getPlayerData(client).jobRouteIsland = 0;
+        getPlayerData(client).jobRouteIsland = 0;
         return false;
     }
 

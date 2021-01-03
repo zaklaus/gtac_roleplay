@@ -136,9 +136,14 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerInterior(client, inHouse.entranceInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
+					setTimeout(function() {
+						enableCityAmbienceForPlayer(client);
+						clearPlayerOwnedPeds(client);
+					}, 2000);
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "ag.inHouse");
+
 		}
 		return true;
 	}
@@ -159,9 +164,14 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerInterior(client, inBusiness.entranceInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
+					setTimeout(function() {
+						enableCityAmbienceForPlayer(client);
+						clearPlayerOwnedPeds(client);
+					}, 2000);
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "ag.inBusiness");
+			console.log(`[Asshat.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
 		}
 		return true;
 	}
@@ -184,6 +194,7 @@ function enterExitPropertyCommand(command, params, client) {
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
 
 			fadeCamera(client, false, 1.0);
+			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, closestBusiness.exitPosition);
 				setPlayerHeading(client, closestBusiness.exitRotation);
@@ -218,6 +229,7 @@ function enterExitPropertyCommand(command, params, client) {
 
 
 			fadeCamera(client, false, 1.0);
+			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, closestHouse.exitPosition);
 				setPlayerHeading(client, closestHouse.exitRotation);
@@ -228,7 +240,6 @@ function enterExitPropertyCommand(command, params, client) {
 				}, 1000);
 			}, 1100);
 			setEntityData(client, "ag.inHouse", closestHouseId);
-
 			return true;
 		}
 	}

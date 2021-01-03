@@ -253,7 +253,7 @@ function processPlayerDeath(client, position) {
 
 function processPedSpawn(ped) {
     if(ped.type == ELEMENT_PLAYER) {
-        setTimeout(processPlayerSpawn, 1000, ped);
+        setTimeout(processPlayerSpawn, 500, ped);
     }
 }
 
@@ -272,7 +272,7 @@ function processPlayerSpawn(ped) {
         return false;
     }
 
-    if(!getPlayerData(client).switchingCharacter) {
+    if(!isPlayerSwitchingCharacter(client)) {
         return false;
     }
 
@@ -289,9 +289,7 @@ function processPlayerSpawn(ped) {
         setPlayerHeading(client, tempSubAccount.spawnHeading);
         setPlayerInterior(client, tempSubAccount.interior);
         setPlayerVirtualWorld(client, tempSubAccount.dimension);
-        setTimeout(function() {
-            updatePlayerCash(client);
-        }, 1000);
+        updatePlayerCash(client);
     }, 500);
 
     updateAllPlayerNameTags();
@@ -299,5 +297,11 @@ function processPlayerSpawn(ped) {
     getPlayerData(client).switchingCharacter = false;
     triggerNetworkEvent("ag.jobType", client, tempSubAccount.job);
 }
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnPedSpawn", function(event, ped) {
+    processPedSpawn(ped);
+});
 
 // ---------------------------------------------------------------------------

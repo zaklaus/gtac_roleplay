@@ -1077,7 +1077,7 @@ app.init = function()
 	console.log(`[Asshat.GUI] Initializing GUI ...`);
 
 	console.log(`[Asshat.GUI] Creating login GUI ...`);
-	login.window = mexui.window(game.width/2-150, game.height/2-125, 300, 250, 'LOGIN', {
+	login.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
 			transitionTime: 500,

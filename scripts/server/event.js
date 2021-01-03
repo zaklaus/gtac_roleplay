@@ -276,7 +276,7 @@ function processPlayerSpawn(ped) {
         return false;
     }
 
-    messagePlayerAlert(client, `You are now playing as: [#0099FF]${tempSubAccount.firstName} ${tempSubAccount.lastName}`, getColourByName("white"));
+    messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
     messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
     messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 
@@ -285,17 +285,17 @@ function processPlayerSpawn(ped) {
 
     setTimeout(function() {
         setEntityData(ped, "ag.spawned", true, true);
-        setPlayerPosition(client, tempSubAccount.spawnPosition);
-        setPlayerHeading(client, tempSubAccount.spawnHeading);
-        setPlayerInterior(client, tempSubAccount.interior);
-        setPlayerVirtualWorld(client, tempSubAccount.dimension);
+        setPlayerPosition(client, getPlayerCurrentSubAccount(client).spawnPosition);
+        setPlayerHeading(client, getPlayerCurrentSubAccount(client).spawnHeading);
+        setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
+        setPlayerVirtualWorld(client, getPlayerCurrentSubAccount(client).dimension);
         updatePlayerCash(client);
     }, 500);
 
     updateAllPlayerNameTags();
 
     getPlayerData(client).switchingCharacter = false;
-    triggerNetworkEvent("ag.jobType", client, tempSubAccount.job);
+    triggerNetworkEvent("ag.jobType", client, getPlayerCurrentSubAccount(client).job);
 }
 
 // ---------------------------------------------------------------------------

@@ -95,7 +95,7 @@ addNetworkHandler("ag.veh.sync", syncVehicleProperties);
 
 // ---------------------------------------------------------------------------
 
-function syncCivilian(civilian) {
+function syncCivilianProperties(civilian) {
 
 }
 addNetworkHandler("ag.civ.sync", syncCivilianProperties);

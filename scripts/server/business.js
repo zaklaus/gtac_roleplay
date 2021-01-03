@@ -13,6 +13,8 @@ function initBusinessScript() {
 	getServerData().businesses = loadBusinessesFromDatabase();
 	createAllBusinessPickups();
 	createAllBusinessBlips();
+
+	setAllBusinessIndexes();
 	console.log("[Asshat.Business]: Business script initialized successfully!");
 	return true;
 }
@@ -962,6 +964,14 @@ function reloadAllBusinessesCommand(command, params, client) {
 	createAllBusinessBlips();
 
 	messageAdminAction(`All businesses have been reloaded by an admin!`);
+}
+
+// ---------------------------------------------------------------------------
+
+function setAllBusinessIndexes() {
+	for(let i in getServerData().businesses) {
+		getServerData().businesses[i].index = i;
+	}
 }
 
 // ---------------------------------------------------------------------------

@@ -50,18 +50,8 @@ addNetworkHandler("ag.promptAnswerYes", function(client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.onPlayerEnterSphere", function(client, sphere) {
-    let ownerType = sphere.getData("ag.ownerType");
-    let ownerId = sphere.getData("ag.ownerId");
-
-    switch(ownerType) {
-        case AG_PICKUP_JOB:
-            let jobData = getJobData(ownerId);
-            showJobInformationToPlayer(client, jobData.jobType);
-            break;
-
-        default:
-            break;
-    }
+    //let ownerType = getEntityData(sphere, "ag.ownerType");
+    //let ownerId = getEntityData(sphere, "ag.ownerId");
 });
 
 // ---------------------------------------------------------------------------
@@ -71,29 +61,6 @@ addNetworkHandler("ag.afk", function(client, afkState) {
         setEntityData(client, "ag.afk", true, true);
     } else {
         client.removeData("ag.afk");
-    }
-});
-
-// ---------------------------------------------------------------------------
-
-// Not implemented yet
-addNetworkHandler("ag.heldKey", function(client, key) {
-    switch(key) {
-        case getGlobalConfig().keybinds.actionKey:
-            processHoldActionKey(client);
-            break;
-
-        case getGlobalConfig().keybinds.vehicleLightsKey:
-            processHoldVehicleLightsKey(client);
-            break;
-
-        case getGlobalConfig().keybinds.vehicleLockKey:
-            processHoldVehicleLockKey(client);
-            break;
-
-        case getGlobalConfig().keybinds.vehicleEngineKey:
-            processHoldVehicleEngineKey(client);
-            break;
     }
 });
 
@@ -166,3 +133,21 @@ function showGameMessage(client, text, colour, duration) {
 
 // ---------------------------------------------------------------------------
 
+function enableCityAmbienceForPlayer(client) {
+    triggerNetworkEvent("ag.ambience", client, true);
+}
+
+// ---------------------------------------------------------------------------
+
+function disableCityAmbienceForPlayer(client) {
+    triggerNetworkEvent("ag.ambience", client, false);
+}
+
+// ---------------------------------------------------------------------------
+
+function clearPlayerOwnedPeds(client) {
+	console.log(`[Asshat.Utilities] Clearing peds owned by ${getPlayerDisplayForConsole(client)}`);
+	triggerNetworkEvent("ag.clearPeds", client);
+}
+
+// ---------------------------------------------------------------------------

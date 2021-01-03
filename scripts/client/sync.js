@@ -25,20 +25,6 @@ addEventHandler("onProcess", function(event, deltaTime) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.vehicle", function(syncId, model, position, heading, colour1, colour2, locked, lights) { //livery, dirtLevel, locked, lights) {
-    let vehicle = createVehicle(model, position, heading);
-    setEntityData(vehicle, "ag.syncId", syncId);
-    vehicle.colour1 = colour1;
-    vehicle.colour2 = colour2;
-    //vehicle.livery = livery;
-    //vehicle.dirtLevel = dirtLevel;
-    vehicle.carLock = locked;
-    vehicle.lights = lights;
-    serverVehicles.push(vehicle);
-});
-
-// ---------------------------------------------------------------------------
-
 addNetworkHandler("ag.veh.engine", function(vehicle, state) {
     vehicle.engine = state;
 });
@@ -54,5 +40,64 @@ addNetworkHandler("ag.veh.lights", function(vehicle, state) {
 addNetworkHandler("ag.veh.repair", function(syncId) {
     getVehicleFromSyncId(syncId).fix();
 });
+
+// ---------------------------------------------------------------------------
+
+function syncVehicleProperties(vehicle) {
+    if(doesEntityDataExist(vehicle, "ag.lights")) {
+        let lights = getEntityData(vehicle, "ag.lights");
+        if(lights != vehicle.lights) {
+            vehicle.lights = lights;
+        }
+    }
+
+    if(doesEntityDataExist(vehicle, "ag.engine")) {
+        let engine = getEntityData(vehicle, "ag.engine");
+        if(engine != vehicle.engine) {
+            vehicle.engine = engine;
+        }
+    }
+
+    if(doesEntityDataExist(vehicle, "ag.siren")) {
+        let siren = getEntityData(vehicle, "ag.siren");
+        if(siren != vehicle.siren) {
+            vehicle.siren = siren;
+        }
+    }
+
+    if(doesEntityDataExist(vehicle, "ag.panelStatus")) {
+        let panelsStatus = getEntityData(vehicle, "ag.panelStatus");
+        for(let i in panelsStatus) {
+            vehicle.setPanelStatus(i, panelsStatus[i]);
+        }
+    }
+
+    if(doesEntityDataExist(vehicle, "ag.wheelStatus")) {
+        let wheelsStatus = getEntityData(vehicle, "ag.wheelStatus");
+        for(let i in wheelsStatus) {
+            vehicle.setWheelStatus(i, wheelsStatus[i]);
+        }
+    }
+
+    if(doesEntityDataExist(vehicle, "ag.lightStatus")) {
+        let lightStatus = getEntityData(vehicle, "ag.lightStatus");
+        for(let i in lightStatus) {
+            vehicle.setLightStatus(i, lightStatus[i]);
+        }
+    }
+
+    if(doesEntityDataExist(vehicle, "ag.suspensionHeight")) {
+        let suspensionHeight = getEntityData(vehicle, "ag.suspensionHeight");
+        vehicle.setSuspensionHeight(suspensionHeight);
+    }
+}
+addNetworkHandler("ag.veh.sync", syncVehicleProperties);
+
+// ---------------------------------------------------------------------------
+
+function syncCivilian(civilian) {
+
+}
+addNetworkHandler("ag.civ.sync", syncCivilianProperties);
 
 // ---------------------------------------------------------------------------

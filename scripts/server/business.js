@@ -904,7 +904,7 @@ function doesBusinessHaveInterior(businessId) {
 
 function deleteBusinessEntrancePickup(businessId) {
 	if(getBusinessData(businessId).entrancePickup != null) {
-		removeFromWorld(getBusinessData(businessId).entrancePickup);
+		//removeFromWorld(getBusinessData(businessId).entrancePickup);
 		destroyElement(getBusinessData(businessId).entrancePickup);
 		getBusinessData(businessId).entrancePickup = false;
 	}
@@ -914,7 +914,7 @@ function deleteBusinessEntrancePickup(businessId) {
 
 function deleteBusinessExitPickup(businessId) {
 	if(getBusinessData(businessId).exitPickup != null) {
-		removeFromWorld(getBusinessData(businessId).exitPickup);
+		//removeFromWorld(getBusinessData(businessId).exitPickup);
 		destroyElement(getBusinessData(businessId).exitPickup);
 		getBusinessData(businessId).exitPickup = false;
 	}
@@ -924,7 +924,7 @@ function deleteBusinessExitPickup(businessId) {
 
 function deleteBusinessEntranceBlip(businessId) {
 	if(getBusinessData(businessId).entranceBlip != null) {
-		removeFromWorld(getBusinessData(businessId).entranceBlip);
+		//removeFromWorld(getBusinessData(businessId).entranceBlip);
 		destroyElement(getBusinessData(businessId).entranceBlip);
 		getBusinessData(businessId).entranceBlip = false;
 	}
@@ -934,7 +934,7 @@ function deleteBusinessEntranceBlip(businessId) {
 
 function deleteBusinessExitBlip(businessId) {
 	if(getBusinessData(businessId).exitBlip != null) {
-		removeFromWorld(getBusinessData(businessId).exitBlip);
+		//removeFromWorld(getBusinessData(businessId).exitBlip);
 		destroyElement(getBusinessData(businessId).exitBlip);
 		getBusinessData(businessId).exitBlip = false;
 	}

@@ -23,6 +23,14 @@ bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
 // ----------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function (event) {
+	if(!renderHUD) {
+		return false;
+	}
+
+	if(!renderScoreboard) {
+		return false;
+	}
+
 	if(localPlayer != null) {
 		if(isKeyDown(SDLK_TAB)) {
 			if(listFont != null && titleFont != null) {

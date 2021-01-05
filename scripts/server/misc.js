@@ -129,6 +129,7 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
 			fadeCamera(client, false, 1.0);
+			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, inHouse.entrancePosition);
 				setPlayerHeading(client, inHouse.entranceRotation);
@@ -143,7 +144,6 @@ function enterExitPropertyCommand(command, params, client) {
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "ag.inHouse");
-
 		}
 		return true;
 	}
@@ -157,6 +157,7 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
 			fadeCamera(client, false, 1.0);
+			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, inBusiness.entrancePosition);
 				setPlayerHeading(client, inBusiness.entranceRotation);
@@ -226,7 +227,6 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
-
 
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);

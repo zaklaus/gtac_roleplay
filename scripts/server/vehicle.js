@@ -198,6 +198,11 @@ function vehicleLockCommand(command, params, client) {
 		return false;
 	}
 
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
+
 	if(isPlayerInAnyVehicle(client)) {
 		vehicle = getPlayerVehicle(client);
 		if(!isPlayerInFrontVehicleSeat(client)) {
@@ -234,6 +239,11 @@ function vehicleLightsCommand(command, params, client) {
 
 	let vehicle = getPlayerVehicle(client);
 
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
+
 	if(getPlayerVehicleSeat(client) > 1) {
 		messagePlayerError(client, "You need to be in the front seat!");
 		return false;
@@ -251,6 +261,11 @@ function vehicleLightsCommand(command, params, client) {
 function deleteVehicleCommand(command, params, client) {
 	if(!getPlayerVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
+		return false;
+	}
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and can't be deleted.");
 		return false;
 	}
 
@@ -284,6 +299,11 @@ function vehicleEngineCommand(command, params, client) {
 		return false;
 	}
 
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used on it.");
+		return false;
+	}
+
 	getVehicleData(vehicle).engine = !getVehicleData(vehicle).engine;
 	vehicle.engine = getVehicleData(vehicle).engine;
 	//triggerNetworkEvent("ag.veh.engine", null, getVehicleForNetworkEvent(vehicle), getVehicleData(vehicle).engine);
@@ -299,12 +319,17 @@ function vehicleSirenCommand(command, params, client) {
 		return false;
 	}
 
+	let vehicle = getPlayerVehicle(client);
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
+
 	if(getPlayerVehicleSeat(client) > 1) {
 		messagePlayerError(client, "You need to be in the front seat!");
 		return false;
 	}
-
-	let vehicle = getPlayerVehicle(client);
 
 	if(!doesClientHaveVehicleKeys(client, vehicle)) {
 		messagePlayerError(client, "You don't have keys to this vehicle!");
@@ -326,6 +351,11 @@ function setVehicleColourCommand(command, params, client) {
 	}
 
 	let vehicle = getPlayerVehicle(client);
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
 
 	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
@@ -363,6 +393,11 @@ function vehicleRepairCommand(command, params, client) {
 
 	let vehicle = getPlayerVehicle(client);
 
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
+
 	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
 			messagePlayerError(client, "You need to be at a pay-n-spray!");
@@ -374,7 +409,6 @@ function vehicleRepairCommand(command, params, client) {
 		messagePlayerError(client, `You don't have enough money to repair the vehicle (need $${getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash} more!)`);
 		return false;
 	}
-
 
 	getPlayerCurrentSubAccount(client).cash -= getGlobalConfig().repairVehicleCost;
 	repairVehicle(vehicle);
@@ -391,6 +425,11 @@ function buyVehicleCommand(command, params, client) {
 	}
 
 	let vehicle = getPlayerVehicle(client);
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
 
 	if(getVehicleData(vehicle).buyPrice <= 0) {
 		messagePlayerError(client, `This ${getVehicleName(vehicle)} is not for sale!`);
@@ -423,6 +462,11 @@ function rentVehicleCommand(command, params, client) {
 	}
 
 	let vehicle = getPlayerVehicle(client);
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
 
 	if(getVehicleData(vehicle).rentPrice <= 0) {
 		messagePlayerError(client, `This ${getVehicleName(vehicle)} is not for rent!`);

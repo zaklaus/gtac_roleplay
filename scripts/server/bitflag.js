@@ -151,7 +151,7 @@ function doesPlayerHaveStaffPermission(client, requiredFlags) {
 
 	let staffFlags = 0;
 	if(!isClientFromDiscord(client)) {
-		staffFlags = getServerData().clients[client.index].accountData.flags.admin;
+		staffFlags = getPlayerData(client).accountData.flags.admin;
 	} else {
 		staffFlags = getDiscordUserData(client).accountData.flags.admin;
 	}

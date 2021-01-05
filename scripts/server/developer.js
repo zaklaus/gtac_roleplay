@@ -198,7 +198,7 @@ function restartGameModeCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.runCodeFail", function(client, returnTo, code) {
-	let returnClient = getPlayerFromParams(returnTo);
+	let returnClient = getClients()[returnTo];
 	if(!returnClient) {
 		return false;
 	}
@@ -210,7 +210,7 @@ addNetworkHandler("ag.runCodeFail", function(client, returnTo, code) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.runCodeSuccess", function(client, returnTo, returnVal, code) {
-	let returnClient = getPlayerFromParams(returnTo);
+	let returnClient = getClients()[returnTo];
 	if(!returnClient) {
 		return false;
 	}

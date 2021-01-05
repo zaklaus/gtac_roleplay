@@ -8,28 +8,32 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// UNFINISHED. NOT READY TO USE
-
 function showPlayerLoginGUI(client, errorMessage = "") {
-
+    triggerNetworkEvent("ag.showLogin", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerRegistrationGUI(client, errorMessage = "") {
-
+    triggerNetworkEvent("ag.showRegistration", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerNewCharacterGUI(client) {
-
+    triggerNetworkEvent("ag.showNewCharacter", client);
 }
 
 // ---------------------------------------------------------------------------
 
-function showPlayerPromptGUI(client, promptMessage, answerYesText, answerNoText) {
+function showPlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
+    triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
+}
 
+// ---------------------------------------------------------------------------
+
+function showPlayerPromptGUI(client, promptMessage, promptTitle) {
+    triggerNetworkEvent("ag.showPrompt", client, promptMessage, promptTitle);
 }
 
 // ---------------------------------------------------------------------------

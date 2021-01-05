@@ -119,9 +119,9 @@ addEventHandler("OnPedEnterVehicle", function(event, ped, vehicle, seat) {
     //    return false;
     //}
 
-    //if(!getVehicleData(vehicle)) {
-    //    return false;
-    //}
+    if(!getVehicleData(vehicle)) {
+        return false;
+    }
 
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
@@ -180,8 +180,7 @@ async function playerEnteredVehicle(client) {
                 } else {
                     messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
                 }
-
-                triggerNetworkEvent("ag.control", client, false, false);
+                //setPlayerControlState(client, false);
             }
         }
 
@@ -190,9 +189,7 @@ async function playerEnteredVehicle(client) {
         if(isPlayerWorking(client)) {
             if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
                 if(getVehicleData(vehicle).ownerId == getPlayerCurrentSubAccount(client).job) {
-                    //if(seat == 0) {
-                        getPlayerCurrentSubAccount(client).lastJobVehicle = vehicle;
-                    //}
+                    getPlayerCurrentSubAccount(client).lastJobVehicle = vehicle;
                 }
             }
         }
@@ -230,19 +227,21 @@ function playerExitedVehicle(client) {
 // ---------------------------------------------------------------------------
 
 function processPlayerDeath(client, position) {
-	removeEntityData(client.player, "ag.spawned");
-
-	triggerNetworkEvent("ag.control", client, false);
+	updatePlayerSpawnedState(client, false);
+    setPlayerControlState(client, false);
 	setTimeout(function() {
-		triggerNetworkEvent("ag.fadeCamera", client, false, 1.0);
+		fadePlayerCamera(client, false, 1.0);
 		setTimeout(function() {
 			client.despawnPlayer();
 			if(getPlayerCurrentSubAccount(client).inJail) {
-				let closestJail = getClosestJail(position);
+                let closestJail = getClosestJail(position);
+                getPlayerCurrentSubAccount(client).interior = closestJail.interior;
+                getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
 				spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
 			} else {
-                getPlayerCurrentSubAccount(client).inHospital = true;
                 let closestHospital = getClosestHospital(position);
+                getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
+                getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
 				spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
 			}
 		}, 2000);
@@ -261,7 +260,7 @@ function processPedSpawn(ped) {
 
 function processPlayerSpawn(ped) {
     if(getClientFromPlayerElement(ped) == null) {
-        setTimeout(processPlayerSpawn, ped, 500);
+        setTimeout(processPlayerSpawn, 500, ped);
         return false;
     }
 
@@ -279,29 +278,44 @@ function processPlayerSpawn(ped) {
     messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
     messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
     messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
-
-    triggerNetworkEvent("ag.restoreCamera", client);
-    setEntityData(client, "ag.spawned", true, true);
-
-    setTimeout(function() {
-        setEntityData(ped, "ag.spawned", true, true);
-        setPlayerPosition(client, getPlayerCurrentSubAccount(client).spawnPosition);
-        setPlayerHeading(client, getPlayerCurrentSubAccount(client).spawnHeading);
-        setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
-        setPlayerVirtualWorld(client, getPlayerCurrentSubAccount(client).dimension);
-        updatePlayerCash(client);
-    }, 500);
-
+    restorePlayerCamera(client, false, 1.0);
+    updatePlayerSpawnedState(client, true);
+    setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
+    setPlayerVirtualWorld(client, getPlayerCurrentSubAccount(client).dimension);
     updateAllPlayerNameTags();
-
     getPlayerData(client).switchingCharacter = false;
-    triggerNetworkEvent("ag.jobType", client, getPlayerCurrentSubAccount(client).job);
+    updatePlayerCash(client);
+    updatePlayerJobType(client);
 }
 
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPedSpawn", function(event, ped) {
     processPedSpawn(ped);
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnResourceStart", function(event, resource) {
+    console.warn(`[Asshat.Event] ${resource.name} started!`);
+
+    if(resource != thisResource) {
+        messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]started!`);
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnResourceStop", function(event, resource) {
+    console.warn(`[Asshat.Event] ${resource.name} stopped!`);
+
+    if(resource != thisResource) {
+        messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]stopped!`);
+    }
+
+    if(resource == thisResource) {
+        //saveAllServerDataToDatabase();
+    }
 });
 
 // ---------------------------------------------------------------------------

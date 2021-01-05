@@ -10,10 +10,6 @@
 
 // ---------------------------------------------------------------------------
 
-let inVehicle = null;
-
-// ---------------------------------------------------------------------------
-
 addEventHandler("onProcess", function(event, deltaTime) {
     if(localPlayer != null && localPlayer.getData("ag.spawned") != null) {
         if(localPlayer.health <= 0) {

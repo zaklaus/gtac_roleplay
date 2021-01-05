@@ -101,13 +101,26 @@ function fetchQueryAssoc(dbQuery) {
 
 function quickDatabaseQuery(queryString) {
 	let dbConnection = connectToDatabase();
+	let insertId = 0;
 	if(dbConnection) {
 		let dbQuery = queryDatabase(dbConnection, queryString);
+		if(getDatabaseInsertId(dbConnection)) {
+			insertId = getDatabaseInsertId(dbConnection);
+		}
+
 		if(dbQuery) {
 			freeDatabaseQuery(dbQuery);
 		}
+
 		disconnectFromDatabase(dbConnection);
+
+		if(insertId != 0) {
+			return insertId;
+		}
+
+		return true;
 	}
+	return false;
 }
 
 // ----------------------------------------------------------------------------

@@ -11,9 +11,10 @@
 // ---------------------------------------------------------------------------
 
 let bigMessageFont = null;
-let mainLogo = null;
+let logoImage = null;
 
-let showLogo = true;
+let logoPos = toVector2(gta.width-132, gta.height-132);
+let logoSize = toVector2(128, 128);
 
 let jobRouteStopBlip = null;
 let jobRouteStopSphere = null;
@@ -24,6 +25,7 @@ let smallGameMessageColour = COLOUR_WHITE;
 let smallGameMessageTimer = null;
 
 let inSphere = false;
+let inVehicle = false;
 
 let localPlayerJobType = 0;
 let localPlayerWorking = false;
@@ -32,12 +34,23 @@ let mouseCameraEnabled = false;
 
 let isWalking = false;
 
+let garbageCollectorInterval = null;
+
+let parkedVehiclePosition = false;
+let parkedVehicleHeading = false;
+
+let renderHUD = false;
+let renderLabels = false;
+let renderLogo = false;
+let renderSmallGameMessage = false;
+let renderScoreboard = false;
+
 // ---------------------------------------------------------------------------
 
 addEvent("OnLocalPlayerEnterSphere", 1);
 addEvent("OnLocalPlayerExitSphere", 1);
-addEvent("OnLocalPlayerEnterVehicle", 2);
-addEvent("OnLocalPlayerExitVehicle", 2);
+addEvent("OnLocalPlayerEnterVehicle", 1);
+addEvent("OnLocalPlayerExitVehicle", 1);
 
 // ---------------------------------------------------------------------------
 
@@ -52,7 +65,7 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
 
 		let logoStream = openFile("files/images/main-logo.png");
 		if(logoStream != null) {
-			mainLogo = drawing.loadPNG(logoStream);
+			logoImage = drawing.loadPNG(logoStream);
 			logoStream.close();
 		}
     }
@@ -76,7 +89,6 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
     addNetworkHandler("ag.passenger", enterVehicleAsPassenger);
 });
 
-
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
@@ -95,11 +107,7 @@ addNetworkHandler("ag.restoreCamera", function() {
 
 addNetworkHandler("ag.clearPeds", function() {
     console.log(`[Asshat.Main] Clearing all self-owned peds ...`);
-    getElementsByType(ELEMENT_CIVILIAN).forEach(function(ped) {
-        if(ped.isOwner) {
-            destroyElement(ped);
-        }
-    });
+    clearSelfOwnedPeds();
     console.log(`[Asshat.Main] All self-owned peds cleared`);
 });
 
@@ -107,7 +115,7 @@ addNetworkHandler("ag.clearPeds", function() {
 
 addNetworkHandler("ag.logo", function(state) {
     console.log(`[Asshat.Main] Server logo ${(state) ? "enabled" : "disabled"}`);
-    showLogo = state;
+    renderLogo = state;
 });
 
 // ---------------------------------------------------------------------------
@@ -115,9 +123,11 @@ addNetworkHandler("ag.logo", function(state) {
 addNetworkHandler("ag.ambience", function(state) {
     console.log(`[Asshat.Main] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
     gta.setTrafficEnabled(state);
+    gta.setGenerateCarsAroundCamera(state);
     if(gta.game != GAME_GTA_SA) {
         gta.setCiviliansEnabled(state);
     }
+    clearSelfOwnedPeds();
 });
 
 // ---------------------------------------------------------------------------
@@ -130,7 +140,7 @@ addNetworkHandler("ag.runCode", function(code, returnTo) {
 		triggerNetworkEvent("ag.runCodeFail", returnTo, code);
 		return false;
     }
-    triggerNetworkEvent("ag.runCodeSuccess", returnTo, returnVal, code);
+    triggerNetworkEvent("ag.runCodeSuccess", returnTo, code, returnValue);
 });
 
 // ----------------------------------------------------------------------------
@@ -163,8 +173,6 @@ addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
     console.log(`[Asshat.Main] Giving weapon ${weaponId} with ${ammo} ammo`);
     localPlayer.giveWeapon(weaponId, ammo, active);
 });
-
-
 
 // ---------------------------------------------------------------------------
 
@@ -327,13 +335,13 @@ function processEvent(event, deltaTime) {
 
         if(localPlayer.vehicle) {
             if(!inVehicle) {
-                triggerEvent("OnLocalPlayerEnterVehicle", inVehicle, inVehicle);
+                triggerEvent("OnLocalPlayerEnterVehicle", null, inVehicle);
                 triggerNetworkEvent("ag.onPlayerEnterVehicle");
                 inVehicle = localPlayer.vehicle;
             }
         } else {
             if(inVehicle) {
-                triggerEvent("OnLocalPlayerExitVehicle", inVehicle, inVehicle);
+                triggerEvent("OnLocalPlayerExitVehicle", null, inVehicle);
                 triggerNetworkEvent("ag.onPlayerExitVehicle");
                 inVehicle = false;
             }
@@ -345,7 +353,7 @@ function processEvent(event, deltaTime) {
 
 addEventHandler("OnRender", function(event) {
     // OnProcess was allowing vehicles to slide slowly. This shouldn't.
-    if(inVehicle) {
+    if(inVehicle != false) {
         if(!localPlayer.vehicle.engine) {
             localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
             localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
@@ -365,19 +373,29 @@ addEventHandler("OnRender", function(event) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function (event) {
-    if(smallGameMessageFont != null) {
-        if(smallGameMessageFont != "") {
-            smallGameMessageFont.render(smallGameMessageText, [0, gta.height-50], gta.width, 0.5, 0.0, smallGameMessageFont.size, smallGameMessageColour, true, true, false, true);
-        }
+    if(!renderHUD) {
         return false;
     }
 
+    if(localPlayer == null) {
+        return false;
+    }
+
+    if(renderSmallGameMessage) {
+        if(smallGameMessageFont != null) {
+            if(smallGameMessageFont != "") {
+                smallGameMessageFont.render(smallGameMessageText, [0, gta.height-50], gta.width, 0.5, 0.0, smallGameMessageFont.size, smallGameMessageColour, true, true, false, true);
+            }
+            return false;
+        }
+    }
+
     // Draw logo in corner of screen
-    if(mainLogo != null) {
-        if(showLogo) {
-            let logoPos = toVector2(gta.width-132, gta.height-132);
-            let logoSize = toVector2(128, 128);
-            drawing.drawRectangle(mainLogo, logoPos, logoSize);
+    if(renderLogo) {
+        if(logoImage != null) {
+            if(showLogo) {
+                drawing.drawRectangle(logoImage, logoPos, logoSize);
+            }
         }
     }
 });
@@ -583,3 +601,12 @@ addNetworkHandler("ag.mouseCamera", function(state) {
 
 // ---------------------------------------------------------------------------
 
+function clearSelfOwnedPeds() {
+    getElementsByType(ELEMENT_CIVILIAN).forEach(function(ped) {
+        if(ped.isOwner) {
+            destroyElement(ped);
+        }
+    });
+}
+
+// ---------------------------------------------------------------------------

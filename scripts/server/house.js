@@ -258,6 +258,11 @@ function setHouseBlipCommand(command, params, client) {
 function moveHouseEntranceCommand(command, params, client) {
 	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
 
+	if(!getHouseData(houseId)) {
+		messagePlayer(client, "You need to be near or inside a house!");
+		return false;
+	}
+
 	getHouseData(houseId).entrancePosition = getPlayerPosition(client);
 	getHouseData(houseId).entranceDimension = getPlayerVirtualWorld(client);
 	getHouseData(houseId).entranceInterior = getPlayerInterior(client);
@@ -276,9 +281,14 @@ function moveHouseEntranceCommand(command, params, client) {
 function moveHouseExitCommand(command, params, client) {
 	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
 
-	getHouseData(houseId).entrancePosition = getPlayerPosition(client);
-	getHouseData(houseId).entranceDimension = getPlayerVirtualWorld(client);
-	getHouseData(houseId).entranceInterior = getPlayerInterior(client);
+	if(!getHouseData(houseId)) {
+		messagePlayer(client, "You need to be near or inside a house!");
+		return false;
+	}
+
+	getHouseData(houseId).exitPosition = getPlayerPosition(client);
+	getHouseData(houseId).exitDimension = getPlayerVirtualWorld(client);
+	getHouseData(houseId).exitInterior = getPlayerInterior(client);
 
 	deleteHouseExitBlip(houseId);
 	deleteHouseExitPickup(houseId);
@@ -286,7 +296,7 @@ function moveHouseExitCommand(command, params, client) {
 	createHouseExitBlip(houseId);
 	createHouseExitPickup(houseId);
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved house [#11CC11]${getHouseData(houseId).name} [#FFFFFF]exit to their position`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]exit to their position`);
 }
 
 // ---------------------------------------------------------------------------
@@ -526,7 +536,7 @@ function createHouseExitBlip(houseId) {
 				blipModelId = getHouseData(houseId).exitBlipModel;
 			}
 
-			getHouseData(houseId).exitBlip = gta.createBlip(getHouseData(houseId).exitPosition, blipModelId, 1, getColourByName("houseGreen"));
+			getHouseData(houseId).exitBlip = gta.createBlip(blipModelId, getHouseData(houseId).exitPosition, 1, getColourByName("houseGreen"));
 			getHouseData(houseId).exitBlip.onAllDimensions = false;
 			getHouseData(houseId).exitBlip.dimension = getHouseData(houseId).entranceDimension;
 			//getHouseData(houseId).exitBlip.interior = getHouseData(houseId).exitInterior;
@@ -626,7 +636,7 @@ function doesHouseHaveInterior(houseId) {
 
 function deleteHouseEntrancePickup(houseId) {
 	if(getHouseData(houseId).entrancePickup != null) {
-		removeFromWorld(getHouseData(houseId).entrancePickup);
+		//removeFromWorld(getHouseData(houseId).entrancePickup);
 		destroyElement(getHouseData(houseId).entrancePickup);
 		getHouseData(houseId).entrancePickup = null;
 	}
@@ -636,7 +646,7 @@ function deleteHouseEntrancePickup(houseId) {
 
 function deleteHouseExitPickup(houseId) {
 	if(getHouseData(houseId).exitPickup != null) {
-		removeFromWorld(getHouseData(houseId).exitPickup);
+		//removeFromWorld(getHouseData(houseId).exitPickup);
 		destroyElement(getHouseData(houseId).exitPickup);
 		getHouseData(houseId).exitPickup = null;
 	}
@@ -646,7 +656,7 @@ function deleteHouseExitPickup(houseId) {
 
 function deleteHouseEntranceBlip(houseId) {
 	if(getHouseData(houseId).entranceBlip != null) {
-		removeFromWorld(getHouseData(houseId).entranceBlip);
+		//removeFromWorld(getHouseData(houseId).entranceBlip);
 		destroyElement(getHouseData(houseId).entranceBlip);
 		getHouseData(houseId).entranceBlip = null;
 	}
@@ -656,7 +666,7 @@ function deleteHouseEntranceBlip(houseId) {
 
 function deleteHouseExitBlip(houseId) {
 	if(getHouseData(houseId).exitBlip != null) {
-		removeFromWorld(getHouseData(houseId).exitBlip);
+		//removeFromWorld(getHouseData(houseId).exitBlip);
 		destroyElement(getHouseData(houseId).exitBlip);
 		getHouseData(houseId).exitBlip = null;
 	}
@@ -680,7 +690,7 @@ function reloadAllHousesCommand(command, params, client) {
 	}
 
 	getServerData().houses = null;
-	getServerData().houses = loadHouseFromDatabase();
+	getServerData().houses = loadHousesFromDatabase();
 	createAllHousePickups();
 	createAllHouseBlips();
 

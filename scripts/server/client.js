@@ -151,3 +151,27 @@ function clearPlayerOwnedPeds(client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function updatePlayerJobType(client) {
+    triggerNetworkEvent("ag.jobType", client, getPlayerCurrentSubAccount(client).job);
+}
+
+// ---------------------------------------------------------------------------
+
+function updatePlayerSpawnedState(client, state) {
+    triggerNetworkEvent("ag.spawned", client, state);
+}
+
+// ---------------------------------------------------------------------------
+
+function setPlayerControlState(client, state) {
+    triggerNetworkEvent("ag.control", client, state);
+}
+
+// ---------------------------------------------------------------------------
+
+function updatePlayerShowLogoState(client, state) {
+    triggerNetworkEvent("ag.logo", client, state);
+}
+
+// ---------------------------------------------------------------------------

@@ -315,14 +315,16 @@ function getWeaponModelId(weaponId) {
 function getIsland(position) {
     if(getServerGame() == GAME_GTA_III) {
 		if(position.x > 616) {
-			return 0;
+			return AG_ISLAND_PORTLAND;
 		} else if(position.x < -283) {
-			return 2;
+			return AG_ISLAND_SHORESIDEVALE;
 		}
-		return 1;
+		return AG_ISLAND_STAUNTON;
 	} else {
-		return 0;
+		return AG_ISLAND_NONE;
 	}
+
+	//return gta.getIslandFromPosition(position);
 }
 
 // ---------------------------------------------------------------------------

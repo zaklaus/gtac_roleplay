@@ -161,6 +161,14 @@ function renderJobLabel(name, position, jobType) {
 // ----------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function (event) {
+    if(!renderHUD) {
+        return false;
+    }
+
+    if(!renderLabels) {
+        return false;
+    }
+
     if(localPlayer != null) {
         let pickups = getElementsByType(ELEMENT_PICKUP);
         for(let i in pickups) {

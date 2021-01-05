@@ -28,11 +28,20 @@ let textInputAlpha = 200;
 let login = {
 	window: null,
 	logoImage: null,
+	messageLabel: null,
 	passwordLabel: null,
 	passwordInput: null,
 	loginButton: null,
-	notRegisteredLabel: null,
-	registerButton: null,
+};
+
+let twoFactorAuth = {
+	window: null,
+	logoImage: null,
+	qrCodeHTML: null,
+	messageLabel: null,
+	codeLabel: null,
+	codeInput: null,
+	submitButton: null,
 };
 
 let register = {
@@ -43,8 +52,6 @@ let register = {
 	confirmPasswordInput: null,
 	emailInput: null,
 	registerButton: null,
-	alreadyRegisteredLabel: null,
-	loginButton: null,
 };
 
 let newCharacter = {
@@ -1155,6 +1162,84 @@ app.init = function()
 
 	// ---------------------------------------------------------------------------------
 
+	console.log(`[Asshat.GUI] Creating two factor auth GUI ...`);
+	twoFactorAuth.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
+		main: {
+			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			transitionTime: 500,
+		},
+		title: {
+			textSize: 0.0,
+			textColour: toColour(0, 0, 0, 0),
+		},
+		icon: {
+			textSize: 0.0,
+			textColour: toColour(0, 0, 0, 0),
+		},
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
+	});
+	twoFactorAuth.window.titleBarIconSize = toVector2(0,0);
+	twoFactorAuth.window.titleBarHeight = 0;
+
+	twoFactorAuth.logoImage = twoFactorAuth.window.image(100, 20, 100, 100, mainLogoPath, {
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
+	});
+
+	twoFactorAuth.messageLabel = twoFactorAuth.window.text(20, 135, 260, 20, 'Please enter the code from your authenticator app!', {
+		main: {
+			textSize: 10.0,
+			textAlign: 0.5,
+			textColour: toColour(200, 200, 200, 255),
+			textFont: robotoFont,
+		},
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
+	});
+
+	twoFactorAuth.passwordInput = twoFactorAuth.window.textInput(20, 170, 260, 25, '', {
+		main: {
+			backgroundColour: toColour(0, 0, 0, 120),
+			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], textInputAlpha),
+			textColour: toColour(200, 200, 200, 255),
+			textSize: 10.0,
+			textFont: robotoFont,
+		},
+		caret: {
+			lineColour: toColour(255, 255, 255, 255),
+		},
+		placeholder: {
+			textColour: toColour(200, 200, 200, 150),
+			textSize: 10.0,
+			textFont: robotoFont,
+		},
+		focused: {
+			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 255),
+		},
+	});
+	twoFactorAuth.codeInput.placeholder = "Code";
+
+	twoFactorAuth.submitButton = twoFactorAuth.window.button(20, 205, 260, 30, 'SUBMIT', {
+		main: {
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
+			textColour: toColour(0, 0, 0, 255),
+			textSize: 10.0,
+			textFont: robotoFont,
+			textAlign: 0.5,
+		},
+		focused: {
+			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
+		},
+	}, checkTwoFactorAuth);
+
+	console.log(`[Asshat.GUI] Created two factor auth GUI`);
+
+	// ---------------------------------------------------------------------------------
+
 	console.log(`[Asshat.GUI] Creating new character GUI ...`);
 
 	newCharacter.window = mexui.window(game.width/2-215, game.height/2-83, 430, 166, 'New Character', {
@@ -1813,6 +1898,29 @@ let registrationSuccess = function() {
 
 // ---------------------------------------------------------------------------
 
+let twoFactorAuthFailed = function(errorMessage) {
+	console.log(`[Asshat.GUI] Server reports two-factor authentication failed. Reason: ${errorMessage}`);
+	login.messageLabel.text = errorMessage;
+	login.messageLabel.styles.main.textColour = toColour(180, 32, 32, 255);
+	login.passwordInput.text = "";
+}
+
+// ---------------------------------------------------------------------------
+
+let twoFactorAuthSuccess = function() {
+	console.log(`[Asshat.GUI] Server reports two-factor authentication was successful`);
+	closeAllWindows();
+}
+
+// ---------------------------------------------------------------------------
+
+let checkTwoFactorAuth = function() {
+	console.log(`[Asshat.GUI] Checking two-factor authentication with server ...`);
+	triggerNetworkEvent("ag.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
+}
+
+// ---------------------------------------------------------------------------
+
 let characterSelectSuccess = function() {
 	console.log(`[Asshat.GUI] Server reports character selection was successful`);
 	closeAllWindows();
@@ -1846,6 +1954,7 @@ let closeAllWindows = function() {
 	login.window.shown = false;
 	newCharacter.window.shown = false;
 	characterSelect.window.shown = false;
+	twoFactorAuth.window.shown = false;
 	mexui.setInput(false);
 }
 
@@ -1881,6 +1990,16 @@ let showLogin = function() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	login.window.shown = true;
+}
+
+// ---------------------------------------------------------------------------
+
+let showTwoFactorAuth = function() {
+	closeAllWindows();
+	console.log(`[Asshat.GUI] Showing two-factor authentication window`);
+	setChatWindowEnabled(false);
+	mexui.setInput(true);
+	twoFactorAuth.window.shown = true;
 }
 
 // ---------------------------------------------------------------------------

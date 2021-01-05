@@ -741,8 +741,8 @@ function createJobLocationCommand(command, params, client) {
 		return false;
 	}
 
-	createJobLocation(jobId, getPlayerPosition(client));
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a location for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	createJobLocation(jobId, getPlayerPosition(client), getPlayerInterior(client), getPlayerVirtualWorld(client));
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a location for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 	return true;
 }
 
@@ -943,7 +943,9 @@ function removePlayerFromJobWhiteListCommand(command, params, client) {
 
 function forceAllPlayersToStopWorking() {
 	getClients().forEach(function(client) {
-		stopWorking(client);
+		if(!client.console) {
+			stopWorking(client);
+		}
 	});
 }
 
@@ -1185,7 +1187,7 @@ function canPlayerUseJob(client, jobId) {
 // ---------------------------------------------------------------------------
 
 function deleteJobLocation(jobLocationData) {
-	removeFromWorld(jobLocationData.pickup);
+	//removeFromWorld(jobLocationData.pickup);
 	destroyElement(jobLocationData.pickup);
 }
 
@@ -1248,6 +1250,8 @@ function createJobLocation(job, position, interior, dimension) {
 
 	getServerData().jobs[job].locations.push(jobLocationData);
 
+	createJobLocationPickup(job, getServerData().jobs[job].locations.length-1);
+
 	saveJobLocationToDatabase(jobLocationData);
 }
 
@@ -1294,6 +1298,7 @@ function saveJobLocationToDatabase(jobLocationData) {
 		// If job location hasn't been added to database, ID will be 0
 		if(jobLocationData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO job_loc (job_loc_job, job_loc_enabled, job_loc_pos_x, job_loc_pos_y, job_loc_pos_z, job_loc_int, job_loc_vw) VALUES (${jobLocationData.job}, ${boolToInt(jobLocationData.enabled)}, ${jobLocationData.position.x}, ${jobLocationData.position.y}, ${jobLocationData.position.z}, ${jobLocationData.interior}, ${jobLocationData.dimension})`;
+			console.log(dbQueryString);
 			queryDatabase(dbConnection, dbQueryString);
 			jobLocationData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
@@ -1422,7 +1427,7 @@ function saveAllJobsToDatabase() {
 
 function deleteJobLocationBlip(jobId, locationId) {
 	if(getJobData(jobId).locations[locationId].blip != null) {
-		removeFromWorld(getJobData(jobId).locations[locationId].blip);
+		//removeFromWorld(getJobData(jobId).locations[locationId].blip);
 		destroyElement(getJobData(jobId).locations[locationId].blip);
 		getJobData(jobId).locations[locationId].blip = null;
 	}
@@ -1432,7 +1437,7 @@ function deleteJobLocationBlip(jobId, locationId) {
 
 function deleteJobLocationPickup(jobId, locationId) {
 	if(getJobData(jobId).locations[locationId].pickup != null) {
-		removeFromWorld(getJobData(jobId).locations[locationId].pickup);
+		//removeFromWorld(getJobData(jobId).locations[locationId].pickup);
 		destroyElement(getJobData(jobId).locations[locationId].pickup);
 		getJobData(jobId).locations[locationId].pickup = null;
 	}

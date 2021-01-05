@@ -78,7 +78,7 @@ function toggleAccountGUICommand(command, params, client) {
 	if(!isPlayerLoggedIn(client)) {
 		if(getPlayerData().accountData.databaseId != 0) {
 			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-				triggerNetworkEvent("ag.showLogin", client);
+				showPlayerLoginGUI(client);
 				console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI`);
 			} else {
 				messageClient(`👋 Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
@@ -86,7 +86,7 @@ function toggleAccountGUICommand(command, params, client) {
 			}
 		} else {
 			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-				triggerNetworkEvent("ag.showRegistration", client);
+				showPlayerRegistrationGUI(client);
 				console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 			} else {
 				messageClient(`👋 Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
@@ -106,12 +106,13 @@ function toggleAccountServerLogoCommand(command, params, client) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now [#FFFFFF]be shown the server logo (if enabled on current server)`);
 		console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo ON for their account`);
-		triggerNetworkEvent("ag.logo", client, true);
+		updatePlayerShowLogoState(client);
+		updatePlayerShowLogoState(client, false);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not [#FFFFFF]be shown the server logo.`);
 		console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo OFF for their account`);
-		triggerNetworkEvent("ag.logo", client, false);
+		updatePlayerShowLogoState(client, false);
 	}
 
 	return true;
@@ -757,35 +758,40 @@ function initClient(client) {
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
 
 	setTimeout(function() {
-		let sessionId = saveSessionToDatabase(client);
-		setEntityData(client, "ag.session", sessionId, false);
+		if(client != null) {
 
-		clearChatBox(client);
-		let tempAccountData = loadAccountFromName(client.name, true);
-		let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
+			clearChatBox(client);
+			let tempAccountData = loadAccountFromName(client.name, true);
+			let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
 
-		getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
 
-		if(tempAccountData != false) {
-			if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {
-				messagePlayerAlert(client, "You have been automatically logged in via IP!");
-				loginSuccess(client);
+
+			getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
+
+			let sessionId = saveConnectionToDatabase(client);
+			getServerData().clients[client.index].session = sessionId;
+
+			if(tempAccountData != false) {
+				if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {
+					messagePlayerAlert(client, "You have been automatically logged in via IP!");
+					loginSuccess(client);
+				} else {
+					if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+						console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);
+						triggerNetworkEvent("ag.showLogin", client);
+					} else {
+						console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
+						messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
+					}
+				}
 			} else {
 				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-					console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);
-					triggerNetworkEvent("ag.showLogin", client);
+					console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI.`);
+					triggerNetworkEvent("ag.showRegistration", client);
 				} else {
-					console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
-					messageClient(`Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, client, getColourByName("softGreen"));
+					console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
+					messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
 				}
-			}
-		} else {
-			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-				console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI.`);
-				triggerNetworkEvent("ag.showRegistration", client);
-			} else {
-				console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
-				messageClient(`Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, client, getColourByName("softGreen"));
 			}
 		}
 	}, 2500);
@@ -793,18 +799,16 @@ function initClient(client) {
 
 // ---------------------------------------------------------------------------
 
-function saveSessionToDatabase(client) {
-	// To-do
-	return 0;
+function saveConnectionToDatabase(client) {
+	let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0')`;
+	return quickDatabaseQuery(dbQueryString);
 }
 
 // ---------------------------------------------------------------------------
 
 function createDefaultKeybindsForAccount(accountDatabaseId) {
 	for(let i in getGlobalConfig().defaultKeybinds) {
-		console.log(i);
 		let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${getGlobalConfig().defaultKeybinds[i].key}, '${getGlobalConfig().defaultKeybinds[i].commandString}', UNIX_TIMESTAMP(), ${boolToInt(getGlobalConfig().defaultKeybinds[i].keyState)})`;
-		console.log(dbQueryString);
 		quickDatabaseQuery(dbQueryString);
 	}
 }

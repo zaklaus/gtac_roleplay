@@ -25,7 +25,7 @@ let unlockedColour = toColour(50, 205, 50, 255);
 let lockedColour = toColour(205, 92, 92, 255);
 let jobHelpColour = toColour(234, 198, 126, 255);
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 bindEventHandler("onResourceReady", thisResource, function(event, resource) {
     propertyLabelNameFont = lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
@@ -35,7 +35,7 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
     jobHelpLabelFont = lucasFont.createDefaultFont(10.0, "Roboto", "Light");
 });
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) {
     if(localPlayer == null) {
@@ -82,7 +82,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
     propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, (isBusiness) ? toColour(0, 153, 255, 255) : toColour(17, 204, 17, 255), false, true, false, true);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function renderPropertyExitLabel(position) {
     if(localPlayer == null) {
@@ -110,7 +110,7 @@ function renderPropertyExitLabel(position) {
     propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function renderJobLabel(name, position, jobType) {
     if(localPlayer == null) {
@@ -158,7 +158,7 @@ function renderJobLabel(name, position, jobType) {
     jobNameLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobNameLabelFont.size, COLOUR_WHITE, false, true, false, true);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function (event) {
     if(!renderHUD) {
@@ -208,4 +208,4 @@ addEventHandler("OnDrawnHUD", function (event) {
     }
 });
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------

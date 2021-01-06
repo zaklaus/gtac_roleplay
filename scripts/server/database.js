@@ -8,7 +8,7 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 let databaseConfig = {
 	host: "127.0.0.1",
@@ -21,14 +21,14 @@ let databaseConfig = {
 
 let persistentDatabaseConnection = null;
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function initDatabaseScript() {
 	console.log("[Asshat.Database]: Initializing database script ...");
 	console.log("[Asshat.Database]: Database script initialized successfully!");
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function connectToDatabase() {
 	if(persistentDatabaseConnection == null) {
@@ -48,7 +48,7 @@ function connectToDatabase() {
 	}
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function disconnectFromDatabase(dbConnection) {
 	if(!databaseConfig.usePersistentConnection) {
@@ -57,13 +57,13 @@ function disconnectFromDatabase(dbConnection) {
 	return true;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function queryDatabase(dbConnection, queryString) {
 	return dbConnection.query(queryString);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function escapeDatabaseString(dbConnection, unsafeString) {
 	if(!dbConnection) {
@@ -72,32 +72,32 @@ function escapeDatabaseString(dbConnection, unsafeString) {
 	return dbConnection.escapeString(unsafeString);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getDatabaseInsertId(dbConnection) {
 	return dbConnection.insertId;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getDatabaseError(dbConnection) {
 	return dbConnection.error;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function freeDatabaseQuery(dbQuery) {
 	dbQuery.free();
 	return;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function fetchQueryAssoc(dbQuery) {
 	return dbQuery.fetchAssoc();
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function quickDatabaseQuery(queryString) {
 	let dbConnection = connectToDatabase();
@@ -123,4 +123,47 @@ function quickDatabaseQuery(queryString) {
 	return false;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
+
+function executeDatabaseQueryCommand(command, params, client) {
+	if(getCommand(command).requireLogin) {
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You must be logged in to use this command!");
+			return false;
+		}
+	}
+
+	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
+		messagePlayerError(client, "You do not have permission to use this command!");
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(!targetClient) {
+		messagePlayerError(client, "That player was not found!");
+		return false;
+	}
+
+	if(targetCode == "") {
+		messagePlayerError(client, "You didn't enter any code!");
+		return false;
+	}
+
+	let success = quickDatabaseQuery(params);
+
+	if(!success) {
+		messagePlayerAlert(client, `Database query failed to execute: [#AAAAAA]${query}`);
+	} else if(typeof success != "boolean") {
+		messagePlayeSuccess(client, `Database query successful: [#AAAAAA]${query}`);
+		messagePlayerInfo(client, `Returns: ${success}`);
+	} else {
+		messagePlayeSuccess(client, `Database query successful: [#AAAAAA]${query}`);
+	}
+	return true;
+}
+
+// -------------------------------------------------------------------------

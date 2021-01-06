@@ -1456,7 +1456,6 @@ function processHoldActionKey(client) {
 	let closestBusiness = getClosestBusiness(client.player.position);
 	let jobData = getJobData(closestJobId);
 
-
 	if(getPlayerCurrentSubAccount(client).job == AG_JOB_NONE) {
 		if(jobData.position.distance(client.player.position) <= getGlobalConfig().takeJobDistance) {
 			takeJob(client, closestJobId);
@@ -1616,12 +1615,12 @@ function getJobFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getServerData().jobs) {
 			if(toLowerCase(getServerData().jobs[i].name).indexOf(toLowerCase(params)) != -1) {
-				return getServerData().jobs[i].databaseId;
+				return i;
 			}
 		}
 	} else {
 		if(typeof getServerData().jobs[params] != "undefined") {
-			return getServerData().jobs[params].databaseId;
+			return params;
 		}
 	}
 
@@ -1776,25 +1775,25 @@ function getClosestPoliceStation(position) {
 	return getServerData().policeStations[getServerGame()][closest];
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function isGTAIV() {
 	return (getServerGame() == GAME_GTA_IV);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function arrayBufferToString(arrayBuffer) {
 	return String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getPlayerDisplayForConsole(client) {
 	return `${client.name}[${client.index}]`;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getPlayerNameForNameTag(client) {
 	if(isPlayerSpawned(client)) {
@@ -1803,31 +1802,31 @@ function getPlayerNameForNameTag(client) {
 	return client.name;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function isPlayerSpawned(client) {
 	return (client.player != null);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getLockedUnlockedTextFromBool(boolVal) {
 	return (boolVal) ? "locked" : "unlocked";
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getLockedUnlockedEmojiFromBool(boolVal) {
 	return (boolVal) ? "🔒" : "🔓";
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getPlayerIsland(client) {
 	return getIsland(getPlayerPosition(client));
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function isAtPayAndSpray(position) {
 	for(let i in payAndSprays[getServerGame()]) {
@@ -1839,7 +1838,7 @@ function isAtPayAndSpray(position) {
 	return false;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 async function waitUntil(condition) {
     return new Promise((resolve) => {
@@ -1854,7 +1853,7 @@ async function waitUntil(condition) {
     });
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function resetClientStuff(client) {
 	console.log(`[Asshat.Utilities] Resetting client data for ${getPlayerDisplayForConsole(client)}`);
@@ -1874,4 +1873,4 @@ function resetClientStuff(client) {
 	getPlayerData(client).lastVehicle = null;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------

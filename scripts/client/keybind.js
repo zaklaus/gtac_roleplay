@@ -11,7 +11,7 @@
 let lastKeyBindUse = 0;
 let keyBindDelayTime = 2000;
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function bindAccountKey(key, keyState) {
     bindKey(toInteger(key), keyState, function(event) {
@@ -24,7 +24,7 @@ function bindAccountKey(key, keyState) {
 }
 addNetworkHandler("ag.keybinds.add", bindAccountKey);
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function unBindAccountKey(key) {
     unbindKey(key);
@@ -32,7 +32,7 @@ function unBindAccountKey(key) {
 }
 addNetworkHandler("ag.keybinds.del", unBindAccountKey);
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function hasKeyBindDelayElapsed() {
     if(sdl.ticks-lastKeyBindUse >= keyBindDelayTime) {
@@ -42,4 +42,4 @@ function hasKeyBindDelayElapsed() {
     return false;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------

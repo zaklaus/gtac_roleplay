@@ -13,7 +13,6 @@ function initBusinessScript() {
 	getServerData().businesses = loadBusinessesFromDatabase();
 	createAllBusinessPickups();
 	createAllBusinessBlips();
-
 	setAllBusinessIndexes();
 	console.log("[Asshat.Business]: Business script initialized successfully!");
 	return true;
@@ -549,6 +548,45 @@ function depositIntoBusinessCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function stockItemInBusinessCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+
+	let itemType = getItemTypeFromParams(splitParams[0]);
+	let amount = toInteger(splitParams[1]) || 1;
+	let sellPrice = toInteger(splitParams[2]) || 0;
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(!getItemTypeData(itemType)) {
+		messagePlayerError(client, "Invalid item type name or ID!");
+		messagePlayerInfo(client, "Use /itemtypes for a list of items");
+		return false;
+	}
+
+	let orderTotalCost = getItemTypeData(itemType).orderPrice*amount;
+
+	if(getBusinessData(businessId).till < orderTotalCost) {
+		let neededAmount = orderTotalCost-getBusinessData(businessId).till;
+		messagePlayerError(client, `The business doesn't have enough money (needs [#AAAAAA]$${neededAmount} [#FFFFFF]more)! Use [#AAAAAA]/bizdeposit [#FFFFFF]to add money to the business.`);
+		return false;
+	}
+
+	getBusinessData(businessId).till -= orderTotalCost;
+	addToBusinessInventory(businessId, itemType, amount);
+	messagePlayerSuccess(client, `You ordered ${amount} ${getPluralForm(getItemTypeData(itemType).name)} at $${getItemTypeData(itemType).orderPrice} each for business [#0099FF]'${getBusinessData(businessId).name} [#FFFFFF] and set their sell price [#AAAAAA]$${sellPrice}`);
+}
+
+// ---------------------------------------------------------------------------
+
 function viewBusinessTillAmountCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
@@ -620,6 +658,30 @@ function moveBusinessExitCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function buySkinFromBusinessCommand(command, params, client) {
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
+
+	if(getBusinessData(businessId)) {
+		messagePlayerError(client, `You need to be in a business (or at the door if there is no interior)`);
+		return false;
+	}
+
+	if(getBusinessData(businessId).type == AG_BIZTYPE_CLOTHES) {
+		messagePlayerError(client, `This business doesn't sell clothes (skins)!`);
+		return false;
+	}
+
+	if(getPlayerCurrentSubAccount(client).cash <= AG_TEMPBIZPRICE_CLOTHES) {
+		messagePlayerError(client, `You don't have enough money! You need [#AAAAAA]$${AG_TEMPBIZPRICE_CLOTHES-getPlayerCurrentSubAccount(client).cash} [#FFFFFF]more!`);
+		return false;
+	}
+
+	setPlayerSkin(client, skinId);
+	messageClientSuccess(client, "You bought a new set of clothes ([#AAAAAA]skinId[#FFFFFF]!");
+}
+
+// ---------------------------------------------------------------------------
+
 function getBusinessDataFromDatabaseId(databaseId) {
 	let matchingBusinesses = getServerData().businesses.filter(b => b.databaseId == businessId)
 	if(matchingBusinesses.length == 1) {
@@ -632,9 +694,8 @@ function getBusinessDataFromDatabaseId(databaseId) {
 
 function getClosestBusinessEntrance(position) {
 	let closest = 0;
-	let businesses = getServerData().businesses;
-	for(let i in businesses) {
-		if(getDistance(position, businesses[i].entrancePosition) <= getDistance(position, businesses[closest].entrancePosition)) {
+	for(let i in getServerData().businesses) {
+		if(getDistance(position, getServerData().businesses[i].entrancePosition) <= getDistance(position, getServerData().businesses[closest].entrancePosition)) {
 			closest = i;
 		}
 	}
@@ -972,6 +1033,24 @@ function setAllBusinessIndexes() {
 	for(let i in getServerData().businesses) {
 		getServerData().businesses[i].index = i;
 	}
+}
+
+// ---------------------------------------------------------------------------
+
+function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
+	let tempItemData = new serverClasses.itemData(false);
+	tempItemData.amount = amount;
+	tempItemData.buyPrice = buyPrice;
+	tempItemData.itemType = getItemTypeData(itemType);
+	tempItemData.ownerId = getBusinessData(business).databaseId;
+	tempItemData.ownerType = AG_ITEMOWNER_BIZ;
+	tempItemData.ownerIndex = businessId;
+	tempItemData.itemTypeIndex = itemType;
+	saveItemToDatabase(tempItemData);
+	getServerData().items.push(tempItemData);
+
+	let index = getServerData().items.length-1;
+	getServerData().items[index].index = index;
 }
 
 // ---------------------------------------------------------------------------

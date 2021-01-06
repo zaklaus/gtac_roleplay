@@ -11,11 +11,9 @@
 function initJobScript() {
 	console.log("[Asshat.Job]: Initializing job script ...");
 	getServerData().jobs = loadJobsFromDatabase();
-
-	setAllJobDataIndexes();
 	createAllJobPickups();
 	createAllJobBlips();
-
+	setAllJobDataIndexes();
 	console.log("[Asshat.Job]: Job script initialized successfully!");
 	return true;
 }
@@ -683,11 +681,16 @@ function doesPlayerHaveJobType(client, jobType) {
 // ---------------------------------------------------------------------------
 
 function getJobData(jobId) {
-	for(let i in getServerData().jobs) {
-		if(getServerData().jobs[i].databaseId == jobId) {
-			return getServerData().jobs[i];
-		}
+	//for(let i in getServerData().jobs) {
+	//	if(getServerData().jobs[i].databaseId == jobId) {
+	//		return getServerData().jobs[i];
+	//	}
+	//}
+
+	if(typeof getServerData().jobs[jobId] != "undefined") {
+		return getServerData().jobs[jobId];
 	}
+
 	return false;
 }
 
@@ -750,13 +753,15 @@ function createJobLocationCommand(command, params, client) {
 
 function deleteJobLocationCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
-	let jobData = getJobData(closestJobLocation.job);
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${getJobData(closestJobLocation.jobIndex).name} [#FFFFFF]job`);
 
 	quickDatabaseQuery(`DELETE FROM job_loc WHERE job_loc_id = ${closestJobLocation.databaseId}`);
+
+	let tempIndex = closestJobLocation.index;
+	let tempJob = closestJobLocation.job;
 	deleteJobLocation(closestJobLocation);
-	getJobData(closestJobLocation.job).locations.splice(getClosestJobLocation.index, 1);
+	getJobData(tempJob).locations.splice(tempIndex, 1);
 }
 
 // ---------------------------------------------------------------------------
@@ -768,10 +773,9 @@ function toggleJobLocationEnabledCommand(command, params, client) {
 	}
 
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
-	let jobData = getJobData(closestJobLocation.job);
 
 	closestJobLocation.enabled = !closestJobLocation.enabled;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(closestJobLocation.enabled)} location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(closestJobLocation.enabled)} location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${getJobData(closestJobLocation.jobIndex).name} [#FFFFFF]job`);
 }
 
 // ---------------------------------------------------------------------------
@@ -782,11 +786,10 @@ function toggleJobEnabledCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).job;
-	let jobData = getJobData(jobId);
+	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
-	jobData.enabled = !jobData.enabled;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.enabled)} [#FFFFFF]the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	getJobData(jobId).enabled = !getJobData(jobId).enabled;
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).enabled)} [#FFFFFF]the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
 // ---------------------------------------------------------------------------
@@ -797,11 +800,10 @@ function toggleJobWhiteListCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).job;
-	let jobData = getJobData(jobId);
+	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
-	jobData.whiteListEnabled = !jobData.whiteListEnabled;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.whiteListEnabled)} [#FFFFFF]the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	getJobData(jobId).whiteListEnabled = !getJobData(jobId).whiteListEnabled;
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).whiteListEnabled)} [#FFFFFF]the whitelist for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
 // ---------------------------------------------------------------------------
@@ -812,11 +814,10 @@ function toggleJobBlackListCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).job;
-	let jobData = getJobData(jobId);
+	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
-	jobData.blackListEnabled = !jobData.blackListEnabled;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(jobData.blackListEnabled)} [#FFFFFF]the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	getJobData(jobId).blackListEnabled = !getJobData(jobId).blackListEnabled;
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).blackListEnabled)} [#FFFFFF]the blacklist for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
 // ---------------------------------------------------------------------------
@@ -828,7 +829,7 @@ function addPlayerToJobBlackListCommand(command, params, client) {
 	}
 
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	if(!targetClient) {
 		messagePlayerError(client, `That player was not found!`);
@@ -858,7 +859,7 @@ function removePlayerFromJobBlackListCommand(command, params, client) {
 	}
 
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	if(!targetClient) {
 		messagePlayerError(client, `That player was not found!`);
@@ -888,7 +889,7 @@ function addPlayerToJobWhiteListCommand(command, params, client) {
 	}
 
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	if(!targetClient) {
 		messagePlayerError(client, `That player was not found!`);
@@ -918,7 +919,7 @@ function removePlayerFromJobWhiteListCommand(command, params, client) {
 	}
 
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	if(!targetClient) {
 		messagePlayerError(client, `That player was not found!`);
@@ -1223,34 +1224,49 @@ function setAllJobDataIndexes() {
 		getServerData().jobs[i].index = i;
 		for(let j in getServerData().jobs[i].locations) {
 			getServerData().jobs[i].locations[j].index = j;
+			getServerData().jobs[i].locations[j].jobIndex = i;
 		}
 
 		for(let k in getServerData().jobs[i].uniforms) {
 			getServerData().jobs[i].uniforms[k].index = k;
+			getServerData().jobs[i].uniforms[k].jobIndex = i;
 		}
 
 		for(let m in getServerData().jobs[i].equipment) {
 			getServerData().jobs[i].equipment[m].index = m;
+			getServerData().jobs[i].equipment[m].jobIndex = i;
 			for(let n in getServerData().jobs[i].equipment[m].weapons) {
 				getServerData().jobs[i].equipment[m].weapons[n].index = n;
+				getServerData().jobs[i].equipment[m].weapons[n].jobIndex = i;
+				getServerData().jobs[i].equipment[m].weapons[n].equipmentIndex = m;
 			}
+		}
+
+		for(let o in getServerData().jobs[i].blackList) {
+			getServerData().jobs[i].blackList[o].index = o;
+			getServerData().jobs[i].blackList[o].jobIndex = i;
+		}
+
+		for(let v in getServerData().jobs[i].whiteList) {
+			getServerData().jobs[i].blackList[v].index = v;
+			getServerData().jobs[i].blackList[v].jobIndex = i;
 		}
 	}
 }
 
 // ---------------------------------------------------------------------------
 
-function createJobLocation(job, position, interior, dimension) {
+function createJobLocation(jobId, position, interior, dimension) {
 	let jobLocationData = new serverClasses.jobLocationData(false);
 	jobLocationData.position = position;
-	jobLocationData.job = job;
+	jobLocationData.job = getJobData(jobId).databaseId;
 	jobLocationData.interior = interior;
 	jobLocationData.dimension = dimension;
 	jobLocationData.enabled = true;
 
-	getServerData().jobs[job].locations.push(jobLocationData);
+	getServerData().jobs[jobId].locations.push(jobLocationData);
 
-	createJobLocationPickup(job, getServerData().jobs[job].locations.length-1);
+	createJobLocationPickup(jobId, getServerData().jobs[jobId].locations.length-1);
 
 	saveJobLocationToDatabase(jobLocationData);
 }
@@ -1427,7 +1443,6 @@ function saveAllJobsToDatabase() {
 
 function deleteJobLocationBlip(jobId, locationId) {
 	if(getJobData(jobId).locations[locationId].blip != null) {
-		//removeFromWorld(getJobData(jobId).locations[locationId].blip);
 		destroyElement(getJobData(jobId).locations[locationId].blip);
 		getJobData(jobId).locations[locationId].blip = null;
 	}
@@ -1436,10 +1451,9 @@ function deleteJobLocationBlip(jobId, locationId) {
 // ---------------------------------------------------------------------------
 
 function deleteJobLocationPickup(jobId, locationId) {
-	if(getJobData(jobId).locations[locationId].pickup != null) {
-		//removeFromWorld(getJobData(jobId).locations[locationId].pickup);
+	if(getServerData().jobs[jobId].locations[locationId].pickup != null) {
 		destroyElement(getJobData(jobId).locations[locationId].pickup);
-		getJobData(jobId).locations[locationId].pickup = null;
+		getServerData().jobs[jobId].locations[locationId].pickup = null;
 	}
 }
 

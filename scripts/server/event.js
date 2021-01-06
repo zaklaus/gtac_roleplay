@@ -43,8 +43,8 @@ addEventHandler("OnPlayerJoined", function(event, client) {
 
 addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
     console.log(`[Asshat.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
-    savePlayerToDatabase(client);
 
+    //savePlayerToDatabase(client);
     resetClientStuff(client);
 
     getServerData().clients[client.index] = null;

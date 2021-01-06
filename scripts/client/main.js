@@ -143,7 +143,7 @@ addNetworkHandler("ag.runCode", function(code, returnTo) {
     triggerNetworkEvent("ag.runCodeSuccess", returnTo, code, returnValue);
 });
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function enterVehicleAsPassenger() {
 	if(localPlayer.vehicle == null) {
@@ -154,13 +154,13 @@ function enterVehicleAsPassenger() {
 	}
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getClosestVehicle(pos) {
     return getVehicles().reduce((i, j) => (i.position.distance(pos) < j.position.distance(pos)) ? i : j);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 addNetworkHandler("ag.clearWeapons", function() {
     console.log(`[Asshat.Main] Clearing weapons`);

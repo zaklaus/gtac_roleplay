@@ -142,3 +142,59 @@ const AG_ISLAND_REDCOUNTYSOUTHEAST = 3;
 const AG_ISLAND_REDCOUNTYNORTH = 4;
 const AG_ISLAND_BONECOUNTYNORTH = 5;
 const AG_ISLAND_BONECOUNTYSOUTH = 6;
+
+// Item Owners
+const AG_ITEM_OWNER_NONE = 0;
+const AG_ITEM_OWNER_PLAYER = 1;
+const AG_ITEM_OWNER_VEHTRUNK = 2;
+const AG_ITEM_OWNER_VEHDASH = 3;
+const AG_ITEM_OWNER_BIZFLOOR = 4;
+const AG_ITEM_OWNER_BIZSTORAGE = 5;
+const AG_ITEM_OWNER_HOUSE = 6;
+const AG_ITEM_OWNER_SAFE = 7;
+const AG_ITEM_OWNER_ITEM = 8;
+
+// Item Use Types
+const AG_ITEM_USETYPE_NONE = 0;                 // Has no effect
+const AG_ITEM_USETYPE_WEAPON = 1;               // Equips weapon
+const AG_ITEM_USETYPE_AMMO_CLIP = 2;            // Magazine for weapon. If in inventory, R will load it into gun
+const AG_ITEM_USETYPE_PHONE = 3;                // Pulls out phone
+const AG_ITEM_USETYPE_GPS = 4;                  // Not sure how I want this to work yet
+const AG_ITEM_USETYPE_MAP = 5;                  // Shows minimap on HUD
+const AG_ITEM_USETYPE_SKIN = 6;                 // Changes skin (item skin is replaced with previous skin before changing)
+const AG_ITEM_USETYPE_CLOTHESUPPER = 7;         // Changes upper clothing (GTA IV shirts)
+const AG_ITEM_USETYPE_CLOTHESLOWER = 8;         // Changes lower clothing (GTA IV pants)
+const AG_ITEM_USETYPE_STORAGE = 9;              // Shows stored items. Backpack, crate, briefcase, wallet, etc
+const AG_ITEM_USETYPE_VEHKEY = 10;              // Locks/unlocks a vehicle and allows starting engine without hotwire
+const AG_ITEM_USETYPE_BIZKEY = 11;              // Locks/unlocks a business
+const AG_ITEM_USETYPE_HOUSEKEY = 12;            // Locks/unlocks a house
+const AG_ITEM_USETYPE_SEED = 13;                // Plants a seed
+const AG_ITEM_USETYPE_WEED = 14;                // Light drug effect (short term relief of addiction symptoms?)
+const AG_ITEM_USETYPE_COKE = 15;                // Medium drug effect (medium term relief of addiction symptoms?)
+const AG_ITEM_USETYPE_METH = 16;                // Heavy drug effect (extended term relief of addiction symptoms?)
+const AG_ITEM_USETYPE_CIGAR = 17;               // Just for appearance. Makes people look cool I guess
+const AG_ITEM_USETYPE_WATER = 18;               // Replenishes small amount of health
+const AG_ITEM_USETYPE_FOOD = 19;                // Eat food. Replenishes a small amount of health
+const AG_ITEM_USETYPE_BEER = 20;                // Subtle drunk effect. Replenishes small amount of health.
+const AG_ITEM_USETYPE_WINE = 21;                // Moderate drunk effect. Replenishes moderate amount of health.
+const AG_ITEM_USETYPE_LIQUOR = 22;              // Heavy drunk effect. Replenishes large amount of health.
+const AG_ITEM_USETYPE_COFFEE = 23;              // Replenishes moderate amount of health.
+const AG_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine.
+
+// Item Drop Types
+const AG_ITEM_DROPTYPE_NONE = 0;            // Can't be dropped
+const AG_ITEM_DROPTYPE_OBJECT = 1;          // Drops as an object on the ground
+const AG_ITEM_DROPTYPE_PICKUP = 2;          // Drops as a pickup
+const AG_ITEM_DROPTYPE_OBJECTLIGHT = 3;     // Object that produces an area light effect (lamp, flashlight, etc)
+const AG_ITEM_DROPTYPE_DESTROY = 4;         // Will destroy the item on drop (keys mostly but for any tiny object)
+const AG_ITEM_DROPTYPE_OBJECTSTACK = 5;     // Stackable objects (crates and such). Will sit on top of closest other stackable
+
+// Forensic Types
+const AG_FORENSICS_NONE = 0;
+const AG_FORENSICS_BULLET = 1;              // Bullet. The actual tip that hits a target. Has rifling and ballistics information of the weapon.
+const AG_FORENSICS_BLOOD = 2;               // Blood. Automatically applied to ground and bullets that hit when somebody is shot
+const AG_FORENSICS_BODY = 3;                // Body. A dead body lol
+const AG_FORENSICS_HAIR = 4;                // Hair. Automatically applied to
+const AG_FORENSICS_SWEAT = 5;               // Sweat. Automatically applied to clothing when worn
+const AG_FORENSICS_SALIVA = 6;              // Saliva. Automatically applied to drinks when drank
+const AG_FORENSICS_BULLETCASINGS = 7;       // Bullet casings. Automatically dropped when fired from a weapon except when used in a vehicle (driveby)

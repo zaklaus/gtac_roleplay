@@ -67,7 +67,10 @@ let serverBitFlagKeys = {
 	],
 	clanPermissionFlagKeys: [
 		"none",
+		"startTurfWar",
+		"startPointWar",
 		"inviteMember",
+		"suspendMember",
 		"removeMember",
 		"memberRank",
 		"memberFlags",
@@ -170,7 +173,7 @@ function doesPlayerHaveStaffPermission(client, requiredFlags) {
 
 // ---------------------------------------------------------------------------
 
-function doesClientHaveClanPermission(client, requiredFlags) {
+function doesPlayerHaveClanPermission(client, requiredFlags) {
 	if(isConsole(client)) {
 		return true;
 	}

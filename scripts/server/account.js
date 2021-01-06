@@ -764,12 +764,11 @@ function initClient(client) {
 			let tempAccountData = loadAccountFromName(client.name, true);
 			let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
 
-
-
 			getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
 
 			let sessionId = saveConnectionToDatabase(client);
 			getServerData().clients[client.index].session = sessionId;
+			getServerData().clients[client.index].connectTime = Math.ceil(sdl.ticks);
 
 			if(tempAccountData != false) {
 				if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {

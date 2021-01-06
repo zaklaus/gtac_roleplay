@@ -13,14 +13,14 @@ let listFont = null;
 
 let pausedColour = COLOUR_RED;
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
 	titleFont = lucasFont.createDefaultFont(22.0, "Roboto", "Regular");
 	listFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 });
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function (event) {
 	if(!renderHUD) {

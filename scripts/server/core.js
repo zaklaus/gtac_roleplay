@@ -11,7 +11,7 @@
 let scriptVersion = "1.0";
 let serverStartTime = 0;
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 let serverData = {
 	saveDataIntervalTimer: false,
@@ -22,6 +22,10 @@ let serverData = {
 	families: [],
 	factions: [],
 	commands: {},
+	antiCheat: {
+		whiteListedGameScripts: [],
+		blackListedGameScripts: [],
+	},
 	policeStations: [
 		false,
 		[	// GTA 3
@@ -381,7 +385,7 @@ let serverData = {
 	],
 };
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function initServerData() {
 	// Pre-allocate translation cache language slots
@@ -391,10 +395,10 @@ function initServerData() {
 	global.getServerData().translation.cache.fill(translationCacheFrom);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getServerData() {
 	return serverData;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------

@@ -15,16 +15,16 @@ NOTICE: Most of these ideas are totally random and some might be unrealistic. Ev
 	* Garages
 	* Casinos
 
-* Interactive peds with each one having a background story, characteristics, certain people or groups they like/dislike. 
+* Interactive peds with each one having a background story, characteristics, certain people or groups they like/dislike.
 	* Procedurally generated?
 
 * Nightclubs, bars, etc can employ "bouncer" peds that either prevent entry to certain people, or kick people out.
 
-* Background ambience. 
+* Background ambience.
 	* Anonymous city traffic and pedestrians
 	* They come and go and aren't persistent.
 	* Police peds/traffic will pursue if player has 1+ stars and comes within range and line of sight.
-	
+
 * Named NPCs
 	* Persistent
 	* Move from place to place. Eat at restaurants, drive home, to work, get drunk at a bar, etc.
@@ -35,7 +35,7 @@ NOTICE: Most of these ideas are totally random and some might be unrealistic. Ev
     * Vehicles catch on fire instead of blowing up.
     * Random property fires can occur.
     * Firetrucks can "spray" a fire, lowering the damage until it is extinguished (Aim detection).
-    
+
 * Streetsweeper Job
     * Instead of checkpoints, show actual messes on the road.
     * Drive over the messes with the right vehicle to "clean" the mess.
@@ -46,90 +46,90 @@ NOTICE: Most of these ideas are totally random and some might be unrealistic. Ev
     * Allow the trashtruck drivers to "pickup" the trashbag, then "place" into the truck.
     * If the truck is full, deliver the trashbags to the dump.
     * Only show trashbags if at least one player is currently doing the job.
-    
+
 * Mailman Job
     * Use a white solid van (Pony maybe) as a mail van.
     * Load mail at the post office, and drive a specific route to "deliver" mail.
     * Return the truck for payment.
-    
+
 * Vehicle Towing
     * Use a Yankee or something to store the vehicle "inside" (just make the car disappear) until better sync options are built.
     * Universal command to tow/release a vehicle ( /tow ).
     * Attach to nearest vehicle.
-    
+
 * Item System
     * Several item types, including armour, skins, weapons, drugs, materials, and more.
     * Items can be dropped and picked up.
     * Items can be stored in a vehicle trunk or dash compartment.
     * Items can be given, taken, or used.
-    
+
 * Payphones
     * Make built in payphones usable (detect position, ring sound, etc)
     * Payphones can be called, making them ring to nearby players.
 
-* Multiple bed hospital. 
-	* When one is taken, use the next one. 
-	* If all are full, have a waiting list. 
+* Multiple bed hospital.
+	* When one is taken, use the next one.
+	* If all are full, have a waiting list.
 	* Allow people to go in and lay on a bed to heal (or use a check-in system)
-	
+
 * Several NPC's
-	* Paramedics/Doctors at hospitals, 
+	* Paramedics/Doctors at hospitals,
 	* LC/VC/LS/SF/LV police dept desk clerk and dispatcher.
 	* Jail guard
 	* Interactive. Go up and talk to them for responses etc
-	
-* Use permissions/flag system for everything. 
+
+* Use permissions/flag system for everything.
 	* Admin abilities
 	* Moderation (muted/frozen/etc)
 	* LEO abilities
 	* Clan abilities
     * Account Settings
 	* etc
-	
+
 * Interiors
     * For games with interiors, properties inside of properties (possibly make it a sub-property, but using a "type" to define it. May not be necessary) AKA a business inside a business (illegal back room gambling, anyone?)
 
 * Stealable skins. When one is stolen, it is replaced by the thief's skin
 
-* Black market for anything. 
+* Black market for anything.
 	* Smuggled drugs
 	* LEO items
 	* Weapons and weapon upgrades
 	* Illegal vehicle upgrades like NOS.
-	
-* Drug houses and weed farms. 
-	* Make weed only plantable in certain areas. 
+
+* Drug houses and weed farms.
+	* Make weed only plantable in certain areas.
 	* Drug houses aren't limited to the type of house, as anybody can deal or use in any place.
-	
-* Size-based inventories. 
+
+* Size-based inventories.
 	* Items should have a size and inventories can only hold so much.
-	* Items inside of items. This could be (but not limited to): 
+	* Items inside of items. This could be (but not limited to):
 		* Briefcases
 		* Wallets
 		* Safes
 		* Trashbags
 		* Boxes/crates
 	* Use the item sizes for storage capacity
-	
-* Weapons like DayZ. 
-	* Multiple weapon types that issue different damages. 
+
+* Weapons like DayZ.
+	* Multiple weapon types that issue different damages.
 	* Ammo clips that only fit a compatible weapon
 	* Different clip types hold different amounts of ammo in them (and specific ammo types)
 	* Hollow point and armor piercing round types
 	* Modifications. Flashlight, silencer, bigger clip, tracer, scope, etc.
-	
-* Crime scene investigations. 
+
+* Crime scene investigations.
 	* Blood
 	* Fingerprints
 	* Ballistics/bullets on ground, in objects, walls, etc.
 	* Gunpowder traces
 	* Weapons
-	* Other crime scene stuff for investigation roleplay. 
+	* Other crime scene stuff for investigation roleplay.
 	* These items should be visible on the ground (particle effects?)
 	* Can be cleaned up by anybody (including the murderer or suspects)
 	* Showering or swimming clears blood from body
 	* Rain washes away blood outside (if not under an object or bridge). Perhaps line of sight check with high up Z at same coord?
-	
+
 * Huge police interiors and garages.
 	* Multiple interrogation rooms with blocked sound (chat is localized to that room)
 	* Multiple offices for ranking members
@@ -138,34 +138,34 @@ NOTICE: Most of these ideas are totally random and some might be unrealistic. Ev
 	* Crime scene lab
 	* Cell block area (or multiple cell blocks)
 	* Elevators that can take you to multiple levels of the building (and roof/garage).
-	
-* Custom MDC. 
+
+* Custom MDC.
 	* Arrest logs
 	* Past tickets
 	* Officer reports
 	* Investigation info
 	* APB list
-	
+
 * Admin panel.
 	* Reports
 		* Multiple actions for each
-			* Viewing info and past reports/actions on the reporter and the situation. 			
+			* Viewing info and past reports/actions on the reporter and the situation.
 	* Logs
 		* Chat
 		* Action
 		* Weapon/Kill/Death
 		* Others
-		
+
 * Log everything possible.
 
-* Depending on type of injuries, have multiple results occur over time. 
-	* Gunshots lead to bleeding which could lead to passing out for loss of blood. 
+* Depending on type of injuries, have multiple results occur over time.
+	* Gunshots lead to bleeding which could lead to passing out for loss of blood.
 	* Post-treatment effects are also possible including siezures from blunt force trauma.
-	
+
 * Custom actions to have different results. Interactive-ness.
-	* Hotwiring a car could be successful or could also fail, depending on vehicle type and variance. 
-	* The user has to go through each step in order to complete the task. 
-	* Hotwiring could have things like splitting and joining wires to make the car start or the alarm stop. 
+	* Hotwiring a car could be successful or could also fail, depending on vehicle type and variance.
+	* The user has to go through each step in order to complete the task.
+	* Hotwiring could have things like splitting and joining wires to make the car start or the alarm stop.
 	* Include medical procedures in this idea. Surgeries, gunshot wounds, etc
 	* Require certain tools to perform different actions.
 	* Different vehicles have different wires to use to be successful.
@@ -178,8 +178,8 @@ NOTICE: Most of these ideas are totally random and some might be unrealistic. Ev
 
 * Trunks can hold players/peds (not visibly) and items and is size based.
 
-* Get "inside" the back of trucks/trailers and store items inside. 
-	* Use an interior for this and allow dropped items (including crates and boxes and etc). 
+* Get "inside" the back of trucks/trailers and store items inside.
+	* Use an interior for this and allow dropped items (including crates and boxes and etc).
 	* Shouts and certain speech can be heard outside wherever the truck is at.
 	* Vehicle sink or explode while inside the back causes death and objects destroyed.
 	* Also for airplane interiors
@@ -190,7 +190,7 @@ NOTICE: Most of these ideas are totally random and some might be unrealistic. Ev
 	* Cleaning weapons improves reliability
 
 * Weapons have identifying parts like barrel bores (for ballistics) and serial numbers. Serial numbers can be removed.
-	
+
 * GUI color schemes (https://vortrex.info/f/1/4eca24d1.png) with a settings page to switch them. Orange, red, blue, purple, etc.
 
 * Police
@@ -229,5 +229,50 @@ NOTICE: Most of these ideas are totally random and some might be unrealistic. Ev
 * Speakerphone
 	* While on a phone call, using /speakerphone or something can allow others near the person on the phone to hear and be heard over the call.
 
-	
+
 * Player police officers can issue an APB for a player suspect. NPC police drive and walk around as normal in the game but if they spot the player suspect within a certain distance and line of sight, their position is sent to any player police officers via radio and shown as a blip on the radar. If the suspect evades the NPC police, the blip fades out at the last seen suspect location and eventually disappears, no longer available to player police officers. This means that the blip will continue to show other officers at the suspect's updated location until a) all police officers lose line of sight, b) suspect gets too far away or c) enters a house/business (losing line of sight with police unless they enter). All of these will cause the blip to show the suspects last known and seen location while the blip fades out and eventually disappears. Any officer that re-establishes line of sight within a certain distance will cause the suspect's blip to show again for all police. NPC police will NOT use the built-in wanted level system because this causes excessive spawning of police no matter where the suspect is generally completely unfair. Instead, scripting functions like ped.runTo, vehicle.setCarMission, vehicle.setCruiseSpeed, etc will be used to pursue the suspect. The logic in these functions is not perfect. The NPC officer can wreck the police car, get slowed down by traffic or stuck on something altogether, and the ped can be evaded by continously going around corners and such. All of this provides the ability for the suspect to have a chance of getting away. Changing skin/clothes or driving different/unknown vehicles reduces the NPC's line of sight and distance checking and thus reduces their chance of identifying them when near.
+
+* Casinos
+
+* Pebble companion app
+
+* More GUI
+	* Basic layouts
+		* List
+		* Columned List (Grid?)
+		* Single Text Input Prompt
+	* Complex Layouts
+		* Info boxes for any type of server entity
+		* Admin functions for each one (ban, kick, delete, set owner, etc)
+	* Chat log
+	* Lists of submitted ideas and bug reports
+
+* Web API
+	* REST-like URLs
+	* Type shortened to database table prefix style (/acct, /veh, etc)
+
+* Companion app for my Pebble watch (Rebble)
+	* Whole thing streamlined
+	* Server select, then use GUI colours of server
+	* Connected players
+	* Links to account/character info
+	* Character Info leads to owned vehicles, houses, businesses, current clan, etc
+	* Clan info leads to owned businesses, houses, vehicles, etc
+	* Business, house, vehicle info has links back to owners info pages
+	* Alerts for reports, submitted bugs/ideas, hacker detection
+	* Silent mode to block incoming alerts
+	* Moderation action choices.
+		* Players
+			* Kick, ban, mute, unmute, etc
+		* Vehicles
+			* Set owner (select job, public, biz, house, player, clan, etc)
+			* Despawn
+			* Delete
+		* Business/House
+			* Set owner (select job, public, biz, house, player, clan, etc)
+			* Lock/unlock
+			* Delete
+		* Server
+			* Config options
+			* Shutdown, restart, gmx, etc
+			* Alert (probably pre-made messages, configurable in pebble app)

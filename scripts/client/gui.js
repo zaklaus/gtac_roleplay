@@ -37,7 +37,7 @@ let login = {
 let twoFactorAuth = {
 	window: null,
 	logoImage: null,
-	qrCodeHTML: null,
+	qrCode: null,
 	messageLabel: null,
 	codeLabel: null,
 	codeInput: null,
@@ -1160,7 +1160,7 @@ app.init = function()
 
 	console.log(`[Asshat.GUI] Created login GUI`);
 
-	// ---------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	console.log(`[Asshat.GUI] Creating two factor auth GUI ...`);
 	twoFactorAuth.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
@@ -1183,13 +1183,13 @@ app.init = function()
 	twoFactorAuth.window.titleBarIconSize = toVector2(0,0);
 	twoFactorAuth.window.titleBarHeight = 0;
 
-	twoFactorAuth.logoImage = twoFactorAuth.window.image(100, 20, 100, 100, mainLogoPath, {
+	twoFactorAuth.qrCode = twoFactorAuth.window.image(100, 20, 100, 100, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},
 	});
 
-	twoFactorAuth.messageLabel = twoFactorAuth.window.text(20, 135, 260, 20, 'Please enter the code from your authenticator app!', {
+	twoFactorAuth.codeLabel = twoFactorAuth.window.text(20, 135, 260, 20, 'Please enter the code from your authenticator app!', {
 		main: {
 			textSize: 10.0,
 			textAlign: 0.5,
@@ -1201,7 +1201,7 @@ app.init = function()
 		},
 	});
 
-	twoFactorAuth.passwordInput = twoFactorAuth.window.textInput(20, 170, 260, 25, '', {
+	twoFactorAuth.codeInput = twoFactorAuth.window.textInput(20, 170, 260, 25, '', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, 120),
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], textInputAlpha),
@@ -1238,7 +1238,7 @@ app.init = function()
 
 	console.log(`[Asshat.GUI] Created two factor auth GUI`);
 
-	// ---------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	console.log(`[Asshat.GUI] Creating new character GUI ...`);
 
@@ -1445,7 +1445,7 @@ app.init = function()
 
 	console.log(`[Asshat.GUI] Created new character GUI`);
 
-	// ---------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	console.log(`[Asshat.GUI] Creating register GUI ...`);
 
@@ -1560,7 +1560,7 @@ app.init = function()
 
 	console.log(`[Asshat.GUI] Created register GUI`);
 
-	// ---------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	console.log(`[Asshat.GUI] Creating error GUI ...`);
 
@@ -1602,7 +1602,7 @@ app.init = function()
 
 	console.log(`[Asshat.GUI] Created error GUI ...`);
 
-	// ---------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	console.log(`[Asshat.GUI] Created prompt GUI ...`);
 
@@ -1654,7 +1654,7 @@ app.init = function()
 
 	console.log(`[Asshat.GUI] Created prompt GUI`);
 
-	// ---------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	console.log(`[Asshat.GUI] Creating info dialog GUI ...`);
 
@@ -1695,7 +1695,7 @@ app.init = function()
 
 	console.log(`[Asshat.GUI] Created info dialog GUI`);
 
-	// ---------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------
 
 	console.log(`[Asshat.GUI] Creating character select GUI ...`);
 

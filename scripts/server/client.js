@@ -175,3 +175,9 @@ function updatePlayerShowLogoState(client, state) {
 }
 
 // ---------------------------------------------------------------------------
+
+function restorePlayerCamera(client) {
+    triggerNetworkEvent("ag.restoreCamera", client);
+}
+
+// ---------------------------------------------------------------------------

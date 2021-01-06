@@ -558,7 +558,7 @@ function doesClientOwnVehicle(client, vehicle) {
 
 	if(vehicleData.ownerType == AG_VEHOWNER_CLAN) {
 		if(vehicleData.ownerId == getPlayerCurrentSubAccount(client).clan) {
-			if(doesClientHaveClanPermission(client, "manageVehicles") || doesClientHaveClanPermission(client, "owner")) {
+			if(doesPlayerHaveClanPermission(client, "manageVehicles") || doesPlayerHaveClanPermission(client, "owner")) {
 				return true;
 			}
 		}
@@ -958,7 +958,7 @@ function setVehicleLocked(vehicle, locked) {
 	vehicle.locked = locked;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getVehicleOwnerTypeText(ownerType) {
 	switch(ownerType) {
@@ -979,7 +979,7 @@ function getVehicleOwnerTypeText(ownerType) {
 	}
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function isVehicleOwnedByJob(vehicle, jobId) {
 	if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
@@ -988,7 +988,7 @@ function isVehicleOwnedByJob(vehicle, jobId) {
 	return false;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 async function getPlayerNewVehicle(client) {
 	while(true) {
@@ -999,7 +999,7 @@ async function getPlayerNewVehicle(client) {
 	}
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, dealershipId) {
 	let vehicleDataSlot = getServerData().vehicles.length;
@@ -1025,4 +1025,4 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 	getServerData().vehicles.push(tempVehicleData);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------

@@ -20,7 +20,7 @@ let playerColours = {};
 let playerPaused = {};
 let playerPing = {};
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 addEventHandler("OnResourceReady", function(event, resource) {
 	if (resource == thisResource) {
@@ -29,7 +29,7 @@ addEventHandler("OnResourceReady", function(event, resource) {
 	}
 });
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 addNetworkHandler("ag.nametag", function(clientName, characterName, colour, paused, ping) {
 	playerNames[clientName] = characterName;
@@ -38,13 +38,13 @@ addNetworkHandler("ag.nametag", function(clientName, characterName, colour, paus
 	playerPing[clientName] = ping;
 });
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 addNetworkHandler("ag.ping", function(clientName, ping) {
 	playerPing[clientName] = ping;
 });
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, afk, skin) {
 	if(nametagFont == null) {
@@ -113,7 +113,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 	}
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function updateNametags(element) {
 	if(localPlayer != null) {
@@ -166,7 +166,7 @@ function updateNametags(element) {
 	}
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getClientFromPlayer(player) {
 	getClients().forEach(function(client) {
@@ -176,7 +176,7 @@ function getClientFromPlayer(player) {
 	});
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 addEventHandler("OnDrawnHUD", function(event) {
 	if(gta.game >= GAME_GTA_IV) {
@@ -190,10 +190,10 @@ addEventHandler("OnDrawnHUD", function(event) {
 	});
 });
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function createColour(alpha, red, green, blue) {
 	return alpha << 24 | red << 16 | green << 8 | blue;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------

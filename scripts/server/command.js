@@ -67,6 +67,9 @@ function loadCommands() {
             commandData("biztill", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true),
             commandData("bizwithdraw", withdrawFromBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
             commandData("bizdeposit", depositIntoBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
+            commandData("buy", buyFromBusinessCommand, "<slot> [amount]", getStaffFlagValue("none"), true, true),
+            commandData("bizstockitem", stockItemInBusinessCommand, "<item name> <amount> <sell price>", getStaffFlagValue("none"), true, true),
+            commandData("bizitemprice", setBusinessItemSellPriceCommand, "<item slot> <sell price>", getStaffFlagValue("none"), true, true),
             commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("none"), true, true),
             commandData("bizowner", setBusinessOwnerCommand, "<player name/id>", getStaffFlagValue("none"), true, true),
             commandData("bizblip", setBusinessBlipCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true),
@@ -75,6 +78,11 @@ function loadCommands() {
             commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
             commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
             commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageBusinesses"), true, true),
+
+            // TEMPORARY
+            commandData("buyskin", buySkinFromBusinessCommand, "<skin id>", getStaffFlagValue("none"), true, true),
+            commandData("buygun", buyWeaponFromBusinessCommand, "<weapon id>", getStaffFlagValue("none"), true, true),
+            commandData("buyammo", buyWeaponFromBusinessCommand, "<weapon id>", getStaffFlagValue("none"), true, true),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
@@ -123,6 +131,7 @@ function loadCommands() {
             commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("manageServer"), true, true),
             commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),
             commandData("setgui", toggleServerGUICommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true),
+            //commandData("setguicolours", setServerGUIColoursCommand, "<red> <green> <blue>", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true),
@@ -130,7 +139,10 @@ function loadCommands() {
             commandData("joblocinfo", getJobLocationInfoCommand, "", getStaffFlagValue("none"), true, true),
         ],
         core: [],
-        database: [],
+        database: [
+            commandData("dbquery", executeDatabaseQueryCommand, "<query>", getStaffFlagValue("developer"), true, true),
+            //commandData("dbinfo", getDatabaseInfoCommand, "", getStaffFlagValue("developer"), true, true),
+        ],
         developer: [
             commandData("scode", executeServerCodeCommand, "<code>", getStaffFlagValue("developer"), true, true),
             commandData("ccode", executeClientCodeCommand, "<code>", getStaffFlagValue("developer"), true, true),
@@ -140,7 +152,6 @@ function loadCommands() {
             commandData("docmdall", simulateCommandForAllPlayers, "<command> [params]", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],
-        faction: [],
         help: [
             commandData("help", helpCommand, "", getStaffFlagValue("none"), false, false),
         ],
@@ -160,7 +171,11 @@ function loadCommands() {
             commandData("houseexit", moveHouseExitCommand, "", getStaffFlagValue("manageHouses"), true, true),
             commandData("houseinttype", setHouseInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageHouses"), true, true),
         ],
-        item: [],
+        item: [
+            commandData("giveitem", givePlayerItemCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("takeitem", takePlayerItemCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("takeallitems", takeAllPlayerItemsCommand, "", getStaffFlagValue("none"), true, false),
+        ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),
             commandData("startwork", startWorkingCommand, "", getStaffFlagValue("none"), true, false),

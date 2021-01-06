@@ -258,7 +258,7 @@ let gameConfig = {
 	],
 };
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function initConfigScript() {
 	console.log("[Asshat.Config]: Initializing config script ...");
@@ -307,7 +307,7 @@ function loadServerConfigFromId(tempServerId) {
 	return false;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function applyConfigToServer(tempServerConfig) {
 	server.name = tempServerConfig.name;
@@ -319,7 +319,7 @@ function applyConfigToServer(tempServerConfig) {
 	updateServerRules();
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function saveServerConfigToDatabase(serverConfigData) {
 	console.log(`[Asshat.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
@@ -335,31 +335,31 @@ function saveServerConfigToDatabase(serverConfigData) {
 	console.log(`[Asshat.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getServerConfig() {
 	return serverConfig;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getGameConfig() {
 	return gameConfig;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getGlobalConfig() {
 	return globalConfig;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function getServerId() {
 	return getServerConfig().databaseId;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 function setTimeCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
@@ -518,4 +518,4 @@ function toggleServerGUICommand(command, params, client) {
 	return true;
 }
 
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------------

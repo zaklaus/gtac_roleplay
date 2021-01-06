@@ -13,7 +13,6 @@ function initHouseScript() {
 	getServerData().houses = loadHousesFromDatabase();
 	createAllHousePickups();
 	createAllHouseBlips();
-
 	setAllHouseIndexes();
 	console.log("[Asshat.House]: House script initialized successfully!");
 	return true;

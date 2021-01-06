@@ -274,3 +274,20 @@ function loadGameFixesResource() {
 }
 
 // ---------------------------------------------------------------------------
+
+function getPlayerInfoCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(params);
+
+	if(!getPlayerData(targetClient)) {
+		messagePlayerError(client, "Player not found!");
+		return false;
+	}
+
+	messagePlayerInfo(client, `[#AAAAAA][Player Info] [#FFFFFF]Account: [#AAAAAA]${getPlayerData(targetClient).accountData.name}[${getPlayerData(targetClient).accountData.databaseId}], [#FFFFFF]Character: [#AAAAAA]${getCharacterFullName(client)}[${getPlayerCurrentSubAccount(client).databaseId}], [#FFFFFF]Connected: [#AAAAAA]${getTimeDifferenceDisplay(Math.ceil(sdl.tick/1000), getPlayerData(targetClient).connectTime)} ago, [#FFFFFF]Game Version: [#AAAAAA]${targetClient.gameVersion}, [#FFFFFFF]Client Version: [#AAAAAA]${getPlayerData(targetClient).clientVersion}`);
+}
+
+// ---------------------------------------------------------------------------

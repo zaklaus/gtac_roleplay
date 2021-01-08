@@ -77,6 +77,7 @@ function helpCommand(command, params, client) {
             showAmmunationHelpMessage(client);
             break;
 
+        case "skin":
         case "skins":
         case "clothes":
             showClothesHelpMessage(client);

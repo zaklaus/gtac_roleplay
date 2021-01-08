@@ -216,12 +216,11 @@ function createAllJobPickups() {
 				pickupCount++;
 				getServerData().jobs[i].locations[j].pickup = gta.createPickup(getServerData().jobs[i].pickupModel, getServerData().jobs[i].locations[j].position);
 				getServerData().jobs[i].locations[j].pickup.onAllDimensions = false;
-				getServerData().jobs[i].locations[j].pickup.setData("ag.owner.type", AG_PICKUP_JOB, false);
-				getServerData().jobs[i].locations[j].pickup.setData("ag.owner.id", i, false);
-				getServerData().jobs[i].locations[j].pickup.setData("ag.label.type", AG_LABEL_JOB, true);
-				getServerData().jobs[i].locations[j].pickup.setData("ag.label.name", getServerData().jobs[i].name, true);
-				getServerData().jobs[i].locations[j].pickup.setData("ag.label.jobType", getServerData().jobs[i].databaseId, true);
-				//getServerData().jobs[i].locations[j].pickup.interior = getServerData().jobs[i].locations[j].interior;
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.owner.type", AG_PICKUP_JOB, false);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.owner.id", j, false);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.label.type", AG_LABEL_JOB, true);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.label.name", getServerData().jobs[i].name, true);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.label.jobType", getServerData().jobs[i].databaseId, true);
 				getServerData().jobs[i].locations[j].pickup.dimension = getServerData().jobs[i].locations[j].dimension;
 				addToWorld(getServerData().jobs[i].locations[j].pickup);
 
@@ -486,7 +485,7 @@ function givePlayerJobEquipment(client, equipmentId) {
 		return false;
 	}
 
-	let jobId = getPlayerCurrentSubAccount(client).job;
+	let jobId = getPlayerJob(client);
 	let equipments = getJobData(jobId).equipment;
 
 	for(let i in equipments[equipmentId].weapons) {
@@ -573,7 +572,17 @@ function stopWorking(client) {
 // ---------------------------------------------------------------------------
 
 function jobUniformCommand(command, params, client) {
-	let jobId = getPlayerCurrentSubAccount(client).job;
+	if(!getPlayerJob(client)) {
+		messagePlayerError(client, "You don't have a job!");
+		return false;
+	}
+
+	if(!isPlayerWorking(client)) {
+		messagePlayerError(client, "You are not working! Use /startwork at your job location.");
+		return false;
+	}
+
+	let jobId = getPlayerJob(client);
 	let uniforms = getJobData(jobId).uniforms;
 
 	if(areParamsEmpty(params)) {
@@ -605,7 +614,17 @@ function jobUniformCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function jobEquipmentCommand(command, params, client) {
-	let jobId = getPlayerCurrentSubAccount(client).job;
+	if(!getPlayerJob(client)) {
+		messagePlayerError(client, "You don't have a job!");
+		return false;
+	}
+
+	if(!isPlayerWorking(client)) {
+		messagePlayerError(client, "You are not working! Use /startwork at your job location.");
+		return false;
+	}
+
+	let jobId = getPlayerJob(client);
 	let equipments = getJobData(jobId).equipment;
 
 	if(areParamsEmpty(params)) {
@@ -681,12 +700,6 @@ function doesPlayerHaveJobType(client, jobType) {
 // ---------------------------------------------------------------------------
 
 function getJobData(jobId) {
-	//for(let i in getServerData().jobs) {
-	//	if(getServerData().jobs[i].databaseId == jobId) {
-	//		return getServerData().jobs[i];
-	//	}
-	//}
-
 	if(typeof getServerData().jobs[jobId] != "undefined") {
 		return getServerData().jobs[jobId];
 	}
@@ -1264,11 +1277,12 @@ function createJobLocation(jobId, position, interior, dimension) {
 	jobLocationData.interior = interior;
 	jobLocationData.dimension = dimension;
 	jobLocationData.enabled = true;
+	jobLocationData.jobIndex = jobId;
 
 	getServerData().jobs[jobId].locations.push(jobLocationData);
-
-	createJobLocationPickup(jobId, getServerData().jobs[jobId].locations.length-1);
-
+	let newSlot = getServerData().jobs[jobId].locations.length-1;
+	getServerData().jobs[jobId].locations[newSlot].index = newSlot;
+	createJobLocationPickup(jobId, newSlot);
 	saveJobLocationToDatabase(jobLocationData);
 }
 
@@ -1471,6 +1485,11 @@ function createJobLocationPickup(jobId, locationId) {
 		getJobData(jobId).locations[locationId].pickup = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
 		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
 		addToWorld(getJobData(jobId).locations[locationId].pickup);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.owner.type", AG_PICKUP_JOB, false);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, locationId, false);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, AG_LABEL_JOB, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, getServerData().jobs[jobId].name, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, getServerData().jobs[jobId].databaseId, true);
 	}
 }
 
@@ -1489,6 +1508,19 @@ function createJobLocationBlip(jobId, locationId) {
 		getJobData(jobId).locations[locationId].blip.dimension = getJobData(jobId).locations[locationId].dimension;
 		addToWorld(getJobData(jobId).locations[locationId].blip);
 	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getPlayerJob(client) {
+	let jobDatabaseId = getPlayerCurrentSubAccount(client).job;
+	for(let i in getServerData().jobs) {
+		if(jobDatabaseId == getServerData().jobs[i].databaseId) {
+			return i;
+		}
+	}
+
+	return false;
 }
 
 // ---------------------------------------------------------------------------

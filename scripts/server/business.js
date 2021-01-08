@@ -200,7 +200,7 @@ function setBusinessNameCommand(command, params, client) {
 
 	let oldBusinessName = getBusinessData(businessId).name;
 	getBusinessData(businessId).name = newBusinessName;
-	getBusinessData(businessId).entrancePickup.setData("ag.label.name", getBusinessData(businessId).name, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.name", getBusinessData(businessId).name, true);
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]renamed business [#0099FF]${oldBusinessName} [#FFFFFF]to [#0099FF]${newBusinessName}`);
 }
 
@@ -311,7 +311,7 @@ function lockBusinessCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).locked = !getBusinessData(businessId).locked;
-	getBusinessData(businessId).entrancePickup.setData("ag.label.locked", getBusinessData(businessId).locked, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.locked", getBusinessData(businessId).locked, true);
 	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
 }
 
@@ -785,14 +785,13 @@ function createBusinessEntrancePickup(businessId) {
 		getBusinessData(businessId).entrancePickup = gta.createPickup(pickupModelId, getBusinessData(businessId).entrancePosition);
 		getBusinessData(businessId).entrancePickup.onAllDimensions = false;
 		getBusinessData(businessId).entrancePickup.dimension = getBusinessData(businessId).entranceDimension;
-		//getBusinessData(businessId).entrancePickup.interior = getBusinessData(businessId).entranceInterior;
-		getBusinessData(businessId).entrancePickup.setData("ag.owner.type", AG_PICKUP_BUSINESS_ENTRANCE, false);
-		getBusinessData(businessId).entrancePickup.setData("ag.owner.id", businessId, false);
-		getBusinessData(businessId).entrancePickup.setData("ag.label.type", AG_LABEL_BUSINESS, true);
-		getBusinessData(businessId).entrancePickup.setData("ag.label.name", getBusinessData(businessId).name, true);
-		getBusinessData(businessId).entrancePickup.setData("ag.label.locked", getBusinessData(businessId).locked, true);
+		setEntityData(getBusinessData(businessId).entrancePickup, "ag.owner.type", AG_PICKUP_BUSINESS_ENTRANCE, false);
+		setEntityData(getBusinessData(businessId).entrancePickup, "ag.owner.id", businessId, false);
+		setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.type", AG_LABEL_BUSINESS, true);
+		setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.name", getBusinessData(businessId).name, true);
+		setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.locked", getBusinessData(businessId).locked, true);
 		if(getBusinessData(businessId).buyPrice > 0) {
-			getBusinessData(businessId).entrancePickup.setData("ag.label.price", getBusinessData(businessId).buyPrice, true);
+			setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.price", getBusinessData(businessId).buyPrice, true);
 		}
 		addToWorld(getBusinessData(businessId).entrancePickup);
 	}
@@ -812,8 +811,8 @@ function createBusinessEntranceBlip(businessId) {
 		getBusinessData(businessId).entranceBlip.onAllDimensions = false;
 		getBusinessData(businessId).entranceBlip.dimension = getBusinessData(businessId).entranceDimension;
 		//getBusinessData(businessId).entranceBlip.interior = getBusinessData(businessId).entranceInterior;
-		getBusinessData(businessId).entranceBlip.setData("ag.owner.type", AG_BLIP_BUSINESS_ENTRANCE, false);
-		getBusinessData(businessId).entranceBlip.setData("ag.owner.id", businessId, false);
+		setEntityData(getBusinessData(businessId).entranceBlip, "ag.owner.type", AG_BLIP_BUSINESS_ENTRANCE, false);
+		setEntityData(getBusinessData(businessId).entranceBlip, "ag.owner.id", businessId, false);
 		addToWorld(getBusinessData(businessId).entranceBlip);
 	}
 }
@@ -833,9 +832,9 @@ function createBusinessExitPickup(businessId) {
 			getBusinessData(businessId).exitPickup.onAllDimensions = false;
 			getBusinessData(businessId).exitPickup.dimension = getBusinessData(businessId).exitDimension;
 			//getBusinessData(businessId).exitPickup.interior = getBusinessData(businessId).exitInterior;
-			getBusinessData(businessId).exitPickup.setData("ag.owner.type", AG_PICKUP_BUSINESS_EXIT, false);
-			getBusinessData(businessId).exitPickup.setData("ag.owner.id", businessId, false);
-			getBusinessData(businessId).exitPickup.setData("ag.label.type", AG_LABEL_EXIT, true);
+			setEntityData(getBusinessData(businessId).exitPickup, "ag.owner.type", AG_PICKUP_BUSINESS_EXIT, false);
+			setEntityData(getBusinessData(businessId).exitPickup, "ag.owner.id", businessId, false);
+			setEntityData(getBusinessData(businessId).exitPickup, "ag.label.type", AG_LABEL_EXIT, true);
 			addToWorld(getBusinessData(businessId).exitPickup);
 		}
 	}
@@ -856,8 +855,8 @@ function createBusinessExitBlip(businessId) {
 			getBusinessData(businessId).exitBlip.onAllDimensions = false;
 			getBusinessData(businessId).exitBlip.dimension = getBusinessData(businessId).entranceDimension;
 			//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
-			getBusinessData(businessId).exitBlip.setData("ag.owner.type", AG_BLIP_BUSINESS_EXIT, false);
-			getBusinessData(businessId).exitBlip.setData("ag.owner.id", businessId, false);
+			setEntityData(getBusinessData(businessId).exitBlip, "ag.owner.type", AG_BLIP_BUSINESS_EXIT, false);
+			setEntityData(getBusinessData(businessId).exitBlip, "ag.owner.id", businessId, false);
 			addToWorld(getBusinessData(businessId).exitBlip);
 		}
 	}

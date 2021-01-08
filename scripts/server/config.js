@@ -224,40 +224,166 @@ let gameConfig = {
 
 	removedWorldObjects: [
 		false,
-		[
+
+		[ // GTA III
 			new serverClasses.removedWorldObjectData("fraightback04", toVector3(1229.88, -84.8012, 13.4004), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
 			new serverClasses.removedWorldObjectData("fraightback03", toVector3(1239.49, -68.0529, 11.6914), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
 		],
-		[],
-		[],
-		[],
-		[],
-		[],
+
+		[ // GTA VC
+
+		],
+
+		[ // GTA SA
+
+		],
+
+		[ // GTA UG
+
+		],
+
+		[ // GTA IV
+
+		],
+	],
+
+	excludedGroundSnowModels: [
+		false,
+
+		[ // GTA III
+
+		],
+
+		[ // GTA VC
+
+		],
+
+		[ // GTA SA
+
+		],
+
+		[ // GTA UG
+
+		],
+
+		[ // GTA IV
+
+		],
 	],
 
 	interiorTemplates: [
 		false,
+
 		{ // GTA 3
 
 		},
+
 		{ // GTA VC
 			mall: new serverClasses.interiorTemplateData(toVector3(379.62, 1007.00, 19.22), 4),
-			malibuClub: new serverClasses.interiorTemplateData(toVector3(489.83, -76.49, 11.48), 17),
-			policeStation: new serverClasses.interiorTemplateData(toVector3(396.38, -472.96, 12.34), 12),
+			malibu: new serverClasses.interiorTemplateData(toVector3(489.83, -76.49, 11.48), 17),
+			vcpd: new serverClasses.interiorTemplateData(toVector3(396.38, -472.96, 12.34), 12),
 			apartment: new serverClasses.interiorTemplateData(toVector3(26.67, -1328.89, 13.00), 11),
 			hotel: new serverClasses.interiorTemplateData(toVector3(228.53, -1277.12, 12.07), 1),
 			bikerBar: new serverClasses.interiorTemplateData(toVector3(-597.41, 651.84, 11.30), 11),
 			mansion: new serverClasses.interiorTemplateData(toVector3(-379.14, -551.65, 19.32), 2),
-			ammunationRange: new serverClasses.interiorTemplateData(toVector3(-667.79, 1217.51, 11.10), 10),
+			gunRange: new serverClasses.interiorTemplateData(toVector3(-667.79, 1217.51, 11.10), 10),
 			bank: new serverClasses.interiorTemplateData(toVector3(-894.52, -341.16, 13.45), 3),
 			stripClub: new serverClasses.interiorTemplateData(toVector3(97.53, -1472.06, 10.43), 5),
-			office: new serverClasses.interiorTemplateData(toVector3(120.82, -827.98, 10.62), 6),
+			rosenberg: new serverClasses.interiorTemplateData(toVector3(120.82, -827.98, 10.62), 6),
 			arena: new serverClasses.interiorTemplateData(toVector3(-1080.49, 1331.16, 13.91), 15),
 			ghettoShack: new serverClasses.interiorTemplateData(toVector3(-962.72, 146.11, 9.395), 12),
 		},
-		{ // GTA SA
 
-		}
+		{ // GTA SA
+			lspd: new serverClasses.interiorTemplateData(toVector3(247.113, 62.929, 1003.64), 2),
+			lvpd: new serverClasses.interiorTemplateData(toVector3(288.82, 167.39, 1007.17), 3),
+			sfpd: new serverClasses.interiorTemplateData(toVector3(246.40, 110.84, 1003.22), 10),
+			reeceBarberShop: new serverClasses.interiorTemplateData(toVector3(411.62, -21.43, 1001.80), 2),
+			stripClub1: new serverClasses.interiorTemplateData(toVector3(), ),
+			stripClub2: new serverClasses.interiorTemplateData(toVector3(), ),
+			fourDragons: new serverClasses.interiorTemplateData(toVector3(2016.26, 1017.77, 996.87), 10),
+			caligula: new serverClasses.interiorTemplateData(toVector3(2233.8, 1712.23, 1011.76), 1),
+			genericCasino: new serverClasses.interiorTemplateData(toVector3(1118.88, -10.27, 1002.08), 12),
+			cluckinBell: new serverClasses.interiorTemplateData(toVector3(365.71, -9.88, 1001.85), 9),
+			pizzaStack: new serverClasses.interiorTemplateData(toVector3(372.35, -131.65, 1001.49), 5),
+			burgerShot: new serverClasses.interiorTemplateData(toVector3(363.41, -74.57, 1001.50), 10),
+			tattooParlor: new serverClasses.interiorTemplateData(toVector3(-203.07, -24.16, 1002.27), 16),
+			gym: new serverClasses.interiorTemplateData(toVector3(), ),
+			bank: new serverClasses.interiorTemplateData(toVector3(2305.14, -16.274, 26.74), 1),
+			gas1: new serverClasses.interiorTemplateData(toVector3(-25.88, -185.86, 1003.54), 17),
+			gas2: new serverClasses.interiorTemplateData(toVector3(6.09, -29.27, 1003.54), 10),
+			gas3: new serverClasses.interiorTemplateData(toVector3(-30.94, -89.60, 1003.54), 18),
+			gas4: new serverClasses.interiorTemplateData(toVector3(-25.13, -139.06, 1003.54), 16),
+			gas5: new serverClasses.interiorTemplateData(toVector3(	-27.31, -29.27, 1003.54), 4),
+			gas6: new serverClasses.interiorTemplateData(toVector3(-26.69, -55.71, 1003.54), 6),
+			shamal: new serverClasses.interiorTemplateData(toVector3(2.38, 33.10, 1199.84), 1),
+			andromeda: new serverClasses.interiorTemplateData(toVector3(315.85, 1024.49, 1949.79), 9),
+			airportTickets: new serverClasses.interiorTemplateData(toVector3(-1827.14, 7.20, 1061.14), 14),
+			airportBaggage: new serverClasses.interiorTemplateData(toVector3(-1855.56, 41.26, 1061.14), 14),
+			ammu1: new serverClasses.interiorTemplateData(toVector3(286.14, -40.64, 1001.56), 1),
+			ammu2: new serverClasses.interiorTemplateData(toVector3(286.80, -82.54, 1001.53), 4),
+			ammu3: new serverClasses.interiorTemplateData(toVector3(296.91, -108.07, 1001.56), 6),
+			ammu4: new serverClasses.interiorTemplateData(toVector3(314.82, -141.43, 999.66), 7),
+			ammu5: new serverClasses.interiorTemplateData(toVector3(316.52, -167.70, 999.66), 6),
+			ammuBooth: new serverClasses.interiorTemplateData(toVector3(302.29, -143.13, 1004.06), 7),
+			ammuRange: new serverClasses.interiorTemplateData(toVector3(280.79, -135.20, 1004.06), 7),
+			house1: new serverClasses.interiorTemplateData(toVector3(235.51, 1189.17, 1080.34), 3),
+			house2: new serverClasses.interiorTemplateData(toVector3(225.76, 1240.00, 1082.15), 2),
+			house3: new serverClasses.interiorTemplateData(toVector3(223.04, 1289.26, 1082.20), 1),
+			house4: new serverClasses.interiorTemplateData(toVector3(225.63, 1022.48, 1084.07), 7),
+			house5: new serverClasses.interiorTemplateData(toVector3(295.14, 1474.47, 1080.52), 15),
+			house6: new serverClasses.interiorTemplateData(toVector3(328.49, 1480.59, 1084.45), 15),
+			house7: new serverClasses.interiorTemplateData(toVector3(385.80, 1471.77, 1080.21), 15),
+			atrium: new serverClasses.interiorTemplateData(toVector3(1726.18, -1641.00, 20.23), 18),
+			crackPalace: new serverClasses.interiorTemplateData(toVector3(2,567.52, -1294.59, 1063.25), 2),
+			bloodbowlStadium: new serverClasses.interiorTemplateData(toVector3(-1394.20, 987.62, 1023.96), 15),
+			burningDesireHouse: new serverClasses.interiorTemplateData(toVector3(2338.32, -1180.61, 1027.98), 5),
+			furhbergerHouse: new serverClasses.interiorTemplateData(toVector3(2807.63, -1170.15, 1025.57), 8),
+			dillimoreGas: new serverClasses.interiorTemplateData(toVector3(664.19, -570.73, 16.34), 0),
+			donutShop: new serverClasses.interiorTemplateData(toVector3(376.99, -191.21, 1000.63), 17),
+			airport: new serverClasses.interiorTemplateData(toVector3(-1830.81, 16.83, 1061.14), 14),
+			jeffersonMotel: new serverClasses.interiorTemplateData(toVector3(2220.26, -1,148.01, 1025.80), 15),
+			kickstartStadium: new serverClasses.interiorTemplateData(toVector3(-1410.72, 1,591.16, 1052.53), 14),
+			libertyCity: new serverClasses.interiorTemplateData(toVector3(-750.80, 491.00, 1371.70), 1),
+			lsxBaggageReclaim: new serverClasses.interiorTemplateData(toVector3(-1870.80, 59.81, 1056.25), 14),
+			jizzy: new serverClasses.interiorTemplateData(toVector3(-2637.69, 1404.24, 906.46), 3),
+			rcBattlefield: new serverClasses.interiorTemplateData(toVector3(-1079.99, 1061.58, 1343.04), 10),
+			ryderHouse: new serverClasses.interiorTemplateData(toVector3(2451.77, -1699.80, 1013.51), 2),
+			sfGarage: new serverClasses.interiorTemplateData(toVector3(-2042.42, 178.59, 28.84), 1),
+			sweetHouse: new serverClasses.interiorTemplateData(toVector3(2535.83, -1,674.32, 1015.50), 1),
+			katieHouse: new serverClasses.interiorTemplateData(toVector3(267.22, 304.71, 999.14), 2),
+			helenaHouse: new serverClasses.interiorTemplateData(toVector3(292.44, 308.77, 999.14), 3),
+			welcomePump: new serverClasses.interiorTemplateData(toVector3(681.66, -453.32, -25.61), 1),
+			woozieApartment: new serverClasses.interiorTemplateData(toVector3(-2158.72, 641.29, 1052.38), 1),
+			eightTrackStadium: new serverClasses.interiorTemplateData(toVector3(-1395.96, -208.20, 1051.17), 7),
+			dirtBikeStadium: new serverClasses.interiorTemplateData(toVector3(-1424.93, -664.59, 1059.86), 4),
+			crackDen: new serverClasses.interiorTemplateData(toVector3(318.57, 1115.21, 1082.98), 5),
+			motelRoom: new serverClasses.interiorTemplateData(toVector3(2251.85, -1138.16, 1050.63), 9),
+			hashburyHouse: new serverClasses.interiorTemplateData(toVector3(2260.76, -1210.45, 1049.02), 10),
+			cjHouse: new serverClasses.interiorTemplateData(toVector3(2496.65, -1696.55, 1014.74), 3),
+			maddDoggMansion: new serverClasses.interiorTemplateData(toVector3(1299.14, -794.77, 1084.00), 5),
+			motelRoom2: new serverClasses.interiorTemplateData(toVector3(2262.83, -1137.71, 1050.63), 10),
+			safeHouse1: new serverClasses.interiorTemplateData(toVector3(2365.42, -1131.85, 1050.88), 8),
+			safeHouse2: new serverClasses.interiorTemplateData(toVector3(2324.33, -1144.79, 1050.71), 12),
+			zeroStore: new serverClasses.interiorTemplateData(toVector3(-2240.00, 131.00, 1035.40), 6),
+			brothel1: new serverClasses.interiorTemplateData(toVector3(940.65, -18.48, 1000.93), 3),
+			brothel2: new serverClasses.interiorTemplateData(toVector3(967.53, -53.02, 1001.12), 3),
+			brothel3: new serverClasses.interiorTemplateData(toVector3(744.27, 1437.25, 1102.70), 6),
+			prolapsStore: new serverClasses.interiorTemplateData(toVector3(207.35, -138.00, 1003.31), 3),
+			victimStore: new serverClasses.interiorTemplateData(toVector3(221.33, -6.61, 1005.19), 5),
+			suburbanStore: new serverClasses.interiorTemplateData(toVector3(203.81, -46.53, 1001.80), 1),
+			sexShop: new serverClasses.interiorTemplateData(toVector3(-106.72, -19.64, 1000.71), 3),
+			bincoStore: new serverClasses.interiorTemplateData(toVector3(207.54, -109.00, 1005.13), 15),
+			wardrobe: new serverClasses.interiorTemplateData(toVector3(255.71, -41.13, 1002.02), 14),
+		},
+
+		{ // GTA UG
+
+		},
+
+		{ // GTA IV
+
+		},
 	],
 };
 

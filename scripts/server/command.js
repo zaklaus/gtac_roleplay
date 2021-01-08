@@ -28,6 +28,7 @@ let builtInCommands = [
 function initCommandScript() {
     logToConsole(LOG_DEBUG, "[Asshat.Command]: Initializing commands script ...");
     serverCommands = loadCommands();
+    addAllCommandHandlers();
     logToConsole(LOG_DEBUG, "[Asshat.Command]: Initialized commands script!");
 }
 
@@ -148,8 +149,11 @@ function loadCommands() {
             commandData("ccode", executeClientCodeCommand, "<code>", getStaffFlagValue("developer"), true, true),
             commandData("gmx", restartGameModeCommand, "", getStaffFlagValue("developer"), true, true),
             commandData("saveall", saveAllServerDataCommand, "", getStaffFlagValue("developer"), true, true),
-            commandData("docmd", simulateCommandForPlayer, "<player name/id> <command> [params]", getStaffFlagValue("developer"), true, true),
-            commandData("docmdall", simulateCommandForAllPlayers, "<command> [params]", getStaffFlagValue("developer"), true, true),
+            commandData("docmd", simulateCommandForPlayerCommand, "<player name/id> <command> [params]", getStaffFlagValue("developer"), true, true),
+            commandData("docmdall", simulateCommandForAllPlayersCommand, "<command> [params]", getStaffFlagValue("developer"), true, true),
+            commandData("docmdall", simulateCommandForAllPlayersCommand, "<command> [params]", getStaffFlagValue("developer"), true, true),
+            commandData("addloglvl", addServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
+            commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],
         help: [
@@ -305,9 +309,16 @@ function loadCommands() {
             commandData("vehcolour", setVehicleColourCommand, "<colour1> <colour2>", getStaffFlagValue("none"), true, true),
             commandData("vehrepair", vehicleRepairCommand, "", getStaffFlagValue("none"), true, true),
             commandData("passenger", enterVehicleAsPassengerCommand, "", getStaffFlagValue("none"), true, true),
-
         ],
     };
+}
+
+function addAllCommandHandlers() {
+    for(let i in serverCommands) {
+        for(let j in serverCommands[i]) {
+            addCommandHandler(serverCommands[i][j].command, processPlayerCommand);
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -457,7 +468,7 @@ function enableAllCommandsByType(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function onPlayerCommand(event, client, command, params) {
-    processPlayerCommand(command, params, client)
+    //processPlayerCommand(command, params, client)
 }
 addEventHandler("OnPlayerCommand", onPlayerCommand);
 
@@ -503,10 +514,12 @@ function processPlayerCommand(command, params, client) {
 	//	}
 	//}
 
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(toLowerCase(command)))) {
-        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);
-		messagePlayerError(client, `You do not have permission to use the [#AAAAAA]/${toLowerCase(command)} [#FFFFFF]command!`);
-		return false;
+    if(!client.console) {
+        if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(toLowerCase(command)))) {
+            console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);
+            messagePlayerError(client, `You do not have permission to use the [#AAAAAA]/${toLowerCase(command)} [#FFFFFF]command!`);
+            return false;
+        }
     }
 
     logToConsole(LOG_DEBUG, `[Asshat.Command] ${getPlayerDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);

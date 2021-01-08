@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------
 
 addEventHandler("onProcess", function(event, deltaTime) {
-    if(localPlayer != null && localPlayer.getData("ag.spawned") != null) {
+    if(localPlayer != null && isSpawned) {
         if(localPlayer.health <= 0) {
             localPlayer.clearWeapons();
             triggerNetworkEvent("ag.player.death", localPlayer.position);
@@ -40,26 +40,26 @@ addNetworkHandler("ag.veh.repair", function(syncId) {
 // ---------------------------------------------------------------------------
 
 function syncVehicleProperties(vehicle) {
-    if(doesEntityDataExist(vehicle, "ag.lights")) {
-        let lights = getEntityData(vehicle, "ag.lights");
-        if(lights != vehicle.lights) {
-            vehicle.lights = lights;
-        }
-    }
+    //if(doesEntityDataExist(vehicle, "ag.lights")) {
+    //    let lights = getEntityData(vehicle, "ag.lights");
+    //    if(lights != vehicle.lights) {
+    //        vehicle.lights = lights;
+    //    }
+    //}
 
-    if(doesEntityDataExist(vehicle, "ag.engine")) {
-        let engine = getEntityData(vehicle, "ag.engine");
-        if(engine != vehicle.engine) {
-            vehicle.engine = engine;
-        }
-    }
+    //if(doesEntityDataExist(vehicle, "ag.engine")) {
+    //    let engine = getEntityData(vehicle, "ag.engine");
+    //    if(engine != vehicle.engine) {
+    //        vehicle.engine = engine;
+    //    }
+    //}
 
-    if(doesEntityDataExist(vehicle, "ag.siren")) {
-        let siren = getEntityData(vehicle, "ag.siren");
-        if(siren != vehicle.siren) {
-            vehicle.siren = siren;
-        }
-    }
+    //if(doesEntityDataExist(vehicle, "ag.siren")) {
+    //    let siren = getEntityData(vehicle, "ag.siren");
+    //    if(siren != vehicle.siren) {
+    //        vehicle.siren = siren;
+    //    }
+    //}
 
     if(doesEntityDataExist(vehicle, "ag.panelStatus")) {
         let panelsStatus = getEntityData(vehicle, "ag.panelStatus");
@@ -92,8 +92,31 @@ addNetworkHandler("ag.veh.sync", syncVehicleProperties);
 // ---------------------------------------------------------------------------
 
 function syncCivilianProperties(civilian) {
-
+    if(doesEntityDataExist(civilian, "ag.scale") != null) {
+        let scaleFactor = getEntityData(civilian, "ag.scale");
+		let tempMatrix = civilian.matrix;
+		tempMatrix.setScale(toVector3(scaleFactor.x, scaleFactor.y, scaleFactor.z));
+		let tempPosition = civilian.position;
+		civilian.matrix = tempMatrix;
+		tempPosition.z += scaleFactor.z;
+		civilian.position = tempPosition;
+    }
 }
 addNetworkHandler("ag.civ.sync", syncCivilianProperties);
+
+// ---------------------------------------------------------------------------
+
+function syncPlayerProperties(player) {
+    if(doesEntityDataExist(player, "ag.scale")) {
+        let scaleFactor = getEntityData(player, "ag.scale");
+		let tempMatrix = player.matrix;
+		tempMatrix.setScale(toVector3(scaleFactor.x, scaleFactor.y, scaleFactor.z));
+		let tempPosition = player.position;
+		player.matrix = tempMatrix;
+		tempPosition.z += scaleFactor.z;
+		player.position = tempPosition;
+    }
+}
+addNetworkHandler("ag.player.sync", syncPlayerProperties);
 
 // ---------------------------------------------------------------------------

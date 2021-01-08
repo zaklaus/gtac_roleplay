@@ -12,8 +12,8 @@
 
 let databaseConfig = {
 	host: "127.0.0.1",
-	user: "gtac-main",
-	pass: "QaH2rOP7BOBAkuX5V74EsOFi4uh5XO",
+	user: "gtac_main",
+	pass: "d8NEzoNIFadanisuKuzEgOSOxOjiG6",
 	name: "gtac_main",
 	port: 3306,
 	usePersistentConnection: true,
@@ -24,15 +24,15 @@ let persistentDatabaseConnection = null;
 // -------------------------------------------------------------------------
 
 function initDatabaseScript() {
-	console.log("[Asshat.Database]: Initializing database script ...");
-	console.log("[Asshat.Database]: Database script initialized successfully!");
+	logToConsole(LOG_DEBUG, "[Asshat.Database]: Initializing database script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Database]: Database script initialized successfully!");
 }
 
 // -------------------------------------------------------------------------
 
 function connectToDatabase() {
 	if(persistentDatabaseConnection == null) {
-		console.log("[Asshat.Database] Initializing database connection ...");
+		logToConsole(LOG_DEBUG, "[Asshat.Database] Initializing database connection ...");
 		persistentDatabaseConnection = module.mysql.connect(databaseConfig.host, databaseConfig.user, databaseConfig.pass, databaseConfig.name, databaseConfig.port);
 		if(persistentDatabaseConnection.error) {
 			console.warn("[Asshat.Database] Database connection error: " + toString(persistentDatabaseConnection.error));
@@ -40,10 +40,10 @@ function connectToDatabase() {
 			return false;
 		}
 
-		console.log("[Asshat.Database] Database connection successful!");
+		logToConsole(LOG_DEBUG, "[Asshat.Database] Database connection successful!");
 		return persistentDatabaseConnection;
 	} else {
-		//console.log("[Asshat.Database] Using existing database connection.");
+		//logToConsole(LOG_DEBUG, "[Asshat.Database] Using existing database connection.");
 		return persistentDatabaseConnection;
 	}
 }

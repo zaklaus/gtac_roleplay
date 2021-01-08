@@ -106,8 +106,9 @@ function toggleAccountServerLogoCommand(command, params, client) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now [#FFFFFF]be shown the server logo (if enabled on current server)`);
 		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo ON for their account`);
-		updatePlayerShowLogoState(client);
-		updatePlayerShowLogoState(client, false);
+		if(getServerConfig().showLogo) {
+			updatePlayerShowLogoState(client, true);
+		}
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not [#FFFFFF]be shown the server logo.`);
@@ -751,9 +752,6 @@ function initClient(client) {
 	}
 
 	triggerNetworkEvent("ag.guiColour", client, getServerConfig().guiColour[0], getServerConfig().guiColour[1], getServerConfig().guiColour[2]);
-	triggerNetworkEvent("ag.logo", client, getServerConfig().showLogo);
-	triggerNetworkEvent("ag.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
-
 	showConnectCameraToPlayer(client);
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
 

@@ -20,3 +20,4 @@ const LOG_INFO = 1;
 const LOG_WARN = 2;
 const LOG_ERROR = 4;
 const LOG_VERBOSE = 8;
+const LOG_DEBUG = 16;

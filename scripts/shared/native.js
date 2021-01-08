@@ -115,3 +115,21 @@ function isConsole(client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function logToConsole(tempLogLevel, text) {
+	if(logLevel & tempLogLevel) {
+		if(tempLogLevel == LOG_ERROR) {
+			console.error(text);
+		} else if(tempLogLevel == LOG_WARN) {
+			console.warn(text);
+		} else {
+			console.log(text);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------

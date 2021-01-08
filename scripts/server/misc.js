@@ -11,8 +11,8 @@
 // ---------------------------------------------------------------------------
 
 function initMiscScript() {
-	console.log("[Asshat.Misc]: Initializing misc script ...");
-	console.log("[Asshat.Misc]: Misc script initialized successfully!");
+	logToConsole(LOG_DEBUG, "[Asshat.Misc]: Initializing misc script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Misc]: Misc script initialized successfully!");
 	return true;
 }
 
@@ -22,7 +22,7 @@ function getPositionCommand(command, params, client) {
 	let position = client.player.position;
 
 	messagePlayerNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
-	console.log(`${getPlayerDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
+	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
 	return true;
 }
 
@@ -172,7 +172,7 @@ function enterExitPropertyCommand(command, params, client) {
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "ag.inBusiness");
-			console.log(`[Asshat.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
+			logToConsole(LOG_DEBUG, `[Asshat.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
 		}
 		return true;
 	}
@@ -253,7 +253,7 @@ function enterExitPropertyCommand(command, params, client) {
 
 function sendRemovedWorldObjectsToPlayer(client) {
 	for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
-		console.log(`[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
+		logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
 		triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
 	}
 	return true;

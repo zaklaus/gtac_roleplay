@@ -9,17 +9,17 @@
 // ===========================================================================
 
 function initClanScript() {
-	console.log("[Asshat.Clan]: Initializing clans script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Clan]: Initializing clans script ...");
 	getServerData().clans = loadClansFromDatabase();
 	setAllClanDataIndexes();
-	console.log("[Asshat.Clan]: Clan script initialized successfully!");
+	logToConsole(LOG_DEBUG, "[Asshat.Clan]: Clan script initialized successfully!");
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function loadClansFromDatabase() {
-	console.log("[Asshat.Clan]: Loading clans from database ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Clan]: Loading clans from database ...");
 
 	let tempClans = [];
 	let dbConnection = connectToDatabase();
@@ -34,7 +34,7 @@ function loadClansFromDatabase() {
 					tempClanData.members = loadClanMembersFromDatabase(tempClanData.databaseId);
 					tempClanData.ranks = loadClanRanksFromDatabase(tempClanData.databaseId);
 					tempClans.push(tempClanData);
-					console.log(`[Asshat.Clan]: Clan '${tempClanData.name}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[Asshat.Clan]: Clan '${tempClanData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -42,7 +42,7 @@ function loadClansFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Clan]: ${tempClans.length} clans loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Clan]: ${tempClans.length} clans loaded from database successfully!`);
 	return tempClans;
 }
 

@@ -1081,9 +1081,9 @@ let currentCharacter = 0;
 
 app.init = function()
 {
-	console.log(`[Asshat.GUI] Initializing GUI ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Initializing GUI ...`);
 
-	console.log(`[Asshat.GUI] Creating login GUI ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating login GUI ...`);
 	login.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
@@ -1158,11 +1158,11 @@ app.init = function()
 		},
 	}, checkLogin);
 
-	console.log(`[Asshat.GUI] Created login GUI`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created login GUI`);
 
 	// ------------------------------------------------------------------------------
 
-	console.log(`[Asshat.GUI] Creating two factor auth GUI ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating two factor auth GUI ...`);
 	twoFactorAuth.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
@@ -1236,11 +1236,11 @@ app.init = function()
 		},
 	}, checkTwoFactorAuth);
 
-	console.log(`[Asshat.GUI] Created two factor auth GUI`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created two factor auth GUI`);
 
 	// ------------------------------------------------------------------------------
 
-	console.log(`[Asshat.GUI] Creating new character GUI ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating new character GUI ...`);
 
 	newCharacter.window = mexui.window(game.width/2-215, game.height/2-83, 430, 166, 'New Character', {
 		main: {
@@ -1442,13 +1442,11 @@ app.init = function()
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 		},
 	}, checkNewCharacter);
-
-	console.log(`[Asshat.GUI] Created new character GUI`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created new character GUI`);
 
 	// ------------------------------------------------------------------------------
 
-	console.log(`[Asshat.GUI] Creating register GUI ...`);
-
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating register GUI ...`);
 	register.window = mexui.window(game.width/2-130, game.height/2-115, 300, 230, 'Register', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
@@ -1557,13 +1555,11 @@ app.init = function()
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 		},
 	}, checkRegistration);
-
-	console.log(`[Asshat.GUI] Created register GUI`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created register GUI`);
 
 	// ------------------------------------------------------------------------------
 
-	console.log(`[Asshat.GUI] Creating error GUI ...`);
-
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating error GUI ...`);
 	errorDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'ERROR', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
@@ -1599,13 +1595,11 @@ app.init = function()
 			textAlign: 0.5,
 		},
 	}, closeErrorDialog);
-
-	console.log(`[Asshat.GUI] Created error GUI ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created error GUI ...`);
 
 	// ------------------------------------------------------------------------------
 
-	console.log(`[Asshat.GUI] Created prompt GUI ...`);
-
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created prompt GUI ...`);
 	yesNoDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'Question', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
@@ -1651,13 +1645,11 @@ app.init = function()
 			textAlign: 0.5,
 		},
 	}, yesNoDialogAnswerNo);
-
-	console.log(`[Asshat.GUI] Created prompt GUI`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created prompt GUI`);
 
 	// ------------------------------------------------------------------------------
 
-	console.log(`[Asshat.GUI] Creating info dialog GUI ...`);
-
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating info dialog GUI ...`);
 	infoDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'Information', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
@@ -1692,13 +1684,11 @@ app.init = function()
 			textAlign: 0.5,
 		},
 	}, closeInfoDialog);
-
-	console.log(`[Asshat.GUI] Created info dialog GUI`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created info dialog GUI`);
 
 	// ------------------------------------------------------------------------------
 
-	console.log(`[Asshat.GUI] Creating character select GUI ...`);
-
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating character select GUI ...`);
 	characterSelect.window = mexui.window(game.width/2-215, game.height/2-83, 430, 166, 'Select Character', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
@@ -1808,26 +1798,25 @@ app.init = function()
 			borderColour: toColour(0, 0, 0, 0),
 		}
 	});
-
-	console.log(`[Asshat.GUI] Created character select GUI`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created character select GUI`);
 
 	// ---------------------------------------------------------------------------
 
-	console.log(`[Asshat.GUI] All GUI created successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] All GUI created successfully!`);
 	closeAllWindows();
 };
 
 // ---------------------------------------------------------------------------
 
 let checkLogin = function() {
-	console.log(`[Asshat.GUI] Checking login with server ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Checking login with server ...`);
 	triggerNetworkEvent("ag.checkLogin", login.passwordInput.lines[0]);
 }
 
 // ---------------------------------------------------------------------------
 
 let loginFailed = function(errorMessage) {
-	console.log(`[Asshat.GUI] Server reports login failed`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports login failed`);
 	login.messageLabel.text = errorMessage;
 	login.messageLabel.styles.main.textColour = toColour(180, 32, 32, 255);
 	login.passwordInput.text = "";
@@ -1836,21 +1825,21 @@ let loginFailed = function(errorMessage) {
 // ---------------------------------------------------------------------------
 
 let loginSuccess = function() {
-	console.log(`[Asshat.GUI] Server reports login was successful`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports login was successful`);
 	closeAllWindows();
 }
 
 // ---------------------------------------------------------------------------
 
 let checkRegistration = function() {
-	console.log(`[Asshat.GUI] Checking registration with server ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Checking registration with server ...`);
 	triggerNetworkEvent("ag.checkRegistration", register.passwordInput.lines[0], register.confirmPasswordInput.lines[0], register.emailInput.lines[0]);
 }
 
 // ---------------------------------------------------------------------------
 
 let checkNewCharacter = function() {
-	console.log(`[Asshat.GUI] Checking new character with server ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Checking new character with server ...`);
 	let skinId = false;
 
 	if(newCharacter.firstNameInput.lines[0].length < 2) {
@@ -1881,7 +1870,7 @@ let checkNewCharacter = function() {
 // ---------------------------------------------------------------------------
 
 let registrationFailed = function(errorMessage) {
-	console.log(`[Asshat.GUI] Server reports registration failed. Reason: ${errorMessage}`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports registration failed. Reason: ${errorMessage}`);
 	register.messageLabel.text = errorMessage;
 	register.messageLabel.styles.main.textColour = toColour(180, 32, 32, 255);
 	register.passwordInput.text = "";
@@ -1892,14 +1881,14 @@ let registrationFailed = function(errorMessage) {
 // ---------------------------------------------------------------------------
 
 let registrationSuccess = function() {
-	console.log(`[Asshat.GUI] Server reports registration was successful`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports registration was successful`);
 	closeAllWindows();
 }
 
 // ---------------------------------------------------------------------------
 
 let twoFactorAuthFailed = function(errorMessage) {
-	console.log(`[Asshat.GUI] Server reports two-factor authentication failed. Reason: ${errorMessage}`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports two-factor authentication failed. Reason: ${errorMessage}`);
 	login.messageLabel.text = errorMessage;
 	login.messageLabel.styles.main.textColour = toColour(180, 32, 32, 255);
 	login.passwordInput.text = "";
@@ -1908,28 +1897,28 @@ let twoFactorAuthFailed = function(errorMessage) {
 // ---------------------------------------------------------------------------
 
 let twoFactorAuthSuccess = function() {
-	console.log(`[Asshat.GUI] Server reports two-factor authentication was successful`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports two-factor authentication was successful`);
 	closeAllWindows();
 }
 
 // ---------------------------------------------------------------------------
 
 let checkTwoFactorAuth = function() {
-	console.log(`[Asshat.GUI] Checking two-factor authentication with server ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Checking two-factor authentication with server ...`);
 	triggerNetworkEvent("ag.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
 }
 
 // ---------------------------------------------------------------------------
 
 let characterSelectSuccess = function() {
-	console.log(`[Asshat.GUI] Server reports character selection was successful`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports character selection was successful`);
 	closeAllWindows();
 }
 
 // ---------------------------------------------------------------------------
 
 let closeErrorDialog = function() {
-	console.log(`[Asshat.GUI] Closing error dialog`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Closing error dialog`);
 	errorDialog.window.shown = false;
 	mexui.setInput(false);
 }
@@ -1937,7 +1926,7 @@ let closeErrorDialog = function() {
 // ---------------------------------------------------------------------------
 
 let closeInfoDialog = function() {
-	console.log(`[Asshat.GUI] Closing info dialog`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Closing info dialog`);
 	infoDialog.window.shown = false;
 	mexui.setInput(false);
 }
@@ -1945,7 +1934,7 @@ let closeInfoDialog = function() {
 // ---------------------------------------------------------------------------
 
 let closeAllWindows = function() {
-	console.log(`[Asshat.GUI] Closing all GUI windows`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Closing all GUI windows`);
 	infoDialog.window.shown = false;
 	errorDialog.window.shown = false;
 	yesNoDialog.window.shown = false;
@@ -1961,21 +1950,21 @@ let closeAllWindows = function() {
 // ---------------------------------------------------------------------------
 
 let yesNoDialogAnswerNo = function() {
-	console.log(`[Asshat.GUI] Responding with answer NO to server prompt`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Responding with answer NO to server prompt`);
 	triggerNetworkEvent("ag.promptAnswerNo");
 }
 
 // ---------------------------------------------------------------------------
 
 let yesNoDialogAnswerYes = function() {
-	console.log(`[Asshat.GUI] Responding with answer YES to server prompt`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Responding with answer YES to server prompt`);
 	triggerNetworkEvent("ag.promptAnswerYes");
 }
 
 // ---------------------------------------------------------------------------
 
 let showRegistration = function() {
-	console.log(`[Asshat.GUI] Showing registration window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing registration window`);
 	closeAllWindows();
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
@@ -1986,7 +1975,7 @@ let showRegistration = function() {
 
 let showLogin = function() {
 	closeAllWindows();
-	console.log(`[Asshat.GUI] Showing login window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing login window`);
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	login.window.shown = true;
@@ -1996,7 +1985,7 @@ let showLogin = function() {
 
 let showTwoFactorAuth = function() {
 	closeAllWindows();
-	console.log(`[Asshat.GUI] Showing two-factor authentication window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing two-factor authentication window`);
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	twoFactorAuth.window.shown = true;
@@ -2006,7 +1995,7 @@ let showTwoFactorAuth = function() {
 
 let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
 	closeAllWindows();
-	console.log(`[Asshat.GUI] Showing character selection window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing character selection window`);
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	characterSelect.nameText.text = lastName + ", " + firstName;
@@ -2020,7 +2009,7 @@ let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBir
 
 let showError = function(errorMessage, errorTitle) {
 	closeAllWindows();
-	console.log(`[Asshat.GUI] Showing error window. Error: ${errorTitle} - ${errorMessage}`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing error window. Error: ${errorTitle} - ${errorMessage}`);
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	errorDialog.messageLabel.text = errorMessage;
@@ -2031,7 +2020,7 @@ let showError = function(errorMessage, errorTitle) {
 
 let showYesNo = function(promptMessage, promptTitle) {
 	closeAllWindows();
-	console.log(`[Asshat.GUI] Showing prompt window. Prompt: ${promptTitle} - ${promptMessage}`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing prompt window. Prompt: ${promptTitle} - ${promptMessage}`);
 	mexui.setInput(true);
 	yesNoDialog.messageLabel.text = promptMessage;
 	yesNoDialog.window.shown = true;
@@ -2041,7 +2030,7 @@ let showYesNo = function(promptMessage, promptTitle) {
 
 let showInfo = function(infoMessage, infoTitle) {
 	closeAllWindows();
-	console.log(`[Asshat.GUI] Showing info dialog window. Info: ${infoTitle} - ${infoMessage}`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing info dialog window. Info: ${infoTitle} - ${infoMessage}`);
 	mexui.setInput(true);
 	infoDialog.messageLabel.text = infoMessage;
 	infoDialog.window.shown = true;
@@ -2051,7 +2040,7 @@ let showInfo = function(infoMessage, infoTitle) {
 
 let showNewCharacter = function() {
 	closeAllWindows();
-	console.log(`[Asshat.GUI] Showing info dialog window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing info dialog window`);
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	newCharacter.window.shown = true;
@@ -2060,28 +2049,28 @@ let showNewCharacter = function() {
 // ---------------------------------------------------------------------------
 
 let selectNextCharacter = function() {
-	console.log(`[Asshat.GUI] Requesting next character info from server for character select window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Requesting next character info from server for character select window`);
 	triggerNetworkEvent("ag.nextCharacter");
 }
 
 // ---------------------------------------------------------------------------
 
 let selectPreviousCharacter = function() {
-	console.log(`[Asshat.GUI] Requesting previous character info from server for character select window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Requesting previous character info from server for character select window`);
 	triggerNetworkEvent("ag.previousCharacter");
 }
 
 // ---------------------------------------------------------------------------
 
 let selectThisCharacter = function() {
-	console.log(`[Asshat.GUI] Tell server the current shown character was selected in character select window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Tell server the current shown character was selected in character select window`);
 	triggerNetworkEvent("ag.selectCharacter");
 }
 
 // ---------------------------------------------------------------------------
 
 let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
-	console.log(`[Asshat.GUI] Updating character info with data from server`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Updating character info with data from server`);
 	setChatWindowEnabled(false);
 	characterSelect.window.shown = false;
 	characterSelect.nameText.text = lastName + ", " + firstName;
@@ -2094,70 +2083,70 @@ let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfB
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showLogin", function() {
-	console.log(`[Asshat.GUI] Received request from server to show login window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show login window`);
 	showLogin();
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showRegistration", function() {
-	console.log(`[Asshat.GUI] Received request from server to show registration window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show registration window`);
 	showRegistration();
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showNewCharacter", function() {
-	console.log(`[Asshat.GUI] Received request from server to show new character window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show new character window`);
 	showNewCharacter();
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showCharacterSelect", function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
-	console.log(`[Asshat.GUI] Received request from server to show character selection window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show character selection window`);
 	showCharacterSelect(firstName, lastName, placeOfOrigin, dateOfBirth, skinId);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.switchCharacterSelect", function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
-	console.log(`[Asshat.GUI] Received request from server to update character selection window with new info`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to update character selection window with new info`);
 	switchCharacterSelect(firstName, lastName, placeOfOrigin, dateOfBirth, skinId);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showError", function(errorMessage, errorTitle) {
-	console.log(`[Asshat.GUI] Received request from server to show error window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show error window`);
 	showError(errorMessage, errorTitle);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showPrompt", function(promptMessage, promptTitle) {
-	console.log(`[Asshat.GUI] Received request from server to show prompt window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show prompt window`);
 	showYesNo(promptMessage, promptTitle);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showInfo", function(infoMessage) {
-	console.log(`[Asshat.GUI] Received request from server to show info dialog`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show info dialog`);
 	showInfo(infoMessage);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.loginSuccess", function() {
-	console.log(`[Asshat.GUI] Received signal of successful login from server`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of successful login from server`);
 	loginSuccess();
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.characterSelectSuccess", function() {
-	console.log(`[Asshat.GUI] Received signal of successful character selection from server`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of successful character selection from server`);
 	characterSelectSuccess();
 	setChatWindowEnabled(true);
 });
@@ -2165,32 +2154,32 @@ addNetworkHandler("ag.characterSelectSuccess", function() {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.loginFailed", function(remainingAttempts) {
-	console.log(`[Asshat.GUI] Received signal of failed login from server`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of failed login from server`);
 	loginFailed(remainingAttempts);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.registrationSuccess", function() {
-	console.log(`[Asshat.GUI] Received signal of successful registration from server`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of successful registration from server`);
 	registrationSuccess();
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.registrationFailed", function(errorMessage) {
-	console.log(`[Asshat.GUI] Received signal of failed registration from server`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of failed registration from server`);
 	registrationFailed(errorMessage);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.guiColour", function(red, green, blue) {
-	console.log(`[Asshat.GUI] Received new GUI colours from server`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received new GUI colours from server`);
 	primaryColour = [red, green, blue];
 	focusedColour = [red+focusedColourOffset, green+focusedColourOffset, blue+focusedColourOffset];
 
-	console.log(`[Asshat.GUI] Initializing MexUI app`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Initializing MexUI app`);
 	app.init();
 	triggerNetworkEvent("ag.guiReady", true);
 });

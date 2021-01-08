@@ -68,7 +68,7 @@ function checkForMySQLModule() {
 // ---------------------------------------------------------------------------
 
 function checkForAllRequiredModules() {
-	console.log("[Asshat.Startup]: Checking for required modules ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Startup]: Checking for required modules ...");
 
 	if(!checkForHashingModule()) {
 		console.warn("[Asshat.Startup]: Hashing module is not loaded!");
@@ -82,7 +82,7 @@ function checkForAllRequiredModules() {
 		thisResource.stop();
 	}
 
-	console.log("[Asshat.Startup]: All required modules loaded!");
+	logToConsole(LOG_DEBUG, "[Asshat.Startup]: All required modules loaded!");
 	return true;
 }
 

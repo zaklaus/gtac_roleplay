@@ -19,14 +19,14 @@ function updateTimeRule() {
 // ---------------------------------------------------------------------------
 
 function saveAllServerDataToDatabase() {
-	console.log("[Asshat.Utilities]: Saving all server data to database ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Utilities]: Saving all server data to database ...");
 	saveAllClansToDatabase();
 	saveAllHousesToDatabase();
 	saveAllBusinessesToDatabase();
 	saveServerConfigToDatabase(getServerConfig());
 	saveAllVehiclesToDatabase();
 	saveAllClientsToDatabase();
-	console.log("[Asshat.Utilities]: Saved all server data to database!");
+	logToConsole(LOG_DEBUG, "[Asshat.Utilities]: Saved all server data to database!");
 }
 
 // ---------------------------------------------------------------------------

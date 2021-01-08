@@ -161,7 +161,7 @@ async function translateMessage(messageText, translateFrom = defaultLanguageId, 
 	return new Promise(resolve => {
 		for(let i in translationCache[translateFrom][translateTo]) {
 			if(translationCache[translateFrom][translateTo][0] == messageText) {
-				console.log(`[Translate]: Using existing translation for ${translationLanguages[translateFrom][0]} to ${translationLanguages[translateTo][0]} - (${messageText}), (${translationCache[translateFrom][translateTo][1]})`);
+				logToConsole(LOG_DEBUG, `[Translate]: Using existing translation for ${translationLanguages[translateFrom][0]} to ${translationLanguages[translateTo][0]} - (${messageText}), (${translationCache[translateFrom][translateTo][1]})`);
 				resolve(translationCache[translateFrom][translateTo][1]);
 			}
 		}

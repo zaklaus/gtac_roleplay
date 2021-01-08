@@ -129,8 +129,8 @@ let bindableKeys = {
 // ---------------------------------------------------------------------------
 
 function initKeyBindScript() {
-	console.log("[Asshat.KeyBind]: Initializing key bind script ...");
-	console.log("[Asshat.KeyBind]: Key bind script initialized!");
+	logToConsole(LOG_DEBUG, "[Asshat.KeyBind]: Initializing key bind script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.KeyBind]: Key bind script initialized!");
 }
 
 // ---------------------------------------------------------------------------
@@ -265,7 +265,7 @@ function playerUsedKeyBind(client, key) {
         return false;
     }
 
-    console.log(`[Asshat.KeyBind] ${getPlayerDisplayForConsole(client)} used keybind ${sdl.getKeyName(key)} (${key})`);
+    logToConsole(LOG_DEBUG, `[Asshat.KeyBind] ${getPlayerDisplayForConsole(client)} used keybind ${sdl.getKeyName(key)} (${key})`);
     if(doesPlayerHaveKeyBindForKey(client, key)) {
         let keyBindData = getPlayerKeyBindForKey(client, key);
         if(keyBindData.enabled) {

@@ -9,8 +9,8 @@
 // ===========================================================================
 
 function initSubAccountScript() {
-	console.log("[Asshat.SubAccount]: Initializing subaccount script ...");
-	console.log("[Asshat.SubAccount]: SubAccount script initialized!");
+	logToConsole(LOG_DEBUG, "[Asshat.SubAccount]: Initializing subaccount script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.SubAccount]: SubAccount script initialized!");
 }
 
 // ---------------------------------------------------------------------------
@@ -91,7 +91,7 @@ function saveSubAccountToDatabase(subAccountData) {
 // ---------------------------------------------------------------------------
 
 function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin) {
-	console.log(`[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
+	logToConsole(LOG_DEBUG, `[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
@@ -127,7 +127,7 @@ function showCharacterSelectToClient(client) {
 		getPlayerData(client).currentSubAccount = 0;
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
 		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
-		console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
+		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
 		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
@@ -136,7 +136,7 @@ function showCharacterSelectToClient(client) {
 		getPlayerData(client).subAccounts.forEach(function(subAccount, index) {
 			messagePlayerNormal(client, `${index+1} • [#AAAAAA]${subAccount.firstName} ${subAccount.lastName}`);
 		});
-		console.log(`[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
+		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
 	}
 }
 
@@ -230,7 +230,7 @@ function selectCharacter(client, characterId = -1) {
 		getPlayerData(client).currentSubAccount = characterId;
 	}
 
-	console.log(`[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} with skin ${getPlayerCurrentSubAccount(client).skin}`);
+	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} with skin ${getPlayerCurrentSubAccount(client).skin}`);
 	spawnPlayer(client, getPlayerCurrentSubAccount(client).spawnPosition, getPlayerCurrentSubAccount(client).spawnHeading, getPlayerCurrentSubAccount(client).skin);
 
 	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();

@@ -1856,7 +1856,7 @@ async function waitUntil(condition) {
 // -------------------------------------------------------------------------
 
 function resetClientStuff(client) {
-	console.log(`[Asshat.Utilities] Resetting client data for ${getPlayerDisplayForConsole(client)}`);
+	logToConsole(LOG_DEBUG, `[Asshat.Utilities] Resetting client data for ${getPlayerDisplayForConsole(client)}`);
 
 	if(!getPlayerData(client)) {
 		return false;

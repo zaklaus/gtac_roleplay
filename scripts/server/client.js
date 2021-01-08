@@ -94,7 +94,7 @@ function updatePlayerPing(client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.arrivedAtBusStop", function(client) {
-    console.log(client);
+    logToConsole(LOG_DEBUG, client);
     arrivedAtBusStop(client);
 });
 
@@ -102,7 +102,7 @@ addNetworkHandler("ag.arrivedAtBusStop", function(client) {
 
 addNetworkHandler("ag.clientReady", function(client) {
 	client.setData("ag.isReady", true, false);
-	console.log(`${getPlayerDisplayForConsole(client)}'s client resources are downloaded and ready!`);
+	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client resources are downloaded and ready!`);
 	if(client.getData("ag.isStarted") == true) {
 		initClient(client);
 	}
@@ -112,14 +112,14 @@ addNetworkHandler("ag.clientReady", function(client) {
 
 addNetworkHandler("ag.guiReady", function(client) {
 	client.setData("ag.guiReady", true, false);
-    console.log(`${getPlayerDisplayForConsole(client)}'s client GUI is initialized and ready!`);
+    logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client GUI is initialized and ready!`);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.clientStarted", function(client) {
 	client.setData("ag.isStarted", true, false);
-	console.log(`${getPlayerDisplayForConsole(client)}'s client resources are started and running!`);
+	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client resources are started and running!`);
 	if(client.getData("ag.isReady") == true) {
 		initClient(client);
 	}
@@ -146,7 +146,7 @@ function disableCityAmbienceForPlayer(client) {
 // ---------------------------------------------------------------------------
 
 function clearPlayerOwnedPeds(client) {
-	console.log(`[Asshat.Utilities] Clearing peds owned by ${getPlayerDisplayForConsole(client)}`);
+	logToConsole(LOG_DEBUG, `[Asshat.Utilities] Clearing peds owned by ${getPlayerDisplayForConsole(client)}`);
 	triggerNetworkEvent("ag.clearPeds", client);
 }
 

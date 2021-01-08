@@ -9,8 +9,8 @@
 // ===========================================================================
 
 function initChatScript() {
-	console.log("[Asshat.Chat]: Initializing chat script ...");
-	console.log("[Asshat.Chat]: Chat script initialized successfully!");
+	logToConsole(LOG_DEBUG, "[Asshat.Chat]: Initializing chat script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Chat]: Chat script initialized successfully!");
 	return true;
 }
 

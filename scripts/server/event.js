@@ -11,16 +11,16 @@
 // ---------------------------------------------------------------------------
 
 function initEventScript() {
-	console.log("[Asshat.Event]: Initializing event script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Event]: Initializing event script ...");
     addNetworkHandler("ag.onPlayerEnterVehicle", playerEnteredVehicle);
     addNetworkHandler("ag.onPlayerExitVehicle", playerExitedVehicle);
-    console.log("[Asshat.Event]: Event script initialized!");
+    logToConsole(LOG_DEBUG, "[Asshat.Event]: Event script initialized!");
 }
 
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPlayerConnect", function(event, ipAddress, port) {
-    console.log(`[Asshat.Event] Client connecting (IP: ${ipAddress})`);
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Client connecting (IP: ${ipAddress})`);
     if(isIpAddressBanned(ipAddress)) {
         messagePlayerError(client, "You are banned from this server!");
         return false;
@@ -42,7 +42,7 @@ addEventHandler("OnPlayerJoined", function(event, client) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
-    console.log(`[Asshat.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
+    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
 
     //savePlayerToDatabase(client);
     resetClientStuff(client);
@@ -157,7 +157,7 @@ async function playerEnteredVehicle(client) {
         return false;
     }
 
-    console.log(`[Asshat.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
     getPlayerData(client).lastVehicle = vehicle;
 
@@ -213,7 +213,7 @@ function playerExitedVehicle(client) {
         return false;
     }
 
-    console.log(`[Asshat.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
     if(isPlayerWorking(client)) {
         if(isPlayerOnJobRoute(client)) {

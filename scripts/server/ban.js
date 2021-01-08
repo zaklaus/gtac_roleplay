@@ -19,13 +19,13 @@ const banType = {
 // ---------------------------------------------------------------------------
 
 function initBanScript() {
-    console.log("[Asshat.Ban]: Initializing ban script ...");
-    console.log("[Asshat.Ban]: Ban script initialized!");
+    logToConsole(LOG_DEBUG, "[Asshat.Ban]: Initializing ban script ...");
+    logToConsole(LOG_DEBUG, "[Asshat.Ban]: Ban script initialized!");
 }
 
 // ---------------------------------------------------------------------------
 
-function accountBanCommand(command, params, client, fromDiscord) {
+function accountBanCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -39,7 +39,7 @@ function accountBanCommand(command, params, client, fromDiscord) {
 
 	messageAdminAction(`${getPlayerData(targetClient).accountData.name} has been banned from the server (account ban).`);
 	banAccount(getPlayerData(targetClient).accountData.databaseId, getPlayerData(client).accountData.databaseId, "");
-	targetClient.disconnect();
+	disconnectPlayer(client);
 }
 
 // ---------------------------------------------------------------------------
@@ -62,7 +62,7 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 
 	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
     banSubAccount(getPlayerData(targetClient).currentSubAccountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
-    targetClient.disconnect();
+    disconnectPlayer(client);
 }
 
 // ---------------------------------------------------------------------------

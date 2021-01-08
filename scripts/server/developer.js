@@ -9,7 +9,7 @@
 // ===========================================================================
 
 function initDeveloperScript() {
-	console.log("[Asshat.Developer]: Initializing developer script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Developer]: Initializing developer script ...");
 
 	// Use GTAC command handlers for these since they need to be available on console
 	addCommandHandler("sc", executeServerCodeCommand);
@@ -17,7 +17,7 @@ function initDeveloperScript() {
 	addCommandHandler("docmd", simulateCommandForPlayer);
 	addCommandHandler("allcmd", simulateCommandForAllPlayers);
 
-	console.log("[Asshat.Developer]: Developer script initialized successfully!");
+	logToConsole(LOG_DEBUG, "[Asshat.Developer]: Developer script initialized successfully!");
 	return true;
 }
 

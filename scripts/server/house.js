@@ -9,19 +9,19 @@
 // ===========================================================================
 
 function initHouseScript() {
-	console.log("[Asshat.House]: Initializing house script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.House]: Initializing house script ...");
 	getServerData().houses = loadHousesFromDatabase();
 	createAllHousePickups();
 	createAllHouseBlips();
 	setAllHouseIndexes();
-	console.log("[Asshat.House]: House script initialized successfully!");
+	logToConsole(LOG_DEBUG, "[Asshat.House]: House script initialized successfully!");
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function loadHousesFromDatabase() {
-	console.log("[Asshat.House]: Loading houses from database ...");
+	logToConsole(LOG_DEBUG, "[Asshat.House]: Loading houses from database ...");
 	let tempHouses = [];
 	let dbConnection = connectToDatabase();
 	let dbAssoc;
@@ -33,14 +33,14 @@ function loadHousesFromDatabase() {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempHouseData = new serverClasses.houseData(dbAssoc);
 					tempHouses.push(tempHouseData);
-					console.log(`[Asshat.House]: House '${tempHouseData.description}' (ID ${tempHouseData.databaseId}) loaded!`);
+					logToConsole(LOG_DEBUG, `[Asshat.House]: House '${tempHouseData.description}' (ID ${tempHouseData.databaseId}) loaded!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
-	console.log(`[Asshat.House]: ${tempHouses.length} houses loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.House]: ${tempHouses.length} houses loaded from database successfully!`);
 	return tempHouses;
 }
 
@@ -417,7 +417,7 @@ function saveAllHousesToDatabase() {
 function saveHouseToDatabase(houseId) {
 	let tempHouseData = getServerData().houses[houseId];
 
-	console.log(`[Asshat.House]: Saving house '${tempHouseData.databaseId}' to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.House]: Saving house '${tempHouseData.databaseId}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeHouseDescription = escapeDatabaseString(dbConnection, tempHouseData.description);
@@ -432,7 +432,7 @@ function saveHouseToDatabase(houseId) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.house]: Saved house '${tempHouseData.description}' to database!`);
+	logToConsole(LOG_DEBUG, `[Asshat.house]: Saved house '${tempHouseData.description}' to database!`);
 
 	return false;
 }

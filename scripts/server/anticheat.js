@@ -9,15 +9,15 @@
 // ===========================================================================
 
 function initAntiCheatScript() {
-    console.log("[Asshat.AntiCheat]: Initializing anticheat script ...");
+    logToConsole(LOG_DEBUG, "[Asshat.AntiCheat]: Initializing anticheat script ...");
     getServerData().antiCheat.whiteListedGameScripts = loadAntiCheatGameScriptWhiteListFromDatabase();
     getServerData().antiCheat.blackListedGameScripts = loadAntiCheatGameScriptBlackListFromDatabase();
-	console.log("[Asshat.AntiCheat]: Anticheat script initialized!");
+	logToConsole(LOG_DEBUG, "[Asshat.AntiCheat]: Anticheat script initialized!");
 }
 // ---------------------------------------------------------------------------
 
 function loadAntiCheatGameScriptWhiteListFromDatabase() {
-    console.log(`[Asshat.AntiCheat] Loading whitelisted game scripts ...`);
+    logToConsole(LOG_DEBUG, `[Asshat.AntiCheat] Loading whitelisted game scripts ...`);
     let dbConnection = connectToDatabase();
     let tempWhiteListedGameScripts = [];
 
@@ -29,19 +29,19 @@ function loadAntiCheatGameScriptWhiteListFromDatabase() {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
                 let tempWhiteListedGameScriptData = new serverClasses.whiteListedGameScriptData(dbAssoc);
                 tempWhiteListedGameScripts.push(tempWhiteListedGameScriptData);
-                console.log(`[Asshat.AntiCheat] Whitelisted game script '${tempWhiteListedGameScriptData.scriptName}' loaded successfully!`);
+                logToConsole(LOG_DEBUG, `[Asshat.AntiCheat] Whitelisted game script '${tempWhiteListedGameScriptData.scriptName}' loaded successfully!`);
             }
         }
         disconnectFromDatabase(dbConnection);
     }
-    console.log(`[Asshat.AntiCheat] ${tempWhiteListedGameScripts.length} whitelisted game scripts loaded!`);
+    logToConsole(LOG_DEBUG, `[Asshat.AntiCheat] ${tempWhiteListedGameScripts.length} whitelisted game scripts loaded!`);
     return tempWhiteListedGameScripts;
 }
 
 // ---------------------------------------------------------------------------
 
 function loadAntiCheatGameScriptBlackListFromDatabase() {
-    console.log(`[Asshat.AntiCheat] Loading blacklisted game scripts ...`);
+    logToConsole(LOG_DEBUG, `[Asshat.AntiCheat] Loading blacklisted game scripts ...`);
     let dbConnection = connectToDatabase();
     let tempBlackListedGameScripts = [];
 
@@ -53,12 +53,12 @@ function loadAntiCheatGameScriptBlackListFromDatabase() {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
                 let tempBlackListedGameScriptData = new serverClasses.blackListedGameScriptData(dbAssoc);
                 tempBlackListedGameScripts.push(tempBlackListedGameScriptData);
-                console.log(`[Asshat.AntiCheat] Blacklisted game script '${tempBlackListedGameScriptData.scriptName}' loaded successfully!`);
+                logToConsole(LOG_DEBUG, `[Asshat.AntiCheat] Blacklisted game script '${tempBlackListedGameScriptData.scriptName}' loaded successfully!`);
             }
         }
         disconnectFromDatabase(dbConnection);
     }
-    console.log(`[Asshat.AntiCheat] ${tempBlackListedGameScripts.length} blacklisted game scripts loaded!`);
+    logToConsole(LOG_DEBUG, `[Asshat.AntiCheat] ${tempBlackListedGameScripts.length} blacklisted game scripts loaded!`);
     return tempBlackListedGameScripts;
 }
 

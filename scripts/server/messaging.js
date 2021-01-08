@@ -21,7 +21,7 @@ function messageAdminAction(messageText) {
 
 function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
     if(isConsole(client)) {
-        console.log(`[Asshat.Messaging] ${messageText}`);
+        logToConsole(LOG_DEBUG, `[Asshat.Messaging] ${messageText}`);
         return true;
     }
 
@@ -38,7 +38,7 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
     let clients = getClients();
     for(let i in clients) {
         if(clients[i].console) {
-            console.log(`[Asshat.Messaging] 🛡️ ${messageText}`);
+            logToConsole(LOG_DEBUG, `[Asshat.Messaging] 🛡️ ${messageText}`);
         } else {
             if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
                 messageClient(`🛡️ ${messageText}`, clients[i], getColourByName("softRed"));
@@ -52,7 +52,7 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
 
 function messagePlayerError(client, messageText) {
     if(isConsole(client)) {
-        console.log(`[Asshat.Messaging] ERROR:  ${messageText}`);
+        logToConsole(LOG_DEBUG, `[Asshat.Messaging] ERROR:  ${messageText}`);
         return true;
     }
 
@@ -67,7 +67,7 @@ function messagePlayerError(client, messageText) {
 
 function messagePlayerSyntax(client, messageText) {
     if(isConsole(client)) {
-        console.log(`[Asshat.Messaging] USAGE:  ${messageText}`);
+        logToConsole(LOG_DEBUG, `[Asshat.Messaging] USAGE:  ${messageText}`);
         return true;
     }
 
@@ -82,7 +82,7 @@ function messagePlayerSyntax(client, messageText) {
 
 function messagePlayerAlert(client, messageText) {
     if(isConsole(client)) {
-        console.log(`[Asshat.Messaging] ALERT: ${messageText}`);
+        logToConsole(LOG_DEBUG, `[Asshat.Messaging] ALERT: ${messageText}`);
         return true;
     }
 
@@ -97,7 +97,7 @@ function messagePlayerAlert(client, messageText) {
 
 function messagePlayerSuccess(client, messageText) {
     if(isConsole(client)) {
-        console.log(`[Asshat.Messaging] SUCCESS: ${messageText}`);
+        logToConsole(LOG_DEBUG, `[Asshat.Messaging] SUCCESS: ${messageText}`);
         return true;
     }
 
@@ -112,7 +112,7 @@ function messagePlayerSuccess(client, messageText) {
 
 function messagePlayerInfo(client, messageText) {
     if(isConsole(client)) {
-        console.log(`[INFO] ${messageText}`);
+        logToConsole(LOG_DEBUG, `[INFO] ${messageText}`);
         return true;
     }
 
@@ -127,7 +127,7 @@ function messagePlayerInfo(client, messageText) {
 
 function messagePlayerTip(client, messageText) {
     if(isConsole(client)) {
-        console.log(`[TIP] ${messageText}`);
+        logToConsole(LOG_DEBUG, `[TIP] ${messageText}`);
         return true;
     }
 

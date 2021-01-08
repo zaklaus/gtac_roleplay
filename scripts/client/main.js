@@ -45,6 +45,8 @@ let renderLogo = false;
 let renderSmallGameMessage = false;
 let renderScoreboard = false;
 
+let logLevel = LOG_DEBUG | LOG_INFO | LOG_ERROR | LOG_WARN | LOG_VERBOSE;
+
 // ---------------------------------------------------------------------------
 
 addEvent("OnLocalPlayerEnterSphere", 1);
@@ -99,29 +101,29 @@ addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.restoreCamera", function() {
-    console.log(`[Asshat.Main] Camera restored`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Camera restored`);
     gta.restoreCamera(true);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.clearPeds", function() {
-    console.log(`[Asshat.Main] Clearing all self-owned peds ...`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Clearing all self-owned peds ...`);
     clearSelfOwnedPeds();
-    console.log(`[Asshat.Main] All self-owned peds cleared`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] All self-owned peds cleared`);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.logo", function(state) {
-    console.log(`[Asshat.Main] Server logo ${(state) ? "enabled" : "disabled"}`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Server logo ${(state) ? "enabled" : "disabled"}`);
     renderLogo = state;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.ambience", function(state) {
-    console.log(`[Asshat.Main] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
     gta.setTrafficEnabled(state);
     gta.setGenerateCarsAroundCamera(state);
     if(gta.game != GAME_GTA_SA) {
@@ -163,14 +165,14 @@ function getClosestVehicle(pos) {
 // -------------------------------------------------------------------------
 
 addNetworkHandler("ag.clearWeapons", function() {
-    console.log(`[Asshat.Main] Clearing weapons`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Clearing weapons`);
     localPlayer.clearWeapons();
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
-    console.log(`[Asshat.Main] Giving weapon ${weaponId} with ${ammo} ammo`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Giving weapon ${weaponId} with ${ammo} ammo`);
     localPlayer.giveWeapon(weaponId, ammo, active);
 });
 
@@ -515,7 +517,7 @@ addNetworkHandler("ag.money", function(amount) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
-    console.log(`Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
+    logToConsole(LOG_DEBUG, `Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
     gta.removeWorldObject(model, position, range);
 });
 

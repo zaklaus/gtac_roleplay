@@ -9,12 +9,12 @@
 // ===========================================================================
 
 function initBusinessScript() {
-	console.log("[Asshat.Business]: Initializing business script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Business]: Initializing business script ...");
 	getServerData().businesses = loadBusinessesFromDatabase();
 	createAllBusinessPickups();
 	createAllBusinessBlips();
 	setAllBusinessIndexes();
-	console.log("[Asshat.Business]: Business script initialized successfully!");
+	logToConsole(LOG_DEBUG, "[Asshat.Business]: Business script initialized successfully!");
 	return true;
 }
 
@@ -39,7 +39,7 @@ function loadBusinessFromId(businessId) {
 // ---------------------------------------------------------------------------
 
 function loadBusinessesFromDatabase() {
-	console.log("[Asshat.Business]: Loading businesses from database ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Business]: Loading businesses from database ...");
 
 	let tempBusinesses = [];
 	let dbConnection = connectToDatabase();
@@ -54,7 +54,7 @@ function loadBusinessesFromDatabase() {
 					let tempBusinessData = new serverClasses.businessData(dbAssoc);
 					tempBusinessData.locations = loadBusinessLocationsFromDatabase(tempBusinessData.databaseId);
 					tempBusinesses.push(tempBusinessData);
-					console.log(`[Asshat.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[Asshat.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -62,14 +62,14 @@ function loadBusinessesFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Business]: ${tempBusinesses.length} businesses loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Business]: ${tempBusinesses.length} businesses loaded from database successfully!`);
 	return tempBusinesses;
 }
 
 // ---------------------------------------------------------------------------
 
 function loadBusinessLocationsFromDatabase(businessId) {
-	//console.log("[Asshat.Business]: Loading locations from database ...");
+	//logToConsole(LOG_DEBUG, "[Asshat.Business]: Loading locations from database ...");
 
 	let tempBusinessLocations = [];
 	let dbConnection = connectToDatabase();
@@ -83,7 +83,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempBusinessLocationData = new serverClasses.businessLocationData(dbAssoc);
 					tempBusinessLocations.push(tempBusinessLocationData);
-					//console.log(`[Asshat.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
+					//logToConsole(LOG_DEBUG, `[Asshat.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -91,7 +91,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	//console.log(`[Asshat.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
+	//logToConsole(LOG_DEBUG, `[Asshat.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
 	return tempBusinessLocations;
 }
 
@@ -666,7 +666,7 @@ function buySkinFromBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	if(getBusinessData(businessId).type == AG_BIZTYPE_CLOTHES) {
+	if(getBusinessData(businessId).type == getGlobalConfig().buySkinPrice) {
 		messagePlayerError(client, `This business doesn't sell clothes (skins)!`);
 		return false;
 	}
@@ -734,7 +734,7 @@ function saveAllBusinessesToDatabase() {
 
 function saveBusinessToDatabase(businessId) {
 	let tempBusinessData = getServerData().businesses[businessId]
-	console.log(`[Asshat.Business]: Saving business '${tempBusinessData.name}' to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Business]: Saving business '${tempBusinessData.name}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeBusinessName = escapeDatabaseString(dbConnection, tempBusinessData.name);
@@ -749,7 +749,7 @@ function saveBusinessToDatabase(businessId) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.Business]: Saved business '${tempBusinessData.name}' to database!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Business]: Saved business '${tempBusinessData.name}' to database!`);
 
 	return false;
 }
@@ -1051,6 +1051,12 @@ function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 
 	let index = getServerData().items.length-1;
 	getServerData().items[index].index = index;
+}
+
+// ---------------------------------------------------------------------------
+
+function buyFromBusinessCommand(command, params, client) {
+
 }
 
 // ---------------------------------------------------------------------------

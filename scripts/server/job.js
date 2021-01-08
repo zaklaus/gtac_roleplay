@@ -9,19 +9,19 @@
 // ===========================================================================
 
 function initJobScript() {
-	console.log("[Asshat.Job]: Initializing job script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Job]: Initializing job script ...");
 	getServerData().jobs = loadJobsFromDatabase();
 	createAllJobPickups();
 	createAllJobBlips();
 	setAllJobDataIndexes();
-	console.log("[Asshat.Job]: Job script initialized successfully!");
+	logToConsole(LOG_DEBUG, "[Asshat.Job]: Job script initialized successfully!");
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function loadJobsFromDatabase() {
-	console.log("[Asshat.Job]: Loading jobs from database ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Job]: Loading jobs from database ...");
 
 	let tempJobs = [];
 	let dbConnection = connectToDatabase();
@@ -38,7 +38,7 @@ function loadJobsFromDatabase() {
 					tempJobData.equipment = loadJobEquipmentsFromDatabase(tempJobData.databaseId);
 					tempJobData.uniforms = loadJobUniformsFromDatabase(tempJobData.databaseId);
 					tempJobs.push(tempJobData);
-					console.log(`[Asshat.Job]: Job '${tempJobData.name}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job '${tempJobData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -46,7 +46,7 @@ function loadJobsFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Job]: ${tempJobs.length} jobs loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: ${tempJobs.length} jobs loaded from database successfully!`);
 	return tempJobs;
 }
 
@@ -77,7 +77,7 @@ function loadAllJobLocationsFromDatabase() {
 // ---------------------------------------------------------------------------
 
 function loadJobEquipmentsFromDatabase(jobDatabaseId) {
-	console.log(`[Asshat.Job]: Loading job equipments for job ${jobDatabaseId} from database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job equipments for job ${jobDatabaseId} from database ...`);
 
 	let tempJobEquipments = [];
 	let dbConnection = connectToDatabase();
@@ -92,7 +92,7 @@ function loadJobEquipmentsFromDatabase(jobDatabaseId) {
 					let tempJobEquipmentData = new serverClasses.jobEquipmentData(dbAssoc);
 					tempJobEquipmentData.weapons = loadJobEquipmentWeaponsFromDatabase(tempJobEquipmentData.databaseId);
 					tempJobEquipments.push(tempJobEquipmentData);
-					console.log(`[Asshat.Job]: Job equipment '${tempJobEquipmentData.name}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job equipment '${tempJobEquipmentData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -100,14 +100,14 @@ function loadJobEquipmentsFromDatabase(jobDatabaseId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Job]: ${tempJobEquipments.length} job equipments for job ${jobDatabaseId} loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: ${tempJobEquipments.length} job equipments for job ${jobDatabaseId} loaded from database successfully!`);
 	return tempJobEquipments;
 }
 
 // ---------------------------------------------------------------------------
 
 function loadJobLocationsFromDatabase(jobDatabaseId) {
-	console.log(`[Asshat.Job]: Loading job locations for job ${jobDatabaseId} from database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job locations for job ${jobDatabaseId} from database ...`);
 
 	let tempJobLocations = [];
 	let dbConnection = connectToDatabase();
@@ -121,7 +121,7 @@ function loadJobLocationsFromDatabase(jobDatabaseId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempJobLocationData = new serverClasses.jobLocationData(dbAssoc);
 					tempJobLocations.push(tempJobLocationData);
-					console.log(`[Asshat.Job]: Job location '${tempJobLocationData.databaseId}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job location '${tempJobLocationData.databaseId}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -129,14 +129,14 @@ function loadJobLocationsFromDatabase(jobDatabaseId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Job]: ${tempJobLocations.length} job locations for job ${jobDatabaseId} loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: ${tempJobLocations.length} job locations for job ${jobDatabaseId} loaded from database successfully!`);
 	return tempJobLocations;
 }
 
 // ---------------------------------------------------------------------------
 
 function loadJobUniformsFromDatabase(jobDatabaseId) {
-	console.log(`[Asshat.Job]: Loading job uniforms for job ${jobDatabaseId} from database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job uniforms for job ${jobDatabaseId} from database ...`);
 
 	let tempJobUniforms = [];
 	let dbConnection = connectToDatabase();
@@ -150,7 +150,7 @@ function loadJobUniformsFromDatabase(jobDatabaseId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempJobUniformData = new serverClasses.jobUniformData(dbAssoc);
 					tempJobUniforms.push(tempJobUniformData);
-					console.log(`[Asshat.Job]: Job uniform '${tempJobUniformData.name}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job uniform '${tempJobUniformData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -158,14 +158,14 @@ function loadJobUniformsFromDatabase(jobDatabaseId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Job]: ${tempJobUniforms.length} job uniforms for job ${jobDatabaseId} loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: ${tempJobUniforms.length} job uniforms for job ${jobDatabaseId} loaded from database successfully!`);
 	return tempJobUniforms;
 }
 
 // ---------------------------------------------------------------------------
 
 function loadJobEquipmentWeaponsFromDatabase(jobEquipmentDatabaseId) {
-	console.log(`[Asshat.Job]: Loading job equipment weapons for job equipment ${jobEquipmentDatabaseId} from database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job equipment weapons for job equipment ${jobEquipmentDatabaseId} from database ...`);
 
 	let tempJobEquipmentWeapons = [];
 	let dbConnection = connectToDatabase();
@@ -179,7 +179,7 @@ function loadJobEquipmentWeaponsFromDatabase(jobEquipmentDatabaseId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempJobEquipmentWeaponsData = new serverClasses.jobEquipmentWeaponData(dbAssoc);
 					tempJobEquipmentWeapons.push(tempJobEquipmentWeaponsData);
-					console.log(`[Asshat.Job]: Job equipment weapon '${tempJobEquipmentWeaponsData.name}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job equipment weapon '${tempJobEquipmentWeaponsData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -187,28 +187,28 @@ function loadJobEquipmentWeaponsFromDatabase(jobEquipmentDatabaseId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.Job]: ${tempJobEquipmentWeapons.length} job equipment weapons for equipment ${jobEquipmentDatabaseId} loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: ${tempJobEquipmentWeapons.length} job equipment weapons for equipment ${jobEquipmentDatabaseId} loaded from database successfully!`);
 	return tempJobEquipmentWeapons;
 }
 
 // ---------------------------------------------------------------------------
 
 function createAllJobBlips() {
-	console.log(`[Asshat.Job] Spawning all job location blips ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job] Spawning all job location blips ...`);
 	for(let i in getServerData().jobs) {
 		for(let j in getServerData().jobs[i].locations) {
 			getServerData().jobs[i].locations[j].blip = gta.createBlip((getServerData().jobs[i].blipModel!=0) ? getServerData().jobs[i].blipModel : 0, getServerData().jobs[i].locations[j].position, 2, getColourByName("yellow"));
 			addToWorld(getServerData().jobs[i].locations[j].blip);
-			console.log(`[Asshat.Job] Job '${getServerData().jobs[i].name}' location blip ${j} spawned!`);
+			logToConsole(LOG_DEBUG, `[Asshat.Job] Job '${getServerData().jobs[i].name}' location blip ${j} spawned!`);
 		}
 	}
-	console.log(`[Asshat.Job] All job location blips spawned!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job] All job location blips spawned!`);
 }
 
 // ---------------------------------------------------------------------------
 
 function createAllJobPickups() {
-	console.log(`[Asshat.Job] Spawning all job location pickups ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job] Spawning all job location pickups ...`);
 	let pickupCount = 0;
 	for(let i in getServerData().jobs) {
 		if(getServerData().jobs[i].pickupModel != 0) {
@@ -225,11 +225,11 @@ function createAllJobPickups() {
 				getServerData().jobs[i].locations[j].pickup.dimension = getServerData().jobs[i].locations[j].dimension;
 				addToWorld(getServerData().jobs[i].locations[j].pickup);
 
-				console.log(`[Asshat.Job] Job '${getServerData().jobs[i].name}' location pickup ${j} spawned!`);
+				logToConsole(LOG_DEBUG, `[Asshat.Job] Job '${getServerData().jobs[i].name}' location pickup ${j} spawned!`);
 			}
 		}
 	}
-	console.log(`[Asshat.Job] All job location pickups (${pickupCount}) spawned!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job] All job location pickups (${pickupCount}) spawned!`);
 }
 
 // ---------------------------------------------------------------------------
@@ -1110,7 +1110,7 @@ function getPlayerJobRouteVehicle(client) {
 function startReturnToJobVehicleCountdown(client) {
 	getPlayerData(client).returnToJobVehicleTick = getGlobalConfig().returnToJobVehicleTime;
 	getPlayerData(client).returnToJobVehicleTimer = setInterval(function() {
-		//console.log(getPlayerData(client).returnToJobVehicleTick);
+		//logToConsole(LOG_DEBUG, getPlayerData(client).returnToJobVehicleTick);
 		if(getPlayerData(client).returnToJobVehicleTick > 0) {
 			getPlayerData(client).returnToJobVehicleTick = getPlayerData(client).returnToJobVehicleTick - 1;
 			//console.warn(`You have ${getPlayerData(client).returnToJobVehicleTick} seconds to return to your job vehicle!`);
@@ -1188,8 +1188,9 @@ function canPlayerUseJob(client, jobId) {
 // ---------------------------------------------------------------------------
 
 function deleteJobLocation(jobLocationData) {
-	//removeFromWorld(jobLocationData.pickup);
-	destroyElement(jobLocationData.pickup);
+	if(jobLocationData.pickup) {
+		destroyElement(jobLocationData.pickup);
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -1279,7 +1280,7 @@ function saveJobToDatabase(jobData) {
 		return false;
 	}
 
-	console.log(`[Asshat.Job]: Saving job ${jobData.name} to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saving job ${jobData.name} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeName = escapeDatabaseString(dbConnection, jobData.name);
@@ -1295,7 +1296,7 @@ function saveJobToDatabase(jobData) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.Job]: Saved job ${jobData.name} to database!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saved job ${jobData.name} to database!`);
 
 	return false;
 }
@@ -1308,13 +1309,13 @@ function saveJobLocationToDatabase(jobLocationData) {
 		return false;
 	}
 
-	console.log(`[Asshat.Job]: Saving job location ${jobLocationData.databaseId} to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saving job location ${jobLocationData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		// If job location hasn't been added to database, ID will be 0
 		if(jobLocationData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO job_loc (job_loc_job, job_loc_enabled, job_loc_pos_x, job_loc_pos_y, job_loc_pos_z, job_loc_int, job_loc_vw) VALUES (${jobLocationData.job}, ${boolToInt(jobLocationData.enabled)}, ${jobLocationData.position.x}, ${jobLocationData.position.y}, ${jobLocationData.position.z}, ${jobLocationData.interior}, ${jobLocationData.dimension})`;
-			console.log(dbQueryString);
+			logToConsole(LOG_DEBUG, dbQueryString);
 			queryDatabase(dbConnection, dbQueryString);
 			jobLocationData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
@@ -1324,7 +1325,7 @@ function saveJobLocationToDatabase(jobLocationData) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.Job]: Saved job location ${jobLocationData.databaseId} to database`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saved job location ${jobLocationData.databaseId} to database`);
 
 	return false;
 }
@@ -1337,7 +1338,7 @@ function saveJobEquipmentToDatabase(jobEquipmentData) {
 		return false;
 	}
 
-	console.log(`[Asshat.Job]: Saving job equipment ${jobEquipmentData.databaseId} to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saving job equipment ${jobEquipmentData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeName = escapeDatabaseString(dbConnection, jobEquipmentData.name);
@@ -1353,7 +1354,7 @@ function saveJobEquipmentToDatabase(jobEquipmentData) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.Job]: Saved job equipment ${jobEquipmentData.databaseId} to database`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saved job equipment ${jobEquipmentData.databaseId} to database`);
 
 	return false;
 }
@@ -1366,7 +1367,7 @@ function saveJobEquipmentWeaponToDatabase(jobEquipmentWeaponData) {
 		return false;
 	}
 
-	console.log(`[Asshat.Job]: Saving job equipment weapon ${jobEquipmentWeaponData.databaseId} to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saving job equipment weapon ${jobEquipmentWeaponData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		// If job equipment weapon hasn't been added to database, ID will be 0
@@ -1381,7 +1382,7 @@ function saveJobEquipmentWeaponToDatabase(jobEquipmentWeaponData) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.Job]: Saved job equipment weapon ${jobEquipmentWeaponData.databaseId} to database`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saved job equipment weapon ${jobEquipmentWeaponData.databaseId} to database`);
 
 	return false;
 }
@@ -1394,7 +1395,7 @@ function saveJobUniformToDatabase(jobUniformData) {
 		return false;
 	}
 
-	console.log(`[Asshat.Job]: Saving job uniform ${jobUniformData.databaseId} to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saving job uniform ${jobUniformData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeName = escapeDatabaseString(dbConnection, jobUniformData.name);
@@ -1410,7 +1411,7 @@ function saveJobUniformToDatabase(jobUniformData) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.Job]: Saved job uniform ${jobUniformData.databaseId} to database`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saved job uniform ${jobUniformData.databaseId} to database`);
 
 	return false;
 }
@@ -1467,8 +1468,7 @@ function createJobLocationPickup(jobId, locationId) {
 			pickupModelId = getJobData(jobId).pickupModel;
 		}
 
-		getJobData(jobId).locations[locationId].blip = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
-		getJobData(jobId).locations[locationId].pickup.onAllDimensions = false;
+		getJobData(jobId).locations[locationId].pickup = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
 		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
 		addToWorld(getJobData(jobId).locations[locationId].pickup);
 	}
@@ -1485,7 +1485,7 @@ function createJobLocationBlip(jobId, locationId) {
 		}
 
 		getJobData(jobId).locations[locationId].blip = gta.createBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
-		getJobData(jobId).locations[locationId].blip.onAllDimensions = false;
+		//getJobData(jobId).locations[locationId].blip.onAllDimensions = false;
 		getJobData(jobId).locations[locationId].blip.dimension = getJobData(jobId).locations[locationId].dimension;
 		addToWorld(getJobData(jobId).locations[locationId].blip);
 	}

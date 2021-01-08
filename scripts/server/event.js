@@ -77,6 +77,8 @@ addEventHandler("OnPedExitVehicle", function(event, ped, vehicle) {
     //}
 });
 
+// ---------------------------------------------------------------------------
+
 addEventHandler("OnProcess", function(event, deltaTime) {
     let clients = getClients();
     for(let i in clients) {
@@ -275,6 +277,7 @@ function processPlayerSpawn(ped) {
         return false;
     }
 
+    setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
     messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
     messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
     messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
@@ -286,6 +289,19 @@ function processPlayerSpawn(ped) {
     getPlayerData(client).switchingCharacter = false;
     updatePlayerCash(client);
     updatePlayerJobType(client);
+    setPlayer2DRendering(client, true, true, true, true);
+    updatePlayerSnowState(client);
+
+    sendExcludedModelsForGroundSnowToPlayer(client);
+    sendRemovedWorldObjectsToPlayer(client);
+
+    setTimeout(function() {
+        syncPlayerProperties(client);
+    }, 1000);
+
+    if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
+        updatePlayerShowLogoState(client, true);
+    }
 }
 
 // ---------------------------------------------------------------------------

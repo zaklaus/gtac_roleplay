@@ -101,7 +101,7 @@ addNetworkHandler("ag.arrivedAtBusStop", function(client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.clientReady", function(client) {
-	client.setData("ag.isReady", true, false);
+	setEntityData(client, "ag.isReady", true, false);
 	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client resources are downloaded and ready!`);
 	if(client.getData("ag.isStarted") == true) {
 		initClient(client);
@@ -111,14 +111,14 @@ addNetworkHandler("ag.clientReady", function(client) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.guiReady", function(client) {
-	client.setData("ag.guiReady", true, false);
+	setEntityData(client, "ag.guiReady", true, false);
     logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client GUI is initialized and ready!`);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.clientStarted", function(client) {
-	client.setData("ag.isStarted", true, false);
+	setEntityData(client, "ag.isStarted", true, false);
 	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client resources are started and running!`);
 	if(client.getData("ag.isReady") == true) {
 		initClient(client);
@@ -178,6 +178,43 @@ function updatePlayerShowLogoState(client, state) {
 
 function restorePlayerCamera(client) {
     triggerNetworkEvent("ag.restoreCamera", client);
+}
+
+// -------------------------------------------------------------------------
+
+function setPlayer2DRendering(client, hudState = false, labelState = false, smallGameMessageState = false, scoreboardState = false) {
+	triggerNetworkEvent("ag.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState);
+}
+
+// ---------------------------------------------------------------------------
+
+function syncPlayerProperties(client) {
+    triggerNetworkEvent("ag.player.sync", null, client.player);
+}
+
+// ---------------------------------------------------------------------------
+
+function updatePlayerSnowState(client) {
+    triggerNetworkEvent("ag.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendExcludedModelsForGroundSnowToPlayer(client) {
+	for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
+		logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending excluded model ${i} for ground snow to ${client.name}`);
+		triggerNetworkEvent("ag.excludeGroundSnow", client, getGameConfig().excludedGroundSnowModels[getServerGame()][i]);
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+function sendRemovedWorldObjectsToPlayer(client) {
+	for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
+		logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
+		triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
+	}
+	return true;
 }
 
 // ---------------------------------------------------------------------------

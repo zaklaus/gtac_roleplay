@@ -189,6 +189,7 @@ let gameConfig = {
 			bank: 0,
 			clothes: 0,
 			info: 0,
+			job: 0,
 		},
 
 		{ // GTA Vice City
@@ -197,6 +198,7 @@ let gameConfig = {
 			bank: 0,
 			clothes: 0,
 			info: 0,
+			job: 0,
 		},
 
 		{ // GTA San Andreas
@@ -205,6 +207,7 @@ let gameConfig = {
 			bank: 1,
 			clothes: 1,
 			info: 1,
+			job: 1,
 		}
 	],
 
@@ -261,10 +264,10 @@ let gameConfig = {
 // -------------------------------------------------------------------------
 
 function initConfigScript() {
-	console.log("[Asshat.Config]: Initializing config script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.Config]: Initializing config script ...");
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
 	applyConfigToServer(serverConfig);
-	console.log("[Asshat.Config]: Config script initialized!");
+	logToConsole(LOG_DEBUG, "[Asshat.Config]: Config script initialized!");
 }
 
 // ---------------------------------------------------------------------------
@@ -322,7 +325,7 @@ function applyConfigToServer(tempServerConfig) {
 // -------------------------------------------------------------------------
 
 function saveServerConfigToDatabase(serverConfigData) {
-	console.log(`[Asshat.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeServerName = escapeDatabaseString(dbConnection, serverConfigData.name);
@@ -332,7 +335,7 @@ function saveServerConfigToDatabase(serverConfigData) {
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		disconnectFromDatabase(dbConnection);
 	}
-	console.log(`[Asshat.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
+	logToConsole(LOG_DEBUG, `[Asshat.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
 }
 
 // -------------------------------------------------------------------------

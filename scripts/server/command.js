@@ -26,9 +26,9 @@ let builtInCommands = [
 // ---------------------------------------------------------------------------
 
 function initCommandScript() {
-    console.log("[Asshat.Command]: Initializing commands script ...");
+    logToConsole(LOG_DEBUG, "[Asshat.Command]: Initializing commands script ...");
     serverCommands = loadCommands();
-    console.log("[Asshat.Command]: Initialized commands script!");
+    logToConsole(LOG_DEBUG, "[Asshat.Command]: Initialized commands script!");
 }
 
 // ---------------------------------------------------------------------------
@@ -36,53 +36,53 @@ function initCommandScript() {
 function loadCommands() {
     return {
         account: [
-            commandData("login", loginCommand, "<password>", getStaffFlagValue("none"), false, false),
-            commandData("register", registerCommand, "<password>", getStaffFlagValue("none"), false, false),
-            commandData("changepass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false),
-            commandData("iplogin", autoLoginByIPCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("autolastchar", autoSelectLastCharacterCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("gui", toggleAccountGUICommand, "", getStaffFlagValue("none"), false, false),
-            commandData("2fa", toggleAccountTwoFactorAuthCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("setemail", setAccountEmailCommand, "<email address>", getStaffFlagValue("none"), true, false),
-            commandData("setdiscord", setAccountDiscordCommand, "<Name#0000 - discord name and id>", getStaffFlagValue("none"), true, false),
+            commandData("login", loginCommand, "<password>", getStaffFlagValue("none"), false, false, "Login to an account"),
+            commandData("register", registerCommand, "<password>", getStaffFlagValue("none"), false, false, "Creates an account"),
+            commandData("changepass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false, "Change an account password"),
+            commandData("iplogin", autoLoginByIPCommand, "", getStaffFlagValue("none"), true, false, "Toggle whether to automatically login if you join with the same IP as your last join"),
+            commandData("autolastchar", autoSelectLastCharacterCommand, "", getStaffFlagValue("none"), true, false, "Toggle whether to automatically spawn with the last character you played as"),
+            commandData("gui", toggleAccountGUICommand, "", getStaffFlagValue("none"), false, false, "Toggle whether to use GUI. If GUI is disabled on the server, it won't show even if you have GUI enabled."),
+            commandData("2fa", toggleAccountTwoFactorAuthCommand, "", getStaffFlagValue("none"), true, false, "Set up and use two-factor authentication."),
+            commandData("setemail", setAccountEmailCommand, "<email address>", getStaffFlagValue("none"), true, false, "Sets your email. To reset your password, you must have a valid email set to your account."),
+            commandData("setdiscord", setAccountDiscordCommand, "<Name#0000 - discord name and id>", getStaffFlagValue("none"), true, false, "Set up the integration for discord. Allows you to see info and use in-game commands on discord."),
         ],
         ammunation: [],
         ban: [
-            commandData("aban", accountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true),
-            commandData("cban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true),
-            commandData("saban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true),
-            commandData("ipban", ipBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true),
-            commandData("subnetban", subNetBanCommand, "<player name/id> <range> <reason>", getStaffFlagValue("manageBans"), true, true),
+            commandData("aban", accountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's account."),
+            commandData("cban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's character."),
+            commandData("saban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's character (subaccount)."),
+            commandData("ipban", ipBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's IP."),
+            commandData("subnetban", subNetBanCommand, "<player name/id> <range> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's subnet."),
         ],
         bitFlag: [],
         business: [
-            commandData("addbiz", createBusinessCommand, "<name>", getStaffFlagValue("manageBusinesses"), true, false),
-            commandData("delbiz", deleteBusinessCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, true),
+            commandData("addbiz", createBusinessCommand, "<name>", getStaffFlagValue("manageBusinesses"), true, false, "Creates a business"),
+            commandData("delbiz", deleteBusinessCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, true, "Deletes a business"),
             //commandData("addbizloc", createBusinessLocationCommand, "<type> <business id> <name>", getStaffFlagValue("manageBusinesses"), true, false),
             //commandData("delbizloc", deleteBusinessLocationCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, false),
-            commandData("bizreloadall", reloadAllBusinessesCommand, "", getStaffFlagValue("manageBusinesses"), true, false),
+            commandData("bizreloadall", reloadAllBusinessesCommand, "", getStaffFlagValue("manageBusinesses"), true, false, "Reloads all businesses from the database"),
 
-            commandData("bizlock", lockBusinessCommand, "", getStaffFlagValue("none"), true, true),
-            commandData("bizfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true),
-            commandData("biztill", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true),
-            commandData("bizwithdraw", withdrawFromBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
-            commandData("bizdeposit", depositIntoBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true),
-            commandData("buy", buyFromBusinessCommand, "<slot> [amount]", getStaffFlagValue("none"), true, true),
-            commandData("bizstockitem", stockItemInBusinessCommand, "<item name> <amount> <sell price>", getStaffFlagValue("none"), true, true),
-            commandData("bizitemprice", setBusinessItemSellPriceCommand, "<item slot> <sell price>", getStaffFlagValue("none"), true, true),
-            commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("none"), true, true),
-            commandData("bizowner", setBusinessOwnerCommand, "<player name/id>", getStaffFlagValue("none"), true, true),
-            commandData("bizblip", setBusinessBlipCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true),
-            commandData("bizpickup", setBusinessPickupCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true),
-            commandData("bizinfo", getBusinessInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
-            commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
-            commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("manageBusinesses"), true, true),
-            commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageBusinesses"), true, true),
+            commandData("bizlock", lockBusinessCommand, "", getStaffFlagValue("none"), true, true, "Locks a business"),
+            commandData("bizfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true, "Sets a fee to charge players when they enter the business."),
+            commandData("biztill", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true, "Shows the business's till (cash register) amount"),
+            commandData("bizwithdraw", withdrawFromBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true, "Take money out of the business till (cash register)"),
+            commandData("bizdeposit", depositIntoBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true, "Put money into the business till (cash register)"),
+            commandData("buy", buyFromBusinessCommand, "<slot> [amount]", getStaffFlagValue("none"), true, true, "Buy items from a business"),
+            //commandData("bizstockitem", stockItemInBusinessCommand, "<item name> <amount> <sell price>", getStaffFlagValue("none"), true, true, "Orders items to restock the business with."),
+            //commandData("bizitemprice", setBusinessItemSellPriceCommand, "<item slot> <sell price>", getStaffFlagValue("none"), true, true, "Sets the purchase price of an item in the business"),
+            commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("none"), true, true, "Changes a business name"),
+            commandData("bizowner", setBusinessOwnerCommand, "<player name/id>", getStaffFlagValue("none"), true, true, "Changes the owner of a business"),
+            commandData("bizblip", setBusinessBlipCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true, "Sets the business blip display"),
+            commandData("bizpickup", setBusinessPickupCommand, "<type name/model id>", getStaffFlagValue("manageBusinesses"), true, true, "Sets the business pickup display"),
+            commandData("bizinfo", getBusinessInfoCommand, "[id]", getStaffFlagValue("none"), true, true, "Shows business information"),
+            commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Shows business information"),
+            commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Moves the exit (interior point) of the business"),
+            commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageBusinesses"), true, true, "Changes the business' interior"),
 
             // TEMPORARY
-            commandData("buyskin", buySkinFromBusinessCommand, "<skin id>", getStaffFlagValue("none"), true, true),
-            commandData("buygun", buyWeaponFromBusinessCommand, "<weapon id>", getStaffFlagValue("none"), true, true),
-            commandData("buyammo", buyWeaponFromBusinessCommand, "<weapon id>", getStaffFlagValue("none"), true, true),
+            //commandData("buyskin", buySkinFromBusinessCommand, "<skin id>", getStaffFlagValue("none"), true, true),
+            //commandData("buygun", buyWeaponFromBusinessCommand, "<weapon id>", getStaffFlagValue("none"), true, true),
+            //commandData("buyammo", buyWeaponFromBusinessCommand, "<weapon id>", getStaffFlagValue("none"), true, true),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
@@ -172,9 +172,9 @@ function loadCommands() {
             commandData("houseinttype", setHouseInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageHouses"), true, true),
         ],
         item: [
-            commandData("giveitem", givePlayerItemCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("takeitem", takePlayerItemCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("takeallitems", takeAllPlayerItemsCommand, "", getStaffFlagValue("none"), true, false),
+            //commandData("giveitem", givePlayerItemCommand, "", getStaffFlagValue("none"), true, false),
+            //commandData("takeitem", takePlayerItemCommand, "", getStaffFlagValue("none"), true, false),
+            //commandData("takeallitems", takeAllPlayerItemsCommand, "", getStaffFlagValue("none"), true, false),
         ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),
@@ -340,8 +340,8 @@ function getCommands() {
 
 // ---------------------------------------------------------------------------
 
-function commandData(command, handlerFunction, syntaxString = "", requiredStaffFlags = getStaffFlagValue("none"), requireLogin = true, allowOnDiscord = true) {
-    return new serverClasses.commandData(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord);
+function commandData(command, handlerFunction, syntaxString = "", requiredStaffFlags = getStaffFlagValue("none"), requireLogin = true, allowOnDiscord = true, usageHelpMessage) {
+    return new serverClasses.commandData(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord, usageHelpMessage);
 }
 
 // ---------------------------------------------------------------------------
@@ -509,7 +509,7 @@ function processPlayerCommand(command, params, client) {
 		return false;
     }
 
-    console.log(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
+    logToConsole(LOG_DEBUG, `[Asshat.Command] ${getPlayerDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
     commandData.handlerFunction(toLowerCase(command), params, client);
 }
 
@@ -532,7 +532,7 @@ addCommandHandler("cmd", function(command, params, client) {
 function listAllCommands() {
     for(let i in serverCommands) {
         for(let j in serverCommands[i]) {
-            console.log(serverCommands[i][j].command);
+            logToConsole(LOG_DEBUG, serverCommands[i][j].command);
         }
     }
 }

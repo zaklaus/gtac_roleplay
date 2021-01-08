@@ -15,13 +15,14 @@ function messageAdminAction(messageText) {
     if(getServerConfig().discordEnabled) {
         messageDiscord(`:warning: ${messageText}`);
     }
+    //logToConsole(LOG_INFO, `[Asshat.Messaging] ADMIN: ${messageText}`);
 }
 
 // ---------------------------------------------------------------------------
 
 function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
     if(isConsole(client)) {
-        logToConsole(LOG_DEBUG, `[Asshat.Messaging] ${messageText}`);
+        logToConsole(LOG_INFO, `[Asshat.Messaging] ${messageText}`);
         return true;
     }
 
@@ -38,7 +39,7 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
     let clients = getClients();
     for(let i in clients) {
         if(clients[i].console) {
-            logToConsole(LOG_DEBUG, `[Asshat.Messaging] 🛡️ ${messageText}`);
+            logToConsole(LOG_INFO, `[Asshat.Messaging] ADMINS: ${messageText}`);
         } else {
             if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
                 messageClient(`🛡️ ${messageText}`, clients[i], getColourByName("softRed"));
@@ -52,7 +53,7 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
 
 function messagePlayerError(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_DEBUG, `[Asshat.Messaging] ERROR:  ${messageText}`);
+        logToConsole(LOG_INFO, `[Asshat.Messaging] ERROR:  ${messageText}`);
         return true;
     }
 
@@ -67,7 +68,7 @@ function messagePlayerError(client, messageText) {
 
 function messagePlayerSyntax(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_DEBUG, `[Asshat.Messaging] USAGE:  ${messageText}`);
+        logToConsole(LOG_INFO, `[Asshat.Messaging] USAGE:  ${messageText}`);
         return true;
     }
 
@@ -82,7 +83,7 @@ function messagePlayerSyntax(client, messageText) {
 
 function messagePlayerAlert(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_DEBUG, `[Asshat.Messaging] ALERT: ${messageText}`);
+        logToConsole(LOG_INFO, `[Asshat.Messaging] ALERT: ${messageText}`);
         return true;
     }
 
@@ -97,7 +98,7 @@ function messagePlayerAlert(client, messageText) {
 
 function messagePlayerSuccess(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_DEBUG, `[Asshat.Messaging] SUCCESS: ${messageText}`);
+        logToConsole(LOG_INFO, `[Asshat.Messaging] SUCCESS: ${messageText}`);
         return true;
     }
 
@@ -112,7 +113,7 @@ function messagePlayerSuccess(client, messageText) {
 
 function messagePlayerInfo(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_DEBUG, `[INFO] ${messageText}`);
+        logToConsole(LOG_INFO, `[Asshat.Messaging] INFO: ${messageText}`);
         return true;
     }
 
@@ -127,7 +128,7 @@ function messagePlayerInfo(client, messageText) {
 
 function messagePlayerTip(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_DEBUG, `[TIP] ${messageText}`);
+        logToConsole(LOG_INFO, `[Asshat.Messaging] TIP: ${messageText}`);
         return true;
     }
 

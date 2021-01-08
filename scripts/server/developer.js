@@ -12,10 +12,11 @@ function initDeveloperScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Developer]: Initializing developer script ...");
 
 	// Use GTAC command handlers for these since they need to be available on console
-	addCommandHandler("sc", executeServerCodeCommand);
-	addCommandHandler("cc", executeServerCodeCommand);
-	addCommandHandler("docmd", simulateCommandForPlayer);
-	addCommandHandler("allcmd", simulateCommandForAllPlayers);
+	//addCommandHandler("sc", executeServerCodeCommand);
+	//addCommandHandler("cc", executeServerCodeCommand);
+	//addCommandHandler("docmd", simulateCommandForPlayerCommand);
+	//addCommandHandler("allcmd", simulateCommandForAllPlayersCommand);
+	//addCommandHandler("addloglvl", setServerLogLevelCommand);
 
 	logToConsole(LOG_DEBUG, "[Asshat.Developer]: Developer script initialized successfully!");
 	return true;
@@ -23,7 +24,83 @@ function initDeveloperScript() {
 
 // ---------------------------------------------------------------------------
 
-function simulateCommandForPlayer(command, params, client) {
+function addServerLogLevelCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	switch(toLowerCase(params)) {
+		case "debug":
+			logLevel = logLevel | LOG_DEBUG;
+			break;
+
+		case "warn":
+			logLevel = logLevel | LOG_WARN;
+			break;
+
+		case "error":
+			logLevel = logLevel | LOG_ERROR;
+			break;
+
+		case "info":
+			logLevel = logLevel | LOG_INFO;
+			break;
+
+		case "verbose":
+			logLevel = logLevel | LOG_VERBOSE;
+			break;
+
+		default:
+			return;
+	}
+
+	messageAdminAction(`[#AAAAAA]${client.name} [#FFFFFF]enabled log level [#AAAAAA]${toLowerCase(params)}`);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function removeServerLogLevelCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	switch(toLowerCase(params)) {
+		case "debug":
+			logLevel = logLevel & ~LOG_DEBUG;
+			break;
+
+		case "warn":
+			logLevel = logLevel & ~LOG_WARN;
+			break;
+
+		case "error":
+			logLevel = logLevel & ~LOG_ERROR;
+			break;
+
+		case "info":
+			logLevel = logLevel & ~LOG_INFO;
+			break;
+
+		case "verbose":
+			logLevel = logLevel & ~LOG_VERBOSE;
+			break;
+
+		default:
+			return;
+	}
+
+	messageAdminAction(`[#AAAAAA]${client.name} [#FFFFFF]disabled log level [#AAAAAA]${toLowerCase(params)}`);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function simulateCommandForPlayerCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isPlayerLoggedIn(client)) {
 			messagePlayerError(client, "You must be logged in to use this command!");
@@ -64,7 +141,7 @@ function simulateCommandForPlayer(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function simulateCommandForAllPlayers(command, params, client) {
+function simulateCommandForAllPlayersCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isPlayerLoggedIn(client)) {
 			messagePlayerError(client, "You must be logged in to use this command!");
@@ -105,52 +182,28 @@ function simulateCommandForAllPlayers(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function executeServerCodeCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
-	let returnVal = "Nothing";
+	let returnValue = "Nothing";
 	try {
-		returnVal = eval("(" + params + ")");
+		returnValue = eval("(" + params + ")");
 	} catch(error) {
 		messagePlayerError(client, "The code could not be executed!");
 		return false;
 	}
 
 	messagePlayerSuccess(client, "Server code executed!");
-	messagePlayerNormal(client, `Code: ${params}`);
-	messagePlayerNormal(client, `Returns: ${returnVal}`);
+	messagePlayerNormal(client, `Code: ${params}`, COLOUR_YELLOW);
+	messagePlayerNormal(client, `Returns: ${returnValue}`, COLOUR_YELLOW);
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function executeClientCodeCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;

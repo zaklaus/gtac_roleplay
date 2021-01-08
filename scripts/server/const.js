@@ -198,3 +198,11 @@ const AG_FORENSICS_HAIR = 4;                // Hair. Automatically applied to
 const AG_FORENSICS_SWEAT = 5;               // Sweat. Automatically applied to clothing when worn
 const AG_FORENSICS_SALIVA = 6;              // Saliva. Automatically applied to drinks when drank
 const AG_FORENSICS_BULLETCASINGS = 7;       // Bullet casings. Automatically dropped when fired from a weapon except when used in a vehicle (driveby)
+
+// Account Authentication Methods
+const AG_ACCT_AUTHMETHOD_NONE = 0;
+const AG_ACCT_AUTHMETHOD_EMAIL = 1;
+const AG_ACCT_AUTHMETHOD_PHONENUM = 2;
+const AG_ACCT_AUTHMETHOD_2FA = 3;
+const AG_ACCT_AUTHMETHOD_PEBBLE = 4;
+const AG_ACCT_AUTHMETHOD_PHONEAPP = 5;

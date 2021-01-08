@@ -251,16 +251,6 @@ function enterExitPropertyCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function sendRemovedWorldObjectsToPlayer(client) {
-	for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
-		logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
-		triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
-	}
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
 function loadGameFixesResource() {
 	switch(getServerGame()) {
 		case GAME_GTA_III:

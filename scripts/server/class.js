@@ -263,6 +263,7 @@ function initClassTable() {
 				this.inJail = false;
 				this.interior = 0;
 				this.dimension = 0;
+				this.pedScale = toVector3(1.0, 1.0, 1.0);
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["sacct_id"];
@@ -284,6 +285,7 @@ function initClassTable() {
 					this.job = dbAssoc["sacct_job"];
 					this.interior = dbAssoc["sacct_int"];
 					this.dimension = dbAssoc["sacct_vw"];
+					this.pedScale = toVector3(dbAssoc["sacct_scale_x"], dbAssoc["sacct_scale_y"], dbAssoc["sacct_scale_z"]);
 					return;
 				}
 			}

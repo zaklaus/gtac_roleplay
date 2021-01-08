@@ -144,7 +144,7 @@ function getVehicleHeading(vehicle) {
 // ---------------------------------------------------------------------------
 
 function getVehicleSyncer(vehicle) {
-    return getClients()[vehicle.syncer];
+    return getElementSyncer(vehicle);
 }
 
 // ---------------------------------------------------------------------------
@@ -183,3 +183,17 @@ function setPlayerSkin(client, skin) {
 }
 
 // ---------------------------------------------------------------------------
+
+function disconnectPlayer(client) {
+    return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function getElementSyncer(element) {
+    return getClients()[element.syncer];
+}
+
+// ---------------------------------------------------------------------------
+
+//triggerNetworkEvent("ag.veh.engine", getElementSyncer(getPlayerVehicle(client)), getVehicleForNetworkEvent(vehicle), getVehicleData(vehicle).engine);

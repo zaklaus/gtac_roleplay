@@ -26,13 +26,13 @@ let smallGameMessageTimer = null;
 
 let inSphere = false;
 let inVehicle = false;
+let isWalking = false;
+let isSpawned = false;
 
 let localPlayerJobType = 0;
 let localPlayerWorking = false;
 
 let mouseCameraEnabled = false;
-
-let isWalking = false;
 
 let garbageCollectorInterval = null;
 
@@ -45,7 +45,7 @@ let renderLogo = false;
 let renderSmallGameMessage = false;
 let renderScoreboard = false;
 
-let logLevel = LOG_DEBUG | LOG_INFO | LOG_ERROR | LOG_WARN | LOG_VERBOSE;
+let logLevel = LOG_DEBUG;
 
 // ---------------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
 			fontStream.close();
 		}
 
-		let logoStream = openFile("files/images/main-logo.png");
+		let logoStream = openFile(mainLogoPath);
 		if(logoStream != null) {
 			logoImage = drawing.loadPNG(logoStream);
 			logoStream.close();
@@ -78,17 +78,14 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
 // ---------------------------------------------------------------------------
 
 bindEventHandler("onResourceStart", thisResource, function(event, resource) {
-    triggerNetworkEvent("ag.clientStarted");
-
     if(gta.game == GAME_GTA_SA) {
         gta.setDefaultInteriors(false);
         gta.setCiviliansEnabled(false);
     }
-
-    // Run garbage collector every minute
     garbageCollectorInterval = setInterval(collectAllGarbage, 1000*60);
-
     addNetworkHandler("ag.passenger", enterVehicleAsPassenger);
+
+    triggerNetworkEvent("ag.clientStarted");
 });
 
 // ---------------------------------------------------------------------------
@@ -135,9 +132,9 @@ addNetworkHandler("ag.ambience", function(state) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.runCode", function(code, returnTo) {
-	let returnVal = "Nothing";
+	let returnValue = "Nothing";
 	try {
-		returnVal = eval("(" + code + ")");
+		returnValue = eval("(" + code + ")");
 	} catch(error) {
 		triggerNetworkEvent("ag.runCodeFail", returnTo, code);
 		return false;
@@ -186,6 +183,10 @@ addEventHandler("onElementStreamIn", function(event, element) {
 
         case ELEMENT_CIVILIAN:
             syncCivilianProperties(element);
+            break;
+
+        case ELEMENT_PLAYER:
+            syncPlayerProperties(element);
             break;
 
         default:
@@ -305,6 +306,22 @@ function processEvent(event, deltaTime) {
             position = localPlayer.vehicle.position;
         }
 
+        if(inVehicle != false) {
+            if(!localPlayer.vehicle.engine) {
+                localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
+                localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
+                if(vehicleParkedPosition) {
+                    localPlayer.vehicle.position = parkedVehiclePosition;
+                    localPlayer.vehicle.heading = parkedVehicleHeading;
+                }
+            } else {
+                if(vehicleParkedPosition) {
+                    parkedVehiclePosition = false;
+                    parkedVehicleHeading = false;
+                }
+            }
+        }
+
         getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
             if(pickup.isOwner) {
                 destroyElement(pickup);
@@ -337,15 +354,27 @@ function processEvent(event, deltaTime) {
 
         if(localPlayer.vehicle) {
             if(!inVehicle) {
-                triggerEvent("OnLocalPlayerEnterVehicle", null, inVehicle);
                 triggerNetworkEvent("ag.onPlayerEnterVehicle");
                 inVehicle = localPlayer.vehicle;
+                inVehicleSeat = getLocalPlayerVehicleSeat();
+
+                if(inVehicleSeat == 0) {
+                    inVehicle.engine = false;
+                    if(!inVehicle.engine) {
+                        parkedVehiclePosition = vehicle.position;
+                        parkedVehicleHeading = vehicle.position;
+                    }
+                }
             }
         } else {
             if(inVehicle) {
-                triggerEvent("OnLocalPlayerExitVehicle", null, inVehicle);
                 triggerNetworkEvent("ag.onPlayerExitVehicle");
+                if(inVehicleSeat) {
+                    parkedVehiclePosition = false;
+                    parkedVehicleHeading = false;
+                }
                 inVehicle = false;
+                inVehicleSeat = false;
             }
         }
     }
@@ -354,22 +383,6 @@ function processEvent(event, deltaTime) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnRender", function(event) {
-    // OnProcess was allowing vehicles to slide slowly. This shouldn't.
-    if(inVehicle != false) {
-        if(!localPlayer.vehicle.engine) {
-            localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
-            localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
-            if(vehicleParkedPosition) {
-                localPlayer.vehicle.position = parkedVehiclePosition;
-                localPlayer.vehicle.heading = parkedVehicleHeading;
-            }
-        } else {
-            if(vehicleParkedPosition) {
-                parkedVehiclePosition = false;
-                parkedVehicleHeading = false;
-            }
-        }
-    }
 });
 
 // ---------------------------------------------------------------------------
@@ -392,12 +405,9 @@ addEventHandler("OnDrawnHUD", function (event) {
         }
     }
 
-    // Draw logo in corner of screen
     if(renderLogo) {
         if(logoImage != null) {
-            if(showLogo) {
-                drawing.drawRectangle(logoImage, logoPos, logoSize);
-            }
+            drawing.drawRectangle(logoImage, logoPos, logoSize);
         }
     }
 });
@@ -523,37 +533,18 @@ addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.excludeGroundSnow", function(model) {
+    logToConsole(LOG_DEBUG, `Disabling ground snow for object model ${model}`);
+    groundSnow.excludeModel(model);
+});
+
+// ---------------------------------------------------------------------------
+
 addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
     if(sphere == jobRouteStopSphere) {
         enteredJobRouteSphere();
     }
 });
-
-// ---------------------------------------------------------------------------
-
-addEventHandler("OnLocalPlayerEnterVehicle", function(event, vehicle) {
-    localPlayer.vehicle.engine = false;
-    if(!localPlayer.vehicle.engine) {
-        parkedVehiclePosition = vehicle.position;
-        parkedVehicleHeading = vehicle.position;
-    }
-});
-
-// ---------------------------------------------------------------------------
-
-//addEventHandler("OnPickupCollected", function(event, pickup, ped) {
-//    if(localPlayer != null) {
-//        if(ped == localPlayer) {
-//            if(pickup == jobRouteStopSphere) {
-//                triggerNetworkEvent("ag.arrivedAtBusStop");
-//                destroyElement(jobRouteStopSphere);
-//                destroyElement(jobRouteStopBlip);
-//                jobRouteStopSphere = null;
-//                jobRouteStopBlip = null;
-//            }
-//        }
-//    }
-//});
 
 // ---------------------------------------------------------------------------
 
@@ -596,6 +587,14 @@ addNetworkHandler("ag.working", function(tempWorking) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.spawned", function(client, state) {
+    if(state) {
+        syncPlayerProperties(client.player);
+    }
+});
+
+// ---------------------------------------------------------------------------
+
 addNetworkHandler("ag.mouseCamera", function(state) {
     mouseCameraEnabled = !mouseCameraEnabled;
     SetStandardControlsEnabled(!mouseCameraEnabled);
@@ -609,6 +608,27 @@ function clearSelfOwnedPeds() {
             destroyElement(ped);
         }
     });
+}
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameMessageState, scoreboardState) {
+    renderHUD = hudState;
+    setHUDEnabled(hudState);
+
+    renderLabels = labelState;
+    renderSmallGameMessage = smallGameMessageState;
+    renderScoreboard = scoreboardState;
+});
+
+// ---------------------------------------------------------------------------
+
+function getLocalPlayerVehicleSeat() {
+    for(let i = 0 ; i <= 4 ; i++) {
+        if(localPlayer.vehicle.getOccupant(i) == localPlayer) {
+            return i;
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------

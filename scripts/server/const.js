@@ -103,56 +103,55 @@ const AG_BLIP_HOUSE_EXIT = 5;
 const AG_BLIP_EXIT = 6;
 
 // Insurance Account Owner Types
-const AG_INS_ACCT_OWNER_NONE = 0;
-const AG_INS_ACCT_OWNER_PLAYER = 1;
-const AG_INS_ACCT_OWNER_BIZ = 2;
-const AG_INS_ACCT_OWNER_CLAN = 3;
+const AG_INS_ACCT_OWNER_NONE = 0;               // None
+const AG_INS_ACCT_OWNER_PLAYER = 1;             // Player owns insurance company
+const AG_INS_ACCT_OWNER_BIZ = 2;                // Business owns insurance company
+const AG_INS_ACCT_OWNER_CLAN = 3;               // Clan owns insurance company
 
 // Insurance Account Entity Types
-const AG_INS_ACCT_ENTITY_NONE = 0;
-const AG_INS_ACCT_ENTITY_PLAYER_HEALTH = 1;
-const AG_INS_ACCT_ENTITY_PLAYER_LIFE = 2;
-const AG_INS_ACCT_ENTITY_VEH = 3;
-const AG_INS_ACCT_ENTITY_BIZ = 4;
-const AG_INS_ACCT_ENTITY_HOUSE = 5;
+const AG_INS_ACCT_ENTITY_NONE = 0;              // None
+const AG_INS_ACCT_ENTITY_PLAYER_HEALTH = 1;     // Health Insurance
+const AG_INS_ACCT_ENTITY_PLAYER_LIFE = 2;       // Life Insurance
+const AG_INS_ACCT_ENTITY_VEH = 3;               // Vehicle Insurance
+const AG_INS_ACCT_ENTITY_BIZ = 4;               // Business Insurance
+const AG_INS_ACCT_ENTITY_HOUSE = 5;             // House Insurance
 
 // Insurance Account History Types
-const AG_INS_ACCT_HISTORY_NONE = 0;
-const AG_INS_ACCT_HISTORY_PLAYER_MEDICAL = 1;
-const AG_INS_ACCT_HISTORY_PLAYER_DEATH = 2;
-const AG_INS_ACCT_HISTORY_VEH_DAMAGE = 3;
-const AG_INS_ACCT_HISTORY_VEH_WRECKED = 4;
-const AG_INS_ACCT_HISTORY_VEH_THEFT = 5;
-const AG_INS_ACCT_HISTORY_BIZ_DAMAGE = 6;
-const AG_INS_ACCT_HISTORY_BIZ_THEFT = 7;
-const AG_INS_ACCT_HISTORY_HOUSE_DAMAGE = 8;
-const AG_INS_ACCT_HISTORY_HOUSE_THEFT = 9;
+const AG_INS_ACCT_HISTORY_NONE = 0;             // None
+const AG_INS_ACCT_HISTORY_PLAYER_MEDICAL = 1;   // Medical insurance was used (player disease/injury)
+const AG_INS_ACCT_HISTORY_PLAYER_DEATH = 2;     // Life insurance was used (player death)
+const AG_INS_ACCT_HISTORY_VEH_DAMAGE = 3;       // Vehicle was damaged, but not destroyed
+const AG_INS_ACCT_HISTORY_VEH_WRECKED = 4;      // Vehicle was completely destroyed
+const AG_INS_ACCT_HISTORY_VEH_THEFT = 5;        // Vehicle was stolen
+const AG_INS_ACCT_HISTORY_BIZ_DAMAGE = 6;       // Business was damaged (broken items/window/door)
+const AG_INS_ACCT_HISTORY_BIZ_THEFT = 7;        // Business was stolen from
+const AG_INS_ACCT_HISTORY_HOUSE_DAMAGE = 8;     // House was damaged
+const AG_INS_ACCT_HISTORY_HOUSE_THEFT = 9;      // House was stolen from
 
 // Islands
-const AG_ISLAND_NONE = 0;
-const AG_ISLAND_PORTLAND = 0;
-const AG_ISLAND_STAUNTON = 1;
-const AG_ISLAND_SHORESIDEVALE = 2;
-const AG_ISLAND_VICEWEST = 0;
-const AG_ISLAND_VICEEAST = 1;
-const AG_ISLAND_LOSSANTOS = 0;
-const AG_ISLAND_LASVENTURAS = 1;
-const AG_ISLAND_SANFIERRO = 2;
-const AG_ISLAND_REDCOUNTYSOUTHEAST = 3;
-const AG_ISLAND_REDCOUNTYNORTH = 4;
-const AG_ISLAND_BONECOUNTYNORTH = 5;
-const AG_ISLAND_BONECOUNTYSOUTH = 6;
+const AG_ISLAND_NONE = 0;                       // None
+const AG_ISLAND_PORTLAND = 0;                   // Portland Island
+const AG_ISLAND_STAUNTON = 1;                   // Staunton Island
+const AG_ISLAND_SHORESIDEVALE = 2;              // Shoreside Vale
+const AG_ISLAND_VICEWEST = 0;                   // Western Island of VC
+const AG_ISLAND_VICEEAST = 1;                   // Eastern Island of VC
+const AG_ISLAND_LOSSANTOS = 0;                  // Los Santos
+const AG_ISLAND_LASVENTURAS = 1;                // Las Venturas
+const AG_ISLAND_SANFIERRO = 2;                  // San Fierro
+const AG_ISLAND_REDCOUNTYNORTH = 4;             // Red County North (spans all the way from Palamino/shore on the east east to border of Flint Co on the west)
+const AG_ISLAND_BONECOUNTYNORTH = 5;            // Bone County North (usually called Tierra Robada)
+const AG_ISLAND_BONECOUNTYSOUTH = 6;            // Bone County South
 
 // Item Owners
-const AG_ITEM_OWNER_NONE = 0;
-const AG_ITEM_OWNER_PLAYER = 1;
-const AG_ITEM_OWNER_VEHTRUNK = 2;
-const AG_ITEM_OWNER_VEHDASH = 3;
-const AG_ITEM_OWNER_BIZFLOOR = 4;
-const AG_ITEM_OWNER_BIZSTORAGE = 5;
-const AG_ITEM_OWNER_HOUSE = 6;
-const AG_ITEM_OWNER_SAFE = 7;
-const AG_ITEM_OWNER_ITEM = 8;
+const AG_ITEM_OWNER_NONE = 0;                   // None
+const AG_ITEM_OWNER_PLAYER = 1;                 // Item is in a player's inventory
+const AG_ITEM_OWNER_VEHTRUNK = 2;               // Item is in a vehicle's trunk
+const AG_ITEM_OWNER_VEHDASH = 3;                // Item is in a vehicle's glove compartment
+const AG_ITEM_OWNER_BIZFLOOR = 4;               // Item is in the public area of a business (on the floor = ready to buy)
+const AG_ITEM_OWNER_BIZSTORAGE = 5;             // Item is in a business's storage area (stock room)
+const AG_ITEM_OWNER_HOUSE = 6;                  // Item is in a house
+const AG_ITEM_OWNER_SAFE = 7;                   // Item is in a safe (safes can be anywhere)
+const AG_ITEM_OWNER_ITEM = 8;                   // Item is in another item (trashbag, briefcase, wallet, suitcase, crate/box, barrel, etc)
 
 // Item Use Types
 const AG_ITEM_USETYPE_NONE = 0;                 // Has no effect
@@ -182,27 +181,39 @@ const AG_ITEM_USETYPE_COFFEE = 23;              // Replenishes moderate amount o
 const AG_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine.
 
 // Item Drop Types
-const AG_ITEM_DROPTYPE_NONE = 0;            // Can't be dropped
-const AG_ITEM_DROPTYPE_OBJECT = 1;          // Drops as an object on the ground
-const AG_ITEM_DROPTYPE_PICKUP = 2;          // Drops as a pickup
-const AG_ITEM_DROPTYPE_OBJECTLIGHT = 3;     // Object that produces an area light effect (lamp, flashlight, etc)
-const AG_ITEM_DROPTYPE_DESTROY = 4;         // Will destroy the item on drop (keys mostly but for any tiny object)
-const AG_ITEM_DROPTYPE_OBJECTSTACK = 5;     // Stackable objects (crates and such). Will sit on top of closest other stackable
+const AG_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped
+const AG_ITEM_DROPTYPE_OBJECT = 1;              // Drops as an object on the ground
+const AG_ITEM_DROPTYPE_PICKUP = 2;              // Drops as a pickup
+const AG_ITEM_DROPTYPE_OBJECTLIGHT = 3;         // Object that produces an area light effect (lamp, flashlight, etc)
+const AG_ITEM_DROPTYPE_DESTROY = 4;             // Will destroy the item on drop (keys mostly but for any tiny object)
+const AG_ITEM_DROPTYPE_OBJECTSTACK = 5;         // Stackable objects (crates and such). Will sit on top of closest other stackable
 
 // Forensic Types
 const AG_FORENSICS_NONE = 0;
-const AG_FORENSICS_BULLET = 1;              // Bullet. The actual tip that hits a target. Has rifling and ballistics information of the weapon.
-const AG_FORENSICS_BLOOD = 2;               // Blood. Automatically applied to ground and bullets that hit when somebody is shot
-const AG_FORENSICS_BODY = 3;                // Body. A dead body lol
-const AG_FORENSICS_HAIR = 4;                // Hair. Automatically applied to
-const AG_FORENSICS_SWEAT = 5;               // Sweat. Automatically applied to clothing when worn
-const AG_FORENSICS_SALIVA = 6;              // Saliva. Automatically applied to drinks when drank
-const AG_FORENSICS_BULLETCASINGS = 7;       // Bullet casings. Automatically dropped when fired from a weapon except when used in a vehicle (driveby)
+const AG_FORENSICS_BULLET = 1;                  // Bullet. The actual tip that hits a target. Has rifling and ballistics information of the weapon.
+const AG_FORENSICS_BLOOD = 2;                   // Blood. Automatically applied to ground and bullets that hit when somebody is shot
+const AG_FORENSICS_BODY = 3;                    // Body. A dead body lol
+const AG_FORENSICS_HAIR = 4;                    // Hair. Automatically applied to
+const AG_FORENSICS_SWEAT = 5;                   // Sweat. Automatically applied to clothing when worn
+const AG_FORENSICS_SALIVA = 6;                  // Saliva. Automatically applied to drinks when drank
+const AG_FORENSICS_BULLETCASINGS = 7;           // Bullet casings. Automatically dropped when fired from a weapon except when used in a vehicle (driveby)
 
 // Account Authentication Methods
-const AG_ACCT_AUTHMETHOD_NONE = 0;
-const AG_ACCT_AUTHMETHOD_EMAIL = 1;
-const AG_ACCT_AUTHMETHOD_PHONENUM = 2;
-const AG_ACCT_AUTHMETHOD_2FA = 3;
-const AG_ACCT_AUTHMETHOD_PEBBLE = 4;
-const AG_ACCT_AUTHMETHOD_PHONEAPP = 5;
+const AG_ACCT_AUTHMETHOD_NONE = 0;              // None
+const AG_ACCT_AUTHMETHOD_EMAIL = 1;             // Email
+const AG_ACCT_AUTHMETHOD_PHONENUM = 2;          // Phone number
+const AG_ACCT_AUTHMETHOD_2FA = 3;               // Two factor authentication app (authy, google authenticator, etc)
+const AG_ACCT_AUTHMETHOD_PEBBLE = 4;            // Pebble watch (this one's for Vortrex but anybody with a Pebble can use)
+const AG_ACCT_AUTHMETHOD_PHONEAPP = 5;          // The Android/iOS companion app (will initially be a web based thing until I can get the apps created)
+
+// Police Patrol Types
+const AG_PATROLTYPE_NONE = 0;                   // None
+const AG_PATROLTYPE_FOOT = 1;                   // Foot patrol. Officer takes a vehicle to get to their designated area and then walks a beat. More common in LC games
+const AG_PATROLTYPE_VEHICLE = 2;                // Vehicle patrol. More common in VC/LS/SF/LV cities.
+
+// Job Route States
+const AG_JOBROUTESTATE_NONE = 0;                // None
+const AG_JOBROUTESTATE_INPROGRESS = 1;          // Route is in progress. Player is in between stops but not at the last one.
+const AG_JOBROUTESTATE_LASTSTOP = 2;            // Player is heading to the last stop on the route
+const AG_JOBROUTESTATE_PAUSED = 3;              // Route is paused for some reason. For police, this could be player accepted callout and once finished, patrol route will resume
+const AG_JOBROUTESTATE_ATSTOP = 4;              // For bus/trash stops that freeze player, this is the state when they're at one

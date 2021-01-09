@@ -80,6 +80,12 @@ function getDatabaseInsertId(dbConnection) {
 
 // -------------------------------------------------------------------------
 
+function getQueryNumRows(dbQuery) {
+	return dbQuery.numRows;
+}
+
+// -------------------------------------------------------------------------
+
 function getDatabaseError(dbConnection) {
 	return dbConnection.error;
 }

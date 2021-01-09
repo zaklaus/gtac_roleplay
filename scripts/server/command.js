@@ -79,11 +79,6 @@ function loadCommands() {
             commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Shows business information"),
             commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Moves the exit (interior point) of the business"),
             commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageBusinesses"), true, true, "Changes the business' interior"),
-
-            // TEMPORARY
-            //commandData("buyskin", buySkinFromBusinessCommand, "<skin id>", getStaffFlagValue("none"), true, true),
-            //commandData("buygun", buyWeaponFromBusinessCommand, "<weapon id>", getStaffFlagValue("none"), true, true),
-            //commandData("buyammo", buyWeaponFromBusinessCommand, "<weapon id>", getStaffFlagValue("none"), true, true),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),

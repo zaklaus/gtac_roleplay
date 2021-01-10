@@ -276,3 +276,5 @@ NOTICE: Most of these ideas are totally random and some might be unrealistic. Ev
 			* Config options
 			* Shutdown, restart, gmx, etc
 			* Alert (probably pre-made messages, configurable in pebble app)
+
+- Newspaper GUI

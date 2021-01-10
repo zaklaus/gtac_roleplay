@@ -182,8 +182,8 @@ function restorePlayerCamera(client) {
 
 // -------------------------------------------------------------------------
 
-function setPlayer2DRendering(client, hudState = false, labelState = false, smallGameMessageState = false, scoreboardState = false) {
-	triggerNetworkEvent("ag.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState);
+function setPlayer2DRendering(client, hudState = false, labelState = false, smallGameMessageState = false, scoreboardState = false, hotBarState = false) {
+	triggerNetworkEvent("ag.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState, hotBarState);
 }
 
 // ---------------------------------------------------------------------------
@@ -201,20 +201,54 @@ function updatePlayerSnowState(client) {
 // ---------------------------------------------------------------------------
 
 function sendExcludedModelsForGroundSnowToPlayer(client) {
-	for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
-		logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending excluded model ${i} for ground snow to ${client.name}`);
-		triggerNetworkEvent("ag.excludeGroundSnow", client, getGameConfig().excludedGroundSnowModels[getServerGame()][i]);
+    if(getGameConfig().excludedGroundSnowModels[getServerGame()]) {
+        for(let i in getGameConfig().excludedGroundSnowModels[getServerGame()]) {
+            logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending excluded model ${i} for ground snow to ${client.name}`);
+            triggerNetworkEvent("ag.excludeGroundSnow", client, getGameConfig().excludedGroundSnowModels[getServerGame()][i]);
+        }
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function sendRemovedWorldObjectsToPlayer(client) {
-	for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
-		logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
-		triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
-	}
+    if(getGameConfig().removedWorldObjects[getServerGame()].length > 0) {
+        for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
+            logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
+            triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
+        }
+    }
 	return true;
 }
 
 // ---------------------------------------------------------------------------
+
+function updatePlayerHotBar(client) {
+    let tempHotBarItems = [];
+    for(let i in getPlayerData(client).hotBarItems) {
+        let itemImage = "";
+        let itemValue = 0;
+        let itemExists = false;
+        if(getPlayerData(client).hotBarItems[i] != -1) {
+            let itemData = getItemData(getPlayerData(client).hotBarItems[i]);
+            let itemTypeData = getItemTypeData(itemData.itemTypeIndex);
+            itemExists = true;
+            itemImage = itemTypeData.hotbarImage;
+            itemValue = itemData.value;
+        }
+        tempHotBarItems.push([i, itemExists, itemImage, itemValue]);
+    }
+    triggerNetworkEvent("ag.hotbar", client, getPlayerData(client).activeHotBarSlot, tempHotBarItems);
+}
+
+// ---------------------------------------------------------------------------
+
+function setPlayerWeaponDamageEnabled(client, state) {
+    triggerNetworkEvent("ag.weaponDamageEnabled", null, client.name, state);
+}
+
+// ---------------------------------------------------------------------------
+
+function setPlayerWeaponDamageEvent(client, eventType) {
+    triggerNetworkEvent("ag.weaponDamageEvent", null, client.name, eventType);
+}

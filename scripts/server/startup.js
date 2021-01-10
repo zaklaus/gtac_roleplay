@@ -17,7 +17,6 @@ function initServerScripts() {
 	initClassScript();
 	initDatabaseScript();
 	initBitFlagScript();
-	initCommandScript();
 	initBusinessScript();
 	initClanScript();
 	initHouseScript();
@@ -32,6 +31,7 @@ function initServerScripts() {
 	initKeyBindScript();
 	initEventScript();
 	initAntiCheatScript();
+	initItemScript();
 
 	initTimers();
 
@@ -44,6 +44,8 @@ function initServerScripts() {
 	loadGameFixesResource();
 
 	serverStartTime = new Date().getTime()/1000;
+
+	initCommandScript();
 }
 
 // ---------------------------------------------------------------------------

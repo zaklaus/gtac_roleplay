@@ -284,13 +284,14 @@ function processPlayerSpawn(ped) {
     restorePlayerCamera(client, false, 1.0);
     updatePlayerSpawnedState(client, true);
     setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
-    setPlayerVirtualWorld(client, getPlayerCurrentSubAccount(client).dimension);
+    setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
     updateAllPlayerNameTags();
     getPlayerData(client).switchingCharacter = false;
     updatePlayerCash(client);
     updatePlayerJobType(client);
-    setPlayer2DRendering(client, true, true, true, true);
+    setPlayer2DRendering(client, true, true, true, true, true);
     updatePlayerSnowState(client);
+    updatePlayerHotBar(client);
 
     sendExcludedModelsForGroundSnowToPlayer(client);
     sendRemovedWorldObjectsToPlayer(client);

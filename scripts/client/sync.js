@@ -12,7 +12,7 @@
 
 addEventHandler("onProcess", function(event, deltaTime) {
     if(localPlayer != null && isSpawned) {
-        if(localPlayer.health <= 0) {
+        if(localPlayer.health <= 1) {
             localPlayer.clearWeapons();
             triggerNetworkEvent("ag.player.death", localPlayer.position);
         }
@@ -92,7 +92,7 @@ addNetworkHandler("ag.veh.sync", syncVehicleProperties);
 // ---------------------------------------------------------------------------
 
 function syncCivilianProperties(civilian) {
-    if(doesEntityDataExist(civilian, "ag.scale") != null) {
+    if(doesEntityDataExist(civilian, "ag.scale")) {
         let scaleFactor = getEntityData(civilian, "ag.scale");
 		let tempMatrix = civilian.matrix;
 		tempMatrix.setScale(toVector3(scaleFactor.x, scaleFactor.y, scaleFactor.z));

@@ -20,12 +20,13 @@ function updateTimeRule() {
 
 function saveAllServerDataToDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Utilities]: Saving all server data to database ...");
+	saveAllClientsToDatabase();
 	saveAllClansToDatabase();
 	saveAllHousesToDatabase();
 	saveAllBusinessesToDatabase();
 	saveServerConfigToDatabase(getServerConfig());
 	saveAllVehiclesToDatabase();
-	saveAllClientsToDatabase();
+	saveAllItemsToDatabase();
 	logToConsole(LOG_DEBUG, "[Asshat.Utilities]: Saved all server data to database!");
 }
 

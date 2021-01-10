@@ -15,7 +15,6 @@ let logLevel = LOG_DEBUG;
 // -------------------------------------------------------------------------
 
 let serverData = {
-	saveDataIntervalTimer: false,
 	vehicles: [],
 	clients: new Array(128),
 	businesses: [],
@@ -23,6 +22,10 @@ let serverData = {
 	families: [],
 	factions: [],
 	commands: {},
+	groundItemCache: [],
+	items: [],
+	itemTypes: [],
+	clans: [],
 	antiCheat: {
 		whiteListedGameScripts: [],
 		blackListedGameScripts: [],

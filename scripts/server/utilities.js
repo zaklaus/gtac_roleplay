@@ -1375,16 +1375,6 @@ function getPickupOwnerId(pickup) {
 
 // ---------------------------------------------------------------------------
 
-function canPlayerUseJobs(client) {
-	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.jobBanned) {
-		return false;
-	}
-
-	return true;
-}
-
-// ---------------------------------------------------------------------------
-
 function canPlayerUsePoliceJob(client) {
 	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.policeBanned) {
 		return false;
@@ -1663,6 +1653,23 @@ function getHouseFromParams(params) {
 
 // ---------------------------------------------------------------------------
 
+function getItemTypeFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().itemTypes) {
+			if(toLowerCase(getServerData().itemTypes[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getServerData().itemTypes[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
 function updatePlayerCash(client) {
 	triggerNetworkEvent("ag.money", client, getPlayerCurrentSubAccount(client).cash);
 }
@@ -1874,3 +1881,53 @@ function resetClientStuff(client) {
 }
 
 // -------------------------------------------------------------------------
+
+function getPlayerFromCharacterId(subAccountId) {
+	let clients = getClients();
+	for(let i in clients) {
+		for(let j in getPlayerData(clients).subAccounts) {
+			if(getPlayerData(clients[i]).subAccounts[j].databaseId == subAccountId) {
+				return clients[i];
+			}
+		}
+	}
+
+	return false;
+}
+
+// -------------------------------------------------------------------------
+
+function doesWordStartWithVowel(word) {
+	switch(word.substr(0,1).toLowerCase()) {
+		case "a":
+		case "e":
+		case "i":
+		case "o":
+		case "u":
+			return true;
+
+		default:
+			return false;
+	}
+
+	return false;
+}
+
+// -------------------------------------------------------------------------
+
+function getProperDeterminerForName(word) {
+	if(doesWordStartWithVowel(word)) {
+		return "an";
+	}
+
+	return "a";
+}
+
+// -------------------------------------------------------------------------
+
+function applyOffsetToVector3(position, position2) {
+	return toVector3(position.x+position2.x, position.y+position2.y, position.z+position2.z);
+}
+
+// -------------------------------------------------------------------------
+

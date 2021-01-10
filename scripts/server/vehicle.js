@@ -128,6 +128,11 @@ function getVehicleData(vehicle) {
 // ---------------------------------------------------------------------------
 
 function createVehicleCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	let modelId = getVehicleModelIdFromParams(params);
 
 	if(!modelId) {
@@ -136,22 +141,7 @@ function createVehicleCommand(command, params, client) {
 	}
 
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
-	let vehicleDataSlot = getServerData().vehicles.length;
-
-	let vehicle = gta.createVehicle(modelId, frontPos, getPlayerHeading(client));
-	if(!vehicle) {
-		messagePlayerError(client, "The vehicle could not be created!");
-		return false;
-	}
-	vehicle.heading = getPlayerHeading(client);
-	addToWorld(vehicle);
-
-	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
-
-	setEntityData(vehicle, "ag.dataSlot", vehicleDataSlot, true);
-
-	getServerData().vehicles.push(tempVehicleData);
-	getServerData().vehicles[vehicleDataSlot].syncId = vehicleDataSlot;
+	let vehicle = createPermanentVehicle(modelId, frontPos, getPlayerHeading(client));
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a [#AAAAAA]${getVehicleName(vehicle)}!`);
 }
@@ -159,6 +149,11 @@ function createVehicleCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function createTemporaryVehicleCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	let modelId = getVehicleModelIdFromParams(params);
 
 	if(!modelId) {
@@ -167,23 +162,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 	}
 
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
-	let vehicleDataSlot = getServerData().vehicles.length;
-
-	let vehicle = gta.createVehicle(modelId, frontPos, getPlayerHeading(client));
-	if(!vehicle) {
-		messagePlayerError(client, "The vehicle could not be created!");
-		return false;
-	}
-	vehicle.heading = getPlayerHeading(client);
-	addToWorld(vehicle);
-
-	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
-	tempVehicleData.databaseId = -1;
-
-	setEntityData(vehicle, "ag.dataSlot", vehicleDataSlot, true);
-
-	getServerData().vehicles.push(tempVehicleData);
-	getServerData().vehicles[vehicleDataSlot].syncId = vehicleDataSlot;
+	let vehicle = createTemporaryVehicle(modelId, frontPos, getPlayerHeading(client));
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a temporary ${getVehicleName(vehicle)}!`);
 }
@@ -264,12 +243,13 @@ function deleteVehicleCommand(command, params, client) {
 		return false;
 	}
 
+	let vehicle = getPlayerVehicle(client);
+
 	if(!getVehicleData(vehicle)) {
 		messagePlayerError(client, "This is a random traffic vehicle and can't be deleted.");
 		return false;
 	}
 
-	let vehicle = getPlayerVehicle(client);
 	let dataIndex = getEntityData(vehicle, "ag.dataSlot");
 	let vehicleName = getVehicleName(vehicle);
 
@@ -345,6 +325,11 @@ function vehicleSirenCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setVehicleColourCommand(command, params, client) {
+	if(areParamsEmpty(params) && areThereEnoughParams(params, 2)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	if(!getPlayerVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
 		return false;
@@ -1023,6 +1008,35 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 	setEntityData(vehicle, "ag.dataSlot", vehicleDataSlot, true);
 
 	getServerData().vehicles.push(tempVehicleData);
+}
+
+// -------------------------------------------------------------------------
+
+function createTemporaryVehicle(modelId, position, heading) {
+	let vehicle = gta.createVehicle(modelId, position, heading);
+	vehicle.heading = heading;
+	addToWorld(vehicle);
+
+	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
+	tempVehicleData.databaseId = -1;
+	let slot = getServerData().vehicles.push(tempVehicleData);
+	setEntityData(vehicle, "ag.dataSlot", slot-1, false);
+
+	return vehicle;
+}
+
+// -------------------------------------------------------------------------
+
+function createPermanentVehicle(modelId, position, heading) {
+	let vehicle = gta.createVehicle(modelId, position, heading);
+	vehicle.heading = heading;
+	addToWorld(vehicle);
+
+	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
+	let slot = getServerData().vehicles.push(tempVehicleData);
+	setEntityData(vehicle, "ag.dataSlot", slot-1, false);
+
+	return vehicle;
 }
 
 // -------------------------------------------------------------------------

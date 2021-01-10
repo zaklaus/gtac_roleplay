@@ -90,7 +90,7 @@ function loadJobEquipmentsFromDatabase(jobDatabaseId) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempJobEquipmentData = new serverClasses.jobEquipmentData(dbAssoc);
-					tempJobEquipmentData.weapons = loadJobEquipmentWeaponsFromDatabase(tempJobEquipmentData.databaseId);
+					tempJobEquipmentData.items = loadJobEquipmentItemsFromDatabase(tempJobEquipmentData.databaseId);
 					tempJobEquipments.push(tempJobEquipmentData);
 					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job equipment '${tempJobEquipmentData.name}' loaded from database successfully!`);
 				}
@@ -150,7 +150,7 @@ function loadJobUniformsFromDatabase(jobDatabaseId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempJobUniformData = new serverClasses.jobUniformData(dbAssoc);
 					tempJobUniforms.push(tempJobUniformData);
-					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job uniform '${tempJobUniformData.name}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job uniform '${tempJobUniformData.databaseId}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -164,22 +164,22 @@ function loadJobUniformsFromDatabase(jobDatabaseId) {
 
 // ---------------------------------------------------------------------------
 
-function loadJobEquipmentWeaponsFromDatabase(jobEquipmentDatabaseId) {
-	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job equipment weapons for job equipment ${jobEquipmentDatabaseId} from database ...`);
+function loadJobEquipmentItemsFromDatabase(jobEquipmentDatabaseId) {
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job equipment items for job equipment ${jobEquipmentDatabaseId} from database ...`);
 
-	let tempJobEquipmentWeapons = [];
+	let tempJobEquipmentItems = [];
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
 	let dbAssoc;
 
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_equip_wep` WHERE `job_equip_wep_enabled` = 1 AND `job_equip_wep_equip` = " + toString(jobEquipmentDatabaseId));
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_equip_item` WHERE `job_equip_item_enabled` = 1 AND `job_equip_item_equip` = " + toString(jobEquipmentDatabaseId));
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempJobEquipmentWeaponsData = new serverClasses.jobEquipmentWeaponData(dbAssoc);
-					tempJobEquipmentWeapons.push(tempJobEquipmentWeaponsData);
-					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job equipment weapon '${tempJobEquipmentWeaponsData.name}' loaded from database successfully!`);
+					let tempJobEquipmentItemData = new serverClasses.jobEquipmentItemData(dbAssoc);
+					tempJobEquipmentItems.push(tempJobEquipmentItemData);
+					logToConsole(LOG_DEBUG, `[Asshat.Job]: Job equipment item '${tempJobEquipmentItemData.databaseId}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -187,8 +187,8 @@ function loadJobEquipmentWeaponsFromDatabase(jobEquipmentDatabaseId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Job]: ${tempJobEquipmentWeapons.length} job equipment weapons for equipment ${jobEquipmentDatabaseId} loaded from database successfully!`);
-	return tempJobEquipmentWeapons;
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: ${tempJobEquipmentItems.length} job equipment items for equipment ${jobEquipmentDatabaseId} loaded from database successfully!`);
+	return tempJobEquipmentItems;
 }
 
 // ---------------------------------------------------------------------------
@@ -328,7 +328,7 @@ function takeJobCommand(command, params, client) {
 	}
 
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
-	let jobData = getJobData(closestJobLocation.job);
+	let jobData = getJobData(closestJobLocation.jobIndex);
 
 	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().takeJobDistance) {
 		messagePlayerError(client, "There are no job points close enough!");
@@ -340,12 +340,12 @@ function takeJobCommand(command, params, client) {
 		return false;
 	}
 
-	if(!canPlayerUseJob(client, closestJobLocation.job)) {
+	if(!canPlayerUseJob(client, closestJobLocation.jobIndex)) {
 		messagePlayerError(client, "You can't use this job!");
 		return false;
 	}
 
-	takeJob(client, closestJobLocation.job);
+	takeJob(client, closestJobLocation.jobIndex);
 	messagePlayerSuccess(client, "You now have the " + toString(jobData.name) + " job");
 	return true;
 }
@@ -358,7 +358,7 @@ function startWorkingCommand(command, params, client) {
 	}
 
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
-	let jobData = getJobData(closestJobLocation.job);
+	let jobData = getJobData(closestJobLocation.jobIndex);
 
 	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
 		messagePlayerError(client, "There are no job points close enough!");
@@ -371,7 +371,7 @@ function startWorkingCommand(command, params, client) {
 		return false;
 	}
 
-	if(getPlayerCurrentSubAccount(client).job != closestJobLocation.job) {
+	if(getPlayerCurrentSubAccount(client).job != closestJobLocation.jobIndex) {
 		messagePlayerError(client, "This is not your job!");
 		messagePlayerInfo(client, `If you want this job, use /quitjob to quit your current job.`);
 		return false;
@@ -414,10 +414,13 @@ function startWorking(client) {
 		return false;
 	}
 
+	storePlayerItemsInJobLocker(client);
+	messagePlayerInfo(client, "Your personal items have been stored in your locker while you work");
+
 	getPlayerCurrentSubAccount(client).isWorking = true;
 
 	let jobId = getPlayerCurrentSubAccount(client).job;
-	switch(getJobType(jobId)) {
+	switch(getJobIndexFromDatabaseId(jobId)) {
 		case AG_JOB_POLICE:
 			messagePlayerInfo(client, "Use /uniform and /equip to get your equipment.");
 			break;
@@ -486,10 +489,11 @@ function givePlayerJobEquipment(client, equipmentId) {
 	}
 
 	let jobId = getPlayerJob(client);
-	let equipments = getJobData(jobId).equipment;
 
-	for(let i in equipments[equipmentId].weapons) {
-		triggerNetworkEvent("ag.giveWeapon", client, equipments[equipmentId].weapons[i].weaponId, equipments[equipmentId].weapons[i].ammo, false);
+	for(let i in equipments[equipmentId].items) {
+		let itemId = createItem(getJobData(jobId).equipment[equipmentId].items[i].itemType, getJobData(jobId).equipment[equipmentId].items[i].value, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
+		let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
+		getPlayerData(client).jobEquipmentCache.push(itemId);
 	}
 }
 
@@ -506,7 +510,7 @@ function stopWorking(client) {
 
 	getPlayerCurrentSubAccount(client).isWorking = false;
 
-	triggerNetworkEvent("ag.skin", client, getPlayerCurrentSubAccount(client).skin);
+	setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
 
 	let jobVehicle = getPlayerCurrentSubAccount(client).lastJobVehicle;
 	if(jobVehicle) {
@@ -520,14 +524,14 @@ function stopWorking(client) {
 		jobVehicle.position = vehicleData.spawnPosition;
 		jobVehicle.heading = vehicleData.spawnRotation;
 		jobVehicle.locked = true;
-		setEntityData(jobVehicle, "ag.lights", false, true);
-		setEntityData(jobVehicle, "ag.engine", false, true);
-		setEntityData(jobVehicle, "ag.siren", false, true);
+		jobVehicle.engine = false;
+		jobVehicle.lights = false;
+		jobVehicle.siren = true;
 
 		getPlayerCurrentSubAccount(client).lastJobVehicle = false;
 	}
 
-	triggerNetworkEvent("ag.clearWeapons", client);
+	restorePlayerJobLockerItems(client);
 
 	let jobId = getPlayerCurrentSubAccount(client).job;
 	switch(getJobType(jobId)) {
@@ -587,7 +591,6 @@ function jobUniformCommand(command, params, client) {
 
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
-		messagePlayerNormal(client, `0: No uniform (sets you back to your main skin)`);
 
 		for(let i in uniforms) {
 			messagePlayerNormal(client, `${toInteger(i)+1}: ${uniforms[i].name} (Requires rank ${uniforms[i].requiredRank})`);
@@ -596,19 +599,16 @@ function jobUniformCommand(command, params, client) {
 	}
 
 	let uniformId = toInteger(params) || 1;
-	if(uniformId == 0) {
-		triggerNetworkEvent("ag.pedSkin", client, getPlayerCurrentSubAccount(client).skin);
-		messagePlayerSuccess(client, "You changed your uniform to (none)");
-		return true;
-	}
-
 	if(uniformId < 1 || uniformId > uniforms.length) {
 		messagePlayerError(client, "That uniform ID is invalid!");
 		return false;
 	}
 
-	messagePlayerSuccess(client, `You put on the [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform`);
-	setPlayerSkin(client, uniforms[uniformId-1].skin);
+	messagePlayerSuccess(client, `You have been given a [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform and you can put it on from your inventory.`);
+
+	let itemId = createItem(getItemTypeFromParams("Uniform"), getJobData(jobId).uniforms[uniformId].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
+	let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
+	getPlayerData(client).jobEquipmentCache.push(itemId);
 }
 
 // ---------------------------------------------------------------------------
@@ -757,7 +757,7 @@ function createJobLocationCommand(command, params, client) {
 		return false;
 	}
 
-	createJobLocation(jobId, getPlayerPosition(client), getPlayerInterior(client), getPlayerVirtualWorld(client));
+	createJobLocation(jobId, getPlayerPosition(client), getPlayerInterior(client), getPlayerDimension(client));
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a location for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 	return true;
 }
@@ -1249,10 +1249,10 @@ function setAllJobDataIndexes() {
 		for(let m in getServerData().jobs[i].equipment) {
 			getServerData().jobs[i].equipment[m].index = m;
 			getServerData().jobs[i].equipment[m].jobIndex = i;
-			for(let n in getServerData().jobs[i].equipment[m].weapons) {
-				getServerData().jobs[i].equipment[m].weapons[n].index = n;
-				getServerData().jobs[i].equipment[m].weapons[n].jobIndex = i;
-				getServerData().jobs[i].equipment[m].weapons[n].equipmentIndex = m;
+			for(let n in getServerData().jobs[i].equipment[m].items) {
+				getServerData().jobs[i].equipment[m].items[n].index = n;
+				getServerData().jobs[i].equipment[m].items[n].jobIndex = i;
+				getServerData().jobs[i].equipment[m].items[n].equipmentIndex = m;
 			}
 		}
 
@@ -1375,28 +1375,28 @@ function saveJobEquipmentToDatabase(jobEquipmentData) {
 
 // ---------------------------------------------------------------------------
 
-function saveJobEquipmentWeaponToDatabase(jobEquipmentWeaponData) {
-	if(jobEquipmentWeaponData == null) {
+function saveJobEquipmentItemToDatabase(jobEquipmentItemData) {
+	if(jobEquipmentItemData == null) {
 		// Invalid job equipment weapon data
 		return false;
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saving job equipment weapon ${jobEquipmentWeaponData.databaseId} to database ...`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saving job equipment weapon ${jobEquipmentItemData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		// If job equipment weapon hasn't been added to database, ID will be 0
-		if(jobEquipmentWeaponData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO job_equip_wep (job_equip_wep_equip, job_equip_wep_enabled, job_equip_wep_wep, job_equip_wep_ammo) VALUES (${jobEquipmentWeaponData.equipmentId}, ${boolToInt(jobEquipmentWeaponData.enabled)}, ${jobEquipmentWeaponData.weaponId}, ${jobEquipmentWeaponData.ammo})`;
+		// If job equipment item hasn't been added to database, ID will be 0
+		if(jobEquipmentItemData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO job_equip_item (job_equip_item_equip, job_equip_item_enabled, job_equip_item_type, job_equip_item_value) VALUES (${jobEquipmentItemData.equipmentId}, ${boolToInt(jobEquipmentItemData.enabled)}, ${jobEquipmentItemData.itemType}, ${jobEquipmentItemData.value})`;
 			queryDatabase(dbConnection, dbQueryString);
-			jobEquipmentWeaponData.databaseId = getDatabaseInsertId(dbConnection);
+			jobEquipmentItemData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE job_equip_wep SET job_equip_wep_equip=${jobEquipmentWeaponData.equipmentId}, job_equip_wep_enabled=${boolToInt(jobEquipmentWeaponData.enabled)}, job_equip_wep_wep=${jobEquipmentWeaponData.weaponId}, job_equip_wep_ammo=${jobEquipmentWeaponData.ammo} WHERE job_equip_wep_id=${jobEquipmentWeaponData.databaseId}`;
+			let dbQueryString = `UPDATE job_equip_item SET job_equip_item_equip=${jobEquipmentItemData.equipmentId}, job_equip_item_enabled=${boolToInt(jobEquipmentItemData.enabled)}, job_equip_item_type=${jobEquipmentItemData.itemType}, job_equip_item_value=${jobEquipmentItemData.value} WHERE job_equip_item_id=${jobEquipmentItemData.databaseId}`;
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saved job equipment weapon ${jobEquipmentWeaponData.databaseId} to database`);
+	logToConsole(LOG_DEBUG, `[Asshat.Job]: Saved job equipment weapon ${jobEquipmentItemData.databaseId} to database`);
 
 	return false;
 }
@@ -1447,8 +1447,8 @@ function saveAllJobsToDatabase() {
 		for(let m in getServerData().jobs[i].equipment) {
 			saveJobEquipmentToDatabase(getServerData().jobs[i].equipment[m]);
 
-			for(let n in getServerData().jobs[i].equipment[m].weapons) {
-				saveJobEquipmentWeaponToDatabase(getServerData().jobs[i].equipment[m].weapons[n]);
+			for(let n in getServerData().jobs[i].equipment[m].items) {
+				saveJobEquipmentItemToDatabase(getServerData().jobs[i].equipment[m].items[n]);
 			}
 		}
 	}
@@ -1520,6 +1520,27 @@ function getPlayerJob(client) {
 		}
 	}
 
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function canPlayerUseJobs(client) {
+	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getServerBitFlags().moderationFlags.jobBanned)) {
+		return false;
+	}
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function getJobIndexFromDatabaseId(databaseId) {
+	for(let i in getServerData().jobs) {
+		if(getServerData().jobs[i].databaseId == databaseId) {
+			return i;
+		}
+	}
 	return false;
 }
 

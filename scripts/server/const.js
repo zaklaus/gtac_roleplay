@@ -152,6 +152,7 @@ const AG_ITEM_OWNER_BIZSTORAGE = 5;             // Item is in a business's stora
 const AG_ITEM_OWNER_HOUSE = 6;                  // Item is in a house
 const AG_ITEM_OWNER_SAFE = 7;                   // Item is in a safe (safes can be anywhere)
 const AG_ITEM_OWNER_ITEM = 8;                   // Item is in another item (trashbag, briefcase, wallet, suitcase, crate/box, barrel, etc)
+const AG_ITEM_OWNER_GROUND = 9;                 // Item is on the ground
 
 // Item Use Types
 const AG_ITEM_USETYPE_NONE = 0;                 // Has no effect
@@ -179,6 +180,11 @@ const AG_ITEM_USETYPE_WINE = 21;                // Moderate drunk effect. Replen
 const AG_ITEM_USETYPE_LIQUOR = 22;              // Heavy drunk effect. Replenishes large amount of health.
 const AG_ITEM_USETYPE_COFFEE = 23;              // Replenishes moderate amount of health.
 const AG_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine.
+const AG_ITEM_USETYPE_HANDCUFF = 24;
+const AG_ITEM_USETYPE_ROPE = 25;
+const AG_ITEM_USETYPE_BLINDFOLD = 26;
+const AG_ITEM_USETYPE_TAZER = 27;
+const AG_ITEM_USETYPE_ARMOUR = 28;
 
 // Item Drop Types
 const AG_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped
@@ -217,3 +223,15 @@ const AG_JOBROUTESTATE_INPROGRESS = 1;          // Route is in progress. Player 
 const AG_JOBROUTESTATE_LASTSTOP = 2;            // Player is heading to the last stop on the route
 const AG_JOBROUTESTATE_PAUSED = 3;              // Route is paused for some reason. For police, this could be player accepted callout and once finished, patrol route will resume
 const AG_JOBROUTESTATE_ATSTOP = 4;              // For bus/trash stops that freeze player, this is the state when they're at one
+
+// Tutorial States
+const AG_TUTORIAL_STATE_NONE = 0;
+const AG_TUTORIAL_STATE_FINISHED = 1;
+const AG_TUTORIAL_STATE_STARTING = 2;
+const AG_TUTORIAL_STATE_PICKUPITEM = 3;
+const AG_TUTORIAL_STATE_SWITCHITEM = 4;
+const AG_TUTORIAL_STATE_USEITEM = 5;
+const AG_TUTORIAL_STATE_PUTITEM = 6;
+const AG_TUTORIAL_STATE_TAKEITEM = 7;
+const AG_TUTORIAL_STATE_EXITBIZ = 9;
+const AG_TUTORIAL_STATE_DROPITEM = 10;

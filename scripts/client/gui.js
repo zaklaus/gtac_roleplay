@@ -1387,7 +1387,7 @@ app.init = function()
 	newCharacter.placeOfOrigin.axis.y.scrollBar.styles.innerBar.backgroundColour = toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha);
 	newCharacter.placeOfOrigin.setScrollBarsManual(true);
 
-	newCharacter.skinImage = newCharacter.window.image(310, 32, 110, 70, "files/images/skins/none.png", {
+	newCharacter.skinImage = newCharacter.window.image(250, 32, 110, 70, "files/images/skins/none.png", {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},
@@ -1447,7 +1447,7 @@ app.init = function()
 	// ------------------------------------------------------------------------------
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating register GUI ...`);
-	register.window = mexui.window(game.width/2-130, game.height/2-115, 300, 230, 'Register', {
+	register.window = mexui.window(game.width/2-130, game.height/2-125, 300, 250, 'Register', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
 			transitionTime: 500,

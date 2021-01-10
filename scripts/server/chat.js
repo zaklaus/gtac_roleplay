@@ -82,7 +82,7 @@ function adminChatCommand(command, params, client) {
 		return false;
 	}
 
-	messageAdmins(`[#FFFF00][Admin Chat] [#AAAAAA]${client.name} [#CCCCCC](${getPlayerStaffTitle(client)}) [#FFFFFF]:${params}`);
+	messageAdmins(`[#FFFF00][Admin Chat] [#AAAAAA]${client.name} [#CCCCCC](${getPlayerStaffTitle(client)})[#FFFFFF]: ${params}`);
 }
 
 // ---------------------------------------------------------------------------

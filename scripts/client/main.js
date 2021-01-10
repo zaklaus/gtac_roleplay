@@ -26,6 +26,7 @@ let smallGameMessageTimer = null;
 
 let inSphere = false;
 let inVehicle = false;
+let inVehicleSeat = false;
 let isWalking = false;
 let isSpawned = false;
 
@@ -44,8 +45,12 @@ let renderLabels = false;
 let renderLogo = false;
 let renderSmallGameMessage = false;
 let renderScoreboard = false;
+let renderHotBar = false;
 
 let logLevel = LOG_DEBUG;
+
+let weaponDamageEnabled = {};
+let weaponDamageEvent = AG_WEAPON_DAMAGE_EVENT_NONE;
 
 // ---------------------------------------------------------------------------
 
@@ -73,6 +78,8 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
     }
 
     triggerNetworkEvent("ag.clientReady");
+
+    openAllGarages();
 });
 
 // ---------------------------------------------------------------------------
@@ -306,16 +313,16 @@ function processEvent(event, deltaTime) {
             position = localPlayer.vehicle.position;
         }
 
-        if(inVehicle != false) {
+        if(inVehicle && localPlayer.vehicle != null) {
             if(!localPlayer.vehicle.engine) {
                 localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
                 localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
-                if(vehicleParkedPosition) {
+                if(parkedVehiclePosition) {
                     localPlayer.vehicle.position = parkedVehiclePosition;
                     localPlayer.vehicle.heading = parkedVehicleHeading;
                 }
             } else {
-                if(vehicleParkedPosition) {
+                if(parkedVehiclePosition) {
                     parkedVehiclePosition = false;
                     parkedVehicleHeading = false;
                 }
@@ -361,8 +368,8 @@ function processEvent(event, deltaTime) {
                 if(inVehicleSeat == 0) {
                     inVehicle.engine = false;
                     if(!inVehicle.engine) {
-                        parkedVehiclePosition = vehicle.position;
-                        parkedVehicleHeading = vehicle.position;
+                        parkedVehiclePosition = inVehicle.position;
+                        parkedVehicleHeading = inVehicle.heading;
                     }
                 }
             }
@@ -379,11 +386,6 @@ function processEvent(event, deltaTime) {
         }
     }
 }
-
-// ---------------------------------------------------------------------------
-
-addEventHandler("OnRender", function(event) {
-});
 
 // ---------------------------------------------------------------------------
 
@@ -408,6 +410,12 @@ addEventHandler("OnDrawnHUD", function (event) {
     if(renderLogo) {
         if(logoImage != null) {
             drawing.drawRectangle(logoImage, logoPos, logoSize);
+        }
+    }
+
+    if(renderScoreboard) {
+        if(localPlayer != nul && isKeyDown()) {
+            renderScoreboard();
         }
     }
 });
@@ -588,9 +596,20 @@ addNetworkHandler("ag.working", function(tempWorking) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.spawned", function(client, state) {
-    if(state) {
-        syncPlayerProperties(client.player);
-    }
+    isSpawned = state;
+    syncPlayerProperties(localPlayer);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.weaponDamageEvent", function(clientName, eventType) {
+    weaponDamageEvent[clientName] = eventType;
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.weaponDamageEnabled", function(clientName, state) {
+    weaponDamageEnabled[clientName] = state;
 });
 
 // ---------------------------------------------------------------------------
@@ -612,13 +631,14 @@ function clearSelfOwnedPeds() {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameMessageState, scoreboardState) {
+addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState) {
     renderHUD = hudState;
     setHUDEnabled(hudState);
 
     renderLabels = labelState;
     renderSmallGameMessage = smallGameMessageState;
     renderScoreboard = scoreboardState;
+    renderHotBar = hotBarState;
 });
 
 // ---------------------------------------------------------------------------
@@ -632,3 +652,11 @@ function getLocalPlayerVehicleSeat() {
 }
 
 // ---------------------------------------------------------------------------
+
+addEventHandler("OnPedInflictDamage", function(event, damagedPed, damagerEntity, weaponId, healthLoss, pedPiece) {
+    //if(damagedPed.isType(ELEMENT_PLAYER)) {
+    //    if(localPlayer != null) {
+    //
+    //    }
+    //    if(damagerEntity.isType(ELEMENT_PLAYER))
+});

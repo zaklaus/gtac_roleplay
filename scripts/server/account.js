@@ -735,7 +735,7 @@ function savePlayerToDatabase(client) {
 			subAccountData.spawnPosition = getPlayerPosition(client);
 			subAccountData.spawnHeading = getPlayerHeading(client);
 			subAccountData.interior = getPlayerInterior(client);
-			subAccountData.dimension = getPlayerVirtualWorld(client);
+			subAccountData.dimension = getPlayerDimension(client);
 		}
 
 		saveSubAccountToDatabase(subAccountData);

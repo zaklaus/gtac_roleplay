@@ -1,13 +1,13 @@
 <meta>
 	<info author="Vortrex, Asshat Gaming" version="1.0" description="Asshat-Gaming Roleplay" />
-	
+
 	<!-- Shared -->
 	<script src="scripts/shared/native.js" type="server" language="javascript" />
 	<script src="scripts/shared/native.js" type="client" language="javascript" />
 	<script src="scripts/shared/game-data.js" type="server" language="javascript" />
 	<script src="scripts/shared/game-data.js" type="client" language="javascript" />
 	<script src="scripts/shared/const.js" type="server" language="javascript" />
-	<script src="scripts/shared/const.js" type="client" language="javascript" />		
+	<script src="scripts/shared/const.js" type="client" language="javascript" />
 
 	<!-- Server -->
 	<script src="scripts/server/class.js" type="server" language="javascript" />
@@ -29,6 +29,7 @@
 	<script src="scripts/server/event.js" type="server" language="javascript" />
 	<script src="scripts/server/help.js" type="server" language="javascript" />
 	<script src="scripts/server/house.js" type="server" language="javascript" />
+	<script src="scripts/server/item.js" type="server" language="javascript" />
 	<script src="scripts/server/job.js" type="server" language="javascript" />
 	<script src="scripts/server/keybind.js" type="server" language="javascript" />
 	<script src="scripts/server/locale.js" type="server" language="javascript" />
@@ -46,30 +47,30 @@
 	<script src="scripts/server/config.js" type="server" language="javascript" />
 	<script src="scripts/server/core.js" type="server" language="javascript" />
 	<script src="scripts/server/command.js" type="server" language="javascript" />
-	
-	<script src="scripts/server/business/bakery.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/bar.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/burger.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/clothing.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/club.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/fuel.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/mechanic.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/pizza.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/restaurant.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/vehicle.js" type="server" language="javascript" />	
-	<script src="scripts/server/business/weapon.js" type="server" language="javascript" />	
-	
-	<script src="scripts/server/job/bus.js" type="server" language="javascript" />	
-	<script src="scripts/server/job/drug.js" type="server" language="javascript" />	
-	<script src="scripts/server/job/fire.js" type="server" language="javascript" />	
-	<script src="scripts/server/job/garbage.js" type="server" language="javascript" />	
-	<script src="scripts/server/job/medic.js" type="server" language="javascript" />	
-	<script src="scripts/server/job/police.js" type="server" language="javascript" />	
-	<script src="scripts/server/job/taxi.js" type="server" language="javascript" />	
+
+	<script src="scripts/server/business/bakery.js" type="server" language="javascript" />
+	<script src="scripts/server/business/bar.js" type="server" language="javascript" />
+	<script src="scripts/server/business/burger.js" type="server" language="javascript" />
+	<script src="scripts/server/business/clothing.js" type="server" language="javascript" />
+	<script src="scripts/server/business/club.js" type="server" language="javascript" />
+	<script src="scripts/server/business/fuel.js" type="server" language="javascript" />
+	<script src="scripts/server/business/mechanic.js" type="server" language="javascript" />
+	<script src="scripts/server/business/pizza.js" type="server" language="javascript" />
+	<script src="scripts/server/business/restaurant.js" type="server" language="javascript" />
+	<script src="scripts/server/business/vehicle.js" type="server" language="javascript" />
+	<script src="scripts/server/business/weapon.js" type="server" language="javascript" />
+
+	<script src="scripts/server/job/bus.js" type="server" language="javascript" />
+	<script src="scripts/server/job/drug.js" type="server" language="javascript" />
+	<script src="scripts/server/job/fire.js" type="server" language="javascript" />
+	<script src="scripts/server/job/garbage.js" type="server" language="javascript" />
+	<script src="scripts/server/job/medic.js" type="server" language="javascript" />
+	<script src="scripts/server/job/police.js" type="server" language="javascript" />
+	<script src="scripts/server/job/taxi.js" type="server" language="javascript" />
 	<script src="scripts/server/job/weapon.js" type="server" language="javascript" />
 
 	<script src="scripts/server/startup.js" type="server" language="javascript" />
-	
+
 	<!-- Client -->
 	<file type="client" src="files/images/main-logo.png" />
 	<file type="client" src="files/fonts/roboto-regular.ttf" />

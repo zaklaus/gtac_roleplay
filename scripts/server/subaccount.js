@@ -234,6 +234,7 @@ function selectCharacter(client, characterId = -1) {
 	spawnPlayer(client, getPlayerCurrentSubAccount(client).spawnPosition, getPlayerCurrentSubAccount(client).spawnHeading, getPlayerCurrentSubAccount(client).skin);
 
 	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();
+	cachePlayerHotBarItems(client);
 }
 addNetworkHandler("ag.selectCharacter", selectCharacter);
 
@@ -244,7 +245,7 @@ function switchCharacterCommand(command, params, client) {
 		getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
 		getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
 		//getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
-		//getPlayerCurrentSubAccount(client).dimension = getPlayerVirtualWorld(client);
+		//getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
 
 		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
 

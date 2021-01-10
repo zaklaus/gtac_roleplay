@@ -47,7 +47,7 @@ function loadHousesFromDatabase() {
 // ---------------------------------------------------------------------------
 
 function createHouseCommand(command, params, client) {
-	let tempHouseData = createHouse(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].house, getGameConfig().blipSprites[getServerGame()].house, getPlayerInterior(client), getPlayerVirtualWorld(client));
+	let tempHouseData = createHouse(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].house, getGameConfig().blipSprites[getServerGame()].house, getPlayerInterior(client), getPlayerDimension(client));
 	getServerData().houses.push(tempHouseData);
 
 	createHouseEntrancePickup(getServerData().houses.length-1);
@@ -263,7 +263,7 @@ function moveHouseEntranceCommand(command, params, client) {
 	}
 
 	getHouseData(houseId).entrancePosition = getPlayerPosition(client);
-	getHouseData(houseId).entranceDimension = getPlayerVirtualWorld(client);
+	getHouseData(houseId).entranceDimension = getPlayerDimension(client);
 	getHouseData(houseId).entranceInterior = getPlayerInterior(client);
 
 	deleteHouseEntranceBlip(houseId);
@@ -286,7 +286,7 @@ function moveHouseExitCommand(command, params, client) {
 	}
 
 	getHouseData(houseId).exitPosition = getPlayerPosition(client);
-	getHouseData(houseId).exitDimension = getPlayerVirtualWorld(client);
+	getHouseData(houseId).exitDimension = getPlayerDimension(client);
 	getHouseData(houseId).exitInterior = getPlayerInterior(client);
 
 	deleteHouseExitBlip(houseId);
@@ -698,7 +698,7 @@ function exitHouse(client) {
 	let houseId = getPlayerHouse(client);
 	if(isPlayerSpawned(client)) {
 		setPlayerInterior(client, getServerData().house[houseId].entranceInterior);
-		setPlayerVirtualWorld(client, getServerData().house[houseId].entranceDimension);
+		setPlayerDimension(client, getServerData().house[houseId].entranceDimension);
 		setPlayerPosition(client, getServerData().house[houseId].entrancePosition);
 	}
 	removeEntityData(client, "ag.inHouse");

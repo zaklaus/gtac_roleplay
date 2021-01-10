@@ -74,7 +74,7 @@ function getPlayerVehicle(client) {
 
 // ---------------------------------------------------------------------------
 
-function getPlayerVirtualWorld(client) {
+function getPlayerDimension(client) {
     return client.player.dimension;
 }
 
@@ -90,7 +90,7 @@ function getPlayerInterior(client) {
 
 // ---------------------------------------------------------------------------
 
-function setPlayerVirtualWorld(client, dimension) {
+function setPlayerDimension(client, dimension) {
     client.player.dimension = dimension;
 }
 
@@ -192,6 +192,18 @@ function disconnectPlayer(client) {
 
 function getElementSyncer(element) {
     return getClients()[element.syncer];
+}
+
+// ---------------------------------------------------------------------------
+
+function givePlayerWeapon(client, weaponId, ammo, active) {
+    triggerNetworkEvent("ag.giveWeapon", client, weaponId, ammo, active);
+}
+
+// ---------------------------------------------------------------------------
+
+function clearPlayerWeapons(client) {
+    triggerNetworkEvent("ag.clearWeapons", client);
 }
 
 // ---------------------------------------------------------------------------

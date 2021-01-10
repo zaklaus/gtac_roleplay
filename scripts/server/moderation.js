@@ -226,7 +226,7 @@ function gotoVehicleCommand(command, params, client) {
 	setTimeout(function() {
 		setPlayerPosition(client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
 		setPlayerInterior(client, 0);
-		setPlayerVirtualWorld(client, vehicle.dimension);
+		setPlayerDimension(client, vehicle.dimension);
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to a [#CC22CC]${getVehicleName(vehicle)} [#AAAAAA](ID ${vehicle.id})`);
@@ -251,7 +251,7 @@ function gotoBusinessCommand(command, params, client) {
 	setTimeout(function() {
 		setPlayerPosition(client, getBusinessData(businessId).entrancePosition);
 		setPlayerInterior(client, getBusinessData(businessId).entranceInterior);
-		setPlayerVirtualWorld(client, getBusinessData(businessId).entranceDimension);
+		setPlayerDimension(client, getBusinessData(businessId).entranceDimension);
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to business [#0099FF]${getBusinessData(businessId).name} [#AAAAAA](ID ${businessId})`);
@@ -276,7 +276,7 @@ function gotoHouseCommand(command, params, client) {
 	setTimeout(function() {
 		setPlayerPosition(client, getHouseData(houseId).entrancePosition);
 		setPlayerInterior(client, getHouseData(houseId).entranceInterior);
-		setPlayerVirtualWorld(client, getHouseData(houseId).entranceDimension);
+		setPlayerDimension(client, getHouseData(houseId).entranceDimension);
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to business [#0099FF]${getHouseData(houseId).description} [#AAAAAA](ID ${houseId})`);
@@ -309,7 +309,7 @@ function gotoJobLocationCommand(command, params, client) {
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	setPlayerPosition(client, getJobData(jobId).locations[jobLocationId].position);
 	setPlayerInterior(client, getJobData(jobId).locations[jobLocationId].interior);
-	setPlayerVirtualWorld(client, getJobData(jobId).locations[jobLocationId].dimension);
+	setPlayerDimension(client, getJobData(jobId).locations[jobLocationId].dimension);
 
 	messagePlayerSuccess(client, `You teleported to location [#AAAAAA]${jobLocationId} [#FFFFFF]for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
@@ -327,7 +327,7 @@ function gotoPositionCommand(command, params, client) {
 	let y = splitParams[1] || getPlayerPosition(client).y;
 	let z = splitParams[2] || getPlayerPosition(client).z;
 	let int = splitParams[3] || getPlayerInterior(client);
-	let vw = splitParams[4] || getPlayerVirtualWorld(client);
+	let vw = splitParams[4] || getPlayerDimension(client);
 
 	let newPosition = toVector3(Number(x), Number(y), Number(z));
 
@@ -336,7 +336,7 @@ function gotoPositionCommand(command, params, client) {
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	setPlayerPosition(client, newPosition);
 	setPlayerInterior(client, Number(int));
-	setPlayerVirtualWorld(client, Number(vw));
+	setPlayerDimension(client, Number(vw));
 
 	messagePlayerSuccess(client, `You teleported to coordinates [#AAAAAA]${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
 }
@@ -460,12 +460,12 @@ function playerVirtualWorldCommand(command, params, client) {
 	}
 
 	if(getParamsCount(params, " ") == 1) {
-		messagePlayerInfo(client, `[#AAAAAA]${targetClient.name}'s [#FFFFFF]virtual world is [#AAAAAA]${getPlayerVirtualWorld(targetClient)}`);
+		messagePlayerInfo(client, `[#AAAAAA]${targetClient.name}'s [#FFFFFF]virtual world is [#AAAAAA]${getPlayerDimension(targetClient)}`);
 		return false;
 	}
 
 	let dimensionId = splitParams[1];
-	setPlayerVirtualWorld(targetClient, Number(dimensionId));
+	setPlayerDimension(targetClient, Number(dimensionId));
 	messagePlayerSuccess(client, `You set [#AAAAAA]${targetClient.name}'s [#FFFFFF]virtual world to [#AAAAAA]${dimensionId}`);
 }
 
@@ -490,13 +490,13 @@ function getPlayerCommand(command, params, client) {
 	if(isPlayerInAnyBusiness(client)) {
 		let businessData = getBusinessData(getPlayerBusiness(client));
 		setPlayerInterior(targetClient, businessData.exitInterior);
-		setPlayerVirtualWorld(targetClient, businessData.exitDimension);
+		setPlayerDimension(targetClient, businessData.exitDimension);
 	}
 
 	if(isPlayerInAnyHouse(client)) {
 		let houseData = getHouseData(getPlayerHouse(client));
 		setPlayerInterior(targetClient, houseData.exitInterior);
-		setPlayerVirtualWorld(client, houseData.exitDimension);
+		setPlayerDimension(client, houseData.exitDimension);
 	}
 
 	messagePlayerSuccess(client, `You teleported [#AAAAAA]${targetClient.name} [#FFFFFF]to you.`);

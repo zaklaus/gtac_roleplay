@@ -133,7 +133,7 @@ function enterExitPropertyCommand(command, params, client) {
 			setTimeout(function() {
 				setPlayerPosition(client, inHouse.entrancePosition);
 				setPlayerHeading(client, inHouse.entranceRotation);
-				setPlayerVirtualWorld(client, inHouse.entranceDimension);
+				setPlayerDimension(client, inHouse.entranceDimension);
 				setPlayerInterior(client, inHouse.entranceInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
@@ -161,7 +161,7 @@ function enterExitPropertyCommand(command, params, client) {
 			setTimeout(function() {
 				setPlayerPosition(client, inBusiness.entrancePosition);
 				setPlayerHeading(client, inBusiness.entranceRotation);
-				setPlayerVirtualWorld(client, inBusiness.entranceDimension);
+				setPlayerDimension(client, inBusiness.entranceDimension);
 				setPlayerInterior(client, inBusiness.entranceInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
@@ -199,7 +199,7 @@ function enterExitPropertyCommand(command, params, client) {
 			setTimeout(function() {
 				setPlayerPosition(client, closestBusiness.exitPosition);
 				setPlayerHeading(client, closestBusiness.exitRotation);
-				setPlayerVirtualWorld(client, closestBusiness.exitDimension);
+				setPlayerDimension(client, closestBusiness.exitDimension);
 				setPlayerInterior(client, closestBusiness.exitInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
@@ -233,7 +233,7 @@ function enterExitPropertyCommand(command, params, client) {
 			setTimeout(function() {
 				setPlayerPosition(client, closestHouse.exitPosition);
 				setPlayerHeading(client, closestHouse.exitRotation);
-				setPlayerVirtualWorld(client, closestHouse.exitDimension);
+				setPlayerDimension(client, closestHouse.exitDimension);
 				setPlayerInterior(client, closestHouse.exitInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);

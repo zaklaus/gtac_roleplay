@@ -24,6 +24,7 @@ function initClassTable() {
 				this.databaseId = 0;
 				this.name = "";
 				this.password = "";
+				this.needsSaved = false;
 
 				this.newCharacter = {
 					spawnPosition: false,
@@ -76,6 +77,7 @@ function initClassTable() {
 					this.useGUI = intToBool(dbAssoc["svr_gui"]);
 					this.guiColour = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
 					this.showLogo = intToBool(dbAssoc["svr_logo"]);
+					this.inflationMultiplier = toFloat(dbAssoc["svr_inflation_multiplier"]);
 
 					this.antiCheat = {
 						enabled: intToBool(dbAssoc["svr_ac_enabled"]),
@@ -119,6 +121,17 @@ function initClassTable() {
 				this.returnToJobVehicleTimer = null;
 
 				this.switchingCharacter = false;
+
+				this.tutorialState = AG_TUTORIAL_STATE_NONE;
+				this.tutorialStep = -1;
+				this.tutorialItem = null;
+				this.tutorialVehicle = null;
+
+				this.hotBarItems = new Array(9).fill(-1);
+				this.activeHotBarSlot = 0;
+
+				this.jobLockerCache = new Array(9).fill(-1);
+				this.jobEquipmentCache = [];
 			}
 		},
 		accountData: class {
@@ -179,6 +192,7 @@ function initClassTable() {
 				this.contactAccountId = 0;
 				this.type = 0;
 				this.whenAdded = 0;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["acct_contact_id"];
@@ -200,6 +214,7 @@ function initClassTable() {
 				this.whenDeleted = 0;
 				this.folder = 0;
 				this.message = "";
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["acct_msg_id"];
@@ -224,6 +239,7 @@ function initClassTable() {
 				this.whenDeleted = 0;
 				this.server = 0;
 				this.note = "";
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["acct_note_id"];
@@ -300,6 +316,8 @@ function initClassTable() {
 				this.locked = false;
 				this.hasInterior = false;
 				this.index = -1;
+				this.needsSaved = false;
+				this.itemCache = [];
 
 				this.entrancePosition = false;
 				this.entranceRotation = 0.0;
@@ -358,6 +376,7 @@ function initClassTable() {
 				this.business = 0;
 				this.enabled = false;
 				this.index = -1;
+				this.needsSaved = false;
 
 				this.position = toVector3(0.0, 0.0, 0.0);
 				this.interior = 0;
@@ -387,6 +406,8 @@ function initClassTable() {
 				this.locked = false;
 				this.hasInterior = false;
 				this.index = -1;
+				this.needsSaved = false;
+				this.itemCache = [];
 
 				this.entrancePosition = false;
 				this.entranceRotation = 0.0;
@@ -443,6 +464,7 @@ function initClassTable() {
 				this.initialRank = 0;
 				this.members = [];
 				this.ranks = [];
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc["clan_id"]);
@@ -465,6 +487,7 @@ function initClassTable() {
 				this.enabled = false;
 				this.index = -1;
 				this.clanIndex = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc["clan_rank_id"]);
@@ -491,6 +514,7 @@ function initClassTable() {
 				this.index = -1;
 				this.clanIndex = -1;
 				this.rankIndex = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc["clan_member_id"]);
@@ -505,13 +529,14 @@ function initClassTable() {
 			}
 		},
 		vehicleData: class {
-			constructor(vehicleAssoc = false, vehicle = false) {
+			constructor(dbAssoc = false, vehicle = false) {
 				// General Info
 				this.databaseId = 0;
 				this.server = getServerId();
 				this.model = (vehicle != false) ? vehicle.modelIndex : 0;
 				this.vehicle = vehicle;
 				this.index = -1;
+				this.needsSaved = false;
 
 				// Ownership
 				this.ownerType = AG_VEHOWNER_NONE;
@@ -549,45 +574,48 @@ function initClassTable() {
 				this.visualDamage = 0;
 				this.dirtLevel = 0;
 
-				if(vehicleAssoc) {
+				this.trunkItemCache = [];
+				this.dashItemCache = [];
+
+				if(dbAssoc) {
 					// General Info
-					this.databaseId = toInteger(vehicleAssoc["veh_id"]);
-					this.server = toInteger(vehicleAssoc["veh_server"]);
-					this.model = toInteger(vehicleAssoc["veh_model"]);
+					this.databaseId = toInteger(dbAssoc["veh_id"]);
+					this.server = toInteger(dbAssoc["veh_server"]);
+					this.model = toInteger(dbAssoc["veh_model"]);
 
 					// Ownership
-					this.ownerType = toInteger(vehicleAssoc["veh_owner_type"]);
-					this.ownerId = toInteger(vehicleAssoc["veh_owner_id"]);
-					this.buyPrice = toInteger(vehicleAssoc["veh_buy_price"]);
-					this.rentPrice = toInteger(vehicleAssoc["veh_buy_price"]);
+					this.ownerType = toInteger(dbAssoc["veh_owner_type"]);
+					this.ownerId = toInteger(dbAssoc["veh_owner_id"]);
+					this.buyPrice = toInteger(dbAssoc["veh_buy_price"]);
+					this.rentPrice = toInteger(dbAssoc["veh_buy_price"]);
 
 					// Position and Rotation
-					this.spawnPosition = toVector3(vehicleAssoc["veh_pos_x"], vehicleAssoc["veh_pos_y"], vehicleAssoc["veh_pos_z"]);
-					this.spawnRotation = toInteger(vehicleAssoc["veh_rot_z"]);
-					this.spawnLocked = intToBool(toInteger(vehicleAssoc["veh_spawn_lock"]));
+					this.spawnPosition = toVector3(dbAssoc["veh_pos_x"], dbAssoc["veh_pos_y"], dbAssoc["veh_pos_z"]);
+					this.spawnRotation = toInteger(dbAssoc["veh_rot_z"]);
+					this.spawnLocked = intToBool(toInteger(dbAssoc["veh_spawn_lock"]));
 
 					// Colour Info
-					this.colour1IsRGBA = intToBool(toInteger(vehicleAssoc["veh_col1_isrgba"]));
-					this.colour2IsRGBA = intToBool(toInteger(vehicleAssoc["veh_col2_isrgba"]));
-					this.colour3IsRGBA = intToBool(toInteger(vehicleAssoc["veh_col3_isrgba"]));
-					this.colour4IsRGBA = intToBool(toInteger(vehicleAssoc["veh_col4_isrgba"]));
-					this.colour1RGBA = toColour(toInteger(vehicleAssoc["veh_col1_r"]), toInteger(vehicleAssoc["veh_col1_g"]), toInteger(vehicleAssoc["veh_col1_b"]), toInteger(vehicleAssoc["veh_col1_a"]));
-					this.colour2RGBA = toColour(toInteger(vehicleAssoc["veh_col2_r"]), toInteger(vehicleAssoc["veh_col2_g"]), toInteger(vehicleAssoc["veh_col2_b"]), toInteger(vehicleAssoc["veh_col2_a"]));
-					this.colour3RGBA = toColour(toInteger(vehicleAssoc["veh_col3_r"]), toInteger(vehicleAssoc["veh_col3_g"]), toInteger(vehicleAssoc["veh_col3_b"]), toInteger(vehicleAssoc["veh_col3_a"]));
-					this.colour4RGBA = toColour(toInteger(vehicleAssoc["veh_col4_r"]), toInteger(vehicleAssoc["veh_col4_g"]), toInteger(vehicleAssoc["veh_col4_b"]), toInteger(vehicleAssoc["veh_col4_a"]));
-					this.colour1 = toInteger(vehicleAssoc["veh_col1"]);
-					this.colour2 = toInteger(vehicleAssoc["veh_col2"]);
-					this.colour3 = toInteger(vehicleAssoc["veh_col3"]);
-					this.colour4 = toInteger(vehicleAssoc["veh_col4"]);
+					this.colour1IsRGBA = intToBool(toInteger(dbAssoc["veh_col1_isrgba"]));
+					this.colour2IsRGBA = intToBool(toInteger(dbAssoc["veh_col2_isrgba"]));
+					this.colour3IsRGBA = intToBool(toInteger(dbAssoc["veh_col3_isrgba"]));
+					this.colour4IsRGBA = intToBool(toInteger(dbAssoc["veh_col4_isrgba"]));
+					this.colour1RGBA = toColour(toInteger(dbAssoc["veh_col1_r"]), toInteger(dbAssoc["veh_col1_g"]), toInteger(dbAssoc["veh_col1_b"]), toInteger(dbAssoc["veh_col1_a"]));
+					this.colour2RGBA = toColour(toInteger(dbAssoc["veh_col2_r"]), toInteger(dbAssoc["veh_col2_g"]), toInteger(dbAssoc["veh_col2_b"]), toInteger(dbAssoc["veh_col2_a"]));
+					this.colour3RGBA = toColour(toInteger(dbAssoc["veh_col3_r"]), toInteger(dbAssoc["veh_col3_g"]), toInteger(dbAssoc["veh_col3_b"]), toInteger(dbAssoc["veh_col3_a"]));
+					this.colour4RGBA = toColour(toInteger(dbAssoc["veh_col4_r"]), toInteger(dbAssoc["veh_col4_g"]), toInteger(dbAssoc["veh_col4_b"]), toInteger(dbAssoc["veh_col4_a"]));
+					this.colour1 = toInteger(dbAssoc["veh_col1"]);
+					this.colour2 = toInteger(dbAssoc["veh_col2"]);
+					this.colour3 = toInteger(dbAssoc["veh_col3"]);
+					this.colour4 = toInteger(dbAssoc["veh_col4"]);
 
 					// Vehicle Attributes
-					this.locked = intToBool(toInteger(vehicleAssoc["veh_locked"]));
-					this.engine = intToBool(toInteger(vehicleAssoc["veh_engine"]));
-					this.lights = intToBool(toInteger(vehicleAssoc["veh_lights"]));
-					this.health = toInteger(vehicleAssoc["veh_damage_normal"]);
-					this.engineDamage = toInteger(vehicleAssoc["veh_damage_engine"]);
-					this.visualDamage = toInteger(vehicleAssoc["veh_damage_visual"]);
-					this.dirtLevel = toInteger(vehicleAssoc["veh_dirt_level"]);
+					this.locked = intToBool(toInteger(dbAssoc["veh_locked"]));
+					this.engine = intToBool(toInteger(dbAssoc["veh_engine"]));
+					this.lights = intToBool(toInteger(dbAssoc["veh_lights"]));
+					this.health = toInteger(dbAssoc["veh_damage_normal"]);
+					this.engineDamage = toInteger(dbAssoc["veh_damage_engine"]);
+					this.visualDamage = toInteger(dbAssoc["veh_damage_visual"]);
+					this.dirtLevel = toInteger(dbAssoc["veh_dirt_level"]);
 
 					// Other/Misc
 					this.insuranceAccount = toInteger(0);
@@ -630,7 +658,7 @@ function initClassTable() {
 			}
 		},
 		jobData: class {
-			constructor(dbAssoc) {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.type = AG_JOB_NONE;
 				this.name = "Unnamed";
@@ -641,6 +669,7 @@ function initClassTable() {
 				this.whiteListEnabled = false;
 				this.blackListEnabled = false;
 				this.index = -1;
+				this.needsSaved = false;
 
 				this.equipment = [];
 				this.uniforms = [];
@@ -668,7 +697,7 @@ function initClassTable() {
 			}
 		},
 		jobEquipmentData: class {
-			constructor(dbAssoc) {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.name = "Unnamed";
@@ -676,6 +705,8 @@ function initClassTable() {
 				this.enabled = false;
 				this.index = -1;
 				this.jobIndex = -1;
+				this.needsSaved = false;
+				this.items = [];
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["job_equip_id"];
@@ -686,27 +717,28 @@ function initClassTable() {
 				}
 			}
 		},
-		jobEquipmentWeaponData: class {
-			constructor(dbAssoc) {
+		jobEquipmentItemData: class {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.equipmentId = 0;
-				this.weaponId = 0;
-				this.ammo = 0;
+				this.itemType = 0;
+				this.value = 0;
 				this.enabled = false;
 				this.index = -1;
 				this.jobIndex = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
-					this.databaseId = dbAssoc["job_equip_wep_id"];
-					this.equipmentId = dbAssoc["job_equip_wep_equip"];
-					this.weaponId = dbAssoc["job_equip_wep_wep"];
-					this.ammo = dbAssoc["job_equip_wep_ammo"];
-					this.enabled = dbAssoc["job_equip_wep_enabled"];
+					this.databaseId = dbAssoc["job_equip_item_id"];
+					this.equipmentId = dbAssoc["job_equip_item_equip"];
+					this.itemType = dbAssoc["job_equip_item_type"];
+					this.ammo = dbAssoc["job_equip_item_value"];
+					this.enabled = dbAssoc["job_equip_item_enabled"];
 				}
 			}
 		},
 		jobUniformData: class {
-			constructor(dbAssoc) {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.name = "Unnamed";
@@ -715,6 +747,7 @@ function initClassTable() {
 				this.enabled = false;
 				this.index = -1;
 				this.jobIndex = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["job_uniform_id"];
@@ -722,12 +755,12 @@ function initClassTable() {
 					this.name = dbAssoc["job_uniform_name"];
 					this.requiredRank = dbAssoc["job_uniform_minrank"];
 					this.skin = dbAssoc["job_uniform_skin"];
-					this.enabled = dbAssoc["job_uniform_skin"];
+					this.enabled = intToBool(dbAssoc["job_uniform_enabled"]);
 				}
 			}
 		},
 		jobLocationData: class {
-			constructor(dbAssoc) {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.position = toVector3(0.0, 0.0, 0.0);
@@ -738,6 +771,7 @@ function initClassTable() {
 				this.dimension = 0;
 				this.index = -1;
 				this.jobIndex = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["job_loc_id"];
@@ -752,7 +786,7 @@ function initClassTable() {
 			}
 		},
 		jobWhiteListData: class {
-			constructor(dbAssoc) {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.subAccount = 0
@@ -760,6 +794,7 @@ function initClassTable() {
 				this.index = -1;
 				this.jobIndex = -1;
 				this.jobIndex = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["job_wl_id"];
@@ -770,13 +805,14 @@ function initClassTable() {
 			}
 		},
 		jobBlackListData: class {
-			constructor(dbAssoc) {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.job = 0;
 				this.subAccount = 0
 				this.enabled = false;
 				this.index = -1;
 				this.jobIndex = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["job_bl_id"];
@@ -787,7 +823,7 @@ function initClassTable() {
 			}
 		},
 		keyBindData: class {
-			constructor(dbAssoc, key = 0, commandString = "") {
+			constructor(dbAssoc = false, key = 0, commandString = "") {
 				this.databaseId = 0;
 				this.key = key;
 				this.account = 0;
@@ -796,6 +832,7 @@ function initClassTable() {
 				this.enabled = true;
 				this.keyState = false;
 				this.index = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["acct_hotkey_id"];
@@ -809,12 +846,13 @@ function initClassTable() {
 			}
 		},
 		blackListedGameScriptData: class {
-			constructor(dbAssoc) {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.enabled = false
 				this.server = 0;
 				this.scriptName = "";
 				this.index = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["ac_script_bl_id"];
@@ -825,12 +863,13 @@ function initClassTable() {
 			}
 		},
 		whiteListedGameScriptData: class {
-			constructor(dbAssoc) {
+			constructor(dbAssoc = false) {
 				this.databaseId = 0;
 				this.enabled = false
 				this.server = 0;
 				this.scriptName = "";
 				this.index = -1;
+				this.needsSaved = false;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["ac_script_wl_id"];
@@ -853,6 +892,80 @@ function initClassTable() {
 				this.exitInterior = exitInterior;
 			}
 		},
+		itemData: class {
+			constructor(dbAssoc = false) {
+				this.databaseId = 0;
+				this.index = 0;
+				this.itemTypeIndex = 0;
+				this.itemType = 0;
+				this.ownerType = AG_ITEM_OWNER_NONE;
+				this.ownerId = 0;
+				this.ownerIndex = -1;
+				this.position = toVector3(0.0, 0.0, 0.0);
+				this.interior = 0;
+				this.dimension = 0;
+				this.object = null;
+				this.buyPrice = 0;
+				this.needsSaved = false;
+				this.amount = 0;
+				this.value = 0;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc["item_id"]);
+					this.index = 0;
+					this.itemTypeIndex = 0;
+					this.itemType = toInteger(dbAssoc["item_type"]);
+					this.ownerType = toInteger(dbAssoc["item_owner_type"]);;
+					this.ownerId = toInteger(dbAssoc["item_owner_id"]);
+					this.position = toVector3(toFloat(dbAssoc["item_pos_x"]), toFloat(dbAssoc["item_pos_y"]), toFloat(dbAssoc["item_pos_z"]));
+					this.interior = toInteger(dbAssoc["item_int"]);
+					this.dimension = toInteger(dbAssoc["item_vw"]);
+					this.buyPrice = toInteger(dbAssoc["item_buy_price"]);
+					this.amount = toInteger(dbAssoc["item_amount"]);
+					this.value = toInteger(dbAssoc["item_value"]);
+				}
+			}
+		},
+		itemTypeData: class {
+			constructor(dbAssoc = false) {
+				this.databaseId = 0;
+				this.index = 0;
+				this.name = "Unknown";
+				this.enabled = false;
+				this.useType = AG_ITEM_USETYPE_NONE;
+				this.useId = 0;
+				this.useValue = 0;
+				this.dropType = AG_ITEM_DROPTYPE_NONE;
+				this.useId = 0;
+				this.dropPosition = toVector3(0.0, 0.0, 0.0);
+				this.dropRotation = toVector3(0.0, 0.0, 0.0);
+				this.dropScale = toVector3(0.0, 0.0, 0.0);
+				this.dropModel = 0;
+				this.orderPrice = 0;
+				this.needsSaved = false;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc["item_type_id"]);
+					this.name = dbAssoc["item_type_name"];
+					this.enabled = intToBool(toInteger(dbAssoc["item_type_enabled"]));
+					this.useType = toInteger(dbAssoc["item_type_use_type"]);
+					this.dropType = toInteger(dbAssoc["item_type_drop_type"]);
+					this.useId = toInteger(dbAssoc["item_type_use_id"]);
+					this.dropPosition = toVector3(toFloat(dbAssoc["item_type_drop_pos_x"]), toFloat(dbAssoc["item_type_drop_pos_y"]), toFloat(dbAssoc["item_type_drop_pos_z"]));
+					this.dropRotation = toVector3(toFloat(dbAssoc["item_type_drop_rot_x"]), toFloat(dbAssoc["item_type_drop_rot_y"]), toFloat(dbAssoc["item_type_drop_rot_z"]));
+					this.dropScale = toVector3(toFloat(dbAssoc["item_type_drop_scale_x"]), toFloat(dbAssoc["item_type_drop_scale_y"]), toFloat(dbAssoc["item_type_drop_scale_z"]));
+					this.dropModel = toInteger(dbAssoc["item_type_drop_model"]);
+					this.useId = toInteger(dbAssoc["item_type_use_id"]);
+					this.useValue = toInteger(dbAssoc["item_type_use_value"]);
+					this.orderPrice = toInteger(dbAssoc["item_type_order_price"]);
+					this.demandMultiplier = toFloat(dbAssoc["item_type_demand_multiplier"]);
+					this.supplyMultiplier = toFloat(dbAssoc["item_type_supply_multiplier"]);
+					this.orderPrice = toInteger(dbAssoc["item_type_order_price"]);
+					this.size = toInteger(dbAssoc["item_type_size"]);
+					this.capacity = toInteger(dbAssoc["item_type_capacity"]);
+				}
+			}
+		}
 	}
 
 	return tempClasses;
@@ -871,5 +984,6 @@ function getClass(className) {
 }
 
 // ---------------------------------------------------------------------------
+
 
 

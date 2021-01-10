@@ -98,7 +98,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 // ---------------------------------------------------------------------------
 
 function createBusinessCommand(command, params, client) {
-	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].business, getGameConfig().blipSprites[getServerGame()].business, getPlayerInterior(client), getPlayerVirtualWorld(client));
+	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].business, getGameConfig().blipSprites[getServerGame()].business, getPlayerInterior(client), getPlayerDimension(client));
 	getServerData().businesses.push(tempBusinessData);
 
 	createBusinessEntrancePickup(getServerData().businesses.length-1);
@@ -369,7 +369,7 @@ function getBusinessInfoCommand(command, params, client) {
 			break;
 	}
 
-	messagePlayerInfo(client, `[#0099FF][Business Info] [#FFFFFF]Name: [#AAAAAA]${getBusinessData(businessId).name}, [#FFFFFF]Owner: [#AAAAAA]${ownerName} (${getBusinessOwnerTypeText(getBusinessData(businessId).ownerType)}), [#FFFFFF]Locked: [#AAAAAA]${getYesNoFromBool(intToBool(getBusinessData(businessId).locked))}, [#FFFFFF]ID: [#AAAAAA]${businessId}/${getBusinessData(businessId).databaseId}`);
+	messagePlayerInfo(client, `🏢 [#0099FF][Business Info] [#FFFFFF]Name: [#AAAAAA]${getBusinessData(businessId).name}, [#FFFFFF]Owner: [#AAAAAA]${ownerName} (${getBusinessOwnerTypeText(getBusinessData(businessId).ownerType)}), [#FFFFFF]Locked: [#AAAAAA]${getYesNoFromBool(intToBool(getBusinessData(businessId).locked))}, [#FFFFFF]ID: [#AAAAAA]${businessId}/${getBusinessData(businessId).databaseId}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -548,7 +548,7 @@ function depositIntoBusinessCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function stockItemInBusinessCommand(command, params, client) {
+function orderItemForBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -568,11 +568,11 @@ function stockItemInBusinessCommand(command, params, client) {
 
 	if(!getItemTypeData(itemType)) {
 		messagePlayerError(client, "Invalid item type name or ID!");
-		messagePlayerInfo(client, "Use /itemtypes for a list of items");
+		messagePlayerInfo(client, "Use [#AAAAAA]/itemtypes [#FFFFFF]for a list of items");
 		return false;
 	}
 
-	let orderTotalCost = getItemTypeData(itemType).orderPrice*amount;
+	let orderTotalCost = getItemTypeData(itemType).orderPrice*getServerConfig().inflationMultiplier*getItemTypeData(itemType).demandMultiplier*getItemTypeData(itemType).supplyMultiplier*getItemTypeData(itemType).riskMultiplier*amount;
 
 	if(getBusinessData(businessId).till < orderTotalCost) {
 		let neededAmount = orderTotalCost-getBusinessData(businessId).till;
@@ -582,7 +582,7 @@ function stockItemInBusinessCommand(command, params, client) {
 
 	getBusinessData(businessId).till -= orderTotalCost;
 	addToBusinessInventory(businessId, itemType, amount);
-	messagePlayerSuccess(client, `You ordered ${amount} ${getPluralForm(getItemTypeData(itemType).name)} at $${getItemTypeData(itemType).orderPrice} each for business [#0099FF]'${getBusinessData(businessId).name} [#FFFFFF] and set their sell price [#AAAAAA]$${sellPrice}`);
+	messagePlayerSuccess(client, `You ordered ${amount} ${getPluralForm(getItemTypeData(itemType).name)} at $${getItemTypeData(itemType).orderPrice} each for business [#0099FF]'${getBusinessData(businessId).name} [#FFFFFF] and set their sell price to [#AAAAAA]$${sellPrice}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -617,7 +617,7 @@ function moveBusinessEntranceCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).entrancePosition = getPlayerPosition(client);
-	getBusinessData(businessId).entranceDimension = getPlayerVirtualWorld(client);
+	getBusinessData(businessId).entranceDimension = getPlayerDimension(client);
 	getBusinessData(businessId).entranceInterior = getPlayerInterior(client);
 
 	deleteBusinessEntranceBlip(businessId);
@@ -644,7 +644,7 @@ function moveBusinessExitCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).exitPosition = getPlayerPosition(client);
-	getBusinessData(businessId).exitDimension = getPlayerVirtualWorld(client);
+	getBusinessData(businessId).exitDimension = getPlayerDimension(client);
 	getBusinessData(businessId).exitInterior = getPlayerInterior(client);
 
 	deleteBusinessExitBlip(businessId);
@@ -917,7 +917,7 @@ function exitBusiness(client) {
 	let businessId = getEntityData(client, "ag.inBusiness");
 	if(isPlayerSpawned(client)) {
 		setPlayerInterior(client, getServerData().businesses[businessId].entranceInterior);
-		setPlayerVirtualWorld(client, client, getServerData().businesses[businessId].entranceDimension);
+		setPlayerDimension(client, client, getServerData().businesses[businessId].entranceDimension);
 		setPlayerPosition(client, client, getServerData().businesses[businessId].entrancePosition);
 	}
 	removeEntityData(client, "ag.inBusiness");
@@ -1040,7 +1040,7 @@ function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 	let tempItemData = new serverClasses.itemData(false);
 	tempItemData.amount = amount;
 	tempItemData.buyPrice = buyPrice;
-	tempItemData.itemType = getItemTypeData(itemType);
+	tempItemData.itemType = getItemTypeData(itemType).databaseId;
 	tempItemData.ownerId = getBusinessData(business).databaseId;
 	tempItemData.ownerType = AG_ITEMOWNER_BIZ;
 	tempItemData.ownerIndex = businessId;
@@ -1056,6 +1056,137 @@ function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 
 function buyFromBusinessCommand(command, params, client) {
 
+}
+
+// ---------------------------------------------------------------------------
+
+function setBusinessItemSellPriceCommand(command, params, client) {
+	let splitParams = params.split(" ");
+	let businessId = getBusinessFromParams(splitParams[2]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError("Business not found!");
+		return false;
+	}
+
+	let itemSlot = toInteger(splitParams[0]) || 0;
+
+	if(typeof getBusinessData(businessId).floorItemCache[itemSlot] == "undefined") {
+		messagePlayerError(client, `Item slot ${itemSlot} doesn't exist!`);
+		return false;
+	}
+
+	if(getBusinessData(businessId).floorItemCache[itemSlot] == -1) {
+		messagePlayerError(client, `Item slot ${itemSlot} slot is empty!`);
+		return false;
+	}
+
+	let newPrice = toInteger(splitParams[1]) || 0;
+	if(newPrice < 0) {
+		messagePlayerError("The price can't be negative!");
+		return false;
+	}
+
+	let oldPrice = getBusinessData(businessId).floorItemCache[itemSlot].buyPrice;
+	getItemData(getBusinessData(businessId).floorItemCache[itemSlot]).buyPrice = newPrice;
+
+	messagePlayerSuccess(client, `You changed the price of the ${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot])).name}s in slot ${itemSlot} from $${oldPrice} to $${newPrice}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function storeItemInBusinessStorageCommand(command, params, client) {
+	let splitParams = params.split(" ");
+	let businessId = getBusinessFromParams(splitParams[2]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError("Business not found!");
+		return false;
+	}
+
+	let itemSlot = toInteger(splitParams[0]) || 0;
+
+	if(typeof getBusinessData(businessId).floorItemCache[itemSlot] == "undefined") {
+		messagePlayerError(client, `Item slot ${itemSlot} doesn't exist!`);
+		return false;
+	}
+
+	if(getBusinessData(businessId).floorItemCache[itemSlot] == -1) {
+		messagePlayerError(client, `Item slot ${itemSlot} slot is empty!`);
+		return false;
+	}
+
+	let firstSlot = getBusinessStorageFirstFreeItemSlot(businessId);
+
+	if(firstSlot == -1) {
+		messagePlayerError(client, `There isn't any room in this business storage`);
+		return false;
+	}
+
+	getItemData(getBusinessData(businessId).floorItemCache[itemSlot]).ownerType = AG_ITEM_OWNER_BIZSTORAGE;
+	getBusinessData(businessId).storageItemCache[firstSlot] = getBusinessData(businessId).floorItemCache[itemSlot];
+	getBusinessData(businessId).storageItemCache[itemSlot] = -1;
+	messagePlayerSuccess(client, `You moved the ${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[firstSlot])).name}s in slot ${itemSlot} to the business storage in slot ${firstSlot}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function stockItemOnBusinessFloorCommand(command, params, client) {
+	let splitParams = params.split(" ");
+	let businessId = getBusinessFromParams(splitParams[2]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError("Business not found!");
+		return false;
+	}
+
+	let itemSlot = toInteger(splitParams[0]) || 0;
+
+	if(typeof getBusinessData(businessId).storageItemCache[itemSlot] == "undefined") {
+		messagePlayerError(client, `Item slot ${itemSlot} doesn't exist!`);
+		return false;
+	}
+
+	if(getBusinessData(businessId).storageItemCache[itemSlot] == -1) {
+		messagePlayerError(client, `Item slot ${itemSlot} slot is empty!`);
+		return false;
+	}
+
+	let firstSlot = getBusinessFloorFirstFreeItemSlot(businessId);
+
+	if(firstSlot == -1) {
+		messagePlayerError(client, `There isn't any room in this business storage`);
+		return false;
+	}
+
+	getItemData(getBusinessData(businessId).storageItemCache[itemSlot]).ownerType = AG_ITEM_OWNER_BIZFLOOR;
+	getBusinessData(businessId).floorItemCache[firstSlot] = getBusinessData(businessId).storageItemCache[itemSlot];
+	getBusinessData(businessId).storageItemCache[itemSlot] = -1;
+	messagePlayerSuccess(client, `You moved the ${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[firstSlot])).name}s in slot ${itemSlot} of the business storage to the business floor slot ${firstSlot}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function getBusinessStorageFirstFreeItemSlot(businessId) {
+	for(let i in getBusinessData(businessId).storageItemCache) {
+		if(getBusinessData(businessId).storageItemCache[i] == -1) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+// ---------------------------------------------------------------------------
+
+function getBusinessFloorFirstFreeItemSlot(businessId) {
+	for(let i in getBusinessData(businessId).floorItemCache) {
+		if(getBusinessData(businessId).floorItemCache[i] == -1) {
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 // ---------------------------------------------------------------------------

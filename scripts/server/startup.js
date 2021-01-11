@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: startup.js
 // DESC: Provides startup/shutdown procedures
@@ -32,14 +32,9 @@ function initServerScripts() {
 	initEventScript();
 	initAntiCheatScript();
 	initItemScript();
+	initClientScript();
 
 	initTimers();
-
-	//gta.time.hour = getServerConfig().startup.hour;
-	//gta.time.minute = getServerConfig().startup.minute;
-	//gta.forceWeather(getServerConfig().startup.weather);
-
-	initAllClients();
 
 	loadGameFixesResource();
 

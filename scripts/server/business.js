@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: business.js
 // DESC: Provides business functions and usage
@@ -658,30 +658,6 @@ function moveBusinessExitCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function buySkinFromBusinessCommand(command, params, client) {
-	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
-
-	if(getBusinessData(businessId)) {
-		messagePlayerError(client, `You need to be in a business (or at the door if there is no interior)`);
-		return false;
-	}
-
-	if(getBusinessData(businessId).type == getGlobalConfig().buySkinPrice) {
-		messagePlayerError(client, `This business doesn't sell clothes (skins)!`);
-		return false;
-	}
-
-	if(getPlayerCurrentSubAccount(client).cash <= AG_TEMPBIZPRICE_CLOTHES) {
-		messagePlayerError(client, `You don't have enough money! You need [#AAAAAA]$${AG_TEMPBIZPRICE_CLOTHES-getPlayerCurrentSubAccount(client).cash} [#FFFFFF]more!`);
-		return false;
-	}
-
-	setPlayerSkin(client, skinId);
-	messageClientSuccess(client, "You bought a new set of clothes ([#AAAAAA]skinId[#FFFFFF]!");
-}
-
-// ---------------------------------------------------------------------------
-
 function getBusinessDataFromDatabaseId(databaseId) {
 	let matchingBusinesses = getServerData().businesses.filter(b => b.databaseId == businessId)
 	if(matchingBusinesses.length == 1) {
@@ -739,7 +715,7 @@ function saveBusinessToDatabase(businessId) {
 	if(dbConnection) {
 		let safeBusinessName = escapeDatabaseString(dbConnection, tempBusinessData.name);
 		if(tempBusinessData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO biz_main (biz_server, biz_name, biz_owner_type, biz_owner_id, biz_locked, biz_entrance_fee, biz_till, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_rot_z, biz_entrance_int, biz_entrance_vw, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_rot_z, biz_exit_int, biz_exit_vw) VALUES (${getServerId()}, '${safeBusinessName}', ${tempBusinessData.ownerType}, ${tempBusinessData.ownerId}, ${boolToInt(tempBusinessData.locked)}, ${tempBusinessData.entranceFee}, ${tempBusinessData.till}, ${tempBusinessData.entrancePosition.x}, ${tempBusinessData.entrancePosition.y}, ${tempBusinessData.entrancePosition.z}, ${tempBusinessData.entranceRotation}, ${tempBusinessData.entranceInterior}, ${tempBusinessData.entranceDimension}, ${tempBusinessData.exitPosition.x}, ${tempBusinessData.exitPosition.y}, ${tempBusinessData.exitPosition.z}, ${tempBusinessData.exitRotation}, ${tempBusinessData.exitInterior}, ${tempBusinessData.databaseId+getGlobalConfig().businessDimensionStart}, ${boolToInt(tempBusinessData.hasInterior)})`;
+			let dbQueryString = `INSERT INTO biz_main (biz_server, biz_name, biz_owner_type, biz_owner_id, biz_locked, biz_entrance_fee, biz_till, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_rot_z, biz_entrance_int, biz_entrance_vw, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_rot_z, biz_exit_int, biz_exit_vw, biz_has_interior) VALUES (${getServerId()}, '${safeBusinessName}', ${tempBusinessData.ownerType}, ${tempBusinessData.ownerId}, ${boolToInt(tempBusinessData.locked)}, ${tempBusinessData.entranceFee}, ${tempBusinessData.till}, ${tempBusinessData.entrancePosition.x}, ${tempBusinessData.entrancePosition.y}, ${tempBusinessData.entrancePosition.z}, ${tempBusinessData.entranceRotation}, ${tempBusinessData.entranceInterior}, ${tempBusinessData.entranceDimension}, ${tempBusinessData.exitPosition.x}, ${tempBusinessData.exitPosition.y}, ${tempBusinessData.exitPosition.z}, ${tempBusinessData.exitRotation}, ${tempBusinessData.exitInterior}, ${tempBusinessData.databaseId+getGlobalConfig().businessDimensionStart}, ${boolToInt(tempBusinessData.hasInterior)})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().businesses[businessId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {

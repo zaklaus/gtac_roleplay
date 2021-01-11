@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: discord.js
 // DESC: Provides discord bridging and connection functions and usage
@@ -57,6 +57,10 @@ function sendDiscordSocketData(socketData) {
 // ---------------------------------------------------------------------------
 
 function isClientFromDiscord(client) {
+    if(client == null) {
+        return false;
+    }
+
     if(client instanceof Client) {
         return false;
     } else {

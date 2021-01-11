@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: messaging.js
 // DESC: Provides messaging functions and usage
@@ -11,7 +11,7 @@
 // ---------------------------------------------------------------------------
 
 function messageAdminAction(messageText) {
-    message(`⚠️ ${messageText}`, getColourByName("orange"));
+    messagePlayerNormal(null, `⚠️ ${messageText}`, getColourByName("orange"));
     if(getServerConfig().discordEnabled) {
         messageDiscord(`:warning: ${messageText}`);
     }
@@ -26,11 +26,13 @@ function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
         return true;
     }
 
-    if(!isClientFromDiscord(client)) {
-        messageClient(`${messageText}`, client, colour);
-    } else {
-        messageDiscordUser(client, `${messageText}`);
-    }
+    sendChatBoxMessageToPlayer(client, `${messageText}`, colour);
+
+    //if(!isClientFromDiscord(client)) {
+    //
+    //} else {
+    //    messageDiscordUser(client, `${messageText}`);
+    //}
 }
 
 // ---------------------------------------------------------------------------
@@ -38,11 +40,11 @@ function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
 function messageAdmins(messageText, colour = COLOUR_WHITE) {
     let clients = getClients();
     for(let i in clients) {
-        if(clients[i].console) {
+        if(isConsole(clients[i])) {
             logToConsole(LOG_INFO, `[Asshat.Messaging] ADMINS: ${messageText}`);
         } else {
             if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
-                messageClient(`🛡️ ${messageText}`, clients[i], getColourByName("softRed"));
+                sendChatBoxMessageToPlayer(clients[i], `🛡️ ${messageText}`, getColourByName("softRed"));
             }
         }
 

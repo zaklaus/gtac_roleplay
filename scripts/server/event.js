@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: event.js
 // DESC: Provides handlers for built in GTAC and Asshat-Gaming created events
@@ -11,49 +11,67 @@
 // ---------------------------------------------------------------------------
 
 function initEventScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Event]: Initializing event script ...");
-    addNetworkHandler("ag.onPlayerEnterVehicle", playerEnteredVehicle);
-    addNetworkHandler("ag.onPlayerExitVehicle", playerExitedVehicle);
+    logToConsole(LOG_DEBUG, "[Asshat.Event]: Initializing event script ...");
+    addAllEventHandlers();
     logToConsole(LOG_DEBUG, "[Asshat.Event]: Event script initialized!");
 }
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnPlayerConnect", function(event, ipAddress, port) {
+function addAllEventHandlers() {
+    addEventHandler("onResourceStart", onResourceStart);
+    addEventHandler("onResourceStop", onResourceStop);
+
+    addEventHandler("onProcess", onProcess);
+
+    addEventHandler("onPlayerConnect", onPlayerConnect);
+    addEventHandler("onPlayerJoin", onPlayerJoin);
+    addEventHandler("onPlayerJoined", onPlayerJoined);
+    addEventHandler("onPlayerChat", onPlayerChat);
+    addEventHandler("onPlayerQuit", onPlayerQuit);
+
+    addEventHandler("onPedSpawn", onPedSpawn);
+    addEventHandler("onPedEnterVehicle", onPedEnteringVehicle);
+    //addEventHandler("onPedExitingVehicle", onPedExitingVehicle);
+}
+
+// ---------------------------------------------------------------------------
+
+function onPlayerConnect(event, ipAddress, port) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] Client connecting (IP: ${ipAddress})`);
     if(isIpAddressBanned(ipAddress)) {
         messagePlayerError(client, "You are banned from this server!");
         return false;
     }
-});
+}
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnPlayerJoin", function(event, client) {
+function onPlayerJoin(event, client) {
     fadeCamera(client, true, 1.0);
-});
+}
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnPlayerJoined", function(event, client) {
-    //message(`👋 ${client.name} has joined the server`, getColourByName("softYellow"));
-});
+function onPlayerJoined(event, client) {
+
+}
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnPlayerQuit", function(event, client, quitReasonId) {
+function onPlayerQuit(event, client, quitReasonId) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
 
     //savePlayerToDatabase(client);
     resetClientStuff(client);
 
     getServerData().clients[client.index] = null;
-    message(`👋 ${client.name} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
-});
+    messagePlayerNormal(null, `👋 ${client.name} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
+}
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("onPlayerChat", function(event, client, messageText) {
+function onPlayerChat(event, client, messageText) {
     event.preventDefault();
     if(!getPlayerData(client).loggedIn) {
         messagePlayerError(client, "You need to login before you can chat!");
@@ -62,65 +80,18 @@ addEventHandler("onPlayerChat", function(event, client, messageText) {
 
     messageText = messageText.substring(0, 128);
 
-    message(`${getCharacterFullName(client)}: [#FFFFFF]${messageText}`, getPlayerColour(client));
-});
+    messagePlayerNormal(null, `${getCharacterFullName(client)}: [#FFFFFF]${messageText}`, getPlayerColour(client));
+}
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnPedExitVehicle", function(event, ped, vehicle) {
-    //if(!vehicle || vehicle.owner != -1) {
-    //    return false;
-    //}
-
-    //if(!getVehicleData(vehicle)) {
-    //    return false;
-    //}
-});
+function onProcess(event, deltaTime) {
+    checkVehicleBuying();
+}
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnProcess", function(event, deltaTime) {
-    let clients = getClients();
-    for(let i in clients) {
-        if(getPlayerData(clients[i])) {
-            if(getPlayerData(clients[i]).buyingVehicle) {
-                if(getPlayerVehicle(clients[i]) == getPlayerData(clients[i]).buyingVehicle) {
-                    if(getDistance(getVehiclePosition(getPlayerData(clients[i]).buyingVehicle), getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
-                        if(getPlayerCurrentSubAccount(clients[i]).cash < getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice) {
-                            messagePlayerError(client, "You don't have enough money to buy this vehicle!");
-                            respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
-                            getPlayerData(clients[i]).buyingVehicle = false;
-                            return false;
-                        }
-
-                        createNewDealershipVehicle(getVehicleData(getPlayerData(clients[i]).buyingVehicle).model, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice, getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId);
-                        getPlayerCurrentSubAccount(clients[i]).cash -= getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice;
-                        updatePlayerCash(clients[i]);
-                        getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId = getPlayerCurrentSubAccount(clients[i]).databaseId;
-                        getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerType = AG_VEHOWNER_PLAYER;
-                        getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice = 0;
-                        getVehicleData(getPlayerData(clients[i]).buyingVehicle).rentPrice = 0;
-                        getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnLocked = false;
-                        getPlayerData(clients[i]).buyingVehicle = false;
-                        messagePlayerSuccess(clients[i], "This vehicle is now yours! It will save wherever you leave it.");
-                    }
-                } else {
-                    messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
-                    respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
-                    getPlayerData(clients[i]).buyingVehicle = false;
-                }
-            }
-        }
-    }
-});
-
-// ---------------------------------------------------------------------------
-
-addEventHandler("OnPedEnterVehicle", function(event, ped, vehicle, seat) {
-    //if(!vehicle || vehicle.owner != -1) {
-    //    return false;
-    //}
-
+function onPedEnteringVehicle(event, ped, vehicle, seat) {
     if(!getVehicleData(vehicle)) {
         return false;
     }
@@ -143,11 +114,47 @@ addEventHandler("OnPedEnterVehicle", function(event, ped, vehicle, seat) {
             }
         }
     }
-});
+}
 
 // ---------------------------------------------------------------------------
 
-async function playerEnteredVehicle(client) {
+function onResourceStart(event, resource) {
+    logToConsole(LOG_WARN, `[Asshat.Event] ${resource.name} started!`);
+
+    if(resource != thisResource) {
+        messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]started!`);
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+function onResourceStop(event, resource) {
+    logToConsole(LOG_WARN, `[Asshat.Event] ${resource.name} stopped!`);
+
+    if(resource != thisResource) {
+        messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]stopped!`);
+    }
+
+    if(resource == thisResource) {
+        //saveAllServerDataToDatabase();
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+function onPlayerEnteredSphere(client, sphere) {
+
+}
+
+// ---------------------------------------------------------------------------
+
+function onPlayerExitedSphere(client, sphere) {
+
+}
+
+// ---------------------------------------------------------------------------
+
+async function onPlayerEnteredVehicle(client) {
     if(client.player == null) {
         return false;
     }
@@ -208,7 +215,7 @@ async function playerEnteredVehicle(client) {
 
 // ---------------------------------------------------------------------------
 
-function playerExitedVehicle(client) {
+function onPlayerExitedVehicle(client) {
     let vehicle = getPlayerData(client).lastVehicle;
 
     if(!getVehicleData(vehicle)) {
@@ -228,7 +235,7 @@ function playerExitedVehicle(client) {
 
 // ---------------------------------------------------------------------------
 
-function processPlayerDeath(client, position) {
+function onPlayerDeath(client, position) {
 	updatePlayerSpawnedState(client, false);
     setPlayerControlState(client, false);
 	setTimeout(function() {
@@ -252,17 +259,17 @@ function processPlayerDeath(client, position) {
 
 // ---------------------------------------------------------------------------
 
-function processPedSpawn(ped) {
+function onPedSpawn(ped) {
     if(ped.type == ELEMENT_PLAYER) {
-        setTimeout(processPlayerSpawn, 500, ped);
+        setTimeout(onPlayerSpawn, 500, ped);
     }
 }
 
 // ---------------------------------------------------------------------------
 
-function processPlayerSpawn(ped) {
+function onPlayerSpawn(ped) {
     if(getClientFromPlayerElement(ped) == null) {
-        setTimeout(processPlayerSpawn, 500, ped);
+        setTimeout(onPlayerSpawn, 500, ped);
         return false;
     }
 
@@ -289,7 +296,7 @@ function processPlayerSpawn(ped) {
     getPlayerData(client).switchingCharacter = false;
     updatePlayerCash(client);
     updatePlayerJobType(client);
-    setPlayer2DRendering(client, true, true, true, true, true);
+    setPlayer2DRendering(client, true, true, true, true, true, true);
     updatePlayerSnowState(client);
     updatePlayerHotBar(client);
 
@@ -304,35 +311,5 @@ function processPlayerSpawn(ped) {
         updatePlayerShowLogoState(client, true);
     }
 }
-
-// ---------------------------------------------------------------------------
-
-addEventHandler("OnPedSpawn", function(event, ped) {
-    processPedSpawn(ped);
-});
-
-// ---------------------------------------------------------------------------
-
-addEventHandler("OnResourceStart", function(event, resource) {
-    console.warn(`[Asshat.Event] ${resource.name} started!`);
-
-    if(resource != thisResource) {
-        messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]started!`);
-    }
-});
-
-// ---------------------------------------------------------------------------
-
-addEventHandler("OnResourceStop", function(event, resource) {
-    console.warn(`[Asshat.Event] ${resource.name} stopped!`);
-
-    if(resource != thisResource) {
-        messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]stopped!`);
-    }
-
-    if(resource == thisResource) {
-        //saveAllServerDataToDatabase();
-    }
-});
 
 // ---------------------------------------------------------------------------

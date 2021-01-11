@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: keybind.js
 // DESC: Provides keybind handlers and functions
@@ -191,7 +191,7 @@ function removeKeyBindCommand(command, params, client) {
 function addPlayerKeyBind(client, keyId, tempCommand, tempParams) {
     let keyBindData = new serverClasses.keyBindData(keyId, `${tempCommand} ${tempParams}`);
     getPlayerData(client).accountData.keyBinds.push(keyBindData);
-    sendAccountKeyBindToClient(client, getPlayerKeyBindForKey(client, keyId));
+    sendAddAccountKeyBindToClient(client, getPlayerKeyBindForKey(client, keyId));
 }
 
 // ---------------------------------------------------------------------------
@@ -203,7 +203,7 @@ function removePlayerKeyBind(client, keyId) {
             accountKeyBinds.splice(i, 1);
         }
     }
-    removeAccountKeyBindFromClient(client, keyId);
+    sendRemoveAccountKeyBindToClient(client, keyId);
 }
 
 // ---------------------------------------------------------------------------
@@ -280,20 +280,13 @@ function playerUsedKeyBind(client, key) {
         }
     }
 }
-addNetworkHandler("ag.keybind.trig", playerUsedKeyBind);
 
 // ---------------------------------------------------------------------------
 
 function sendAccountKeyBindsToClient(client) {
     for(let i in getPlayerData(client).accountData.keyBinds) {
-        sendAccountKeyBindToClient(client, getPlayerData(client).accountData.keyBinds[i].key, getPlayerData(client).accountData.keyBinds[i].keyState);
+        sendAddAccountKeyBindToClient(client, getPlayerData(client).accountData.keyBinds[i].key, getPlayerData(client).accountData.keyBinds[i].keyState);
     }
-}
-
-// ---------------------------------------------------------------------------
-
-function sendAccountKeyBindToClient(client, key, keyState) {
-    triggerNetworkEvent("ag.keybinds.add", client, toInteger(key), (keyState) ? KEYSTATE_DOWN : KEYSTATE_UP);
 }
 
 // ---------------------------------------------------------------------------

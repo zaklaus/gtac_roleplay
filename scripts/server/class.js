@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: class.js
 // DESC: Provides classes
@@ -101,6 +101,7 @@ function initClassTable() {
 				this.index = -1;
 				this.connectTime = 0;
 				this.clientVersion = "0.0.0";
+				this.loginAttemptsRemaining = 3;
 
 				this.busRoute = null;
 				this.busRouteStop = null;
@@ -128,10 +129,14 @@ function initClassTable() {
 				this.tutorialVehicle = null;
 
 				this.hotBarItems = new Array(9).fill(-1);
-				this.activeHotBarSlot = 0;
+				this.activeHotBarSlot = -1;
+				this.toggleUseItem = false;
 
 				this.jobLockerCache = new Array(9).fill(-1);
 				this.jobEquipmentCache = [];
+
+				this.itemActionState = AG_ITEM_ACTION_NONE;
+				this.itemActionItem = -1;
 			}
 		},
 		accountData: class {
@@ -302,7 +307,6 @@ function initClassTable() {
 					this.interior = dbAssoc["sacct_int"];
 					this.dimension = dbAssoc["sacct_vw"];
 					this.pedScale = toVector3(dbAssoc["sacct_scale_x"], dbAssoc["sacct_scale_y"], dbAssoc["sacct_scale_z"]);
-					return;
 				}
 			}
 		},
@@ -793,7 +797,6 @@ function initClassTable() {
 				this.enabled = false;
 				this.index = -1;
 				this.jobIndex = -1;
-				this.jobIndex = -1;
 				this.needsSaved = false;
 
 				if(dbAssoc) {
@@ -909,6 +912,7 @@ function initClassTable() {
 				this.needsSaved = false;
 				this.amount = 0;
 				this.value = 0;
+				this.enabled = false;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc["item_id"]);
@@ -923,6 +927,7 @@ function initClassTable() {
 					this.buyPrice = toInteger(dbAssoc["item_buy_price"]);
 					this.amount = toInteger(dbAssoc["item_amount"]);
 					this.value = toInteger(dbAssoc["item_value"]);
+					this.enabled = intToBool(toInteger(dbAssoc["item_enabled"]));
 				}
 			}
 		},
@@ -943,6 +948,12 @@ function initClassTable() {
 				this.dropModel = 0;
 				this.orderPrice = 0;
 				this.needsSaved = false;
+				this.switchDelay = 0;
+				this.pickupDelay = 0;
+				this.putDelay = 0;
+				this.takeDelay = 0;
+				this.giveDelay = 0;
+				this.dropDelay = 0;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc["item_type_id"]);
@@ -963,6 +974,13 @@ function initClassTable() {
 					this.orderPrice = toInteger(dbAssoc["item_type_order_price"]);
 					this.size = toInteger(dbAssoc["item_type_size"]);
 					this.capacity = toInteger(dbAssoc["item_type_capacity"]);
+					this.useDelay = toInteger(dbAssoc["item_type_delay_use"]);
+					this.switchDelay = toInteger(dbAssoc["item_type_delay_switch"]);
+					this.pickupDelay = toInteger(dbAssoc["item_type_delay_pickup"]);
+					this.putDelay = toInteger(dbAssoc["item_type_delay_put"]);
+					this.takeDelay = toInteger(dbAssoc["item_type_delay_take"]);
+					this.giveDelay = toInteger(dbAssoc["item_type_delay_give"]);
+					this.dropDelay = toInteger(dbAssoc["item_type_delay_drop"]);
 				}
 			}
 		}
@@ -984,6 +1002,3 @@ function getClass(className) {
 }
 
 // ---------------------------------------------------------------------------
-
-
-

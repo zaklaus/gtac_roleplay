@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: colour.js
 // DESC: Provides colours, functions and usage
@@ -78,7 +78,7 @@ function getPlayerColour(client) {
 			return getColourByName("darkGrey");
 		} else {
 			if(isPlayerWorking(client)) {
-				return getJobData(getPlayerCurrentSubAccount(client).job).colour;
+				return getJobData(getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client).job)).colour;
 			}
 		}
 	}

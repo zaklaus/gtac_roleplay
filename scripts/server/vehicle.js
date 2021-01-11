@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: vehicle.js
 // DESC: Provides vehicle functions and usage
@@ -99,19 +99,10 @@ function saveVehicleToDatabase(vehicleData) {
 // ---------------------------------------------------------------------------
 
 function spawnAllVehicles() {
-	let vehicles = getServerData().vehicles;
-	for(let i in vehicles) {
-		if(isGTAIV()) {
-			if(!vehicles[i].syncedBy) {
-				let closestClient = getClosestPlayer(vehicles[i].spawnPosition);
-				triggerNetworkEvent("ag.vehicle", closestClient, i, vehicles[i].modelIndex, vehicles[i].spawnPosition, vehicles[i].spawnRotation, vehicles[i].colour1, vehicles[i].colour2, vehicles[i].locked, vehicles[i].lights);
-				vehicles[i].syncedBy = closestClient;
-			}
-		} else {
-			let vehicle = spawnVehicle(vehicles[i]);
-			vehicles[i].vehicle = vehicle;
-			setEntityData(vehicle, "ag.dataSlot", i, false);
-		}
+	for(let i in getServerData().vehicles) {
+		let vehicle = spawnVehicle(getServerData().vehicles[i]);
+		getServerData().vehicles[i].vehicle = vehicle;
+		setEntityData(vehicle, "ag.dataSlot", i, false);
 	}
 }
 
@@ -195,17 +186,10 @@ function vehicleLockCommand(command, params, client) {
 		}
 	}
 
-	if(getVehicleData(vehicle).locked) {
-		vehicle.locked = false;
-		getVehicleData(vehicle).locked = false;
-	} else {
-		vehicle.locked = true;
-		getVehicleData(vehicle).locked = true;
-	}
+	getVehicleData(vehicle).locked = !getVehicleData(vehicle).locked;
+	vehicle.locked = getVehicleData(vehicle).locked;
 
-	let lockText = (getVehicleData(vehicle).locked) ? "locked" : "unlocked";
-
-	meActionToNearbyPlayers(client, `${lockText} the ${getVehicleName(vehicle)}`);
+	meActionToNearbyPlayers(client, `${toLowerCase(getLockedUnlockedFromBool(getVehicleData(vehicle).locked))} the ${getVehicleName(vehicle)}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -228,11 +212,10 @@ function vehicleLightsCommand(command, params, client) {
 		return false;
 	}
 
-	triggerNetworkEvent("ag.veh.lights", getVehicleSyncer(vehicle), getVehicleForNetworkEvent(vehicle), getVehicleData(vehicle).lights);
-
 	getVehicleData(vehicle).lights = !getVehicleData(vehicle).lights;
+	vehicle.lights = true;
 
-	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s lights ${getOnOffFromBool(vehicle)}`);
+	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s lights ${toLowerCase(getOnOffFromBool(vehicle))}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -286,9 +269,8 @@ function vehicleEngineCommand(command, params, client) {
 
 	getVehicleData(vehicle).engine = !getVehicleData(vehicle).engine;
 	vehicle.engine = getVehicleData(vehicle).engine;
-	//triggerNetworkEvent("ag.veh.engine", null, getVehicleForNetworkEvent(vehicle), getVehicleData(vehicle).engine);
 
-	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s engine ${getOnOffFromBool(getVehicleData(vehicle).engine)}`);
+	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s engine ${toLowerCase(getOnOffFromBool(getVehicleData(vehicle).engine))}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -319,7 +301,7 @@ function vehicleSirenCommand(command, params, client) {
 	getVehicleData(vehicle).siren = !getVehicleData(vehicle).siren;
 	vehicle.siren = getVehicleData(vehicle).siren;
 
-	meActionToNearbyPlayers(client, `turns the ${getVehicleName(vehicle)}'s siren ${getOnOffFromBool(getVehicleData(vehicle).siren)}`);
+	meActionToNearbyPlayers(client, `turns the ${getVehicleName(vehicle)}'s siren ${toLowerCase(getOnOffFromBool(getVehicleData(vehicle).siren))}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -1037,6 +1019,43 @@ function createPermanentVehicle(modelId, position, heading) {
 	setEntityData(vehicle, "ag.dataSlot", slot-1, false);
 
 	return vehicle;
+}
+
+// -------------------------------------------------------------------------
+
+function checkVehicleBuying() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(getPlayerData(clients[i])) {
+			if(getPlayerData(clients[i]).buyingVehicle) {
+				if(getPlayerVehicle(clients[i]) == getPlayerData(clients[i]).buyingVehicle) {
+					if(getDistance(getVehiclePosition(getPlayerData(clients[i]).buyingVehicle), getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
+						if(getPlayerCurrentSubAccount(clients[i]).cash < getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice) {
+							messagePlayerError(client, "You don't have enough money to buy this vehicle!");
+							respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
+							getPlayerData(clients[i]).buyingVehicle = false;
+							return false;
+						}
+
+						createNewDealershipVehicle(getVehicleData(getPlayerData(clients[i]).buyingVehicle).model, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice, getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId);
+						getPlayerCurrentSubAccount(clients[i]).cash -= getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice;
+						updatePlayerCash(clients[i]);
+						getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId = getPlayerCurrentSubAccount(clients[i]).databaseId;
+						getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerType = AG_VEHOWNER_PLAYER;
+						getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice = 0;
+						getVehicleData(getPlayerData(clients[i]).buyingVehicle).rentPrice = 0;
+						getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnLocked = false;
+						getPlayerData(clients[i]).buyingVehicle = false;
+						messagePlayerSuccess(clients[i], "This vehicle is now yours! It will save wherever you leave it.");
+					}
+				} else {
+					messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
+					respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
+					getPlayerData(clients[i]).buyingVehicle = false;
+				}
+			}
+		}
+	}
 }
 
 // -------------------------------------------------------------------------

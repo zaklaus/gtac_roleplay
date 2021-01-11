@@ -111,13 +111,17 @@ function getDistance(vec1, vec2) {
 // ---------------------------------------------------------------------------
 
 function isConsole(client) {
+	if(client == null) {
+		return false;
+	}
+
 	return client.console;
 }
 
 // ---------------------------------------------------------------------------
 
 function logToConsole(tempLogLevel, text) {
-	if(logLevel & tempLogLevel) {
+	if(logLevel & tempLogLevel || logLevel == LOG_ALL) {
 		if(tempLogLevel == LOG_ERROR) {
 			console.error(text);
 		} else if(tempLogLevel == LOG_WARN) {
@@ -130,6 +134,12 @@ function logToConsole(tempLogLevel, text) {
 	}
 
 	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function isSamePlayer(client1, client2) {
+	return (client1 == client2);
 }
 
 // ---------------------------------------------------------------------------

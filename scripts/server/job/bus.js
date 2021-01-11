@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: bus.js
 // DESC: Provides bus driver job functions and usage
@@ -398,12 +398,12 @@ function showNextBusStop(client) {
 // ---------------------------------------------------------------------------
 
 function showCurrentBusStop(client) {
-    triggerNetworkEvent("ag.showBusStop", client, getBusRouteStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop), getColourByName("busDriverGreen"));
+    sendJobRouteStopToPlayer(client, getBusRouteStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop), getColourByName("busDriverGreen"))
 }
 
 // ---------------------------------------------------------------------------
 
-function arrivedAtBusStop(client) {
+function playerArrivedAtBusStop(client) {
     if(isLastStopOnBusRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
         respawnVehicle(getPlayerData(client).jobRouteVehicle);
         messagePlayerNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route! You earned $${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout} and your bus has been returned to the bus depot.`, getColourByName("yellow"));

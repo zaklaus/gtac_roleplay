@@ -40,24 +40,34 @@ let garbageCollectorInterval = null;
 let parkedVehiclePosition = false;
 let parkedVehicleHeading = false;
 
-let renderHUD = false;
-let renderLabels = false;
-let renderLogo = false;
-let renderSmallGameMessage = false;
-let renderScoreboard = false;
-let renderHotBar = false;
+let renderHUD = true;
+let renderLabels = true;
+let renderLogo = true;
+let renderSmallGameMessage = true;
+let renderScoreboard = true;
+let renderHotBar = true;
+let renderItemActionDelay = true;
 
-let logLevel = LOG_DEBUG;
+let logLevel = LOG_ALL;
 
 let weaponDamageEnabled = {};
-let weaponDamageEvent = AG_WEAPON_DAMAGE_EVENT_NONE;
+let weaponDamageEvent = {};
+
+let forceWeapon = 0;
+
+let itemActionDelayDuration = 0;
+let itemActionDelayStart = 0;
+let itemActionDelayEnabled = false;
+let itemActionDelayPosition = toVector2(gta.width/2, gta.height-100);
+let itemActionDelaySize = toVector2(100, 10);
 
 // ---------------------------------------------------------------------------
 
 addEvent("OnLocalPlayerEnterSphere", 1);
 addEvent("OnLocalPlayerExitSphere", 1);
-addEvent("OnLocalPlayerEnterVehicle", 1);
-addEvent("OnLocalPlayerExitVehicle", 1);
+addEvent("OnLocalPlayerEnteredVehicle", 1);
+addEvent("OnLocalPlayerExitedVehicle", 1);
+addEvent("OnLocalPlayerSwitchWeapon", 2);
 
 // ---------------------------------------------------------------------------
 
@@ -171,6 +181,7 @@ function getClosestVehicle(pos) {
 addNetworkHandler("ag.clearWeapons", function() {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Clearing weapons`);
     localPlayer.clearWeapons();
+    forceWeapon = 0;
 });
 
 // ---------------------------------------------------------------------------
@@ -178,11 +189,12 @@ addNetworkHandler("ag.clearWeapons", function() {
 addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Giving weapon ${weaponId} with ${ammo} ammo`);
     localPlayer.giveWeapon(weaponId, ammo, active);
+    forceWeapon = weaponId;
 });
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("onElementStreamIn", function(event, element) {
+addEventHandler("OnElementStreamIn", function(event, element) {
     switch(element.type) {
         case ELEMENT_VEHICLE:
             syncVehicleProperties(element);
@@ -194,6 +206,10 @@ addEventHandler("onElementStreamIn", function(event, element) {
 
         case ELEMENT_PLAYER:
             syncPlayerProperties(element);
+            break;
+
+        case ELEMENT_OBJECT:
+            syncObjectProperties(element);
             break;
 
         default:
@@ -305,6 +321,8 @@ function initLocalPlayer(player) {
 // ---------------------------------------------------------------------------
 
 function processEvent(event, deltaTime) {
+    gta.clearMessages();
+
     if(localPlayer != null) {
         localPlayer.wantedLevel = 0;
 
@@ -361,27 +379,25 @@ function processEvent(event, deltaTime) {
 
         if(localPlayer.vehicle) {
             if(!inVehicle) {
-                triggerNetworkEvent("ag.onPlayerEnterVehicle");
                 inVehicle = localPlayer.vehicle;
                 inVehicleSeat = getLocalPlayerVehicleSeat();
-
-                if(inVehicleSeat == 0) {
-                    inVehicle.engine = false;
-                    if(!inVehicle.engine) {
-                        parkedVehiclePosition = inVehicle.position;
-                        parkedVehicleHeading = inVehicle.heading;
-                    }
-                }
+                triggerEvent("OnLocalPlayerEnteredVehicle", inVehicle, inVehicleSeat);
             }
         } else {
             if(inVehicle) {
-                triggerNetworkEvent("ag.onPlayerExitVehicle");
-                if(inVehicleSeat) {
-                    parkedVehiclePosition = false;
-                    parkedVehicleHeading = false;
-                }
+                triggerEvent("OnLocalPlayerExitedVehicle", inVehicle, inVehicleSeat);
                 inVehicle = false;
                 inVehicleSeat = false;
+            }
+        }
+
+        if(forceWeapon != 0) {
+            if(localPlayer.weapon != forceWeapon) {
+                localPlayer.weapon = forceWeapon;
+            }
+        } else {
+            if(localPlayer.weapon > 0) {
+                localPlayer.clearWeapons();
             }
         }
     }
@@ -403,7 +419,6 @@ addEventHandler("OnDrawnHUD", function (event) {
             if(smallGameMessageFont != "") {
                 smallGameMessageFont.render(smallGameMessageText, [0, gta.height-50], gta.width, 0.5, 0.0, smallGameMessageFont.size, smallGameMessageColour, true, true, false, true);
             }
-            return false;
         }
     }
 
@@ -414,8 +429,31 @@ addEventHandler("OnDrawnHUD", function (event) {
     }
 
     if(renderScoreboard) {
-        if(localPlayer != nul && isKeyDown()) {
-            renderScoreboard();
+        if(isKeyDown(SDLK_TAB)) {
+            processScoreboardRendering();
+        }
+    }
+
+    if(renderLabels) {
+        processLabelRendering();
+    }
+
+    if(renderItemActionDelay) {
+        //logToConsole(LOG_DEBUG, `Item action delay render enabled`);
+        if(itemActionDelayEnabled) {
+            //logToConsole(LOG_DEBUG, `Item action delay enabled`);
+            let finishTime = itemActionDelayStart+itemActionDelayDuration;
+            if(sdl.ticks >= finishTime) {
+                logToConsole(LOG_DEBUG, `Item action delay finish time reached`);
+                itemActionDelayEnabled = false;
+                itemActionDelayDuration = 0;
+                itemActionDelayStart = 0;
+                triggerNetworkEvent("ag.itemActionDelayComplete");
+            } else {
+                let progressWidth = itemActionDelaySize.x-Math.ceil((finishTime-sdl.ticks)/100);
+                logToConsole(LOG_DEBUG, `Item action delay in progress - ${Math.ceil((finishTime-sdl.ticks)/100)} - ${progressWidth}/${itemActionDelaySize.x}`);
+                drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2), itemActionDelayPosition.y-(itemActionDelaySize.y/2)], [progressWidth, itemActionDelaySize.y], COLOUR_LIME, COLOUR_LIME, COLOUR_LIME, COLOUR_LIME);
+            }
         }
     }
 });
@@ -631,7 +669,7 @@ function clearSelfOwnedPeds() {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState) {
+addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState) {
     renderHUD = hudState;
     setHUDEnabled(hudState);
 
@@ -639,6 +677,7 @@ addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameM
     renderSmallGameMessage = smallGameMessageState;
     renderScoreboard = scoreboardState;
     renderHotBar = hotBarState;
+    renderItemActionDelay = itemActionDelayState;
 });
 
 // ---------------------------------------------------------------------------
@@ -659,4 +698,37 @@ addEventHandler("OnPedInflictDamage", function(event, damagedPed, damagerEntity,
     //
     //    }
     //    if(damagerEntity.isType(ELEMENT_PLAYER))
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnLocalPlayerExitedVehicle", function(event, vehicle, seat) {
+    triggerNetworkEvent("ag.onPlayerExitVehicle");
+    if(inVehicleSeat) {
+        parkedVehiclePosition = false;
+        parkedVehicleHeading = false;
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("OnLocalPlayerEnteredVehicle", function(event, vehicle, seat) {
+    triggerNetworkEvent("ag.onPlayerEnterVehicle");
+
+    if(inVehicleSeat == 0) {
+        inVehicle.engine = false;
+        if(!inVehicle.engine) {
+            parkedVehiclePosition = inVehicle.position;
+            parkedVehicleHeading = inVehicle.heading;
+        }
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.showItemActionDelay", function(duration) {
+    itemActionDelayDuration = duration;
+    itemActionDelayStart = sdl.ticks;
+    itemActionDelayEnabled = true;
+    logToConsole(LOG_DEBUG, `Item action delay event called. Duration: ${itemActionDelayDuration}, Start: ${itemActionDelayStart}, Render: ${renderItemActionDelay}`);
 });

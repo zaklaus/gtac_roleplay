@@ -27,6 +27,7 @@
 	<script src="scripts/server/developer.js" type="server" language="javascript" />
 	<script src="scripts/server/discord.js" type="server" language="javascript" />
 	<script src="scripts/server/event.js" type="server" language="javascript" />
+	<script src="scripts/server/gui.js" type="server" language="javascript" />
 	<script src="scripts/server/help.js" type="server" language="javascript" />
 	<script src="scripts/server/house.js" type="server" language="javascript" />
 	<script src="scripts/server/item.js" type="server" language="javascript" />
@@ -69,6 +70,11 @@
 	<script src="scripts/server/job/taxi.js" type="server" language="javascript" />
 	<script src="scripts/server/job/weapon.js" type="server" language="javascript" />
 
+	<script src="scripts/server/item/food.js" type="server" language="javascript" />
+	<script src="scripts/server/item/drink.js" type="server" language="javascript" />
+	<script src="scripts/server/item/walkie-talkie.js" type="server" language="javascript" />
+	<script src="scripts/server/item/phone.js" type="server" language="javascript" />
+
 	<script src="scripts/server/startup.js" type="server" language="javascript" />
 
 	<!-- Client -->
@@ -82,6 +88,7 @@
 	<script src="scripts/client/sync.js" type="client" language="javascript" />
 	<script src="scripts/client/scoreboard.js" type="client" language="javascript" />
 	<script src="scripts/client/keybind.js" type="client" language="javascript" />
+	<script src="scripts/client/chatbox.js" type="client" language="javascript" />
 	<script src="scripts/client/label.js" type="client" language="javascript" />
 	<script src="scripts/client/mouse-camera.js" type="client" language="javascript" />
 

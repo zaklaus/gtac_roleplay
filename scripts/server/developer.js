@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: developer.js
 // DESC: Provides developer operation, commands, functions and usage
@@ -223,7 +223,7 @@ function executeClientCodeCommand(command, params, client) {
 		return false;
 	}
 
-	triggerNetworkEvent("ag.runCode", targetClient, targetCode, client.index);
+	sendRunCodeToClient(client, targetClient, targetCode, client.index);
 
 	messagePlayerSuccess(client, "Executing client code for " + toString(targetClient.name) + "!");
 	messagePlayerNormal(client, "Code: " + targetCode);
@@ -242,7 +242,7 @@ function saveAllServerDataCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function restartGameModeCommand(command, params, client) {
-	message(`[#FF9900]The server game mode is restarting!`, getColourByName("orange"));
+	messagePlayerNormal(null, `[#FF9900]The server game mode is restarting!`, getColourByName("orange"));
 	consoleCommand("refresh");
 	thisResource.restart();
 	return true;
@@ -250,7 +250,7 @@ function restartGameModeCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.runCodeFail", function(client, returnTo, code) {
+function clientRunCodeFail(client, returnTo, code) {
 	let returnClient = getClients()[returnTo];
 	if(!returnClient) {
 		return false;
@@ -258,11 +258,11 @@ addNetworkHandler("ag.runCodeFail", function(client, returnTo, code) {
 
 	messagePlayerError(returnClient, `Client code failed to execute for ${client.name}!`);
 	messagePlayerNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
-});
+}
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.runCodeSuccess", function(client, returnTo, returnVal, code) {
+function clientRunCodeSuccess(client, returnTo, returnVal, code) {
 	let returnClient = getClients()[returnTo];
 	if(!returnClient) {
 		return false;
@@ -271,7 +271,7 @@ addNetworkHandler("ag.runCodeSuccess", function(client, returnTo, returnVal, cod
 	messagePlayerSuccess(returnClient, `Client code executed for ${client.name}!`);
 	messagePlayerNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
 	messagePlayerNormal(returnClient, `Returns: ${returnVal}`, getColourByName("yellow"));
-});
+}
 
 // ---------------------------------------------------------------------------
 

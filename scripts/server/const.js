@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: const.js
 // DESC: Provides constants
@@ -180,11 +180,16 @@ const AG_ITEM_USETYPE_WINE = 21;                // Moderate drunk effect. Replen
 const AG_ITEM_USETYPE_LIQUOR = 22;              // Heavy drunk effect. Replenishes large amount of health.
 const AG_ITEM_USETYPE_COFFEE = 23;              // Replenishes moderate amount of health.
 const AG_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine.
-const AG_ITEM_USETYPE_HANDCUFF = 24;
-const AG_ITEM_USETYPE_ROPE = 25;
-const AG_ITEM_USETYPE_BLINDFOLD = 26;
-const AG_ITEM_USETYPE_TAZER = 27;
-const AG_ITEM_USETYPE_ARMOUR = 28;
+const AG_ITEM_USETYPE_HANDCUFF = 24;            //
+const AG_ITEM_USETYPE_ROPE = 25;                //
+const AG_ITEM_USETYPE_BLINDFOLD = 26;           //
+const AG_ITEM_USETYPE_TAZER = 27;               //
+const AG_ITEM_USETYPE_ARMOUR = 28;              //
+const AG_ITEM_USETYPE_HEALTH = 29;              //
+const AG_ITEM_USETYPE_AED = 30;                 //
+const AG_ITEM_USETYPE_WALKIETALKIE = 31;        //
+const AG_ITEM_USETYPE_BOOMBOX = 32;             //
+const AG_ITEM_USETYPE_EARBUDS = 33;             //
 
 // Item Drop Types
 const AG_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped
@@ -235,3 +240,12 @@ const AG_TUTORIAL_STATE_PUTITEM = 6;
 const AG_TUTORIAL_STATE_TAKEITEM = 7;
 const AG_TUTORIAL_STATE_EXITBIZ = 9;
 const AG_TUTORIAL_STATE_DROPITEM = 10;
+
+// Item Occupied States
+const AG_ITEM_ACTION_NONE = 0;
+const AG_ITEM_ACTION_USE = 1;
+const AG_ITEM_ACTION_PICKUP = 2;
+const AG_ITEM_ACTION_DROP = 3;
+const AG_ITEM_ACTION_SWITCH = 4;
+const AG_ITEM_ACTION_PUT = 5;
+const AG_ITEM_ACTION_TAKE = 6;

@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: utilities.js
 // DESC: Provides util functions and arrays with data
@@ -1540,6 +1540,12 @@ function getOnOffFromBool(boolVal) {
 
 function getEnabledDisabledFromBool(boolVal) {
 	return (boolVal) ? "Enabled" : "Disabled";
+}
+
+// ---------------------------------------------------------------------------
+
+function getLockedUnlockedFromBool(boolVal) {
+	return (boolVal) ? "Locked" : "Unlocked";
 }
 
 // ---------------------------------------------------------------------------

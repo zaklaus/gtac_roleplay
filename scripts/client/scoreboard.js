@@ -24,7 +24,7 @@ bindEventHandler("OnResourceReady", thisResource, function(event, resource) {
 
 // -------------------------------------------------------------------------
 
-function renderScoreboard() {
+function processScoreboardRendering() {
 	if(scoreBoardListFont != null && scoreBoardTitleFont != null) {
 		let scoreboardStart = (game.height/2)-(Math.floor(getClients().length/2)*20);
 		let titleSize = scoreBoardTitleFont.measure("PLAYERS", game.width, 0.0, 1.0, 10, false, false);

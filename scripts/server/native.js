@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: native.js
 // DESC: Provides util function to wrap mod-specific stuff
@@ -51,7 +51,7 @@ function getPlayerPosition(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerPosition(client, position) {
-    return triggerNetworkEvent("ag.position", client, position);
+    sendPlayerSetPosition(client, position);
 }
 
 // ---------------------------------------------------------------------------
@@ -63,7 +63,7 @@ function getPlayerHeading(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerHeading(client, heading) {
-    return triggerNetworkEvent("ag.heading", client, heading);
+    sendPlayerSetHeading(client, heading);
 }
 
 // ---------------------------------------------------------------------------
@@ -97,7 +97,7 @@ function setPlayerDimension(client, dimension) {
 // ---------------------------------------------------------------------------
 
 function setPlayerInterior(client, interior) {
-    triggerNetworkEvent("ag.interior", client, interior);
+    sendPlayerSetInterior(client, interior);
     getPlayerCurrentSubAccount(client).interior = interior;
 }
 
@@ -172,7 +172,7 @@ function isPlayerInFrontVehicleSeat(client) {
 // ---------------------------------------------------------------------------
 
 function removePlayerFromVehicle(client) {
-    triggerNetworkEvent("ag.removeFromVehicle", client);
+    sendPlayerRemoveFromVehicle(client);
     return true;
 }
 
@@ -196,16 +196,42 @@ function getElementSyncer(element) {
 
 // ---------------------------------------------------------------------------
 
-function givePlayerWeapon(client, weaponId, ammo, active) {
-    triggerNetworkEvent("ag.giveWeapon", client, weaponId, ammo, active);
+function getPlayerWeaponAmmo(client) {
+    client.player.weaponAmmunition + client.player.weaponClipAmmunition;
 }
 
 // ---------------------------------------------------------------------------
 
-function clearPlayerWeapons(client) {
-    triggerNetworkEvent("ag.clearWeapons", client);
+function setPlayerVelocity(client, velocity) {
+    client.player.velocity = velocity;
 }
 
 // ---------------------------------------------------------------------------
 
-//triggerNetworkEvent("ag.veh.engine", getElementSyncer(getPlayerVehicle(client)), getVehicleForNetworkEvent(vehicle), getVehicleData(vehicle).engine);
+function getPlayerVelocity(client, velocity) {
+    return client.player.velocity;
+}
+
+// ---------------------------------------------------------------------------
+
+function getElementDimension(element) {
+    return element.dimension;
+}
+
+// ---------------------------------------------------------------------------
+
+function setElementDimension(element, dimension) {
+    return element.dimension = dimension;
+}
+
+// ---------------------------------------------------------------------------
+
+function givePlayerHealth(client, amount) {
+    if(getPlayerHealth(client)+amount > 100) {
+        setPlayerHealth(client, 100);
+    } else {
+        setPlayerHealth(client, getPlayerHealth(client)+amount);
+    }
+}
+
+// ---------------------------------------------------------------------------

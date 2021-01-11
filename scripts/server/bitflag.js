@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: bitflags.js
 // DESC: Provides bitwise operations, functions and usage
@@ -138,6 +138,14 @@ function createBitFlagTable(keyNames) {
 // ---------------------------------------------------------------------------
 
 function hasBitFlag(allFlags, checkForFlag) {
+	if(allFlags == 0) {
+		return false;
+	}
+
+	if(allFlags == -1) {
+		return true;
+	}
+
 	return (allFlags & checkForFlag);
 }
 
@@ -153,10 +161,8 @@ function doesPlayerHaveStaffPermission(client, requiredFlags) {
 	}
 
 	let staffFlags = 0;
-	if(!isClientFromDiscord(client)) {
+	if(getPlayerData(client)) {
 		staffFlags = getPlayerData(client).accountData.flags.admin;
-	} else {
-		staffFlags = getDiscordUserData(client).accountData.flags.admin;
 	}
 
 	// -1 is automatic override (having -1 for staff flags is basically god mode admin level)
@@ -320,3 +326,5 @@ function getServerBitFlags() {
 function getServerBitFlagKeys() {
 	return serverBitFlagKeys;
 }
+
+// ---------------------------------------------------------------------------

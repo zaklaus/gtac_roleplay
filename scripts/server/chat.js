@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: chat.js
 // DESC: Provides chat functions and usage
@@ -99,11 +99,29 @@ function clanChatCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function talkToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().talkDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
 			messagePlayerTalk(getClientFromPlayerElement(clients[i]), client, messageText);
 		//}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function phoneOutgoingToNearbyPlayers(client, messageText) {
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
+	for(let i in clients) {
+		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](to phone): [#FFFFFF]${messageText}`);
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function phoneIncomingToNearbyPlayers(client, messageText) {
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().radioSpeakerDistance);
+	for(let i in clients) {
+		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](from phone): [#FFFFFF]${messageText}`);
 	}
 }
 

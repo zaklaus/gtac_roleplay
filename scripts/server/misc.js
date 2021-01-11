@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: misc.js
 // DESC: Provides any uncategorized functions and usage
@@ -29,14 +29,14 @@ function getPositionCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function toggleMouseCursorCommand(command, params, client) {
-	triggerNetworkEvent("ag.cursorToggle", client);
+	sendPlayerMouseCursorToggle(client);
 	return true;
 }
 
 // ---------------------------------------------------------------------------
 
 function toggleMouseCameraCommand(command, params, client) {
-	triggerNetworkEvent("ag.mouseCamera", client);
+	sendPlayerMouseCameraToggle(client);
 	return true;
 }
 
@@ -278,6 +278,16 @@ function getPlayerInfoCommand(command, params, client) {
 	}
 
 	messagePlayerInfo(client, `[#AAAAAA][Player Info] [#FFFFFF]Account: [#AAAAAA]${getPlayerData(targetClient).accountData.name}[${getPlayerData(targetClient).accountData.databaseId}], [#FFFFFF]Character: [#AAAAAA]${getCharacterFullName(client)}[${getPlayerCurrentSubAccount(client).databaseId}], [#FFFFFF]Connected: [#AAAAAA]${getTimeDifferenceDisplay(Math.ceil(sdl.tick/1000), getPlayerData(targetClient).connectTime)} ago, [#FFFFFF]Game Version: [#AAAAAA]${targetClient.gameVersion}, [#FFFFFFF]Client Version: [#AAAAAA]${getPlayerData(targetClient).clientVersion}`);
+}
+
+// ---------------------------------------------------------------------------
+
+function playerChangeAFKState(client, afkState) {
+    if(afkState) {
+        setEntityData(client, "ag.afk", true, true);
+    } else {
+        client.removeData("ag.afk");
+    }
 }
 
 // ---------------------------------------------------------------------------

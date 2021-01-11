@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: command.js
 // DESC: Provides command data, functions and usage
@@ -188,6 +188,11 @@ function loadCommands() {
             commandData("houseitems", listHouseInventoryCommand, "", getStaffFlagValue("none"), true, false),
             commandData("bizstorage", listBusinessStorageInventoryCommand, "", getStaffFlagValue("none"), true, false),
             commandData("bizfloor", listBusinessFloorInventoryCommand, "", getStaffFlagValue("none"), true, false),
+
+            commandData("power", toggleItemEnabledCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("freq", setWalkieTalkieFrequencyCommand, "[frequncy number]", getStaffFlagValue("none"), true, false),
+            commandData("call", callWithPhoneCommand, "[number]", getStaffFlagValue("none"), true, false),
+            commandData("speakerphone", togglePhoneSpeakerCommand, "", getStaffFlagValue("none"), true, false),
         ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),

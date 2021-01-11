@@ -87,7 +87,9 @@ function syncVehicleProperties(vehicle) {
         vehicle.setSuspensionHeight(suspensionHeight);
     }
 }
-addNetworkHandler("ag.veh.sync", syncVehicleProperties);
+addNetworkHandler("ag.veh.sync", function(event, vehicle) {
+    syncVehicleProperties(vehicle);
+});
 
 // ---------------------------------------------------------------------------
 
@@ -102,7 +104,9 @@ function syncCivilianProperties(civilian) {
 		civilian.position = tempPosition;
     }
 }
-addNetworkHandler("ag.civ.sync", syncCivilianProperties);
+addNetworkHandler("ag.civ.sync", function(event, civilian) {
+    syncCivilianProperties(civilian);
+});
 
 // ---------------------------------------------------------------------------
 
@@ -117,6 +121,25 @@ function syncPlayerProperties(player) {
 		player.position = tempPosition;
     }
 }
-addNetworkHandler("ag.player.sync", syncPlayerProperties);
+addNetworkHandler("ag.player.sync", function(event, player) {
+    syncPlayerProperties(player);
+});
+
+// ---------------------------------------------------------------------------
+
+function syncObjectProperties(object) {
+    if(doesEntityDataExist(object, "ag.scale")) {
+        let scaleFactor = getEntityData(object, "ag.scale");
+		let tempMatrix = object.matrix;
+		tempMatrix.setScale(toVector3(scaleFactor.x, scaleFactor.y, scaleFactor.z));
+		let tempPosition = object.position;
+		object.matrix = tempMatrix;
+		tempPosition.z += scaleFactor.z;
+		object.position = tempPosition;
+    }
+}
+addNetworkHandler("ag.obj.sync", function(event, object) {
+    syncObjectProperties(object);
+});
 
 // ---------------------------------------------------------------------------

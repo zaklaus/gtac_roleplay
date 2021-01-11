@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: garbage.js
 // DESC: Provides garbage collector job functions and usage
@@ -113,7 +113,7 @@ function showCurrentGarbageStop(client) {
 
 // ---------------------------------------------------------------------------
 
-function arrivedAtGarbageStop(client) {
+function playerArrivedAtGarbageStop(client) {
     if(isLastStopOnGarbageRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
         respawnVehicle(getPlayerData(client).jobRouteVehicle);
         messagePlayerNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! You earned $${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout} and your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));

@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: job.js
 // DESC: Provides job functions and usage
@@ -371,7 +371,7 @@ function startWorkingCommand(command, params, client) {
 		return false;
 	}
 
-	if(getPlayerCurrentSubAccount(client).job != closestJobLocation.jobIndex) {
+	if(getPlayerCurrentSubAccount(client).job != closestJobLocation.job) {
 		messagePlayerError(client, "This is not your job!");
 		messagePlayerInfo(client, `If you want this job, use /quitjob to quit your current job.`);
 		return false;
@@ -456,7 +456,7 @@ function startWorking(client) {
 	}
 
 	updatePlayerNameTag(client);
-	triggerNetworkEvent("ag.working", client, true);
+	sendPlayerWorkingState(client, true);
 	//showStartedWorkingTip(client);
 }
 
@@ -473,11 +473,6 @@ function getJobInfoCommand(command, params, client) {
 function getJobLocationInfoCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 
-	//if(!getJobData(getJobIdFromDatabaseId(closestJobLocation.job))) {
-	//	messagePlayerError(client, "Job not found!");
-	//	return false;
-	//}
-
 	messagePlayerInfo(client, `[#FFFF00][Job Location Info] [#FFFFFF]Job: [#AAAAAA]${getJobData(closestJobLocation.job).name} (${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}), [#FFFFFF]Enabled: [#AAAAAA]${getYesNoFromBool(closestJobLocation.enabled)}, [#FFFFFF]Database ID: [#AAAAAA]${closestJobLocation.databaseId}`);
 }
 
@@ -490,10 +485,13 @@ function givePlayerJobEquipment(client, equipmentId) {
 
 	let jobId = getPlayerJob(client);
 
-	for(let i in equipments[equipmentId].items) {
+	for(let i in getJobData(jobId).equipment[equipmentId].items) {
 		let itemId = createItem(getJobData(jobId).equipment[equipmentId].items[i].itemType, getJobData(jobId).equipment[equipmentId].items[i].value, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
 		let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
+		getPlayerData(client).hotBarItems[freeSlot] = itemId;
 		getPlayerData(client).jobEquipmentCache.push(itemId);
+
+		updatePlayerHotBar(client);
 	}
 }
 
@@ -570,7 +568,7 @@ function stopWorking(client) {
 	}
 
 	updatePlayerNameTag(client);
-	triggerNetworkEvent("ag.working", client, false);
+	sendPlayerWorkingState(client, false);
 }
 
 // ---------------------------------------------------------------------------
@@ -712,14 +710,14 @@ function getJobData(jobId) {
 function quitJob(client) {
 	stopWorking(client);
 	getPlayerCurrentSubAccount(client).job = AG_JOB_NONE;
-	triggerNetworkEvent("ag.jobType", client, AG_JOB_NONE);
+	sendPlayerJobType(client, jobType);
 }
 
 // ---------------------------------------------------------------------------
 
 function takeJob(client, jobId) {
-	getPlayerCurrentSubAccount(client).job = jobId;
-	triggerNetworkEvent("ag.jobType", client, jobId);
+	getPlayerCurrentSubAccount(client).job = getJobData(jobId).databaseId;
+	sendPlayerJobType(client, getJobData(jobId).databaseId);
 }
 
 // ---------------------------------------------------------------------------
@@ -1070,7 +1068,7 @@ function startJobRoute(client) {
 
 function stopJobRoute(client, successful = false) {
 	stopReturnToJobVehicleCountdown(client);
-	triggerNetworkEvent("ag.stopJobRoute", client);
+	sendPlayerStopJobRoute(client);
 
 	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
 		respawnVehicle(getPlayerData(client).busRouteVehicle);
@@ -1150,38 +1148,6 @@ function stopReturnToJobVehicleCountdown(client) {
 
 // ---------------------------------------------------------------------------
 
-function sendAllJobLabelsToPlayer(client) {
-	let tempJobLocations = [];
-	for(let k in getServerData().jobs) {
-		for(let m in getServerData().jobs[k].locations) {
-			tempJobLocations.push({
-				id: getServerData().jobs[k].locations[m].databaseId,
-				jobType: getServerData().jobs[k].jobType,
-				name: getServerData().jobs[k].name,
-				position: getServerData().jobs[k].locations[m].position,
-			});
-		}
-	}
-
-	let totalJobLocations = tempJobLocations.length;
-	let tempJobLabels = [];
-	let jobLocationsPerNetworkEvent = 100;
-	let totalNetworkEvents = Math.ceil(totalJobLocations/jobLocationsPerNetworkEvent);
-	for(let i = 0 ; i < totalNetworkEvents ; i++) {
-		for(let j = 0 ; j < jobLocationsPerNetworkEvent ; j++) {
-			let tempJobLocationId = (i*jobLocationsPerNetworkEvent)+j;
-			//if(typeof getServerData().jobs[i] != "undefined") {
-				let tempJobLabels = [];
-				tempJobLabels.push([tempJobLocations[i].id, tempJobLocations[i].position, getGameConfig().propertyLabelHeight[getServerGame()], tempJobLocations[i].name, tempJobLocations[i].jobType, false]);
-			//}
-		}
-		triggerNetworkEvent("ag.joblabel.all", client, tempJobLabels);
-		tempJobLabels = [];
-	}
-}
-
-// ---------------------------------------------------------------------------
-
 function canPlayerUseJob(client, jobId) {
 	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageJobs"))) {
 		return true;
@@ -1191,11 +1157,19 @@ function canPlayerUseJob(client, jobId) {
 		return false;
 	}
 
-	if(getJobData(jobId).whiteListEnabled) {
+	if(isJobWhiteListed(jobId)) {
 		if(!isPlayerOnJobWhiteList(client, jobId)) {
-			return false
+			return false;
 		}
 	}
+
+	if(!isJobBlackListed(jobId)) {
+		if(isPlayerOnJobBlackList(client, jobId)) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -1542,6 +1516,58 @@ function getJobIndexFromDatabaseId(databaseId) {
 		}
 	}
 	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function isJobWhiteListed(jobId) {
+	return getJobData(jobId).whiteListEnabled;
+}
+
+// ---------------------------------------------------------------------------
+
+function isPlayerOnJobWhiteList(client, jobId) {
+	for(let i in getJobData(jobId).whiteList) {
+		if(getJobData(jobId).whiteList[i].subAccount == getPlayerCurrentSubAccount(client).databaseId) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function isJobBlackListed(jobId) {
+	return getJobData(jobId).blackListEnabled;
+}
+
+// ---------------------------------------------------------------------------
+
+function isPlayerOnJobBlackList(client, jobId) {
+	for(let i in getJobData(jobId).blackList) {
+		if(getJobData(jobId).blackList[i].subAccount == getPlayerCurrentSubAccount(client).databaseId) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
+function playerArrivedAtJobRouteStop(client) {
+	if(!isPlayerOnJobRoute(client)) {
+		return false;
+	}
+
+	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
+		playerArrivedAtBusStop(client);
+	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
+		playerArrivedAtGarbageStop(client);
+	} else if(doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+		playerArrivedAtPolicePatrolPoint(client);
+	}
 }
 
 // ---------------------------------------------------------------------------

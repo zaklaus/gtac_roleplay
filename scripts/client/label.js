@@ -48,10 +48,6 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
 
 	if(propertyLabelLockedFont == null) {
 		return false;
-	}
-
-    if(localPlayer.position.distance(position) > 7.5) {
-        return false;
     }
 
     let tempPosition = position;
@@ -97,10 +93,6 @@ function renderPropertyExitLabel(position) {
 		return false;
 	}
 
-    if(localPlayer.position.distance(position) > 7.5) {
-        return false;
-    }
-
     let tempPosition = position;
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
@@ -124,10 +116,6 @@ function renderJobLabel(name, position, jobType) {
 	if(jobHelpLabelFont == null) {
 		return false;
 	}
-
-    if(localPlayer.position.distance(position) > 7.5) {
-        return false;
-    }
 
     let tempPosition = position;
     tempPosition.z = tempPosition.z + propertyLabelHeight;
@@ -160,52 +148,38 @@ function renderJobLabel(name, position, jobType) {
 
 // -------------------------------------------------------------------------
 
-addEventHandler("OnDrawnHUD", function (event) {
-    if(!renderHUD) {
-        return false;
-    }
-
-    if(!renderLabels) {
-        return false;
-    }
-
+function processLabelRendering() {
     if(localPlayer != null) {
         let pickups = getElementsByType(ELEMENT_PICKUP);
         for(let i in pickups) {
             if(pickups[i].getData("ag.label.type") != null) {
-                //if(pickups[i].isOnScreen) {
-                    if(getDistance(localPlayer.position, pickups[i].position)) {
-                        //if(pickups[i].interior == localPlayer.interior) {
-                            //if(pickups[i].dimension == localPlayer.dimension) {
-                                let price = 0;
-                                if(pickups[i].getData("ag.label.price") != null) {
-                                    price = pickups[i].getData("ag.label.price");
-                                }
-
-                                switch(pickups[i].getData("ag.label.type")) {
-                                    case AG_LABEL_BUSINESS:
-                                        renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
-                                        break;
-
-                                    case AG_LABEL_HOUSE:
-                                        renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
-                                        break;
-
-                                    case AG_LABEL_JOB:
-                                        renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
-                                        break;
-
-                                    case AG_LABEL_EXIT:
-                                        renderPropertyExitLabel(pickups[i].position);
-                                        break;
-                                }
-                            //}
-                        //}
+                if(getDistance(localPlayer.position, pickups[i].position) <= 7.5) {
+                    let price = 0;
+                    if(pickups[i].getData("ag.label.price") != null) {
+                        price = pickups[i].getData("ag.label.price");
                     }
-                //}
+
+                    switch(pickups[i].getData("ag.label.type")) {
+                        case AG_LABEL_BUSINESS:
+                            renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
+                            break;
+
+                        case AG_LABEL_HOUSE:
+                            renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
+                            break;
+
+                        case AG_LABEL_JOB:
+                            renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
+                            break;
+
+                        case AG_LABEL_EXIT:
+                            renderPropertyExitLabel(pickups[i].position);
+                            break;
+                    }
+                }
             }
         }
     }
-});
+}
 
 // -------------------------------------------------------------------------

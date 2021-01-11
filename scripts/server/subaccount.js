@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: subaccount.js
 // DESC: Provides subaccount (character) functions and usage
@@ -126,7 +126,7 @@ function showCharacterSelectToClient(client) {
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).currentSubAccount = 0;
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
-		triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
@@ -144,24 +144,24 @@ function showCharacterSelectToClient(client) {
 
 function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrigin, skinId) {
 	if(areParamsEmpty(firstName)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "First name cannot be blank!");
+		showPlayerNewCharacterFailedGUI(client, "First name cannot be blank!");
 		return false;
 	}
 	firstName = firstName.trim();
 
 	if(areParamsEmpty(lastName)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Last name cannot be blank!");
+		showPlayerNewCharacterFailedGUI(client, "Last name cannot be blank!");
 		return false;
 	}
 	lastName = lastName.trim();
 
 	if(areParamsEmpty(dateOfBirth)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Date of birth cannot be blank!");
+		showPlayerNewCharacterFailedGUI(client, "Date of birth cannot be blank!");
 		return false;
 	}
 
 	if(areParamsEmpty(placeOfOrigin)) {
-		triggerNetworkEvent("ag.newCharacterFailed", client, "Place of origin cannot be blank!");
+		showPlayerNewCharacterFailedGUI(client, "Place of origin cannot be blank!");
 		return false;
 	}
 
@@ -172,9 +172,9 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
 	if(!subAccountData) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			triggerNetworkEvent("ag.newCharacterFailed", client, "Something went wrong. Your character could not be created!");
+			showPlayerNewCharacterFailedGUI("Your character could not be created!");
 		} else {
-			messagePlayerAlert(client, "Something went wrong. Your character could not be created!");
+			messagePlayerAlert(client, "Your character could not be created!");
 		}
 		messagePlayerAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
 		return false;
@@ -185,11 +185,11 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 	let tempSubAccount = getPlayerData(client).subAccounts[0];
 	showCharacterSelectToClient(client);
 }
-addNetworkHandler("ag.checkNewCharacter", checkNewCharacter);
+
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.previousCharacter", function(client) {
+function checkPreviousCharacter(client) {
 	if(getPlayerData(client).subAccounts.length > 1) {
 		if(getPlayerData(client).currentSubAccount <= 0) {
 			getPlayerData(client).currentSubAccount = getPlayerData(client).subAccounts.length-1;
@@ -199,13 +199,13 @@ addNetworkHandler("ag.previousCharacter", function(client) {
 
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
-		triggerNetworkEvent("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
+		updatePlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
-});
+}
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.nextCharacter", function(client) {
+function checkNextCharacter(client) {
 	if(getPlayerData(client).subAccounts.length > 1) {
 		if(getPlayerData(client).currentSubAccount >= getPlayerData(client).subAccounts.length-1) {
 			getPlayerData(client).currentSubAccount = 0;
@@ -215,15 +215,15 @@ addNetworkHandler("ag.nextCharacter", function(client) {
 
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
-		triggerNetworkEvent("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
+		updatePlayerCharacterSelectGUI("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
-});
+}
 
 // ---------------------------------------------------------------------------
 
 function selectCharacter(client, characterId = -1) {
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-		triggerNetworkEvent("ag.characterSelectSuccess", client);
+		showPlayerCharacterSelectSuccessGUI(client);
 	}
 
 	if(characterId != -1) {
@@ -236,7 +236,6 @@ function selectCharacter(client, characterId = -1) {
 	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();
 	cachePlayerHotBarItems(client);
 }
-addNetworkHandler("ag.selectCharacter", selectCharacter);
 
 // ---------------------------------------------------------------------------
 
@@ -244,8 +243,8 @@ function switchCharacterCommand(command, params, client) {
 	if(isPlayerSpawned(client)) {
 		getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
 		getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
-		//getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
-		//getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
+		getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
+		getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
 
 		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
 

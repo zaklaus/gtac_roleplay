@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: moderation.js
 // DESC: Provides moderation commands, functions and usage
@@ -144,7 +144,7 @@ function freezeClientCommand(command, params, client) {
 	}
 
 	messageAdminAction(`${toString(targetClient.name)} has been frozen by an admin!`);
-	triggerNetworkEvent("ag.frozen", client, true);
+	setPlayerFrozenState(client, state);
 }
 
 // ---------------------------------------------------------------------------
@@ -170,7 +170,7 @@ function unFreezeClientCommand(command, params, client) {
 	}
 
 	messageAdminAction(`${toString(targetClient.name)} has been un-frozen by an admin!`);
-	triggerNetworkEvent("ag.frozen", client, false);
+	sendPlayerFrozenState(client, false);
 }
 
 // ---------------------------------------------------------------------------
@@ -187,24 +187,14 @@ function gotoPlayerCommand(command, params, client) {
         return false;
     }
 
-	//message(`[#996600][ADMIN]: [#FFFFFF]${toString(targetClient.name)} has been un-frozen by an admin!`);
-	client.player.velocity = toVector3(0.0, 0.0, 0.0);
-	setPlayerPosition(client, getPosBehindPos(getPlayerPosition(targetClient), getPlayerHeading(targetClient), 2));
-	setPlayerHeading(client, getPlayerHeading(targetClient));
+	setPlayerVelocity(client, toVector3(0.0, 0.0, 0.0));
+	setTimeout(function() {
+		setPlayerPosition(client, getPosBehindPos(getPlayerPosition(targetClient), getPlayerHeading(targetClient), 2));
+		setPlayerHeading(client, getPlayerHeading(targetClient));
+		setPlayerInterior(client, getPlayerInterior(targetClient));
+		setPlayerDimension(client, getPlayerInterior(targetClient));
+	}, 1000);
 
-	if(isPlayerInAnyBusiness(targetClient)) {
-		let businessData = getBusinessData(getPlayerBusiness(targetClient));
-		triggerNetworkEvent("ag.interior", client, businessData.exitInterior);
-		//triggerNetworkEvent("ag.dimension", client, businessData.exitInterior);
-		client.player.dimension = businessData.exitDimension;
-	}
-
-	if(isPlayerInAnyHouse(targetClient)) {
-		let houseData = getHouseData(getPlayerHouse(targetClient));
-		triggerNetworkEvent("ag.interior", client, houseData.exitInterior);
-		//triggerNetworkEvent("ag.dimension", client, houseData.exitInterior);
-		client.player.dimension = houseData.exitDimension;
-	}
 	messagePlayerSuccess(client, `You teleported to [#AAAAAA]${targetClient.name}`);
 }
 
@@ -222,11 +212,11 @@ function gotoVehicleCommand(command, params, client) {
 
 	let vehicle = getServerData().vehicles[toInteger(params)].vehicle;
 
-	client.player.velocity = toVector3(0.0, 0.0, 0.0);
+	setPlayerVelocity(client, toVector3(0.0, 0.0, 0.0));
 	setTimeout(function() {
 		setPlayerPosition(client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
 		setPlayerInterior(client, 0);
-		setPlayerDimension(client, vehicle.dimension);
+		setPlayerDimension(client, getVehicleDimension(vehicle));
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to a [#CC22CC]${getVehicleName(vehicle)} [#AAAAAA](ID ${vehicle.id})`);
@@ -247,7 +237,7 @@ function gotoBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	client.player.velocity = toVector3(0.0, 0.0, 0.0);
+	setPlayerVelocity(client, toVector3(0.0, 0.0, 0.0));
 	setTimeout(function() {
 		setPlayerPosition(client, getBusinessData(businessId).entrancePosition);
 		setPlayerInterior(client, getBusinessData(businessId).entranceInterior);
@@ -401,7 +391,7 @@ function teleportDownCommand(command, params, client) {
 		return false;
 	}
 
-	triggerNetworkEvent("ag.position", client, getPosBelowPos(getPlayerPosition(client), params));
+	setPlayerPosition(client, getPosBelowPos(getPlayerPosition(client), params));
 
 	messagePlayerSuccess(client, `You teleported down [#AAAAAA]${params} [#FFFFFF]meters`);
 }

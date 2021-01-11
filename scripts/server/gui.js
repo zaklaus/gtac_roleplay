@@ -1,40 +1,12 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: gui.js
 // DESC: Provides GUI functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
-
-function showPlayerLoginGUI(client, errorMessage = "") {
-    triggerNetworkEvent("ag.showLogin", client);
-}
-
-// ---------------------------------------------------------------------------
-
-function showPlayerRegistrationGUI(client, errorMessage = "") {
-    triggerNetworkEvent("ag.showRegistration", client);
-}
-
-// ---------------------------------------------------------------------------
-
-function showPlayerNewCharacterGUI(client) {
-    triggerNetworkEvent("ag.showNewCharacter", client);
-}
-
-// ---------------------------------------------------------------------------
-
-function showPlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
-    triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
-}
-
-// ---------------------------------------------------------------------------
-
-function showPlayerPromptGUI(client, promptMessage, promptTitle) {
-    triggerNetworkEvent("ag.showPrompt", client, promptMessage, promptTitle);
-}
 
 // ---------------------------------------------------------------------------
 
@@ -52,6 +24,45 @@ function showPlayerPhoneGUI(client) {
 
 function showPlayerItemInventoryGUI(client) {
 
+}
+
+// ---------------------------------------------------------------------------
+
+function playerPromptAnswerNo(client) {
+    if(!getEntityData(client, "ag.prompt")) {
+        return false;
+    }
+
+    switch(getEntityData(client, "ag.prompt")) {
+        case AG_PROMPT_CREATEFIRSTCHAR:
+            showPlayerErrorGUI(client, "You don't have a character to play. Goodbye!", "No Characters")
+            setTimeout(function() { client.disconnect(); }, 5000);
+            break;
+
+        default:
+            break;
+    }
+
+    client.removeData("ag.prompt");
+}
+
+// ---------------------------------------------------------------------------
+
+function playerPromptAnswerYes(client) {
+    if(!getEntityData(client, "ag.prompt")) {
+        return false;
+    }
+
+    switch(getEntityData(client, "ag.prompt")) {
+        case AG_PROMPT_CREATEFIRSTCHAR:
+            showPlayerNewCharacterGUI(client);
+            break;
+
+        default:
+            break;
+    }
+
+    client.removeData("ag.prompt");
 }
 
 // ---------------------------------------------------------------------------

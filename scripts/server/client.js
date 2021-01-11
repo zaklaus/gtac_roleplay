@@ -1,74 +1,66 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: client.js
 // DESC: Provides client communication and cross-endpoint operations
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.promptAnswerNo", function(client) {
-    if(!getEntityData(client, "ag.prompt")) {
-        return false;
-    }
-
-    switch(getEntityData(client, "ag.prompt")) {
-        case AG_PROMPT_CREATEFIRSTCHAR:
-            triggerNetworkEvent("ag.showError", client, "You don't have a character to play. Goodbye!", "No Characters");
-            setTimeout(function() { client.disconnect(); }, 5000);
-            break;
-
-        default:
-            break;
-    }
-
-    client.removeData("ag.prompt");
-});
+function initClientScript() {
+    logToConsole(LOG_DEBUG, "[Asshat.Client]: Initializing client script ...");
+    addAllNetworkHandlers();
+    logToConsole(LOG_DEBUG, "[Asshat.Clan]: Initializing client script ...");
+}
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.promptAnswerYes", function(client) {
-    if(!getEntityData(client, "ag.prompt")) {
-        return false;
-    }
+function addAllNetworkHandlers() {
+    logToConsole(LOG_DEBUG, "[Asshat.Client]: Adding network handlers ...");
 
-    switch(getEntityData(client, "ag.prompt")) {
-        case AG_PROMPT_CREATEFIRSTCHAR:
-            triggerNetworkEvent("ag.showNewCharacter", client);
-            break;
+    // KeyBind
+    addNetworkHandler("ag.useKeyBind", playerUsedKeyBind);
 
-        default:
-            break;
-    }
+    // GUI
+    addNetworkHandler("ag.promptAnswerNo", playerPromptAnswerNo);
+    addNetworkHandler("ag.promptAnswerYes", playerPromptAnswerYes);
 
-    client.removeData("ag.prompt");
-});
+    // AFK
+    addNetworkHandler("ag.afk", playerChangeAFKState);
 
-// ---------------------------------------------------------------------------
+    // Event
+    addNetworkHandler("ag.enteredSphere", onPlayerEnteredSphere);
+    addNetworkHandler("ag.exitedSphere", onPlayerExitedSphere);
+    addNetworkHandler("ag.playerDeath", onPlayerDeath);
+    addNetworkHandler("ag.onPlayerEnterVehicle", onPlayerEnteredVehicle);
+    addNetworkHandler("ag.onPlayerExitVehicle", onPlayerExitedVehicle);
 
-addNetworkHandler("ag.onPlayerEnterSphere", function(client, sphere) {
-    //let ownerType = getEntityData(sphere, "ag.ownerType");
-    //let ownerId = getEntityData(sphere, "ag.ownerId");
-});
+    // Job
+    addNetworkHandler("ag.arrivedAtJobRouteStop", playerArrivedAtJobRouteStop);
 
-// ---------------------------------------------------------------------------
+    // Client
+    addNetworkHandler("ag.clientReady", playerClientReady);
+    addNetworkHandler("ag.guiReady", playerGUIReady);
+    addNetworkHandler("ag.clientStarted", playerClientStarted);
 
-addNetworkHandler("ag.afk", function(client, afkState) {
-    if(afkState) {
-        setEntityData(client, "ag.afk", true, true);
-    } else {
-        client.removeData("ag.afk");
-    }
-});
+    // Account
+    addNetworkHandler("ag.checkLogin", checkLogin);
+    addNetworkHandler("ag.checkRegistration", checkRegistration);
 
-// ---------------------------------------------------------------------------
+    // Developer
+    addNetworkHandler("ag.runCodeSuccess", clientRunCodeSuccess);
+    addNetworkHandler("ag.runCodeFail", clientRunCodeFail);
 
-addNetworkHandler("ag.player.death", function(client, position) {
-    processPlayerDeath(client, position);
-});
+    // SubAccount
+    addNetworkHandler("ag.checkNewCharacter", checkNewCharacter);
+    addNetworkHandler("ag.nextCharacter", checkNextCharacter);
+    addNetworkHandler("ag.previousCharacter", checkPreviousCharacter);
+    addNetworkHandler("ag.selectCharacter", selectCharacter);
+
+    // Item
+    addNetworkHandler("ag.itemActionDelayComplete", playerItemActionDelayComplete);
+}
 
 // ---------------------------------------------------------------------------
 
@@ -93,37 +85,30 @@ function updatePlayerPing(client) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.arrivedAtBusStop", function(client) {
-    logToConsole(LOG_DEBUG, client);
-    arrivedAtBusStop(client);
-});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.clientReady", function(client) {
+function playerClientReady(client) {
 	setEntityData(client, "ag.isReady", true, false);
 	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client resources are downloaded and ready!`);
 	if(client.getData("ag.isStarted") == true) {
 		initClient(client);
 	}
-});
+}
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.guiReady", function(client) {
+function playerGUIReady(client) {
 	setEntityData(client, "ag.guiReady", true, false);
     logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client GUI is initialized and ready!`);
-});
+}
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.clientStarted", function(client) {
+function playerClientStarted(client) {
 	setEntityData(client, "ag.isStarted", true, false);
 	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client resources are started and running!`);
 	if(client.getData("ag.isReady") == true) {
 		initClient(client);
 	}
-});
+}
 
 // ---------------------------------------------------------------------------
 
@@ -182,8 +167,8 @@ function restorePlayerCamera(client) {
 
 // -------------------------------------------------------------------------
 
-function setPlayer2DRendering(client, hudState = false, labelState = false, smallGameMessageState = false, scoreboardState = false, hotBarState = false) {
-	triggerNetworkEvent("ag.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState, hotBarState);
+function setPlayer2DRendering(client, hudState = false, labelState = false, smallGameMessageState = false, scoreboardState = false, hotBarState = false, itemActionDelayState = false) {
+	triggerNetworkEvent("ag.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState);
 }
 
 // ---------------------------------------------------------------------------
@@ -201,7 +186,7 @@ function updatePlayerSnowState(client) {
 // ---------------------------------------------------------------------------
 
 function sendExcludedModelsForGroundSnowToPlayer(client) {
-    if(getGameConfig().excludedGroundSnowModels[getServerGame()]) {
+    if(getGameConfig().excludedGroundSnowModels[getServerGame()].length > 0) {
         for(let i in getGameConfig().excludedGroundSnowModels[getServerGame()]) {
             logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending excluded model ${i} for ground snow to ${client.name}`);
             triggerNetworkEvent("ag.excludeGroundSnow", client, getGameConfig().excludedGroundSnowModels[getServerGame()][i]);
@@ -252,3 +237,227 @@ function setPlayerWeaponDamageEnabled(client, state) {
 function setPlayerWeaponDamageEvent(client, eventType) {
     triggerNetworkEvent("ag.weaponDamageEvent", null, client.name, eventType);
 }
+
+// ---------------------------------------------------------------------------
+
+function sendJobRouteStopToPlayer(client, position, colour) {
+    triggerNetworkEvent("ag.showJobRouteStop", client, position, colour);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerLoginSuccessGUI(client) {
+    triggerNetworkEvent("ag.loginSuccess", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerLoginFailedGUI(client, errorMessage) {
+    triggerNetworkEvent("ag.loginFailed", client, errorMessage);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerRegistrationSuccessGUI(client) {
+    triggerNetworkEvent("ag.registrationSuccess", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerRegistrationFailedGUI(client, errorMessage) {
+    triggerNetworkEvent("ag.registrationFailed", client, errorMessage);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerGUIColours(client) {
+	triggerNetworkEvent("ag.guiColour", client, getServerConfig().guiColour[0], getServerConfig().guiColour[1], getServerConfig().guiColour[2]);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerGUIInit(client) {
+	triggerNetworkEvent("ag.guiInit", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerLoginGUI(client, errorMessage = "") {
+    triggerNetworkEvent("ag.showLogin", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerRegistrationGUI(client, errorMessage = "") {
+    triggerNetworkEvent("ag.showRegistration", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerNewCharacterGUI(client) {
+    triggerNetworkEvent("ag.showNewCharacter", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
+    triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
+}
+
+// ---------------------------------------------------------------------------
+
+function updatePlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
+    triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerCharacterSelectSuccessGUI(client) {
+    triggerNetworkEvent("ag.characterSelectSuccess", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerPromptGUI(client, promptMessage, promptTitle) {
+    triggerNetworkEvent("ag.showPrompt", client, promptMessage, promptTitle);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendRunCodeToClient(client, code, returnTo) {
+    triggerNetworkEvent("ag.runCode", client, code, returnTo);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerWorkingState(client, state) {
+    triggerNetworkEvent("ag.working", client, state);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerJobType(client, jobType) {
+    triggerNetworkEvent("ag.jobType", client, jobType);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerStopJobRoute(client) {
+    triggerNetworkEvent("ag.stopJobRoute", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerMouseCameraToggle(client) {
+    triggerNetworkEvent("ag.mouseCamera", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerMouseCursorToggle(client) {
+    triggerNetworkEvent("ag.mouseCursor", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendAddAccountKeyBindToClient(client, key, keyState) {
+    triggerNetworkEvent("ag.addKeyBind", client, toInteger(key), (keyState) ? KEYSTATE_DOWN : KEYSTATE_UP);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendRemoveAccountKeyBindToClient(client, key, keyState) {
+    triggerNetworkEvent("ag.delKeyBind", client, toInteger(key));
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerSetPosition(client, position) {
+    triggerNetworkEvent("ag.position", client, position);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerSetHeading(client, heading) {
+    triggerNetworkEvent("ag.heading", client, heading);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerSetInterior(client, interior) {
+    triggerNetworkEvent("ag.interior", client, interior);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerFrozenState(client, state) {
+    triggerNetworkEvent("ag.frozen", client, state);
+}
+
+// ---------------------------------------------------------------------------
+
+function givePlayerWeapon(client, weaponId, ammo, active) {
+    triggerNetworkEvent("ag.giveWeapon", client, weaponId, ammo, active);
+}
+
+// ---------------------------------------------------------------------------
+
+function clearPlayerWeapons(client) {
+    triggerNetworkEvent("ag.clearWeapons", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerNewCharacterFailedGUI(client, errorMessage) {
+    triggerNetworkEvent("ag.newCharacterFailed", client, errorMessage);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerRemoveFromVehicle(client) {
+    triggerNetworkEvent("ag.removeFromVehicle", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendChatBoxMessageToPlayer(client, message, colour) {
+    triggerNetworkEvent("ag.m", client, message, colour)
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerItemTakeDelay(client, itemId) {
+    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(itemId).itemTypeIndex).takeDelay);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerItemUseDelay(client, itemSlot) {
+    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerItemDropDelay(client, itemSlot) {
+    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerItemPickupDelay(client, itemId) {
+    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerItemPutDelay(client, itemSlot) {
+    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerItemSwitchDelay(client, itemSlot) {
+    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).switchDelay);
+}
+
+// ---------------------------------------------------------------------------

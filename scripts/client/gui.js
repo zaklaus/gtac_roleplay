@@ -2178,7 +2178,11 @@ addNetworkHandler("ag.guiColour", function(red, green, blue) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received new GUI colours from server`);
 	primaryColour = [red, green, blue];
 	focusedColour = [red+focusedColourOffset, green+focusedColourOffset, blue+focusedColourOffset];
+});
 
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.guiInit", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Initializing MexUI app`);
 	app.init();
 	triggerNetworkEvent("ag.guiReady", true);

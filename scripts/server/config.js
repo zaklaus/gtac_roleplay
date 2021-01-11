@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: config.js
 // DESC: Provides server configuration
@@ -36,7 +36,7 @@ let globalConfig = {
 		new serverClasses.keyBindData(false, toInteger(SDLK_m), "cursor"),
 		new serverClasses.keyBindData(false, toInteger(SDLK_o), "drop"),
 		new serverClasses.keyBindData(false, toInteger(SDLK_p), "pickup"),
-		new serverClasses.keyBindData(false, toInteger(SDLK_e), "use"),
+		new serverClasses.keyBindData(false, toInteger(SDLK_u), "use"),
 		new serverClasses.keyBindData(false, toInteger(SDLK_i), "inv"),
 		new serverClasses.keyBindData(false, toInteger(SDLK_0), "i 0"),
 		new serverClasses.keyBindData(false, toInteger(SDLK_1), "i 1"),
@@ -55,6 +55,10 @@ let globalConfig = {
 	houseDimensionStart: 100,
 	buyVehicleDriveAwayDistance: 25.0,
 	returnToJobVehicleTime: 30,
+	walkieTalkieSpeakerDistance: 15,
+	walkieTalkieTalkDistance: 15,
+	phoneSpeakerDistance: 15,
+	phoneTalkDistance: 15,
 };
 
 let gameConfig = {
@@ -605,7 +609,7 @@ function setSnowingCommand(command, params, client) {
 	getServerConfig().fallingSnow = fallingSnow;
 	getServerConfig().groundSnow = groundSnow;
 
-	triggerNetworkEvent("ag.snow", null, fallingSnow, groundSnow);
+	updatePlayerSnowState(null);
 
     messageAdminAction(`${client.name} turned falling snow ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} [#FFFFFF]and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
     updateServerRules();
@@ -629,7 +633,7 @@ function toggleServerLogoCommand(command, params, client) {
 
 	getServerConfig().useLogo = !getServerConfig().useLogo;
 
-	triggerNetworkEvent("ag.logo", null, intToBool(getServerConfig().useLogo));
+	updatePlayerShowLogoState(null, getServerConfig().useLogo);
 
     messageAdminAction(`${client.name} turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);
     updateServerRules();

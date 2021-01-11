@@ -1,7 +1,7 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ---------------------------------------------------------------------------
 // FILE: police.js
 // DESC: Provides police officer job functions and usage
@@ -231,7 +231,7 @@ function policeDetainCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
-function arrivedAtPolicePatrolPoint(client) {
+function playerArivedAtPolicePatrolPoint(client) {
     if(isLastStopOnPolicePatrolRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
         messagePlayerNormal(client, `You finished the ${getPatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} patrol route! You earned $${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout}`, getColourByName("yellow"));
         messagePlayerNormal(client, `You can either continue driving the patrol route again, or use /stoproute to end your patrol.`, getColourByName("yellow"));

@@ -54,12 +54,17 @@ let weaponDamageEnabled = {};
 let weaponDamageEvent = {};
 
 let forceWeapon = 0;
+let forceWeaponAmmo = 0;
+let forceWeaponClipAmmo = 0;
 
 let itemActionDelayDuration = 0;
 let itemActionDelayStart = 0;
 let itemActionDelayEnabled = false;
 let itemActionDelayPosition = toVector2(gta.width/2, gta.height-100);
 let itemActionDelaySize = toVector2(100, 10);
+
+let drunkEffectAmount = 0;
+let drunkEffectDurationTimer = null;
 
 // ---------------------------------------------------------------------------
 
@@ -182,6 +187,8 @@ addNetworkHandler("ag.clearWeapons", function() {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Clearing weapons`);
     localPlayer.clearWeapons();
     forceWeapon = 0;
+    forceWeaponAmmo = 0;
+    forceWeaponClipAmmo = 0;
 });
 
 // ---------------------------------------------------------------------------
@@ -189,6 +196,8 @@ addNetworkHandler("ag.clearWeapons", function() {
 addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Giving weapon ${weaponId} with ${ammo} ammo`);
     localPlayer.giveWeapon(weaponId, ammo, active);
+    forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(weaponId));
+    forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(weaponId));
     forceWeapon = weaponId;
 });
 
@@ -209,7 +218,7 @@ addEventHandler("OnElementStreamIn", function(event, element) {
             break;
 
         case ELEMENT_OBJECT:
-            syncObjectProperties(element);
+            //syncObjectProperties(element);
             break;
 
         default:
@@ -394,6 +403,11 @@ function processEvent(event, deltaTime) {
         if(forceWeapon != 0) {
             if(localPlayer.weapon != forceWeapon) {
                 localPlayer.weapon = forceWeapon;
+                localPlayer.setWeaponClipAmmunition(getWeaponSlot(forceWeapon), forceWeaponClipAmmo);
+                localPlayer.setWeaponAmmunition(getWeaponSlot(forceWeapon), forceWeaponAmmo);
+            } else {
+                forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(forceWeapon));
+                forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(forceWeapon));
             }
         } else {
             if(localPlayer.weapon > 0) {
@@ -622,6 +636,7 @@ function enteredJobRouteSphere() {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.jobType", function(tempJobType) {
+    logToConsole(LOG_INFO, `[Asshat.Main] Set local player job type to ${tempJobType}`);
     localPlayerJobType = tempJobType;
 });
 
@@ -641,18 +656,21 @@ addNetworkHandler("ag.spawned", function(client, state) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.weaponDamageEvent", function(clientName, eventType) {
+    logToConsole(LOG_INFO, `[Asshat.Main] Set ${clientName} damage event type to ${eventType}`);
     weaponDamageEvent[clientName] = eventType;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.weaponDamageEnabled", function(clientName, state) {
+    logToConsole(LOG_INFO, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} damage from ${clientName}`);
     weaponDamageEnabled[clientName] = state;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.mouseCamera", function(state) {
+    logToConsole(LOG_INFO, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} mouse camera`);
     mouseCameraEnabled = !mouseCameraEnabled;
     SetStandardControlsEnabled(!mouseCameraEnabled);
 });
@@ -660,6 +678,7 @@ addNetworkHandler("ag.mouseCamera", function(state) {
 // ---------------------------------------------------------------------------
 
 function clearSelfOwnedPeds() {
+    logToConsole(LOG_DEBUG, `Clearing self-owned peds`);
     getElementsByType(ELEMENT_CIVILIAN).forEach(function(ped) {
         if(ped.isOwner) {
             destroyElement(ped);
@@ -693,11 +712,12 @@ function getLocalPlayerVehicleSeat() {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPedInflictDamage", function(event, damagedPed, damagerEntity, weaponId, healthLoss, pedPiece) {
-    //if(damagedPed.isType(ELEMENT_PLAYER)) {
-    //    if(localPlayer != null) {
-    //
-    //    }
-    //    if(damagerEntity.isType(ELEMENT_PLAYER))
+    if(damagedPed == localPlayer) {
+        if(!weaponDamageEnabled[damagerEntity.name]) {
+            event.preventDefault();
+            triggerNetworkEvent(player, "ag.weaponDamage", damagerEntity, weaponId, pedPiece);
+        }
+    }
 });
 
 // ---------------------------------------------------------------------------
@@ -716,10 +736,12 @@ addEventHandler("OnLocalPlayerEnteredVehicle", function(event, vehicle, seat) {
     triggerNetworkEvent("ag.onPlayerEnterVehicle");
 
     if(inVehicleSeat == 0) {
-        inVehicle.engine = false;
-        if(!inVehicle.engine) {
-            parkedVehiclePosition = inVehicle.position;
-            parkedVehicleHeading = inVehicle.heading;
+        if(inVehicle.owner != -1) {
+            inVehicle.engine = false;
+            if(!inVehicle.engine) {
+                parkedVehiclePosition = inVehicle.position;
+                parkedVehicleHeading = inVehicle.heading;
+            }
         }
     }
 });
@@ -732,3 +754,32 @@ addNetworkHandler("ag.showItemActionDelay", function(duration) {
     itemActionDelayEnabled = true;
     logToConsole(LOG_DEBUG, `Item action delay event called. Duration: ${itemActionDelayDuration}, Start: ${itemActionDelayStart}, Render: ${renderItemActionDelay}`);
 });
+
+// ---------------------------------------------------------------------------
+
+function getWeaponSlot(weaponId) {
+	return getGameData().weaponSlots[gta.game][weaponId];
+}
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.drunkEffect", function(amount, duration) {
+    drunkEffectAmount = 0;
+    drunkEffectDurationTimer = setInterval(function() {
+        drunkEffectAmount = drunkEffectAmount;
+        if(drunkEffectAmount > 0) {
+            gta.SET_MOTION_BLUR(drunkEffectAmount);
+        } else {
+            clearInterval(drunkEffectDurationTimer);
+            drunkEffectDurationTimer = null;
+        }
+    }, 1000);
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.clearPedState", function() {
+    localPlayer.clearObjective();
+});
+
+// ---------------------------------------------------------------------------

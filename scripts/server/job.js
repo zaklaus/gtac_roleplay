@@ -486,11 +486,15 @@ function givePlayerJobEquipment(client, equipmentId) {
 	let jobId = getPlayerJob(client);
 
 	for(let i in getJobData(jobId).equipment[equipmentId].items) {
-		let itemId = createItem(getJobData(jobId).equipment[equipmentId].items[i].itemType, getJobData(jobId).equipment[equipmentId].items[i].value, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
+		let value = getJobData(jobId).equipment[equipmentId].items[i].value
+		if(getItemTypeData(getItemTypeIndexFromDatabaseId(getJobData(jobId).equipment[equipmentId].items[i].itemType)).useType == AG_ITEM_USETYPE_WALKIETALKIE) {
+			value = getJobData(jobId).walkieTalkieFrequency;
+		}
+		let itemId = createItem(getItemTypeIndexFromDatabaseId(getJobData(jobId).equipment[equipmentId].items[i].itemType), value, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
+		getItemData(itemId).needsSaved = false;
 		let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
 		getPlayerData(client).hotBarItems[freeSlot] = itemId;
 		getPlayerData(client).jobEquipmentCache.push(itemId);
-
 		updatePlayerHotBar(client);
 	}
 }
@@ -606,7 +610,9 @@ function jobUniformCommand(command, params, client) {
 
 	let itemId = createItem(getItemTypeFromParams("Uniform"), getJobData(jobId).uniforms[uniformId].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
 	let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
+	getPlayerData(client).hotBarItems[freeSlot] = itemId;
 	getPlayerData(client).jobEquipmentCache.push(itemId);
+	updatePlayerHotBar(client);
 }
 
 // ---------------------------------------------------------------------------
@@ -710,7 +716,7 @@ function getJobData(jobId) {
 function quitJob(client) {
 	stopWorking(client);
 	getPlayerCurrentSubAccount(client).job = AG_JOB_NONE;
-	sendPlayerJobType(client, jobType);
+	sendPlayerJobType(client, 0);
 }
 
 // ---------------------------------------------------------------------------
@@ -1463,7 +1469,7 @@ function createJobLocationPickup(jobId, locationId) {
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, locationId, false);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, AG_LABEL_JOB, true);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, getServerData().jobs[jobId].name, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, getServerData().jobs[jobId].databaseId, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, jobId, true);
 	}
 }
 

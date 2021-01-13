@@ -67,7 +67,9 @@ function isNull(val) {
 
 function getEntityData(entity, dataName) {
 	if(entity != null) {
-		return entity.getData(dataName);
+		if(entity.getData != null) {
+			return entity.getData(dataName);
+		}
 	}
     return null;
 }

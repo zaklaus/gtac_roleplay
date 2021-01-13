@@ -32,7 +32,7 @@ function addAllEventHandlers() {
 
     addEventHandler("onPedSpawn", onPedSpawn);
     addEventHandler("onPedEnterVehicle", onPedEnteringVehicle);
-    //addEventHandler("onPedExitingVehicle", onPedExitingVehicle);
+    addEventHandler("onPedExitVehicle", onPedExitingVehicle);
 }
 
 // ---------------------------------------------------------------------------
@@ -92,12 +92,13 @@ function onProcess(event, deltaTime) {
 // ---------------------------------------------------------------------------
 
 function onPedEnteringVehicle(event, ped, vehicle, seat) {
-    if(!getVehicleData(vehicle)) {
-        return false;
-    }
-
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
+        getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGVEHICLE;
+
+        if(!getVehicleData(vehicle)) {
+            return false;
+        }
 
         if(seat == 0) {
             vehicle.engine = getVehicleData(vehicle).engine;
@@ -114,6 +115,16 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
             }
         }
     }
+}
+
+// ---------------------------------------------------------------------------
+
+function onPedExitingVehicle(event, ped, vehicle) {
+    //if(ped.isType(ELEMENT_PLAYER)) {
+    //    let client = getClientFromPlayerElement(ped);
+    //    getPlayerData(client).pedState = AG_PEDSTATE_EXITINGVEHICLE;
+    //}
+
 }
 
 // ---------------------------------------------------------------------------
@@ -161,6 +172,10 @@ async function onPlayerEnteredVehicle(client) {
 
     await waitUntil(() => client.player.vehicle != null);
     let vehicle = client.player.vehicle;
+
+    if(vehicle.owner != -1) {
+        return false;
+    }
 
     if(!getVehicleData(vehicle)) {
         return false;
@@ -216,6 +231,8 @@ async function onPlayerEnteredVehicle(client) {
 // ---------------------------------------------------------------------------
 
 function onPlayerExitedVehicle(client) {
+    getPlayerData(client).pedState = AG_PEDSTATE_READY;
+
     let vehicle = getPlayerData(client).lastVehicle;
 
     if(!getVehicleData(vehicle)) {
@@ -236,6 +253,7 @@ function onPlayerExitedVehicle(client) {
 // ---------------------------------------------------------------------------
 
 function onPlayerDeath(client, position) {
+    getPlayerData(client).pedState = AG_PEDSTATE_DEAD;
 	updatePlayerSpawnedState(client, false);
     setPlayerControlState(client, false);
 	setTimeout(function() {
@@ -284,7 +302,6 @@ function onPlayerSpawn(ped) {
         return false;
     }
 
-    setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
     messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
     messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
     messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
@@ -295,10 +312,11 @@ function onPlayerSpawn(ped) {
     updateAllPlayerNameTags();
     getPlayerData(client).switchingCharacter = false;
     updatePlayerCash(client);
-    updatePlayerJobType(client);
+    sendPlayerJobType(client, getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client)));
     setPlayer2DRendering(client, true, true, true, true, true, true);
     updatePlayerSnowState(client);
     updatePlayerHotBar(client);
+    setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
 
     sendExcludedModelsForGroundSnowToPlayer(client);
     sendRemovedWorldObjectsToPlayer(client);
@@ -310,6 +328,8 @@ function onPlayerSpawn(ped) {
     if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
         updatePlayerShowLogoState(client, true);
     }
+
+    getPlayerData(client).pedState = AG_PEDSTATE_READY;
 }
 
 // ---------------------------------------------------------------------------

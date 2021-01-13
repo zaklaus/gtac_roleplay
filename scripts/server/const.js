@@ -153,6 +153,8 @@ const AG_ITEM_OWNER_HOUSE = 6;                  // Item is in a house
 const AG_ITEM_OWNER_SAFE = 7;                   // Item is in a safe (safes can be anywhere)
 const AG_ITEM_OWNER_ITEM = 8;                   // Item is in another item (trashbag, briefcase, wallet, suitcase, crate/box, barrel, etc)
 const AG_ITEM_OWNER_GROUND = 9;                 // Item is on the ground
+const AG_ITEM_OWNER_JOBLOCKER = 10;             // Item is in player's job locker
+const AG_ITEM_OWNER_LOCKER = 10;                // Item is in player's locker
 
 // Item Use Types
 const AG_ITEM_USETYPE_NONE = 0;                 // Has no effect
@@ -190,6 +192,12 @@ const AG_ITEM_USETYPE_AED = 30;                 //
 const AG_ITEM_USETYPE_WALKIETALKIE = 31;        //
 const AG_ITEM_USETYPE_BOOMBOX = 32;             //
 const AG_ITEM_USETYPE_EARBUDS = 33;             //
+const AG_ITEM_USETYPE_BADGE = 34;               //
+const AG_ITEM_USETYPE_DRINK = 35;               //
+const AG_ITEM_USETYPE_EXTINGUISHER = 36;        //
+const AG_ITEM_USETYPE_SPRAYPAINT = 37;          //
+const AG_ITEM_USETYPE_PEPPERSPRAY = 38;         //
+const AG_ITEM_USETYPE_FLASHLIGHT = 39;          //
 
 // Item Drop Types
 const AG_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped
@@ -249,3 +257,14 @@ const AG_ITEM_ACTION_DROP = 3;
 const AG_ITEM_ACTION_SWITCH = 4;
 const AG_ITEM_ACTION_PUT = 5;
 const AG_ITEM_ACTION_TAKE = 6;
+
+// Ped States
+const AG_PEDSTATE_NONE = 2;
+const AG_PEDSTATE_READY = 1;
+const AG_PEDSTATE_DRIVER = 2;
+const AG_PEDSTATE_PASSENGER = 3;
+const AG_PEDSTATE_DEAD = 4;
+const AG_PEDSTATE_ENTERINGPROPERTY = 5;
+const AG_PEDSTATE_EXITINGPROPERTY = 6;
+const AG_PEDSTATE_ENTERINGVEHICLE = 7;
+const AG_PEDSTATE_EXITINGVEHICLE = 8;

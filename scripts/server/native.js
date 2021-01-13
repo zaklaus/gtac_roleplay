@@ -184,6 +184,12 @@ function setPlayerSkin(client, skin) {
 
 // ---------------------------------------------------------------------------
 
+function getPlayerSkin(client) {
+    return client.player.modelIndex;
+}
+
+// ---------------------------------------------------------------------------
+
 function disconnectPlayer(client) {
     return false;
 }

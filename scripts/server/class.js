@@ -137,6 +137,10 @@ function initClassTable() {
 
 				this.itemActionState = AG_ITEM_ACTION_NONE;
 				this.itemActionItem = -1;
+
+				this.alcoholLevel = 0;
+
+				this.pedState = AG_PEDSTATE_NONE;
 			}
 		},
 		accountData: class {
@@ -672,6 +676,7 @@ function initClassTable() {
 				this.colour = toColour(0, 0, 0, 255);
 				this.whiteListEnabled = false;
 				this.blackListEnabled = false;
+				this.walkieTalkieFrequency = 0;
 				this.index = -1;
 				this.needsSaved = false;
 
@@ -691,6 +696,7 @@ function initClassTable() {
 					this.colour = toColour(dbAssoc["job_colour_r"], dbAssoc["job_colour_g"], dbAssoc["job_colour_b"], 255);
 					this.whiteListEnabled = dbAssoc["job_whitelist"];
 					this.blackListEnabled = dbAssoc["job_blacklist"];
+					this.walkieTalkieFrequency = dbAssoc["job_walkietalkiefreq"];
 
 					this.equipment = [];
 					this.uniforms = [];
@@ -736,7 +742,7 @@ function initClassTable() {
 					this.databaseId = dbAssoc["job_equip_item_id"];
 					this.equipmentId = dbAssoc["job_equip_item_equip"];
 					this.itemType = dbAssoc["job_equip_item_type"];
-					this.ammo = dbAssoc["job_equip_item_value"];
+					this.value = dbAssoc["job_equip_item_value"];
 					this.enabled = dbAssoc["job_equip_item_enabled"];
 				}
 			}

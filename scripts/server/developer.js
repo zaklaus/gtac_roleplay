@@ -24,6 +24,64 @@ function initDeveloperScript() {
 
 // ---------------------------------------------------------------------------
 
+function p(params) {
+	return getPlayerFromParams(params);
+}
+
+function pd(params) {
+	return getPlayerData(getPlayerFromParams(params));
+}
+
+function cv(params) {
+	return getClosestVehicle(getPlayerPosition(getPlayerFromParams(params)));
+}
+
+function iv(params) {
+	return getPlayerVehicle(getPlayerFromParams(params));
+}
+
+function bd(params) {
+	return getBusinessFromParams(params);
+}
+
+function hd(params) {
+	return getHouseFromParams(params);
+}
+
+function jd(params) {
+	return getJobFromParams(params);
+}
+
+function jld(params, jobLocationIndex) {
+	return getJobFromParams(params).locations[jobLocationIndex];
+}
+
+function vd(params) {
+	return getVehicleData(getVehicleFromParams(params));
+}
+
+function pad(params) {
+	return getPlayerData(getPlayerFromParams(params)).accountData;
+}
+
+function pcsd(params) {
+	return getPlayerCurrentSubAccount(getPlayerFromParams(params));
+}
+
+function psd(params, subAccountIndex) {
+	return getPlayerData(getPlayerFromParams(params)).subAccounts[subAccountIndex];
+}
+
+function pv(params) {
+	return getPlayerVehicle(getPlayerFromParams(params));
+}
+
+function pvd(params) {
+	return getVehicleData(getPlayerVehicle(getPlayerFromParams(params)));
+}
+
+// ---------------------------------------------------------------------------
+
 function addServerLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));

@@ -191,8 +191,8 @@ function loadCommands() {
 
             commandData("power", toggleItemEnabledCommand, "", getStaffFlagValue("none"), true, false),
             commandData("freq", setWalkieTalkieFrequencyCommand, "[frequncy number]", getStaffFlagValue("none"), true, false),
-            commandData("call", callWithPhoneCommand, "[number]", getStaffFlagValue("none"), true, false),
-            commandData("speakerphone", togglePhoneSpeakerCommand, "", getStaffFlagValue("none"), true, false),
+            //commandData("call", callWithPhoneCommand, "[number]", getStaffFlagValue("none"), true, false),
+            //commandData("speakerphone", togglePhoneSpeakerCommand, "", getStaffFlagValue("none"), true, false),
         ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),

@@ -1922,11 +1922,16 @@ function doesWordStartWithVowel(word) {
 // -------------------------------------------------------------------------
 
 function getProperDeterminerForName(word) {
-	if(doesWordStartWithVowel(word)) {
-		return "an";
-	}
+	switch(word.substr(0,1).toLowerCase()) {
+		case "a":
+		case "e":
+		case "i":
+		case "o":
+			return "an";
 
-	return "a";
+		default:
+			return "a";
+	}
 }
 
 // -------------------------------------------------------------------------
@@ -1936,4 +1941,3 @@ function applyOffsetToVector3(position, position2) {
 }
 
 // -------------------------------------------------------------------------
-

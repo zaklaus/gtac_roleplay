@@ -60,6 +60,8 @@ function addAllNetworkHandlers() {
 
     // Item
     addNetworkHandler("ag.itemActionDelayComplete", playerItemActionDelayComplete);
+
+    addNetworkHandler("ag.weaponDamage", playerDamagedByPlayer);
 }
 
 // ---------------------------------------------------------------------------
@@ -138,7 +140,7 @@ function clearPlayerOwnedPeds(client) {
 // ---------------------------------------------------------------------------
 
 function updatePlayerJobType(client) {
-    triggerNetworkEvent("ag.jobType", client, getPlayerCurrentSubAccount(client).job);
+    triggerNetworkEvent("ag.jobType", client, getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client).job));
 }
 
 // ---------------------------------------------------------------------------
@@ -457,7 +459,27 @@ function showPlayerItemPutDelay(client, itemSlot) {
 // ---------------------------------------------------------------------------
 
 function showPlayerItemSwitchDelay(client, itemSlot) {
-    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).switchDelay);
+    if(itemSlot != -1) {
+        if(getPlayerData(client).hotBarItems[itemSlot] != -1) {
+            triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).switchDelay);
+        } else {
+            playerSwitchItem(client, itemSlot);
+        }
+    } else {
+        playerSwitchItem(client, itemSlot);
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerDrunkEffect(client, amount, duration) {
+    triggerNetworkEvent("ag.drunkEffect", client, amount, duration);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendPlayerClearPedState(client) {
+    triggerNetworkEvent("ag.clearPedState", client);
 }
 
 // ---------------------------------------------------------------------------

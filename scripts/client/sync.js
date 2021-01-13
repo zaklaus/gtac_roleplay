@@ -105,7 +105,7 @@ function syncCivilianProperties(civilian) {
     }
 }
 addNetworkHandler("ag.civ.sync", function(event, civilian) {
-    syncCivilianProperties(civilian);
+    //syncCivilianProperties(civilian);
 });
 
 // ---------------------------------------------------------------------------
@@ -139,7 +139,7 @@ function syncObjectProperties(object) {
     }
 }
 addNetworkHandler("ag.obj.sync", function(event, object) {
-    syncObjectProperties(object);
+    //syncObjectProperties(object);
 });
 
 // ---------------------------------------------------------------------------

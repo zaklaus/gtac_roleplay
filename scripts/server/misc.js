@@ -120,6 +120,14 @@ function submitBugReportCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function enterExitPropertyCommand(command, params, client) {
+	if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
+		if(getPlayerData(client).pedState == AG_PEDSTATE_ENTERINGVEHICLE) {
+			sendPlayerClearPedState(client);
+		} else {
+			return false;
+		}
+	}
+
 	if(isPlayerInAnyHouse(client)) {
 		let inHouse = getServerData().houses[getPlayerHouse(client)];
 		if(getDistance(inHouse.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
@@ -127,6 +135,7 @@ function enterExitPropertyCommand(command, params, client) {
 				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
 				return false;
 			}
+			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
@@ -140,6 +149,7 @@ function enterExitPropertyCommand(command, params, client) {
 					setTimeout(function() {
 						enableCityAmbienceForPlayer(client);
 						clearPlayerOwnedPeds(client);
+						getPlayerData(client).pedState = AG_PEDSTATE_READY;
 					}, 2000);
 				}, 1000);
 			}, 1100);
@@ -155,6 +165,7 @@ function enterExitPropertyCommand(command, params, client) {
 				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
 				return false;
 			}
+			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
@@ -168,6 +179,7 @@ function enterExitPropertyCommand(command, params, client) {
 					setTimeout(function() {
 						enableCityAmbienceForPlayer(client);
 						clearPlayerOwnedPeds(client);
+						getPlayerData(client).pedState = AG_PEDSTATE_READY;
 					}, 2000);
 				}, 1000);
 			}, 1100);
@@ -194,6 +206,7 @@ function enterExitPropertyCommand(command, params, client) {
 
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
 
+			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
@@ -203,6 +216,7 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerInterior(client, closestBusiness.exitInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
+					getPlayerData(client).pedState = AG_PEDSTATE_READY;
 				}, 1000);
 			}, 1100);
 			setEntityData(client, "ag.inBusiness", closestBusinessId);
@@ -228,6 +242,7 @@ function enterExitPropertyCommand(command, params, client) {
 
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
 
+			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
@@ -237,6 +252,7 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerInterior(client, closestHouse.exitInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
+					getPlayerData(client).pedState = AG_PEDSTATE_READY;
 				}, 1000);
 			}, 1100);
 			setEntityData(client, "ag.inHouse", closestHouseId);

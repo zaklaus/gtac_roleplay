@@ -74,6 +74,9 @@
 	<script src="scripts/server/item/drink.js" type="server" language="javascript" />
 	<script src="scripts/server/item/walkie-talkie.js" type="server" language="javascript" />
 	<script src="scripts/server/item/phone.js" type="server" language="javascript" />
+	<script src="scripts/server/item/handcuff.js" type="server" language="javascript" />
+	<script src="scripts/server/item/rope.js" type="server" language="javascript" />
+	<script src="scripts/server/item/tazer.js" type="server" language="javascript" />
 
 	<script src="scripts/server/startup.js" type="server" language="javascript" />
 

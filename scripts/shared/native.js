@@ -13,6 +13,42 @@ setErrorMode(RESOURCEERRORMODE_STRICT);
 
 // ---------------------------------------------------------------------------
 
+function and(var1, var2) {
+	return (var1 && var2);
+}
+
+// ---------------------------------------------------------------------------
+
+function or(var1, var2) {
+	return (var1 || var2);
+}
+
+// ---------------------------------------------------------------------------
+
+function not(var1) {
+	return !var1;
+}
+
+// ---------------------------------------------------------------------------
+
+function gt(var1, var2) {
+	return (var1 > var2);
+}
+
+// ---------------------------------------------------------------------------
+
+function lt(var1, var2) {
+	return (var1 < var2);
+}
+
+// ---------------------------------------------------------------------------
+
+function eq(var1, var2) {
+	return (var1 == var2);
+}
+
+// ---------------------------------------------------------------------------
+
 function toInteger(val) {
 	return Number(val);
 }
@@ -142,6 +178,12 @@ function logToConsole(tempLogLevel, text) {
 
 function isSamePlayer(client1, client2) {
 	return (client1 == client2);
+}
+
+// ---------------------------------------------------------------------------
+
+function getClientFromIndex(index) {
+	return getClients().find(c => c.index == index);
 }
 
 // ---------------------------------------------------------------------------

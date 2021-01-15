@@ -541,9 +541,7 @@ function getVehiclesInRange(position, distance) {
 // ---------------------------------------------------------------------------
 
 function getClientsInRange(position, distance) {
-	//return getClients().filter(x => x.player && x.player.position.distance(position) <= distance);
-
-	return getElementsByTypeInRange(ELEMENT_PLAYER, position, distance);
+	return getPlayersInRange(position, distance);
 }
 
 // ---------------------------------------------------------------------------
@@ -955,12 +953,12 @@ function getVehiclesInRange(position, range) {
 // ---------------------------------------------------------------------------
 
 function getPlayersInRange(position, range) {
-	let peds = getPeds();
+	let clients = getClients();
 	let inRangePlayers = [];
-	for(let i in peds) {
-		if(peds[i].isType(ELEMENT_PLAYER)) {
-			if(getDistance(position, peds[i].position) <= range) {
-				inRangePlayers.push(peds[i]);
+	for(let i in clients) {
+		if(isPlayerSpawned(clients[i])) {
+			if(getDistance(position, getPlayerPosition(clients[i])) <= range) {
+				inRangePlayers.push(clients[i]);
 			}
 		}
 	}
@@ -1818,6 +1816,10 @@ function getPlayerNameForNameTag(client) {
 // -------------------------------------------------------------------------
 
 function isPlayerSpawned(client) {
+	if(client.console) {
+		return false;
+	}
+
 	return (client.player != null);
 }
 
@@ -1876,12 +1878,14 @@ function resetClientStuff(client) {
 	}
 
 	if(isPlayerOnJobRoute(client)) {
-		stopJobRoute(client);
+		stopJobRoute(client, false, false);
 	}
 
 	if(getPlayerData(client).rentingVehicle) {
 		stopRentingVehicle(client);
 	}
+
+	deleteJobItems(client);
 
 	getPlayerData(client).lastVehicle = null;
 }
@@ -1891,7 +1895,7 @@ function resetClientStuff(client) {
 function getPlayerFromCharacterId(subAccountId) {
 	let clients = getClients();
 	for(let i in clients) {
-		for(let j in getPlayerData(clients).subAccounts) {
+		for(let j in getPlayerData(clients[i]).subAccounts) {
 			if(getPlayerData(clients[i]).subAccounts[j].databaseId == subAccountId) {
 				return clients[i];
 			}

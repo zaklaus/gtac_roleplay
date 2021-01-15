@@ -30,17 +30,17 @@ let serverColours = {
 		royalBlue: toColour(0, 0, 255, 255),
 		teal: toColour(0, 255, 255, 255),
 		orange: toColour(255, 128, 0, 255),
-		softRed: toColour(205, 92, 92, 255),
+		softRed: toColour(205, 60, 60, 255),
 		softGreen: toColour(50, 205, 50, 255),
 		lightPurple: toColour(150, 0, 150, 255),
 		lightGrey: toColour(200, 200, 200, 255),
 		mediumGrey: toColour(150, 150, 150, 255),
 		darkGrey: toColour(64, 64, 64, 255),
-		policeBlue: toColour(70, 130, 180, 255),
+		policeBlue: toColour(50, 80, 200, 255),
 		medicPink: toColour(219, 112, 147, 255),
-		firefighterRed: toColour(205, 92, 92, 255),
-		busDriverGreen: toColour(50, 205, 50, 255),
-		taxiDriverYellow: toColour(240, 230, 140, 255),
+		firefighterRed: toColour(205, 60, 60, 255),
+		busDriverGreen: toColour(50, 160, 50, 255),
+		taxiDriverYellow: toColour(240, 230, 100, 255),
 		civilianWhite: toColour(200, 200, 200, 255),
 		burntYellow: toColour(210, 210, 0, 255),
 		burntOrange: toColour(210, 120, 0, 255),
@@ -89,7 +89,7 @@ function getPlayerColour(client) {
 // ---------------------------------------------------------------------------
 
 function getBoolRedGreenInlineColour(boolVal) {
-	return (!boolVal) ? "[#AA2222]" : "[#22AA22]";
+	return (!boolVal) ? "[#cd3c3c]" : "[#32cd32]";
 }
 
 // ---------------------------------------------------------------------------

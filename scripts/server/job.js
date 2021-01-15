@@ -533,6 +533,7 @@ function stopWorking(client) {
 		getPlayerCurrentSubAccount(client).lastJobVehicle = false;
 	}
 
+	deleteJobItems(client);
 	restorePlayerJobLockerItems(client);
 
 	let jobId = getPlayerCurrentSubAccount(client).job;
@@ -608,7 +609,7 @@ function jobUniformCommand(command, params, client) {
 
 	messagePlayerSuccess(client, `You have been given a [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform and you can put it on from your inventory.`);
 
-	let itemId = createItem(getItemTypeFromParams("Uniform"), getJobData(jobId).uniforms[uniformId].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
+	let itemId = createItem(getItemTypeFromParams("Outfit"), getJobData(jobId).uniforms[uniformId-1].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
 	let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
 	getPlayerData(client).hotBarItems[freeSlot] = itemId;
 	getPlayerData(client).jobEquipmentCache.push(itemId);
@@ -1072,24 +1073,40 @@ function startJobRoute(client) {
 
 // ---------------------------------------------------------------------------
 
-function stopJobRoute(client, successful = false) {
+function stopJobRoute(client, successful = false, alertPlayer = true) {
 	stopReturnToJobVehicleCountdown(client);
 	sendPlayerStopJobRoute(client);
 
 	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
-		respawnVehicle(getPlayerData(client).busRouteVehicle);
-		messagePlayerAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
-		getPlayerData(client).busRouteVehicle = false;
-		getPlayerData(client).busRoute = false;
-		getPlayerData(client).busRouteStop = false;
-		getPlayerData(client).busRouteIsland = false;
+		respawnVehicle(getPlayerData(client).jobRouteVehicle);
+		getPlayerData(client).jobRouteVehicle = false;
+		getPlayerData(client).jobRoute = false;
+		getPlayerData(client).jobRouteStop = false;
+		getPlayerData(client).jobRouteIsland = false;
+
+		if(alertPlayer) {
+			messagePlayerAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
+		}
 	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
-		respawnVehicle(getPlayerData(client).garbageRouteVehicle);
-		messagePlayerAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).garbageRouteIsland, getPlayerData(client).garbageRoute).name} garbage route! Your trashmaster has been returned to the bus depot.`, getColourByName("yellow"));
-		getPlayerData(client).garbageRouteVehicle = false;
-		getPlayerData(client).garbageRoute = false;
-		getPlayerData(client).garbageRouteStop = false;
-		getPlayerData(client).garbageRouteIsland = false;
+		respawnVehicle(getPlayerData(client).jobRouteVehicle);
+		getPlayerData(client).jobRouteVehicle = false;
+		getPlayerData(client).jobRoute = false;
+		getPlayerData(client).jobRouteStop = false;
+		getPlayerData(client).jobRouteIsland = false;
+
+		if(alertPlayer) {
+			messagePlayerAlert(client, `You stopped the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! Your trashmaster has been returned to the bus depot.`, getColourByName("yellow"));
+		}
+	} else if(doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+		respawnVehicle(getPlayerData(client).jobRouteVehicle);
+		getPlayerData(client).jobRouteVehicle = false;
+		getPlayerData(client).jobRoute = false;
+		getPlayerData(client).jobRouteStop = false;
+		getPlayerData(client).jobRouteIsland = false;
+
+		if(alertPlayer) {
+			messagePlayerAlert(client, `You stopped the ${getPolicePatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} patrol route! Your police car has been returned to the station.`, getColourByName("yellow"));
+		}
 	}
 }
 
@@ -1464,12 +1481,12 @@ function createJobLocationPickup(jobId, locationId) {
 
 		getJobData(jobId).locations[locationId].pickup = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
 		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
-		addToWorld(getJobData(jobId).locations[locationId].pickup);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.owner.type", AG_PICKUP_JOB, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, locationId, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, AG_LABEL_JOB, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, getServerData().jobs[jobId].name, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, jobId, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.owner.id", locationId, false);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.type", AG_LABEL_JOB, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.name", getJobData(jobId).name, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.jobType", jobId, true);
+		addToWorld(getJobData(jobId).locations[locationId].pickup);
 	}
 }
 
@@ -1574,6 +1591,21 @@ function playerArrivedAtJobRouteStop(client) {
 	} else if(doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
 		playerArrivedAtPolicePatrolPoint(client);
 	}
+}
+
+// ---------------------------------------------------------------------------
+
+function deleteJobItems(client) {
+	for(let i in getPlayerData(client).jobEquipmentCache) {
+		for(let j in getPlayerData(client).hotBarItems) {
+			if(getPlayerData(client).hotBarItems[j] == getPlayerData(client).jobEquipmentCache[i]) {
+				getPlayerData(client).hotBarItems[j] = -1;
+			}
+		}
+		deleteItem(getPlayerData(client).jobEquipmentCache[i]);
+	}
+
+
 }
 
 // ---------------------------------------------------------------------------

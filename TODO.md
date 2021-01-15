@@ -24,3 +24,5 @@ For grand opening:
     - Take second beer from crate
     - Store second beer in trunk
 ------------------------------------------------------
+
+* Change mouse cursor/camera net events to force state instead of toggle on client end

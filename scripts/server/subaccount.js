@@ -81,7 +81,12 @@ function saveSubAccountToDatabase(subAccountData) {
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
-		let dbQueryString = `UPDATE sacct_main SET sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension} WHERE sacct_id=${subAccountData.databaseId}`;
+		let safeClanTag = escapeDatabaseString(subAccountData.clanTag);
+		let safeClanTitle = escapeDatabaseString(subAccountData.clanTitle);
+		let safeFirstName = escapeDatabaseString(subAccountData.firstName);
+		let safeLastName = escapeDatabaseString(subAccountData.lastName);
+		let safeMiddleName = escapeDatabaseString(subAccountData.middleName);
+		let dbQueryString = `UPDATE sacct_main SET sacct_name_first='${safeFirstName}', sacct_name_last='${safeLastName}', sacct_name_middle='${safeMiddleName}', sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension}, sacct_last_login=${subAccountData.lastLogin}, sacct_clan=${subAccountData.clan}, sacct_clan_rank=${subAccountData.clanRank}, sacct_clan_tag='${safeClanTag}', sacct_clan_title='${safeClanTitle}', sacct_clan_flags=${subAccountData.clanFlags} WHERE sacct_id=${subAccountData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
@@ -115,19 +120,19 @@ function showCharacterSelectToClient(client) {
 	getPlayerData(client).switchingCharacter = true;
 
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
-		if(getPlayerData().subAccounts != null) {
-			if(getPlayerData().subAccounts.length > 0) {
-				selectCharacter(client, getPlayerLastUsedSubAccount(client));
-				return true;
-			}
+		if(getPlayerData(client).subAccounts.length > 0) {
+			logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being auto-spawned as character ID ${getPlayerLastUsedSubAccount(client)}`);
+			selectCharacter(client, getPlayerLastUsedSubAccount(client));
+			return true;
 		}
 	}
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).currentSubAccount = 0;
+		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
-		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
+		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
 		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
@@ -136,7 +141,7 @@ function showCharacterSelectToClient(client) {
 		getPlayerData(client).subAccounts.forEach(function(subAccount, index) {
 			messagePlayerNormal(client, `${index+1} • [#AAAAAA]${subAccount.firstName} ${subAccount.lastName}`);
 		});
-		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
+		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
 	}
 }
 
@@ -199,6 +204,7 @@ function checkPreviousCharacter(client) {
 
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
+		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		updatePlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 }
@@ -215,6 +221,7 @@ function checkNextCharacter(client) {
 
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
+		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		updatePlayerCharacterSelectGUI("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 }
@@ -222,19 +229,23 @@ function checkNextCharacter(client) {
 // ---------------------------------------------------------------------------
 
 function selectCharacter(client, characterId = -1) {
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-		showPlayerCharacterSelectSuccessGUI(client);
-	}
-
+	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} character select called (Character ID ${characterId})`);
 	if(characterId != -1) {
+		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} provided character ID (${characterId}) to spawn with`);
 		getPlayerData(client).currentSubAccount = characterId;
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} with skin ${getPlayerCurrentSubAccount(client).skin}`);
-	spawnPlayer(client, getPlayerCurrentSubAccount(client).spawnPosition, getPlayerCurrentSubAccount(client).spawnHeading, getPlayerCurrentSubAccount(client).skin);
+	showPlayerCharacterSelectSuccessGUI(client);
+
+	let spawnPosition = getPlayerCurrentSubAccount(client).spawnPosition;
+	let spawnHeading = getPlayerCurrentSubAccount(client).spawnHeading;
+	let skin = getPlayerCurrentSubAccount(client).skin
+
+	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
+	spawnPlayer(client, spawnPosition, spawnHeading, skin);
+	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 
 	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();
-	cachePlayerHotBarItems(client);
 }
 
 // ---------------------------------------------------------------------------
@@ -293,7 +304,7 @@ function useCharacterCommand(command, params, client) {
 
 function getPlayerLastUsedSubAccount(client) {
 	let subAccounts = getPlayerData(client).subAccounts;
-	lastUsed = 0;
+	let lastUsed = 0;
 	for(let i in subAccounts) {
 		if(subAccounts[i].lastLogin > subAccounts[lastUsed].lastLogin) {
 			lastUsed = i;

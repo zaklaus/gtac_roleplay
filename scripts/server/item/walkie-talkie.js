@@ -29,13 +29,15 @@ function getPlayerActiveWalkieTalkieFrequency(client) {
 function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
     walkieTalkieOutgoingToNearbyPlayers(transmittingPlayer, messageText);
 
-	let clients = getPlayingClients();
+	let clients = getClients();
 	for(let i in clients) {
-        if(!samePlayer(transmittingPlayer, clients[i])) {
-            if(getPlayerActiveWalkieTalkieFrequency(clients[i]) == radioFrequency) {
-                walkieTalkieIncomingToNearbyPlayers(clients[i], messageText);
-            }
-        }
+		if(isPlayerSpawned(clients[i])) {
+			if(!isSamePlayer(transmittingPlayer, clients[i])) {
+				if(getPlayerActiveWalkieTalkieFrequency(clients[i]) == radioFrequency) {
+					walkieTalkieIncomingToNearbyPlayers(clients[i], messageText);
+				}
+			}
+		}
 	}
 }
 
@@ -44,7 +46,7 @@ function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
 function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
-		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](to radio): [#FFFFFF]${messageText}`);
+		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](to radio): [#FFFFFF]${messageText}`);
 	}
 }
 
@@ -53,7 +55,7 @@ function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 function walkieTalkieIncomingToNearbyPlayers(client, messageText) {
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().walkieTalkieSpeakerDistance);
 	for(let i in clients) {
-		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](from radio): [#FFFFFF]${messageText}`);
+		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](from radio): [#FFFFFF]${messageText}`);
 	}
 }
 
@@ -98,6 +100,17 @@ function setWalkieTalkieFrequencyCommand(command, params, client) {
 
 	getItemData(getPlayerActiveItem(client)).value = params*100;
 	messagePlayerSuccess(client, `You set the frequency of you walkie talkie in slot ${getPlayerData(client).activeHotbarSlot} to ${getItemValueDisplay(getPlayerActiveItem(client))}`)
+}
+
+// ---------------------------------------------------------------------------
+
+function walkieTalkieChatCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	walkieTalkieTransmit(getPlayerActiveWalkieTalkieFrequency(client), params, client);
 }
 
 // ---------------------------------------------------------------------------

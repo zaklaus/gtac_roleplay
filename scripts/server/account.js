@@ -971,7 +971,7 @@ function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
 		return true;
 	}
 
-	return true;
+	return false;
 }
 
 // ---------------------------------------------------------------------------

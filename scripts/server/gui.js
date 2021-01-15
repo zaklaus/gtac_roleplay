@@ -10,28 +10,12 @@
 
 // ---------------------------------------------------------------------------
 
-function showPlayerPromptGUI(client) {
-
-}
-
-// ---------------------------------------------------------------------------
-
-function showPlayerPhoneGUI(client) {
-
-}
-
-// ---------------------------------------------------------------------------
-
-function showPlayerItemInventoryGUI(client) {
-
-}
-
-// ---------------------------------------------------------------------------
-
 function playerPromptAnswerNo(client) {
     if(!getEntityData(client, "ag.prompt")) {
         return false;
     }
+
+    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} answered NO to their prompt (${getEntityData(client, "ag.prompt")})`);
 
     switch(getEntityData(client, "ag.prompt")) {
         case AG_PROMPT_CREATEFIRSTCHAR:
@@ -52,6 +36,8 @@ function playerPromptAnswerYes(client) {
     if(!getEntityData(client, "ag.prompt")) {
         return false;
     }
+
+    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} answered YES to their prompt (${getEntityData(client, "ag.prompt")})`);
 
     switch(getEntityData(client, "ag.prompt")) {
         case AG_PROMPT_CREATEFIRSTCHAR:

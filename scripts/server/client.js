@@ -67,12 +67,14 @@ function addAllNetworkHandlers() {
 // ---------------------------------------------------------------------------
 
 function updatePlayerNameTag(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending ${getPlayerDisplayForConsole(client)}'s updated nametag to all players`);
 	triggerNetworkEvent("ag.nametag", null, client.name, getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
 }
 
 // ---------------------------------------------------------------------------
 
 function updateAllPlayerNameTags() {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending updated nametags to all players`);
     let clients = getClients();
 	for(let i in clients) {
         updatePlayerNameTag(clients[i]);
@@ -82,6 +84,7 @@ function updateAllPlayerNameTags() {
 // ---------------------------------------------------------------------------
 
 function updatePlayerPing(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending ${getPlayerDisplayForConsole(client)}'s ping to all players`);
 	triggerNetworkEvent("ag.ping", null, client.name, client.ping);
 }
 
@@ -115,55 +118,56 @@ function playerClientStarted(client) {
 // ---------------------------------------------------------------------------
 
 function showGameMessage(client, text, colour, duration) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing game message to ${getPlayerDisplayForConsole(client)} (${text}) for ${duration} milliseconds`);
     triggerNetworkEvent("ag.smallGameMessage", client, text, colour, duration);
 }
 
 // ---------------------------------------------------------------------------
 
 function enableCityAmbienceForPlayer(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
     triggerNetworkEvent("ag.ambience", client, true);
 }
 
 // ---------------------------------------------------------------------------
 
 function disableCityAmbienceForPlayer(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
     triggerNetworkEvent("ag.ambience", client, false);
 }
 
 // ---------------------------------------------------------------------------
 
 function clearPlayerOwnedPeds(client) {
-	logToConsole(LOG_DEBUG, `[Asshat.Utilities] Clearing peds owned by ${getPlayerDisplayForConsole(client)}`);
+	logToConsole(LOG_DEBUG, `[Asshat.Client] Clearing peds owned by ${getPlayerDisplayForConsole(client)}`);
 	triggerNetworkEvent("ag.clearPeds", client);
 }
 
 // ---------------------------------------------------------------------------
 
-function updatePlayerJobType(client) {
-    triggerNetworkEvent("ag.jobType", client, getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client).job));
-}
-
-// ---------------------------------------------------------------------------
-
 function updatePlayerSpawnedState(client, state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s spawned state ${toUpperCase(getOnOffFromBool(state))}`);
     triggerNetworkEvent("ag.spawned", client, state);
 }
 
 // ---------------------------------------------------------------------------
 
 function setPlayerControlState(client, state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s control state ${toUpperCase(getOnOffFromBool(state))}`);
     triggerNetworkEvent("ag.control", client, state);
 }
 
 // ---------------------------------------------------------------------------
 
 function updatePlayerShowLogoState(client, state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s logo state ${toUpperCase(getOnOffFromBool(state))}`);
     triggerNetworkEvent("ag.logo", client, state);
 }
 
 // ---------------------------------------------------------------------------
 
 function restorePlayerCamera(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Restoring ${getPlayerDisplayForConsole(client)}'s camera`);
     triggerNetworkEvent("ag.restoreCamera", client);
 }
 
@@ -176,12 +180,14 @@ function setPlayer2DRendering(client, hudState = false, labelState = false, smal
 // ---------------------------------------------------------------------------
 
 function syncPlayerProperties(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to sync ${getPlayerDisplayForConsole(client)}'s player ped properties`);
     triggerNetworkEvent("ag.player.sync", null, client.player);
 }
 
 // ---------------------------------------------------------------------------
 
 function updatePlayerSnowState(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s snow state (Falling: ${toUpperCase(getOnOffFromBool(getServerConfig().fallingSnow))}, Ground: ${toUpperCase(getOnOffFromBool(getServerConfig().groundSnow))})`);
     triggerNetworkEvent("ag.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
 }
 
@@ -201,7 +207,7 @@ function sendExcludedModelsForGroundSnowToPlayer(client) {
 function sendRemovedWorldObjectsToPlayer(client) {
     if(getGameConfig().removedWorldObjects[getServerGame()].length > 0) {
         for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
-            logToConsole(LOG_DEBUG, `[Asshat.Misc] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
             triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
         }
     }
@@ -211,6 +217,7 @@ function sendRemovedWorldObjectsToPlayer(client) {
 // ---------------------------------------------------------------------------
 
 function updatePlayerHotBar(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending updated hotbar data to ${getPlayerDisplayForConsole(client)}`);
     let tempHotBarItems = [];
     for(let i in getPlayerData(client).hotBarItems) {
         let itemImage = "";
@@ -231,192 +238,231 @@ function updatePlayerHotBar(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerWeaponDamageEnabled(client, state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending weapon damage state for ${getPlayerDisplayForConsole(client)} to all players`);
     triggerNetworkEvent("ag.weaponDamageEnabled", null, client.name, state);
 }
 
 // ---------------------------------------------------------------------------
 
 function setPlayerWeaponDamageEvent(client, eventType) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending weapon damage event (${eventType}) for ${getPlayerDisplayForConsole(client)} to all players`);
     triggerNetworkEvent("ag.weaponDamageEvent", null, client.name, eventType);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendJobRouteStopToPlayer(client, position, colour) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending job route stop data to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showJobRouteStop", client, position, colour);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerLoginSuccessGUI(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending login success GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.loginSuccess", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerLoginFailedGUI(client, errorMessage) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending login failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.loginFailed", client, errorMessage);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerRegistrationSuccessGUI(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending registration success GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.registrationSuccess", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerRegistrationFailedGUI(client, errorMessage) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending registration failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.registrationFailed", client, errorMessage);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerGUIColours(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending GUI colours to ${getPlayerDisplayForConsole(client)}`);
 	triggerNetworkEvent("ag.guiColour", client, getServerConfig().guiColour[0], getServerConfig().guiColour[1], getServerConfig().guiColour[2]);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerGUIInit(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending GUI init signal to ${getPlayerDisplayForConsole(client)}`);
 	triggerNetworkEvent("ag.guiInit", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerLoginGUI(client, errorMessage = "") {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show login GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showLogin", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerRegistrationGUI(client, errorMessage = "") {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show registration GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showRegistration", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerNewCharacterGUI(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show new character GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showNewCharacter", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending character select GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
 }
 
 // ---------------------------------------------------------------------------
 
 function updatePlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
-    triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending update character select GUI signal to ${getPlayerDisplayForConsole(client)}`);
+    triggerNetworkEvent("ag.switchCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerCharacterSelectSuccessGUI(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending character select success GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.characterSelectSuccess", client);
 }
 
 // ---------------------------------------------------------------------------
 
+function showPlayerCharacterSelectFailedGUI(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending character select failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
+    triggerNetworkEvent("ag.characterSelectFailed", client);
+}
+
+// ---------------------------------------------------------------------------
+
 function showPlayerPromptGUI(client, promptMessage, promptTitle) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show prompt GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${promptTitle}, Message: ${promptMessage})`);
     triggerNetworkEvent("ag.showPrompt", client, promptMessage, promptTitle);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendRunCodeToClient(client, code, returnTo) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending runcode to ${getPlayerDisplayForConsole(client)} (returnTo: ${getPlayerDisplayForConsole(getClientFromIndex(returnTo))}, Code: ${code})`);
     triggerNetworkEvent("ag.runCode", client, code, returnTo);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerWorkingState(client, state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending working state (${toUpperCase(getYesNoFromBool(state))}) to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.working", client, state);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerJobType(client, jobType) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending job type (${jobType}) to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.jobType", client, jobType);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerStopJobRoute(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to abort job route to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.stopJobRoute", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerMouseCameraToggle(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to toggle mouse camera ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.mouseCamera", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerMouseCursorToggle(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to toggle mouse cursor ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.mouseCursor", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendAddAccountKeyBindToClient(client, key, keyState) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending added keybind to ${getPlayerDisplayForConsole(client)} (Key: ${sdl.getKeyName(key)}, State: ${(keyState) ? "down" : "up"})`);
     triggerNetworkEvent("ag.addKeyBind", client, toInteger(key), (keyState) ? KEYSTATE_DOWN : KEYSTATE_UP);
 }
 
 // ---------------------------------------------------------------------------
 
-function sendRemoveAccountKeyBindToClient(client, key, keyState) {
+function sendRemoveAccountKeyBindToClient(client, key) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending deleted keybind to ${getPlayerDisplayForConsole(client)} (Key: ${sdl.getKeyName(key)})`);
     triggerNetworkEvent("ag.delKeyBind", client, toInteger(key));
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerSetPosition(client, position) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set position signal to ${getPlayerDisplayForConsole(client)} (Position: ${position.x}, ${position.y}, ${position.z})`);
     triggerNetworkEvent("ag.position", client, position);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerSetHeading(client, heading) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set heading signal to ${getPlayerDisplayForConsole(client)} (Heading: ${heading})`);
     triggerNetworkEvent("ag.heading", client, heading);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerSetInterior(client, interior) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set heading signal to ${getPlayerDisplayForConsole(client)} (Interior: ${interior})`);
     triggerNetworkEvent("ag.interior", client, interior);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerFrozenState(client, state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set heading signal to ${getPlayerDisplayForConsole(client)} (State: ${toUpperCase(getYesNoFromBool(state))})`);
     triggerNetworkEvent("ag.frozen", client, state);
 }
 
 // ---------------------------------------------------------------------------
 
 function givePlayerWeapon(client, weaponId, ammo, active) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to give weapon (Weapon: ${weaponId}, Ammo: ${ammo})`);
     triggerNetworkEvent("ag.giveWeapon", client, weaponId, ammo, active);
 }
 
 // ---------------------------------------------------------------------------
 
 function clearPlayerWeapons(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to clear weapons`);
     triggerNetworkEvent("ag.clearWeapons", client);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerNewCharacterFailedGUI(client, errorMessage) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending new character failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.newCharacterFailed", client, errorMessage);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerRemoveFromVehicle(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending remove from vehicle signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.removeFromVehicle", client);
 }
 
@@ -429,30 +475,35 @@ function sendChatBoxMessageToPlayer(client, message, colour) {
 // ---------------------------------------------------------------------------
 
 function showPlayerItemTakeDelay(client, itemId) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item take delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(itemId).itemTypeIndex).takeDelay} milliseconds)`);
     triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(itemId).itemTypeIndex).takeDelay);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemUseDelay(client, itemSlot) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item use delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay} milliseconds)`);
     triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemDropDelay(client, itemSlot) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item drop delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay} milliseconds)`);
     triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemPickupDelay(client, itemId) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item pickup delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay} milliseconds)`);
     triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay);
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemPutDelay(client, itemSlot) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item put delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay} milliseconds)`);
     triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay);
 }
 
@@ -461,11 +512,14 @@ function showPlayerItemPutDelay(client, itemSlot) {
 function showPlayerItemSwitchDelay(client, itemSlot) {
     if(itemSlot != -1) {
         if(getPlayerData(client).hotBarItems[itemSlot] != -1) {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).switchDelay} milliseconds)`);
             triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).switchDelay);
         } else {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (instant)`);
             playerSwitchItem(client, itemSlot);
         }
     } else {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (instant)`);
         playerSwitchItem(client, itemSlot);
     }
 }
@@ -473,13 +527,37 @@ function showPlayerItemSwitchDelay(client, itemSlot) {
 // ---------------------------------------------------------------------------
 
 function sendPlayerDrunkEffect(client, amount, duration) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Setting drunk effect for ${getPlayerDisplayForConsole(client)} to ${amount} for ${duration} milliseconds`);
     triggerNetworkEvent("ag.drunkEffect", client, amount, duration);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerClearPedState(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Clearing ped state for ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.clearPedState", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function playerDamagedByPlayer(client, damagerPed, weaponId, pedPiece) {
+    let damagerClient = getClientFromPlayerElement(damagerPed);
+
+    if(!getPlayerData(damagerClient) || !getPlayerData(client)) {
+        return false;
+    }
+
+    switch(getPlayerData(damagerClient).weaponDamageEvent) {
+        case AG_WEAPON_DAMAGE_EVENT_TAZER:
+            if(!isPlayerTazed(client) && !isPlayerHandCuffed(client) && !isPlayerInAnyVehicle(client)) {
+                meActionToNearbyPlayers(client, `electrifies ${getCharacterFullName(damagerClient)} with their tazer`);
+                tazePlayer(client);
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
 // ---------------------------------------------------------------------------

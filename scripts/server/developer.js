@@ -28,6 +28,14 @@ function p(params) {
 	return getPlayerFromParams(params);
 }
 
+function o(params) {
+	return getElementsByType(ELEMENT_OBJECT)[params];
+}
+
+function io(params) {
+	return getItemData(params).object;
+}
+
 function pd(params) {
 	return getPlayerData(getPlayerFromParams(params));
 }
@@ -309,7 +317,7 @@ function restartGameModeCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function clientRunCodeFail(client, returnTo, code) {
-	let returnClient = getClients()[returnTo];
+	let returnClient = getClientFromIndex(returnTo);
 	if(!returnClient) {
 		return false;
 	}

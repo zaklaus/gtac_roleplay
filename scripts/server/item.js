@@ -252,6 +252,10 @@ function dropItemCommand(command, params, client) {
 		hotBarSlot = toInteger(params);
 	}
 
+	if(hotBarSlot == -1) {
+		return false;
+	}
+
 	if(getPlayerData(client).hotBarItems[hotBarSlot] == -1) {
 		messagePlayerError(client, `Please equip an item or provide a slot ID to drop an item`);
 		return false;
@@ -398,23 +402,54 @@ function playerUseItem(client, hotBarSlot) {
 				return false;
 			}
 
-			if(!isPlayerSurrendered(closestPlayer)) {
-				messagePlayerError(client, `${getCharacterFullName(closestPlayer)} can't be tied up! They either need to have their hands up, be knocked out, or tazed`);
-				return false;
-			}
-			break;
-
-		case AG_ITEM_USETYPE_HANDCUFFS:
-			closestPlayer = getClosestPlayer(getPlayerPosition(client));
-
-			if(!getPlayerData(closestPlayer)) {
+			if(getDistance(getPlayerPosition(closestPlayer), getPlayerPosition(client)) > getGlobalConfig().handcuffPlayerDistance) {
 				messagePlayerError(client, "There isn't anyone close enough to tie up!");
 				return false;
 			}
 
 			if(!isPlayerSurrendered(closestPlayer)) {
-				messagePlayerError(client, `${getCharacterFullName(closestPlayer)} can't be cuffed! They either need to have their hands up, be knocked out, or tazed`);
+				messagePlayerError(client, `${getCharacterFullName(closestPlayer)} can't be tied! They either need to have their hands up, be knocked out, or tazed`);
 				return false;
+			}
+
+			if(isPlayerHandCuffed(closestPlayer)) {
+				ropeUnTiePlayer(closestPlayer);
+				meActionToNearbyPlayers(client, `unties the rope from ${getCharacterFullName(closestPlayer)}'s hands and feet`);
+			} else {
+				if(!isPlayerSurrendered(closestPlayer)) {
+					messagePlayerError(client, `${getCharacterFullName(closestPlayer)} can't be tied up! They either need to have their hands up, be knocked out, or tazed`);
+					return false;
+				}
+
+				ropeTiePlayer(closestPlayer);
+				meActionToNearbyPlayers(client, `takes their rope and ties ${getCharacterFullName(closestPlayer)}'s hands and feet together.`);
+			}
+			break;
+
+		case AG_ITEM_USETYPE_HANDCUFF:
+			closestPlayer = getClosestPlayer(getPlayerPosition(client));
+
+			if(!getPlayerData(closestPlayer)) {
+				messagePlayerError(client, "There isn't anyone close enough to handcuff!");
+				return false;
+			}
+
+			if(getDistance(getPlayerPosition(closestPlayer), getPlayerPosition(client)) > getGlobalConfig().handcuffPlayerDistance) {
+				messagePlayerError(client, "There isn't anyone close enough to handcuff!");
+				return false;
+			}
+
+			if(isPlayerHandCuffed(closestPlayer)) {
+				unHandCuffPlayer(closestPlayer);
+				meActionToNearbyPlayers(client, `takes their key and removes the handcuffs from ${getCharacterFullName(closestPlayer)}`);
+			} else {
+				if(!isPlayerSurrendered(closestPlayer)) {
+					messagePlayerError(client, `${getCharacterFullName(closestPlayer)} can't be cuffed! They either need to have their hands up, be knocked out, or tazed`);
+					return false;
+				}
+
+				handCuffPlayer(closestPlayer);
+				meActionToNearbyPlayers(client, `takes their cuffs and places them on ${getCharacterFullName(closestPlayer)}`);
 			}
 			break;
 
@@ -424,7 +459,7 @@ function playerUseItem(client, hotBarSlot) {
 
 		case AG_ITEM_USETYPE_WALKIETALKIE:
 			getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
-			messagePlayerAlert(client, `You turned ${toUpperCase(getBoolRedGreenInlineColour(getOnOffFromBool(getItemData(itemIndex).enabled)))} your walkie talkie in slot ${getPlayerData(client).activeHotBarSlot+1} (${getItemValueDisplay(itemIndex)})`);
+			messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your walkie talkie in slot ${getPlayerData(client).activeHotBarSlot+1} [#AAAAAA](${getItemValueDisplay(itemIndex)})`);
 			break;
 
 		case AG_ITEM_USETYPE_PHONE:
@@ -510,7 +545,7 @@ function playerPickupItem(client, itemId) {
 		getItemData(itemId).ownerId = getPlayerCurrentSubAccount(client).databaseId;
 		getItemData(itemId).position = toVector3(0.0, 0.0, 0.0);
 		getItemData(itemId).dimension = 0;
-		deleteGroundItemObject(itemIndex);
+		deleteGroundItemObject(itemId);
 
 		getPlayerData(client).hotBarItems[firstSlot] = itemId;
 		updatePlayerHotBar(client);
@@ -570,7 +605,7 @@ function playerSwitchItem(client, newHotBarSlot) {
 
 	if(currentHotBarItem != -1) {
 		if(getItemData(currentHotBarItem)) {
-			if(getItemTypeData(getItemData(currentHotBarItem).itemTypeIndex).useType == AG_ITEM_USETYPE_WEAPON) {
+			if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(currentHotBarItem).itemTypeIndex).useType) != -1) {
 				getItemData(currentHotBarItem).value = getPlayerWeaponAmmo(client);
 				clearPlayerWeapons(client);
 			}
@@ -1209,7 +1244,7 @@ function toggleItemEnabledCommand(command, params, client) {
 	}
 
 	getItemData(getPlayerActiveItem(client)).enabled = !getItemData(getPlayerActiveItem(client)).enabled;
-	messagePlayerNormal(client, `You turned ${toUpperCase(getOnOffFromBool(getBoolRedGreenInlineColour(getItemData(getPlayerActiveItem(client)).enabled)))} (your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)}`)
+	messagePlayerNormal(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)} [#AAAAAA](${getItemValueDisplay(getPlayerActiveItem(client))}`)
 }
 
 // ---------------------------------------------------------------------------

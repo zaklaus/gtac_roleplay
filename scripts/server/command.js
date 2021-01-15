@@ -193,6 +193,8 @@ function loadCommands() {
             commandData("freq", setWalkieTalkieFrequencyCommand, "[frequncy number]", getStaffFlagValue("none"), true, false),
             //commandData("call", callWithPhoneCommand, "[number]", getStaffFlagValue("none"), true, false),
             //commandData("speakerphone", togglePhoneSpeakerCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("radio", walkieTalkieChatCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("r", walkieTalkieChatCommand, "", getStaffFlagValue("none"), true, false),
         ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),
@@ -204,8 +206,6 @@ function loadCommands() {
             commandData("uniform", jobUniformCommand, "[uniform]", getStaffFlagValue("none"), true, false),
             commandData("equip", jobEquipmentCommand, "[equipment]", getStaffFlagValue("none"), true, false),
 
-            commandData("radio", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
-            commandData("r", jobRadioCommand, "", getStaffFlagValue("none"), true, false),
             commandData("department", jobDepartmentRadioCommand, "", getStaffFlagValue("none"), true, false),
             commandData("d", jobDepartmentRadioCommand, "", getStaffFlagValue("none"), true, false),
 

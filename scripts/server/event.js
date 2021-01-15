@@ -120,11 +120,10 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
 // ---------------------------------------------------------------------------
 
 function onPedExitingVehicle(event, ped, vehicle) {
-    //if(ped.isType(ELEMENT_PLAYER)) {
-    //    let client = getClientFromPlayerElement(ped);
-    //    getPlayerData(client).pedState = AG_PEDSTATE_EXITINGVEHICLE;
-    //}
-
+    if(ped.isType(ELEMENT_PLAYER)) {
+        let client = getClientFromPlayerElement(ped);
+        getPlayerData(client).pedState = AG_PEDSTATE_EXITINGVEHICLE;
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -286,49 +285,64 @@ function onPedSpawn(ped) {
 // ---------------------------------------------------------------------------
 
 function onPlayerSpawn(ped) {
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Checking for ${getPlayerDisplayForConsole(client)}'s client element`);
     if(getClientFromPlayerElement(ped) == null) {
+        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s client element not set yet. Rechecking ...`);
         setTimeout(onPlayerSpawn, 500, ped);
         return false;
     }
 
+    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s client element is valid.`);
+
     let client = getClientFromPlayerElement(ped);
 
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Checking ${getPlayerDisplayForConsole(client)}'s player data`);
     if(!getPlayerData(client)) {
+        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player data is invalid. Kicking them from server.`);
         client.disconnect();
         return false;
     }
 
-    if(!isPlayerSwitchingCharacter(client)) {
-        return false;
-    }
+    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player data is valid.`);
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Processing ${getPlayerDisplayForConsole(client)}'s spawn (Player Element ID: ${client.player.id})`);
+    restorePlayerCamera(client);
+    //logToConsole(LOG_DEBUG, `Checking switchchar for ${getPlayerDisplayForConsole(client)}`);
+    //if(!isPlayerSwitchingCharacter(client)) {
+    //    return false;
+    //}
 
+    logToConsole(LOG_DEBUG, `Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
+    getPlayerData(client).ped = ped;
+
+    logToConsole(LOG_DEBUG, `Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
     messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
     messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
     messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
-    restorePlayerCamera(client, false, 1.0);
     updatePlayerSpawnedState(client, true);
     setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
     setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
     updateAllPlayerNameTags();
-    getPlayerData(client).switchingCharacter = false;
     updatePlayerCash(client);
     sendPlayerJobType(client, getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client)));
     setPlayer2DRendering(client, true, true, true, true, true, true);
     updatePlayerSnowState(client);
-    updatePlayerHotBar(client);
-    setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
-
     sendExcludedModelsForGroundSnowToPlayer(client);
     sendRemovedWorldObjectsToPlayer(client);
 
-    setTimeout(function() {
-        syncPlayerProperties(client);
-    }, 1000);
+    //setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
+
+    //setTimeout(function() {
+    //    syncPlayerProperties(client);
+    //}, 1000);
 
     if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
         updatePlayerShowLogoState(client, true);
     }
 
+    cachePlayerHotBarItems(client);
+    updatePlayerHotBar(client);
+
+    getPlayerData(client).switchingCharacter = false;
     getPlayerData(client).pedState = AG_PEDSTATE_READY;
 }
 

@@ -18,30 +18,6 @@ function getServerGame() {
 
 // ---------------------------------------------------------------------------
 
-function agGetPedPosition(ped) {
-    return ped.position;
-}
-
-// ---------------------------------------------------------------------------
-
-function agGetPedRotation(ped) {
-    return ped.heading;
-}
-
-// ---------------------------------------------------------------------------
-
-function agGetPedSkin(ped) {
-    return ped.modelIndex;
-}
-
-// ---------------------------------------------------------------------------
-
-function agSetPedSkin(ped, skinId) {
-    return ped.modelIndex = skinId;
-}
-
-// ---------------------------------------------------------------------------
-
 function getPlayerPosition(client) {
     if(client.player != null) {
         return client.player.position;
@@ -51,6 +27,7 @@ function getPlayerPosition(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerPosition(client, position) {
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s position to ${position.x}, ${position.y}, ${position.z}`);
     sendPlayerSetPosition(client, position);
 }
 
@@ -63,6 +40,7 @@ function getPlayerHeading(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerHeading(client, heading) {
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s heading to ${heading}`);
     sendPlayerSetHeading(client, heading);
 }
 
@@ -91,12 +69,14 @@ function getPlayerInterior(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerDimension(client, dimension) {
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s dimension to ${interior}`);
     client.player.dimension = dimension;
 }
 
 // ---------------------------------------------------------------------------
 
 function setPlayerInterior(client, interior) {
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s interior to ${interior}`);
     sendPlayerSetInterior(client, interior);
     getPlayerCurrentSubAccount(client).interior = interior;
 }
@@ -156,6 +136,7 @@ function getVehicleForNetworkEvent(vehicle) {
 // ---------------------------------------------------------------------------
 
 function deleteGameElement(element) {
+    logToConsole(LOG_DEBUG, `Destroying game element ${element.id} (Type: ${element.type})`);
     if(element != null) {
         destroyElement(element);
         return true;
@@ -172,6 +153,7 @@ function isPlayerInFrontVehicleSeat(client) {
 // ---------------------------------------------------------------------------
 
 function removePlayerFromVehicle(client) {
+    logToConsole(LOG_DEBUG, `Removing ${getPlayerDisplayForConsole(client)} from their vehicle`);
     sendPlayerRemoveFromVehicle(client);
     return true;
 }
@@ -179,6 +161,7 @@ function removePlayerFromVehicle(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerSkin(client, skin) {
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s skin to ${skin} (${getGameData().skinNames[getServerGame()][skin]})`);
     client.player.modelIndex = skin;
 }
 
@@ -191,6 +174,8 @@ function getPlayerSkin(client) {
 // ---------------------------------------------------------------------------
 
 function disconnectPlayer(client) {
+    logToConsole(LOG_DEBUG, `Disconnecting (kicking) ${getPlayerDisplayForConsole(client)}`);
+    client.disconnect();
     return false;
 }
 
@@ -209,6 +194,7 @@ function getPlayerWeaponAmmo(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerVelocity(client, velocity) {
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s velocity to ${velocity.x}, ${velocity.y}, ${velocity.z}`);
     client.player.velocity = velocity;
 }
 
@@ -234,9 +220,23 @@ function setElementDimension(element, dimension) {
 
 function givePlayerHealth(client, amount) {
     if(getPlayerHealth(client)+amount > 100) {
+        logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s health to 100`);
         setPlayerHealth(client, 100);
     } else {
+        logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s health to ${getPlayerHealth(client)+amount}`);
         setPlayerHealth(client, getPlayerHealth(client)+amount);
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+function givePlayerArmour(client, amount) {
+    if(getPlayerArmour(client)+amount > 100) {
+        logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s armour to 100`);
+        setPlayerArmour(client, 100);
+    } else {
+        logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s armour to ${getPlayerArmour(client)+amount}`);
+        setPlayerArmour(client, getPlayerArmour(client)+amount);
     }
 }
 

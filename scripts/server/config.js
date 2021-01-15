@@ -59,6 +59,14 @@ let globalConfig = {
 	walkieTalkieTalkDistance: 15,
 	phoneSpeakerDistance: 15,
 	phoneTalkDistance: 15,
+	tazerEffectDuration: 15000,
+	weaponEquippableTypes: [
+		AG_ITEM_USETYPE_WEAPON,
+		AG_ITEM_USETYPE_TAZER,
+		AG_ITEM_USETYPE_EXTINGUISHER,
+		AG_ITEM_USETYPE_SPRAYPAINT,
+		AG_ITEM_USETYPE_PEPPERSPRAY,
+	],
 };
 
 let gameConfig = {

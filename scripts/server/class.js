@@ -302,7 +302,7 @@ function initClassTable() {
 					this.dateOfBirth = dbAssoc["sacct_when_born"];
 					this.spawnPosition = toVector3(dbAssoc["sacct_pos_x"], dbAssoc["sacct_pos_y"], dbAssoc["sacct_pos_z"]);
 					this.spawnHeading = toFloat(dbAssoc["sacct_angle"]);
-					this.lastLogin = toInteger(dbAssoc["sacct_last_login"]);
+					this.lastLogin = toInteger(dbAssoc["sacct_when_lastlogin"]);
 					this.clan = toInteger(dbAssoc["sacct_clan"]);
 					this.clanFlags = toInteger(dbAssoc["sacct_clan_flags"]);
 					this.clanRank = toInteger(dbAssoc["sacct_clan_rank"]);

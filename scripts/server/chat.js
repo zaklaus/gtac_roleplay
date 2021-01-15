@@ -102,7 +102,7 @@ function talkToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
-			messagePlayerTalk(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerTalk(clients[i], client, messageText);
 		//}
 	}
 }
@@ -131,7 +131,7 @@ function whisperToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
-			messagePlayerWhisper(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerWhisper(clients[i], client, messageText);
 		//}
 	}
 }
@@ -142,7 +142,7 @@ function shoutToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().shoutDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messagePlayerShout(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerShout(clients[i], client, messageText);
 		//}
 	}
 }
@@ -153,7 +153,7 @@ function doActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().doActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messagePlayerDoAction(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerDoAction(clients[i], client, messageText);
 		//}
 	}
 }
@@ -164,7 +164,7 @@ function meActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(client.player.position, getGlobalConfig().meActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messagePlayerMeAction(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerMeAction(clients[i], client, messageText);
 		//}
 	}
 }
@@ -175,7 +175,7 @@ function clanChat(client, messageText) {
 	let clients = getClients();
 	for(let i in clients) {
 		if(getPlayerCurrentSubAccount(client).clan != getPlayerCurrentSubAccount(clients[i]).clan) {
-			messageClientClanChat(getClientFromPlayerElement(clients[i]), client, messageText);
+			messageClientClanChat(clients[i], client, messageText);
 		}
 	}
 }

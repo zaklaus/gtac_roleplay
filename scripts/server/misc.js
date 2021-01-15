@@ -307,3 +307,23 @@ function playerChangeAFKState(client, afkState) {
 }
 
 // ---------------------------------------------------------------------------
+
+function checkPlayerSpawning() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(!isConsole(clients[i])) {
+			if(getPlayerData(clients[i])) {
+				if(getPlayerData(clients[i]).loggedIn) {
+					if(getPlayerData(clients[i]).ped == null) {
+						if(clients[i].player != null) {
+							getPlayerData(clients[i]).ped = clients[i].player;
+							onPlayerSpawn(clients[i].player);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------

@@ -214,7 +214,7 @@ addEventHandler("OnElementStreamIn", function(event, element) {
             break;
 
         case ELEMENT_PLAYER:
-            syncPlayerProperties(element);
+            //syncPlayerProperties(element);
             break;
 
         case ELEMENT_OBJECT:

@@ -514,7 +514,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	getServerData().businesses[businessId].till -= amount;
 	getPlayerCurrentSubAccount(client).cash += amount;
 	updatePlayerCash(client);
-	messagePlayerSuccess(client, `You withdrew $${amount} from business '${tempBusinessData.name}''s till'`);
+	messagePlayerSuccess(client, `You withdrew $${amount} from business [#0099FF]${tempBusinessData.name} till'`);
 }
 
 // ---------------------------------------------------------------------------
@@ -543,7 +543,7 @@ function depositIntoBusinessCommand(command, params, client) {
 	getServerData().businesses[businessId].till += amount;
 	getPlayerCurrentSubAccount(client).cash -= amount;
 	updatePlayerCash(client);
-	messagePlayerSuccess(client, `You deposited $${amount} into business '${tempBusinessData.name}''s till'`);
+	messagePlayerSuccess(client, `You deposited $${amount} into business [#0099FF]${tempBusinessData.name} [#FFFFFF]till'`);
 }
 
 // ---------------------------------------------------------------------------
@@ -556,9 +556,9 @@ function orderItemForBusinessCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 
-	let itemType = getItemTypeFromParams(splitParams[0]);
-	let amount = toInteger(splitParams[1]) || 1;
-	let sellPrice = toInteger(splitParams[2]) || 0;
+	let itemType = getItemTypeFromParams(splitParams.slice(0,-2).join(" "));
+	let amount = toInteger(splitParams.slice(-2,-1)) || 1;
+	let sellPrice = toInteger(splitParams.slice(-1)) || 0;
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
@@ -572,8 +572,20 @@ function orderItemForBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	let orderTotalCost = getItemTypeData(itemType).orderPrice*getServerConfig().inflationMultiplier*getItemTypeData(itemType).demandMultiplier*getItemTypeData(itemType).supplyMultiplier*getItemTypeData(itemType).riskMultiplier*amount;
+	let pricePerItem = getItemTypeData(itemType).orderPrice*getServerConfig().inflationMultiplier*getItemTypeData(itemType).demandMultiplier*getItemTypeData(itemType).supplyMultiplier*getItemTypeData(itemType).riskMultiplier;
+	let orderTotalCost = pricePerItem*amount;
 
+	getPlayerData(client).promptType = AG_PROMPT_BIZORDER;
+	getPlayerData(client).businessOrderAmount = amount;
+	getPlayerData(client).businessOrderBusiness = businessId;
+	getPlayerData(client).businessOrderItem = itemType;
+
+	showPlayerPromptGUI(client, `This order will cost [#AAAAAA]$${orderTotalCost} (${amount} at $${pricePerItem} each)`, "Business Order Cost");
+}
+
+// ---------------------------------------------------------------------------
+
+function orderItemForBusiness(businessId, itemType, amount, sellPrice) {
 	if(getBusinessData(businessId).till < orderTotalCost) {
 		let neededAmount = orderTotalCost-getBusinessData(businessId).till;
 		messagePlayerError(client, `The business doesn't have enough money (needs [#AAAAAA]$${neededAmount} [#FFFFFF]more)! Use [#AAAAAA]/bizdeposit [#FFFFFF]to add money to the business.`);
@@ -942,7 +954,7 @@ function deleteBusinessEntrancePickup(businessId) {
 	if(getBusinessData(businessId).entrancePickup != null) {
 		//removeFromWorld(getBusinessData(businessId).entrancePickup);
 		destroyElement(getBusinessData(businessId).entrancePickup);
-		getBusinessData(businessId).entrancePickup = false;
+		getBusinessData(businessId).entrancePickup = null;
 	}
 }
 
@@ -952,7 +964,7 @@ function deleteBusinessExitPickup(businessId) {
 	if(getBusinessData(businessId).exitPickup != null) {
 		//removeFromWorld(getBusinessData(businessId).exitPickup);
 		destroyElement(getBusinessData(businessId).exitPickup);
-		getBusinessData(businessId).exitPickup = false;
+		getBusinessData(businessId).exitPickup = null;
 	}
 }
 
@@ -962,7 +974,7 @@ function deleteBusinessEntranceBlip(businessId) {
 	if(getBusinessData(businessId).entranceBlip != null) {
 		//removeFromWorld(getBusinessData(businessId).entranceBlip);
 		destroyElement(getBusinessData(businessId).entranceBlip);
-		getBusinessData(businessId).entranceBlip = false;
+		getBusinessData(businessId).entranceBlip = null;
 	}
 }
 
@@ -972,7 +984,7 @@ function deleteBusinessExitBlip(businessId) {
 	if(getBusinessData(businessId).exitBlip != null) {
 		//removeFromWorld(getBusinessData(businessId).exitBlip);
 		destroyElement(getBusinessData(businessId).exitBlip);
-		getBusinessData(businessId).exitBlip = false;
+		getBusinessData(businessId).exitBlip = null;
 	}
 }
 

@@ -233,9 +233,9 @@ function policeDetainCommand(command, params, client) {
 
 function playerArivedAtPolicePatrolPoint(client) {
     if(isLastStopOnPolicePatrolRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
-        messagePlayerNormal(client, `You finished the ${getPatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} patrol route! You earned $${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout}`, getColourByName("yellow"));
+        messagePlayerNormal(client, `You finished the ${getPatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} patrol route! You earned $${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier}`, getColourByName("yellow"));
         messagePlayerNormal(client, `You can either continue driving the patrol route again, or use /stoproute to end your patrol.`, getColourByName("yellow"));
-        getPlayerCurrentSubAccount(client).cash += getPolicePatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout;
+        getPlayerCurrentSubAccount(client).cash += getPolicePatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier;
         updatePlayerCash(client);
 		getPlayerData(client).jobRouteVehicle = false;
 		getPlayerData(client).jobRoute = 0;

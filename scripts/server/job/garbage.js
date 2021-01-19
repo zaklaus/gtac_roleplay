@@ -15,6 +15,7 @@ let garbageRoutes = [
             { // ROUTE 0
                 name: "Portland #1",
                 island: 0,
+                payout: 150,
                 positions: [
                     toVector3(1169.8, -45.54, 10.4),
                     toVector3(928, -59.1, 8.61),
@@ -37,6 +38,7 @@ let garbageRoutes = [
             { // ROUTE 0
                 name: "Staunton #1",
                 island: 1,
+                payout: 150,
                 positions: [
                     toVector3(49.85, -1539.9, 26.6),
                     toVector3(49.71, -1458.1, 26.6),
@@ -116,8 +118,8 @@ function showCurrentGarbageStop(client) {
 function playerArrivedAtGarbageStop(client) {
     if(isLastStopOnGarbageRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
         respawnVehicle(getPlayerData(client).jobRouteVehicle);
-        messagePlayerNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! You earned $${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout} and your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
-        getPlayerCurrentSubAccount(client).cash += getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout;
+        messagePlayerNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! You earned $${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier} and your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
+        getPlayerCurrentSubAccount(client).cash += getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier;
         updatePlayerCash(client);
 		getPlayerData(client).jobRouteVehicle = false;
 		getPlayerData(client).jobRoute = 0;

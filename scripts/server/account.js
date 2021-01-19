@@ -423,7 +423,7 @@ function loginSuccess(client) {
 	if(getPlayerData(client).subAccounts.length == 0) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No characters");
-			setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+			getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
 			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters prompt GUI`);
 		} else {
 			messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
@@ -690,7 +690,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		showPlayerRegistrationSuccessGUI(client);
 		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
-		setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+		getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
 	} else {
 		messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
 	}

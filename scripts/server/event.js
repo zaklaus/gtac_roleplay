@@ -87,6 +87,7 @@ function onPlayerChat(event, client, messageText) {
 
 function onProcess(event, deltaTime) {
     checkVehicleBuying();
+    checkPlayerSpawning();
 }
 
 // ---------------------------------------------------------------------------
@@ -277,24 +278,25 @@ function onPlayerDeath(client, position) {
 // ---------------------------------------------------------------------------
 
 function onPedSpawn(ped) {
-    if(ped.type == ELEMENT_PLAYER) {
-        setTimeout(onPlayerSpawn, 500, ped);
-    }
+    //if(ped.type == ELEMENT_PLAYER) {
+    //    setTimeout(onPlayerSpawn, 500, ped);
+    //}
 }
 
 // ---------------------------------------------------------------------------
 
 function onPlayerSpawn(ped) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Checking for ${getPlayerDisplayForConsole(client)}'s client element`);
+    //logToConsole(LOG_DEBUG, `[Asshat.Event] Checking for ${getPlayerDisplayForConsole(client)}'s client element`);
     if(getClientFromPlayerElement(ped) == null) {
         logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s client element not set yet. Rechecking ...`);
         setTimeout(onPlayerSpawn, 500, ped);
         return false;
     }
 
+    let client = getClientFromPlayerElement(ped);
+
     logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s client element is valid.`);
 
-    let client = getClientFromPlayerElement(ped);
 
     logToConsole(LOG_DEBUG, `[Asshat.Event] Checking ${getPlayerDisplayForConsole(client)}'s player data`);
     if(!getPlayerData(client)) {
@@ -318,15 +320,35 @@ function onPlayerSpawn(ped) {
     messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
     messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
     messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
     updatePlayerSpawnedState(client, true);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player interior to ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
     setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player dimension to ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
     setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Updating all player name tags`);
     updateAllPlayerNameTags();
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
     updatePlayerCash(client);
-    sendPlayerJobType(client, getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client)));
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
+    sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Enabling all rendering states for ${getPlayerDisplayForConsole(client)}`);
     setPlayer2DRendering(client, true, true, true, true, true, true);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
     updatePlayerSnowState(client);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ground snow excluded models to ${getPlayerDisplayForConsole(client)}`);
     sendExcludedModelsForGroundSnowToPlayer(client);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
     sendRemovedWorldObjectsToPlayer(client);
 
     //setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
@@ -335,14 +357,21 @@ function onPlayerSpawn(ped) {
     //    syncPlayerProperties(client);
     //}, 1000);
 
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
     if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
         updatePlayerShowLogoState(client, true);
     }
 
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Caching ${getPlayerDisplayForConsole(client)}'s hotbar items`);
     cachePlayerHotBarItems(client);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
     updatePlayerHotBar(client);
 
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
     getPlayerData(client).switchingCharacter = false;
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
     getPlayerData(client).pedState = AG_PEDSTATE_READY;
 }
 

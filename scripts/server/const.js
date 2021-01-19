@@ -9,7 +9,9 @@
 // ===========================================================================
 
 // Prompts (used for client GUI prompt responses)
+const AG_PROMPT_NONE = 0;
 const AG_PROMPT_CREATEFIRSTCHAR = 1;
+const AG_PROMPT_BIZORDER = 2;
 
 // Job Types
 const AG_JOB_NONE = 0;

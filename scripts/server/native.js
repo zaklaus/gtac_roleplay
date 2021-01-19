@@ -69,7 +69,7 @@ function getPlayerInterior(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerDimension(client, dimension) {
-    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s dimension to ${interior}`);
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s dimension to ${dimension}`);
     client.player.dimension = dimension;
 }
 
@@ -188,7 +188,7 @@ function getElementSyncer(element) {
 // ---------------------------------------------------------------------------
 
 function getPlayerWeaponAmmo(client) {
-    client.player.weaponAmmunition + client.player.weaponClipAmmunition;
+    return client.player.weaponAmmunition;
 }
 
 // ---------------------------------------------------------------------------

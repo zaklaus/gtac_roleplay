@@ -636,7 +636,7 @@ function enteredJobRouteSphere() {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.jobType", function(tempJobType) {
-    logToConsole(LOG_INFO, `[Asshat.Main] Set local player job type to ${tempJobType}`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Set local player job type to ${tempJobType}`);
     localPlayerJobType = tempJobType;
 });
 
@@ -656,21 +656,21 @@ addNetworkHandler("ag.spawned", function(client, state) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.weaponDamageEvent", function(clientName, eventType) {
-    logToConsole(LOG_INFO, `[Asshat.Main] Set ${clientName} damage event type to ${eventType}`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Set ${clientName} damage event type to ${eventType}`);
     weaponDamageEvent[clientName] = eventType;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.weaponDamageEnabled", function(clientName, state) {
-    logToConsole(LOG_INFO, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} damage from ${clientName}`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} damage from ${clientName}`);
     weaponDamageEnabled[clientName] = state;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.mouseCamera", function(state) {
-    logToConsole(LOG_INFO, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} mouse camera`);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} mouse camera`);
     mouseCameraEnabled = !mouseCameraEnabled;
     SetStandardControlsEnabled(!mouseCameraEnabled);
 });
@@ -715,7 +715,7 @@ addEventHandler("OnPedInflictDamage", function(event, damagedPed, damagerEntity,
     if(damagedPed == localPlayer) {
         if(!weaponDamageEnabled[damagerEntity.name]) {
             event.preventDefault();
-            triggerNetworkEvent(player, "ag.weaponDamage", damagerEntity, weaponId, pedPiece);
+            triggerNetworkEvent("ag.weaponDamage", damagerEntity, weaponId, pedPiece);
         }
     }
 });

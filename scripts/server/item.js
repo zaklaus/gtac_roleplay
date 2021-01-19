@@ -351,7 +351,14 @@ function playerUseItem(client, hotBarSlot) {
 	switch(getItemTypeData(getItemData(itemIndex).itemTypeIndex).useType) {
 		case AG_ITEM_USETYPE_SKIN:
 			let oldSkin = getPlayerSkin(client);
+			if(isPlayerWorking(client)) {
+				oldSkin = getPlayerCurrentSubAccount(client).skin;
+			}
+
 			let newSkin = getItemData(itemIndex).value;
+			if(isPlayerWorking(client)) {
+				newSkin = getPlayerCurrentSubAccount(client).skin;
+			}
 			setPlayerSkin(client, newSkin);
 			getItemData(itemIndex).value = oldSkin;
 			meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(getSkinNameFromId(newSkin))} ${getSkinNameFromId(newSkin)} ${toLowerCase(getItemName(itemIndex))}`);
@@ -487,6 +494,8 @@ function playerDropItem(client, hotBarSlot) {
 	if(itemId != -1) {
 		meActionToNearbyPlayers(client, `drops ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} on the ground`);
 
+		resyncWeaponItemAmmo(client);
+
 		getPlayerData(client).hotBarItems[hotBarSlot] = -1;
 		updatePlayerHotBar(client);
 
@@ -523,6 +532,8 @@ function playerPutItem(client, hotBarSlot) {
 			meActionToNearbyPlayers(client, `places ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} in the ${getVehicleName(bestNewOwner[1])}'s trunk`);
 			break;
 	}
+
+	resyncWeaponItemAmmo(client);
 
 	getItemData(itemId).ownerType = ownerType;
 	getItemData(itemId).ownerId = ownerId;
@@ -603,14 +614,17 @@ function playerSwitchItem(client, newHotBarSlot) {
 		newHotBarItem = getPlayerData(client).hotBarItems[newHotBarSlot];
 	}
 
+	resyncWeaponItemAmmo(client);
+
 	if(currentHotBarItem != -1) {
 		if(getItemData(currentHotBarItem)) {
 			if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(currentHotBarItem).itemTypeIndex).useType) != -1) {
-				getItemData(currentHotBarItem).value = getPlayerWeaponAmmo(client);
 				clearPlayerWeapons(client);
 			}
 		}
 	}
+
+
 
 	if(newHotBarItem != -1) {
 		if(getItemData(newHotBarItem)) {
@@ -892,6 +906,16 @@ function listPlayerInventoryCommand(command, params, client) {
 		if(getPlayerData(client).hotBarItems[i] == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA](Empty)`);
 		} else {
+			if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useType)) {
+				if(getPlayerData(client).hotBarItems[i] == getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem]) {
+					if(getPlayerWeaponAmmo(client) <= getItemData(getPlayerData(client).hotBarItems[i]).value) {
+						getItemData(getPlayerData(client).hotBarItems[i]).value = getPlayerWeaponAmmo(client);
+					} else {
+						setPlayerWeaponAmmo(client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useId, getItemData(getPlayerData(client).hotBarItems[i]).value);
+					}
+				}
+			}
+
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplay(getPlayerData(client).hotBarItems[i])}]`);
 		}
 	}
@@ -1055,24 +1079,6 @@ function listItemInventoryCommand(command, params, client) {
 	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
 		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
 	}
-}
-
-// ---------------------------------------------------------------------------
-
-function stockItemOnBusinessFloorCommand(command, params, client) {
-
-}
-
-// ---------------------------------------------------------------------------
-
-function storeItemInBusinessStorageCommand(command, params, client) {
-
-}
-
-// ---------------------------------------------------------------------------
-
-function orderItemForBusinessCommand(command, params, client) {
-
 }
 
 // ---------------------------------------------------------------------------
@@ -1271,6 +1277,24 @@ function getPlayerItemSlot(client, slot) {
 	if(slot != -1) {
 		if(getPlayerData(client).hotBarItems[slot] != -1) {
 			return getPlayerData(client).hotBarItems[slot];
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function resyncWeaponItemAmmo(client) {
+	if(getPlayerData(client).currentHotBarItem != -1) {
+		if(getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem] != -1) {
+			if(getItemData(getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem])) {
+				if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem]).itemTypeIndex).useType)) {
+					if(getPlayerWeaponAmmo(client) <= getItemData(getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem]).value) {
+						getItemData(getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem]).value = getPlayerWeaponAmmo(client);
+					} else {
+						setPlayerWeaponAmmo(client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem]).itemTypeIndex).useId, getItemData(getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem]).value);
+					}
+				}
+			}
 		}
 	}
 }

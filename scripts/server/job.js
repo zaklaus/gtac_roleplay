@@ -533,6 +533,7 @@ function stopWorking(client) {
 		getPlayerCurrentSubAccount(client).lastJobVehicle = false;
 	}
 
+	setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
 	deleteJobItems(client);
 	restorePlayerJobLockerItems(client);
 
@@ -607,13 +608,15 @@ function jobUniformCommand(command, params, client) {
 		return false;
 	}
 
-	messagePlayerSuccess(client, `You have been given a [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform and you can put it on from your inventory.`);
+	setPlayerSkin(client, getJobData(jobId).uniforms[uniformId-1].skin);
 
-	let itemId = createItem(getItemTypeFromParams("Outfit"), getJobData(jobId).uniforms[uniformId-1].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
-	let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
-	getPlayerData(client).hotBarItems[freeSlot] = itemId;
-	getPlayerData(client).jobEquipmentCache.push(itemId);
-	updatePlayerHotBar(client);
+	//messagePlayerSuccess(client, `You have been given a [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform and you can put it on from your inventory.`);
+	meActionToNearbyPlayers(client, `${getCharacterFullName(client)} puts on ${getProperDeterminerForName(getJobData(jobId).uniforms[uniformId-1].name)} ${getJobData(jobId).uniforms[uniformId-1].name} uniform`);
+	//let itemId = createItem(getItemTypeFromParams("Outfit"), getJobData(jobId).uniforms[uniformId-1].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
+	//let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
+	//getPlayerData(client).hotBarItems[freeSlot] = itemId;
+	//getPlayerData(client).jobEquipmentCache.push(itemId);
+	//updatePlayerHotBar(client);
 }
 
 // ---------------------------------------------------------------------------
@@ -653,6 +656,7 @@ function jobEquipmentCommand(command, params, client) {
 		return false;
 	}
 
+	deleteJobItems(client);
 	givePlayerJobEquipment(client, equipmentId-1);
 	messagePlayerSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
 }
@@ -717,7 +721,7 @@ function getJobData(jobId) {
 function quitJob(client) {
 	stopWorking(client);
 	getPlayerCurrentSubAccount(client).job = AG_JOB_NONE;
-	sendPlayerJobType(client, 0);
+	sendPlayerJobType(client, -1);
 }
 
 // ---------------------------------------------------------------------------
@@ -1485,7 +1489,7 @@ function createJobLocationPickup(jobId, locationId) {
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.owner.id", locationId, false);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.type", AG_LABEL_JOB, true);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.name", getJobData(jobId).name, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.jobType", jobId, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.jobType", getJobData(jobId).databaseId, true);
 		addToWorld(getJobData(jobId).locations[locationId].pickup);
 	}
 }
@@ -1605,7 +1609,7 @@ function deleteJobItems(client) {
 		deleteItem(getPlayerData(client).jobEquipmentCache[i]);
 	}
 
-
+	updatePlayerHotBar(client);
 }
 
 // ---------------------------------------------------------------------------

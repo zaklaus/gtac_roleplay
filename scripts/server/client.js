@@ -475,36 +475,66 @@ function sendChatBoxMessageToPlayer(client, message, colour) {
 // ---------------------------------------------------------------------------
 
 function showPlayerItemTakeDelay(client, itemId) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item take delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(itemId).itemTypeIndex).takeDelay} milliseconds)`);
-    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(itemId).itemTypeIndex).takeDelay);
+    let delay = getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay;
+    if(delay > 0) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+    } else {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+        playerTakeItem(client, itemId);
+    }
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemUseDelay(client, itemSlot) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item use delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay} milliseconds)`);
-    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay);
+    let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay;
+    if(delay > 0) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+    } else {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+        playeUseItem(client, itemSlot);
+    }
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemDropDelay(client, itemSlot) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item drop delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay} milliseconds)`);
-    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay);
+    let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay;
+    if(delay > 0) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+    } else {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+        playerDropItem(client, itemSlot);
+    }
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemPickupDelay(client, itemId) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item pickup delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay} milliseconds)`);
-    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay);
+    let delay = getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay;
+    if(delay > 0) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+    } else {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+        playerPickupItem(client, itemId);
+    }
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemPutDelay(client, itemSlot) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item put delay to ${getPlayerDisplayForConsole(client)} (${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay} milliseconds)`);
-    triggerNetworkEvent("ag.showItemActionDelay", client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay);
+    let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay;
+    if(delay > 0) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+    } else {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+        playerPutItem(client, itemSlot);
+    }
 }
 
 // ---------------------------------------------------------------------------

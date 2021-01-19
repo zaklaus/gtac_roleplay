@@ -159,18 +159,18 @@ function isConsole(client) {
 // ---------------------------------------------------------------------------
 
 function logToConsole(tempLogLevel, text) {
-	if(logLevel & tempLogLevel || logLevel == LOG_ALL) {
+	if((logLevel & tempLogLevel) || logLevel == LOG_ALL) {
 		if(tempLogLevel == LOG_ERROR) {
 			console.error(text);
+			return true;
 		} else if(tempLogLevel == LOG_WARN) {
 			console.warn(text);
+			return true;
 		} else {
 			console.log(text);
+			return true;
 		}
-
-		return true;
 	}
-
 	return false;
 }
 

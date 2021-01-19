@@ -123,6 +123,7 @@ function enterExitPropertyCommand(command, params, client) {
 	if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
 		if(getPlayerData(client).pedState == AG_PEDSTATE_ENTERINGVEHICLE) {
 			sendPlayerClearPedState(client);
+			getPlayerData(client).pedState = AG_PEDSTATE_READY;
 		} else {
 			return false;
 		}
@@ -314,7 +315,7 @@ function checkPlayerSpawning() {
 		if(!isConsole(clients[i])) {
 			if(getPlayerData(clients[i])) {
 				if(getPlayerData(clients[i]).loggedIn) {
-					if(getPlayerData(clients[i]).ped == null) {
+					if(!getPlayerData(clients[i]).ped) {
 						if(clients[i].player != null) {
 							getPlayerData(clients[i]).ped = clients[i].player;
 							onPlayerSpawn(clients[i].player);

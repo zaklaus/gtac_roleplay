@@ -28,7 +28,7 @@ let builtInCommands = [
 function initCommandScript() {
     logToConsole(LOG_DEBUG, "[Asshat.Command]: Initializing commands script ...");
     serverCommands = loadCommands();
-    addAllCommandHandlers();
+    //addAllCommandHandlers();
     logToConsole(LOG_DEBUG, "[Asshat.Command]: Initialized commands script!");
 }
 
@@ -71,7 +71,7 @@ function loadCommands() {
             commandData("buy", buyFromBusinessCommand, "<slot> [amount]", getStaffFlagValue("none"), true, true, "Buy items from a business"),
             commandData("bizstock", stockItemOnBusinessFloorCommand, "<item name> <amount> <sell price>", getStaffFlagValue("none"), true, true, "Uses storage items to restock the business with."),
             commandData("bizstore", storeItemInBusinessStorageCommand, "<item name> <amount>", getStaffFlagValue("none"), true, true, "Moves items from the business to the business storage"),
-            commandData("bizorder", orderItemForBusinessCommand, "<item name> <amount> <sell price>", getStaffFlagValue("none"), true, true, "Moves items from the business storage to the business."),
+            commandData("bizorder", orderItemForBusinessCommand, "<item name> <amount> <sell price>", getStaffFlagValue("none"), true, true, "Orders items to sell from a business"),
             commandData("bizitemprice", setBusinessItemSellPriceCommand, "<item slot> <sell price>", getStaffFlagValue("none"), true, true, "Sets the purchase price of a business item"),
             commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("none"), true, true, "Changes a business name"),
             commandData("bizowner", setBusinessOwnerCommand, "<player name/id>", getStaffFlagValue("none"), true, true, "Changes the owner of a business"),
@@ -327,6 +327,8 @@ function loadCommands() {
     };
 }
 
+// ---------------------------------------------------------------------------
+
 function addAllCommandHandlers() {
     for(let i in serverCommands) {
         for(let j in serverCommands[i]) {
@@ -482,7 +484,7 @@ function enableAllCommandsByType(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function onPlayerCommand(event, client, command, params) {
-    //processPlayerCommand(command, params, client)
+    processPlayerCommand(command, params, client)
 }
 addEventHandler("OnPlayerCommand", onPlayerCommand);
 

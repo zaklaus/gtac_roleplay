@@ -44,6 +44,7 @@ function initClassTable() {
 				this.useGUI = true;
 				this.guiColour = [200, 200, 200];
 				this.showLogo = true;
+				this.inflationMultiplier = 1;
 
 				this.antiCheat = {
 					enabled: false,
@@ -141,6 +142,12 @@ function initClassTable() {
 				this.alcoholLevel = 0;
 
 				this.pedState = AG_PEDSTATE_NONE;
+
+				this.promptType = AG_PROMPT_NONE;
+
+				this.businessOrderAmount = 0;
+				this.businessOrderBusiness = -1;
+				this.businessOrderItem = -1;
 			}
 		},
 		accountData: class {

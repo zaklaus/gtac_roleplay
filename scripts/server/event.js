@@ -88,6 +88,7 @@ function onPlayerChat(event, client, messageText) {
 function onProcess(event, deltaTime) {
     checkVehicleBuying();
     checkPlayerSpawning();
+    //checkVehicleBurning();
 }
 
 // ---------------------------------------------------------------------------
@@ -172,6 +173,12 @@ async function onPlayerEnteredVehicle(client) {
 
     await waitUntil(() => client.player.vehicle != null);
     let vehicle = client.player.vehicle;
+
+    if(vehicle.syncer != client.index) {
+        if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
+            vehicle.setSyncer(client, true);
+        }
+    }
 
     if(vehicle.owner != -1) {
         return false;

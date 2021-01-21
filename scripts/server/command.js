@@ -66,6 +66,7 @@ function loadCommands() {
             commandData("bizlock", lockBusinessCommand, "", getStaffFlagValue("none"), true, true, "Locks a business"),
             commandData("bizfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true, "Sets a fee to charge players when they enter the business."),
             commandData("biztill", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true, "Shows the business's till (cash register) amount"),
+            commandData("bizbalance", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true, "Shows the business's till (cash register) amount"),
             commandData("bizwithdraw", withdrawFromBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true, "Take money out of the business till (cash register)"),
             commandData("bizdeposit", depositIntoBusinessCommand, "<amount>", getStaffFlagValue("none"), true, true, "Put money into the business till (cash register)"),
             commandData("buy", buyFromBusinessCommand, "<slot> [amount]", getStaffFlagValue("none"), true, true, "Buy items from a business"),

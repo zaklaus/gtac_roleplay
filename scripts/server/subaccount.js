@@ -243,6 +243,7 @@ function selectCharacter(client, characterId = -1) {
 
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 	spawnPlayer(client, spawnPosition, spawnHeading, skin);
+	//spawnPlayer(p(0), getServerConfig().newCharacter.spawnPosition, 0.0, 26);
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 
 	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();

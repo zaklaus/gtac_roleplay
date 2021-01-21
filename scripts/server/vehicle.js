@@ -1059,3 +1059,12 @@ function checkVehicleBuying() {
 }
 
 // -------------------------------------------------------------------------
+
+function checkVehicleBurning() {
+	let vehicles = getElementsByType(ELEMENT_VEHICLE);
+	for(let i in vehicles) {
+
+	}
+}
+
+// -------------------------------------------------------------------------

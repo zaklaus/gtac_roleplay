@@ -76,7 +76,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		let hy = y-10/2;
 		let colourB = toColour(0, 0, 0, Math.floor(255.0*alpha)); // Background colour (black)
 		drawing.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
-		let colour = toColour(Math.floor(255.0*alpha), Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0); // Health bar colour (varies, depending on health)
+		let colour = toColour(Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0, Math.floor(255.0*alpha)); // Health bar colour (varies, depending on health)
 		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*health, 10-6], colour, colour, colour, colour);
 	}
 

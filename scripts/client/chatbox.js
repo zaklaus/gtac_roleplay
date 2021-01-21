@@ -12,9 +12,12 @@
 
 let chatBoxHistory = [];
 let bottomMessageIndex = 0;
+let maxChatBoxHistory = 500;
 
 let scrollAmount = 1;
 let maxChatBoxLines = 6;
+
+// ---------------------------------------------------------------------------
 
 bindKey(SDLK_PAGEUP, KEYSTATE_DOWN, chatBoxScrollUp);
 bindKey(SDLK_PAGEDOWN, KEYSTATE_DOWN, chatBoxScrollDown);

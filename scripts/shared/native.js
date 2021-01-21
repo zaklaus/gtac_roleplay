@@ -143,6 +143,9 @@ function doesEntityDataExist(entity, dataName) {
 // ---------------------------------------------------------------------------
 
 function getDistance(vec1, vec2) {
+	if(isNull(vec1) || isNull(vec2)) {
+		return false;
+	}
     return vec1.distance(vec2);
 }
 

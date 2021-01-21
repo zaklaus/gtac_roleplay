@@ -504,17 +504,15 @@ function withdrawFromBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	let tempBusinessData = getServerData().businesses.filter(b => b.databaseId == businessId)[0];
-
-	if(getServerData().businesses[businessId].till < amount) {
+	if(getBusinessData(businessId).till < amount) {
 		messagePlayerError(client, `Business '${tempBusinessData.name}' doesn't have that much money! Use /bizbalance.`);
 		return false;
 	}
 
-	getServerData().businesses[businessId].till -= amount;
+	getBusinessData(businessId).till -= amount;
 	getPlayerCurrentSubAccount(client).cash += amount;
 	updatePlayerCash(client);
-	messagePlayerSuccess(client, `You withdrew $${amount} from business [#0099FF]${tempBusinessData.name} till'`);
+	messagePlayerSuccess(client, `You withdrew $${amount} from business [#0099FF]${getBusinessData(businessId).name} till'`);
 }
 
 // ---------------------------------------------------------------------------
@@ -540,10 +538,10 @@ function depositIntoBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	getServerData().businesses[businessId].till += amount;
+	getBusinessData(businessId).till += amount;
 	getPlayerCurrentSubAccount(client).cash -= amount;
 	updatePlayerCash(client);
-	messagePlayerSuccess(client, `You deposited $${amount} into business [#0099FF]${tempBusinessData.name} [#FFFFFF]till'`);
+	messagePlayerSuccess(client, `You deposited $${amount} into business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till'`);
 }
 
 // ---------------------------------------------------------------------------
@@ -611,7 +609,7 @@ function viewBusinessTillAmountCommand(command, params, client) {
 		return false;
 	}
 
-	messagePlayerSuccess(client, `Business '${getServerData().businesses[businessId].name}' till has $'${getServerData().businesses[businessId].till}'!`);
+	messagePlayerSuccess(client, `Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till has [#AAAAAA]$'${getBusinessData(businessId).till}'`);
 }
 
 // ---------------------------------------------------------------------------

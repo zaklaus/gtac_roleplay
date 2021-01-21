@@ -186,7 +186,23 @@ function isSamePlayer(client1, client2) {
 // ---------------------------------------------------------------------------
 
 function getClientFromIndex(index) {
-	return getClients().find(c => c.index == index);
+	let clients = getClients();
+	for(let i in clients) {
+		if(clients[i].index == index) {
+			return clients[i];
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getConsoleClient() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(isConsole(clients[i])) {
+			return clients[i];
+		}
+	}
 }
 
 // ---------------------------------------------------------------------------

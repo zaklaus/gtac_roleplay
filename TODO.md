@@ -4,9 +4,8 @@
 * Cut down on engine/lights/lock messages.
 * Account settings to toggle tips
 * Get coords for more bus routes.
-
+* Change mouse cursor/camera net events to force state instead of toggle on client end
 * Add more jobs
-
 ------------------------------------------------------
 For grand opening:
 - Get remaining interiors set up for the businesses/houses in Vice City
@@ -24,5 +23,3 @@ For grand opening:
     - Take second beer from crate
     - Store second beer in trunk
 ------------------------------------------------------
-
-* Change mouse cursor/camera net events to force state instead of toggle on client end

@@ -329,7 +329,7 @@ function clientRunCodeFail(client, returnTo, code) {
 // ---------------------------------------------------------------------------
 
 function clientRunCodeSuccess(client, returnTo, returnVal, code) {
-	let returnClient = getClients()[returnTo];
+	let returnClient = getClientFromIndex(returnTo);
 	if(!returnClient) {
 		return false;
 	}

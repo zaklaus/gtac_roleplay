@@ -514,18 +514,6 @@ function getServerId() {
 // -------------------------------------------------------------------------
 
 function setTimeCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -555,18 +543,6 @@ function setTimeCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setWeatherCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -590,18 +566,6 @@ function setWeatherCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setSnowingCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -627,18 +591,6 @@ function setSnowingCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function toggleServerLogoCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	getServerConfig().useLogo = !getServerConfig().useLogo;
 
 	updatePlayerShowLogoState(null, getServerConfig().useLogo);
@@ -651,18 +603,6 @@ function toggleServerLogoCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function toggleServerGUICommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
     getServerConfig().useGUI = !getServerConfig().useGUI;
 
     messageAdminAction(`${client.name} turned GUI ${toLowerCase(getOnOffFromBool(getServerConfig().useGUI))} for this server`);

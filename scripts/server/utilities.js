@@ -1801,6 +1801,9 @@ function arrayBufferToString(arrayBuffer) {
 // -------------------------------------------------------------------------
 
 function getPlayerDisplayForConsole(client) {
+	if(isNull(client)) {
+		return "(Unknown client)";
+	}
 	return `${client.name}[${client.index}]`;
 }
 
@@ -1942,6 +1945,24 @@ function getProperDeterminerForName(word) {
 
 function applyOffsetToVector3(position, position2) {
 	return toVector3(position.x+position2.x, position.y+position2.y, position.z+position2.z);
+}
+
+// -------------------------------------------------------------------------
+
+function getPluralForm(name) {
+	return name;
+}
+
+// -------------------------------------------------------------------------
+
+function removeColoursFromString(str) {
+	let matchRegex = /#([a-f0-9]{3}|[a-f0-9]{4}(?:[a-f0-9]{2}){0,2})\b/gi;
+	let matchedHexes = str.match(matchRegex);
+	for(let i in matchHex) {
+		str.replace(matchedHexes, `{${i}}`);
+	}
+
+	return [str, matchedHexes];
 }
 
 // -------------------------------------------------------------------------

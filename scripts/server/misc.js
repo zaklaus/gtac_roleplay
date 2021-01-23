@@ -328,3 +328,20 @@ function checkPlayerSpawning() {
 }
 
 // ---------------------------------------------------------------------------
+
+function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
+	if(promptType == AG_PROMPT_NONE) {
+		return false;
+	}
+
+	getPlayerData(client).promptType = promptType;
+
+	if(canPlayerUseGUI(client)) {
+		showPlayerPromptGUI(client, promptMessage, promptTitle);
+	} else {
+		messagePlayerNormal(client, `❓ ${promptMessage}`);
+		messagePlayerInfo(client, `[#FFFFFF]Use [#AAAAAA]/yes or [#AAAAAA]/no`);
+	}
+}
+
+// ---------------------------------------------------------------------------

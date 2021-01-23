@@ -148,6 +148,7 @@ function initClassTable() {
 				this.businessOrderAmount = 0;
 				this.businessOrderBusiness = -1;
 				this.businessOrderItem = -1;
+				this.businessOrderValue = -1;
 			}
 		},
 		accountData: class {
@@ -953,6 +954,7 @@ function initClassTable() {
 				this.useType = AG_ITEM_USETYPE_NONE;
 				this.useId = 0;
 				this.useValue = 0;
+				this.maxValue = 0;
 				this.dropType = AG_ITEM_DROPTYPE_NONE;
 				this.useId = 0;
 				this.dropPosition = toVector3(0.0, 0.0, 0.0);
@@ -960,6 +962,9 @@ function initClassTable() {
 				this.dropScale = toVector3(0.0, 0.0, 0.0);
 				this.dropModel = 0;
 				this.orderPrice = 0;
+				this.demandMultiplier = 1;
+				this.supplyMultiplier = 1;
+				this.riskMultiplier = 1;
 				this.needsSaved = false;
 				this.switchDelay = 0;
 				this.pickupDelay = 0;
@@ -981,10 +986,11 @@ function initClassTable() {
 					this.dropModel = toInteger(dbAssoc["item_type_drop_model"]);
 					this.useId = toInteger(dbAssoc["item_type_use_id"]);
 					this.useValue = toInteger(dbAssoc["item_type_use_value"]);
+					this.maxValue = toInteger(dbAssoc["item_type_max_value"]);
 					this.orderPrice = toInteger(dbAssoc["item_type_order_price"]);
 					this.demandMultiplier = toFloat(dbAssoc["item_type_demand_multiplier"]);
 					this.supplyMultiplier = toFloat(dbAssoc["item_type_supply_multiplier"]);
-					this.orderPrice = toInteger(dbAssoc["item_type_order_price"]);
+					this.riskMultiplier = toFloat(dbAssoc["item_type_risk_multiplier"]);
 					this.size = toInteger(dbAssoc["item_type_size"]);
 					this.capacity = toInteger(dbAssoc["item_type_capacity"]);
 					this.useDelay = toInteger(dbAssoc["item_type_delay_use"]);

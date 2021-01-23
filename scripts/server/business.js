@@ -505,7 +505,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	}
 
 	if(getBusinessData(businessId).till < amount) {
-		messagePlayerError(client, `Business '${tempBusinessData.name}' doesn't have that much money! Use /bizbalance.`);
+		messagePlayerError(client, `Business [#0099FF]${tempBusinessData.name} doesn't have that much money! Use /bizbalance.`);
 		return false;
 	}
 
@@ -541,7 +541,7 @@ function depositIntoBusinessCommand(command, params, client) {
 	getBusinessData(businessId).till += amount;
 	getPlayerCurrentSubAccount(client).cash -= amount;
 	updatePlayerCash(client);
-	messagePlayerSuccess(client, `You deposited $${amount} into business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till'`);
+	messagePlayerSuccess(client, `You deposited $${amount} into business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till`);
 }
 
 // ---------------------------------------------------------------------------
@@ -552,47 +552,55 @@ function orderItemForBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-
-	let itemType = getItemTypeFromParams(splitParams.slice(0,-2).join(" "));
-	let amount = toInteger(splitParams.slice(-2,-1)) || 1;
-	let sellPrice = toInteger(splitParams.slice(-1)) || 0;
-	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
-
-	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, "Business not found!");
+	if(!areThereEnoughParams(params, 3, " ")) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
+
+	let splitParams = params.split(" ");
+	let itemType = getItemTypeFromParams(splitParams.slice(0,-2).join(" "));
 
 	if(!getItemTypeData(itemType)) {
 		messagePlayerError(client, "Invalid item type name or ID!");
 		messagePlayerInfo(client, "Use [#AAAAAA]/itemtypes [#FFFFFF]for a list of items");
 		return false;
 	}
+	let pricePerItem = getOrderPriceForItemType(itemType);
 
-	let pricePerItem = getItemTypeData(itemType).orderPrice*getServerConfig().inflationMultiplier*getItemTypeData(itemType).demandMultiplier*getItemTypeData(itemType).supplyMultiplier*getItemTypeData(itemType).riskMultiplier;
+	let amount = toInteger(splitParams.slice(-2, -1)) || 1;
+	let value = toInteger(splitParams.slice(-1)) || getItemTypeData(itemType).capacity;
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	logToConsole(LOG_DEBUG, `[Asshat.Business] ${getPlayerDisplayForConsole(client)} is ordering ${amount} ${splitParams.slice(0,-2).join(" ")} (${value})`);
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "You must be inside or near a business door!");
+		return false;
+	}
+
 	let orderTotalCost = pricePerItem*amount;
 
-	getPlayerData(client).promptType = AG_PROMPT_BIZORDER;
+	//getPlayerData(client).promptType = AG_PROMPT_BIZORDER;
 	getPlayerData(client).businessOrderAmount = amount;
 	getPlayerData(client).businessOrderBusiness = businessId;
 	getPlayerData(client).businessOrderItem = itemType;
+	getPlayerData(client).businessOrderValue = value;
 
-	showPlayerPromptGUI(client, `This order will cost [#AAAAAA]$${orderTotalCost} (${amount} at $${pricePerItem} each)`, "Business Order Cost");
+	showPlayerPrompt(client, AG_PROMPT_BIZORDER, `Ordering ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${pricePerItem} each will cost a total of $${orderTotalCost}`, "Business Order Cost");
 }
 
 // ---------------------------------------------------------------------------
 
-function orderItemForBusiness(businessId, itemType, amount, sellPrice) {
+function orderItemForBusiness(businessId, itemType, amount) {
 	if(getBusinessData(businessId).till < orderTotalCost) {
 		let neededAmount = orderTotalCost-getBusinessData(businessId).till;
-		messagePlayerError(client, `The business doesn't have enough money (needs [#AAAAAA]$${neededAmount} [#FFFFFF]more)! Use [#AAAAAA]/bizdeposit [#FFFFFF]to add money to the business.`);
+		//messagePlayerError(client, `The business doesn't have enough money (needs [#AAAAAA]$${neededAmount} [#FFFFFF]more)! Use [#AAAAAA]/bizdeposit [#FFFFFF]to add money to the business.`);
 		return false;
 	}
 
 	getBusinessData(businessId).till -= orderTotalCost;
 	addToBusinessInventory(businessId, itemType, amount);
-	messagePlayerSuccess(client, `You ordered ${amount} ${getPluralForm(getItemTypeData(itemType).name)} at $${getItemTypeData(itemType).orderPrice} each for business [#0099FF]'${getBusinessData(businessId).name} [#FFFFFF] and set their sell price to [#AAAAAA]$${sellPrice}`);
+	//messagePlayerSuccess(client, `You ordered ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${getItemTypeData(itemType).orderPrice} each for business [#0099FF]${getBusinessData(businessId).name}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -609,7 +617,7 @@ function viewBusinessTillAmountCommand(command, params, client) {
 		return false;
 	}
 
-	messagePlayerSuccess(client, `Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till has [#AAAAAA]$'${getBusinessData(businessId).till}'`);
+	messagePlayerSuccess(client, `Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till has [#AAAAAA]$${getBusinessData(businessId).till}`);
 }
 
 // ---------------------------------------------------------------------------

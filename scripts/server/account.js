@@ -447,11 +447,11 @@ function saveAccountToDatabase(accountData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safePassword = escapeDatabaseString(dbConnection, accountData.password);
-		let safeStaffTitle = escapeDatabaseString(dbConnection, accountData.staffTitle);
-		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
+		//let safeStaffTitle = escapeDatabaseString(dbConnection, accountData.staffTitle);
+		//let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
 		//let safeIRCAccount = dbConnection.escapetoString(accountData.ircAccount);
 
-		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_staff_title='${safeStaffTitle}', acct_mod_flags=${toString(accountData.flags.moderation)}, acct_discord=${toString(accountData.discordAccount)}, acct_email='${safeEmailAddress}', acct_ip=INET_ATON('${accountData.ipAddress}') WHERE acct_id=${accountData.databaseId}`;
+		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_mod_flags=${toString(accountData.flags.moderation)}, acct_discord=${toString(accountData.discordAccount)}, acct_ip=INET_ATON('${accountData.ipAddress}') WHERE acct_id=${accountData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);

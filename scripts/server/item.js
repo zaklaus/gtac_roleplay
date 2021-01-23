@@ -466,13 +466,13 @@ function playerUseItem(client, hotBarSlot) {
 
 		case AG_ITEM_USETYPE_WALKIETALKIE:
 			getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
-			messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your walkie talkie in slot ${getPlayerData(client).activeHotBarSlot+1} [#AAAAAA](${getItemValueDisplay(itemIndex)})`);
+			messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your walkie talkie in slot ${getPlayerData(client).activeHotBarSlot+1} [#AAAAAA](${getItemValueDisplayForItem(itemIndex)})`);
 			break;
 
 		case AG_ITEM_USETYPE_PHONE:
 			getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
 			if(getItemData(itemIndex).enabled) {
-				messagePlayerAlert(client, `You turned on your phone in slot ${getPlayerData(client).activeHotBarSlot+1} (${getItemValueDisplay(itemIndex)})`);
+				messagePlayerAlert(client, `You turned on your phone in slot ${getPlayerData(client).activeHotBarSlot+1} (${getItemValueDisplayForItem(itemIndex)})`);
 			} else {
 				messagePlayerAlert(client, `You turned OFF your phone in slot ${getPlayerData(client).activeHotBarSlot+1}`);
 			}
@@ -916,7 +916,7 @@ function listPlayerInventoryCommand(command, params, client) {
 				}
 			}
 
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplay(getPlayerData(client).hotBarItems[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getPlayerData(client).hotBarItems[i])}]`);
 		}
 	}
 
@@ -953,7 +953,7 @@ function listBusinessStorageInventoryCommand(command, params, client) {
 		if(getBusinessData(businessId).storageItemCache[i] == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}[${getItemValueDisplay(getBusinessData(businessId).storageItemCache[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]`);
 		}
 	}
 
@@ -990,7 +990,7 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 		if(getBusinessData(businessId).floorItemCache[i] == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[${getItemValueDisplay(getBusinessData(businessId).floorItemCache[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}]`);
 		}
 	}
 
@@ -1027,7 +1027,7 @@ function listHouseInventoryCommand(command, params, client) {
 		if(getHouseData(houseId).itemCache[i] == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplay(getBusinessData(houseId).itemCache[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(houseId).itemCache[i])}]`);
 		}
 	}
 
@@ -1064,7 +1064,7 @@ function listItemInventoryCommand(command, params, client) {
 		if(getItemData(itemId).itemCache[i] == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplay(getItemData(itemId).itemCache[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getItemData(itemId).itemCache[i])}]`);
 		}
 	}
 
@@ -1203,19 +1203,25 @@ function playerItemActionDelayComplete(client) {
 
 // ---------------------------------------------------------------------------
 
-function getItemValueDisplay(itemId) {
-	if(getItemData(itemId)) {
-		if(getItemTypeData(getItemData(itemId).itemTypeIndex).useType == AG_ITEM_USETYPE_SKIN) {
-			return getSkinNameFromId(getItemData(itemId).value);
-		} else if(getItemTypeData(getItemData(itemId).itemTypeIndex).useType == AG_ITEM_USETYPE_FOOD) {
-			return toString(getItemData(itemId).value)+"%";
-		} else if(getItemTypeData(getItemData(itemId).itemTypeIndex).useType == AG_ITEM_USETYPE_PHONE) {
-			return toString(getItemData(itemId).value);
-		} else if(getItemTypeData(getItemData(itemId).itemTypeIndex).useType == AG_ITEM_USETYPE_WALKIETALKIE) {
-			return toString(toString(getItemData(itemId).value).slice(0,-2)+"."+toString(getItemData(itemId).value).slice(-1)+"MHz");
-		} else {
-			return getItemData(itemId).value;
-		}
+function getItemValueDisplayForItem(itemId) {
+	return getItemValueDisplay(getItemData(itemId).itemTypeIndex, getItemData(itemId).value);
+}
+
+// ---------------------------------------------------------------------------
+
+function getItemValueDisplay(itemType, value) {
+	if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_SKIN) {
+		return getSkinNameFromId(value);
+	} else if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_FOOD || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_DRINK || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_EXTINGUISHER || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_SPRAYPAINT || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_PEPPERSPRAY) {
+		return getPercentage(toString(value), getItemTypeData(itemType).capacity)+"%";
+	} else if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_PHONE) {
+		return toString(value);
+	} else if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_WEAPON || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_TAZER) {
+		return toString(value)+" rounds";
+	} else if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_WALKIETALKIE) {
+		return toString(toString(value).slice(0,-2)+"."+toString(value).slice(-1)+"MHz");
+	} else {
+		return value;
 	}
 	return "unknown";
 }
@@ -1250,7 +1256,7 @@ function toggleItemEnabledCommand(command, params, client) {
 	}
 
 	getItemData(getPlayerActiveItem(client)).enabled = !getItemData(getPlayerActiveItem(client)).enabled;
-	messagePlayerNormal(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)} [#AAAAAA](${getItemValueDisplay(getPlayerActiveItem(client))}`)
+	messagePlayerNormal(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)} [#AAAAAA](${getItemValueDisplayForItem(getPlayerActiveItem(client))}`)
 }
 
 // ---------------------------------------------------------------------------
@@ -1297,6 +1303,12 @@ function resyncWeaponItemAmmo(client) {
 			}
 		}
 	}
+}
+
+// ---------------------------------------------------------------------------
+
+function getOrderPriceForItemType(itemType) {
+	return getItemTypeData(itemType).orderPrice*getServerConfig().inflationMultiplier*getItemTypeData(itemType).demandMultiplier*getItemTypeData(itemType).supplyMultiplier*getItemTypeData(itemType).riskMultiplier;
 }
 
 // ---------------------------------------------------------------------------

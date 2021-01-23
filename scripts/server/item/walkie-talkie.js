@@ -101,7 +101,7 @@ function setWalkieTalkieFrequencyCommand(command, params, client) {
 	}
 
 	getItemData(getPlayerActiveItem(client)).value = params*100;
-	messagePlayerSuccess(client, `You set the frequency of you walkie talkie in slot ${getPlayerData(client).activeHotbarSlot} to ${getItemValueDisplay(getPlayerActiveItem(client))}`)
+	messagePlayerSuccess(client, `You set the frequency of you walkie talkie in slot ${getPlayerData(client).activeHotbarSlot} to ${getItemValueDisplayForItem(getPlayerActiveItem(client))}`)
 }
 
 // ---------------------------------------------------------------------------

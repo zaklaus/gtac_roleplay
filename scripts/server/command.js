@@ -252,6 +252,8 @@ function loadCommands() {
             commandData("exit", enterExitPropertyCommand, "", getStaffFlagValue("none"), true, false),
             commandData("cursor", toggleMouseCursorCommand, "", getStaffFlagValue("none"), true, false),
             commandData("mousecam", toggleMouseCameraCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("yes", playerPromptAnswerYesCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("no", playerPromptAnswerNoCommand, "", getStaffFlagValue("none"), true, false),
         ],
         moderation: [
             commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),

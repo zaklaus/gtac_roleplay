@@ -65,12 +65,15 @@ function playerPromptAnswerYes(client) {
                     getPlayerData(client).businessOrderAmount = 0;
                     getPlayerData(client).businessOrderBusiness = false;
                     getPlayerData(client).businessOrderItem = -1;
+                    getPlayerData(client).businessOrderValue = -1;
                 } else {
-                    logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} successfully ordered ${getPlayerData(client).businessOrderAmount} ${getPlayerData(client).businessOrderItem} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness)}`);
-                    showPlayerInfoGUI(client, `[Asshat.GUI] You ordered ${getPlayerData(client).businessOrderAmount} ${getPlayerData(client).businessOrderItem} for ${getPlayerData(client).businessOrderCost}!`, "Business Order Successful");
+                    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} successfully ordered ${getPlayerData(client).businessOrderAmount} ${getPlayerData(client).businessOrderItem} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness)}`);
+                    showPlayerInfoGUI(client, `You ordered ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} (${getItemValueDisplay(getPlayerData(client).businessOrderItem, getPlayerData(client).businessOrderValue)}) for ${getPlayerData(client).businessOrderCost}!`, "Business Order Successful");
+
                     getPlayerData(client).businessOrderAmount = 0;
                     getPlayerData(client).businessOrderBusiness = false;
                     getPlayerData(client).businessOrderItem = -1;
+                    getPlayerData(client).businessOrderValue = -1;
                 }
             } else {
                 showPlayerErrorGUI(client, `You aren't ordering anything for a business!`, `Business Order Canceled`);
@@ -88,6 +91,18 @@ function playerPromptAnswerYes(client) {
 
 function canPlayerUseGUI(client) {
     return (getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client));
+}
+
+// ---------------------------------------------------------------------------
+
+function playerPromptAnswerYesCommand(command, params, client) {
+    playerPromptAnswerYes(client);
+}
+
+// ---------------------------------------------------------------------------
+
+function playerPromptAnswerNoCommand(command, params, client) {
+    playerPromptAnswerNo(client);
 }
 
 // ---------------------------------------------------------------------------

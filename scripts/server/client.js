@@ -356,6 +356,20 @@ function showPlayerPromptGUI(client, promptMessage, promptTitle) {
 
 // ---------------------------------------------------------------------------
 
+function showPlayerInfoGUI(client, infoMessage, infoTitle) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show info GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${infoTitle}, Message: ${infoMessage})`);
+    triggerNetworkEvent("ag.showInfo", client, infoMessage, infoTitle);
+}
+
+// ---------------------------------------------------------------------------
+
+function showPlayerErrorGUI(client, errorMessage, errorTitle) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show error GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${errorTitle}, Message: ${errorMessage})`);
+    triggerNetworkEvent("ag.showInfo", client, errorMessage, errorTitle);
+}
+
+// ---------------------------------------------------------------------------
+
 function sendRunCodeToClient(client, code, returnTo) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending runcode to ${getPlayerDisplayForConsole(client)} (returnTo: ${getPlayerDisplayForConsole(getClientFromIndex(returnTo))}, Code: ${code})`);
     triggerNetworkEvent("ag.runCode", client, code, returnTo);

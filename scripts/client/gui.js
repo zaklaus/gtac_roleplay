@@ -1583,7 +1583,10 @@ app.init = function()
 			textAlign: 0.5,
 			textColour: toColour(255, 255, 255, 255),
 			textFont: robotoFont,
-		}
+		},
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
 	});
 
 	errorDialog.okayButton = errorDialog.window.button(20, 95, 360, 30, 'OK', {
@@ -1593,6 +1596,9 @@ app.init = function()
 			textSize: 10.0,
 			textFont: robotoFont,
 			textAlign: 0.5,
+		},
+		focused: {
+			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 255),
 		},
 	}, closeErrorDialog);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created error GUI ...`);
@@ -1623,7 +1629,10 @@ app.init = function()
 			textAlign: 0.5,
 			textColour: toColour(255, 255, 255, 255),
 			textFont: robotoFont,
-		}
+		},
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
 	});
 
 	yesNoDialog.yesButton = yesNoDialog.window.button(20, 95, 175, 30, 'YES', {
@@ -1634,6 +1643,9 @@ app.init = function()
 			textFont: robotoFont,
 			textAlign: 0.5,
 		},
+		focused: {
+			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 255),
+		},
 	}, yesNoDialogAnswerYes);
 
 	yesNoDialog.noButton = yesNoDialog.window.button(205, 95, 175, 30, 'NO', {
@@ -1643,6 +1655,9 @@ app.init = function()
 			textSize: 10.0,
 			textFont: robotoFont,
 			textAlign: 0.5,
+		},
+		focused: {
+			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 255),
 		},
 	}, yesNoDialogAnswerNo);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created prompt GUI`);
@@ -1672,7 +1687,10 @@ app.init = function()
 			textAlign: 0.5,
 			textColour: toColour(255, 255, 255, 220),
 			textFont: robotoFont,
-		}
+		},
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
 	});
 
 	infoDialog.okayButton = infoDialog.window.button(20, 95, 360, 30, 'OK', {
@@ -1682,6 +1700,9 @@ app.init = function()
 			textSize: 10.0,
 			textFont: robotoFont,
 			textAlign: 0.5,
+		},
+		focused: {
+			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 255),
 		},
 	}, closeInfoDialog);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created info dialog GUI`);

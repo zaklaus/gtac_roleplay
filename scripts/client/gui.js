@@ -1707,6 +1707,41 @@ app.init = function()
 	}, closeInfoDialog);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created info dialog GUI`);
 
+// ------------------------------------------------------------------------------
+
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating list dialog GUI ...`);
+	listDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'List', {
+		main: {
+			backgroundColour: toColour(0, 0, 0, windowAlpha),
+		},
+		title: {
+			textSize: 11.0,
+			textColour: toColour(0, 0, 0, 255),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+		},
+		icon: {
+			textSize: 11.0,
+			textColour: toColour(255, 255, 255, 255),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+			hover: {
+				backgroundColour: toColour(205, 60, 60, windowTitleAlpha),
+			},
+		},
+	});
+
+	listDialog.messageLabel = infoDialog.window.text(15, 50, 370, 20, 'Information Message', {
+		main: {
+			textSize: 10.0,
+			textAlign: 0.5,
+			textColour: toColour(255, 255, 255, 220),
+			textFont: robotoFont,
+		},
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
+	});
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created info dialog GUI`);
+
 	// ------------------------------------------------------------------------------
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating character select GUI ...`);

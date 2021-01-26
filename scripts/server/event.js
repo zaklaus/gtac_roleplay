@@ -88,6 +88,7 @@ function onPlayerChat(event, client, messageText) {
 function onProcess(event, deltaTime) {
     checkVehicleBuying();
     checkPlayerSpawning();
+    //checkPlayerPedState();
     //checkVehicleBurning();
 }
 

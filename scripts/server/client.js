@@ -34,7 +34,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.exitedSphere", onPlayerExitedSphere);
     addNetworkHandler("ag.playerDeath", onPlayerDeath);
     addNetworkHandler("ag.onPlayerEnterVehicle", onPlayerEnteredVehicle);
-    addNetworkHandler("ag.onPlayerExitVehicle", onPlayerExitedVehicle);
+    //addNetworkHandler("ag.onPlayerExitVehicle", onPlayerExitedVehicle);
 
     // Job
     addNetworkHandler("ag.arrivedAtJobRouteStop", playerArrivedAtJobRouteStop);
@@ -154,7 +154,7 @@ function updatePlayerSpawnedState(client, state) {
 
 function setPlayerControlState(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s control state ${toUpperCase(getOnOffFromBool(state))}`);
-    triggerNetworkEvent("ag.control", client, state);
+    triggerNetworkEvent("ag.control", client, state, !state);
 }
 
 // ---------------------------------------------------------------------------
@@ -224,11 +224,13 @@ function updatePlayerHotBar(client) {
         let itemValue = 0;
         let itemExists = false;
         if(getPlayerData(client).hotBarItems[i] != -1) {
-            let itemData = getItemData(getPlayerData(client).hotBarItems[i]);
-            let itemTypeData = getItemTypeData(itemData.itemTypeIndex);
-            itemExists = true;
-            itemImage = itemTypeData.hotbarImage;
-            itemValue = itemData.value;
+            if(getItemData(getPlayerData(client).hotBarItems[i])) {
+                let itemData = getItemData(getPlayerData(client).hotBarItems[i]);
+                let itemTypeData = getItemTypeData(itemData.itemTypeIndex);
+                itemExists = true;
+                itemImage = itemTypeData.hotbarImage;
+                itemValue = itemData.value;
+            }
         }
         tempHotBarItems.push([i, itemExists, itemImage, itemValue]);
     }
@@ -247,6 +249,7 @@ function setPlayerWeaponDamageEnabled(client, state) {
 function setPlayerWeaponDamageEvent(client, eventType) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending weapon damage event (${eventType}) for ${getPlayerDisplayForConsole(client)} to all players`);
     triggerNetworkEvent("ag.weaponDamageEvent", null, client.name, eventType);
+    getPlayerData(client).weaponDamageEvent = eventType;
 }
 
 // ---------------------------------------------------------------------------
@@ -489,65 +492,75 @@ function sendChatBoxMessageToPlayer(client, message, colour) {
 // ---------------------------------------------------------------------------
 
 function showPlayerItemTakeDelay(client, itemId) {
-    let delay = getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay;
-    if(delay > 0) {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
-    } else {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-        playerTakeItem(client, itemId);
+    if(getItemData(itemId)) {
+        let delay = getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay;
+        if(delay > 0) {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+            triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+        } else {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+            playerTakeItem(client, itemId);
+        }
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemUseDelay(client, itemSlot) {
-    let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay;
-    if(delay > 0) {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
-    } else {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-        playeUseItem(client, itemSlot);
+    if(getItemData(getPlayerData(client).hotBarItems[itemSlot])) {
+        let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay;
+        if(delay > 0) {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+            triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+        } else {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+            playerUseItem(client, itemSlot);
+        }
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemDropDelay(client, itemSlot) {
-    let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay;
-    if(delay > 0) {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
-    } else {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-        playerDropItem(client, itemSlot);
+    if(getItemData(getPlayerData(client).hotBarItems[itemSlot])) {
+        let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay;
+        if(delay > 0) {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+            triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+        } else {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+            playerDropItem(client, itemSlot);
+        }
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemPickupDelay(client, itemId) {
-    let delay = getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay;
-    if(delay > 0) {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
-    } else {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-        playerPickupItem(client, itemId);
+    if(getItemData(itemId)) {
+        let delay = getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay;
+        if(delay > 0) {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+            triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+        } else {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+            playerPickupItem(client, itemId);
+        }
     }
 }
 
 // ---------------------------------------------------------------------------
 
 function showPlayerItemPutDelay(client, itemSlot) {
-    let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay;
-    if(delay > 0) {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-        triggerNetworkEvent("ag.showItemActionDelay", client, delay);
-    } else {
-        logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-        playerPutItem(client, itemSlot);
+    if(getItemData(getPlayerData(client).hotBarItems[itemSlot])) {
+        let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay;
+        if(delay > 0) {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+            triggerNetworkEvent("ag.showItemActionDelay", client, delay);
+        } else {
+            logToConsole(LOG_DEBUG, `[Asshat.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (instant)`);
+            playerPutItem(client, itemSlot);
+        }
     }
 }
 
@@ -584,17 +597,34 @@ function sendPlayerClearPedState(client) {
 
 // ---------------------------------------------------------------------------
 
-function playerDamagedByPlayer(client, damagerPed, weaponId, pedPiece) {
-    let damagerClient = getClientFromPlayerElement(damagerPed);
+function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, healthLoss) {
+    let damagerEntity = getClientByName(damagerEntityName);
 
-    if(!getPlayerData(damagerClient) || !getPlayerData(client)) {
+    if(isNull(damagerEntity)) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)}'s damager entity from ID is null`);
         return false;
     }
 
-    switch(getPlayerData(damagerClient).weaponDamageEvent) {
+    logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)} was damaged by ${damagerEntity}`);
+
+    if(isNull(damagerEntity)) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)}'s damager client is INVALID`);
+        return false;
+    }
+
+    if(!getPlayerData(damagerEntity) || !getPlayerData(client)) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)}'s damager's client data is INVALID`);
+        return false;
+    }
+
+    logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)}'s damager is ${getPlayerDisplayForConsole(damagerEntity)}`);
+
+    switch(getPlayerData(damagerEntity).weaponDamageEvent) {
         case AG_WEAPON_DAMAGE_EVENT_TAZER:
+            logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)}'s damager ${getPlayerDisplayForConsole(damagerEntity)} is using a tazer`);
             if(!isPlayerTazed(client) && !isPlayerHandCuffed(client) && !isPlayerInAnyVehicle(client)) {
-                meActionToNearbyPlayers(client, `electrifies ${getCharacterFullName(damagerClient)} with their tazer`);
+                logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)} was not previously tazed, binded, or in a vehicle. Taze successful`);
+                meActionToNearbyPlayers(damagerEntity, `electrifies ${getCharacterFullName(client)} with their tazer`);
                 tazePlayer(client);
             }
             break;

@@ -1068,3 +1068,20 @@ function checkVehicleBurning() {
 }
 
 // -------------------------------------------------------------------------
+
+function checkPlayerPedStates() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(getPlayerData(clients[i])) {
+			if(getPlayerData(clients[i]).pedState) {
+				if(isPlayerInAnyVehicle(clients[i])) {
+					if(getPlayerData(clients[i]).pedState == AG_PEDSTATE_EXITINGVEHICLE) {
+						getPlayerData(clients[i]).pedState == AG_PEDSTATE_READY;
+					}
+				}
+			}
+		}
+	}
+}
+
+// -------------------------------------------------------------------------

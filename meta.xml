@@ -11,7 +11,6 @@
 
 	<!-- Server -->
 	<script src="scripts/server/class.js" type="server" language="javascript" />
-
 	<script src="scripts/server/account.js" type="server" language="javascript" />
 	<script src="scripts/server/ammunation.js" type="server" language="javascript" />
 	<script src="scripts/server/anticheat.js" type="server" language="javascript" />
@@ -45,6 +44,8 @@
 	<script src="scripts/server/utilities.js" type="server" language="javascript" />
 	<script src="scripts/server/vehicle.js" type="server" language="javascript" />
 
+	<!-- Server Scripts (Loaded Last) -->
+	<script src="scripts/server/startup.js" type="server" language="javascript" />
 	<script src="scripts/server/config.js" type="server" language="javascript" />
 	<script src="scripts/server/core.js" type="server" language="javascript" />
 	<script src="scripts/server/command.js" type="server" language="javascript" />
@@ -61,6 +62,7 @@
 	<script src="scripts/server/business/vehicle.js" type="server" language="javascript" />
 	<script src="scripts/server/business/weapon.js" type="server" language="javascript" />
 
+	<!-- Jobs -->
 	<script src="scripts/server/job/bus.js" type="server" language="javascript" />
 	<script src="scripts/server/job/drug.js" type="server" language="javascript" />
 	<script src="scripts/server/job/fire.js" type="server" language="javascript" />
@@ -70,6 +72,7 @@
 	<script src="scripts/server/job/taxi.js" type="server" language="javascript" />
 	<script src="scripts/server/job/weapon.js" type="server" language="javascript" />
 
+	<!-- Items -->
 	<script src="scripts/server/item/food.js" type="server" language="javascript" />
 	<script src="scripts/server/item/drink.js" type="server" language="javascript" />
 	<script src="scripts/server/item/walkie-talkie.js" type="server" language="javascript" />
@@ -78,13 +81,7 @@
 	<script src="scripts/server/item/rope.js" type="server" language="javascript" />
 	<script src="scripts/server/item/tazer.js" type="server" language="javascript" />
 
-	<script src="scripts/server/startup.js" type="server" language="javascript" />
-
 	<!-- Client -->
-	<file type="client" src="files/images/main-logo.png" />
-	<file type="client" src="files/fonts/roboto-regular.ttf" />
-	<file type="client" src="files/fonts/pricedown.ttf" />
-
 	<script src="scripts/client/gui.js" type="client" language="javascript" />
 	<script src="scripts/client/main.js" type="client" language="javascript" />
 	<script src="scripts/client/nametag.js" type="client" language="javascript" />
@@ -94,186 +91,4 @@
 	<script src="scripts/client/chatbox.js" type="client" language="javascript" />
 	<script src="scripts/client/label.js" type="client" language="javascript" />
 	<script src="scripts/client/mouse-camera.js" type="client" language="javascript" />
-
-	<file type="client" src="files/images/skins/none.png" />
-	<!--
-	<file type="client" src="files/images/skins/gta3/Skin000.png" />
-	<file type="client" src="files/images/skins/gta3/Skin001.png" />
-	<file type="client" src="files/images/skins/gta3/Skin002.png" />
-	<file type="client" src="files/images/skins/gta3/Skin003.png" />
-	<file type="client" src="files/images/skins/gta3/Skin004.png" />
-	<file type="client" src="files/images/skins/gta3/Skin005.png" />
-	<file type="client" src="files/images/skins/gta3/Skin006.png" />
-	<file type="client" src="files/images/skins/gta3/Skin007.png" />
-	<file type="client" src="files/images/skins/gta3/Skin008.png" />
-	<file type="client" src="files/images/skins/gta3/Skin009.png" />
-	<file type="client" src="files/images/skins/gta3/Skin010.png" />
-	<file type="client" src="files/images/skins/gta3/Skin011.png" />
-	<file type="client" src="files/images/skins/gta3/Skin012.png" />
-	<file type="client" src="files/images/skins/gta3/Skin013.png" />
-	<file type="client" src="files/images/skins/gta3/Skin014.png" />
-	<file type="client" src="files/images/skins/gta3/Skin015.png" />
-	<file type="client" src="files/images/skins/gta3/Skin016.png" />
-	<file type="client" src="files/images/skins/gta3/Skin017.png" />
-	<file type="client" src="files/images/skins/gta3/Skin018.png" />
-	<file type="client" src="files/images/skins/gta3/Skin020.png" />
-	<file type="client" src="files/images/skins/gta3/Skin021.png" />
-	<file type="client" src="files/images/skins/gta3/Skin022.png" />
-	<file type="client" src="files/images/skins/gta3/Skin023.png" />
-	<file type="client" src="files/images/skins/gta3/Skin024.png" />
-	<file type="client" src="files/images/skins/gta3/Skin025.png" />
-	<file type="client" src="files/images/skins/gta3/Skin030.png" />
-	<file type="client" src="files/images/skins/gta3/Skin031.png" />
-	<file type="client" src="files/images/skins/gta3/Skin032.png" />
-	<file type="client" src="files/images/skins/gta3/Skin033.png" />
-	<file type="client" src="files/images/skins/gta3/Skin034.png" />
-	<file type="client" src="files/images/skins/gta3/Skin035.png" />
-	<file type="client" src="files/images/skins/gta3/Skin036.png" />
-	<file type="client" src="files/images/skins/gta3/Skin037.png" />
-	<file type="client" src="files/images/skins/gta3/Skin038.png" />
-	<file type="client" src="files/images/skins/gta3/Skin039.png" />
-	<file type="client" src="files/images/skins/gta3/Skin040.png" />
-	<file type="client" src="files/images/skins/gta3/Skin041.png" />
-	<file type="client" src="files/images/skins/gta3/Skin042.png" />
-	<file type="client" src="files/images/skins/gta3/Skin043.png" />
-	<file type="client" src="files/images/skins/gta3/Skin044.png" />
-	<file type="client" src="files/images/skins/gta3/Skin045.png" />
-	<file type="client" src="files/images/skins/gta3/Skin046.png" />
-	<file type="client" src="files/images/skins/gta3/Skin047.png" />
-	<file type="client" src="files/images/skins/gta3/Skin048.png" />
-	<file type="client" src="files/images/skins/gta3/Skin049.png" />
-	<file type="client" src="files/images/skins/gta3/Skin050.png" />
-	<file type="client" src="files/images/skins/gta3/Skin051.png" />
-	<file type="client" src="files/images/skins/gta3/Skin052.png" />
-	<file type="client" src="files/images/skins/gta3/Skin053.png" />
-	<file type="client" src="files/images/skins/gta3/Skin054.png" />
-	<file type="client" src="files/images/skins/gta3/Skin055.png" />
-	<file type="client" src="files/images/skins/gta3/Skin056.png" />
-	<file type="client" src="files/images/skins/gta3/Skin057.png" />
-	<file type="client" src="files/images/skins/gta3/Skin058.png" />
-	<file type="client" src="files/images/skins/gta3/Skin059.png" />
-	<file type="client" src="files/images/skins/gta3/Skin060.png" />
-	<file type="client" src="files/images/skins/gta3/Skin061.png" />
-	<file type="client" src="files/images/skins/gta3/Skin062.png" />
-	<file type="client" src="files/images/skins/gta3/Skin063.png" />
-	<file type="client" src="files/images/skins/gta3/Skin064.png" />
-	<file type="client" src="files/images/skins/gta3/Skin065.png" />
-	<file type="client" src="files/images/skins/gta3/Skin066.png" />
-	<file type="client" src="files/images/skins/gta3/Skin067.png" />
-	<file type="client" src="files/images/skins/gta3/Skin068.png" />
-	<file type="client" src="files/images/skins/gta3/Skin069.png" />
-	<file type="client" src="files/images/skins/gta3/Skin070.png" />
-	<file type="client" src="files/images/skins/gta3/Skin071.png" />
-	<file type="client" src="files/images/skins/gta3/Skin072.png" />
-	<file type="client" src="files/images/skins/gta3/Skin073.png" />
-	<file type="client" src="files/images/skins/gta3/Skin074.png" />
-	<file type="client" src="files/images/skins/gta3/Skin075.png" />
-	<file type="client" src="files/images/skins/gta3/Skin076.png" />
-	<file type="client" src="files/images/skins/gta3/Skin077.png" />
-	<file type="client" src="files/images/skins/gta3/Skin078.png" />
-	<file type="client" src="files/images/skins/gta3/Skin080.png" />
-	<file type="client" src="files/images/skins/gta3/Skin081.png" />
-	<file type="client" src="files/images/skins/gta3/Skin082.png" />
-	<file type="client" src="files/images/skins/gta3/Skin083.png" />
-	<file type="client" src="files/images/skins/gta3/Skin084.png" />
-	<file type="client" src="files/images/skins/gta3/Skin085.png" />
-	<file type="client" src="files/images/skins/gta3/Skin086.png" />
-	<file type="client" src="files/images/skins/gta3/Skin087.png" />
-	<file type="client" src="files/images/skins/gta3/Skin088.png" />
-	<file type="client" src="files/images/skins/gta3/Skin089.png" />
-	<file type="client" src="files/images/skins/gta3/Skin090.png" />
-	<file type="client" src="files/images/skins/gta3/Skin091.png" />
-	<file type="client" src="files/images/skins/gta3/Skin092.png" />
-	<file type="client" src="files/images/skins/gta3/Skin093.png" />
-	<file type="client" src="files/images/skins/gta3/Skin094.png" />
-	<file type="client" src="files/images/skins/gta3/Skin095.png" />
-	<file type="client" src="files/images/skins/gta3/Skin096.png" />
-	<file type="client" src="files/images/skins/gta3/Skin097.png" />
-	<file type="client" src="files/images/skins/gta3/Skin098.png" />
-	<file type="client" src="files/images/skins/gta3/Skin099.png" />
-	<file type="client" src="files/images/skins/gta3/Skin100.png" />
-	<file type="client" src="files/images/skins/gta3/Skin101.png" />
-	<file type="client" src="files/images/skins/gta3/Skin102.png" />
-	<file type="client" src="files/images/skins/gta3/Skin103.png" />
-	<file type="client" src="files/images/skins/gta3/Skin104.png" />
-	<file type="client" src="files/images/skins/gta3/Skin105.png" />
-	<file type="client" src="files/images/skins/gta3/Skin106.png" />
-	<file type="client" src="files/images/skins/gta3/Skin107.png" />
-	<file type="client" src="files/images/skins/gta3/Skin108.png" />
-	<file type="client" src="files/images/skins/gta3/Skin109.png" />
-	<file type="client" src="files/images/skins/gta3/Skin110.png" />
-	<file type="client" src="files/images/skins/gta3/Skin111.png" />
-	<file type="client" src="files/images/skins/gta3/Skin112.png" />
-	<file type="client" src="files/images/skins/gta3/Skin113.png" />
-	<file type="client" src="files/images/skins/gta3/Skin114.png" />
-	<file type="client" src="files/images/skins/gta3/Skin115.png" />
-	<file type="client" src="files/images/skins/gta3/Skin116.png" />
-	<file type="client" src="files/images/skins/gta3/Skin118.png" />
-	<file type="client" src="files/images/skins/gta3/Skin120.png" />
-	<file type="client" src="files/images/skins/gta3/Skin121.png" />
-	-->
-
-	<!-- MexUI -->
-	<file type="client" src="third-party/mexui/Images/down-arrow.png" />
-	<script language="javascript" type="client" src="third-party/mexui/mexui.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Native.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Utility.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entity/Transition.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entity/StyleableEntity.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entity/Component.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Component/Control.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Component/Entry.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Component/Event.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Component/Window.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entity/ControlAxis.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entity/ControlWithEntries.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entry/DropDownItem.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entry/GridColumn.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entry/GridRow.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entry/ListRow.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entry/Tab.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Entry/TreeRow.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Button.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/CheckBox.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/DropDown.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Grid.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Image.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Line.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/List.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/ProgressBar.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/RadioButton.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Rectangle.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/ScrollBar.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Slider.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/TabPanel.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Text.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/TextInput.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Tree.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Character.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Characters.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Day.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Date.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Digit.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Digits.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Hour.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Integer.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Letter.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/LetterDigit.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Letters.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/LettersDigits.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Minute.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Month.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Number.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Password.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/PositiveInteger.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/PositiveNumber.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/RangedInteger.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/RangedNumber.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Second.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/TextArea.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Time.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Week.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/WeekDay.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Year.js" />
-	<script language="javascript" type="client" src="third-party/mexui/Core/Init.js" />
 </meta>

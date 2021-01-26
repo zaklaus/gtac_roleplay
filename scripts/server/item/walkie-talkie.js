@@ -34,7 +34,7 @@ function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
 		if(isPlayerSpawned(clients[i])) {
 			if(!isSamePlayer(transmittingPlayer, clients[i])) {
 				if(getPlayerActiveWalkieTalkieFrequency(clients[i]) == radioFrequency) {
-					if(getItemData(getPlayerData(client).hotBarItems[getPlayerFirstItemSlotByUseType(client, AG_ITEM_USETYPE_WALKIETALKIE)]).enabled) {
+					if(getItemData(getPlayerData(clients[i]).hotBarItems[getPlayerFirstItemSlotByUseType(clients[i], AG_ITEM_USETYPE_WALKIETALKIE)]).enabled) {
 						walkieTalkieIncomingToNearbyPlayers(clients[i], messageText);
 					}
 				}

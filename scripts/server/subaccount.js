@@ -81,11 +81,11 @@ function saveSubAccountToDatabase(subAccountData) {
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
-		let safeClanTag = escapeDatabaseString(subAccountData.clanTag);
-		let safeClanTitle = escapeDatabaseString(subAccountData.clanTitle);
-		let safeFirstName = escapeDatabaseString(subAccountData.firstName);
-		let safeLastName = escapeDatabaseString(subAccountData.lastName);
-		let safeMiddleName = escapeDatabaseString(subAccountData.middleName);
+		let safeClanTag = escapeDatabaseString(dbConnection, subAccountData.clanTag);
+		let safeClanTitle = escapeDatabaseString(dbConnection, subAccountData.clanTitle);
+		let safeFirstName = escapeDatabaseString(dbConnection, subAccountData.firstName);
+		let safeLastName = escapeDatabaseString(dbConnection, subAccountData.lastName);
+		let safeMiddleName = escapeDatabaseString(dbConnection, subAccountData.middleName);
 		let dbQueryString = `UPDATE sacct_main SET sacct_name_first='${safeFirstName}', sacct_name_last='${safeLastName}', sacct_name_middle='${safeMiddleName}', sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension}, sacct_last_login=${subAccountData.lastLogin}, sacct_clan=${subAccountData.clan}, sacct_clan_rank=${subAccountData.clanRank}, sacct_clan_tag='${safeClanTag}', sacct_clan_title='${safeClanTitle}', sacct_clan_flags=${subAccountData.clanFlags} WHERE sacct_id=${subAccountData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
@@ -222,7 +222,7 @@ function checkNextCharacter(client) {
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
-		updatePlayerCharacterSelectGUI("ag.switchCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
+		updatePlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 }
 

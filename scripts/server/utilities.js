@@ -493,15 +493,13 @@ function getClosestCivilian(position) {
 
 // ---------------------------------------------------------------------------
 
-function getClosestPlayer(position, exemptClient) {
+function getClosestPlayer(position) {
 	let clients = getClients();
 	let closest = 0;
 	for(let i in clients) {
-		if(clients[i] != exemptClient) {
-			if(getDistance(getPlayerPosition(clients[i]), position) > 0.0) {
-				if(getDistance(getPlayerPosition(clients[i]), position) < getDistance(getPlayerPosition(clients[closest]), position)) {
-					closest = i;
-				}
+		if(getDistance(getPlayerPosition(clients[i]), position) > 0.0) {
+			if(getDistance(getPlayerPosition(clients[i]), position) < getDistance(getPlayerPosition(clients[closest]), position)) {
+				closest = i;
 			}
 		}
 	}
@@ -1965,19 +1963,6 @@ function removeColoursFromString(str) {
 	}
 
 	return [str, matchedHexes];
-}
-
-// -------------------------------------------------------------------------
-
-function getClientByName(name) {
-	let clients = getClients();
-	for(let i in clients) {
-		if(clients[i].name == name) {
-			return clients[i];
-		}
-	}
-
-	return null;
 }
 
 // -------------------------------------------------------------------------

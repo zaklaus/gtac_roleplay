@@ -200,6 +200,7 @@ const AG_ITEM_USETYPE_EXTINGUISHER = 36;        //
 const AG_ITEM_USETYPE_SPRAYPAINT = 37;          //
 const AG_ITEM_USETYPE_PEPPERSPRAY = 38;         //
 const AG_ITEM_USETYPE_FLASHLIGHT = 39;          //
+const AG_ITEM_USETYPE_AIRPLANETICKET = 40;      //
 
 // Item Drop Types
 const AG_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped
@@ -274,3 +275,4 @@ const AG_PEDSTATE_BINDED = 9;
 const AG_PEDSTATE_TAZED = 10;
 const AG_PEDSTATE_INTRUNK = 11;
 const AG_PEDSTATE_INITEM = 12;
+const AG_PEDSTATE_HANDSUP = 13;

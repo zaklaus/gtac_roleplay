@@ -66,6 +66,8 @@ let itemActionDelaySize = toVector2(100, 10);
 let drunkEffectAmount = 0;
 let drunkEffectDurationTimer = null;
 
+let controlsEnabled = false;
+
 // ---------------------------------------------------------------------------
 
 addEvent("OnLocalPlayerEnterSphere", 1);
@@ -95,6 +97,8 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
     triggerNetworkEvent("ag.clientReady");
 
     openAllGarages();
+
+
 });
 
 // ---------------------------------------------------------------------------
@@ -108,6 +112,13 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
     addNetworkHandler("ag.passenger", enterVehicleAsPassenger);
 
     triggerNetworkEvent("ag.clientStarted");
+    addEventHandler("onProcess", processEvent);
+});
+
+// ---------------------------------------------------------------------------
+
+bindEventHandler("onResourceStop", thisResource, function(event, resource) {
+    removeEventHandler("onProcess");
 });
 
 // ---------------------------------------------------------------------------
@@ -265,67 +276,39 @@ function getIslandFromPosition(position) {
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("onPedSpawn", function(event, ped) {
-     // Nasty workaround since localPlayer is null as the player spawns (reported as client bug #194)
-    setTimeout(initLocalPlayer, 500, ped);
-});
-
-// ---------------------------------------------------------------------------
-
-function attemptToShowBlipsOnSpawn(ped) {
-    if(ped == localPlayer) {
-        showIslandBlips();
-    }
-}
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.skin", function(skin) {
-    localPlayer.skin = skin;
-});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.pedSkin", function(ped, skin) {
-    ped.skin = skin;
+addNetworkHandler("ag.position", function(position) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting position to ${position.x}, ${position.y}, ${position.z}`);
+    localPlayer.position = position;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.position", function(position) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting position to ${position.x}, ${position.y}, ${position.z}`);
     localPlayer.position = position;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.heading", function(heading) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting heading to ${heading}`);
     localPlayer.heading = heading;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.interior", function(interior) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Interior set to ${interior}`);
     localPlayer.interior = interior;
     gta.cameraInterior = interior;
 });
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.dimension", function(dimension) {
-    localPlayer.dimension = dimension;
-});
-
-// ---------------------------------------------------------------------------
-
 addNetworkHandler("ag.removeFromVehicle", function() {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Removing local player from vehicle`);
     localPlayer.removeFromVehicle();
 });
-
-// ---------------------------------------------------------------------------
-
-function initLocalPlayer(player) {
-    addEventHandler("onProcess", processEvent);
-}
 
 // ---------------------------------------------------------------------------
 
@@ -333,85 +316,92 @@ function processEvent(event, deltaTime) {
     gta.clearMessages();
 
     if(localPlayer != null) {
-        localPlayer.wantedLevel = 0;
+        if(isSpawned) {
+            if(!controlsEnabled) {
+                //localPlayer.velocity = new Vec3(0.0, 0.0, 0.0);
+                localPlayer.clearObjective();
+            }
 
-        let position = localPlayer.position;
-        if(localPlayer.vehicle) {
-            position = localPlayer.vehicle.position;
-        }
+            localPlayer.wantedLevel = 0;
 
-        if(inVehicle && localPlayer.vehicle != null) {
-            if(!localPlayer.vehicle.engine) {
-                localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
-                localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
-                if(parkedVehiclePosition) {
-                    localPlayer.vehicle.position = parkedVehiclePosition;
-                    localPlayer.vehicle.heading = parkedVehicleHeading;
+            let position = localPlayer.position;
+            if(localPlayer.vehicle) {
+                position = localPlayer.vehicle.position;
+            }
+
+            if(inVehicle && localPlayer.vehicle != null) {
+                if(!localPlayer.vehicle.engine) {
+                    localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
+                    localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
+                    if(parkedVehiclePosition) {
+                        localPlayer.vehicle.position = parkedVehiclePosition;
+                        localPlayer.vehicle.heading = parkedVehicleHeading;
+                    }
+                } else {
+                    if(parkedVehiclePosition) {
+                        parkedVehiclePosition = false;
+                        parkedVehicleHeading = false;
+                    }
+                }
+            }
+
+            getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
+                if(pickup.isOwner) {
+                    destroyElement(pickup);
+                }
+            });
+
+            getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
+                if(position.distance(sphere.position) <= sphere.radius) {
+                    if(!inSphere) {
+                        inSphere = sphere;
+                        triggerEvent("OnLocalPlayerEnterSphere", null, sphere);
+                        //triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
+                    }
+                } else {
+                    if(inSphere) {
+                        inSphere = false;
+                        triggerEvent("OnLocalPlayerExitSphere", null, sphere);
+                        //triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
+                    }
+                }
+            });
+
+            if(gta.game == GAME_GTA_SA) {
+                if(jobRouteStopSphere != null) {
+                    if(position.distance(jobRouteStopSphere.position) <= 2.0) {
+                        enteredJobRouteSphere();
+                    }
+                }
+            }
+
+            if(localPlayer.vehicle) {
+                if(!inVehicle) {
+                    inVehicle = localPlayer.vehicle;
+                    inVehicleSeat = getLocalPlayerVehicleSeat();
+                    triggerEvent("OnLocalPlayerEnteredVehicle", inVehicle, inVehicleSeat);
                 }
             } else {
-                if(parkedVehiclePosition) {
-                    parkedVehiclePosition = false;
-                    parkedVehicleHeading = false;
+                if(inVehicle) {
+                    triggerEvent("OnLocalPlayerExitedVehicle", inVehicle, inVehicleSeat);
+                    inVehicle = false;
+                    inVehicleSeat = false;
                 }
             }
-        }
 
-        getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
-            if(pickup.isOwner) {
-                destroyElement(pickup);
-            }
-        });
-
-        getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
-            if(position.distance(sphere.position) <= sphere.radius) {
-                if(!inSphere) {
-                    inSphere = sphere;
-                    triggerEvent("OnLocalPlayerEnterSphere", null, sphere);
-                    //triggerNetworkEvent("ag.onPlayerEnterSphere", sphere);
+            if(forceWeapon != 0) {
+                if(localPlayer.weapon != forceWeapon) {
+                    localPlayer.weapon = forceWeapon;
+                    localPlayer.setWeaponClipAmmunition(getWeaponSlot(forceWeapon), forceWeaponClipAmmo);
+                    localPlayer.setWeaponAmmunition(getWeaponSlot(forceWeapon), forceWeaponAmmo);
+                } else {
+                    forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(forceWeapon));
+                    forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(forceWeapon));
                 }
             } else {
-                if(inSphere) {
-                    inSphere = false;
-                    triggerEvent("OnLocalPlayerExitSphere", null, sphere);
-                    //triggerNetworkEvent("ag.onPlayerExitSphere", sphere);
+                if(localPlayer.weapon > 0) {
+                    localPlayer.clearWeapons();
                 }
-            }
-        });
-
-        if(gta.game == GAME_GTA_SA) {
-            if(jobRouteStopSphere != null) {
-                if(position.distance(jobRouteStopSphere.position) <= 2.0) {
-                    enteredJobRouteSphere();
-                }
-            }
-        }
-
-        if(localPlayer.vehicle) {
-            if(!inVehicle) {
-                inVehicle = localPlayer.vehicle;
-                inVehicleSeat = getLocalPlayerVehicleSeat();
-                triggerEvent("OnLocalPlayerEnteredVehicle", inVehicle, inVehicleSeat);
-            }
-        } else {
-            if(inVehicle) {
-                triggerEvent("OnLocalPlayerExitedVehicle", inVehicle, inVehicleSeat);
-                inVehicle = false;
-                inVehicleSeat = false;
-            }
-        }
-
-        if(forceWeapon != 0) {
-            if(localPlayer.weapon != forceWeapon) {
-                localPlayer.weapon = forceWeapon;
-                localPlayer.setWeaponClipAmmunition(getWeaponSlot(forceWeapon), forceWeaponClipAmmo);
-                localPlayer.setWeaponAmmunition(getWeaponSlot(forceWeapon), forceWeaponAmmo);
-            } else {
-                forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(forceWeapon));
-                forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(forceWeapon));
-            }
-        } else {
-            if(localPlayer.weapon > 0) {
-                localPlayer.clearWeapons();
             }
         }
     }
@@ -529,36 +519,38 @@ function closeAllGarages() {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.freeze", function(state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting frozen state to ${state}`);
     gui.showCursor(state, !state);
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.control", function(controlState, cursorState = false) {
-    gui.showCursor(cursorState, controlState);
-});
-
-// ---------------------------------------------------------------------------
-
-addNetworkHandler("ag.cursortoggle", function() {
-    gui.showCursor(!gui.cursorEnabled, false);
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting control state to ${controlState} (Cursor: ${cursorState})`);
+    controlsEnabled = controlState;
+    localPlayer.invincible = true;
+    localPlayer.collisionsEnabled = controlState;
+    localPlayer.invincible = false;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.fadeCamera", function(state, time) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Fading camera ${(state)?"in":"out"} for ${time} seconds`);
     gta.fadeCamera(state, time);
 });
 
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, pedPiece) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Ped ${wastedPed.name} died`);
     wastedPed.clearWeapons();
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.showBusStop", function(position, colour) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Showing bus stop`);
     if(gta.game == GAME_GTA_SA) {
         jobRouteStopSphere = gta.createPickup(1318, position, 1);
     } else {
@@ -572,6 +564,7 @@ addNetworkHandler("ag.showBusStop", function(position, colour) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting falling snow to ${fallingSnow} and ground snow to ${groundSnow}`);
     if(!isNull(snowing)) {
         snowing = fallingSnow;
         forceSnowing(groundSnow);
@@ -581,6 +574,7 @@ addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.money", function(amount) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting local player money`);
     localPlayer.money = amount;
 });
 
@@ -601,6 +595,7 @@ addNetworkHandler("ag.excludeGroundSnow", function(model) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Local player entered sphere`);
     if(sphere == jobRouteStopSphere) {
         enteredJobRouteSphere();
     }
@@ -609,6 +604,7 @@ addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.smallGameMessage", function(text, colour, duration) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Showing small game message '${text}' for ${duration}ms`);
     if(smallGameMessageText != "") {
         clearTimeout(smallGameMessageTimer);
     }
@@ -626,6 +622,7 @@ addNetworkHandler("ag.smallGameMessage", function(text, colour, duration) {
 // ---------------------------------------------------------------------------
 
 function enteredJobRouteSphere() {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Entered job route sphere`);
     triggerNetworkEvent("ag.arrivedAtBusStop");
     destroyElement(jobRouteStopSphere);
     destroyElement(jobRouteStopBlip);
@@ -643,14 +640,15 @@ addNetworkHandler("ag.jobType", function(tempJobType) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.working", function(tempWorking) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting working state to ${tempWorking}`);
     localPlayerWorking = tempWorking;
 });
 
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.spawned", function(client, state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting spawned state to ${state}`);
     isSpawned = state;
-    syncPlayerProperties(localPlayer);
 });
 
 // ---------------------------------------------------------------------------
@@ -677,6 +675,13 @@ addNetworkHandler("ag.mouseCamera", function(state) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.mouseCursor", function(state) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} mouse cursor`);
+    gui.showCursor(state, !state);
+});
+
+// ---------------------------------------------------------------------------
+
 function clearSelfOwnedPeds() {
     logToConsole(LOG_DEBUG, `Clearing self-owned peds`);
     getElementsByType(ELEMENT_CIVILIAN).forEach(function(ped) {
@@ -689,6 +694,7 @@ function clearSelfOwnedPeds() {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Updating render states (HUD: ${hudState}, Labels: ${labelState}, Bottom Text: ${smallGameMessageState}, Scoreboard: ${scoreboardState}, HotBar: ${hotBarState}, Item Action Delay: ${itemActionDelayState})`);
     renderHUD = hudState;
     setHUDEnabled(hudState);
 
@@ -711,11 +717,16 @@ function getLocalPlayerVehicleSeat() {
 
 // ---------------------------------------------------------------------------
 
-addEventHandler("OnPedInflictDamage", function(event, damagedPed, damagerEntity, weaponId, healthLoss, pedPiece) {
-    if(damagedPed == localPlayer) {
-        if(!weaponDamageEnabled[damagerEntity.name]) {
-            event.preventDefault();
-            triggerNetworkEvent("ag.weaponDamage", damagerEntity, weaponId, pedPiece);
+addEventHandler("OnPedInflictDamage", function(event, damagedEntity, damagerEntity, weaponId, healthLoss, pedPiece) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] ${damagerEntity.name} (${damagerEntity.name}, ${damagerEntity.type} - ${typeof damagerEntity}) damaged ${damagedEntity} (${damagedEntity.name}, ${damagedEntity.type} - ${typeof damagedEntity}) at part ${pedPiece} with weapon ${weaponId}`);
+    if(!isNull(damagedEntity) && !isNull(damagerEntity)) {
+        if(damagedEntity.isType(ELEMENT_PLAYER)) {
+            if(damagedEntity == localPlayer) {
+                if(!weaponDamageEnabled[damagerEntity.name]) {
+                    event.preventDefault();
+                    triggerNetworkEvent("ag.weaponDamage", damagerEntity.name, weaponId, pedPiece, healthLoss);
+                }
+            }
         }
     }
 });
@@ -723,6 +734,7 @@ addEventHandler("OnPedInflictDamage", function(event, damagedPed, damagerEntity,
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnLocalPlayerExitedVehicle", function(event, vehicle, seat) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Local player exited vehicle`);
     triggerNetworkEvent("ag.onPlayerExitVehicle");
     if(inVehicleSeat) {
         parkedVehiclePosition = false;
@@ -733,6 +745,7 @@ addEventHandler("OnLocalPlayerExitedVehicle", function(event, vehicle, seat) {
 // ---------------------------------------------------------------------------
 
 addEventHandler("OnLocalPlayerEnteredVehicle", function(event, vehicle, seat) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Local player entered vehicle`);
     triggerNetworkEvent("ag.onPlayerEnterVehicle");
 
     if(inVehicleSeat == 0) {
@@ -752,7 +765,7 @@ addNetworkHandler("ag.showItemActionDelay", function(duration) {
     itemActionDelayDuration = duration;
     itemActionDelayStart = sdl.ticks;
     itemActionDelayEnabled = true;
-    logToConsole(LOG_DEBUG, `Item action delay event called. Duration: ${itemActionDelayDuration}, Start: ${itemActionDelayStart}, Render: ${renderItemActionDelay}`);
+    logToConsole(LOG_DEBUG, `Item action delay started. Duration: ${itemActionDelayDuration}, Start: ${itemActionDelayStart}, Rendering Enabled: ${renderItemActionDelay}`);
 });
 
 // ---------------------------------------------------------------------------
@@ -764,6 +777,7 @@ function getWeaponSlot(weaponId) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.drunkEffect", function(amount, duration) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Drunk effect set to ${amount} for ${duration}ms`);
     drunkEffectAmount = 0;
     drunkEffectDurationTimer = setInterval(function() {
         drunkEffectAmount = drunkEffectAmount;
@@ -779,7 +793,21 @@ addNetworkHandler("ag.drunkEffect", function(amount, duration) {
 // ---------------------------------------------------------------------------
 
 addNetworkHandler("ag.clearPedState", function() {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Clearing local ped state`);
     localPlayer.clearObjective();
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.pedSpeech", function(pedName, speechId) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Making ${pedName}'s ped talk (${speechId})`);
+    gta.SET_CHAR_SAY(int, int)
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.hotbar", function(activeSlot, itemsArray) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Updating hotbar`);
 });
 
 // ---------------------------------------------------------------------------

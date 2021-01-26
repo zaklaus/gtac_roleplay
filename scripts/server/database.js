@@ -132,18 +132,6 @@ function quickDatabaseQuery(queryString) {
 // -------------------------------------------------------------------------
 
 function executeDatabaseQueryCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -170,6 +158,19 @@ function executeDatabaseQueryCommand(command, params, client) {
 		messagePlayeSuccess(client, `Database query successful: [#AAAAAA]${query}`);
 	}
 	return true;
+}
+
+// -------------------------------------------------------------------------
+
+function setConstantsAsGlobalVariablesInDatabase() {
+	let dbConnection = connectToDatabase();
+	let entries = Object.entries(global);
+	for(let i in entries) {
+		logToConsole(LOG_DEBUG, `Checking entry ${i} (${entries[i]})`);
+		if(toString(i).slice(0, 3).indexOf("AG_") != -1) {
+			logToConsole(LOG_DEBUG, `Adding ${i} (${entries[i]}) to database global variables`);
+		}
+	}
 }
 
 // -------------------------------------------------------------------------

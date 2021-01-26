@@ -159,7 +159,7 @@ function setHousePickupCommand(command, params, client) {
 
 	if(getHouseData(houseId).entrancePickupModel != -1) {
 		if(getHouseData(houseId).entrancePickup != null) {
-			destroyElement(getHouseData(houseId).entrancePickup);
+			deleteGameElement(getHouseData(houseId).entrancePickup);
 		}
 
 		createHouseEntrancePickup(houseId);
@@ -243,7 +243,7 @@ function setHouseBlipCommand(command, params, client) {
 
 	if(getHouseData(houseId).entranceBlipModel != -1) {
 		if(getHouseData(houseId).entranceBlip != null) {
-			destroyElement(getHouseData(houseId).entranceBlip);
+			deleteGameElement(getHouseData(houseId).entranceBlip);
 		}
 
 		createHouseEntranceBlip(houseId);
@@ -632,7 +632,7 @@ function doesHouseHaveInterior(houseId) {
 function deleteHouseEntrancePickup(houseId) {
 	if(getHouseData(houseId).entrancePickup != null) {
 		//removeFromWorld(getHouseData(houseId).entrancePickup);
-		destroyElement(getHouseData(houseId).entrancePickup);
+		deleteGameElement(getHouseData(houseId).entrancePickup);
 		getHouseData(houseId).entrancePickup = null;
 	}
 }
@@ -642,7 +642,7 @@ function deleteHouseEntrancePickup(houseId) {
 function deleteHouseExitPickup(houseId) {
 	if(getHouseData(houseId).exitPickup != null) {
 		//removeFromWorld(getHouseData(houseId).exitPickup);
-		destroyElement(getHouseData(houseId).exitPickup);
+		deleteGameElement(getHouseData(houseId).exitPickup);
 		getHouseData(houseId).exitPickup = null;
 	}
 }
@@ -652,7 +652,7 @@ function deleteHouseExitPickup(houseId) {
 function deleteHouseEntranceBlip(houseId) {
 	if(getHouseData(houseId).entranceBlip != null) {
 		//removeFromWorld(getHouseData(houseId).entranceBlip);
-		destroyElement(getHouseData(houseId).entranceBlip);
+		deleteGameElement(getHouseData(houseId).entranceBlip);
 		getHouseData(houseId).entranceBlip = null;
 	}
 }
@@ -662,7 +662,7 @@ function deleteHouseEntranceBlip(houseId) {
 function deleteHouseExitBlip(houseId) {
 	if(getHouseData(houseId).exitBlip != null) {
 		//removeFromWorld(getHouseData(houseId).exitBlip);
-		destroyElement(getHouseData(houseId).exitBlip);
+		deleteGameElement(getHouseData(houseId).exitBlip);
 		getHouseData(houseId).exitBlip = null;
 	}
 }

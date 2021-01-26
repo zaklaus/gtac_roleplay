@@ -182,6 +182,8 @@ function useItemCommand(command, params, client) {
 	getPlayerData(client).itemActionState = AG_ITEM_ACTION_USE;
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	showPlayerItemUseDelay(client, hotBarSlot);
+
+	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ---------------------------------------------------------------------------
@@ -241,6 +243,8 @@ function pickupItemCommand(command, params, client) {
 	getPlayerData(client).itemActionState = AG_ITEM_ACTION_PICKUP;
 	getPlayerData(client).itemActionItem = itemId;
 	showPlayerItemPickupDelay(client, itemId);
+
+	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ---------------------------------------------------------------------------
@@ -282,6 +286,8 @@ function dropItemCommand(command, params, client) {
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	getPlayerData(client).itemActionState = AG_ITEM_ACTION_DROP;
 	showPlayerItemDropDelay(client, itemId);
+
+	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ---------------------------------------------------------------------------
@@ -310,6 +316,8 @@ function putItemCommand(command, params, client) {
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	getPlayerData(client).itemActionState = AG_ITEM_ACTION_PUT;
 	showPlayerItemPutDelay(client, hotBarSlot);
+
+	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ---------------------------------------------------------------------------
@@ -338,6 +346,8 @@ function takeItemCommand(command, params, client) {
 	getPlayerData(client).itemActionItem = itemId;
 	getPlayerData(client).itemActionState = AG_ITEM_ACTION_TAKE;
 	showPlayerItemTakeDelay(client, itemId);
+
+	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ---------------------------------------------------------------------------
@@ -402,7 +412,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case AG_ITEM_USETYPE_ROPE:
-			closestPlayer = getClosestPlayer(getPlayerPosition(client));
+			closestPlayer = getClosestPlayer(getPlayerPosition(client), client);
 
 			if(!getPlayerData(closestPlayer)) {
 				messagePlayerError(client, "There isn't anyone close enough to tie up!");
@@ -434,7 +444,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case AG_ITEM_USETYPE_HANDCUFF:
-			closestPlayer = getClosestPlayer(getPlayerPosition(client));
+			closestPlayer = getClosestPlayer(getPlayerPosition(client), client);
 
 			if(!getPlayerData(closestPlayer)) {
 				messagePlayerError(client, "There isn't anyone close enough to handcuff!");
@@ -699,6 +709,8 @@ function playerSwitchHotBarSlotCommand(command, params, client) {
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	getPlayerData(client).itemActionState = AG_ITEM_ACTION_SWITCH;
 	showPlayerItemSwitchDelay(client, hotBarSlot);
+
+	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ---------------------------------------------------------------------------
@@ -906,7 +918,7 @@ function listPlayerInventoryCommand(command, params, client) {
 		if(getPlayerData(client).hotBarItems[i] == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA](Empty)`);
 		} else {
-			if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useType)) {
+			if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useType) != -1) {
 				if(getPlayerData(client).hotBarItems[i] == getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem]) {
 					if(getPlayerWeaponAmmo(client) <= getItemData(getPlayerData(client).hotBarItems[i]).value) {
 						getItemData(getPlayerData(client).hotBarItems[i]).value = getPlayerWeaponAmmo(client);
@@ -1119,9 +1131,9 @@ function saveItemToDatabase(itemId) {
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
+		logToConsole(LOG_DEBUG, `[Asshat.Item]: Saved item '${tempItemData.name}' to database!`);
 		return true;
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.Item]: Saved item '${tempItemData.name}' to database!`);
 
 	return false;
 }
@@ -1309,6 +1321,20 @@ function resyncWeaponItemAmmo(client) {
 
 function getOrderPriceForItemType(itemType) {
 	return getItemTypeData(itemType).orderPrice*getServerConfig().inflationMultiplier*getItemTypeData(itemType).demandMultiplier*getItemTypeData(itemType).supplyMultiplier*getItemTypeData(itemType).riskMultiplier;
+}
+
+// ---------------------------------------------------------------------------
+
+function clearPlayerItemActionState(client) {
+	getPlayerData(client).itemActionState = AG_ITEM_ACTION_NONE;
+}
+
+// ---------------------------------------------------------------------------
+
+function clearPlayerItemActionStateAfterDelay(client, delay) {
+	setTimeout(function() {
+		clearPlayerItemActionState(client);
+	}, delay);
 }
 
 // ---------------------------------------------------------------------------

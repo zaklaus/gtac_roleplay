@@ -67,6 +67,7 @@ let globalConfig = {
 		AG_ITEM_USETYPE_SPRAYPAINT,
 		AG_ITEM_USETYPE_PEPPERSPRAY,
 	],
+	itemActionStateReset: 5000,
 };
 
 let gameConfig = {

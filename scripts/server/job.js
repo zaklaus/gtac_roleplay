@@ -611,7 +611,7 @@ function jobUniformCommand(command, params, client) {
 	setPlayerSkin(client, getJobData(jobId).uniforms[uniformId-1].skin);
 
 	//messagePlayerSuccess(client, `You have been given a [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform and you can put it on from your inventory.`);
-	meActionToNearbyPlayers(client, `${getCharacterFullName(client)} puts on ${getProperDeterminerForName(getJobData(jobId).uniforms[uniformId-1].name)} ${getJobData(jobId).uniforms[uniformId-1].name} uniform`);
+	meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(getJobData(jobId).uniforms[uniformId-1].name)} ${getJobData(jobId).uniforms[uniformId-1].name} uniform`);
 	//let itemId = createItem(getItemTypeFromParams("Outfit"), getJobData(jobId).uniforms[uniformId-1].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
 	//let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
 	//getPlayerData(client).hotBarItems[freeSlot] = itemId;
@@ -1203,7 +1203,7 @@ function canPlayerUseJob(client, jobId) {
 
 function deleteJobLocation(jobLocationData) {
 	if(jobLocationData.pickup) {
-		destroyElement(jobLocationData.pickup);
+		deleteGameElement(jobLocationData.pickup);
 	}
 }
 
@@ -1459,7 +1459,7 @@ function saveAllJobsToDatabase() {
 
 function deleteJobLocationBlip(jobId, locationId) {
 	if(getJobData(jobId).locations[locationId].blip != null) {
-		destroyElement(getJobData(jobId).locations[locationId].blip);
+		deleteGameElement(getJobData(jobId).locations[locationId].blip);
 		getJobData(jobId).locations[locationId].blip = null;
 	}
 }
@@ -1468,7 +1468,7 @@ function deleteJobLocationBlip(jobId, locationId) {
 
 function deleteJobLocationPickup(jobId, locationId) {
 	if(getServerData().jobs[jobId].locations[locationId].pickup != null) {
-		destroyElement(getJobData(jobId).locations[locationId].pickup);
+		deleteGameElement(getJobData(jobId).locations[locationId].pickup);
 		getServerData().jobs[jobId].locations[locationId].pickup = null;
 	}
 }

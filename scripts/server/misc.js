@@ -317,7 +317,7 @@ function checkPlayerSpawning() {
 				if(getPlayerData(clients[i]).loggedIn) {
 					if(!getPlayerData(clients[i]).ped) {
 						if(clients[i].player != null) {
-							getPlayerData(clients[i]).ped = clients[i].player;
+							//getPlayerData(clients[i]).ped = clients[i].player;
 							onPlayerSpawn(clients[i].player);
 						}
 					}

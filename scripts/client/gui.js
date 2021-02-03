@@ -76,6 +76,12 @@ let infoDialog = {
 	okayButton: null,
 };
 
+let listDialog = {
+	window: null,
+	messageLabel: null,
+	listGrid: null,
+};
+
 let yesNoDialog = {
 	window: null,
 	messageLabel: null,
@@ -1710,7 +1716,7 @@ app.init = function()
 // ------------------------------------------------------------------------------
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating list dialog GUI ...`);
-	listDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'List', {
+	listDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 500, 'List', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
 		},
@@ -1729,7 +1735,7 @@ app.init = function()
 		},
 	});
 
-	listDialog.messageLabel = infoDialog.window.text(15, 50, 370, 20, 'Information Message', {
+	listDialog.messageLabel = infoDialog.window.text(5, 5, 390, 20, 'Select one', {
 		main: {
 			textSize: 10.0,
 			textAlign: 0.5,
@@ -1740,7 +1746,30 @@ app.init = function()
 			borderColour: toColour(0, 0, 0, 0),
 		},
 	});
-	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created info dialog GUI`);
+
+	listDialog.listGrid = listDialog.window.grid(5, 25, 390, 450, {
+		main: {
+			backgroundColour: 	toColour(0, 0, 0, windowAlpha),
+		},
+		column: {
+			lineColour: 		toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+		},
+		header:	{
+			backgroundColour:	toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha-50),
+			textColour:			toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+		},
+		cell: {
+			backgroundColour:	toColour(0, 0, 0, windowAlpha),
+			textColour:			toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+		},
+		row: {
+			lineColour:			toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+			hover: {
+				backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 120),
+			}
+		}
+	});
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created list dialog GUI`);
 
 	// ------------------------------------------------------------------------------
 
@@ -1995,11 +2024,12 @@ let closeAllWindows = function() {
 	errorDialog.window.shown = false;
 	yesNoDialog.window.shown = false;
 	errorDialog.window.shown = false;
-	register.window.shown = false;
+	errorDialog.window.shown = false;
 	login.window.shown = false;
 	newCharacter.window.shown = false;
 	characterSelect.window.shown = false;
 	twoFactorAuth.window.shown = false;
+	listDialog.window.shown = false;
 	mexui.setInput(false);
 }
 

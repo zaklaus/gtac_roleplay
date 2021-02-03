@@ -287,12 +287,12 @@ mexui.isAnyWindowShown = function()
 mexui.setInput = function(showInput)
 {
 	gui.showCursor(showInput, !showInput);
-	//if(localPlayer)
-	//{
-	//	if(showInput)
-	//		gta.setCameraLookAtEntity(new Vec3(gta.cameraMatrix.m41, gta.cameraMatrix.m42, gta.cameraMatrix.m43), localPlayer, false);
-	//	else
-	//		gta.restoreCamera(false);
-	//}
+	if(localPlayer)
+	{
+		if(showInput)
+			gta.setCameraLookAt(new Vec3(gta.cameraMatrix.m41, gta.cameraMatrix.m42, gta.cameraMatrix.m43), localPlayer.position, false);
+		else
+			gta.restoreCamera(false);
+	}
 };
 

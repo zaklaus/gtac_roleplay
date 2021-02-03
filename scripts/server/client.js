@@ -635,3 +635,9 @@ function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, he
 }
 
 // ---------------------------------------------------------------------------
+
+function setPlayerCameraLookAt(client, cameraPosition, lookAtPosition) {
+	triggerNetworkEvent("ag.cameraLookAt", client, cameraPosition, lookAtPosition);
+}
+
+// ---------------------------------------------------------------------------

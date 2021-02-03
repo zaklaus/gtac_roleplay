@@ -603,6 +603,30 @@ function toggleServerLogoCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function toggleAntiCheatScriptWhitelist(command, params, client) {
+	getServerConfig().antiCheat.gameScriptWhiteListEnabled = !getServerConfig().antiCheat.gameScriptWhiteListEnabled;
+
+	updatePlayerShowLogoState(null, getServerConfig().antiCheat.gameScriptWhiteListEnabled);
+
+    messageAdminAction(`${client.name} turned anticheat game script whitelist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptWhiteListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptWhiteListEnabled))}`);
+    updateServerRules();
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function toggleAntiCheatScriptBlacklist(command, params, client) {
+	getServerConfig().antiCheat.gameScriptBlackListEnabled = !getServerConfig().antiCheat.gameScriptBlackListEnabled;
+
+	updatePlayerShowLogoState(null, getServerConfig().antiCheat.gameScriptBlackListEnabled);
+
+    messageAdminAction(`${client.name} turned anticheat game script blacklist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptBlackListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptBlackListEnabled))}`);
+    updateServerRules();
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
 function toggleServerGUICommand(command, params, client) {
     getServerConfig().useGUI = !getServerConfig().useGUI;
 

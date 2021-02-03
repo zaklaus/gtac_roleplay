@@ -147,8 +147,8 @@ function toInteger(val) {
 
 // ---------------------------------------------------------------------------
 
-function toFloat(val) {
-	return parseFloat(val);
+function toFloat(val, fixed = 2) {
+	return parseFloat((val).toFixed(fixed));
 }
 
 // ---------------------------------------------------------------------------

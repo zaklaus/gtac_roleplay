@@ -49,6 +49,8 @@ function initClassTable() {
 				this.antiCheat = {
 					enabled: false,
 					checkGameScripts: false,
+					gameScriptWhiteListEnabled: false,
+					gameScriptBlackListEnabled: false,
 					gameScriptWhiteList: [],
 					gameScriptBlackList: [],
 				};
@@ -83,6 +85,8 @@ function initClassTable() {
 					this.antiCheat = {
 						enabled: intToBool(dbAssoc["svr_ac_enabled"]),
 						checkGameScripts: intToBool(dbAssoc["svr_ac_check_scripts"]),
+						gameScriptBlackListEnabled: intToBool(dbAssoc["svr_ac_script_bl"]),
+						gameScriptWhiteListEnabled: intToBool(dbAssoc["svr_ac_script_wl"]),
 						gameScriptWhiteList: [],
 						gameScriptBlackList: [],
 					};
@@ -300,25 +304,25 @@ function initClassTable() {
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["sacct_id"];
-					this.server = dbAssoc["sacct_server"];
+					this.server = toInteger(dbAssoc["sacct_server"]);
 					this.firstName = dbAssoc["sacct_name_first"];
 					this.lastName = dbAssoc["sacct_name_last"];
-					this.account = dbAssoc["sacct_acct"];
-					this.skin = dbAssoc["sacct_skin"];
-					this.cash = dbAssoc["sacct_cash"];
+					this.account = toInteger(dbAssoc["sacct_acct"]);
+					this.skin = toInteger(dbAssoc["sacct_skin"]);
+					this.cash = toInteger(dbAssoc["sacct_cash"]);
 					this.placeOfOrigin = dbAssoc["sacct_origin"];
 					this.dateOfBirth = dbAssoc["sacct_when_born"];
-					this.spawnPosition = toVector3(dbAssoc["sacct_pos_x"], dbAssoc["sacct_pos_y"], dbAssoc["sacct_pos_z"]);
+					this.spawnPosition = toVector3(toFloat(dbAssoc["sacct_pos_x"]), toFloat(dbAssoc["sacct_pos_y"]), toFloat(dbAssoc["sacct_pos_z"]));
 					this.spawnHeading = toFloat(dbAssoc["sacct_angle"]);
 					this.lastLogin = toInteger(dbAssoc["sacct_when_lastlogin"]);
 					this.clan = toInteger(dbAssoc["sacct_clan"]);
 					this.clanFlags = toInteger(dbAssoc["sacct_clan_flags"]);
 					this.clanRank = toInteger(dbAssoc["sacct_clan_rank"]);
 					this.clanTitle = toInteger(dbAssoc["sacct_clan_title"]);
-					this.job = dbAssoc["sacct_job"];
-					this.interior = dbAssoc["sacct_int"];
-					this.dimension = dbAssoc["sacct_vw"];
-					this.pedScale = toVector3(dbAssoc["sacct_scale_x"], dbAssoc["sacct_scale_y"], dbAssoc["sacct_scale_z"]);
+					this.job = toInteger(dbAssoc["sacct_job"]);
+					this.interior = toInteger(dbAssoc["sacct_int"]);
+					this.dimension = toInteger(dbAssoc["sacct_vw"]);
+					this.pedScale = toVector3(toFloat(dbAssoc["sacct_scale_x"]), toFloat(dbAssoc["sacct_scale_y"]), toFloat(dbAssoc["sacct_scale_z"]));
 				}
 			}
 		},

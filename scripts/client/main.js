@@ -123,8 +123,8 @@ bindEventHandler("onResourceStop", thisResource, function(event, resource) {
 
 // ---------------------------------------------------------------------------
 
-addNetworkHandler("ag.connectCamera", function(cameraPosition, cameraLookat) {
-    gta.fadeCamera(true);
+addNetworkHandler("ag.cameraLookAt", function(cameraPosition, cameraLookat) {
+    logToConsole(LOG_DEBUG, `[Asshat.Main] Set camera to look at ${cameraPosition.x}, ${cameraPosition.y}, ${cameraPosition.z}`);
     gta.setCameraLookAt(cameraPosition, cameraLookat, true);
 });
 

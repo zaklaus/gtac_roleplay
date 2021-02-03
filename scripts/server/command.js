@@ -152,6 +152,13 @@ function loadCommands() {
             commandData("docmdall", simulateCommandForAllPlayersCommand, "<command> [params]", getStaffFlagValue("developer"), true, true),
             commandData("addloglvl", addServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
             commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
+            commandData("addacscriptwl", addAntiCheatWhiteListedScript, "<script name>", getStaffFlagValue("developer"), true, true),
+            commandData("delacscriptwl", removeAntiCheatWhiteListedScript, "<script name>", getStaffFlagValue("developer"), true, true),
+            commandData("addacscriptbl", addAntiCheatBlackListedScript, "<script name>", getStaffFlagValue("developer"), true, true),
+            commandData("delacscriptbl", removeAntiCheatBlackListedScript, "<script name>", getStaffFlagValue("developer"), true, true),
+            commandData("setacscriptbl", setAntiCheatScriptBlackListEnabled, "<0/1 state>", getStaffFlagValue("developer"), true, true),
+            commandData("setacscriptwl", setAntiCheatScriptWhiteListEnabled, "<0/1 state>", getStaffFlagValue("developer"), true, true),
+            commandData("setac", setAntiCheatEnabled, "<0/1 state>", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],
         help: [

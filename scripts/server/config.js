@@ -9,6 +9,7 @@
 // ===========================================================================
 
 let serverConfig = {};
+let databaseConfig = {};
 
 let globalConfig = {
 	accountPasswordHash: "SHA512",

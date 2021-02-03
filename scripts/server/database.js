@@ -10,21 +10,17 @@
 
 // -------------------------------------------------------------------------
 
-let databaseConfig = {
-	host: "127.0.0.1",
-	user: "gtac_main",
-	pass: "d8NEzoNIFadanisuKuzEgOSOxOjiG6",
-	name: "gtac_main",
-	port: 3306,
-	usePersistentConnection: true,
-}
-
-let persistentDatabaseConnection = null;
+let databaseConfig = {};
+let persistentDatabaseConnection = null,
 
 // -------------------------------------------------------------------------
 
 function initDatabaseScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Initializing database script ...");
+
+	let databaseConfigFile = loadTextFile("database.json");
+	databaseConfig = JSON.parse(databaseConfigFile);
+
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Database script initialized successfully!");
 }
 

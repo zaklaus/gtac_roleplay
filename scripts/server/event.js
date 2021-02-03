@@ -87,7 +87,7 @@ function onPlayerChat(event, client, messageText) {
 
 function onProcess(event, deltaTime) {
     checkVehicleBuying();
-    checkPlayerSpawning();
+    //checkPlayerSpawning();
     //checkPlayerPedState();
     //checkVehicleBurning();
 }
@@ -293,18 +293,15 @@ function onPedSpawn(ped) {
 
 // ---------------------------------------------------------------------------
 
-function onPlayerSpawn(ped) {
-    //logToConsole(LOG_DEBUG, `[Asshat.Event] Checking for ${getPlayerDisplayForConsole(client)}'s client element`);
-    if(getClientFromPlayerElement(ped) == null) {
-        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s client element not set yet. Rechecking ...`);
-        setTimeout(onPlayerSpawn, 500, ped);
+function onPlayerSpawn(client) {
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Checking for ${getPlayerDisplayForConsole(client)}'s player ped`);
+    if(client.player == null) {
+        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player element not set yet. Rechecking ...`);
+        setTimeout(onPlayerSpawn, 500, client);
         return false;
     }
 
-    let client = getClientFromPlayerElement(ped);
-
-    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s client element is valid.`);
-
+    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player ped is valid. Continuing spawn processing ...`);
 
     logToConsole(LOG_DEBUG, `[Asshat.Event] Checking ${getPlayerDisplayForConsole(client)}'s player data`);
     if(!getPlayerData(client)) {
@@ -313,16 +310,15 @@ function onPlayerSpawn(ped) {
         return false;
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player data is valid.`);
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Processing ${getPlayerDisplayForConsole(client)}'s spawn (Player Element ID: ${client.player.id})`);
+    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player data is valid. Continuing spawn processing ...`);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player skin for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).skin}`);
+    setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
+
     restorePlayerCamera(client);
-    //logToConsole(LOG_DEBUG, `Checking switchchar for ${getPlayerDisplayForConsole(client)}`);
-    //if(!isPlayerSwitchingCharacter(client)) {
-    //    return false;
-    //}
 
     logToConsole(LOG_DEBUG, `Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
-    getPlayerData(client).ped = ped;
+    getPlayerData(client).ped = client.player;
 
     logToConsole(LOG_DEBUG, `Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
     messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
@@ -332,10 +328,11 @@ function onPlayerSpawn(ped) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
     updatePlayerSpawnedState(client, true);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player interior to ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
     setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player dimension to ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
     setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
 
     logToConsole(LOG_DEBUG, `[Asshat.Event] Updating all player name tags`);

@@ -1509,13 +1509,6 @@ function getClientChatColour(client) {
 
 // ---------------------------------------------------------------------------
 
-function showConnectCameraToPlayer(client) {
-	triggerNetworkEvent("ag.connectCamera", client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
-	//triggerNetworkEvent("ag.showCharacterSelect", client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
-}
-
-// ---------------------------------------------------------------------------
-
 function initAllClients() {
 	getClients().forEach(function(client) {
 		initClient(client);
@@ -1983,3 +1976,10 @@ function checkPlayerPedStates() {
 }
 
 // -------------------------------------------------------------------------
+
+function showConnectCameraToPlayer(client) {
+	fadeCamera(client, true, 1);
+	setPlayerCameraLookAt(client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
+}
+
+// ---------------------------------------------------------------------------

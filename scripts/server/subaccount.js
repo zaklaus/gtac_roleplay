@@ -239,12 +239,19 @@ function selectCharacter(client, characterId = -1) {
 
 	let spawnPosition = getPlayerCurrentSubAccount(client).spawnPosition;
 	let spawnHeading = getPlayerCurrentSubAccount(client).spawnHeading;
-	let skin = getPlayerCurrentSubAccount(client).skin
+	let spawnInterior = getPlayerCurrentSubAccount(client).interior;
+	let spawnDimension = getPlayerCurrentSubAccount(client).dimension;
+	let skin = getPlayerCurrentSubAccount(client).skin;
 
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
-	spawnPlayer(client, spawnPosition, spawnHeading, skin);
+	//setPlayerCameraLookAt(client, getPosBehindPos(spawnPosition, spawnHeading, 5), spawnPosition);
+	spawnPlayer(client, spawnPosition, spawnHeading, skin, spawnInterior, spawnDimension);
 	//spawnPlayer(p(0), getServerConfig().newCharacter.spawnPosition, 0.0, 26);
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
+
+	setTimeout(function() {
+		onPlayerSpawn(client);
+	}, 1000);
 
 	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();
 }

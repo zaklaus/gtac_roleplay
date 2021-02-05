@@ -86,6 +86,8 @@ function syncVehicleProperties(vehicle) {
         let suspensionHeight = getEntityData(vehicle, "ag.suspensionHeight");
         vehicle.setSuspensionHeight(suspensionHeight);
     }
+
+    gta.REMOVE_UPSIDEDOWN_CAR_CHECK(gta.GET_VEHICLE_ID(vehicle));
 }
 addNetworkHandler("ag.veh.sync", function(event, vehicle) {
     syncVehicleProperties(vehicle);

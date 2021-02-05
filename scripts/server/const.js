@@ -24,7 +24,7 @@ const AG_JOB_GARBAGE = 6;
 const AG_JOB_WEAPON = 7;
 const AG_JOB_DRUG = 8;
 
-// Pickup Owner Types
+// Pickup Types
 const AG_PICKUP_NONE = 0;
 const AG_PICKUP_JOB = 1;
 const AG_PICKUP_BUSINESS_ENTRANCE = 2;
@@ -33,54 +33,48 @@ const AG_PICKUP_HOUSE_ENTRANCE = 4;
 const AG_PICKUP_HOUSE_EXIT = 5;
 const AG_PICKUP_EXIT = 5;
 
-// Sphere Types
-const AG_SPHERE_NONE = 0;
-const AG_SPHERE_JOB = 1;
-const AG_SPHERE_BUSINESS = 2;
-const AG_SPHERE_HOUSE = 3;
-
 // Vehicle Owner Types
-const AG_VEHOWNER_NONE = 0;
-const AG_VEHOWNER_PLAYER = 1;
-const AG_VEHOWNER_JOB = 2;
-const AG_VEHOWNER_CLAN = 3;
-const AG_VEHOWNER_FACTION = 4;
-const AG_VEHOWNER_PUBLIC = 5;
-const AG_VEHOWNER_BIZ = 6;
+const AG_VEHOWNER_NONE = 0;                     // Not owned
+const AG_VEHOWNER_PLAYER = 1;                   // Owned by a player (character/subaccount)
+const AG_VEHOWNER_JOB = 2;                      // Owned by a job
+const AG_VEHOWNER_CLAN = 3;                     // Owned by a clan
+const AG_VEHOWNER_FACTION = 4;                  // Owned by a faction (not used at the moment)
+const AG_VEHOWNER_PUBLIC = 5;                   // Public vehicle. Anybody can drive it.
+const AG_VEHOWNER_BIZ = 6;                      // Owned by a business (also includes dealerships since they're businesses)
 
 // Business Owner Types
-const AG_BIZOWNER_NONE = 0;
-const AG_BIZOWNER_PLAYER = 1;
-const AG_BIZOWNER_JOB = 2;
-const AG_BIZOWNER_CLAN = 3;
-const AG_BIZOWNER_FACTION = 4;
-const AG_BIZOWNER_PUBLIC = 5;
+const AG_BIZOWNER_NONE = 0;                     // Not owned
+const AG_BIZOWNER_PLAYER = 1;                   // Owned by a player (character/subaccount)
+const AG_BIZOWNER_JOB = 2;                      // Owned by a job
+const AG_BIZOWNER_CLAN = 3;                     // Owned by a clan
+const AG_BIZOWNER_FACTION = 4;                  // Owned by a faction (not used at the moment)
+const AG_BIZOWNER_PUBLIC = 5;                   // Public Business. Used for goverment/official places like police, fire, city hall, DMV, etc
 
 // House Owner Types
-const AG_HOUSEOWNER_NONE = 0;
-const AG_HOUSEOWNER_PLAYER = 1;
-const AG_HOUSEOWNER_JOB = 2;
-const AG_HOUSEOWNER_CLAN = 3;
-const AG_HOUSEOWNER_FACTION = 4;
-const AG_HOUSEOWNER_PUBLIC = 5;
+const AG_HOUSEOWNER_NONE = 0;                   // Not owned
+const AG_HOUSEOWNER_PLAYER = 1;                 // Owner is a player (character/subaccount)
+const AG_HOUSEOWNER_JOB = 2;                    // Owned by a job
+const AG_HOUSEOWNER_CLAN = 3;                   // Owned by a clan
+const AG_HOUSEOWNER_FACTION = 4;                // Owned by a faction
+const AG_HOUSEOWNER_PUBLIC = 5;                 // Is a public house. Technically not owned. This probably won't be used.
 
 // Business Location Types
-const AG_BIZLOC_NONE = 0;
-const AG_BIZLOC_FUEL = 1;
-const AG_BIZLOC_DRIVETHRU = 2;
-const AG_BIZLOC_VENDMACHINE = 3;
+const AG_BIZLOC_NONE = 0;                       // None
+const AG_BIZLOC_FUEL = 1;                       // Fuel pump
+const AG_BIZLOC_DRIVETHRU = 2;                  // Drivethrough
+const AG_BIZLOC_VENDMACHINE = 3;                // Vending machine
 
 // Account Contact Types
 const AG_CONTACT_NONE = 0;
-const AG_CONTACT_NEUTRAL = 1;
-const AG_CONTACT_FRIEND = 2;
-const AG_CONTACT_BLOCKED = 3;
+const AG_CONTACT_NEUTRAL = 1;                   // Contact is neutral. Used for general contacts with no special additional features
+const AG_CONTACT_FRIEND = 2;                    // Contact is a friend. Shows when they're online.
+const AG_CONTACT_BLOCKED = 3;                   // Contact is blocked. Prevents all communication to/from them except for RP
 
 // Job Work Types (Currently Unused)
 const AG_JOBWORKTYPE_NONE = 0;
-const AG_JOBWORKTYPE_ROUTE = 1; // Jobs that use routes. Bus, trash collector, mail, etc
-const AG_JOBWORKTYPE_SELL = 2; // Jobs that sell items to other players and NPCs. Drugs, guns, etc
-const AG_JOBWORKTYPE_SERVICE = 3; // Services to other players and NPCs. Taxi ride, mechanic fix, etc
+const AG_JOBWORKTYPE_ROUTE = 1;                 // Jobs that use routes. Bus, trash collector, mail, etc
+const AG_JOBWORKTYPE_SELL = 2;                  // Jobs that sell items to other players and NPCs. Drugs, guns, etc
+const AG_JOBWORKTYPE_SERVICE = 3;               // Services to other players and NPCs. Taxi ride, mechanic fix, etc
 
 // Vehicle Seats
 const AG_VEHSEAT_DRIVER = 0;
@@ -183,7 +177,7 @@ const AG_ITEM_USETYPE_BEER = 20;                // Subtle drunk effect. Replenis
 const AG_ITEM_USETYPE_WINE = 21;                // Moderate drunk effect. Replenishes moderate amount of health.
 const AG_ITEM_USETYPE_LIQUOR = 22;              // Heavy drunk effect. Replenishes large amount of health.
 const AG_ITEM_USETYPE_COFFEE = 23;              // Replenishes moderate amount of health.
-const AG_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine.
+const AG_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine. Not used at the moment
 const AG_ITEM_USETYPE_HANDCUFF = 24;            //
 const AG_ITEM_USETYPE_ROPE = 25;                //
 const AG_ITEM_USETYPE_BLINDFOLD = 26;           //

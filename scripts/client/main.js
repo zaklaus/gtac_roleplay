@@ -97,8 +97,6 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
     triggerNetworkEvent("ag.clientReady");
 
     openAllGarages();
-
-
 });
 
 // ---------------------------------------------------------------------------
@@ -469,12 +467,14 @@ function openAllGarages() {
         case GAME_GTA_III:
             for(let i=0;i<=26;i++) {
                 openGarage(i);
+                gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
         case GAME_GTA_VC:
             for(let i=0;i<=32;i++) {
                 openGarage(i);
+                gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
@@ -496,12 +496,14 @@ function closeAllGarages() {
         case GAME_GTA_III:
             for(let i=0;i<=26;i++) {
                 closeGarage(i);
+                gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
         case GAME_GTA_VC:
             for(let i=0;i<=32;i++) {
                 closeGarage(i);
+                gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
@@ -649,6 +651,9 @@ addNetworkHandler("ag.working", function(tempWorking) {
 addNetworkHandler("ag.spawned", function(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting spawned state to ${state}`);
     isSpawned = state;
+    if(state) {
+        gta.SET_PLAYER_NEVER_GETS_TIRED(gta.GET_PLAYER_ID(), 0);
+    }
 });
 
 // ---------------------------------------------------------------------------

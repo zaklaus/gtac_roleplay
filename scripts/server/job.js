@@ -11,8 +11,15 @@
 function initJobScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Job]: Initializing job script ...");
 	getServerData().jobs = loadJobsFromDatabase();
-	createAllJobPickups();
-	createAllJobBlips();
+
+	if(getServerConfig().createJobPickups) {
+		createAllJobPickups();
+	}
+
+	if(getServerConfig().createJobBlips) {
+		createAllJobBlips();
+	}
+
 	setAllJobDataIndexes();
 	logToConsole(LOG_DEBUG, "[Asshat.Job]: Job script initialized successfully!");
 	return true;
@@ -414,6 +421,7 @@ function startWorking(client) {
 		return false;
 	}
 
+	getPlayerCurrentSubAccount(client).skin = getPlayerSkin(client);
 	storePlayerItemsInJobLocker(client);
 	messagePlayerInfo(client, "Your personal items have been stored in your locker while you work");
 

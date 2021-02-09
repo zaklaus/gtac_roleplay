@@ -58,6 +58,13 @@ function initClassTable() {
 				this.discordBotToken = "";
 				this.discordEnabled = false;
 
+				this.createJobPickups = false;
+				this.createBusinessPickups = false;
+				this.createHousePickups = false;
+				this.createJobBlips = false;
+				this.createBusinessBlips = false;
+				this.createHouseBlips = false;
+
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["svr_id"];
 					this.name = dbAssoc["svr_name"];
@@ -74,6 +81,7 @@ function initClassTable() {
 					this.connectCameraLookAt = toVector3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
 					this.hour = toInteger(dbAssoc["svr_start_time_hour"]);
 					this.minute = toInteger(dbAssoc["svr_start_time_min"]);
+					this.minuteDuration = toInteger(dbAssoc["svr_time_min_duration"]);
 					this.weather = toInteger(dbAssoc["svr_start_weather"]);
 					this.fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
 					this.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
@@ -91,8 +99,15 @@ function initClassTable() {
 						gameScriptBlackList: [],
 					};
 
-					this.discordBotToken = "";
-					this.discordEnabled = false;
+					this.discordBotToken = intToBool(dbAssoc["svr_discord_bot_token"]);
+					this.discordEnabled = intToBool(dbAssoc["svr_discord_bot_enabled"]);
+
+					this.createJobPickups = intToBool(dbAssoc["svr_job_pickups"]);
+					this.createBusinessPickups = intToBool(dbAssoc["svr_biz_pickups"]);
+					this.createHousePickups = intToBool(dbAssoc["svr_house_pickups"]);
+					this.createJobBlips = intToBool(dbAssoc["svr_job_blips"]);
+					this.createBusinessBlips = intToBool(dbAssoc["svr_biz_blips"]);
+					this.createHouseBlips = intToBool(dbAssoc["svr_house_blips"]);
 				}
 			}
 		},
@@ -905,6 +920,11 @@ function initClassTable() {
 				this.model = model;
 				this.position = position;
 				this.range = range;
+			}
+		},
+		excludedGroundSnowModel: class {
+			constructor(model) {
+				this.model = model;
 			}
 		},
 		interiorTemplateData: class {

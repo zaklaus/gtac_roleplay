@@ -131,6 +131,27 @@ function createGroundItemCommand(command, params, client) {
 	let value = splitParams.slice(-1) || 1;
 
 	if(!getItemTypeData(itemType)) {
+		messagePlayerError(client, `Item '${itemType}' not found`);
+		return false;
+	}
+
+	//if(value <= 0) {
+	//	messagePlayerError(client, `The value must be more than 0!`);
+	//	return false;
+	//}
+
+	let itemId = createGroundItem(itemType, toInteger(value), getPlayerPosition(client), getPlayerDimension(client));
+	messagePlayerSuccess(client, `You created a ${getItemTypeData(itemType).name} on the ground at your position`);
+}
+
+// ---------------------------------------------------------------------------
+
+function createItemCommand(command, params, client) {
+	let splitParams = params.split(" ");
+	let itemType = getItemTypeFromParams(splitParams.slice(0, -1).join(" "));
+	let value = splitParams.slice(-1) || 1;
+
+	if(!getItemTypeData(itemType)) {
 		messagePlayerError(client, `Item '${params}' not found`);
 		return false;
 	}

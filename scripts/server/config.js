@@ -287,7 +287,42 @@ let gameConfig = {
 		],
 
 		[ // GTA SA
+			// Twin tunnels from Rodeo, Los Santos to/from Flint County
+			13682, // TCElawcuntunb
+			13680, // TCElawcuntunb
+			13676, // TCElawcuntun1a_law2
+			13677, // TCElawcuntun1a_law2
 
+			// Los Santos
+			6387, // century03_LAw2 (L.A. Century Plaza underground parking)
+			17633, // lae2_ground08
+			4818, // TRNTRK8_LAS
+			4884, // lastranentun1_LAS
+			4885, // lastranentun4_LAS
+
+			// Train Tunnel under Los Santos
+			6248, // RailTunn01_LAw
+			6249, // RailTunn02_LAw
+			6250, // RailTunn03_LAw
+			6251, // RailTunn04_LAw
+			6252, // RailTunn05_LAw
+			5772, // RailTunn01_LAwN (Market Station lower level)
+			5773, // TrainStat01_LAwN (Market Station upper/ground level)
+			6502, // RailTunn04_LAw2
+			6290, // RailTunn02_LAw2
+			6501, // RailTunn03_LAw2
+			6292, // RailTunn01_LAw2N
+
+			6966, // vegasNbank1 (L.V. north building underground parking, upper level)
+			7245, // vegasNbank1ug (L.V. north building underground parking, lower level)
+			7011, // courthse_vgn01 (L.V. courthouse parking structure)
+			8390, // multicarpark01_lvS (Large parking structure next to pyramid)
+
+			// Train tunnel next to Las Venturas
+			6982, // vgsNtraintunnel01
+			6983, // vgsNtraintunnel02
+			6984, // vgsNtraintunnel03
+			6981, // vgsNtraintunnel04
 		],
 
 		[ // GTA UG
@@ -410,10 +445,115 @@ let gameConfig = {
 
 		},
 	],
-
-	itemUseAnimations: [
-		
+	/*
+	animations: [
+		false,
+		{
+			itemDrop: new serverClasses.animationData(),
+			itemPickup: new serverClasses.animationData(),
+			itemUse: new serverClasses.animationData(),
+			itemThrow: new serverClasses.animationData(),
+			itemPut: new serverClasses.animationData(),
+			itemTake: new serverClasses.animationData(),
+			itemGiveTake: new serverClasses.animationData(),
+			sit: new serverClasses.animationData(),
+			stand: new serverClasses.animationData(),
+			sitToStand: new serverClasses.animationData(),
+			standToSit: new serverClasses.animationData(),
+			standIdle: new serverClasses.animationData(),
+			talk: new serverClasses.animationData(),
+			wave: new serverClasses.animationData(),
+			greet: new serverClasses.animationData(),
+			handCuff: new serverClasses.animationData(),
+			handsUp: new serverClasses.animationData(),
+		},
+		{
+			itemDrop: new serverClasses.animationData(),
+			itemPickup: new serverClasses.animationData(),
+			itemUse: new serverClasses.animationData(),
+			itemThrow: new serverClasses.animationData(),
+			itemPut: new serverClasses.animationData(),
+			itemTake: new serverClasses.animationData(),
+			itemGiveTake: new serverClasses.animationData(),
+			sit: new serverClasses.animationData(),
+			stand: new serverClasses.animationData(),
+			sitToStand: new serverClasses.animationData(),
+			standToSit: new serverClasses.animationData(),
+			standIdle: new serverClasses.animationData(),
+			talk: new serverClasses.animationData(),
+			wave: new serverClasses.animationData(),
+			greet: new serverClasses.animationData(),
+			handCuff: new serverClasses.animationData(),
+			handsUp: new serverClasses.animationData(),
+		},
+		{
+			itemDrop: new serverClasses.animationData(),
+			itemPickup: new serverClasses.animationData(),
+			itemUse: new serverClasses.animationData(),
+			itemThrow: new serverClasses.animationData(),
+			itemPut: new serverClasses.animationData(),
+			itemTake: new serverClasses.animationData(),
+			itemGiveTake: new serverClasses.animationData(),
+			sit: new serverClasses.animationData(),
+			stand: new serverClasses.animationData(),
+			sitToStand: new serverClasses.animationData(),
+			standToSit: new serverClasses.animationData(),
+			standIdle: new serverClasses.animationData(),
+			talk: new serverClasses.animationData(),
+			wave: new serverClasses.animationData(),
+			greet: new serverClasses.animationData(),
+			handCuff: new serverClasses.animationData(),
+			handsUp: new serverClasses.animationData(),
+		},
+		false,
+		{
+			itemDrop: new serverClasses.animationData(),
+			itemPickup: new serverClasses.animationData(),
+			itemUse: new serverClasses.animationData(),
+			itemThrow: new serverClasses.animationData(),
+			itemPut: new serverClasses.animationData(),
+			itemTake: new serverClasses.animationData(),
+			itemGiveTake: new serverClasses.animationData(),
+			sit: new serverClasses.animationData(),
+			stand: new serverClasses.animationData(),
+			sitToStand: new serverClasses.animationData(),
+			standToSit: new serverClasses.animationData(),
+			standIdle: new serverClasses.animationData(),
+			talk: new serverClasses.animationData(),
+			wave: new serverClasses.animationData(),
+			greet: new serverClasses.animationData(),
+			handCuff: new serverClasses.animationData(),
+			handsUp: new serverClasses.animationData(),
+		}
 	],
+	tutorial: {
+		spawnPosition: [
+			false,
+			new serverClasses.tutorialVehicleData(new Vec3(0.0, 0.0, 0.0), 0.0, 0, 0),
+			new serverClasses.tutorialVehicleData(new Vec3(0.0, 0.0, 0.0), 0.0, 0, 0),
+			new serverClasses.tutorialSpawnData(new Vec3(0.0, 0.0, 0.0), 0.0, 0, 0),
+			false,
+			new serverClasses.tutorialVehicleData(new Vec3(0.0, 0.0, 0.0), 0.0, 0, 0),
+		],
+		vehicle: [
+			false,
+			new serverClasses.tutorialVehicleData(111, new Vec3(0.0, 0.0, 0.0)),
+			new serverClasses.tutorialVehicleData(175, new Vec3(0.0, 0.0, 0.0), 0.0),
+			new serverClasses.tutorialVehicleData(445, new Vec3(0.0, 0.0, 0.0), 0.0),
+			false,
+			new serverClasses.tutorialVehicleData(0, new Vec3(0.0, 0.0, 0.0), 0.0),
+		],
+		item: [
+			false,
+			new serverClasses.tutorialItemData(new Vec3(0.0, 0.0, 0.0)),
+			new serverClasses.tutorialItemData(new Vec3(0.0, 0.0, 0.0), 0.0),
+			new serverClasses.tutorialItemData(new Vec3(0.0, 0.0, 0.0), 0.0),
+			false,
+			new serverClasses.tutorialItemData(new Vec3(0.0, 0.0, 0.0), 0.0),
+		],
+	}
+	*/
+
 };
 
 // -------------------------------------------------------------------------
@@ -546,6 +686,23 @@ function setTimeCommand(command, params, client) {
 	return true;
 }
 
+
+// -------------------------------------------------------------------------
+
+function setMinuteDurationCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let minuteDuration = toInteger(params) || 60000;
+	getServerConfig().minuteDuration = minuteDuration;
+	setTimeMinuteDuration(null, minuteDuration);
+
+	messageAdminAction(`${client.name} set the minute duration to ${minuteDuration}ms`);
+	return true;
+}
+
 // ---------------------------------------------------------------------------
 
 function setWeatherCommand(command, params, client) {
@@ -563,6 +720,7 @@ function setWeatherCommand(command, params, client) {
     }
 
     gta.forceWeather(toInteger(weatherId));
+	getServerConfig().weather = weatherId;
 
     messageAdminAction(`${client.name} set the weather to [#AAAAAA]${weatherNames[getServerGame()][toInteger(weatherId)]}`);
     updateServerRules();
@@ -578,11 +736,8 @@ function setSnowingCommand(command, params, client) {
 	}
 
 	let splitParams = params.split();
-    let fallingSnow = Number(splitParams[0]) || !getServerConfig().fallingSnow;
-	let groundSnow = Number(splitParams[1]) || !getServerConfig().groundSnow;
-
-	fallingSnow = intToBool(toInteger(fallingSnow));
-	groundSnow = intToBool(toInteger(groundSnow));
+    let fallingSnow = intToBool(toInteger(splitParams[0]) || 0) || !getServerConfig().fallingSnow;
+	let groundSnow = intToBool(toInteger(splitParams[1]) || 0) || !getServerConfig().groundSnow;
 
 	getServerConfig().fallingSnow = fallingSnow;
 	getServerConfig().groundSnow = groundSnow;

@@ -652,7 +652,38 @@ addNetworkHandler("ag.spawned", function(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting spawned state to ${state}`);
     isSpawned = state;
     if(state) {
-        gta.SET_PLAYER_NEVER_GETS_TIRED(gta.GET_PLAYER_ID(), 0);
+        if(gta.game == GTA_GAME_III || gta.game == GTA_GAME_VC) {
+            gta.SET_PLAYER_NEVER_GETS_TIRED(gta.GET_PLAYER_ID(), 0);
+            gta.setGameStat(STAT_PROGRESSMADE, 9999);
+            gta.setGameStat(STAT_TOTALPROGRESSINGAME, 9999);
+        }
+
+        if(gta.game == GTA_GAME_SA) {
+            gta.setGameStat(STAT_WEAPONTYPE_PISTOL_SKILL, 400);
+            gta.setGameStat(STAT_WEAPONTYPE_PISTOL_SILENCED_SKILL, 400);
+            gta.setGameStat(STAT_WEAPONTYPE_DESERT_EAGLE_SKILL, 400);
+            gta.setGameStat(STAT_WEAPONTYPE_SHOTGUN_SKILL, 400);
+            gta.setGameStat(STAT_WEAPONTYPE_SAWNOFF_SHOTGUN_SKILL, 1);
+            gta.setGameStat(STAT_WEAPONTYPE_SPAS12_SHOTGUN_SKILL, 400);
+            gta.setGameStat(STAT_WEAPONTYPE_MICRO_UZI_SKILL, 400);
+            gta.setGameStat(STAT_WEAPONTYPE_MP5_SKILL, 400);
+            gta.setGameStat(STAT_WEAPONTYPE_AK47_SKILL, 400);
+            gta.setGameStat(STAT_WEAPONTYPE_M4_SKILL, 400);
+            gta.setGameStat(STAT_DRIVING_SKILL, 9999);
+            gta.setGameStat(STAT_FAT, 0);
+            gta.setGameStat(STAT_ENERGY, 9999);
+            gta.setGameStat(STAT_CYCLE_SKILL, 9999);
+            gta.setGameStat(STAT_BIKE_SKILL, 9999);
+            gta.setGameStat(STAT_GAMBLING, 9999);
+            gta.setGameStat(STAT_PROGRESS_MADE, 9999);
+            gta.setGameStat(STAT_RESPECT, 0);
+            gta.setGameStat(STAT_RESPECT_TOTAL, 0);
+            gta.setGameStat(STAT_SEX_APPEAL, 0);
+            gta.setGameStat(STAT_STAMINA, 9999);
+            gta.setGameStat(STAT_TOTAL_PROGRESS, 100);
+            gta.setGameStat(STAT_UNDERWATER_STAMINA, 9999);
+            gta.setGameStat(STAT_BODY_MUSCLE, 0);
+        }
     }
 });
 

@@ -11,11 +11,9 @@
 function initServerScripts() {
 
 	checkForAllRequiredModules();
-
-	initConfigScript();
-
-	initClassScript();
 	initDatabaseScript();
+	initConfigScript();
+	initClassScript();
 	initBitFlagScript();
 	initBusinessScript();
 	initClanScript();

@@ -11,7 +11,6 @@
 
 	<!-- Server -->
 	<script src="scripts/server/class.js" type="server" language="javascript" />
-
 	<script src="scripts/server/account.js" type="server" language="javascript" />
 	<script src="scripts/server/ammunation.js" type="server" language="javascript" />
 	<script src="scripts/server/anticheat.js" type="server" language="javascript" />
@@ -44,7 +43,6 @@
 	<script src="scripts/server/translate.js" type="server" language="javascript" />
 	<script src="scripts/server/utilities.js" type="server" language="javascript" />
 	<script src="scripts/server/vehicle.js" type="server" language="javascript" />
-
 	<script src="scripts/server/config.js" type="server" language="javascript" />
 	<script src="scripts/server/core.js" type="server" language="javascript" />
 	<script src="scripts/server/command.js" type="server" language="javascript" />

@@ -11,8 +11,15 @@
 function initHouseScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.House]: Initializing house script ...");
 	getServerData().houses = loadHousesFromDatabase();
-	createAllHousePickups();
-	createAllHouseBlips();
+
+	if(getServerConfig().createHousePickups) {
+		createAllHousePickups();
+	}
+
+	if(getServerConfig().createHousePickups) {
+		createAllHouseBlips();
+	}
+
 	setAllHouseIndexes();
 	logToConsole(LOG_DEBUG, "[Asshat.House]: House script initialized successfully!");
 	return true;

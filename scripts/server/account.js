@@ -446,15 +446,15 @@ function loginSuccess(client) {
 function saveAccountToDatabase(accountData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		logToConsole(LOG_VERBOSE, `Escaping account data for ${getPlayerDisplayForConsole(client)}`);
+		//logToConsole(LOG_VERBOSE, `Escaping account data for ${getPlayerDisplayForConsole(client)}`);
 		let safePassword = escapeDatabaseString(dbConnection, accountData.password);
-		logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s password escaped successfully`);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(accountData.name)}'s password escaped successfully`);
 		let safeStaffTitle = escapeDatabaseString(dbConnection, accountData.staffTitle);
-		logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff title escaped successfully`);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff title escaped successfully`);
 		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
-		logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s email address escaped successfully`);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s email address escaped successfully`);
 		let safeIRCAccount = escapeDatabaseString(dbConnection, accountData.ircAccount);
-		logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s irc account escaped successfully`);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s irc account escaped successfully`);
 
 		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_mod_flags=${accountData.flags.moderation}, acct_discord=${accountData.discordAccount}, acct_ip=INET_ATON('${accountData.ipAddress}') WHERE acct_id=${accountData.databaseId}`;
 		logToConsole(LOG_VERBOSE, dbQueryString);
@@ -469,9 +469,9 @@ function saveAccountToDatabase(accountData) {
 function saveAccountKeyBindsDatabase(keyBindData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		logToConsole(LOG_VERBOSE, `Escaping account keybinds data for ${getPlayerDisplayForConsole(client)}`);
+		//logToConsole(LOG_VERBOSE, `Escaping account keybinds data for ${getPlayerDisplayForConsole(client)}`);
 		let safeCommandString = escapeDatabaseString(dbConnection, keyBindData.commandString);
-		logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s keybind command string escaped successfully`);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s keybind command string escaped successfully`);
 		if(keyBindData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_cmdstr, acct_hotkey_key, acct_hotkey_down, acct_hotkey_enabled) VALUES ('${safeCommandString}', ${keyBindData.key}, ${boolToInt(keyBindData.keyState)}, ${boolToInt(keyBindData.enabled)}, ${keyBindData.account}`;
 			keyBindData.databaseId = getDatabaseInsertId(dbConnection);
@@ -493,7 +493,7 @@ function saveAccountStaffNotesDatabase(staffNoteData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeNoteContent = escapeDatabaseString(dbConnection, staffNoteData.note);
-		logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff note string escaped successfully`);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff note string escaped successfully`);
 		if(staffNoteData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO acct_note (acct_note_message, acct_note_who_added, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${getServerId()}, ${staffNoteData.account}`;
 			staffNoteData.databaseId = getDatabaseInsertId(dbConnection);

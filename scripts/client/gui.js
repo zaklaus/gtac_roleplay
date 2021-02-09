@@ -2021,10 +2021,9 @@ let closeInfoDialog = function() {
 let closeAllWindows = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Closing all GUI windows`);
 	infoDialog.window.shown = false;
-	errorDialog.window.shown = false;
 	yesNoDialog.window.shown = false;
 	errorDialog.window.shown = false;
-	errorDialog.window.shown = false;
+	register.window.shown = false;
 	login.window.shown = false;
 	newCharacter.window.shown = false;
 	characterSelect.window.shown = false;

@@ -11,8 +11,15 @@
 function initBusinessScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Business]: Initializing business script ...");
 	getServerData().businesses = loadBusinessesFromDatabase();
-	createAllBusinessPickups();
-	createAllBusinessBlips();
+
+	if(getServerConfig().createBusinessPickups) {
+		createAllBusinessPickups();
+	}
+
+	if(getServerConfig().createBusinessPickups) {
+		createAllBusinessBlips();
+	}
+
 	setAllBusinessIndexes();
 	logToConsole(LOG_DEBUG, "[Asshat.Business]: Business script initialized successfully!");
 	return true;
@@ -753,7 +760,7 @@ function saveBusinessToDatabase(businessId) {
 function createAllBusinessPickups() {
 	for(let i in getServerData().businesses) {
 		createBusinessEntrancePickup(i);
-		createBusinessExitPickup(i);
+		//createBusinessExitPickup(i);
 	}
 }
 

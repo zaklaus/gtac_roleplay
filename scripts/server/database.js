@@ -10,15 +10,15 @@
 
 // -------------------------------------------------------------------------
 
-let databaseConfig = {};
-let persistentDatabaseConnection = null,
+let persistentDatabaseConnection = null;
 
 // -------------------------------------------------------------------------
 
 function initDatabaseScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Initializing database script ...");
 
-	let databaseConfigFile = loadTextFile("database.json");
+	let databaseConfigFile = loadTextFile("config/database.json");
+	logToConsole(LOG_DEBUG, databaseConfigFile);
 	databaseConfig = JSON.parse(databaseConfigFile);
 
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Database script initialized successfully!");

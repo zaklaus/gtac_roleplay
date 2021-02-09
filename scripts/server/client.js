@@ -641,3 +641,9 @@ function setPlayerCameraLookAt(client, cameraPosition, lookAtPosition) {
 }
 
 // ---------------------------------------------------------------------------
+
+function setTimeMinuteDuration(client, minuteDuration) {
+	triggerNetworkEvent("ag.minuteDuration", client, minuteDuration);
+}
+
+// ---------------------------------------------------------------------------

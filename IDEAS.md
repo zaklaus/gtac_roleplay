@@ -217,7 +217,7 @@
 	Player police officers can issue an APB for a player suspect. NPC police drive and walk around as normal in the game but if they spot the player suspect within a certain distance and line of sight, their position is sent to any player police officers via radio and shown as a blip on the radar. If the suspect evades the NPC police, the blip fades out at the last seen suspect location and eventually disappears, no longer available to player police officers. This means that the blip will continue to show other officers at the suspect's updated location until a) all police officers lose line of sight, b) suspect gets too far away or c) enters a house/business (losing line of sight with police unless they enter). All of these will cause the blip to show the suspects last known and seen location while the blip fades out and eventually disappears. Any officer that re-establishes line of sight within a certain distance will cause the suspect's blip to show again for all police. NPC police will NOT use the built-in wanted level system because this causes excessive spawning of police no matter where the suspect is generally completely unfair. Instead, scripting functions like ped.runTo, vehicle.setCarMission, vehicle.setCruiseSpeed, etc will be used to pursue the suspect. The logic in these functions is not perfect. The NPC officer can wreck the police car, get slowed down by traffic or stuck on something altogether, and the ped can be evaded by continously going around corners and such. All of this provides the ability for the suspect to have a chance of getting away. Changing skin/clothes or driving different/unknown vehicles reduces the NPC's line of sight and distance checking and thus reduces their chance of identifying them when near
 	```
 ---
-=== NPC Types
+### NPC Types
 	* Bodyguards
 	* Biker gang formation
 	* Convoy Line
@@ -234,19 +234,19 @@
 	* Tweakers
 	* Bouncers
 ---
-=== Accents
+### Accents
 	* Shown before message ... "[Japanese] John Smith says: hello"
 	* Pre-set accent choices
 	* Custom accent
 ---
-=== Speakerphone
+### Speakerphone
 	* While on a phone call, using /speakerphone or something can allow others near the person on the phone to hear and be heard over the call.
 ---
-=== Casinos
+### Casinos
 	* Will have to be custom-made and server sided
 	* Using server side will also allow casino gameplay in games where they don't exist
 ---
-* Companion app
+### Companion app
 	* Android/iOS
 	* Pebble watch (Uses phone companion app for connection)
 	* Whole thing streamlined
@@ -283,7 +283,7 @@
 			* Shutdown, restart, gmx, etc
 			* Alert (probably pre-made messages, configurable in pebble app)
 ---
-=== More GUI
+### More GUI
 	* Basic layouts
 		* List
 		* Columned List (Grid?)
@@ -294,14 +294,14 @@
 	* Chat log
 	* Lists of submitted ideas and bug reports
 ---
-=== Web API
+### Web API
 	* REST-like URLs
 	* Type shortened to database table prefix style (/acct, /veh, etc)
 	* Auth token header
 ---
-=== Newspaper GUI
+### Newspaper GUI
 ---
-=== Tutorial Stuff
+### Tutorial Stuff
     * Two sets of flags for each tutorial. One for "already finished" and "declined tutorial"
     * Tutorials will be in their own dimension (tutorial dimension start + client index)
     * Tutorials
@@ -321,4 +321,20 @@
             * Show business/house management
             * Show turf wars
             * Show point wars
+---
+### Inventory Display
+	* Player choice
+	* Minecraft-style hotbar
+	* GTA V style radial wheel
+---
+### Usable world furniture
+	* Key press to use
+	* ATMs
+	* Chairs, benches, beds, restaurant seats, etc
+	* Specific transition anims where possible, otherwise warp to locked anim (i.e. instant stand to sit)
+	* Available offsets
+---
+### Pointing
+	* Key to point sort of like FiveM has.
+	* Use a 3D primitive on the spot thats pointed to, if no anim available.
 ---

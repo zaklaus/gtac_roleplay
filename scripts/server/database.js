@@ -18,7 +18,6 @@ function initDatabaseScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Initializing database script ...");
 
 	let databaseConfigFile = loadTextFile("config/database.json");
-	logToConsole(LOG_DEBUG, databaseConfigFile);
 	databaseConfig = JSON.parse(databaseConfigFile);
 
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Database script initialized successfully!");

@@ -67,7 +67,7 @@ function addAllNetworkHandlers() {
 // ---------------------------------------------------------------------------
 
 function updatePlayerNameTag(client) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending ${getPlayerDisplayForConsole(client)}'s updated nametag to all players`);
+    //logToConsole(LOG_DEBUG, `[Asshat.Client] Sending ${getPlayerDisplayForConsole(client)}'s updated nametag to all players`);
 	triggerNetworkEvent("ag.nametag", null, client.name, getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
 }
 
@@ -84,7 +84,7 @@ function updateAllPlayerNameTags() {
 // ---------------------------------------------------------------------------
 
 function updatePlayerPing(client) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending ${getPlayerDisplayForConsole(client)}'s ping to all players`);
+    //logToConsole(LOG_DEBUG, `[Asshat.Client] Sending ${getPlayerDisplayForConsole(client)}'s ping to all players`);
 	triggerNetworkEvent("ag.ping", null, client.name, client.ping);
 }
 
@@ -187,8 +187,10 @@ function syncPlayerProperties(client) {
 // ---------------------------------------------------------------------------
 
 function updatePlayerSnowState(client) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s snow state (Falling: ${toUpperCase(getOnOffFromBool(getServerConfig().fallingSnow))}, Ground: ${toUpperCase(getOnOffFromBool(getServerConfig().groundSnow))})`);
-    triggerNetworkEvent("ag.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
+    if(doesGameHaveSnow(getServerGame())) {
+        logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s snow state (Falling: ${toUpperCase(getOnOffFromBool(getServerConfig().fallingSnow))}, Ground: ${toUpperCase(getOnOffFromBool(getServerConfig().groundSnow))})`);
+        triggerNetworkEvent("ag.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -444,14 +446,14 @@ function sendPlayerSetHeading(client, heading) {
 // ---------------------------------------------------------------------------
 
 function sendPlayerSetInterior(client, interior) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set heading signal to ${getPlayerDisplayForConsole(client)} (Interior: ${interior})`);
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set interior signal to ${getPlayerDisplayForConsole(client)} (Interior: ${interior})`);
     triggerNetworkEvent("ag.interior", client, interior);
 }
 
 // ---------------------------------------------------------------------------
 
 function sendPlayerFrozenState(client, state) {
-    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set heading signal to ${getPlayerDisplayForConsole(client)} (State: ${toUpperCase(getYesNoFromBool(state))})`);
+    logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set frozen signal to ${getPlayerDisplayForConsole(client)} (State: ${toUpperCase(getYesNoFromBool(state))})`);
     triggerNetworkEvent("ag.frozen", client, state);
 }
 

@@ -311,7 +311,9 @@ addNetworkHandler("ag.removeFromVehicle", function() {
 // ---------------------------------------------------------------------------
 
 function processEvent(event, deltaTime) {
-    gta.clearMessages();
+    if(gta.game != GAME_GTA_IV) {
+        gta.clearMessages();
+    }
 
     if(localPlayer != null) {
         if(isSpawned) {
@@ -436,7 +438,7 @@ addEventHandler("OnDrawnHUD", function (event) {
         }
     }
 
-    if(renderLabels) {
+    if(renderLabels && gta.game != GAME_GTA_IV) {
         processLabelRendering();
     }
 

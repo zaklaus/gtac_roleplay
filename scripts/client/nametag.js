@@ -36,6 +36,15 @@ addNetworkHandler("ag.nametag", function(clientName, characterName, colour, paus
 	playerColours[clientName] = colour;
 	playerPaused[clientName] = paused;
 	playerPing[clientName] = ping;
+
+	if(gta.game == GAME_GTA_IV) {
+		let client = getPlayerFromParams(clientName);
+		if(client != false) {
+			if(client.player != null) {
+				client.player.setNametag(characterName, colour);
+			}
+		}
+	}
 });
 
 // -------------------------------------------------------------------------

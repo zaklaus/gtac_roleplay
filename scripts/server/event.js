@@ -73,9 +73,11 @@ function onPlayerQuit(event, client, quitReasonId) {
 
 function onPlayerChat(event, client, messageText) {
     event.preventDefault();
-    if(!getPlayerData(client).loggedIn) {
-        messagePlayerError(client, "You need to login before you can chat!");
-        return false;
+    if(!isNull(getPlayerData(client))) {
+        if(!getPlayerData(client).loggedIn) {
+            messagePlayerError(client, "You need to login before you can chat!");
+            return false;
+        }
     }
 
     messageText = messageText.substring(0, 128);
@@ -272,12 +274,20 @@ function onPlayerDeath(client, position) {
                 let closestJail = getClosestJail(position);
                 getPlayerCurrentSubAccount(client).interior = closestJail.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
-				spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
+                if(getServerGame() == GAME_GTA_IV) {
+                    spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
+                } else {
+                    spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin, closestJail.interior, closestJail.dimension);
+                }
 			} else {
                 let closestHospital = getClosestHospital(position);
                 getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
-				spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
+                if(getServerGame() == GAME_GTA_IV) {
+                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
+                } else {
+                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin, closestHospital.interior, closestHospital.dimension);
+                }
 			}
 		}, 2000);
 	}, 1000);
@@ -312,72 +322,72 @@ function onPlayerSpawn(client) {
 
     logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player data is valid. Continuing spawn processing ...`);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player skin for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).skin}`);
-    setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
+    //logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player skin for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).skin}`);
+    //setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
 
     restorePlayerCamera(client);
 
-    logToConsole(LOG_DEBUG, `Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
-    getPlayerData(client).ped = client.player;
+    //if(getServerGame() != GAME_GTA_IV) {
+        logToConsole(LOG_DEBUG, `Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
+        getPlayerData(client).ped = client.player;
 
-    logToConsole(LOG_DEBUG, `Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
-    messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
-    messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
-    messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
+        logToConsole(LOG_DEBUG, `Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
+        messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
+        messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
+        messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
-    updatePlayerSpawnedState(client, true);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
+        updatePlayerSpawnedState(client, true);
 
+        //logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
+        //setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
-    setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
+        //logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
+        //setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
-    setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Updating all player name tags`);
+        updateAllPlayerNameTags();
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Updating all player name tags`);
-    updateAllPlayerNameTags();
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
+        updatePlayerCash(client);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
-    updatePlayerCash(client);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
+        sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
-    sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Enabling all rendering states for ${getPlayerDisplayForConsole(client)}`);
+        setPlayer2DRendering(client, true, true, true, true, true, true);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Enabling all rendering states for ${getPlayerDisplayForConsole(client)}`);
-    setPlayer2DRendering(client, true, true, true, true, true, true);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
+        updatePlayerSnowState(client);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
-    updatePlayerSnowState(client);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ground snow excluded models to ${getPlayerDisplayForConsole(client)}`);
+        sendExcludedModelsForGroundSnowToPlayer(client);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ground snow excluded models to ${getPlayerDisplayForConsole(client)}`);
-    sendExcludedModelsForGroundSnowToPlayer(client);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
+        sendRemovedWorldObjectsToPlayer(client);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
-    sendRemovedWorldObjectsToPlayer(client);
+        //setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
 
-    //setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
+        //setTimeout(function() {
+        //    syncPlayerProperties(client);
+        //}, 1000);
 
-    //setTimeout(function() {
-    //    syncPlayerProperties(client);
-    //}, 1000);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
+        if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
+            updatePlayerShowLogoState(client, true);
+        }
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
-    if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
-        updatePlayerShowLogoState(client, true);
-    }
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Caching ${getPlayerDisplayForConsole(client)}'s hotbar items`);
+        cachePlayerHotBarItems(client);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Caching ${getPlayerDisplayForConsole(client)}'s hotbar items`);
-    cachePlayerHotBarItems(client);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
+        updatePlayerHotBar(client);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
-    updatePlayerHotBar(client);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
+        getPlayerData(client).switchingCharacter = false;
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
-    getPlayerData(client).switchingCharacter = false;
-
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
-    getPlayerData(client).pedState = AG_PEDSTATE_READY;
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
+        getPlayerData(client).pedState = AG_PEDSTATE_READY;
 }
 
 // ---------------------------------------------------------------------------

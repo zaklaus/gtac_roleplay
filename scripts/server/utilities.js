@@ -759,31 +759,6 @@ function getClientFromPlayer(player) {
 
 // ---------------------------------------------------------------------------
 
-function getPlayerFromParams(params) {
-	let clients = getClients();
-	if(isNaN(params)) {
-		for(let i in clients) {
-			if(!clients[i].console) {
-				if(toLowerCase(clients[i].name).indexOf(toLowerCase(params)) != -1) {
-					return clients[i];
-				}
-
-				if(toLowerCase(getCharacterFullName(clients[i])).indexOf(toLowerCase(params)) != -1) {
-					return clients[i];
-				}
-			}
-		}
-	} else {
-		if(typeof clients[toInteger(params)] != "undefined") {
-			return clients[toInteger(params)];
-		}
-	}
-
-	return false;
-}
-
-// ---------------------------------------------------------------------------
-
 function getFirstEmptyEffectSlot(isServer = false) {
 	if(isServer) {
 		for(let i in effects) {
@@ -1983,3 +1958,7 @@ function showConnectCameraToPlayer(client) {
 }
 
 // ---------------------------------------------------------------------------
+
+function doesGameHaveSnow(gameId) {
+	return (getServerGame() != GAME_GTA_IV);
+}

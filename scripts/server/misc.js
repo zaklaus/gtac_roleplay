@@ -271,7 +271,9 @@ function enterExitPropertyCommand(command, params, client) {
 function loadGameFixesResource() {
 	switch(getServerGame()) {
 		case GAME_GTA_III:
-			findResourceByName("asshat-gta3").start();
+			if(findResourceByName("asshat-gta3") != null) {
+				findResourceByName("asshat-gta3").start();
+			}
 			break;
 
 		default:

@@ -161,7 +161,7 @@ function removePlayerFromVehicle(client) {
 // ---------------------------------------------------------------------------
 
 function setPlayerSkin(client, skin) {
-    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s skin to ${skin} (${getGameData().skinNames[getServerGame()][skin]})`);
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s skin to ${skin} (${getSkinNameFromId(skin)})`);
     client.player.modelIndex = skin;
 }
 

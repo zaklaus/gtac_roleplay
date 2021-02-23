@@ -60,11 +60,15 @@ function queryDatabase(dbConnection, queryString) {
 
 // -------------------------------------------------------------------------
 
-function escapeDatabaseString(dbConnection, unsafeString) {
+function escapeDatabaseString(dbConnection, unsafeString = "") {
 	if(!dbConnection) {
 		dbConnection = connectToDatabase();
 	}
-	return dbConnection.escapeString(unsafeString);
+
+	if(typeof unsafeString == "string") {
+		return dbConnection.escapeString(unsafeString);
+	}
+	return unsafeString;
 }
 
 // -------------------------------------------------------------------------
@@ -88,7 +92,9 @@ function getDatabaseError(dbConnection) {
 // -------------------------------------------------------------------------
 
 function freeDatabaseQuery(dbQuery) {
-	dbQuery.free();
+	if(dbQuery != null) {
+		dbQuery.free();
+	}
 	return;
 }
 

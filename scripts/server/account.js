@@ -239,7 +239,7 @@ function setAccountDiscordCommand(command, params, client) {
 		return false;
 	}
 
-	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
+	// TO-DO: Command (like /verifydiscord or use this one for second step too) to input verification code sent to email.
 	//getPlayerData(client).accountData.emailAddress = emailAddress;
 	//messagePlayerSuccess(client, "Your discord account has been attached to your game account!");
 }

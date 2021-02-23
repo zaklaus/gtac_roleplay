@@ -12,6 +12,11 @@
 
 addEventHandler("onProcess", function(event, deltaTime) {
     if(localPlayer != null && isSpawned) {
+        if(gta.game == GAME_GTA_IV) {
+            triggerNetworkEvent("ag.player.pos", localPlayer.position);
+            triggerNetworkEvent("ag.player.heading", localPlayer.heading);
+        }
+
         if(localPlayer.health <= 1) {
             localPlayer.clearWeapons();
             triggerNetworkEvent("ag.player.death", localPlayer.position);
@@ -39,28 +44,39 @@ addNetworkHandler("ag.veh.repair", function(syncId) {
 
 // ---------------------------------------------------------------------------
 
+addNetworkHandler("ag.veh.sync", function(event, vehicle) {
+    if(vehicle != null) {
+        syncVehicleProperties(vehicle);
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.civ.sync", function(event, civilian) {
+    if(civilian != null) {
+        syncCivilianProperties(civilian);
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.player.sync", function(event, player) {
+    if(player != null) {
+        syncPlayerProperties(player);
+    }
+});
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.obj.sync", function(event, object) {
+    if(object != null) {
+        syncObjectProperties(object);
+    }
+});
+
+// ---------------------------------------------------------------------------
+
 function syncVehicleProperties(vehicle) {
-    //if(doesEntityDataExist(vehicle, "ag.lights")) {
-    //    let lights = getEntityData(vehicle, "ag.lights");
-    //    if(lights != vehicle.lights) {
-    //        vehicle.lights = lights;
-    //    }
-    //}
-
-    //if(doesEntityDataExist(vehicle, "ag.engine")) {
-    //    let engine = getEntityData(vehicle, "ag.engine");
-    //    if(engine != vehicle.engine) {
-    //        vehicle.engine = engine;
-    //    }
-    //}
-
-    //if(doesEntityDataExist(vehicle, "ag.siren")) {
-    //    let siren = getEntityData(vehicle, "ag.siren");
-    //    if(siren != vehicle.siren) {
-    //        vehicle.siren = siren;
-    //    }
-    //}
-
     if(doesEntityDataExist(vehicle, "ag.panelStatus")) {
         let panelsStatus = getEntityData(vehicle, "ag.panelStatus");
         for(let i in panelsStatus) {
@@ -87,11 +103,24 @@ function syncVehicleProperties(vehicle) {
         vehicle.setSuspensionHeight(suspensionHeight);
     }
 
-    gta.REMOVE_UPSIDEDOWN_CAR_CHECK(gta.GET_VEHICLE_ID(vehicle));
+    if(doesEntityDataExist(vehicle, "ag.upgrades")) {
+        let upgrades = getEntityData(vehicle, "ag.upgrades");
+        for(let i in upgrades) {
+            vehicle.addUpgrade(upgrades[i]);
+        }
+    }
+
+    if(doesEntityDataExist(vehicle, "ag.livery")) {
+        let upgrades = getEntityData(vehicle, "ag.livery");
+        if(getServerGame() == GAME_GTA_SA) {
+            vehicle.setPaintJob(livery);
+        } else if(getServerGame() == GAME_GTA_IV) {
+            vehicle.livery = livery;
+        }
+    }
+
+    //gta.REMOVE_UPSIDEDOWN_CAR_CHECK(gta.GET_VEHICLE_ID(vehicle));
 }
-addNetworkHandler("ag.veh.sync", function(event, vehicle) {
-    syncVehicleProperties(vehicle);
-});
 
 // ---------------------------------------------------------------------------
 
@@ -105,10 +134,32 @@ function syncCivilianProperties(civilian) {
 		tempPosition.z += scaleFactor.z;
 		civilian.position = tempPosition;
     }
+
+    if(doesEntityDataExist(civilian, "ag.fightStyle")) {
+        let fightStyle = getEntityData(civilian, "ag.fightStyle");
+        civilian.fightStyle = fightStyle;
+    }
+
+    if(doesEntityDataExist(civilian, "ag.walkStyle")) {
+        let walkStyle = getEntityData(civilian, "ag.walkStyle");
+        civilian.walkStyle = walkStyle;
+    }
+
+    if(doesEntityDataExist(civilian, "ag.bodyPartHead")) {
+        let bodyPartHead = getEntityData(civilian, "ag.bodyPartHead");
+        civilian.changeBodyPart(1, bodyPartHead[0], bodyPartHead[1]);
+    }
+
+    if(doesEntityDataExist(civilian, "ag.bodyPartUpper")) {
+        let bodyPartUpper = getEntityData(civilian, "ag.bodyPartUpper");
+        civilian.changeBodyPart(1, bodyPartUpper[0], bodyPartUpper[1]);
+    }
+
+    if(doesEntityDataExist(civilian, "ag.bodyPartLower")) {
+        let bodyPartLower = getEntityData(civilian, "ag.bodyPartLower");
+        civilian.changeBodyPart(1, bodyPartLower[0], bodyPartLower[1]);
+    }
 }
-addNetworkHandler("ag.civ.sync", function(event, civilian) {
-    //syncCivilianProperties(civilian);
-});
 
 // ---------------------------------------------------------------------------
 
@@ -122,10 +173,32 @@ function syncPlayerProperties(player) {
 		tempPosition.z += scaleFactor.z;
 		player.position = tempPosition;
     }
+
+    if(doesEntityDataExist(player, "ag.fightStyle")) {
+        let fightStyle = getEntityData(player, "ag.fightStyle");
+        player.fightStyle = fightStyle;
+    }
+
+    if(doesEntityDataExist(player, "ag.walkStyle")) {
+        let walkStyle = getEntityData(player, "ag.walkStyle");
+        player.walkStyle = walkStyle;
+    }
+
+    if(doesEntityDataExist(player, "ag.bodyPartHead")) {
+        let bodyPartHead = getEntityData(player, "ag.bodyPartHead");
+        player.changeBodyPart(1, bodyPartHead[0], bodyPartHead[1]);
+    }
+
+    if(doesEntityDataExist(player, "ag.bodyPartUpper")) {
+        let bodyPartUpper = getEntityData(player, "ag.bodyPartUpper");
+        player.changeBodyPart(1, bodyPartUpper[0], bodyPartUpper[1]);
+    }
+
+    if(doesEntityDataExist(player, "ag.bodyPartLower")) {
+        let bodyPartLower = getEntityData(player, "ag.bodyPartLower");
+        player.changeBodyPart(1, bodyPartLower[0], bodyPartLower[1]);
+    }
 }
-addNetworkHandler("ag.player.sync", function(event, player) {
-    syncPlayerProperties(player);
-});
 
 // ---------------------------------------------------------------------------
 
@@ -140,8 +213,5 @@ function syncObjectProperties(object) {
 		object.position = tempPosition;
     }
 }
-addNetworkHandler("ag.obj.sync", function(event, object) {
-    //syncObjectProperties(object);
-});
 
 // ---------------------------------------------------------------------------

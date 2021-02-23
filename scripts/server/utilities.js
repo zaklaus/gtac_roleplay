@@ -1791,7 +1791,7 @@ function isPlayerSpawned(client) {
 		return false;
 	}
 
-	return (client.player != null);
+	return (client.player != null || getPlayerData(client).syncPosition != null);
 }
 
 // -------------------------------------------------------------------------

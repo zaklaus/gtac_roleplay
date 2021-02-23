@@ -19,8 +19,12 @@ function getServerGame() {
 // ---------------------------------------------------------------------------
 
 function getPlayerPosition(client) {
-    if(client.player != null) {
-        return client.player.position;
+    if(getServerGame() == GAME_GTA_IV) {
+        return getPlayerData(client).syncPosition;
+    } else {
+        if(client.player != null) {
+            return client.player.position;
+        }
     }
 }
 
@@ -34,7 +38,13 @@ function setPlayerPosition(client, position) {
 // ---------------------------------------------------------------------------
 
 function getPlayerHeading(client) {
-    return client.player.heading;
+    if(getServerGame() == GAME_GTA_IV) {
+        return getPlayerData(client).syncHeading;
+    } else {
+        if(client.player != null) {
+            return client.player.heading;
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -47,7 +57,14 @@ function setPlayerHeading(client, heading) {
 // ---------------------------------------------------------------------------
 
 function getPlayerVehicle(client) {
-    return client.player.vehicle;
+    if(getServerGame() == GAME_GTA_IV)  {
+        return getPlayerData().syncVehicle;
+    } else {
+        if(client.player.vehicle) {
+            return client.player.vehicle;
+        }
+    }
+    return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -84,13 +101,17 @@ function setPlayerInterior(client, interior) {
 // ---------------------------------------------------------------------------
 
 function isPlayerInAnyVehicle(client) {
-    return (client.player.vehicle != null);
+    if(getServerGame() == GAME_GTA_IV)  {
+        return (getPlayerData().syncVehicle != null);
+    } else {
+        return (client.player.vehicle != null);
+    }
 }
 
 // ---------------------------------------------------------------------------
 
 function getPlayerVehicleSeat(client) {
-    if(!getPlayerVehicle(client)) {
+    if(!isPlayerInAnyVehicle(client)) {
         return false;
     }
 

@@ -849,3 +849,14 @@ addNetworkHandler("ag.hotbar", function(activeSlot, itemsArray) {
 });
 
 // ---------------------------------------------------------------------------
+
+function getPedFromNetworkEvent(ped) {
+    //let peds = getPeds();
+    //for(let i in peds) {
+    //    if(peds)
+    //}
+
+    return getElementFromId(ped);
+}
+
+// ---------------------------------------------------------------------------

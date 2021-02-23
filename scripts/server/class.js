@@ -168,6 +168,9 @@ function initClassTable() {
 				this.businessOrderBusiness = -1;
 				this.businessOrderItem = -1;
 				this.businessOrderValue = -1;
+
+				this.syncPosition = null;
+				this.syncHeading = null;
 			}
 		},
 		accountData: class {
@@ -295,6 +298,7 @@ function initClassTable() {
 				this.server = 0;
 				this.firstName = "John";
 				this.lastName = "Doe";
+				this.middleName = "Q";
 				this.account = 0;
 				this.skin = 0;
 				this.cash = 0;
@@ -316,12 +320,35 @@ function initClassTable() {
 				this.interior = 0;
 				this.dimension = 0;
 				this.pedScale = toVector3(1.0, 1.0, 1.0);
+				this.walkStyle = 0;
+				this.fightStyle = 0;
+
+				this.bodyParts = {
+					hair: [0,0],
+					head: [0,0],
+					upper: [0,0],
+					lower: [0,0],
+				};
+
+				this.bodyProps = {
+					hair: [0,0],
+					eyes: [0,0],
+					head: [0,0],
+					leftHand: [0,0],
+					rightHand: [0,0],
+					leftWrist: [0,0],
+					rightWrist: [0,0],
+					hip: [0,0],
+					leftFoot: [0,0],
+					rightFoot: [0,0],
+				};
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["sacct_id"];
 					this.server = toInteger(dbAssoc["sacct_server"]);
 					this.firstName = dbAssoc["sacct_name_first"];
 					this.lastName = dbAssoc["sacct_name_last"];
+					this.middleName = dbAssoc["sacct_name_middle"];
 					this.account = toInteger(dbAssoc["sacct_acct"]);
 					this.skin = toInteger(dbAssoc["sacct_skin"]);
 					this.cash = toInteger(dbAssoc["sacct_cash"]);
@@ -338,6 +365,28 @@ function initClassTable() {
 					this.interior = toInteger(dbAssoc["sacct_int"]);
 					this.dimension = toInteger(dbAssoc["sacct_vw"]);
 					this.pedScale = toVector3(toFloat(dbAssoc["sacct_scale_x"]), toFloat(dbAssoc["sacct_scale_y"]), toFloat(dbAssoc["sacct_scale_z"]));
+					this.walkStyle = toInteger(dbAssoc["sacct_walkstyle"]);
+					this.fightStyle = toInteger(dbAssoc["sacct_fightstyle"]);
+
+					this.bodyParts = {
+						hair: [toInteger(dbAssoc["sacct_iv_part_hair_model"]), toInteger(dbAssoc["sacct_iv_part_hair_texture"])],
+						head: [toInteger(dbAssoc["sacct_iv_part_head_model"]), toInteger(dbAssoc["sacct_iv_part_head_texture"])],
+						upper: [toInteger(dbAssoc["sacct_iv_part_upper_model"]), toInteger(dbAssoc["sacct_iv_part_upper_texture"])],
+						lower: [toInteger(dbAssoc["sacct_iv_part_lower_model"]), toInteger(dbAssoc["sacct_iv_part_lower_texture"])],
+					};
+
+					this.bodyProps = {
+						hair: [toInteger(dbAssoc["sacct_iv_prop_hair_model"]), toInteger(dbAssoc["sacct_iv_prop_hair_texture"])],
+						eyes: [toInteger(dbAssoc["sacct_iv_prop_eyes_model"]), toInteger(dbAssoc["sacct_iv_prop_eyes_texture"])],
+						head: [toInteger(dbAssoc["sacct_iv_prop_head_model"]), toInteger(dbAssoc["sacct_iv_prop_head_texture"])],
+						leftHand: [toInteger(dbAssoc["sacct_iv_prop_lefthand_model"]), toInteger(dbAssoc["sacct_iv_prop_lefthand_texture"])],
+						rightHand: [toInteger(dbAssoc["sacct_iv_prop_righthand_model"]), toInteger(dbAssoc["sacct_iv_prop_righthand_texture"])],
+						leftWrist: [toInteger(dbAssoc["sacct_iv_prop_leftwrist_model"]), toInteger(dbAssoc["sacct_iv_prop_leftwrist_texture"])],
+						rightWrist: [toInteger(dbAssoc["sacct_iv_prop_rightwrist_model"]), toInteger(dbAssoc["sacct_iv_prop_rightwrist_texture"])],
+						hip: [toInteger(dbAssoc["sacct_iv_prop_hip_model"]), toInteger(dbAssoc["sacct_iv_prop_hip_texture"])],
+						leftFoot: [toInteger(dbAssoc["sacct_iv_prop_leftfoot_model"]), toInteger(dbAssoc["sacct_iv_prop_leftfoot_texture"])],
+						rightFoot: [toInteger(dbAssoc["sacct_iv_prop_rightfoot_model"]), toInteger(dbAssoc["sacct_iv_prop_rightfoot_texture"])],
+					};
 				}
 			}
 		},

@@ -62,6 +62,9 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.itemActionDelayComplete", playerItemActionDelayComplete);
 
     addNetworkHandler("ag.weaponDamage", playerDamagedByPlayer);
+
+    addNetworkHandler("ag.player.position", updatePositionInPlayerData);
+    addNetworkHandler("ag.player.heading", updateHeadingInPlayerData);
 }
 
 // ---------------------------------------------------------------------------
@@ -646,6 +649,18 @@ function setPlayerCameraLookAt(client, cameraPosition, lookAtPosition) {
 
 function setTimeMinuteDuration(client, minuteDuration) {
 	triggerNetworkEvent("ag.minuteDuration", client, minuteDuration);
+}
+
+// ---------------------------------------------------------------------------
+
+function updatePositionInPlayerData(client, position) {
+    getPlayerData(client).syncPosition = position;
+}
+
+// ---------------------------------------------------------------------------
+
+function updateHeadingInPlayerData(client, heading) {
+    getPlayerData(client).syncHeading = heading;
 }
 
 // ---------------------------------------------------------------------------

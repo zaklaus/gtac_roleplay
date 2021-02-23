@@ -85,10 +85,11 @@ function saveSubAccountToDatabase(subAccountData) {
 		let safeClanTitle = escapeDatabaseString(dbConnection, subAccountData.clanTitle);
 		let safeFirstName = escapeDatabaseString(dbConnection, subAccountData.firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, subAccountData.lastName);
-		let safeMiddleName = escapeDatabaseString(dbConnection, subAccountData.middleName);
-		let dbQueryString = `UPDATE sacct_main SET sacct_name_first='${safeFirstName}', sacct_name_last='${safeLastName}', sacct_name_middle='${safeMiddleName}', sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension}, sacct_last_login=${subAccountData.lastLogin}, sacct_clan=${subAccountData.clan}, sacct_clan_rank=${subAccountData.clanRank}, sacct_clan_tag='${safeClanTag}', sacct_clan_title='${safeClanTitle}', sacct_clan_flags=${subAccountData.clanFlags} WHERE sacct_id=${subAccountData.databaseId}`;
+		//let safeMiddleName = escapeDatabaseString(dbConnection, subAccountData.middleName);
+		let dbQueryString = `UPDATE sacct_main SET sacct_name_first='${safeFirstName}', sacct_name_last='${safeLastName}', sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension}, sacct_clan=${subAccountData.clan}, sacct_clan_rank=${subAccountData.clanRank}, sacct_clan_tag='${safeClanTag}', sacct_clan_title='${safeClanTitle}', sacct_clan_flags=${subAccountData.clanFlags}, sacct_fightstyle=${subAccountData.fightStyle}, sacct_walkstyle=${subAccountData.walkStyle} WHERE sacct_id=${subAccountData.databaseId}`;
+		logToConsole(LOG_DEBUG, dbQueryString);
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		//freeDatabaseQuery(dbQuery);
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
     }
 }
@@ -263,18 +264,30 @@ function selectCharacter(client, characterId = -1) {
 // ---------------------------------------------------------------------------
 
 function switchCharacterCommand(command, params, client) {
-	if(isPlayerSpawned(client)) {
-		getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
-		getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
-		getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
-		getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
-
-		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
-
-		resetClientStuff(client);
-
-		client.despawnPlayer();
+	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is requesting to switch characters (current character: ${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}])`);
+	if(!isPlayerSpawned(client)) {
+		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is allowed to switch characters (not spawned)`);
+		return false;
 	}
+
+	if(isPlayerSwitchingCharacter(client)) {
+		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is not allowed to switch characters (already in switch char mode)`);
+		messagePlayerError(client, "You are already selecting/switching characters!");
+		return false;
+	}
+
+	getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
+	getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
+	getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
+	getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
+
+	logToConsole(client, `Saving ${getPlayerDisplayForConsole(client)}'s subaccount (${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}] to database`)
+	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
+
+	resetClientStuff(client);
+
+	client.despawnPlayer();
+
 	showConnectCameraToPlayer(client);
 	showCharacterSelectToClient(client);
 }

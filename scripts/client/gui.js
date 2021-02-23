@@ -1826,6 +1826,18 @@ app.init = function()
 		}
 	});
 
+	//characterSelect.lastPlayedText = characterSelect.window.text(10, 90, 200, 25, 'Last Played: ', {
+	//	main: {
+	//		textSize: 9.0,
+	//		textAlign: 0.0,
+	//		textColour: toColour(255, 255, 255, 220),
+	//		textFont: robotoFont,
+	//	},
+	//	focused: {
+	//		borderColour: toColour(0, 0, 0, 0),
+	//	}
+	//});
+
 	characterSelect.selectCharacterButton = characterSelect.window.button(90, 130, 250, 25, 'SELECT', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),

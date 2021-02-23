@@ -25,6 +25,11 @@ let unlockedColour = toColour(50, 205, 50, 255);
 let lockedColour = toColour(205, 92, 92, 255);
 let jobHelpColour = toColour(234, 198, 126, 255);
 
+let renderLabelDistance = 7.5;
+
+let propertyLabelLockedOffset = 16;
+let propertyLabelNameOffset = 18;
+
 // -------------------------------------------------------------------------
 
 bindEventHandler("onResourceReady", thisResource, function(event, resource) {
@@ -54,13 +59,17 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
+    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+        return false;
+    }
+
     let text = "";
     if(price > 0) {
         text = `For sale: $${price}`;
         let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
         propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(0, 150, 0, 255), false, true, false, true);
 
-        screenPosition.y -= 18;
+        screenPosition.y -= propertyLabelLockedOffset;
     }
 
     text = (locked) ? "LOCKED" : "UNLOCKED";
@@ -71,7 +80,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
     let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
     propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, (locked) ? lockedColour : unlockedColour, false, true, false, true);
 
-    screenPosition.y -= 22;
+    screenPosition.y -= propertyLabelNameOffset;
 
     text = name || " ";
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
@@ -97,6 +106,10 @@ function renderPropertyExitLabel(position) {
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
+    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+        return false;
+    }
+
     let text = "EXIT";
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
     propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);
@@ -120,6 +133,10 @@ function renderJobLabel(name, position, jobType) {
     let tempPosition = position;
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
+
+    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+        return false;
+    }
 
     let text = "";
     if(jobType == localPlayerJobType) {
@@ -153,7 +170,7 @@ function processLabelRendering() {
         let pickups = getElementsByType(ELEMENT_PICKUP);
         for(let i in pickups) {
             if(pickups[i].getData("ag.label.type") != null) {
-                if(getDistance(localPlayer.position, pickups[i].position) <= 7.5) {
+                if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
                     let price = 0;
                     if(pickups[i].getData("ag.label.price") != null) {
                         price = pickups[i].getData("ag.label.price");

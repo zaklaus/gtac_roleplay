@@ -367,10 +367,19 @@ function onPlayerSpawn(client) {
         sendRemovedWorldObjectsToPlayer(client);
 
         //setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
+        if(getServerGame() == GAME_GTA_SA) {
+            setEntityData(client.player, "ag.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
+            setEntityData(client.player, "ag.fightStyle", getPlayerCurrentSubAccount(client).fightStyle, true);
+        }
 
-        //setTimeout(function() {
-        //    syncPlayerProperties(client);
-        //}, 1000);
+        if(getServerGame() == GAME_GTA_IV) {
+            setEntityData(client.player, "ag.bodyParts", getPlayerCurrentSubAccount(client).bodyParts, true);
+            setEntityData(client.player, "ag.bodyProps", getPlayerCurrentSubAccount(client).bodyProps, true);
+        }
+
+        setTimeout(function() {
+            syncPlayerProperties(client);
+        }, 1000);
 
         logToConsole(LOG_DEBUG, `[Asshat.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
         if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {

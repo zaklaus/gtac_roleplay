@@ -722,7 +722,7 @@ function setWeatherCommand(command, params, client) {
     gta.forceWeather(toInteger(weatherId));
 	getServerConfig().weather = weatherId;
 
-    messageAdminAction(`${client.name} set the weather to [#AAAAAA]${weatherNames[getServerGame()][toInteger(weatherId)]}`);
+    messageAdminAction(`${client.name} set the weather to [#AAAAAA]${getGameData().weatherNames[getServerGame()][toInteger(weatherId)]}`);
     updateServerRules();
 	return true;
 }

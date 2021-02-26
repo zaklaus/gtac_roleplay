@@ -307,6 +307,13 @@ function saveAllServerDataCommand(command, params, client) {
 
 // ---------------------------------------------------------------------------
 
+function testEmailCommand(command, params, client) {
+	sendEmail(params, "Player",  "Test email", "Just testing the SMTP module for the server!");
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
 function restartGameModeCommand(command, params, client) {
 	messagePlayerNormal(null, `[#FF9900]The server game mode is restarting!`, getColourByName("orange"));
 	consoleCommand("refresh");

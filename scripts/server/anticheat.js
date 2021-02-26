@@ -63,3 +63,16 @@ function loadAntiCheatGameScriptBlackListFromDatabase() {
 }
 
 // ---------------------------------------------------------------------------
+
+function clearPlayerStateToEnterExitProperty(client) {
+    if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
+		if(getPlayerData(client).pedState == AG_PEDSTATE_ENTERINGVEHICLE) {
+			sendPlayerClearPedState(client);
+			getPlayerData(client).pedState = AG_PEDSTATE_READY;
+		} else {
+			return false;
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------

@@ -1,0 +1,9 @@
+{
+    "host":"",
+    "port":"",
+    "username":"",
+    "password":"",
+    "from":"",
+    "fromName":"",
+    "useTLS":"true"
+}

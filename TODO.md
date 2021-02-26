@@ -1,6 +1,6 @@
 * Ice cream job
     * VC: -862.39, -578.35, 11.10
-
+------------------------------------------------------
 * Cut down on engine/lights/lock messages.
 * Account settings to toggle tips
 * Get coords for more bus routes.
@@ -22,4 +22,6 @@ For grand opening:
     - Place item on ground (crate)
     - Take second beer from crate
     - Store second beer in trunk
+------------------------------------------------------
+* Look into using TLS instead of SSL for SMTP email usage.
 ------------------------------------------------------

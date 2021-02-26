@@ -784,7 +784,7 @@ addEventHandler("OnLocalPlayerExitedVehicle", function(event, vehicle, seat) {
 
 addEventHandler("OnLocalPlayerEnteredVehicle", function(event, vehicle, seat) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Local player entered vehicle`);
-    triggerNetworkEvent("ag.onPlayerEnterVehicle");
+    triggerNetworkEvent("ag.onPlayerEnterVehicle", getVehicleForNetworkEvent(vehicle), seat);
 
     if(inVehicleSeat == 0) {
         if(inVehicle.owner != -1) {

@@ -19,7 +19,7 @@ function initMiscScript() {
 // ---------------------------------------------------------------------------
 
 function getPositionCommand(command, params, client) {
-	let position = client.player.position;
+	let position = getPlayerPosition(client);
 
 	messagePlayerNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
 	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
@@ -120,15 +120,6 @@ function submitBugReportCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function enterExitPropertyCommand(command, params, client) {
-	if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
-		if(getPlayerData(client).pedState == AG_PEDSTATE_ENTERINGVEHICLE) {
-			sendPlayerClearPedState(client);
-			getPlayerData(client).pedState = AG_PEDSTATE_READY;
-		} else {
-			return false;
-		}
-	}
-
 	if(isPlayerInAnyHouse(client)) {
 		let inHouse = getServerData().houses[getPlayerHouse(client)];
 		if(getDistance(inHouse.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
@@ -136,6 +127,7 @@ function enterExitPropertyCommand(command, params, client) {
 				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
 				return false;
 			}
+			clearPlayerStateToEnterExitProperty(client);
 			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
 			fadeCamera(client, false, 1.0);
@@ -167,6 +159,7 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
+			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
@@ -205,8 +198,8 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 
+			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
-
 			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
@@ -241,8 +234,8 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 
+			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
-
 			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);

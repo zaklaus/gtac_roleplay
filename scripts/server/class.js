@@ -171,6 +171,9 @@ function initClassTable() {
 
 				this.syncPosition = null;
 				this.syncHeading = null;
+
+				this.twoFactorAuthenticationState = AG_2FA_STATE_NONE;
+				this.twoFactorAuthenticationCode = 0;
 			}
 		},
 		accountData: class {

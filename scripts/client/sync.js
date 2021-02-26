@@ -13,7 +13,7 @@
 addEventHandler("onProcess", function(event, deltaTime) {
     if(localPlayer != null && isSpawned) {
         if(gta.game == GAME_GTA_IV) {
-            triggerNetworkEvent("ag.player.pos", localPlayer.position);
+            triggerNetworkEvent("ag.player.position", localPlayer.position);
             triggerNetworkEvent("ag.player.heading", localPlayer.heading);
         }
 
@@ -143,6 +143,9 @@ function syncCivilianProperties(civilian) {
     if(doesEntityDataExist(civilian, "ag.walkStyle")) {
         let walkStyle = getEntityData(civilian, "ag.walkStyle");
         civilian.walkStyle = walkStyle;
+        //if(gta.game == GAME_GTA_III || gta.game == GAME_GTA_VC) {
+        //    gta.SET_ANIM_GROUP_FOR_CHAR()
+        //}
     }
 
     if(doesEntityDataExist(civilian, "ag.bodyPartHead")) {

@@ -10,6 +10,7 @@
 
 let serverConfig = {};
 let databaseConfig = {};
+let emailConfig = {};
 
 let globalConfig = {
 	accountPasswordHash: "SHA512",

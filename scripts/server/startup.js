@@ -13,6 +13,7 @@ function initServerScripts() {
 	checkForAllRequiredModules();
 	initDatabaseScript();
 	initConfigScript();
+	initEmailScript();
 	initClassScript();
 	initBitFlagScript();
 	initBusinessScript();
@@ -62,6 +63,16 @@ function checkForMySQLModule() {
 
 // ---------------------------------------------------------------------------
 
+function checkForSMTPModule() {
+	if(typeof module.smtp == "undefined") {
+		return false;
+	}
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
 function checkForAllRequiredModules() {
 	logToConsole(LOG_DEBUG, "[Asshat.Startup]: Checking for required modules ...");
 
@@ -73,6 +84,12 @@ function checkForAllRequiredModules() {
 
 	if(!checkForMySQLModule()) {
 		console.warn("[Asshat.Startup]: MySQL module is not loaded!");
+		console.warn("[Asshat.Startup]: This resource will now shutdown.");
+		thisResource.stop();
+	}
+
+	if(!checkForSMTPModule()) {
+		console.warn("[Asshat.Startup]: SMTP Email module is not loaded!");
 		console.warn("[Asshat.Startup]: This resource will now shutdown.");
 		thisResource.stop();
 	}

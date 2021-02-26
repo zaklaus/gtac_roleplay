@@ -76,7 +76,7 @@ mexui.bindEvents = function()
 		}
 	});
 
-	addEventHandler('onBeforeDrawHUD', function(event)
+	addEventHandler('onDrawnHUD', function(event)
 	{
 		mexui.render();
 	});
@@ -90,7 +90,7 @@ mexui.unbindEvents = function()
 	removeEventHandler('onMouseWheel');
 	removeEventHandler('onKeyDown');
 	removeEventHandler('onCharacter');
-	removeEventHandler('onBeforeDrawHUD');
+	removeEventHandler('onDrawnHUD');
 };
 
 // timers

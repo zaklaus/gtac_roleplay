@@ -262,3 +262,15 @@ function givePlayerArmour(client, amount) {
 }
 
 // ---------------------------------------------------------------------------
+
+function sendToClient(client, eventName, ...args) {
+    triggerNetworkEvent.call(client, eventName, args);
+}
+
+// ---------------------------------------------------------------------------
+
+function receiveFromClient(eventName, handlerFunction) {
+    addNetworkHandler(eventName, handlerFunction);
+}
+
+// ---------------------------------------------------------------------------

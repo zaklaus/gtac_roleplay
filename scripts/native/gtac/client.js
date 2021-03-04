@@ -27,9 +27,3 @@ function receiveFromServer(eventName, handlerFunction) {
 }
 
 // ---------------------------------------------------------------------------
-
-function listenFromServer(eventName, handlerFunction) {
-    addNetworkHandler(eventName, handlerFunction);
-}
-
-// ---------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 // -------------------------------------------------------------------------
 
 let randomTips = [
-    `[#FFFFFF]Press [#0066FF]E [#FFFFFF]near a taxi if you need a ride.`,
+    `[#FFFFFF]Hold [#0066FF]E [#FFFFFF]to hail a nearby taxi if you need a ride.`,
     `[#FFFFFF]Press [#0066FF]G [#FFFFFF]to enter a vehicle as passenger.`,
     `[#FFFFFF]Banks can provide loans. Use [#AAAAAA]/help loans [#FFFFFF] for more details.`,
     `[#FFFFFF]Want to make a clan? Use [#AAAAAA]/help clans [#FFFFFF] for details.`,
@@ -24,6 +24,9 @@ let randomTips = [
     `[#FFFFFF]You can find most locations by using [#AAAAAA]/gps`,
     `[#FFFFFF]Use /notips if you don't want to see tips and extra information`,
     `[#FFFFFF]Want to advertise your business? Visit the news station and place an /ad today!`,
+    `[#FFFFFF]You can edit your keybinds using [#AAAAAA]/keybind`,
+    `[#FFFFFF]You can change your quick item display. Choices are GTAV-style pie menu or Minecraft-style hotbar`,
+    `[#FFFFFF]Press I to see your inventory, and use number keys to select an item`,
 ];
 
 // -------------------------------------------------------------------------

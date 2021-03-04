@@ -34,6 +34,7 @@ let serverBitFlagKeys = {
 		"manageJobs",
 		"manageItems",
 		"manageWorld",
+		"manageAntiCheat",
 		"developer",
 	],
 	moderationFlagKeys: [
@@ -44,13 +45,22 @@ let serverBitFlagKeys = {
 		"gunBanned",
 		"jobBanned",
 		"ammuBanned",
+		"noSkinCustomization",
+		"desyncWeapons",
+		"hackerWorld",
+		"adminJailed",
+		"exemptFromAntiCheat",
+		"exemptFromBans",
+		"forceTutorial",
+		"characterNameNeedsStaffApproval",
 	],
 	factionFlagKeys: [
 		"none",
 		"police",
 		"medical",
 		"fire",
-		"government"
+		"government",
+		"generic",
 	],
 	clanFlagKeys: [
 		"none",
@@ -83,6 +93,7 @@ let serverBitFlagKeys = {
 		"manageVehicles",
 		"manageHouses",
 		"manageBusinesses",
+		"manageNPCs",
 		"owner",
 	],
 	accountSettingsFlagKeys: [
@@ -95,6 +106,12 @@ let serverBitFlagKeys = {
 		"autoLoginIP",
 		"noServerLogo",
 		"autoSelectLastCharacter",
+		"showRealTimeClock",
+		"useGUIForItems",
+		"useRadialWheelItems", // If this is disabled, use MMORPG-style hotbar IF useGUIForItems is enabled
+		"disableKeyBinds",
+		"showTimedRandomTips",
+		"showActionTips",
 	],
 	subAccountSettingsFlagKeys: [],
 }

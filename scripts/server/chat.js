@@ -128,7 +128,7 @@ function phoneIncomingToNearbyPlayers(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function whisperToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().talkDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
 			messagePlayerWhisper(clients[i], client, messageText);
@@ -139,7 +139,7 @@ function whisperToNearbyPlayers(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function shoutToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().shoutDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().shoutDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
 			messagePlayerShout(clients[i], client, messageText);
@@ -150,7 +150,7 @@ function shoutToNearbyPlayers(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function doActionToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().doActionDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().doActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
 			messagePlayerDoAction(clients[i], client, messageText);
@@ -161,7 +161,7 @@ function doActionToNearbyPlayers(client, messageText) {
 // ---------------------------------------------------------------------------
 
 function meActionToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().meActionDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().meActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
 			messagePlayerMeAction(clients[i], client, messageText);

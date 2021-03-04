@@ -25,3 +25,5 @@ For grand opening:
 ------------------------------------------------------
 * Look into using TLS instead of SSL for SMTP email usage.
 ------------------------------------------------------
+* Add display for player's actual time (like Steam overlay has)
+------------------------------------------------------

@@ -911,7 +911,7 @@ function initClassTable() {
 			}
 		},
 		keyBindData: class {
-			constructor(dbAssoc = false, key = 0, commandString = "") {
+			constructor(dbAssoc = false, key = 0, commandString = "", keyState = AG_KEYSTATE_UP) {
 				this.databaseId = 0;
 				this.key = key;
 				this.account = 0;

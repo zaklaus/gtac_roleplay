@@ -27,3 +27,5 @@ For grand opening:
 ------------------------------------------------------
 * Add display for player's actual time (like Steam overlay has)
 ------------------------------------------------------
+* Change structure of item types to include only **one** set of items
+    * Use a new table for game-specific data (model, obj pos/rot/scale, etc)

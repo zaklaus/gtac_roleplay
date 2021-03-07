@@ -11,8 +11,7 @@
 function initEmailScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Email]: Initializing email script ...");
 
-	let emailConfigFile = loadTextFile("config/email.json");
-	emailConfig = JSON.parse(emailConfigFile);
+    emailConfig = loadEmailConfiguration();
 
 	logToConsole(LOG_DEBUG, "[Asshat.Email]: Email script initialized successfully!");
 }
@@ -32,6 +31,13 @@ function sendEmail(toEmail, toName, subject, body) {
         body,
         emailConfig.from,
         emailConfig.fromName);
+}
+
+// -------------------------------------------------------------------------
+
+function loadEmailConfiguration() {
+    let emailConfigFile = loadTextFile("config/email.json");
+	return JSON.parse(emailConfigFile);
 }
 
 // -------------------------------------------------------------------------

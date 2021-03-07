@@ -21,6 +21,7 @@ function initBusinessScript() {
 	}
 
 	setAllBusinessIndexes();
+	cacheAllBusinessItems();
 	logToConsole(LOG_DEBUG, "[Asshat.Business]: Business script initialized successfully!");
 	return true;
 }
@@ -519,7 +520,35 @@ function withdrawFromBusinessCommand(command, params, client) {
 	getBusinessData(businessId).till -= amount;
 	getPlayerCurrentSubAccount(client).cash += amount;
 	updatePlayerCash(client);
-	messagePlayerSuccess(client, `You withdrew $${amount} from business [#0099FF]${getBusinessData(businessId).name} till'`);
+	messagePlayerSuccess(client, `You withdrew $${amount} from business [#0099FF]${getBusinessData(businessId).name} till`);
+}
+
+// ---------------------------------------------------------------------------
+
+function setBusinessBuyPriceCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+
+	let amount = toInteger(splitParams[0]) || 0;
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(amount < 0) {
+		messagePlayerError(client, `The amount can't be less than 0!`);
+		return false;
+	}
+
+	getBusinessData(businessId).buyPrice = amount;
+	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.price", getBusinessData(businessId).buyPrice, true);
+	messagePlayerSuccess(client, `[#FFFFFF]You set the [#0099FF]${getBusinessData(businessId).name} business's for-sale price to [#AAAAAA]$${amount}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -740,11 +769,77 @@ function saveBusinessToDatabase(businessId) {
 	if(dbConnection) {
 		let safeBusinessName = escapeDatabaseString(dbConnection, tempBusinessData.name);
 		if(tempBusinessData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO biz_main (biz_server, biz_name, biz_owner_type, biz_owner_id, biz_locked, biz_entrance_fee, biz_till, biz_entrance_pos_x, biz_entrance_pos_y, biz_entrance_pos_z, biz_entrance_rot_z, biz_entrance_int, biz_entrance_vw, biz_exit_pos_x, biz_exit_pos_y, biz_exit_pos_z, biz_exit_rot_z, biz_exit_int, biz_exit_vw, biz_has_interior) VALUES (${getServerId()}, '${safeBusinessName}', ${tempBusinessData.ownerType}, ${tempBusinessData.ownerId}, ${boolToInt(tempBusinessData.locked)}, ${tempBusinessData.entranceFee}, ${tempBusinessData.till}, ${tempBusinessData.entrancePosition.x}, ${tempBusinessData.entrancePosition.y}, ${tempBusinessData.entrancePosition.z}, ${tempBusinessData.entranceRotation}, ${tempBusinessData.entranceInterior}, ${tempBusinessData.entranceDimension}, ${tempBusinessData.exitPosition.x}, ${tempBusinessData.exitPosition.y}, ${tempBusinessData.exitPosition.z}, ${tempBusinessData.exitRotation}, ${tempBusinessData.exitInterior}, ${tempBusinessData.databaseId+getGlobalConfig().businessDimensionStart}, ${boolToInt(tempBusinessData.hasInterior)})`;
+			let dbQueryString = `INSERT INTO biz_main (
+					biz_server,
+					biz_name,
+					biz_owner_type,
+					biz_owner_id,
+					biz_locked,
+					biz_entrance_fee,
+					biz_till,
+					biz_entrance_pos_x,
+					biz_entrance_pos_y,
+					biz_entrance_pos_z,
+					biz_entrance_rot_z,
+					biz_entrance_int,
+					biz_entrance_vw,
+					biz_exit_pos_x,
+					biz_exit_pos_y,
+					biz_exit_pos_z,
+					biz_exit_rot_z,
+					biz_exit_int,
+					biz_exit_vw,
+					biz_has_interior
+				) VALUES (
+					${getServerId()},
+					'${safeBusinessName}',
+					${tempBusinessData.ownerType},
+					${tempBusinessData.ownerId},
+					${boolToInt(tempBusinessData.locked)},
+					${tempBusinessData.entranceFee},
+					${tempBusinessData.till},
+					${tempBusinessData.entrancePosition.x},
+					${tempBusinessData.entrancePosition.y},
+					${tempBusinessData.entrancePosition.z},
+					${tempBusinessData.entranceRotation},
+					${tempBusinessData.entranceInterior},
+					${tempBusinessData.entranceDimension},
+					${tempBusinessData.exitPosition.x},
+					${tempBusinessData.exitPosition.y},
+					${tempBusinessData.exitPosition.z},
+					${tempBusinessData.exitRotation},
+					${tempBusinessData.exitInterior},
+					${tempBusinessData.databaseId+getGlobalConfig().businessDimensionStart},
+					${boolToInt(tempBusinessData.hasInterior)}
+				)`;
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().businesses[businessId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE biz_main SET biz_name='${safeBusinessName}', biz_owner_type=${tempBusinessData.ownerType}, biz_owner_id=${tempBusinessData.ownerId}, biz_locked=${boolToInt(tempBusinessData.locked)}, biz_entrance_fee=${tempBusinessData.entranceFee}, biz_till=${tempBusinessData.till}, biz_entrance_pos_x=${tempBusinessData.entrancePosition.x}, biz_entrance_pos_y=${tempBusinessData.entrancePosition.y}, biz_entrance_pos_z=${tempBusinessData.entrancePosition.z}, biz_entrance_rot_z=${tempBusinessData.entranceRotation}, biz_entrance_int=${tempBusinessData.entranceInterior}, biz_entrance_vw=${tempBusinessData.entranceDimension}, biz_exit_pos_x=${tempBusinessData.exitPosition.x}, biz_exit_pos_y=${tempBusinessData.exitPosition.y}, biz_exit_pos_z=${tempBusinessData.exitPosition.z}, biz_exit_rot_z=${tempBusinessData.exitRotation}, biz_exit_int=${tempBusinessData.exitInterior}, biz_exit_vw=${tempBusinessData.exitDimension}, biz_has_interior=${boolToInt(tempBusinessData.hasInterior)} WHERE biz_id=${tempBusinessData.databaseId}`;
+
+			let dbQueryString =
+				`UPDATE biz_main SET
+					biz_name='${safeBusinessName}',
+					biz_owner_type=${tempBusinessData.ownerType},
+					biz_owner_id=${tempBusinessData.ownerId},
+					biz_locked=${boolToInt(tempBusinessData.locked)},
+					biz_entrance_fee=${tempBusinessData.entranceFee},
+					biz_till=${tempBusinessData.till},
+					biz_entrance_pos_x=${tempBusinessData.entrancePosition.x},
+					biz_entrance_pos_y=${tempBusinessData.entrancePosition.y},
+					biz_entrance_pos_z=${tempBusinessData.entrancePosition.z},
+					biz_entrance_rot_z=${tempBusinessData.entranceRotation},
+					biz_entrance_int=${tempBusinessData.entranceInterior},
+					biz_entrance_vw=${tempBusinessData.entranceDimension},
+					biz_exit_pos_x=${tempBusinessData.exitPosition.x},
+					biz_exit_pos_y=${tempBusinessData.exitPosition.y},
+					biz_exit_pos_z=${tempBusinessData.exitPosition.z},
+					biz_exit_rot_z=${tempBusinessData.exitRotation},
+					biz_exit_int=${tempBusinessData.exitInterior},
+					biz_exit_vw=${tempBusinessData.exitDimension},
+					biz_has_interior=${boolToInt(tempBusinessData.hasInterior)}
+					biz_buy_price=${tempBusinessData.buyPrice}
+				WHERE biz_id=${tempBusinessData.databaseId}`;
+
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -1229,6 +1324,20 @@ function getBusinessFloorFirstFreeItemSlot(businessId) {
 	}
 
 	return -1;
+}
+
+// ---------------------------------------------------------------------------
+
+function cacheAllBusinessItems() {
+	for(let i in getServerData().businesses) {
+		for(let j in getServerData().items) {
+			if(getItemData(j).ownerType == AG_ITEM_OWNER_BIZFLOOR && getItemData(j).ownerId == getBusinessData(j).databaseId) {
+				getBusinessData(j).floorItemCache.push(j);
+			} else if(getItemData(j).ownerType == AG_ITEM_OWNER_BIZSTORAGE && getItemData(j).ownerId == getBusinessData(j).databaseId) {
+				getBusinessData(j).storageItemCache.push(j);
+			}
+		}
+	}
 }
 
 // ---------------------------------------------------------------------------

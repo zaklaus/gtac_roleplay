@@ -433,7 +433,30 @@ function saveHouseToDatabase(houseId) {
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().houses[houseId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE house_main SET house_description='${safeHouseDescription}', house_owner_type=${tempHouseData.ownerType}, house_owner_id=${tempHouseData.ownerId}, house_locked=${boolToInt(tempHouseData.locked)}, house_entrance_pos_x=${tempHouseData.entrancePosition.x}, house_entrance_pos_y=${tempHouseData.entrancePosition.y}, house_entrance_pos_z=${tempHouseData.entrancePosition.z}, house_entrance_rot_z=${tempHouseData.entranceRotation}, house_entrance_int=${tempHouseData.entranceInterior}, house_entrance_vw=${tempHouseData.entranceDimension}, house_exit_pos_x=${tempHouseData.exitPosition.x}, house_exit_pos_y=${tempHouseData.exitPosition.y}, house_exit_pos_z=${tempHouseData.exitPosition.z}, house_exit_rot_z=${tempHouseData.exitRotation}, house_exit_int=${tempHouseData.exitInterior}, house_exit_vw=${tempHouseData.exitDimension}, house_has_interior=${boolToInt(tempHouseData.hasInterior)} WHERE house_id=${tempHouseData.databaseId}`;
+
+			let dbQueryString =
+				`UPDATE house_main SET
+					house_description='${safeHouseDescription}',
+					house_owner_type=${tempHouseData.ownerType},
+					house_owner_id=${tempHouseData.ownerId},
+					house_locked=${boolToInt(tempHouseData.locked)},
+					house_entrance_pos_x=${tempHouseData.entrancePosition.x},
+					house_entrance_pos_y=${tempHouseData.entrancePosition.y},
+					house_entrance_pos_z=${tempHouseData.entrancePosition.z},
+					house_entrance_rot_z=${tempHouseData.entranceRotation},
+					house_entrance_int=${tempHouseData.entranceInterior},
+					house_entrance_vw=${tempHouseData.entranceDimension},
+					house_exit_pos_x=${tempHouseData.exitPosition.x},
+					house_exit_pos_y=${tempHouseData.exitPosition.y},
+					house_exit_pos_z=${tempHouseData.exitPosition.z},
+					house_exit_rot_z=${tempHouseData.exitRotation},
+					house_exit_int=${tempHouseData.exitInterior},
+					house_exit_vw=${tempHouseData.exitDimension},
+					house_buy_price=${tempHouseData.buyPrice},
+					house_rent_price=${tempHouseData.rentPrice},
+					house_has_interior=${boolToInt(tempHouseData.hasInterior)}
+				WHERE house_id=${tempHouseData.databaseId}`;
+
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);

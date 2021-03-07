@@ -85,8 +85,65 @@ function saveSubAccountToDatabase(subAccountData) {
 		let safeClanTitle = escapeDatabaseString(dbConnection, subAccountData.clanTitle);
 		let safeFirstName = escapeDatabaseString(dbConnection, subAccountData.firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, subAccountData.lastName);
-		//let safeMiddleName = escapeDatabaseString(dbConnection, subAccountData.middleName);
-		let dbQueryString = `UPDATE sacct_main SET sacct_name_first='${safeFirstName}', sacct_name_last='${safeLastName}', sacct_pos_x=${subAccountData.spawnPosition.x}, sacct_pos_y=${subAccountData.spawnPosition.y}, sacct_pos_z=${subAccountData.spawnPosition.z}, sacct_angle=${subAccountData.spawnHeading}, sacct_skin=${subAccountData.skin}, sacct_cash=${subAccountData.cash}, sacct_job=${subAccountData.job}, sacct_int=${subAccountData.interior}, sacct_vw=${subAccountData.dimension}, sacct_clan=${subAccountData.clan}, sacct_clan_rank=${subAccountData.clanRank}, sacct_clan_tag='${safeClanTag}', sacct_clan_title='${safeClanTitle}', sacct_clan_flags=${subAccountData.clanFlags}, sacct_fightstyle=${subAccountData.fightStyle}, sacct_walkstyle=${subAccountData.walkStyle} WHERE sacct_id=${subAccountData.databaseId}`;
+		let safeMiddleName = escapeDatabaseString(dbConnection, subAccountData.middleName);
+
+		let dbQueryString = `
+			UPDATE sacct_main SET
+				sacct_name_first='${safeFirstName}',
+				sacct_name_last='${safeLastName}',
+				sacct_name_middle='${safeMiddleName}',
+				sacct_pos_x=${subAccountData.spawnPosition.x},
+				sacct_pos_y=${subAccountData.spawnPosition.y},
+				sacct_pos_z=${subAccountData.spawnPosition.z},
+				sacct_scale_x=${subAccountData.pedScale.x},
+				sacct_scale_y=${subAccountData.pedScale.y},
+				sacct_scale_z=${subAccountData.pedScale.z},
+				sacct_angle=${subAccountData.spawnHeading},
+				sacct_skin=${subAccountData.skin},
+				sacct_cash=${subAccountData.cash},
+				sacct_job=${subAccountData.job},
+				sacct_int=${subAccountData.interior},
+				sacct_vw=${subAccountData.dimension},
+				sacct_clan=${subAccountData.clan},
+				sacct_clan_rank=${subAccountData.clanRank},
+				sacct_clan_tag='${safeClanTag}',
+				sacct_clan_title='${safeClanTitle}',
+				sacct_clan_flags=${subAccountData.clanFlags},
+				sacct_fightstyle=${subAccountData.fightStyle},
+				sacct_walkstyle=${subAccountData.walkStyle},
+				sacct_when_lastlogin=${subAccountData.lastLogin},
+				sacct_origin=${subAccountData.placeOfOrigin},
+				sacct_when_born=${subAccountData.dateOfBirth},
+				sacct_iv_part_hair_model=${subAccountData.bodyParts.hair[0]},
+				sacct_iv_part_hair_texture=${subAccountData.bodyParts.hair[1]},
+				sacct_iv_part_head_model=${subAccountData.bodyParts.head[0]},
+				sacct_iv_part_head_texture=${subAccountData.bodyParts.head[1]},
+				sacct_iv_part_upper_model=${subAccountData.bodyParts.upper[0]},
+				sacct_iv_part_upper_texture=${subAccountData.bodyParts.upper[1]},
+				sacct_iv_part_lower_model=${subAccountData.bodyParts.lower[0]},
+				sacct_iv_part_lower_texture=${subAccountData.bodyParts.lower[1]},
+				sacct_iv_prop_hair_model=${subAccountData.bodyProps.hair[0]},
+				sacct_iv_prop_hair_texture=${subAccountData.bodyProps.hair[1]},
+				sacct_iv_prop_eyes_model=${subAccountData.bodyProps.eyes[0]},
+				sacct_iv_prop_eyes_texture=${subAccountData.bodyProps.eyes[1]},
+				sacct_iv_prop_head_model=${subAccountData.bodyProps.head[0]},
+				sacct_iv_prop_head_texture=${subAccountData.bodyProps.head[1]},
+				sacct_iv_prop_lefthand_model=${subAccountData.bodyProps.leftHand[0]},
+				sacct_iv_prop_lefthand_texture=${subAccountData.bodyProps.leftHand[1]},
+				sacct_iv_prop_righthand_model=${subAccountData.bodyProps.rightHand[0]},
+				sacct_iv_prop_righthand_texture=${subAccountData.bodyProps.rightHand[1]},
+				sacct_iv_prop_leftwrist_model=${subAccountData.bodyProps.leftWrist[0]},
+				sacct_iv_prop_leftwrist_texture=${subAccountData.bodyProps.leftWrist[1]},
+				sacct_iv_prop_rightwrist_model=${subAccountData.bodyProps.rightWrist[0]},
+				sacct_iv_prop_rightwrist_texture=${subAccountData.bodyProps.rightWrist[1]},
+				sacct_iv_prop_hip_model=${subAccountData.bodyProps.hip[0]},
+				sacct_iv_prop_hip_texture=${subAccountData.bodyProps.hip[1]},
+				sacct_iv_prop_leftfoot_model=${subAccountData.bodyProps.leftFoot[0]},
+				sacct_iv_prop_leftfoot_texture=${subAccountData.bodyProps.leftFoot[1]},
+				sacct_iv_prop_rightfoot_model=${subAccountData.bodyProps.rightFoot[0]},
+				sacct_iv_prop_rightfoot_texture=${subAccountData.bodyProps.rightFoot[1]}
+			WHERE sacct_id=${subAccountData.databaseId}`;
+
 		logToConsole(LOG_DEBUG, dbQueryString);
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		freeDatabaseQuery(dbQuery);

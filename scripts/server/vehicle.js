@@ -1068,3 +1068,17 @@ function checkVehicleBurning() {
 }
 
 // -------------------------------------------------------------------------
+
+function cacheAllVehicleItems() {
+	for(let i in getServerData().vehicles) {
+		for(let j in getServerData().items) {
+			if(getItemData(j).ownerType == AG_ITEM_OWNER_VEHTRUNK && getItemData(j).ownerId == getServerData().vehicles[i].databaseId) {
+				getServerData().vehicles[i].trunkItemCache.push(j);
+			} else if(getItemData(j).ownerType == AG_ITEM_OWNER_VEHDASH && getItemData(j).ownerId == getServerData().vehicles[i].databaseId) {
+				getServerData().vehicles[i].dashItemCache.push(j);
+			}
+		}
+	}
+}
+
+// -------------------------------------------------------------------------

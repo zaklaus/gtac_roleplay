@@ -1313,7 +1313,22 @@ function saveJobToDatabase(jobData) {
 			queryDatabase(dbConnection, dbQueryString);
 			jobData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE job_main SET job_name='${safeName}', job_enabled=${boolToInt(jobData.enabled)}, job_pickup=${jobData.pickupModel}, job_blip=${jobData.blipModel}, job_type=${jobData.type}, job_colour_r=${jobData.colourArray[0]}, job_colour_g=${jobData.colourArray[1]}, job_colour_b=${jobData.colourArray[2]} WHERE job_id=${jobData.databaseId}`;
+
+			let dbQueryString =
+				`UPDATE job_main SET
+					job_name='${safeName}',
+					job_enabled=${boolToInt(jobData.enabled)},
+					job_pickup=${jobData.pickupModel},
+					job_blip=${jobData.blipModel},
+					job_type=${jobData.type},
+					job_colour_r=${jobData.colourArray[0]},
+					job_colour_g=${jobData.colourArray[1]},
+					job_colour_b=${jobData.colourArray[2]},
+					job_walkietalkiefreq=${jobData.walkieTalkieFrequency},
+					job_wl=${jobData.whiteListEnabled},
+					job_bl=${jobData.blackListEnabled}
+				WHERE job_id=${jobData.databaseId}`;
+
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);

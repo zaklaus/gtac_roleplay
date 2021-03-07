@@ -126,25 +126,27 @@ function toggleAccountServerLogoCommand(command, params, client) {
 function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("twoStepAuth");
 
-	if(getPlayerData(client).emailAddress != "") {
+	if(getPlayerData(client).accountData.emailAddress != "") {
 		messagePlayerError(client, "You need to add your email to your account to use two-factor authentication.");
 		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add your email.");
 		return false;
 	}
 
-	if(!isValidEmailAddress(getPlayerData(client).emailAddress)) {
-		messagePlayerError(client, "The email you previously added is not valid.");
-		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add a valid email.");
+	if(isAccountEmailVerified(getPlayerData(client).accountData)) {
+		messagePlayerError(client, "You need to verify your email to your account to use two-factor authentication.");
+		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/verifyemail [#FFFFFF]to verify your email.");
 		return false;
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerSuccess(client, `[#FFFFFF]Use this code to add your account into your authenticator app: [#AAAAAA]${addtoAuthenticatorCode}`);
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
+		messagePlayerSuccess(client, `[#FFFFFF]You have turned ${getBoolRedGreenInlineColour(false)}ON [#FFFFFF] two factor authentication![#AAAAAA]${addtoAuthenticatorCode}`);
+		messagePlayerAlert(client, "You will be required to enter a code sent to your email every time you log on.");
 		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF [#FFFFFF]two-factor authentication for login.`);
+		messagePlayerAlert(client, "You won't be required to enter a code sent to your email every time you log on anymore.");
 		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
 	return true;
@@ -199,9 +201,6 @@ function changePasswordCommand(command, params, client) {
 // ---------------------------------------------------------------------------
 
 function setAccountEmailCommand(command, params, client) {
-	messagePlayerError(client, `This command is not yet finished and will be available soon!`);
-	return false;
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -215,9 +214,58 @@ function setAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
-	//getPlayerData(client).accountData.emailAddress = emailAddress;
-	messagePlayerSuccess(client, "Your password has been changed!");
+	//if(getPlayerData(client).accountData.emailAddress != "") {
+	//	messagePlayerError(client, `Your email is already set!`);
+	//	return false;
+	//}
+
+	if(getPlayerData(client).accountData.emailAddress != "" && isAccountEmailVerified(getPlayerData(client).accountData)) {
+		messagePlayerError(client, `You already set your email and verified it!`);
+		return false;
+	}
+
+	setAccountEmail(getPlayerData(client).accountData, emailAddress);
+
+	let emailVerificationCode = generateEmailVerificationCode();
+	setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+	sendEmailVerificationEmail(client, emailVerificationCode);
+
+	messagePlayerSuccess(client, `Your email has been set!`);
+	messagePlayerAlert(client, `Please verify your email to enable extra account security and recovery features.`);
+	messagePlayerAlert(client, `A verification code and instructions have been sent to your email.`);
+	saveAccountToDatabase(getPlayerData(client).accountData);
+}
+
+// ---------------------------------------------------------------------------
+
+function verifyAccountEmailCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let verificationCode = splitParams[0];
+
+	if(isAccountEmailVerified(getPlayerData(client).accountData)) {
+		messagePlayerError(client, `You already verified your email!`);
+		return false;
+	}
+
+	if(module.hashing.sha512(verificationCode) != getPlayerData(client).accountData.emailVerificationCode) {
+		messagePlayerError(client, `Invalid email verification code! A new one has been created and sent to your email.`);
+		let emailVerificationCode = generateEmailVerificationCode();
+		setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+		sendEmailVerificationEmail(client, emailVerificationCode);
+		return false;
+	}
+
+	getPlayerData(client).accountData.flags.moderation = addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("emailVerified"));
+	getPlayerData(client).accountData.emailVerificationCode = "";
+
+	messagePlayerSuccess(client, `Your email has been verified!`);
+	messagePlayerAlert(client, `You can now use your email for password resets, two-factor authentication, alerts, and more!`);
+	saveAccountToDatabase(getPlayerData(client).accountData);
 }
 
 // ---------------------------------------------------------------------------
@@ -456,7 +504,7 @@ function saveAccountToDatabase(accountData) {
 		let safeIRCAccount = escapeDatabaseString(dbConnection, accountData.ircAccount);
 		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s irc account escaped successfully`);
 
-		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_mod_flags=${accountData.flags.moderation}, acct_discord=${accountData.discordAccount}, acct_ip=INET_ATON('${accountData.ipAddress}') WHERE acct_id=${accountData.databaseId}`;
+		let dbQueryString = `UPDATE acct_main SET acct_email='${safeEmailAddress}', acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_mod_flags=${accountData.flags.moderation}, acct_discord=${accountData.discordAccount}, acct_ip=INET_ATON('${accountData.ipAddress}'), acct_code_verifyemail='${accountData.emailVerificationCode}' WHERE acct_id=${accountData.databaseId}`;
 		logToConsole(LOG_VERBOSE, dbQueryString);
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		//freeDatabaseQuery(dbQuery);
@@ -990,6 +1038,60 @@ function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
 
 function getPlayerStaffTitle(client) {
 	return getPlayerData(client).accountData.staffTitle;
+}
+
+// ---------------------------------------------------------------------------
+
+function isAccountEmailVerified(accountData) {
+	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("emailVerified"));
+}
+
+// ---------------------------------------------------------------------------
+
+function isAccountTwoFactorAuthenticationVerified(accountData) {
+	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("twoFactorAuthVerified"));
+}
+
+// ---------------------------------------------------------------------------
+
+function setAccountEmail(accountData, emailAddress) {
+	accountData.emailAddress = emailAddress;
+	accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
+}
+
+// ---------------------------------------------------------------------------
+
+function setAccountEmailVerificationCode(accountData, emailVerificationCode) {
+	accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
+}
+
+// ---------------------------------------------------------------------------
+
+function generateEmailVerificationCode() {
+	return generateRandomString(10);
+}
+
+// ---------------------------------------------------------------------------
+
+function sendEmailVerificationEmail(client, emailVerificationCode) {
+	let emailBodyText = getGlobalConfig().emailBody.confirmEmail;
+	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", emailVerificationCode);
+
+	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);
+}
+
+// ---------------------------------------------------------------------------
+
+function verifyAccountEmail(accountData, verificationCode) {
+	let emailVerificationCode = generateRandomString(10);
+
+	let emailBodyText = getGlobalConfig().emailBody.confirmEmail;
+	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", emailVerificationCode);
+
+	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);
+
+	getPlayerData(client).accountData.emailAddress = emailAddress;
+	getPlayerData(client).accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
 }
 
 // ---------------------------------------------------------------------------

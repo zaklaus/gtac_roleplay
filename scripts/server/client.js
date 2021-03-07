@@ -664,3 +664,21 @@ function updateHeadingInPlayerData(client, heading) {
 }
 
 // ---------------------------------------------------------------------------
+
+function forcePlayerIntoSkinItemSelect(client, itemId) {
+    getPlayerData(client).itemActionItem = itemId;
+    triggerNetworkEvent("ag.skinSelect", client);
+}
+
+// ---------------------------------------------------------------------------
+
+function playerSkinItemSelectComplete(client, skinId) {
+    getPlayerCurrentSubAccount(client).skin = skinId;
+    if(!isPlayerWorking(client)) {
+        setPlayerSkin(client, skinId);
+    } else {
+        messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.")
+    }
+}
+
+// ---------------------------------------------------------------------------

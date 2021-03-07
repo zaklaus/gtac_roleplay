@@ -74,7 +74,7 @@ let globalConfig = {
 	itemActionStateReset: 5000,
 	emailBody: {
 		confirmEmail: `Welcome to Asshat Gaming Roleplay for GTA Connected!\nPlease confirm your email by using the command /verifyemail in-game.\n\nYour verification code is: {VERIFICATIONCODE}`,
-		emailConfirmed: `Your email has been confirmed on Asshat Gaming Roleplay for GTA Connected!\nYou may now use this email for password resets, offline notifications, two-factor authentication, and more!\nWe hope you enjoy your time on our servers!`,
+		emailConfirmed: `Your email has been confirmed on Asshat Gaming Roleplay for GTA Connected!\nYou may now use this email to reset your password, require two-factor authentication on login, receive offline notifications, and more!`,
 		twoFactorAuthentication: `Please enter the following code to continue on Asshat Gaming's roleplay server for {GAMENAME}: {2FACODE}`,
 		accountAuthSuccessAlert: `You or someone else has successfully logged in to your account on the Asshat Gaming roleplay server for {GAMENAME}.\nIP Address: {IPADDRESS}\nLocation: {LOCATION}\nTimestamp: {TIMESTAMP}`,
 		accountAuthFailAlert: `You or someone else has failed to login to your account on the Asshat Gaming roleplay server for {GAMENAME}.\nIP Address: {IPADDRESS}\nLocation: {LOCATION}\nTimestamp: {TIMESTAMP}`,

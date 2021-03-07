@@ -379,60 +379,6 @@ function makeReadableTime(hour, minute) {
 
 // ---------------------------------------------------------------------------
 
-function getPosToRightOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos((-angle+1.57)+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin((-angle+1.57)+(Math.PI/2)))*distance));
-
-	let rightPos = toVector3(x, y, pos.z);
-
-	return rightPos;
-}
-
-// ---------------------------------------------------------------------------
-
-function getPosToLeftOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos((angle+1.57)+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin((angle+1.57)+(Math.PI/2)))*distance));
-
-	let leftPos = toVector3(x, y, pos.z);
-
-	return leftPos;
-}
-
-// ---------------------------------------------------------------------------
-
-function getPosInFrontOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
-	let z = pos.z;
-
-	return toVector3(x, y, z);
-}
-
-// ---------------------------------------------------------------------------
-
-function getPosBehindPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos(angle-(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin(angle-(Math.PI/2)))*distance));
-	let z = pos.z;
-
-	return toVector3(x,y,z);
-}
-
-// ---------------------------------------------------------------------------
-
-function getPosAbovePos(pos, distance) {
-	return toVector3(pos.x, pos.y, pos.z+distance);
-}
-
-// ---------------------------------------------------------------------------
-
-function getPosBelowPos(pos, distance) {
-	return toVector3(pos.x, pos.y, pos.z-distance);
-}
-
-// ---------------------------------------------------------------------------
-
 function getHeadingFromPosToPos(pos1, pos2) {
 	let x = pos2.x-pos1.x;
 	let y = pos2.y-pos1.y;
@@ -1961,4 +1907,16 @@ function showConnectCameraToPlayer(client) {
 
 function doesGameHaveSnow(gameId) {
 	return (getServerGame() != GAME_GTA_IV);
+}
+
+// ---------------------------------------------------------------------------
+
+function generateRandomString(length) {
+	var result           = '';
+	var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var charactersLength = characters.length;
+	for ( var i = 0; i < length; i++ ) {
+	   result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
 }

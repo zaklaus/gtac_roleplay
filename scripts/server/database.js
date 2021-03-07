@@ -16,10 +16,7 @@ let persistentDatabaseConnection = null;
 
 function initDatabaseScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Initializing database script ...");
-
-	let databaseConfigFile = loadTextFile("config/database.json");
-	databaseConfig = JSON.parse(databaseConfigFile);
-
+	databaseConfiguration = loadDatabaseConfiguration();
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Database script initialized successfully!");
 }
 
@@ -175,3 +172,8 @@ function setConstantsAsGlobalVariablesInDatabase() {
 }
 
 // -------------------------------------------------------------------------
+
+function loadDatabaseConfiguration() {
+	let databaseConfigFile = loadTextFile("config/database.json");
+	return JSON.parse(databaseConfigFile);
+}

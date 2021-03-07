@@ -72,6 +72,14 @@ let globalConfig = {
 		AG_ITEM_USETYPE_PEPPERSPRAY,
 	],
 	itemActionStateReset: 5000,
+	emailBody: {
+		confirmEmail: `Welcome to Asshat Gaming Roleplay for GTA Connected!\nPlease confirm your email by using the command /verifyemail in-game.\n\nYour verification code is: {VERIFICATIONCODE}`,
+		emailConfirmed: `Your email has been confirmed on Asshat Gaming Roleplay for GTA Connected!\nYou may now use this email for password resets, offline notifications, two-factor authentication, and more!\nWe hope you enjoy your time on our servers!`,
+		twoFactorAuthentication: `Please enter the following code to continue on Asshat Gaming's roleplay server for {GAMENAME}: {2FACODE}`,
+		accountAuthSuccessAlert: `You or someone else has successfully logged in to your account on the Asshat Gaming roleplay server for {GAMENAME}.\nIP Address: {IPADDRESS}\nLocation: {LOCATION}\nTimestamp: {TIMESTAMP}`,
+		accountAuthFailAlert: `You or someone else has failed to login to your account on the Asshat Gaming roleplay server for {GAMENAME}.\nIP Address: {IPADDRESS}\nLocation: {LOCATION}\nTimestamp: {TIMESTAMP}`,
+		offlineMessageAlert: `You have received a private message on the Asshat Gaming roleplay server for {GAMENAME}. You are receiving this notification because you enabled message notifications via email when you're not connected to the server.\nFrom: {FROMNAME}\nTimestamp: {TIMESTAMP}\nMessage: {MESSAGE}`,
+	},
 };
 
 let gameConfig = {
@@ -795,6 +803,57 @@ function toggleServerGUICommand(command, params, client) {
 
     messageAdminAction(`${client.name} turned GUI ${toLowerCase(getOnOffFromBool(getServerConfig().useGUI))} for this server`);
     updateServerRules();
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function reloadServerConfigurationCommand(command, params, client) {
+	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
+	applyConfigToServer(serverConfig);
+	updateServerRules();
+
+    messageAdminAction(`${client.name} reloaded the server configuration`);
+
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function reloadEmailConfigurationCommand(command, params, client) {
+	emailConfig = loadEmailConfigFromGameAndPort(server.game, server.port);
+	applyConfigToServer(serverConfig);
+	updateServerRules();
+    messageAdminAction(`${client.name} reloaded the email configuration`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function reloadEmailConfigurationCommand(command, params, client) {
+	emailConfig = loadEmailConfig();
+    messageAdminAction(`${client.name} reloaded the email configuration`);
+	return true;
+}
+
+// ---------------------------------------------------------------------------
+
+function reloadDatabaseConfigurationCommand(command, params, client) {
+	//if(!databaseInUse) {
+		if(databaseConfig.usePersistentConnection && isDatabaseConnected(persistentDatabaseConnection)) {
+			console.warn(`[Asshat.Database] Closing persistent database connection`);
+			persistentDatabaseConnection.close();
+			persistentDatabaseConnection = null;
+		}
+		databaseEnabled = false;
+		databaseConfig = loadEmailConfig();
+		messageAdminAction(`${client.name} reloaded the database configuration`);
+		databaseEnabled = true;
+		if(databaseConfig.usePersistentConnection) {
+			connectToDatabase();
+		}
+	//}
+
 	return true;
 }
 

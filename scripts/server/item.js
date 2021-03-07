@@ -381,18 +381,18 @@ function playerUseItem(client, hotBarSlot) {
 
 	switch(getItemTypeData(getItemData(itemIndex).itemTypeIndex).useType) {
 		case AG_ITEM_USETYPE_SKIN:
-			let oldSkin = getPlayerSkin(client);
-			if(isPlayerWorking(client)) {
-				oldSkin = getPlayerCurrentSubAccount(client).skin;
-			}
+			//let oldSkin = getPlayerSkin(client);
+			//if(isPlayerWorking(client)) {
+			//	oldSkin = getPlayerCurrentSubAccount(client).skin;
+			//}
 
-			let newSkin = getItemData(itemIndex).value;
-			if(isPlayerWorking(client)) {
-				newSkin = getPlayerCurrentSubAccount(client).skin;
-			}
-			setPlayerSkin(client, newSkin);
-			getItemData(itemIndex).value = oldSkin;
-			meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(getSkinNameFromId(newSkin))} ${getSkinNameFromId(newSkin)} ${toLowerCase(getItemName(itemIndex))}`);
+			//let newSkin = getItemData(itemIndex).value;
+			//if(isPlayerWorking(client)) {
+			//	newSkin = getPlayerCurrentSubAccount(client).skin;
+			//}
+			//setPlayerSkin(client, newSkin);
+			//getItemData(itemIndex).value = oldSkin;
+			forcePlayerIntoSkinItemSelect(client, itemIndex);
 			break;
 
 		case AG_ITEM_USETYPE_WEAPON:
@@ -982,8 +982,8 @@ function listBusinessStorageInventoryCommand(command, params, client) {
 	}
 
 	let itemDisplay = [];
-	for(let i in getBusinessData(businessId).storageItemCache[i]) {
-		if(getBusinessData(businessId).storageItemCache[i] == -1) {
+	for(let i in getBusinessData(businessId).storageItemCache) {
+		if(getBusinessData(businessId).storageItemCache == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]`);
@@ -1009,7 +1009,7 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, "Business not found!");
 		return false;
 	}
 
@@ -1019,8 +1019,8 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 	}
 
 	let itemDisplay = [];
-	for(let i in getBusinessData(businessId).floorItemCache[i]) {
-		if(getBusinessData(businessId).floorItemCache[i] == -1) {
+	for(let i in getBusinessData(businessId).floorItemCache) {
+		if(getBusinessData(businessId).floorItemCache == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}]`);
@@ -1056,8 +1056,8 @@ function listHouseInventoryCommand(command, params, client) {
 	}
 
 	let itemDisplay = [];
-	for(let i in getHouseData(houseId).itemCache[i]) {
-		if(getHouseData(houseId).itemCache[i] == -1) {
+	for(let i in getHouseData(houseId).itemCache) {
+		if(getHouseData(houseId).itemCache == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(houseId).itemCache[i])}]`);
@@ -1093,8 +1093,8 @@ function listItemInventoryCommand(command, params, client) {
 	}
 
 	let itemDisplay = [];
-	for(let i in getItemData(itemId).itemCache[i]) {
-		if(getItemData(itemId).itemCache[i] == -1) {
+	for(let i in getItemData(itemId).itemCache) {
+		if(getItemData(itemId).itemCache == -1) {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
 			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getItemData(itemId).itemCache[i])}]`);
@@ -1244,7 +1244,7 @@ function getItemValueDisplayForItem(itemId) {
 
 function getItemValueDisplay(itemType, value) {
 	if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_SKIN) {
-		return getSkinNameFromId(value);
+		return "any";
 	} else if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_FOOD || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_DRINK || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_EXTINGUISHER || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_SPRAYPAINT || getItemTypeData(itemType).useType == AG_ITEM_USETYPE_PEPPERSPRAY) {
 		return getPercentage(toString(value), getItemTypeData(itemType).capacity)+"%";
 	} else if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_PHONE) {

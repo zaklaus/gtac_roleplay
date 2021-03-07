@@ -17,6 +17,7 @@ let serverBitFlags = {
 	clanFlags: {},
 	accountSettingsFlags: {},
 	subAccountSettingsFlags: {},
+	accountFlags: {},
 };
 
 // ---------------------------------------------------------------------------
@@ -53,6 +54,8 @@ let serverBitFlagKeys = {
 		"exemptFromBans",
 		"forceTutorial",
 		"characterNameNeedsStaffApproval",
+		"emailVerified",
+		"twoFactorAuthVerified",
 	],
 	factionFlagKeys: [
 		"none",
@@ -267,16 +270,16 @@ function getAccountSettingsFlagValue(flagName) {
 
 // ---------------------------------------------------------------------------
 
-function getAccountFlagsFlagValue(flagName) {
+function getModerationFlagValue(flagName) {
     if(flagName == "all") {
         return -1;
 	}
 
-	if(typeof serverBitFlags.accountFlags[flagName] === "undefined") {
+	if(typeof serverBitFlags.moderationFlags[flagName] === "undefined") {
 		return false;
 	}
 
-	return serverBitFlags.accountFlags[flagName];
+	return serverBitFlags.moderationFlags[flagName];
 }
 
 // ---------------------------------------------------------------------------

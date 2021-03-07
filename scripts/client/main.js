@@ -68,6 +68,8 @@ let drunkEffectDurationTimer = null;
 
 let controlsEnabled = false;
 
+let usingSkinSelector = false;
+
 // ---------------------------------------------------------------------------
 
 addEvent("OnLocalPlayerEnterSphere", 1);
@@ -117,6 +119,27 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
 
 bindEventHandler("onResourceStop", thisResource, function(event, resource) {
     removeEventHandler("onProcess");
+});
+
+// ---------------------------------------------------------------------------
+
+addEventHandler("onKeyUp", function(event, virtualKey, physicalKey, keyModifiers) {
+    if(usingSkinSelector) {
+        if(physicalKey == SDLK_d) {
+            if(getGameData(gta.game).allowedSkins.length-1 == skinSelectorIndex) {
+                skinSelectorIndex = 0;
+            }
+            localPlayer.skin = getGameData(gta.game).allowedSkins[skinSelectorIndex];
+        } else if(physicalKey == SDLK_a) {
+            if(getGameData(gta.game).allowedSkins.length-1 == 0) {
+                skinSelectorIndex = getGameData(gta.game).allowedSkins.length-1;
+            }
+            localPlayer.skin = getGameData(gta.game).allowedSkins[skinSelectorIndex];
+        } else if(physicalKey == SDLK_RETURN) {
+            triggerNetworkEvent("ag.skinSelected", getGameData(gta.game).allowedSkins[skinSelectorIndex]);
+            usingSkinSelector = false;
+        }
+    }
 });
 
 // ---------------------------------------------------------------------------
@@ -459,6 +482,10 @@ addEventHandler("OnDrawnHUD", function (event) {
                 drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2), itemActionDelayPosition.y-(itemActionDelaySize.y/2)], [progressWidth, itemActionDelaySize.y], COLOUR_LIME, COLOUR_LIME, COLOUR_LIME, COLOUR_LIME);
             }
         }
+    }
+
+    if(usingSkinSelector) {
+
     }
 });
 
@@ -858,5 +885,17 @@ function getPedFromNetworkEvent(ped) {
 
     return getElementFromId(ped);
 }
+
+// ---------------------------------------------------------------------------
+
+addNetworkHandler("ag.skinSelect", function() {
+    usingSkinSelector = true;
+    let frontCameraPosition = getPosInFrontOfPos(localPlayer.position, localPlayer.heading, 5);
+    setCameraLookAt(frontCamPos, localPlayer.position);
+    gui.toggleCursor(true, false);
+    localPlayer.invincible = true;
+    localPlayer.setProofs(true, true, true, true, true);
+    localPlayer.collisionsEnabled = false;
+});
 
 // ---------------------------------------------------------------------------

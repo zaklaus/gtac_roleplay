@@ -436,7 +436,7 @@ function saveHouseToDatabase(houseId) {
 
 			let dbQueryString =
 				`UPDATE house_main SET
-					house_description='${safeHouseDescription}',
+					 house_description='${safeHouseDescription}',
 					house_owner_type=${tempHouseData.ownerType},
 					house_owner_id=${tempHouseData.ownerId},
 					house_locked=${boolToInt(tempHouseData.locked)},
@@ -455,14 +455,19 @@ function saveHouseToDatabase(houseId) {
 					house_buy_price=${tempHouseData.buyPrice},
 					house_rent_price=${tempHouseData.rentPrice},
 					house_has_interior=${boolToInt(tempHouseData.hasInterior)}
-				WHERE house_id=${tempHouseData.databaseId}`;
+				 WHERE house_id=${tempHouseData.databaseId}`;
 
-			queryDatabase(dbConnection, dbQueryString);
+			//dbQueryString = dbQueryString.trim();
+			dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
+			logToConsole(LOG_DEBUG, dbQueryString);
+			let dbQuery = queryDatabase(dbConnection, dbQueryString);
+			freeDatabaseQuery(dbQuery);
+			disconnectFromDatabase(dbConnection);
 		}
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.house]: Saved house '${tempHouseData.description}' to database!`);
+	logToConsole(LOG_DEBUG, `[Asshat.House]: Saved house '${tempHouseData.description}' to database!`);
 
 	return false;
 }

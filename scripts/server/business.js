@@ -818,7 +818,7 @@ function saveBusinessToDatabase(businessId) {
 
 			let dbQueryString =
 				`UPDATE biz_main SET
-					biz_name='${safeBusinessName}',
+					 biz_name='${safeBusinessName}',
 					biz_owner_type=${tempBusinessData.ownerType},
 					biz_owner_id=${tempBusinessData.ownerId},
 					biz_locked=${boolToInt(tempBusinessData.locked)},
@@ -838,9 +838,13 @@ function saveBusinessToDatabase(businessId) {
 					biz_exit_vw=${tempBusinessData.exitDimension},
 					biz_has_interior=${boolToInt(tempBusinessData.hasInterior)}
 					biz_buy_price=${tempBusinessData.buyPrice}
-				WHERE biz_id=${tempBusinessData.databaseId}`;
+				 WHERE biz_id=${tempBusinessData.databaseId}`;
 
-			queryDatabase(dbConnection, dbQueryString);
+			dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
+			logToConsole(LOG_DEBUG, dbQueryString);
+			let dbQuery = queryDatabase(dbConnection, dbQueryString);
+			freeDatabaseQuery(dbQuery);
+			disconnectFromDatabase(dbConnection);
 		}
 		disconnectFromDatabase(dbConnection);
 		return true;
@@ -1168,11 +1172,13 @@ function buyFromBusinessCommand(command, params, client) {
 
 	if(typeof getBusinessData(businessId).floorItemCache[itemSlot] == "undefined") {
 		messagePlayerError(client, `Item slot ${itemSlot} doesn't exist!`);
+		messagePlayerTip(client, `Use /bizitems to see what the business has for sale.`);
 		return false;
 	}
 
 	if(getBusinessData(businessId).floorItemCache[itemSlot] == -1) {
 		messagePlayerError(client, `Item slot ${itemSlot} slot is empty!`);
+		messagePlayerTip(client, `Use /bizitems to see what the business has for sale.`);
 		return false;
 	}
 

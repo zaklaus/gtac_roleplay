@@ -504,10 +504,23 @@ function saveAccountToDatabase(accountData) {
 		let safeIRCAccount = escapeDatabaseString(dbConnection, accountData.ircAccount);
 		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s irc account escaped successfully`);
 
-		let dbQueryString = `UPDATE acct_main SET acct_email='${safeEmailAddress}', acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_mod_flags=${accountData.flags.moderation}, acct_discord=${accountData.discordAccount}, acct_ip=INET_ATON('${accountData.ipAddress}'), acct_code_verifyemail='${accountData.emailVerificationCode}' WHERE acct_id=${accountData.databaseId}`;
-		logToConsole(LOG_VERBOSE, dbQueryString);
+		let dbQueryString =
+			`UPDATE acct_main SET
+				 acct_email='${safeEmailAddress}',
+				acct_pass='${safePassword}',
+				acct_settings=${accountData.settings},
+				acct_staff_flags=${accountData.flags.admin},
+				acct_mod_flags=${accountData.flags.moderation},
+				acct_discord=${accountData.discordAccount},
+				acct_ip=INET_ATON('${accountData.ipAddress}'),
+				acct_code_verifyemail='${accountData.emailVerificationCode}'
+			 WHERE acct_id=${accountData.databaseId}`;
+
+		//dbQueryString = dbQueryString.trim();
+		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
+		logToConsole(LOG_DEBUG, dbQueryString);
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		//freeDatabaseQuery(dbQuery);
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 	}
 }

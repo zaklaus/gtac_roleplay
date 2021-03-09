@@ -8,6 +8,8 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+const { slice } = require("core-js/core/array");
+
 let serverTimers = {};
 
 // ---------------------------------------------------------------------------
@@ -39,6 +41,7 @@ function initTimers() {
 		serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
 		serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
 		serverTimers.garbageCollectorTimer = setInterval(collectAllGarbage, 60000);
+		serverTimers.payDayTimer = setInterval(checkPayDays, 60000);
 	}
 }
 
@@ -69,6 +72,20 @@ function updatePings() {
 	for(let i in clients) {
 		if(!clients[i].console) {
 			updatePlayerPing(clients[i]);
+		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+
+function checkPayDays() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(isPlayerLoggedIn(client) && isPlayerSpawned(client)) {
+			if(sdl.ticks-getPlayerData(client).payDayTickStart >= getGlobalConfig().payDayTickCount) {
+				getPlayerData(client).payDayStart = sdl.ticks;
+				playerPayDay(client);
+			}
 		}
 	}
 }

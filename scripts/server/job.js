@@ -274,7 +274,7 @@ function showJobInformationToPlayer(client, jobType) {
 			break;
 
 		case AG_JOB_FIRE:
-			if(!canClientUseFireJob(client)){
+			if(!canClientUseFireJob(client)) {
 				return false;
 			}
 			messagePlayerInfo(client, "== Job Help =================================");

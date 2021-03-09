@@ -174,6 +174,9 @@ function initClassTable() {
 
 				this.twoFactorAuthenticationState = AG_2FA_STATE_NONE;
 				this.twoFactorAuthenticationCode = 0;
+
+				this.payDayAmount = 0;
+				this.payDayTickStart = 0;
 			}
 		},
 		accountData: class {
@@ -376,23 +379,23 @@ function initClassTable() {
 					this.fightStyle = toInteger(dbAssoc["sacct_fightstyle"]);
 
 					this.bodyParts = {
-						hair: [toInteger(dbAssoc["sacct_iv_part_hair_model"]) || 0, toInteger(dbAssoc["sacct_iv_part_hair_texture"]) || 0],
-						head: [toInteger(dbAssoc["sacct_iv_part_head_model"]) || 0, toInteger(dbAssoc["sacct_iv_part_head_texture"]) || 0],
-						upper: [toInteger(dbAssoc["sacct_iv_part_upper_model"]) || 0, toInteger(dbAssoc["sacct_iv_part_upper_texture"]) || 0],
-						lower: [toInteger(dbAssoc["sacct_iv_part_lower_model"]) || 0, toInteger(dbAssoc["sacct_iv_part_lower_texture"]) || 0],
+						hair: [toInteger(dbAssoc["sacct_hd_part_hair_model"]) || 0, toInteger(dbAssoc["sacct_hd_part_hair_texture"]) || 0],
+						head: [toInteger(dbAssoc["sacct_hd_part_head_model"]) || 0, toInteger(dbAssoc["sacct_hd_part_head_texture"]) || 0],
+						upper: [toInteger(dbAssoc["sacct_hd_part_upper_model"]) || 0, toInteger(dbAssoc["sacct_hd_part_upper_texture"]) || 0],
+						lower: [toInteger(dbAssoc["sacct_hd_part_lower_model"]) || 0, toInteger(dbAssoc["sacct_hd_part_lower_texture"]) || 0],
 					};
 
 					this.bodyProps = {
-						hair: [toInteger(dbAssoc["sacct_iv_prop_hair_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_hair_texture"]) || 0],
-						eyes: [toInteger(dbAssoc["sacct_iv_prop_eyes_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_eyes_texture"]) || 0],
-						head: [toInteger(dbAssoc["sacct_iv_prop_head_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_head_texture"]) || 0],
-						leftHand: [toInteger(dbAssoc["sacct_iv_prop_lefthand_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_lefthand_texture"]) || 0],
-						rightHand: [toInteger(dbAssoc["sacct_iv_prop_righthand_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_righthand_texture"]) || 0],
-						leftWrist: [toInteger(dbAssoc["sacct_iv_prop_leftwrist_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_leftwrist_texture"]) || 0],
-						rightWrist: [toInteger(dbAssoc["sacct_iv_prop_rightwrist_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_rightwrist_texture"]) || 0],
-						hip: [toInteger(dbAssoc["sacct_iv_prop_hip_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_hip_texture"]) || 0],
-						leftFoot: [toInteger(dbAssoc["sacct_iv_prop_leftfoot_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_leftfoot_texture"]) || 0],
-						rightFoot: [toInteger(dbAssoc["sacct_iv_prop_rightfoot_model"]) || 0, toInteger(dbAssoc["sacct_iv_prop_rightfoot_texture"]) || 0],
+						hair: [toInteger(dbAssoc["sacct_hd_prop_hair_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_hair_texture"]) || 0],
+						eyes: [toInteger(dbAssoc["sacct_hd_prop_eyes_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_eyes_texture"]) || 0],
+						head: [toInteger(dbAssoc["sacct_hd_prop_head_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_head_texture"]) || 0],
+						leftHand: [toInteger(dbAssoc["sacct_hd_prop_lefthand_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_lefthand_texture"]) || 0],
+						rightHand: [toInteger(dbAssoc["sacct_hd_prop_righthand_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_righthand_texture"]) || 0],
+						leftWrist: [toInteger(dbAssoc["sacct_hd_prop_leftwrist_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_leftwrist_texture"]) || 0],
+						rightWrist: [toInteger(dbAssoc["sacct_hd_prop_rightwrist_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_rightwrist_texture"]) || 0],
+						hip: [toInteger(dbAssoc["sacct_hd_prop_hip_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_hip_texture"]) || 0],
+						leftFoot: [toInteger(dbAssoc["sacct_hd_prop_leftfoot_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_leftfoot_texture"]) || 0],
+						rightFoot: [toInteger(dbAssoc["sacct_hd_prop_rightfoot_model"]) || 0, toInteger(dbAssoc["sacct_hd_prop_rightfoot_texture"]) || 0],
 					};
 				}
 			}
@@ -495,6 +498,8 @@ function initClassTable() {
 				this.ownerType = AG_HOUSEOWNER_NONE;
 				this.ownerId = 0;
 				this.buyPrice = 0;
+				this.rentPrice = 0;
+				this.renter = 0;
 				this.locked = false;
 				this.hasInterior = false;
 				this.index = -1;
@@ -525,6 +530,8 @@ function initClassTable() {
 					this.ownerType = toInteger(dbAssoc["house_owner_type"]);
 					this.ownerId = toInteger(dbAssoc["house_owner_id"]);
 					this.buyPrice = toInteger(dbAssoc["house_buy_price"]);
+					this.rentPrice = toInteger(dbAssoc["house_rent_price"]);
+					this.renter = toInteger(dbAssoc["house_renter"]);
 					this.locked = intToBool(toInteger(dbAssoc["house_locked"]));
 					this.hasInterior = intToBool(toInteger(dbAssoc["house_has_interior"]));
 
@@ -657,6 +664,22 @@ function initClassTable() {
 				this.colour3 = (vehicle) ? vehicle.colour3 : 1;
 				this.colour4 = (vehicle) ? vehicle.colour4 : 1;
 
+				this.extras = [
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+					0,
+				];
+
 				// Vehicle Attributes
 				this.locked = false;
 				this.engine = false;
@@ -700,6 +723,23 @@ function initClassTable() {
 					this.colour3 = toInteger(dbAssoc["veh_col3"]);
 					this.colour4 = toInteger(dbAssoc["veh_col4"]);
 
+					// Extras (components on SA, extras on IV+)
+					this.extras = [
+						toInteger(dbAssoc["veh_extra1"]),
+						toInteger(dbAssoc["veh_extra2"]),
+						toInteger(dbAssoc["veh_extra3"]),
+						toInteger(dbAssoc["veh_extra4"]),
+						toInteger(dbAssoc["veh_extra5"]),
+						toInteger(dbAssoc["veh_extra6"]),
+						toInteger(dbAssoc["veh_extra7"]),
+						toInteger(dbAssoc["veh_extra8"]),
+						toInteger(dbAssoc["veh_extra9"]),
+						toInteger(dbAssoc["veh_extra10"]),
+						toInteger(dbAssoc["veh_extra11"]),
+						toInteger(dbAssoc["veh_extra12"]),
+						toInteger(dbAssoc["veh_extra13"]),
+					];
+
 					// Vehicle Attributes
 					this.locked = intToBool(toInteger(dbAssoc["veh_locked"]));
 					this.engine = intToBool(toInteger(dbAssoc["veh_engine"]));
@@ -713,6 +753,9 @@ function initClassTable() {
 					this.insuranceAccount = toInteger(0);
 					this.fuel = toInteger(0);
 					this.flags = toInteger(0);
+					this.needsSaved = false;
+					this.whoAdded = toInteger(dbAssoc["veh_who_added"]);
+					this.whenAdded = toInteger(dbAssoc["veh_when_added"]);
 				}
 			}
 		},

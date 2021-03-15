@@ -50,6 +50,10 @@ function helpCommand(command, params, client) {
             showVehicleDealershipHelpMessage(client);
             break;
 
+        case "business":
+            showBusinessHelpMessage(client);
+            break;
+
         case "job":
             showJobHelpMessage(client);
             break;
@@ -114,6 +118,7 @@ function helpCommand(command, params, client) {
 // == Vehicle Tuneup ===========================
 // == Bindable Keys ============================
 // == Clothes ==================================
+// == Business =================================
 
 // -------------------------------------------------------------------------
 
@@ -231,8 +236,20 @@ function showClothesHelpMessage(client) {
 function showBindKeysHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Bindable Keys [#FF9900]============================");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]You can set your own keys binds. Use [#AAAAAA]/keybinds [#FFFFFF]to add, remove, or change your keys.");
-    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Default keys are: [#0066FF]K [#FFFFFF]for engine, [#0066FF]I [#FFFFFF]for lights, and [#0066FF]L [#FFFFFF]for lock/unlock");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Default keys are: [#0066FF]K [#FFFFFF]for vehicle engine, [#0066FF]I [#FFFFFF]for lights, and [#0066FF]L [#FFFFFF]for lock/unlock");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF][#0066FF]I [#FFFFFF]to see your items and [#0066FF]1-9 [#FFFFFF]to equip an item or [#0066FF]0 (zero) [#FFFFFF]to equip none.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF][#0066FF]U [#FFFFFF]to use or [#0066FF]O [#FFFFFF]to drop your current item, and [#0066FF]P [#FFFFFF]to pickup an item from the ground.");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Your keybinds will automatically be usable on all servers");
+}
+
+// -------------------------------------------------------------------------
+
+function showBusinessHelpMessage(client) {
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Business [#FF9900]=================================");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Use /buy to purchase items or /bizitems to see a list of what's for sale at any business");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Businesses are shown with blue names above the icon at their entrance.");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Business owner commands: [#AAAAAA]/bizorder, /biz");
+    messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]A new car for sale will appear when you drive away from the dealer.");
 }
 
 // -------------------------------------------------------------------------

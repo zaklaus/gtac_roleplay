@@ -343,7 +343,7 @@ function takeJobCommand(command, params, client) {
 	}
 
 	if(getPlayerCurrentSubAccount(client).job > AG_JOB_NONE) {
-		messagePlayerError(client, "You already have a job! Use /quitjob to quit your job.");
+		messagePlayerError(client, `[#FFFFFF]You already have a job! Use [#AAAAAA]/quitjob [#FFFFFF]to quit your current job.`);
 		return false;
 	}
 
@@ -353,7 +353,7 @@ function takeJobCommand(command, params, client) {
 	}
 
 	takeJob(client, closestJobLocation.jobIndex);
-	messagePlayerSuccess(client, "You now have the " + toString(jobData.name) + " job");
+	messagePlayerSuccess(client, `[#FFFFFF]You now have the [#FFFF00]${jobData.name} [#FFFFFF]job`);
 	return true;
 }
 

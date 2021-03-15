@@ -41,6 +41,7 @@ let serverColours = {
 		firefighterRed: toColour(205, 60, 60, 255),
 		busDriverGreen: toColour(50, 160, 50, 255),
 		taxiDriverYellow: toColour(240, 230, 100, 255),
+		deliveryPurple: toColour(177, 156, 217, 255),
 		civilianWhite: toColour(200, 200, 200, 255),
 		burntYellow: toColour(210, 210, 0, 255),
 		burntOrange: toColour(210, 120, 0, 255),
@@ -49,7 +50,7 @@ let serverColours = {
 		businessBlue: toColour(0, 153, 255, 255),
 		houseGreen: toColour(17, 204, 17, 255),
 		clanOrange: toColour(255, 153, 0, 255),
-	}
+	},
 };
 
 // -------------------------------------------------------------------------
@@ -90,6 +91,22 @@ function getPlayerColour(client) {
 
 function getBoolRedGreenInlineColour(boolVal) {
 	return (!boolVal) ? "[#cd3c3c]" : "[#32cd32]";
+}
+
+// ---------------------------------------------------------------------------
+
+function hexToRgb(h) {
+	return [
+		'0x'+h[1]+h[2]|0,
+		'0x'+h[3]+h[4]|0,
+		'0x'+h[5]+h[6]|0
+	];
+}
+
+// ---------------------------------------------------------------------------
+
+function rgbToHex(r, g, b) {
+	return "#"+((1<<24)+(r<<16)+(g<<8)+ b).toString(16).slice(1);
 }
 
 // ---------------------------------------------------------------------------

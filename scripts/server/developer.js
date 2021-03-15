@@ -391,7 +391,7 @@ function submitBugReport(client, bugText) {
 // ---------------------------------------------------------------------------
 
 function isDevelopmentServer() {
-	return intToBool(server.getCVar("devserver"));
+	return intToBool(server.getCVar("devserver") || 0);
 }
 
 // ---------------------------------------------------------------------------

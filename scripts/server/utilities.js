@@ -1554,6 +1554,23 @@ function getBusinessFromParams(params) {
 
 // ---------------------------------------------------------------------------
 
+function getGameLocationFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getGameData().locations) {
+			if(toLowerCase(getGameData().locations[i][0]).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getGameData().locations[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
 function getHouseFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getServerData().houses) {
@@ -1920,3 +1937,11 @@ function generateRandomString(length) {
 	}
 	return result;
 }
+
+// ---------------------------------------------------------------------------
+
+function getTimeDisplayUntilPlayerPayDay(client) {
+	return getTimeDifferenceDisplay(sdl.ticks-getPlayerData(client).payDayTickStart);
+}
+
+// ---------------------------------------------------------------------------

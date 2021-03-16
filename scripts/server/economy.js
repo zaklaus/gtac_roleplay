@@ -3,29 +3,21 @@
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
 // ===========================================================================
-// FILE: handcuff.js
-// DESC: Provides features and usage for the handcuff item type
+// FILE: economy.js
+// DESC: Provides economy/financial utils, functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
 // ===========================================================================
 
-function isPlayerTied(client) {
-    return (getPlayerData(client).pedState == AG_PEDSTATE_BINDED);
+function getTimeDisplayUntilPlayerPayDay(client) {
+	return getTimeDifferenceDisplay(sdl.ticks-getPlayerData(client).payDayTickStart);
 }
 
 // ===========================================================================
 
-function ropeTiePlayer(client) {
-    getPlayerData(client).pedState = AG_PEDSTATE_BINDED;
-    setPlayerControlState(client, false);
-}
-
-// ===========================================================================
-
-function ropeUnTiePlayer(client) {
-    getPlayerData(client).pedState = AG_PEDSTATE_READY;
-    setPlayerControlState(client, true);
+function applyServerInflationMultiplier(value) {
+	return value*getServerConfig().inflationMultiplier;
 }
 
 // ===========================================================================

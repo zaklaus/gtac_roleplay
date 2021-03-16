@@ -2,13 +2,13 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: bitflags.js
 // DESC: Provides bitwise operations, functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let serverBitFlags = {
 	staffFlags: {},
@@ -20,7 +20,7 @@ let serverBitFlags = {
 	accountFlags: {},
 };
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let serverBitFlagKeys = {
 	staffFlagKeys: [
@@ -119,7 +119,7 @@ let serverBitFlagKeys = {
 	subAccountSettingsFlagKeys: [],
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initBitFlagScript() {
 	serverBitFlags.staffFlags = createBitFlagTable(serverBitFlagKeys.staffFlagKeys);
@@ -132,13 +132,13 @@ function initBitFlagScript() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addBitFlagCommandHandlers() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createBitFlagTable(keyNames) {
 	let bitVal = 0;
@@ -154,7 +154,7 @@ function createBitFlagTable(keyNames) {
 	return bitTable;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function hasBitFlag(allFlags, checkForFlag) {
 	if(allFlags == 0) {
@@ -168,7 +168,7 @@ function hasBitFlag(allFlags, checkForFlag) {
 	return (allFlags & checkForFlag);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveStaffPermission(client, requiredFlags) {
 	if(isConsole(client)) {
@@ -196,7 +196,7 @@ function doesPlayerHaveStaffPermission(client, requiredFlags) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveClanPermission(client, requiredFlags) {
 	if(isConsole(client)) {
@@ -226,7 +226,7 @@ function doesPlayerHaveClanPermission(client, requiredFlags) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getStaffFlagValue(flagName) {
     if(flagName == "all") {
@@ -240,7 +240,7 @@ function getStaffFlagValue(flagName) {
 	return serverBitFlags.staffFlags[flagName];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClanFlagValue(flagName) {
     if(flagName == "all") {
@@ -254,7 +254,7 @@ function getClanFlagValue(flagName) {
 	return getServerBitFlags().clanFlags[flagName];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getAccountSettingsFlagValue(flagName) {
     if(flagName == "all") {
@@ -268,7 +268,7 @@ function getAccountSettingsFlagValue(flagName) {
 	return serverBitFlags.accountSettingsFlags[flagName];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getModerationFlagValue(flagName) {
     if(flagName == "all") {
@@ -282,7 +282,7 @@ function getModerationFlagValue(flagName) {
 	return serverBitFlags.moderationFlags[flagName];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function givePlayerStaffFlag(client, flagName) {
 	if(!getStaffFlagValue(flagName)) {
@@ -293,7 +293,7 @@ function givePlayerStaffFlag(client, flagName) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function takePlayerStaffFlag(client, flagName) {
 	if(!getStaffFlagValue(flagName)) {
@@ -304,19 +304,19 @@ function takePlayerStaffFlag(client, flagName) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addBitFlag(allFlags, flagValue) {
 	return allFlags | flagValue;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removeBitFlag(allFlags, flagValue) {
 	return allFlags & ~flagValue;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function takePlayerStaffFlag(client, flagName) {
 	if(!getStaffFlagValue(flagName)) {
@@ -327,23 +327,39 @@ function takePlayerStaffFlag(client, flagName) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearPlayerStaffFlags(client) {
 	getPlayerData(client).accountData.flags.admin = getStaffFlagValue("none");
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getServerBitFlags() {
 	return serverBitFlags;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getServerBitFlagKeys() {
 	return serverBitFlagKeys;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function createBitwiseTable(tableKeys) {
+	let bitVal = 0;
+	let bitTable = {};
+	let incVal = 1;
+
+	for(let i in tableKeys) {
+		let key = tableKeys[i];
+		bitTable[key] = bitVal;
+		bitVal = 1 << incVal;
+		incVal++;
+	}
+	return bitTable;
+}
+
+// ===========================================================================

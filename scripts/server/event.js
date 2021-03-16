@@ -2,13 +2,13 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: event.js
 // DESC: Provides handlers for built in GTAC and Asshat-Gaming created events
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initEventScript() {
     logToConsole(LOG_DEBUG, "[Asshat.Event]: Initializing event script ...");
@@ -16,7 +16,7 @@ function initEventScript() {
     logToConsole(LOG_DEBUG, "[Asshat.Event]: Event script initialized!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addAllEventHandlers() {
     addEventHandler("onResourceStart", onResourceStart);
@@ -35,7 +35,7 @@ function addAllEventHandlers() {
     addEventHandler("onPedExitVehicle", onPedExitingVehicle);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerConnect(event, ipAddress, port) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] Client connecting (IP: ${ipAddress})`);
@@ -45,19 +45,19 @@ function onPlayerConnect(event, ipAddress, port) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerJoin(event, client) {
     fadeCamera(client, true, 1.0);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerJoined(event, client) {
 
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerQuit(event, client, quitReasonId) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
@@ -69,7 +69,7 @@ function onPlayerQuit(event, client, quitReasonId) {
     messagePlayerNormal(null, `👋 ${client.name} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerChat(event, client, messageText) {
     event.preventDefault();
@@ -85,7 +85,7 @@ function onPlayerChat(event, client, messageText) {
     messagePlayerNormal(null, `${getCharacterFullName(client)}: [#FFFFFF]${messageText}`, getPlayerColour(client));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onProcess(event, deltaTime) {
     checkVehicleBuying();
@@ -94,7 +94,7 @@ function onProcess(event, deltaTime) {
     //checkVehicleBurning();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPedEnteringVehicle(event, ped, vehicle, seat) {
     if(ped.isType(ELEMENT_PLAYER)) {
@@ -122,7 +122,7 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPedExitingVehicle(event, ped, vehicle) {
     if(ped.isType(ELEMENT_PLAYER)) {
@@ -131,7 +131,7 @@ function onPedExitingVehicle(event, ped, vehicle) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onResourceStart(event, resource) {
     logToConsole(LOG_WARN, `[Asshat.Event] ${resource.name} started!`);
@@ -141,7 +141,7 @@ function onResourceStart(event, resource) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onResourceStop(event, resource) {
     logToConsole(LOG_WARN, `[Asshat.Event] ${resource.name} stopped!`);
@@ -155,19 +155,19 @@ function onResourceStop(event, resource) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerEnteredSphere(client, sphere) {
 
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerExitedSphere(client, sphere) {
 
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 async function onPlayerEnteredVehicle(client) {
     if(client.player == null) {
@@ -238,7 +238,7 @@ async function onPlayerEnteredVehicle(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerExitedVehicle(client) {
     getPlayerData(client).pedState = AG_PEDSTATE_READY;
@@ -260,7 +260,7 @@ function onPlayerExitedVehicle(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerDeath(client, position) {
     getPlayerData(client).pedState = AG_PEDSTATE_DEAD;
@@ -293,7 +293,7 @@ function onPlayerDeath(client, position) {
 	}, 1000);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPedSpawn(ped) {
     //if(ped.type == ELEMENT_PLAYER) {
@@ -301,7 +301,7 @@ function onPedSpawn(ped) {
     //}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerSpawn(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] Checking for ${getPlayerDisplayForConsole(client)}'s player ped`);
@@ -399,4 +399,4 @@ function onPlayerSpawn(client) {
         getPlayerData(client).pedState = AG_PEDSTATE_READY;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

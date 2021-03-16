@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: colour.js
 // DESC: Provides colours, functions and usage
 // TYPE: Server (JavaScript)
@@ -71,7 +71,7 @@ function getColourByName(colourName) {
 	return getServerColours().byName[colourName];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerColour(client) {
 	if(getPlayerData(client) != false) {
@@ -87,13 +87,13 @@ function getPlayerColour(client) {
 	return getColourByName("civilianWhite");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBoolRedGreenInlineColour(boolVal) {
 	return (!boolVal) ? "[#cd3c3c]" : "[#32cd32]";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function hexToRgb(h) {
 	return [
@@ -103,10 +103,33 @@ function hexToRgb(h) {
 	];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function rgbToHex(r, g, b) {
 	return "#"+((1<<24)+(r<<16)+(g<<8)+ b).toString(16).slice(1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function getClientChatColour(client) {
+	let tempJob = getPlayerCurrentSubAccount(client).job;
+	if(tempJob != -1) {
+		if(getPlayerData(client).isWorking) {
+			return getJobData(tempJob).jobColour;
+		}
+	}
+	return getColourByName("white");
+}
+
+// ===========================================================================
+
+function getRandomRGB() {
+	return toColour.apply(null, [
+		getRandom(0, 255),
+		getRandom(0, 255),
+		getRandom(0, 255),
+		255
+	]);
+}
+
+// ===========================================================================

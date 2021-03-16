@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: gui.js
 // DESC: Provides GUI functionality and styles (using MexUI)
 // TYPE: Client (JavaScript)
@@ -1166,7 +1166,7 @@ app.init = function()
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created login GUI`);
 
-	// ------------------------------------------------------------------------------
+	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating two factor auth GUI ...`);
 	twoFactorAuth.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
@@ -1244,7 +1244,7 @@ app.init = function()
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created two factor auth GUI`);
 
-	// ------------------------------------------------------------------------------
+	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating new character GUI ...`);
 
@@ -1450,7 +1450,7 @@ app.init = function()
 	}, checkNewCharacter);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created new character GUI`);
 
-	// ------------------------------------------------------------------------------
+	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating register GUI ...`);
 	register.window = mexui.window(game.width/2-130, game.height/2-125, 300, 250, 'Register', {
@@ -1563,7 +1563,7 @@ app.init = function()
 	}, checkRegistration);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created register GUI`);
 
-	// ------------------------------------------------------------------------------
+	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating error GUI ...`);
 	errorDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'ERROR', {
@@ -1609,7 +1609,7 @@ app.init = function()
 	}, closeErrorDialog);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created error GUI ...`);
 
-	// ------------------------------------------------------------------------------
+	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created prompt GUI ...`);
 	yesNoDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'Question', {
@@ -1668,7 +1668,7 @@ app.init = function()
 	}, yesNoDialogAnswerNo);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created prompt GUI`);
 
-	// ------------------------------------------------------------------------------
+	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating info dialog GUI ...`);
 	infoDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'Information', {
@@ -1713,7 +1713,7 @@ app.init = function()
 	}, closeInfoDialog);
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created info dialog GUI`);
 
-// ------------------------------------------------------------------------------
+// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating list dialog GUI ...`);
 	listDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 500, 'List', {
@@ -1771,7 +1771,7 @@ app.init = function()
 	});
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created list dialog GUI`);
 
-	// ------------------------------------------------------------------------------
+	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating character select GUI ...`);
 	characterSelect.window = mexui.window(game.width/2-215, game.height/2-83, 430, 166, 'Select Character', {
@@ -1897,20 +1897,20 @@ app.init = function()
 	});
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Created character select GUI`);
 
-	// ---------------------------------------------------------------------------
+	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] All GUI created successfully!`);
 	closeAllWindows();
 };
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let checkLogin = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Checking login with server ...`);
 	triggerNetworkEvent("ag.checkLogin", login.passwordInput.lines[0]);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let loginFailed = function(errorMessage) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports login failed`);
@@ -1919,21 +1919,21 @@ let loginFailed = function(errorMessage) {
 	login.passwordInput.text = "";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let loginSuccess = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports login was successful`);
 	closeAllWindows();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let checkRegistration = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Checking registration with server ...`);
 	triggerNetworkEvent("ag.checkRegistration", register.passwordInput.lines[0], register.confirmPasswordInput.lines[0], register.emailInput.lines[0]);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let checkNewCharacter = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Checking new character with server ...`);
@@ -1964,7 +1964,7 @@ let checkNewCharacter = function() {
 	);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let registrationFailed = function(errorMessage) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports registration failed. Reason: ${errorMessage}`);
@@ -1975,14 +1975,14 @@ let registrationFailed = function(errorMessage) {
 	register.emailInput.text = "";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let registrationSuccess = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports registration was successful`);
 	closeAllWindows();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let twoFactorAuthFailed = function(errorMessage) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports two-factor authentication failed. Reason: ${errorMessage}`);
@@ -1991,28 +1991,28 @@ let twoFactorAuthFailed = function(errorMessage) {
 	login.passwordInput.text = "";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let twoFactorAuthSuccess = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports two-factor authentication was successful`);
 	closeAllWindows();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let checkTwoFactorAuth = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Checking two-factor authentication with server ...`);
 	triggerNetworkEvent("ag.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let characterSelectSuccess = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports character selection was successful`);
 	closeAllWindows();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let closeErrorDialog = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Closing error dialog`);
@@ -2020,7 +2020,7 @@ let closeErrorDialog = function() {
 	mexui.setInput(false);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let closeInfoDialog = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Closing info dialog`);
@@ -2028,7 +2028,7 @@ let closeInfoDialog = function() {
 	mexui.setInput(false);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let closeAllWindows = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Closing all GUI windows`);
@@ -2044,21 +2044,21 @@ let closeAllWindows = function() {
 	mexui.setInput(false);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let yesNoDialogAnswerNo = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Responding with answer NO to server prompt`);
 	triggerNetworkEvent("ag.promptAnswerNo");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let yesNoDialogAnswerYes = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Responding with answer YES to server prompt`);
 	triggerNetworkEvent("ag.promptAnswerYes");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let showRegistration = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing registration window`);
@@ -2068,7 +2068,7 @@ let showRegistration = function() {
 	register.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let showLogin = function() {
 	closeAllWindows();
@@ -2078,7 +2078,7 @@ let showLogin = function() {
 	login.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let showTwoFactorAuth = function() {
 	closeAllWindows();
@@ -2088,7 +2088,7 @@ let showTwoFactorAuth = function() {
 	twoFactorAuth.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
 	closeAllWindows();
@@ -2102,7 +2102,7 @@ let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBir
 	characterSelect.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let showError = function(errorMessage, errorTitle) {
 	closeAllWindows();
@@ -2113,7 +2113,7 @@ let showError = function(errorMessage, errorTitle) {
 	errorDialog.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let showYesNo = function(promptMessage, promptTitle) {
 	closeAllWindows();
@@ -2123,7 +2123,7 @@ let showYesNo = function(promptMessage, promptTitle) {
 	yesNoDialog.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let showInfo = function(infoMessage, infoTitle) {
 	closeAllWindows();
@@ -2133,7 +2133,7 @@ let showInfo = function(infoMessage, infoTitle) {
 	infoDialog.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let showNewCharacter = function() {
 	closeAllWindows();
@@ -2143,28 +2143,28 @@ let showNewCharacter = function() {
 	newCharacter.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let selectNextCharacter = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Requesting next character info from server for character select window`);
 	triggerNetworkEvent("ag.nextCharacter");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let selectPreviousCharacter = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Requesting previous character info from server for character select window`);
 	triggerNetworkEvent("ag.previousCharacter");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let selectThisCharacter = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Tell server the current shown character was selected in character select window`);
 	triggerNetworkEvent("ag.selectCharacter");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Updating character info with data from server`);
@@ -2177,70 +2177,70 @@ let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfB
 	characterSelect.window.shown = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showLogin", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show login window`);
 	showLogin();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showRegistration", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show registration window`);
 	showRegistration();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showNewCharacter", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show new character window`);
 	showNewCharacter();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showCharacterSelect", function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show character selection window`);
 	showCharacterSelect(firstName, lastName, placeOfOrigin, dateOfBirth, skinId);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.switchCharacterSelect", function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to update character selection window with new info`);
 	switchCharacterSelect(firstName, lastName, placeOfOrigin, dateOfBirth, skinId);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showError", function(errorMessage, errorTitle) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show error window`);
 	showError(errorMessage, errorTitle);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showPrompt", function(promptMessage, promptTitle) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show prompt window`);
 	showYesNo(promptMessage, promptTitle);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showInfo", function(infoMessage) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show info dialog`);
 	showInfo(infoMessage);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.loginSuccess", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of successful login from server`);
 	loginSuccess();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.characterSelectSuccess", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of successful character selection from server`);
@@ -2248,28 +2248,28 @@ addNetworkHandler("ag.characterSelectSuccess", function() {
 	setChatWindowEnabled(true);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.loginFailed", function(remainingAttempts) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of failed login from server`);
 	loginFailed(remainingAttempts);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.registrationSuccess", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of successful registration from server`);
 	registrationSuccess();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.registrationFailed", function(errorMessage) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of failed registration from server`);
 	registrationFailed(errorMessage);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.guiColour", function(red, green, blue) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received new GUI colours from server`);
@@ -2277,7 +2277,7 @@ addNetworkHandler("ag.guiColour", function(red, green, blue) {
 	focusedColour = [red+focusedColourOffset, green+focusedColourOffset, blue+focusedColourOffset];
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.guiInit", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Initializing MexUI app`);
@@ -2285,4 +2285,4 @@ addNetworkHandler("ag.guiInit", function() {
 	triggerNetworkEvent("ag.guiReady", true);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

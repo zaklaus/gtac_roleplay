@@ -2,13 +2,13 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: misc.js
 // DESC: Provides any uncategorized functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initMiscScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Misc]: Initializing misc script ...");
@@ -16,7 +16,7 @@ function initMiscScript() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPositionCommand(command, params, client) {
 	let position = getPlayerPosition(client);
@@ -26,21 +26,21 @@ function getPositionCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleMouseCursorCommand(command, params, client) {
 	sendPlayerMouseCursorToggle(client);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleMouseCameraCommand(command, params, client) {
 	sendPlayerMouseCameraToggle(client);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setNewCharacterSpawnPositionCommand(command, params, client) {
 	let position = client.player.position;
@@ -51,7 +51,7 @@ function setNewCharacterSpawnPositionCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setNewCharacterMoneyCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -68,7 +68,7 @@ function setNewCharacterMoneyCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setNewCharacterSkinCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -89,7 +89,7 @@ function setNewCharacterSkinCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function submitIdeaCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -103,7 +103,7 @@ function submitIdeaCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function submitBugReportCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -117,7 +117,7 @@ function submitBugReportCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function enterExitPropertyCommand(command, params, client) {
 	if(isPlayerInAnyHouse(client)) {
@@ -259,7 +259,7 @@ function enterExitPropertyCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadGameFixesResource() {
 	switch(getServerGame()) {
@@ -275,7 +275,7 @@ function loadGameFixesResource() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerInfoCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -292,7 +292,7 @@ function getPlayerInfoCommand(command, params, client) {
 	messagePlayerInfo(client, `[#AAAAAA][Player Info] [#FFFFFF]Account: [#AAAAAA]${getPlayerData(targetClient).accountData.name}[${getPlayerData(targetClient).accountData.databaseId}], [#FFFFFF]Character: [#AAAAAA]${getCharacterFullName(client)}[${getPlayerCurrentSubAccount(client).databaseId}], [#FFFFFF]Connected: [#AAAAAA]${getTimeDifferenceDisplay(Math.ceil(sdl.tick/1000), getPlayerData(targetClient).connectTime)} ago, [#FFFFFF]Game Version: [#AAAAAA]${targetClient.gameVersion}, [#FFFFFFF]Client Version: [#AAAAAA]${getPlayerData(targetClient).clientVersion}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerChangeAFKState(client, afkState) {
     if(afkState) {
@@ -302,7 +302,7 @@ function playerChangeAFKState(client, afkState) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkPlayerSpawning() {
 	let clients = getClients();
@@ -322,7 +322,7 @@ function checkPlayerSpawning() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
 	if(promptType == AG_PROMPT_NONE) {
@@ -339,4 +339,4 @@ function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

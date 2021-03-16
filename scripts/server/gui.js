@@ -2,13 +2,13 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: gui.js
 // DESC: Provides GUI functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerPromptAnswerNo(client) {
     if(getPlayerData(client).promptType == AG_PROMPT_NONE) {
@@ -43,7 +43,7 @@ function playerPromptAnswerNo(client) {
     getPlayerData(client).promptType = AG_PROMPT_NONE;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerPromptAnswerYes(client) {
     if(getPlayerData(client).promptType == AG_PROMPT_NONE) {
@@ -87,22 +87,22 @@ function playerPromptAnswerYes(client) {
     getPlayerData(client).promptType = AG_PROMPT_NONE;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function canPlayerUseGUI(client) {
     return (getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerPromptAnswerYesCommand(command, params, client) {
     playerPromptAnswerYes(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerPromptAnswerNoCommand(command, params, client) {
     playerPromptAnswerNo(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

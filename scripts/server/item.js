@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: item.js
 // DESC: Provides item functions and usage
 // TYPE: Server (JavaScript)
@@ -18,7 +18,7 @@ function initItemScript() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadItemsFromDatabase() {
 	let tempItems = [];
@@ -40,7 +40,7 @@ function loadItemsFromDatabase() {
 	return tempItems;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadItemTypesFromDatabase() {
 	let tempItemTypes = [];
@@ -63,7 +63,7 @@ function loadItemTypesFromDatabase() {
 	return tempItemTypes;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createItem(itemTypeId, value, ownerType, ownerId, amount=1) {
 	let tempItemData = new serverClasses.itemData(false);
@@ -80,7 +80,7 @@ function createItem(itemTypeId, value, ownerType, ownerId, amount=1) {
 	return index;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createGroundItem(itemTypeId, value, position, dimension = 0) {
 	let itemIndex = createItem(itemTypeId, value, AG_ITEM_OWNER_GROUND, 0);
@@ -90,7 +90,7 @@ function createGroundItem(itemTypeId, value, position, dimension = 0) {
 	return itemIndex;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createGroundItemObject(itemId) {
 	if(!getItemData(itemId)) {
@@ -110,7 +110,7 @@ function createGroundItemObject(itemId) {
 	getServerData().groundItemCache.push(itemId);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteGroundItemObject(itemId) {
 	if(getServerData().groundItemCache.indexOf(itemId) != -1) {
@@ -123,7 +123,7 @@ function deleteGroundItemObject(itemId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createGroundItemCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -144,7 +144,7 @@ function createGroundItemCommand(command, params, client) {
 	messagePlayerSuccess(client, `You created a ${getItemTypeData(itemType).name} on the ground at your position`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createItemCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -165,7 +165,7 @@ function createItemCommand(command, params, client) {
 	messagePlayerSuccess(client, `You created a ${getItemTypeData(itemType).name} on the ground at your position`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function useItemCommand(command, params, client) {
 	let hotBarSlot = getPlayerData(client).activeHotBarSlot;
@@ -207,7 +207,7 @@ function useItemCommand(command, params, client) {
 	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteGroundItemCommand(command, params, client) {
 	let itemId = getClosestItemOnGround(getPlayerPosition(client));
@@ -229,7 +229,7 @@ function deleteGroundItemCommand(command, params, client) {
 	messagePlayerSuccess(client, `You deleted the ${tempName} item near you`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function pickupItemCommand(command, params, client) {
 	let itemId = getClosestItemOnGround(getPlayerPosition(client));
@@ -268,7 +268,7 @@ function pickupItemCommand(command, params, client) {
 	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function dropItemCommand(command, params, client) {
 	let hotBarSlot = getPlayerData(client).activeHotBarSlot;
@@ -311,7 +311,7 @@ function dropItemCommand(command, params, client) {
 	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function putItemCommand(command, params, client) {
 	let hotBarSlot = toInteger(params);
@@ -341,7 +341,7 @@ function putItemCommand(command, params, client) {
 	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function takeItemCommand(command, params, client) {
 	let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
@@ -371,7 +371,7 @@ function takeItemCommand(command, params, client) {
 	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerUseItem(client, hotBarSlot) {
 	let closestPlayer;
@@ -518,7 +518,7 @@ function playerUseItem(client, hotBarSlot) {
 	updatePlayerHotBar(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerDropItem(client, hotBarSlot) {
 	let itemId = getPlayerData(client).hotBarItems[hotBarSlot];
@@ -539,7 +539,7 @@ function playerDropItem(client, hotBarSlot) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerPutItem(client, hotBarSlot) {
 	let itemId = getPlayerData(client).hotBarItems[hotBarSlot];
@@ -576,7 +576,7 @@ function playerPutItem(client, hotBarSlot) {
 	updatePlayerHotBar(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerPickupItem(client, itemId) {
 	meActionToNearbyPlayers(client, `picks up ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} from the ground`);
@@ -594,7 +594,7 @@ function playerPickupItem(client, itemId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerTakeItem(client, itemId) {
 	switch(bestOwner[1]) {
@@ -625,7 +625,7 @@ function playerTakeItem(client, itemId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerSwitchItem(client, newHotBarSlot) {
 	if(newHotBarSlot < -1 || newHotBarSlot > 9) {
@@ -698,7 +698,7 @@ function playerSwitchItem(client, newHotBarSlot) {
 	updatePlayerHotBar(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerSwitchHotBarSlotCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -734,7 +734,7 @@ function playerSwitchHotBarSlotCommand(command, params, client) {
 	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClosestItemOnGround(position) {
 	let items = getServerData().groundItemCache;
@@ -748,7 +748,7 @@ function getClosestItemOnGround(position) {
 	return items[closest];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setItemDataIndexes() {
 	for(let i in getServerData().items) {
@@ -761,7 +761,7 @@ function setItemDataIndexes() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllGroundItemObjects() {
 	for(let i in getServerData().groundItemCache) {
@@ -769,19 +769,19 @@ function createAllGroundItemObjects() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showItemInventoryToPlayer(client, itemIndex) {
 
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function syncPlayerInventoryWeapons(client) {
 
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerFirstEmptyHotBarSlot(client) {
 	for(let i in getPlayerData(client).hotBarItems) {
@@ -793,7 +793,7 @@ function getPlayerFirstEmptyHotBarSlot(client) {
 	return -1;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function cachePlayerHotBarItems(client) {
 	for(let i in getServerData().items) {
@@ -808,7 +808,7 @@ function cachePlayerHotBarItems(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteItem(itemId) {
 	switch(getItemData(itemId).ownerType) {
@@ -866,7 +866,7 @@ function deleteItem(itemId) {
 	getServerData().items.splice(itemId, 1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBestNewOwnerToPutItem(client) {
 	let closestDistance = 100.0;
@@ -890,7 +890,7 @@ function getBestNewOwnerToPutItem(client) {
 	return [AG_ITEM_OWNER_NONE, 0];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBestItemToTake(client, slot) {
 	let closestDistance = 100.0;
@@ -931,7 +931,7 @@ function getBestItemToTake(client, slot) {
 	return [ownerType, ownerId, itemId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listPlayerInventoryCommand(command, params, client) {
 	let itemDisplay = [];
@@ -966,7 +966,7 @@ function listPlayerInventoryCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listBusinessStorageInventoryCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
@@ -1003,7 +1003,7 @@ function listBusinessStorageInventoryCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listBusinessFloorInventoryCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
@@ -1040,7 +1040,7 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listHouseInventoryCommand(command, params, client) {
 	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
@@ -1077,7 +1077,7 @@ function listHouseInventoryCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listItemInventoryCommand(command, params, client) {
 	let itemId = getClosestItemOnGround(getPlayerPosition(client));
@@ -1114,19 +1114,19 @@ function listItemInventoryCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getItemData(itemId) {
 	return getServerData().items[itemId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getItemTypeData(itemTypeId) {
 	return getServerData().itemTypes[itemTypeId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllItemsToDatabase() {
 	for(let i in getServerData().items) {
@@ -1136,7 +1136,7 @@ function saveAllItemsToDatabase() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveItemToDatabase(itemId) {
 	let tempItemData = getServerData().items[itemId];
@@ -1159,7 +1159,7 @@ function saveItemToDatabase(itemId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function storePlayerItemsInJobLocker(client) {
 	for(let i in getPlayerData(client).hotBarItems) {
@@ -1172,7 +1172,7 @@ function storePlayerItemsInJobLocker(client) {
 	updatePlayerHotBar(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function restorePlayerJobLockerItems(client) {
 	for(let i in getPlayerData(client).jobEquipmentCache) {
@@ -1191,7 +1191,7 @@ function restorePlayerJobLockerItems(client) {
 	updatePlayerHotBar(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getItemTypeIndexFromDatabaseId(databaseId) {
 	for(let i in getServerData().itemTypes) {
@@ -1201,7 +1201,7 @@ function getItemTypeIndexFromDatabaseId(databaseId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerItemActionDelayComplete(client) {
     switch(getPlayerData(client).itemActionState) {
@@ -1234,13 +1234,13 @@ function playerItemActionDelayComplete(client) {
     getPlayerData(client).itemActionItem = -1;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getItemValueDisplayForItem(itemId) {
 	return getItemValueDisplay(getItemData(itemId).itemTypeIndex, getItemData(itemId).value);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getItemValueDisplay(itemType, value) {
 	if(getItemTypeData(itemType).useType == AG_ITEM_USETYPE_SKIN) {
@@ -1259,7 +1259,7 @@ function getItemValueDisplay(itemType, value) {
 	return "unknown";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerFirstItemSlotByUseType(client, useType) {
 	for(let i in getPlayerData(client).hotBarItems) {
@@ -1275,7 +1275,7 @@ function getPlayerFirstItemSlotByUseType(client, useType) {
 	return -1;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleItemEnabledCommand(command, params, client) {
 	if(!getPlayerActiveItem(client)) {
@@ -1292,7 +1292,7 @@ function toggleItemEnabledCommand(command, params, client) {
 	messagePlayerNormal(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)} [#AAAAAA](${getItemValueDisplayForItem(getPlayerActiveItem(client))}`)
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getItemName(itemId) {
 	if(getItemData(itemId)) {
@@ -1300,7 +1300,7 @@ function getItemName(itemId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerActiveItem(client) {
 	if(getPlayerData(client).activeHotBarSlot != -1) {
@@ -1310,7 +1310,7 @@ function getPlayerActiveItem(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerItemSlot(client, slot) {
 	if(slot != -1) {
@@ -1320,7 +1320,7 @@ function getPlayerItemSlot(client, slot) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function resyncWeaponItemAmmo(client) {
 	if(getPlayerData(client).currentHotBarItem != -1) {
@@ -1338,19 +1338,19 @@ function resyncWeaponItemAmmo(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getOrderPriceForItemType(itemType) {
 	return getItemTypeData(itemType).orderPrice*getServerConfig().inflationMultiplier*getItemTypeData(itemType).demandMultiplier*getItemTypeData(itemType).supplyMultiplier*getItemTypeData(itemType).riskMultiplier;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearPlayerItemActionState(client) {
 	getPlayerData(client).itemActionState = AG_ITEM_ACTION_NONE;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearPlayerItemActionStateAfterDelay(client, delay) {
 	setTimeout(function() {
@@ -1358,4 +1358,4 @@ function clearPlayerItemActionStateAfterDelay(client, delay) {
 	}, delay);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

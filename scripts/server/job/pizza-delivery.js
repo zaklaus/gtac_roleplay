@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: pizza-delivery.js
 // DESC: Provides pizza delivery driver job functions and usage
 // TYPE: Job (JavaScript)
@@ -224,57 +224,38 @@ let pizzaDeliveryStops = [
     ],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
-function getRandomPizzaDeliveryStops(island) {
+function getRandomPizzaDeliveryStop(island) {
     if(pizzaDeliveryStops[getServerGame()][island].length == 1) {
         return 0;
     }
     return getRandom(0, pizzaDeliveryStops[getServerGame()][island].length-1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showCurrentPizzaDeliveryStop(client) {
     sendJobDeliveryPointToPlayer(client, getPizzaDeliveryStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute), getColourByName("deliveryPurple"))
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
-function playerArrivedAtBusStop(client) {
-    if(isLastStopOnBusRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
-        respawnVehicle(getPlayerData(client).jobRouteVehicle);
-        let payout = getPizzaDeliveryPay(getPlayerData(client).jobDeliveryStart, getPlayerData(client).jobDeliveryStop)*getServerData().inflationMultiplier;
-        getPlayerData(client).payDayAmount += payout;
-        messagePlayerNormal(client, `You delivered the pizza! Return to the pizza restaurant if you want to deliver another pizza.`, getColourByName("yellow"));
-        messagePlayerNormal(client, `You earned $${payout}. Your total paycheck of [#AAAAAA]${getPlayerData(client).payDayAmount} will be received in [#AAAAAA]${getTimeDisplayUntilPlayerPayDay(client)}`);
-		getPlayerData(client).jobRouteVehicle = false;
-		getPlayerData(client).jobRoute = 0;
-		getPlayerData(client).jobRouteStop = 0;
-        getPlayerData(client).jobRouteIsland = 0;
-        return false;
-    }
-
-    showGameMessage(client, "⌛ Please wait a moment for passengers to get on and off the bus.", getColourByName("busDriverGreen"), 3500);
-    freezeJobVehicleForRouteStop(client);
-    getPlayerData(client).jobRouteStop = getNextStopOnBusRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop);
-    setTimeout(function() {
-        unFreezeJobVehicleForRouteStop(client);
-        showCurrentBusStop(client);
-        showGameMessage(client, "Proceed to the next stop (green checkpoint)", getColourByName("busDriverGreen"), 3500);
-    }, 5000);
+function playerArrivedAtPizzaDeliveryDestination(client) {
+    respawnVehicle(getPlayerData(client).jobDeliveryVehicle);
+    let payout = applyServerInflationMultiplier(getPizzaDeliveryPay(getPlayerData(client).jobDeliveryStart, getPlayerData(client).jobDeliveryStop));
+    getPlayerData(client).payDayAmount += payout;
+    messagePlayerNormal(client, `You delivered the pizza! Return to the pizza restaurant if you want to deliver another pizza.`, getColourByName("yellow"));
+    messagePlayerNormal(client, `You earned $${payout}. Your total paycheck of [#AAAAAA]${getPlayerData(client).payDayAmount} will be received in [#AAAAAA]${getTimeDisplayUntilPlayerPayDay(client)}`);
+    getPlayerData(client).jobDeliveryVehicle = false;
+    getPlayerData(client).jobDeliveryStart = 0;
+    getPlayerData(client).jobDeliveryStop = 0;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
-function getBusRouteStopPosition(island, busRoute, busRouteStop) {
-    return busRoutes[getServerGame()][island][busRoute].positions[busRouteStop];
+function getPizzaDeliveryPay(startPoint, stopPoint) {
+    return Math.floor(getDistance(startPoint, stopPoint));
 }
 
-// ---------------------------------------------------------------------------
-
-function getBusRouteData(island, busRoute) {
-    return busRoutes[getServerGame()][island][busRoute];
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================

@@ -29,3 +29,5 @@ For grand opening:
 ------------------------------------------------------
 * Change structure of item types to include only **one** set of items
     * Use a new table for game-specific data (model, obj pos/rot/scale, etc)
+------------------------------------------------------
+* Change pizza delivery job to pick a random house door instead of pre-established places on the street.

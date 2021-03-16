@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: chat.js
 // DESC: Provides chat functions and usage
 // TYPE: Server (JavaScript)
@@ -14,7 +14,7 @@ function initChatScript() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function meActionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -26,7 +26,7 @@ function meActionCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doActionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -38,7 +38,7 @@ function doActionCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function shoutCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -50,7 +50,7 @@ function shoutCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function talkCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -62,7 +62,7 @@ function talkCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function whisperCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -74,7 +74,7 @@ function whisperCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function adminChatCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -85,7 +85,7 @@ function adminChatCommand(command, params, client) {
 	messageAdmins(`[#FFFF00][Admin Chat] [#AAAAAA]${client.name} [#CCCCCC](${getPlayerStaffTitle(client)})[#FFFFFF]: ${params}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clanChatCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -96,7 +96,7 @@ function clanChatCommand(command, params, client) {
 	clanChat(client, params);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function talkToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
@@ -107,7 +107,7 @@ function talkToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function phoneOutgoingToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
@@ -116,7 +116,7 @@ function phoneOutgoingToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function phoneIncomingToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().radioSpeakerDistance);
@@ -125,7 +125,7 @@ function phoneIncomingToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function whisperToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
@@ -136,7 +136,7 @@ function whisperToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function shoutToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().shoutDistance);
@@ -147,7 +147,7 @@ function shoutToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().doActionDistance);
@@ -158,7 +158,7 @@ function doActionToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function meActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().meActionDistance);
@@ -169,7 +169,7 @@ function meActionToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clanChat(client, messageText) {
 	let clients = getClients();
@@ -180,4 +180,4 @@ function clanChat(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

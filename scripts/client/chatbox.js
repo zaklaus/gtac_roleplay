@@ -2,13 +2,13 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: chatbox.js
 // DESC: Provides extra chatbox features
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let chatBoxHistory = [];
 let bottomMessageIndex = 0;
@@ -17,12 +17,12 @@ let maxChatBoxHistory = 500;
 let scrollAmount = 1;
 let maxChatBoxLines = 6;
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 bindKey(SDLK_PAGEUP, KEYSTATE_DOWN, chatBoxScrollUp);
 bindKey(SDLK_PAGEDOWN, KEYSTATE_DOWN, chatBoxScrollDown);
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.m", function(messageString, colour) {
     message(messageString, colour);
@@ -30,13 +30,13 @@ addNetworkHandler("ag.m", function(messageString, colour) {
     bottomMessageIndex = chatBoxHistory.length-1;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addToChatBoxHistory(messageString, colour) {
     chatBoxHistory.push([messageString, colour]);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function chatBoxScrollUp() {
     if(bottomMessageIndex > maxChatBoxLines) {
@@ -45,7 +45,7 @@ function chatBoxScrollUp() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function chatBoxScrollDown() {
     if(bottomMessageIndex < chatBoxHistory.length-1) {
@@ -54,7 +54,7 @@ function chatBoxScrollDown() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearChatBox() {
     for(let i = 0 ; i <= maxChatBoxLines ; i++) {
@@ -62,7 +62,7 @@ function clearChatBox() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updateChatBox() {
     clearChatBox();
@@ -75,4 +75,4 @@ function updateChatBox() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

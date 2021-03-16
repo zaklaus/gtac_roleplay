@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: timers.js
 // DESC: Provides timer functions and features
 // TYPE: Server (JavaScript)
@@ -12,13 +12,13 @@ const { slice } = require("core-js/core/array");
 
 let serverTimers = {};
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updateTimeRule() {
 	server.setRule("Time", makeReadableTime(gta.time.hour, gta.time.minute));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllServerDataToDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Utilities]: Saving all server data to database ...");
@@ -32,7 +32,7 @@ function saveAllServerDataToDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Utilities]: Saved all server data to database!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initTimers() {
 	if(!isDevelopmentServer()) {
@@ -45,7 +45,7 @@ function initTimers() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function vehicleRentCheck() {
 	for(let i in getServerData().vehicles) {
@@ -65,7 +65,7 @@ function vehicleRentCheck() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePings() {
 	let clients = getClients();
@@ -76,7 +76,7 @@ function updatePings() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkPayDays() {
 	let clients = getClients();
@@ -90,4 +90,4 @@ function checkPayDays() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: clan.js
 // DESC: Provides clan functions and usage
 // TYPE: Server (JavaScript)
@@ -16,7 +16,7 @@ function initClanScript() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadClansFromDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Clan]: Loading clans from database ...");
@@ -606,7 +606,7 @@ function saveAllClansToDatabase() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setAllClanDataIndexes() {
 	for(let i in getServerData().clans) {
@@ -624,7 +624,7 @@ function setAllClanDataIndexes() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function arePlayersInSameClan(client1, client2) {
 	if(getPlayerClan(client1) == getPlayerClan(client2)) {
@@ -634,4 +634,4 @@ function arePlayersInSameClan(client1, client2) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

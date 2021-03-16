@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: subaccount.js
 // DESC: Provides subaccount (character) functions and usage
 // TYPE: Server (JavaScript)
@@ -13,7 +13,7 @@ function initSubAccountScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.SubAccount]: SubAccount script initialized!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadSubAccountFromName(firstName, lastName) {
 	let dbConnection = connectToDatabase();
@@ -33,7 +33,7 @@ function loadSubAccountFromName(firstName, lastName) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadSubAccountFromId(subAccountId) {
 	let dbConnection = connectToDatabase();
@@ -51,7 +51,7 @@ function loadSubAccountFromId(subAccountId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadSubAccountsFromAccount(accountId) {
 	let tempSubAccounts = [];
@@ -75,7 +75,7 @@ function loadSubAccountsFromAccount(accountId) {
 	return tempSubAccounts;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveSubAccountToDatabase(subAccountData) {
 	let dbConnection = connectToDatabase();
@@ -153,7 +153,7 @@ function saveSubAccountToDatabase(subAccountData) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
@@ -174,7 +174,7 @@ function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, p
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showCharacterSelectToClient(client) {
 	getPlayerData(client).switchingCharacter = true;
@@ -205,7 +205,7 @@ function showCharacterSelectToClient(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrigin, skinId) {
 	if(areParamsEmpty(firstName)) {
@@ -252,7 +252,7 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 }
 
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkPreviousCharacter(client) {
 	if(getPlayerData(client).subAccounts.length > 1) {
@@ -269,7 +269,7 @@ function checkPreviousCharacter(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkNextCharacter(client) {
 	if(getPlayerData(client).subAccounts.length > 1) {
@@ -286,7 +286,7 @@ function checkNextCharacter(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function selectCharacter(client, characterId = -1) {
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} character select called (Character ID ${characterId})`);
@@ -320,7 +320,7 @@ function selectCharacter(client, characterId = -1) {
 	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function switchCharacterCommand(command, params, client) {
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is requesting to switch characters (current character: ${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}])`);
@@ -351,7 +351,7 @@ function switchCharacterCommand(command, params, client) {
 	showCharacterSelectToClient(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function newCharacterCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -366,7 +366,7 @@ function newCharacterCommand(command, params, client) {
 	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", getServerConfig().newCharacter.skin);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function useCharacterCommand(command, params, client) {
 	if(!getPlayerData(client).switchingCharacter) {
@@ -384,7 +384,7 @@ function useCharacterCommand(command, params, client) {
 	selectCharacter(client, characterId-1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerLastUsedSubAccount(client) {
 	let subAccounts = getPlayerData(client).subAccounts;
@@ -397,22 +397,44 @@ function getPlayerLastUsedSubAccount(client) {
 	return lastUsed;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function transferCharacterToServer(subAccountDatabaseId, newServerId) {
 	quickDatabaseQuery(`UPDATE sacct_main SET sacct_server = ${newServerId}, sacct_skin = ${loadServerConfigFromId(newServerId).newCharacter.skin} WHERE sacct_id = ${subAccountDatabaseId} LIMIT 1;`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCharacterFullName(client) {
 	return `${getPlayerCurrentSubAccount(client).firstName} ${getPlayerCurrentSubAccount(client).lastName}`;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerSwitchingCharacter(client) {
 	return getPlayerData(client).switchingCharacter;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function getPlayerCurrentSubAccount(client) {
+	if(!getPlayerData(client)) {
+		return false;
+	}
+
+	let subAccountId = getPlayerData(client).currentSubAccount;
+	if(subAccountId == -1) {
+		return false;
+	}
+
+	return getPlayerData(client).subAccounts[subAccountId];
+}
+
+// ===========================================================================
+
+function getClientSubAccountName(client) {
+	let subAccountData = getPlayerCurrentSubAccount(client);
+	return `${subAccountData.firstName} ${subAccountData.lastName}`;
+}
+
+// ===========================================================================

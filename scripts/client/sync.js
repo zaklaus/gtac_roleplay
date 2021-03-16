@@ -2,13 +2,13 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: sync.js
 // DESC: Provides some elements and data sync
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("onProcess", function(event, deltaTime) {
     if(localPlayer != null && isSpawned) {
@@ -24,25 +24,25 @@ addEventHandler("onProcess", function(event, deltaTime) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.veh.engine", function(vehicle, state) {
     vehicle.engine = state;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.veh.lights", function(vehicle, state) {
     vehicle.lights = state;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.veh.repair", function(syncId) {
     getVehicleFromSyncId(syncId).fix();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.veh.sync", function(event, vehicle) {
     if(vehicle != null) {
@@ -50,7 +50,7 @@ addNetworkHandler("ag.veh.sync", function(event, vehicle) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.civ.sync", function(event, civilian) {
     if(civilian != null) {
@@ -58,7 +58,7 @@ addNetworkHandler("ag.civ.sync", function(event, civilian) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.player.sync", function(event, player) {
     if(player != null) {
@@ -66,7 +66,7 @@ addNetworkHandler("ag.player.sync", function(event, player) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.obj.sync", function(event, object) {
     if(object != null) {
@@ -74,7 +74,7 @@ addNetworkHandler("ag.obj.sync", function(event, object) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function syncVehicleProperties(vehicle) {
     if(doesEntityDataExist(vehicle, "ag.panelStatus")) {
@@ -122,7 +122,7 @@ function syncVehicleProperties(vehicle) {
     //gta.REMOVE_UPSIDEDOWN_CAR_CHECK(gta.GET_VEHICLE_ID(vehicle));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function syncCivilianProperties(civilian) {
     if(doesEntityDataExist(civilian, "ag.scale")) {
@@ -164,7 +164,7 @@ function syncCivilianProperties(civilian) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function syncPlayerProperties(player) {
     if(doesEntityDataExist(player, "ag.scale")) {
@@ -203,7 +203,7 @@ function syncPlayerProperties(player) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function syncObjectProperties(object) {
     if(doesEntityDataExist(object, "ag.scale")) {
@@ -217,4 +217,4 @@ function syncObjectProperties(object) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

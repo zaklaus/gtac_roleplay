@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: config.js
 // DESC: Provides server configuration
 // TYPE: Server (JavaScript)
@@ -576,7 +576,7 @@ function initConfigScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Config]: Config script initialized!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadServerConfigFromGameAndPort(gameId, port) {
 	let dbConnection = connectToDatabase();
@@ -596,7 +596,7 @@ function loadServerConfigFromGameAndPort(gameId, port) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadServerConfigFromId(tempServerId) {
 	let dbConnection = connectToDatabase();
@@ -714,7 +714,7 @@ function setMinuteDurationCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setWeatherCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -738,7 +738,7 @@ function setWeatherCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setSnowingCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -760,7 +760,7 @@ function setSnowingCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleServerLogoCommand(command, params, client) {
 	getServerConfig().useLogo = !getServerConfig().useLogo;
@@ -772,7 +772,7 @@ function toggleServerLogoCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleAntiCheatScriptWhitelist(command, params, client) {
 	getServerConfig().antiCheat.gameScriptWhiteListEnabled = !getServerConfig().antiCheat.gameScriptWhiteListEnabled;
@@ -784,7 +784,7 @@ function toggleAntiCheatScriptWhitelist(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleAntiCheatScriptBlacklist(command, params, client) {
 	getServerConfig().antiCheat.gameScriptBlackListEnabled = !getServerConfig().antiCheat.gameScriptBlackListEnabled;
@@ -796,7 +796,7 @@ function toggleAntiCheatScriptBlacklist(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleServerGUICommand(command, params, client) {
     getServerConfig().useGUI = !getServerConfig().useGUI;
@@ -806,7 +806,7 @@ function toggleServerGUICommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function reloadServerConfigurationCommand(command, params, client) {
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
@@ -818,7 +818,7 @@ function reloadServerConfigurationCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function reloadEmailConfigurationCommand(command, params, client) {
 	emailConfig = loadEmailConfigFromGameAndPort(server.game, server.port);
@@ -828,7 +828,7 @@ function reloadEmailConfigurationCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function reloadEmailConfigurationCommand(command, params, client) {
 	emailConfig = loadEmailConfig();
@@ -836,7 +836,7 @@ function reloadEmailConfigurationCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function reloadDatabaseConfigurationCommand(command, params, client) {
 	//if(!databaseInUse) {

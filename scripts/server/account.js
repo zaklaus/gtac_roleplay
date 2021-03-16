@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: account.js
 // DESC: Provides account functions and usage
 // TYPE: Server (JavaScript)
@@ -13,7 +13,7 @@ function initAccountScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Account]: Account script initialized!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loginCommand(command, params, client) {
 	if(!isPlayerRegistered(client)) {
@@ -30,7 +30,7 @@ function loginCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function autoLoginByIPCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
@@ -45,7 +45,7 @@ function autoLoginByIPCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function autoSelectLastCharacterCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
@@ -60,7 +60,7 @@ function autoSelectLastCharacterCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleAccountGUICommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noGUI");
@@ -97,7 +97,7 @@ function toggleAccountGUICommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleAccountServerLogoCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noServerLogo");
@@ -119,7 +119,7 @@ function toggleAccountServerLogoCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 // UNFINISHED!
 // TO-DO: Make GUI, add command to generate code to add to auth app and command to input code returned by auth app
@@ -152,7 +152,7 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function registerCommand(command, params, client) {
 	if(isPlayerRegistered(client)) {
@@ -171,7 +171,7 @@ function registerCommand(command, params, client) {
 	//messagePlayerAlert(client, "To play on the server, you will need to make a character.");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function changePasswordCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -198,7 +198,7 @@ function changePasswordCommand(command, params, client) {
 	messagePlayerSuccess(client, "Your password has been changed!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setAccountEmailCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -236,7 +236,7 @@ function setAccountEmailCommand(command, params, client) {
 	saveAccountToDatabase(getPlayerData(client).accountData);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function verifyAccountEmailCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -268,7 +268,7 @@ function verifyAccountEmailCommand(command, params, client) {
 	saveAccountToDatabase(getPlayerData(client).accountData);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setAccountDiscordCommand(command, params, client) {
 	messagePlayerError(client, `This command is not yet finished and will be available soon!`);
@@ -292,7 +292,7 @@ function setAccountDiscordCommand(command, params, client) {
 	//messagePlayerSuccess(client, "Your discord account has been attached to your game account!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerLoggedIn(client) {
 	if(isConsole(client)) {
@@ -306,7 +306,7 @@ function isPlayerLoggedIn(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerRegistered(client) {
 	if(isConsole(client)) {
@@ -322,14 +322,14 @@ function isPlayerRegistered(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPasswordMeetRequirements(password) {
 	// Will be added soon
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isAccountPasswordCorrect(accountData, password) {
 	if(accountData.password == password) {
@@ -339,7 +339,7 @@ function isAccountPasswordCorrect(accountData, password) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountFromName(accountName, fullLoad = false) {
 	let dbConnection = connectToDatabase();
@@ -367,7 +367,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountFromId(accountId, fullLoad = false) {
 	let dbConnection = connectToDatabase();
@@ -393,7 +393,7 @@ function loadAccountFromId(accountId, fullLoad = false) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getAccountHashingFunction() {
 	switch(toLowerCase(getGlobalConfig().accountPasswordHash)) {
@@ -432,7 +432,7 @@ function getAccountHashingFunction() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isNameRegistered(name) {
 	let accountData = loadAccountFromName(name, true);
@@ -443,7 +443,7 @@ function isNameRegistered(name) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function hashAccountPassword(name, password) {
 	let hashFunction = getAccountHashingFunction();
@@ -451,13 +451,13 @@ function hashAccountPassword(name, password) {
 	return hashFunction(saltedInfo);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saltAccountInfo(name, password) {
 	return "ag.gaming." + toString(accountSaltHash) + "." + toString(name) + "." + toString(password);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loginSuccess(client) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} successfully logged in.`);
@@ -489,7 +489,7 @@ function loginSuccess(client) {
 	messagePlayerNormal(null, `👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAccountToDatabase(accountData) {
 	let dbConnection = connectToDatabase();
@@ -525,7 +525,7 @@ function saveAccountToDatabase(accountData) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAccountKeyBindsDatabase(keyBindData) {
 	let dbConnection = connectToDatabase();
@@ -548,7 +548,7 @@ function saveAccountKeyBindsDatabase(keyBindData) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAccountStaffNotesDatabase(staffNoteData) {
 	let dbConnection = connectToDatabase();
@@ -566,7 +566,7 @@ function saveAccountStaffNotesDatabase(staffNoteData) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 /*
 function saveAccountContactsDatabase(accountContactData) {
@@ -589,7 +589,7 @@ function saveAccountContactsDatabase(accountContactData) {
 }
 */
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAccount(name, password, email = "") {
 	let dbConnection = connectToDatabase();
@@ -610,7 +610,7 @@ function createAccount(name, password, email = "") {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkLogin(client, password) {
 	getPlayerData(client).loginAttemptsRemaining = getPlayerData(client).loginAttemptsRemaining-1;
@@ -672,7 +672,7 @@ function checkLogin(client, password) {
 	loginSuccess(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkRegistration(client, password, confirmPassword = "", emailAddress = "") {
 	logToConsole(LOG_DEBUG, "[Asshat.Account]: Checking registration for " + toString(client.name));
@@ -769,13 +769,13 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 };
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isValidEmailAddress(emailAddress) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllClientsToDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Account]: Saving all clients to database ...");
@@ -785,7 +785,7 @@ function saveAllClientsToDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Account]: All clients saved to database successfully!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function savePlayerToDatabase(client) {
 	if(getPlayerData(client) == null) {
@@ -815,7 +815,7 @@ function savePlayerToDatabase(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initClient(client) {
 	if(isConsole(client)) {
@@ -867,14 +867,14 @@ function initClient(client) {
 	}, 2500);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveConnectionToDatabase(client) {
 	let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0')`;
 	return quickDatabaseQuery(dbQueryString);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createDefaultKeybindsForAccount(accountDatabaseId) {
 	for(let i in getGlobalConfig().defaultKeybinds) {
@@ -883,7 +883,7 @@ function createDefaultKeybindsForAccount(accountDatabaseId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account keybinds for account ${accountDatabaseID} from database ...`);
@@ -912,7 +912,7 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	return tempAccountKeybinds;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account staff notes for account ${accountDatabaseID} from database ...`);
@@ -941,7 +941,7 @@ function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
 	return tempAccountStaffNotes;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountContactsFromDatabase(accountDatabaseID) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account contacts for account ${accountDatabaseID} from database ...`);
@@ -970,7 +970,7 @@ function loadAccountContactsFromDatabase(accountDatabaseID) {
 	return tempAccountContacts;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountMessagesFromDatabase(accountDatabaseID) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account messages for account ${accountDatabaseID} from database ...`);
@@ -999,7 +999,7 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 	return tempAccountMessages;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isAccountAutoIPLoginEnabled(accountData) {
 	let accountSettings = accountData.settings;
@@ -1007,7 +1007,7 @@ function isAccountAutoIPLoginEnabled(accountData) {
 	return hasBitFlag(accountSettings, flagValue);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveGUIEnabled(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noGUI"))) {
@@ -1017,7 +1017,7 @@ function doesPlayerHaveGUIEnabled(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveLogoEnabled(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noServerLogo"))) {
@@ -1027,7 +1027,7 @@ function doesPlayerHaveLogoEnabled(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveAutoLoginByIPEnabled(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
@@ -1037,7 +1037,7 @@ function doesPlayerHaveAutoLoginByIPEnabled(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"))) {
@@ -1047,44 +1047,44 @@ function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerStaffTitle(client) {
 	return getPlayerData(client).accountData.staffTitle;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isAccountEmailVerified(accountData) {
 	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("emailVerified"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isAccountTwoFactorAuthenticationVerified(accountData) {
 	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("twoFactorAuthVerified"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setAccountEmail(accountData, emailAddress) {
 	accountData.emailAddress = emailAddress;
 	accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setAccountEmailVerificationCode(accountData, emailVerificationCode) {
 	accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function generateEmailVerificationCode() {
 	return generateRandomString(10);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendEmailVerificationEmail(client, emailVerificationCode) {
 	let emailBodyText = getGlobalConfig().emailBody.confirmEmail;
@@ -1093,7 +1093,7 @@ function sendEmailVerificationEmail(client, emailVerificationCode) {
 	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function verifyAccountEmail(accountData, verificationCode) {
 	let emailVerificationCode = generateRandomString(10);
@@ -1107,4 +1107,4 @@ function verifyAccountEmail(accountData, verificationCode) {
 	getPlayerData(client).accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

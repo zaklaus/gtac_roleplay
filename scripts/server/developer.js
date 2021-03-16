@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: developer.js
 // DESC: Provides developer operation, commands, functions and usage
 // TYPE: Server (JavaScript)
@@ -22,7 +22,7 @@ function initDeveloperScript() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function p(params) {
 	return getPlayerFromParams(params);
@@ -88,7 +88,7 @@ function pvd(params) {
 	return getVehicleData(getPlayerVehicle(getPlayerFromParams(params)));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addServerLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -126,7 +126,7 @@ function addServerLogLevelCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removeServerLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -164,7 +164,7 @@ function removeServerLogLevelCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function simulateCommandForPlayerCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
@@ -205,7 +205,7 @@ function simulateCommandForPlayerCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function simulateCommandForAllPlayersCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
@@ -245,7 +245,7 @@ function simulateCommandForAllPlayersCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function executeServerCodeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -267,7 +267,7 @@ function executeServerCodeCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function executeClientCodeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -296,7 +296,7 @@ function executeClientCodeCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllServerDataCommand(command, params, client) {
 	messageAdmins(`[#FF9900]Saving all server data to database ...`);
@@ -305,14 +305,14 @@ function saveAllServerDataCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function testEmailCommand(command, params, client) {
 	sendEmail(params, "Player",  "Test email", "Just testing the SMTP module for the server!");
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function restartGameModeCommand(command, params, client) {
 	messagePlayerNormal(null, `[#FF9900]The server game mode is restarting!`, getColourByName("orange"));
@@ -321,7 +321,7 @@ function restartGameModeCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clientRunCodeFail(client, returnTo, code) {
 	let returnClient = getClientFromIndex(returnTo);
@@ -333,7 +333,7 @@ function clientRunCodeFail(client, returnTo, code) {
 	messagePlayerNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clientRunCodeSuccess(client, returnTo, returnVal, code) {
 	let returnClient = getClientFromIndex(returnTo);
@@ -346,7 +346,7 @@ function clientRunCodeSuccess(client, returnTo, returnVal, code) {
 	messagePlayerNormal(returnClient, `Returns: ${returnVal}`, getColourByName("yellow"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function submitIdea(client, ideaText) {
 	let position = (getPlayerVehicle(client)) ? getVehiclePosition(getPlayerVehicle(client)) : getPlayerPosition(client);
@@ -367,7 +367,7 @@ function submitIdea(client, ideaText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function submitBugReport(client, bugText) {
 	let position = (getPlayerVehicle(client)) ? getVehiclePosition(getPlayerVehicle(client)) : getPlayerPosition(client);
@@ -388,10 +388,10 @@ function submitBugReport(client, bugText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isDevelopmentServer() {
 	return intToBool(server.getCVar("devserver") || 0);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

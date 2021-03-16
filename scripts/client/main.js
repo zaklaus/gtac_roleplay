@@ -2,13 +2,13 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: main.js
 // DESC: Main client script (will be reorganized into individual files later)
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let bigMessageFont = null;
 let logoImage = null;
@@ -70,7 +70,7 @@ let controlsEnabled = false;
 
 let usingSkinSelector = false;
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEvent("OnLocalPlayerEnterSphere", 1);
 addEvent("OnLocalPlayerExitSphere", 1);
@@ -78,7 +78,7 @@ addEvent("OnLocalPlayerEnteredVehicle", 1);
 addEvent("OnLocalPlayerExitedVehicle", 1);
 addEvent("OnLocalPlayerSwitchWeapon", 2);
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 bindEventHandler("onResourceReady", thisResource, function(event, resource) {
 	if(resource == thisResource) {
@@ -101,7 +101,7 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
     openAllGarages();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 bindEventHandler("onResourceStart", thisResource, function(event, resource) {
     if(gta.game == GAME_GTA_SA) {
@@ -115,13 +115,13 @@ bindEventHandler("onResourceStart", thisResource, function(event, resource) {
     addEventHandler("onProcess", processEvent);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 bindEventHandler("onResourceStop", thisResource, function(event, resource) {
     removeEventHandler("onProcess");
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("onKeyUp", function(event, virtualKey, physicalKey, keyModifiers) {
     if(usingSkinSelector) {
@@ -142,21 +142,21 @@ addEventHandler("onKeyUp", function(event, virtualKey, physicalKey, keyModifiers
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.cameraLookAt", function(cameraPosition, cameraLookat) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Set camera to look at ${cameraPosition.x}, ${cameraPosition.y}, ${cameraPosition.z}`);
     gta.setCameraLookAt(cameraPosition, cameraLookat, true);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.restoreCamera", function() {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Camera restored`);
     gta.restoreCamera(true);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.clearPeds", function() {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Clearing all self-owned peds ...`);
@@ -164,14 +164,14 @@ addNetworkHandler("ag.clearPeds", function() {
     logToConsole(LOG_DEBUG, `[Asshat.Main] All self-owned peds cleared`);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.logo", function(state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Server logo ${(state) ? "enabled" : "disabled"}`);
     renderLogo = state;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.ambience", function(state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
@@ -183,7 +183,7 @@ addNetworkHandler("ag.ambience", function(state) {
     clearSelfOwnedPeds();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.runCode", function(code, returnTo) {
 	let returnValue = "Nothing";
@@ -223,7 +223,7 @@ addNetworkHandler("ag.clearWeapons", function() {
     forceWeaponClipAmmo = 0;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Giving weapon ${weaponId} with ${ammo} ammo`);
@@ -233,7 +233,7 @@ addNetworkHandler("ag.giveWeapon", function(weaponId, ammo, active) {
     forceWeapon = weaponId;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("OnElementStreamIn", function(event, element) {
     switch(element.type) {
@@ -258,7 +258,7 @@ addEventHandler("OnElementStreamIn", function(event, element) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.blips", function(blipData) {
     for(let i in blipData) {
@@ -266,7 +266,7 @@ addNetworkHandler("ag.blips", function(blipData) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showIslandBlips() {
     for(let i in allServerBlips) {
@@ -278,7 +278,7 @@ function showIslandBlips() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getIslandFromPosition(position) {
     switch(gta.game) {
@@ -295,28 +295,28 @@ function getIslandFromPosition(position) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.position", function(position) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting position to ${position.x}, ${position.y}, ${position.z}`);
     localPlayer.position = position;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.position", function(position) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting position to ${position.x}, ${position.y}, ${position.z}`);
     localPlayer.position = position;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.heading", function(heading) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting heading to ${heading}`);
     localPlayer.heading = heading;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.interior", function(interior) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Interior set to ${interior}`);
@@ -324,14 +324,14 @@ addNetworkHandler("ag.interior", function(interior) {
     gta.cameraInterior = interior;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.removeFromVehicle", function() {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Removing local player from vehicle`);
     localPlayer.removeFromVehicle();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function processEvent(event, deltaTime) {
     if(gta.game != GAME_GTA_IV) {
@@ -430,7 +430,7 @@ function processEvent(event, deltaTime) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("OnDrawnHUD", function (event) {
     if(!renderHUD) {
@@ -489,7 +489,7 @@ addEventHandler("OnDrawnHUD", function (event) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function openAllGarages() {
     switch(gta.game) {
@@ -518,7 +518,7 @@ function openAllGarages() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function closeAllGarages() {
     switch(gta.game) {
@@ -547,14 +547,14 @@ function closeAllGarages() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.freeze", function(state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting frozen state to ${state}`);
     gui.showCursor(state, !state);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.control", function(controlState, cursorState = false) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting control state to ${controlState} (Cursor: ${cursorState})`);
@@ -564,21 +564,21 @@ addNetworkHandler("ag.control", function(controlState, cursorState = false) {
     localPlayer.invincible = false;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.fadeCamera", function(state, time) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Fading camera ${(state)?"in":"out"} for ${time} seconds`);
     gta.fadeCamera(state, time);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("OnPedWasted", function(event, wastedPed, killerPed, weapon, pedPiece) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Ped ${wastedPed.name} died`);
     wastedPed.clearWeapons();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showBusStop", function(position, colour) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Showing bus stop`);
@@ -592,7 +592,7 @@ addNetworkHandler("ag.showBusStop", function(position, colour) {
     jobRouteStopBlip = gta.createBlip(position, 0, 2, colour);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting falling snow to ${fallingSnow} and ground snow to ${groundSnow}`);
@@ -602,28 +602,28 @@ addNetworkHandler("ag.snow", function(fallingSnow, groundSnow) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.money", function(amount) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting local player money`);
     localPlayer.money = amount;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.removeWorldObject", function(model, position, range) {
     logToConsole(LOG_DEBUG, `Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
     gta.removeWorldObject(model, position, range);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.excludeGroundSnow", function(model) {
     logToConsole(LOG_DEBUG, `Disabling ground snow for object model ${model}`);
     groundSnow.excludeModel(model);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Local player entered sphere`);
@@ -632,7 +632,7 @@ addEventHandler("OnLocalPlayerEnterSphere", function(event, sphere) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.smallGameMessage", function(text, colour, duration) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Showing small game message '${text}' for ${duration}ms`);
@@ -650,7 +650,7 @@ addNetworkHandler("ag.smallGameMessage", function(text, colour, duration) {
     }, duration);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function enteredJobRouteSphere() {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Entered job route sphere`);
@@ -661,21 +661,21 @@ function enteredJobRouteSphere() {
     jobRouteStopBlip = null;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.jobType", function(tempJobType) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Set local player job type to ${tempJobType}`);
     localPlayerJobType = tempJobType;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.working", function(tempWorking) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting working state to ${tempWorking}`);
     localPlayerWorking = tempWorking;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.spawned", function(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting spawned state to ${state}`);
@@ -716,21 +716,21 @@ addNetworkHandler("ag.spawned", function(client, state) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.weaponDamageEvent", function(clientName, eventType) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Set ${clientName} damage event type to ${eventType}`);
     weaponDamageEvent[clientName] = eventType;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.weaponDamageEnabled", function(clientName, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} damage from ${clientName}`);
     weaponDamageEnabled[clientName] = state;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.mouseCamera", function(state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} mouse camera`);
@@ -738,14 +738,14 @@ addNetworkHandler("ag.mouseCamera", function(state) {
     SetStandardControlsEnabled(!mouseCameraEnabled);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.mouseCursor", function(state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] ${(state)?"Enabled":"Disabled"} mouse cursor`);
     gui.showCursor(state, !state);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearSelfOwnedPeds() {
     logToConsole(LOG_DEBUG, `Clearing self-owned peds`);
@@ -756,7 +756,7 @@ function clearSelfOwnedPeds() {
     });
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Updating render states (HUD: ${hudState}, Labels: ${labelState}, Bottom Text: ${smallGameMessageState}, Scoreboard: ${scoreboardState}, HotBar: ${hotBarState}, Item Action Delay: ${itemActionDelayState})`);
@@ -770,7 +770,7 @@ addNetworkHandler("ag.set2DRendering", function(hudState, labelState, smallGameM
     renderItemActionDelay = itemActionDelayState;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getLocalPlayerVehicleSeat() {
     for(let i = 0 ; i <= 4 ; i++) {
@@ -780,7 +780,7 @@ function getLocalPlayerVehicleSeat() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("OnPedInflictDamage", function(event, damagedEntity, damagerEntity, weaponId, healthLoss, pedPiece) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] ${damagerEntity.name} (${damagerEntity.name}, ${damagerEntity.type} - ${typeof damagerEntity}) damaged ${damagedEntity} (${damagedEntity.name}, ${damagedEntity.type} - ${typeof damagedEntity}) at part ${pedPiece} with weapon ${weaponId}`);
@@ -796,7 +796,7 @@ addEventHandler("OnPedInflictDamage", function(event, damagedEntity, damagerEnti
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("OnLocalPlayerExitedVehicle", function(event, vehicle, seat) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Local player exited vehicle`);
@@ -807,7 +807,7 @@ addEventHandler("OnLocalPlayerExitedVehicle", function(event, vehicle, seat) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addEventHandler("OnLocalPlayerEnteredVehicle", function(event, vehicle, seat) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Local player entered vehicle`);
@@ -824,7 +824,7 @@ addEventHandler("OnLocalPlayerEnteredVehicle", function(event, vehicle, seat) {
     }
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.showItemActionDelay", function(duration) {
     itemActionDelayDuration = duration;
@@ -833,13 +833,13 @@ addNetworkHandler("ag.showItemActionDelay", function(duration) {
     logToConsole(LOG_DEBUG, `Item action delay started. Duration: ${itemActionDelayDuration}, Start: ${itemActionDelayStart}, Rendering Enabled: ${renderItemActionDelay}`);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getWeaponSlot(weaponId) {
 	return getGameData().weaponSlots[gta.game][weaponId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.drunkEffect", function(amount, duration) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Drunk effect set to ${amount} for ${duration}ms`);
@@ -855,27 +855,27 @@ addNetworkHandler("ag.drunkEffect", function(amount, duration) {
     }, 1000);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.clearPedState", function() {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Clearing local ped state`);
     localPlayer.clearObjective();
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.pedSpeech", function(pedName, speechId) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Making ${pedName}'s ped talk (${speechId})`);
     gta.SET_CHAR_SAY(int, int)
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.hotbar", function(activeSlot, itemsArray) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Updating hotbar`);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPedFromNetworkEvent(ped) {
     //let peds = getPeds();
@@ -886,7 +886,7 @@ function getPedFromNetworkEvent(ped) {
     return getElementFromId(ped);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addNetworkHandler("ag.skinSelect", function() {
     usingSkinSelector = true;
@@ -898,4 +898,10 @@ addNetworkHandler("ag.skinSelect", function() {
     localPlayer.collisionsEnabled = false;
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function isSnowEnabled() {
+    return (typeof snowing != "undefined");
+}
+
+// ===========================================================================

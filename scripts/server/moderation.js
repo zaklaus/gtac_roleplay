@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: moderation.js
 // DESC: Provides moderation commands, functions and usage
 // TYPE: Server (JavaScript)
@@ -11,7 +11,7 @@
 function initModerationScript() {
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function kickClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -37,7 +37,7 @@ function kickClientCommand(command, params, client) {
 	targetClient.disconnect();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setClientStaffTitleCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -68,7 +68,7 @@ function setClientStaffTitleCommand(command, params, client) {
 	targetClient.disconnect();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function muteClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -94,7 +94,7 @@ function muteClientCommand(command, params, client) {
 	setEntityData(targetClient, "ag.muted", true, false);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function unMuteClientCommand(command, params, client) {
 
@@ -121,7 +121,7 @@ function unMuteClientCommand(command, params, client) {
 	removeEntityData(targetClient, "ag.muted");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function freezeClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -147,7 +147,7 @@ function freezeClientCommand(command, params, client) {
 	setPlayerFrozenState(client, state);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function unFreezeClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -173,7 +173,7 @@ function unFreezeClientCommand(command, params, client) {
 	sendPlayerFrozenState(client, false);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function gotoPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -198,7 +198,7 @@ function gotoPlayerCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported to [#AAAAAA]${targetClient.name}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function gotoVehicleCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -222,7 +222,7 @@ function gotoVehicleCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported to a [#CC22CC]${getVehicleName(vehicle)} [#AAAAAA](ID ${vehicle.id})`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function gotoBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -247,7 +247,7 @@ function gotoBusinessCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported to business [#0099FF]${getBusinessData(businessId).name} [#AAAAAA](ID ${businessId})`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function gotoGameLocationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -272,7 +272,7 @@ function gotoGameLocationCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported to game location [#AAAAAA]${getGameData().locations[businessId][0]}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function gotoHouseCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -297,7 +297,7 @@ function gotoHouseCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported to business [#0099FF]${getHouseData(houseId).description} [#AAAAAA](ID ${houseId})`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function gotoJobLocationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -329,7 +329,7 @@ function gotoJobLocationCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported to location [#AAAAAA]${jobLocationId} [#FFFFFF]for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function gotoPositionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -356,7 +356,7 @@ function gotoPositionCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported to coordinates [#AAAAAA]${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function teleportForwardCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -369,7 +369,7 @@ function teleportForwardCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported forward ${params} meters`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function teleportBackwardCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -382,7 +382,7 @@ function teleportBackwardCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported backward [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function teleportLeftCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -395,7 +395,7 @@ function teleportLeftCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported left [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function teleportUpCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -408,7 +408,7 @@ function teleportUpCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported up [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function teleportDownCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -421,7 +421,7 @@ function teleportDownCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported down [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function teleportRightCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -434,7 +434,7 @@ function teleportRightCommand(command, params, client) {
 	messagePlayerSuccess(client, `You teleported right [#AAAAAA]${params} [#FFFFFF]meters`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerInteriorCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -459,7 +459,7 @@ function playerInteriorCommand(command, params, client) {
 	messagePlayerSuccess(client, `You set ${targetClient.name}'s interior to [#AAAAAA]${interiorId}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerVirtualWorldCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -484,7 +484,7 @@ function playerVirtualWorldCommand(command, params, client) {
 	messagePlayerSuccess(client, `You set [#AAAAAA]${targetClient.name}'s [#FFFFFF]virtual world to [#AAAAAA]${dimensionId}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -518,7 +518,7 @@ function getPlayerCommand(command, params, client) {
 	messagePlayerAlert(targetClient, `An admin has teleported you to their location`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addStaffFlagCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -552,7 +552,7 @@ function addStaffFlagCommand(command, params, client) {
 	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(true)}given [#AAAAAA]${targetClient.name} [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function takeStaffFlagCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -586,7 +586,7 @@ function takeStaffFlagCommand(command, params, client) {
 	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(false)}taken [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag from [#AAAAAA]${targetClient.name}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearStaffFlagsCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -620,7 +620,7 @@ function clearStaffFlagsCommand(command, params, client) {
 	messagePlayerSuccess(client, `You have removed all staff flags from [#AAAAAA]${targetClient.name}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getStaffFlagsCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
@@ -661,7 +661,7 @@ function getStaffFlagsCommand(command, params, client) {
 	messagePlayerInfo(client, `[#FFFFFF]${targetClient.name}'s staff flags: [#AAAAAA]${tempStaffFlags.join("[#FFFFFF], [#AAAAAA]")}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function allStaffFlagsCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -681,7 +681,7 @@ function allStaffFlagsCommand(command, params, client) {
 	messagePlayerInfo(client, `[#FFFFFF]Staff flags: [#AAAAAA]${getServerBitFlagKeys().join("[#FFFFFF], [#AAAAAA]")}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function givePlayerMoneyCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -704,4 +704,4 @@ function givePlayerMoneyCommand(command, params, client) {
 	messagePlayerAlert(client, `An admin gave you [#AAAAAA]$${amount}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: startup.js
 // DESC: Provides startup/shutdown procedures
 // TYPE: Server (JavaScript)
@@ -42,7 +42,7 @@ function initServerScripts() {
 	initCommandScript();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkForHashingModule() {
 	if(typeof module.hashing == "undefined") {
@@ -51,7 +51,7 @@ function checkForHashingModule() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkForMySQLModule() {
 	if(typeof module.mysql == "undefined") {
@@ -61,7 +61,7 @@ function checkForMySQLModule() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkForSMTPModule() {
 	if(typeof module.smtp == "undefined") {
@@ -71,7 +71,7 @@ function checkForSMTPModule() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkForAllRequiredModules() {
 	logToConsole(LOG_DEBUG, "[Asshat.Startup]: Checking for required modules ...");
@@ -98,8 +98,8 @@ function checkForAllRequiredModules() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 initServerScripts();
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

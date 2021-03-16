@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: utilities.js
 // DESC: Provides util functions and arrays with data
 // TYPE: Server (JavaScript)
@@ -22,7 +22,7 @@ let disconnectReasons = [
 	"Crashed"
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let policeStations = [
 	[],
@@ -40,7 +40,7 @@ let policeStations = [
 	],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let fireStations = [
 	[],
@@ -55,7 +55,7 @@ let fireStations = [
 	],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let hospitals = [
 	[],
@@ -70,7 +70,7 @@ let hospitals = [
 	],
 ]
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let payAndSprays = [
 	[],
@@ -85,7 +85,7 @@ let payAndSprays = [
 	],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let ammuNations = [
 	[],
@@ -99,7 +99,7 @@ let ammuNations = [
 	],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let hiddenPackages = [
 	[
@@ -208,7 +208,7 @@ let hiddenPackages = [
 	[]
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let weekDays = [
 	"Sunday",
@@ -220,7 +220,7 @@ let weekDays = [
 	"Saturday"
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let months = [
 	"January",
@@ -237,7 +237,7 @@ let months = [
 	"December"
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let cardinalDirections = [
 	"North",
@@ -251,7 +251,7 @@ let cardinalDirections = [
 	"Unknown"
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function areParamsEmpty(params) {
 	if(!params || params == "" || params.length == 0 || typeof params == "undefined") {
@@ -261,46 +261,46 @@ function areParamsEmpty(params) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getParamsCount(params, delimiter = " ") {
 	return params.split(delimiter).length;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function areThereEnoughParams(params, requiredAmount, delimiter = " ") {
 	return (params.split(delimiter).length >= requiredAmount);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getParams(params, delimiter, index) {
 	return params.split(delimiter)[index];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCardinalDirectionName(cardinalDirectionId) {
 	let cardinalDirections = ["North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest", "Unknown" ];
 	return cardinalDirections[cardinalDirectionId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getWeekDayName(weekdayId) {
 	let weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
 	return weekdayNames[weekdayId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getMonthName(monthId) {
 	let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	return monthNames[monthId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getWeaponModelId(weaponId) {
 	let weaponModels = [
@@ -310,7 +310,7 @@ function getWeaponModelId(weaponId) {
 	return weaponModels[getServerGame()][weaponId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getIsland(position) {
     if(getServerGame() == GAME_GTA_III) {
@@ -327,19 +327,19 @@ function getIsland(position) {
 	//return gta.getIslandFromPosition(position);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function openAllGarages() {
 
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function closeAllGarages() {
 
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function replaceEmojiIntoString(message) {
 	for(let i in emojiReplaceString) {
@@ -348,7 +348,7 @@ function replaceEmojiIntoString(message) {
 	return message;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function makeReadableTime(hour, minute) {
 	let hourStr = toString(hour);
@@ -377,7 +377,7 @@ function makeReadableTime(hour, minute) {
 	return hourStr + ":" + minuteStr + " " + meridianStr;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getHeadingFromPosToPos(pos1, pos2) {
 	let x = pos2.x-pos1.x;
@@ -389,19 +389,19 @@ function getHeadingFromPosToPos(pos1, pos2) {
 	return degToRad(deg);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function degToRad(deg) {
 	return deg * Math.PI / 180;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function radToDeg(rad) {
 	return rad * 180 / Math.PI;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getAngleInCircleFromCenter(center, total, current) {
 	let gap = 360 / total;
@@ -418,7 +418,7 @@ function getAngleInCircleFromCenter(center, total, current) {
 	return degToRad(deg);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClosestVehicle(position) {
 	let vehicles = getServerData().vehicles;
@@ -431,34 +431,13 @@ function getClosestVehicle(position) {
 	return vehicles[closest].vehicle;
 }
 
-// ---------------------------------------------------------------------------
-
-function getClosestCivilian(position) {
-	return getElementsByType(ELEMENT_CIVILIAN).reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
-}
-
-// ---------------------------------------------------------------------------
-
-function getClosestPlayer(position, exemptClient) {
-	let clients = getClients();
-	let closest = 0;
-	for(let i in clients) {
-		if(exemptClient != clients[i]) {
-			if(getDistance(getPlayerPosition(clients[i]), position) < getDistance(getPlayerPosition(clients[closest]), position)) {
-				closest = i;
-			}
-		}
-	}
-	return clients[closest];
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClosestElementByType(elementType, position) {
 	return getElementsByType(elementType).reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClosestJobLocation(position) {
 	let closestJobLocation = false;
@@ -472,61 +451,37 @@ function getClosestJobLocation(position) {
 	return closestJobLocation;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobIndex(jobData) {
 	return getServerData().jobs.indexOf(jobData);
 }
 
-// ---------------------------------------------------------------------------
-
-function getVehiclesInRange(position, distance) {
-	return getElementsByType(ELEMENT_VEHICLE).filter(x => x.player && x.position.distance(position) <= distance);
-}
-
-// ---------------------------------------------------------------------------
-
-function getClientsInRange(position, distance) {
-	return getPlayersInRange(position, distance);
-}
-
-// ---------------------------------------------------------------------------
-
-function getCiviliansInRange(position, distance) {
-	return getElementsByType(ELEMENT_CIVILIAN).filter(x => x.position.distance(position) <= distance);
-}
-
-// ---------------------------------------------------------------------------
-
-function getElementsByTypeInRange(elementType, position, distance) {
-	return getElementsByType(elementType).filter(x => x.position.distance(position) <= distance);
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobPointsInRange(position, distance) {
 	return getServerData().jobs[getServerGame()].filter(x => x.position.distance(position) <= distance);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getWeaponName(weapon) {
 	return weaponNames[getServerGame()][weapon];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function vec3ToVec2(pos) {
 	return toVector2(pos[0], pos[1]);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function vec3ToVec3(pos, z) {
 	return toVector3(pos[0], pos[1], z);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isParamsInvalid(params) {
 	if(params == null) {
@@ -544,84 +499,7 @@ function isParamsInvalid(params) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
-
-function isValidVehicleModel(modelId) {
-	if(getServerGame() == GAME_GTA_III) {
-		if(modelId < 90 || modelId > 150) {
-			return false;
-		}
-
-		return true;
-	}
-
-	if(getServerGame() == GAME_GTA_VC) {
-		if(modelId < 130 || modelId > 236) {
-			return false;
-		}
-
-		return true;
-	}
-
-	if(getServerGame() == GAME_GTA_SA) {
-		return true;
-	}
-
-	if(getServerGame() == GAME_GTA_IV) {
-		return true;
-	}
-
-	return false;
-}
-
-// ---------------------------------------------------------------------------
-
-function getVehicleModelIdFromParams(params) {
-	if(isNaN(params)) {
-		let modelId = getVehicleModelIdFromName(params);
-
-		if(!modelId) {
-			return false;
-		}
-
-		if(isValidVehicleModel(toInteger(modelId))) {
-			return toInteger(modelId);
-		}
-
-		return false;
-	} else {
-		if(isValidVehicleModel(toInteger(params))) {
-			return toInteger(params);
-		}
-
-		return false;
-	}
-
-	return false;
-}
-
-// ---------------------------------------------------------------------------
-
-function getVehicleModelIdFromName(params) {
-	if(isGTAIV()) {
-		for(let i in getGameData().gtaivVehicleModels) {
-			if(toLowerCase(getGameData().gtaivVehicleModels[i][0]).indexOf(toLowerCase(params)) != -1) {
-				return getGameData().gtaivVehicleModels[i][1];
-			}
-		}
-	} else {
-		let vehicleNames = getGameData().vehicleNames[getServerGame()];
-		for(let i in vehicleNames) {
-			if(toLowerCase(vehicleNames[i]).indexOf(toLowerCase(params)) != -1) {
-				return toInteger(i)+toInteger(getGameData().vehicleModelIdStart[getServerGame()]);
-			}
-		}
-	}
-
-	return false;
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesWordStartWithVowel(word) {
 	switch(toLowerCase(word.substr(0,1))) {
@@ -639,22 +517,7 @@ function doesWordStartWithVowel(word) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
-
-function getVehicleNameFromModelId(modelId) {
-	if(isGTAIV()) {
-		for(let i in getGameData().gtaivVehicleModels) {
-			if(getGameData().gtaivVehicleModels[i][1] == modelId) {
-				return getGameData().gtaivVehicleModels[i][0];
-			}
-		}
-	} else {
-		let modelIndex = modelId-getGameData().vehicleModelIdStart[getServerGame()];
-		return getGameData().vehicleNames[getServerGame()][modelIndex];
-	}
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function replaceEmojiIntoString(message) {
 	for(let i in emojiReplaceString) {
@@ -665,14 +528,7 @@ function replaceEmojiIntoString(message) {
 	return message;
 }
 
-// ---------------------------------------------------------------------------
-
-function getSyncerFromId(syncerId) {
-	let clients = getClients();
-	return clients[syncerId];
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClientFromName(clientName) {
 	let clients = getClients();
@@ -690,7 +546,7 @@ function getClientFromName(clientName) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClientFromPlayer(player) {
 	let clients = getClients();
@@ -703,21 +559,7 @@ function getClientFromPlayer(player) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
-
-function getFirstEmptyEffectSlot(isServer = false) {
-	if(isServer) {
-		for(let i in effects) {
-			if(!effects[i].exists) {
-				return i;
-			}
-		}
-	}
-
-	return false;
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function packData(...args) {
 	for(let i in args) {
@@ -735,38 +577,13 @@ function packData(...args) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function combine(a, b, c) {
 	return toInteger((a << 20) | (b << 10) | c);
 }
 
-// ---------------------------------------------------------------------------
-
-function createBitwiseTable(tableKeys) {
-	let bitVal = 0;
-	let bitTable = {};
-	let incVal = 1;
-
-	for(let i in tableKeys) {
-		let key = tableKeys[i];
-		bitTable[key] = bitVal;
-		bitVal = 1 << incVal;
-		incVal++;
-	}
-	return bitTable;
-}
-
-// ---------------------------------------------------------------------------
-
-function hasBitFlag(checkThis, checkFor) {
-	if(checkThis & checkFor) {
-		return true;
-	}
-	return false;
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function killDeathRatio(kills, deaths) {
 	if(deaths == 0 || kills == 0) {
@@ -775,7 +592,7 @@ function killDeathRatio(kills, deaths) {
 	return Float((iKills*100/iDeaths) * 0.01);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCardinalDirection(pos1, pos2) {
 	let a = pos1.x - pos2.x;
@@ -834,7 +651,7 @@ function getCardinalDirection(pos1, pos2) {
 	return na;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getTimeDifferenceDisplay(unixTimeOne, unixTimeTwo) {
     let timeDifference = unixTimeOne-unixTimeTwo;
@@ -858,7 +675,7 @@ function getTimeDifferenceDisplay(unixTimeOne, unixTimeTwo) {
     return hourString + " and " + minuteString;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getVehiclesInRange(position, range) {
 	let vehicles = getVehicles();
@@ -871,7 +688,7 @@ function getVehiclesInRange(position, range) {
 	return inRangeVehicles;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayersInRange(position, range) {
 	let clients = getClients();
@@ -886,7 +703,7 @@ function getPlayersInRange(position, range) {
 	return inRangePlayers;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCiviliansInRange(position, range) {
 	let peds = getPeds();
@@ -901,7 +718,7 @@ function getCiviliansInRange(position, range) {
 	return inRangeCivilians;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getFileData(filePath) {
 	let file = openFile(filePath, false);
@@ -913,10 +730,9 @@ function getFileData(filePath) {
 	return fileData;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
-function setFileData(filePath, fileData)
-{
+function setFileData(filePath, fileData) {
 	let file = openFile(filePath, true);
 	if(!file) {
 		return false;
@@ -926,24 +742,13 @@ function setFileData(filePath, fileData)
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function is2dPositionOnScreen(pos2d) {
 	return pos2d.x >= 0 && pos2d.y >= 0 && pos2d.x <= game.width && pos2d.y <= game.height;
 }
 
-// ---------------------------------------------------------------------------
-
-function getRandomRGB() {
-	return toColour.apply(null, [
-		getRandom(0, 255),
-		getRandom(0, 255),
-		getRandom(0, 255),
-		255
-	]);
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function breakText(text, maxLength) {
 	let lines = [];
@@ -961,40 +766,13 @@ function breakText(text, maxLength) {
 	return lines;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getSpeedFromVelocity(vel) {
 	return Math.sqrt(vel.x*vel.x + vel.y*vel.y + vel.z*vel.z);
 }
 
-// ---------------------------------------------------------------------------
-
-function getRandom(min, max) {
-	return Math.floor(Math.random() * (parseInt(max) - parseInt(min) + 1)) + parseInt(min)
-}
-
-// ---------------------------------------------------------------------------
-
-function getArrayOfElementId(elements) {
-	let tempArray = [];
-	for(let i in elements) {
-		tempArray.push(elements[i].id);
-	}
-
-	return tempArray;
-}
-
-// ---------------------------------------------------------------------------
-
-function Enum(constantsList) {
-    let tempTable = {};
-	for(let i in constantsList) {
-        tempTable[constantsList[i]] = i;
-    }
-	return tempTable;
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isValidSkin(skin, game = GAME_GTA_III) {
 	if(game == GAME_GTA_III) {
@@ -1010,27 +788,7 @@ function isValidSkin(skin, game = GAME_GTA_III) {
 	}
 }
 
-// ---------------------------------------------------------------------------
-
-function getClientVirtualWorld(client) {
-	if(isClientSpawned(client)) {
-		return getClientPlayer(client).dimension;
-	}
-
-	return 0;
-}
-
-// ---------------------------------------------------------------------------
-
-function getClientInterior(client) {
-	if(isClientSpawned(client)) {
-		return getClientPlayer(client).interior;
-	}
-
-	return 0;
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPositionArea(position) {
 	if(typeof position == "Vec3") {
@@ -1047,7 +805,7 @@ function getPositionArea(position) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getAreaName(position) {
 	let areaId = getPositionArea(position);
@@ -1058,13 +816,13 @@ function getAreaName(position) {
 	return getGameAreas()[areaId][0];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getGameAreas(gameId) {
 	return gameAreas[gameId];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerData(client) {
 	if(client != null) {
@@ -1073,29 +831,7 @@ function getPlayerData(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
-
-function getPlayerCurrentSubAccount(client) {
-	if(!getPlayerData(client)) {
-		return false;
-	}
-
-	let subAccountId = getPlayerData(client).currentSubAccount;
-	if(subAccountId == -1) {
-		return false;
-	}
-
-	return getPlayerData(client).subAccounts[subAccountId];
-}
-
-// ---------------------------------------------------------------------------
-
-function getClientSubAccountName(client) {
-	let subAccountData = getPlayerCurrentSubAccount(client);
-	return `${subAccountData.firstName} ${subAccountData.lastName}`;
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllLocationBlips() {
     createAllPoliceStationBlips();
@@ -1106,7 +842,7 @@ function createAllLocationBlips() {
     createAllAmmunationBlips();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllPoliceStationBlips() {
 	if(getGameConfig().blipSprites[getServerGame()].policeStation != -1) {
@@ -1116,7 +852,7 @@ function createAllPoliceStationBlips() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllFireStationBlips() {
 	if(getGameConfig().blipSprites[getServerGame()].fireStation != -1) {
@@ -1126,7 +862,7 @@ function createAllFireStationBlips() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllHospitalBlips() {
 	if(getGameConfig().blipSprites[getServerGame()].hospital != -1) {
@@ -1136,7 +872,7 @@ function createAllHospitalBlips() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllAmmunationBlips() {
 	if(getGameConfig().blipSprites[getServerGame()].ammunation != -1) {
@@ -1146,7 +882,7 @@ function createAllAmmunationBlips() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllPayAndSprayBlips() {
 	if(getGameConfig().blipSprites[getServerGame()].payAndSpray != -1) {
@@ -1156,7 +892,7 @@ function createAllPayAndSprayBlips() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllFuelStationBlips() {
 	if(getGameConfig().blipSprites[getServerGame()].fuelStation != -1) {
@@ -1166,133 +902,21 @@ function createAllFuelStationBlips() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
-function sendAllPoliceStationBlips(client) {
-	if(getGameConfig().blipSprites[getServerGame()].policeStation != -1) {
-		let tempBlips = [];
-		for(let i in getServerData().policeStations[getServerGame()]) {
-			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].policeStation,
-				getServerData().policeStations[getServerGame()][i].position.x,
-				getServerData().policeStations[getServerGame()][i].position.y,
-				getServerData().policeStations[getServerGame()][i].position.z,
-				3,
-				getColourByName("policeBlue"),
-			]);
-		}
-		triggerNetworkEvent("ag.blips", client, tempBlips);
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function sendAllFireStationBlips(client) {
-	if(getGameConfig().blipSprites[getServerGame()].fireStation != -1) {
-		let tempBlips = [];
-		for(let i in getServerData().fireStations[getServerGame()]) {
-			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].fireStation,
-				getServerData().fireStations[getServerGame()][i].position.x,
-				getServerData().fireStations[getServerGame()][i].position.y,
-				getServerData().fireStations[getServerGame()][i].position.z,
-				3,
-				getColourByName("firefighterRed"),
-			]);
-		}
-		triggerNetworkEvent("ag.blips", client, tempBlips);
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function sendAllHospitalBlips(client) {
-	if(getGameConfig().blipSprites[getServerGame()].hospital != -1) {
-		let tempBlips = [];
-		for(let i in getServerData().hospitals[getServerGame()]) {
-			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].hospital,
-				getServerData().hospitals[getServerGame()][i].position.x,
-				getServerData().hospitals[getServerGame()][i].position.y,
-				getServerData().hospitals[getServerGame()][i].position.z,
-				3,
-				getColourByName("medicPink"),
-			]);
-		}
-		triggerNetworkEvent("ag.blips", client, tempBlips);
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function sendAllAmmunationBlips(client) {
-	if(getGameConfig().blipSprites[getServerGame()].ammunation != -1) {
-		let tempBlips = [];
-		for(let i in getServerData().ammunations[getServerGame()]) {
-			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].ammunation,
-				getServerData().ammunations[getServerGame()][i].position.x,
-				getServerData().ammunations[getServerGame()][i].position.y,
-				getServerData().ammunations[getServerGame()][i].position.z,
-				3,
-				0
-			]);
-		}
-		triggerNetworkEvent("ag.blips", client, tempBlips);
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function sendAllPayAndSprayBlips(client) {
-	if(getGameConfig().blipSprites[getServerGame()].payAndSpray != -1) {
-		let tempBlips = [];
-		for(let i in getServerData().payAndSprays[getServerGame()]) {
-			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].payAndSpray,
-				getServerData().payAndSprays[getServerGame()][i].position.x,
-				getServerData().payAndSprays[getServerGame()][i].position.y,
-				getServerData().payAndSprays[getServerGame()][i].position.z,
-				3,
-				0
-			]);
-		}
-		triggerNetworkEvent("ag.blips", client, tempBlips);
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function sendAllFuelStationBlips(client) {
-	if(getGameConfig().blipSprites[getServerGame()].fuelStation != -1) {
-		let tempBlips = [];
-		for(let i in getServerData().fuelStations[getServerGame()]) {
-			tempBlips.push([
-				getGameConfig().blipSprites[getServerGame()].fuelStation,
-				getServerData().fuelStations[getServerGame()][i].position.x,
-				getServerData().fuelStations[getServerGame()][i].position.y,
-				getServerData().fuelStations[getServerGame()][i].position.z,
-				3,
-				getColourByName("burntOrange"),
-			]);
-		}
-		triggerNetworkEvent("ag.blips", client, tempBlips);
-	}
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPickupOwnerType(pickup) {
 	return pickup.getData("ag.ownerType");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPickupOwnerId(pickup) {
 	return pickup.getData("ag.ownerId");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function canPlayerUsePoliceJob(client) {
 	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.policeBanned) {
@@ -1302,7 +926,7 @@ function canPlayerUsePoliceJob(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function canClientUseFireJob(client) {
 	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.fireBanned) {
@@ -1312,7 +936,7 @@ function canClientUseFireJob(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function canClientUseAmmunations(client) {
 	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.ammuBanned) {
@@ -1322,7 +946,7 @@ function canClientUseAmmunations(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function canClientUseGuns(client) {
 	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.gunBanned) {
@@ -1332,19 +956,19 @@ function canClientUseGuns(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function intToBool(intVal) {
 	return (intVal == 1) ? true : false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function boolToInt(boolVal) {
 	return (boolVal) ? 1 : 0;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendAllBlips(client) {
 	sendAllPoliceStationBlips(client);
@@ -1356,79 +980,7 @@ function sendAllBlips(client) {
 	sendAllJobBlips(client);
 }
 
-// ---------------------------------------------------------------------------
-
-function processHoldActionKey(client) {
-	let closestJobId = getClosestJobPointId(client.player.position);
-	let closestVehicle = getClosestVehicle(client.player.position);
-	let closestHouse = getClosestHouse(client.player.position);
-	let closestBusiness = getClosestBusiness(client.player.position);
-	let jobData = getJobData(closestJobId);
-
-	if(getPlayerCurrentSubAccount(client).job == AG_JOB_NONE) {
-		if(jobData.position.distance(client.player.position) <= getGlobalConfig().takeJobDistance) {
-			takeJob(client, closestJobId);
-			messagePlayerSuccess(client, "You now have the " + toString(jobData.name) + " job");
-		}
-	} else {
-		if(jobData.jobType == getPlayerCurrentSubAccount(client).job) {
-			if(jobData.position.distance(client.player.position) <= getGlobalConfig().startWorkDistance) {
-				startWorking(client);
-				messagePlayerSuccess(client, "You are now working as a " + toString(jobData.name));
-				showStartedWorkingTip(client);
-				return true;
-			}
-		} else {
-			messagePlayerError(client, "This is not your job!");
-			messagePlayerInfo(client, `Use /quitjob to quit your current job.`);
-		}
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function processPressActionKey(client) {
-	// Check job stuff
-	let closestJob = getClosestJob(client.player.position);
-
-	if(getPlayerCurrentSubAccount(client).job == AG_JOB_NONE) {
-		if(closestJob.position.distance(client.player.position) <= getGlobalConfig().takeJobDistance) {
-
-		}
-	}
-}
-
-// ---------------------------------------------------------------------------
-
-function processHoldVehicleLightsKey(client) {
-
-}
-
-// ---------------------------------------------------------------------------
-
-function processHoldVehicleLockKey(client) {
-
-}
-
-// ---------------------------------------------------------------------------
-
-function processHoldVehicleEngineKey(client) {
-
-}
-
-// ---------------------------------------------------------------------------
-
-function getClientChatColour(client) {
-	let tempJob = getPlayerCurrentSubAccount(client).job;
-	if(tempJob != -1) {
-		if(getPlayerData(client).isWorking) {
-			return getJobData(tempJob).jobColour;
-		}
-	}
-	return getColourByName("white");
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initAllClients() {
 	getClients().forEach(function(client) {
@@ -1436,31 +988,31 @@ function initAllClients() {
 	});
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getYesNoFromBool(boolVal) {
 	return (boolVal) ? "Yes" : "No";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getOnOffFromBool(boolVal) {
 	return (boolVal) ? "On" : "Off";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getEnabledDisabledFromBool(boolVal) {
 	return (boolVal) ? "Enabled" : "Disabled";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getLockedUnlockedFromBool(boolVal) {
 	return (boolVal) ? "Locked" : "Unlocked";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updateServerRules() {
 	server.setRule("Time", makeReadableTime(getServerConfig().hour, getServerConfig().minute));
@@ -1468,7 +1020,7 @@ function updateServerRules() {
 	server.setRule("Snowing", getYesNoFromBool(getServerConfig().fallingSnow));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getWeatherFromParams(params) {
 	if(isNaN(params)) {
@@ -1485,7 +1037,7 @@ function getWeatherFromParams(params) {
 	return 0;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClanFromParams(params) {
 	if(isNaN(params)) {
@@ -1501,7 +1053,7 @@ function getClanFromParams(params) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClanRankFromParams(clanId, params) {
 	if(isNaN(params)) {
@@ -1517,7 +1069,7 @@ function getClanRankFromParams(clanId, params) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobFromParams(params) {
 	if(isNaN(params)) {
@@ -1535,7 +1087,7 @@ function getJobFromParams(params) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusinessFromParams(params) {
 	if(isNaN(params)) {
@@ -1552,7 +1104,7 @@ function getBusinessFromParams(params) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getGameLocationFromParams(params) {
 	if(isNaN(params)) {
@@ -1569,7 +1121,7 @@ function getGameLocationFromParams(params) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getHouseFromParams(params) {
 	if(isNaN(params)) {
@@ -1586,7 +1138,7 @@ function getHouseFromParams(params) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getItemTypeFromParams(params) {
 	if(isNaN(params)) {
@@ -1603,34 +1155,8 @@ function getItemTypeFromParams(params) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
 
-function updatePlayerCash(client) {
-	triggerNetworkEvent("ag.money", client, getPlayerCurrentSubAccount(client).cash);
-}
-
-// ---------------------------------------------------------------------------
-
-function setPlayerCash(client, amount) {
-	getPlayerCurrentSubAccount(client).cash = amount;
-	updatePlayerCash(client);
-}
-
-// ---------------------------------------------------------------------------
-
-function givePlayerCash(client, amount) {
-	getPlayerCurrentSubAccount(client).cash += amount;
-	updatePlayerCash(client);
-}
-
-// ---------------------------------------------------------------------------
-
-function takePlayerCash(client, amount) {
-	getPlayerCurrentSubAccount(client).cash -= amount;
-	updatePlayerCash(client);
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearChatBox(client) {
 	//gta.messages.clear();
@@ -1639,7 +1165,7 @@ function clearChatBox(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getSkinIdFromParams(params, gameId = getServerGame()) {
 	if(isNaN(params)) {
@@ -1656,7 +1182,7 @@ function getSkinIdFromParams(params, gameId = getServerGame()) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getSkinNameFromId(modelId, gameId = getServerGame()) {
 	if(gameId >= GAME_GTA_IV) {
@@ -1671,7 +1197,7 @@ function getSkinNameFromId(modelId, gameId = getServerGame()) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getSkinIdFromName(params, gameId = getServerGame()) {
 	if(gameId == GAME_GTA_IV || gameId == GAME_GTA_IV_EFLC) {
@@ -1691,7 +1217,7 @@ function getSkinIdFromName(params, gameId = getServerGame()) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClosestHospital(position) {
 	let closest = 0;
@@ -1704,7 +1230,7 @@ function getClosestHospital(position) {
 	return getServerData().hospitals[getServerGame()][closest];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClosestPoliceStation(position) {
 	let closest = 0;
@@ -1715,18 +1241,6 @@ function getClosestPoliceStation(position) {
 	}
 
 	return getServerData().policeStations[getServerGame()][closest];
-}
-
-// -------------------------------------------------------------------------
-
-function isGTAIV() {
-	return (getServerGame() == GAME_GTA_IV);
-}
-
-// -------------------------------------------------------------------------
-
-function arrayBufferToString(arrayBuffer) {
-	return String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
 }
 
 // -------------------------------------------------------------------------
@@ -1874,12 +1388,6 @@ function getProperDeterminerForName(word) {
 
 // -------------------------------------------------------------------------
 
-function applyOffsetToVector3(position, position2) {
-	return toVector3(position.x+position2.x, position.y+position2.y, position.z+position2.z);
-}
-
-// -------------------------------------------------------------------------
-
 function getPluralForm(name) {
 	return name;
 }
@@ -1920,13 +1428,7 @@ function showConnectCameraToPlayer(client) {
 	setPlayerCameraLookAt(client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
 }
 
-// ---------------------------------------------------------------------------
-
-function doesGameHaveSnow(gameId) {
-	return (getServerGame() != GAME_GTA_IV);
-}
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function generateRandomString(length) {
 	var result           = '';
@@ -1938,10 +1440,141 @@ function generateRandomString(length) {
 	return result;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
-function getTimeDisplayUntilPlayerPayDay(client) {
-	return getTimeDifferenceDisplay(sdl.ticks-getPlayerData(client).payDayTickStart);
+// ===========================================================================
+
+function getVehicleModelIdFromParams(params) {
+	if(isNaN(params)) {
+		let modelId = getVehicleModelIdFromName(params);
+
+		if(!modelId) {
+			return false;
+		}
+
+		if(isValidVehicleModel(toInteger(modelId))) {
+			return toInteger(modelId);
+		}
+
+		return false;
+	} else {
+		if(isValidVehicleModel(toInteger(params))) {
+			return toInteger(params);
+		}
+
+		return false;
+	}
+
+	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function getVehicleModelIdFromName(params) {
+	if(isGTAIV()) {
+		for(let i in getGameData().gtaivVehicleModels) {
+			if(toLowerCase(getGameData().gtaivVehicleModels[i][0]).indexOf(toLowerCase(params)) != -1) {
+				return getGameData().gtaivVehicleModels[i][1];
+			}
+		}
+	} else {
+		let vehicleNames = getGameData().vehicleNames[getServerGame()];
+		for(let i in vehicleNames) {
+			if(toLowerCase(vehicleNames[i]).indexOf(toLowerCase(params)) != -1) {
+				return toInteger(i)+toInteger(getGameData().vehicleModelIdStart[getServerGame()]);
+			}
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getVehicleNameFromModelId(modelId) {
+	if(isGTAIV()) {
+		for(let i in getGameData().gtaivVehicleModels) {
+			if(getGameData().gtaivVehicleModels[i][1] == modelId) {
+				return getGameData().gtaivVehicleModels[i][0];
+			}
+		}
+	} else {
+		let modelIndex = modelId-getGameData().vehicleModelIdStart[getServerGame()];
+		return getGameData().vehicleNames[getServerGame()][modelIndex];
+	}
+}
+
+// ===========================================================================
+
+function isValidVehicleModel(modelId) {
+	if(getGame() == GAME_GTA_III) {
+		if(modelId < 90 || modelId > 150) {
+			return false;
+		}
+
+		return true;
+	}
+
+	if(getGame() == GAME_GTA_VC) {
+		if(modelId < 130 || modelId > 236) {
+			return false;
+		}
+
+		return true;
+	}
+
+	if(getGame() == GAME_GTA_SA) {
+		return true;
+	}
+
+	if(getGame() == GAME_GTA_IV) {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getVehiclesInRange(position, distance) {
+	return getElementsByType(ELEMENT_VEHICLE).filter(x => x.player && x.position.distance(position) <= distance);
+}
+
+// ===========================================================================
+
+function getClientsInRange(position, distance) {
+	return getPlayersInRange(position, distance);
+}
+
+// ===========================================================================
+
+function getCiviliansInRange(position, distance) {
+	return getElementsByType(ELEMENT_CIVILIAN).filter(x => x.position.distance(position) <= distance);
+}
+
+// ===========================================================================
+
+function getElementsByTypeInRange(elementType, position, distance) {
+	return getElementsByType(elementType).filter(x => x.position.distance(position) <= distance);
+}
+
+// ===========================================================================
+
+function getClosestCivilian(position) {
+	return getElementsByType(ELEMENT_CIVILIAN).reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
+}
+
+// ===========================================================================
+
+function getClosestPlayer(position, exemptClient) {
+	let clients = getClients();
+	let closest = 0;
+	for(let i in clients) {
+		if(exemptClient != clients[i]) {
+			if(getDistance(getPlayerPosition(clients[i]), position) < getDistance(getPlayerPosition(clients[closest]), position)) {
+				closest = i;
+			}
+		}
+	}
+	return clients[closest];
+}

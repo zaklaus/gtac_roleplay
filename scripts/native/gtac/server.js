@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: native.js
 // DESC: Provides util function to wrap mod-specific stuff
 // TYPE: Server (JavaScript)
@@ -10,13 +10,13 @@
 
 // Use data for each because args are probably gonna be way different for each mod
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getServerGame() {
 	return server.game;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerPosition(client) {
     if(getServerGame() == GAME_GTA_IV) {
@@ -28,14 +28,14 @@ function getPlayerPosition(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerPosition(client, position) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s position to ${position.x}, ${position.y}, ${position.z}`);
     sendPlayerSetPosition(client, position);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerHeading(client) {
     if(getServerGame() == GAME_GTA_IV) {
@@ -47,14 +47,14 @@ function getPlayerHeading(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerHeading(client, heading) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s heading to ${heading}`);
     sendPlayerSetHeading(client, heading);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerVehicle(client) {
     if(getServerGame() == GAME_GTA_IV)  {
@@ -67,13 +67,13 @@ function getPlayerVehicle(client) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerDimension(client) {
     return client.player.dimension;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerInterior(client) {
     if(getPlayerData(client)) {
@@ -83,14 +83,14 @@ function getPlayerInterior(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerDimension(client, dimension) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s dimension to ${dimension}`);
     client.player.dimension = dimension;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerInterior(client, interior) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s interior to ${interior}`);
@@ -98,7 +98,7 @@ function setPlayerInterior(client, interior) {
     getPlayerCurrentSubAccount(client).interior = interior;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerInAnyVehicle(client) {
     if(getServerGame() == GAME_GTA_IV)  {
@@ -108,7 +108,7 @@ function isPlayerInAnyVehicle(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerVehicleSeat(client) {
     if(!isPlayerInAnyVehicle(client)) {
@@ -124,37 +124,37 @@ function getPlayerVehicleSeat(client) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerSpawned(client) {
     return (client.player != null);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getVehiclePosition(vehicle) {
     return vehicle.position;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getVehicleHeading(vehicle) {
     return vehicle.heading;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getVehicleSyncer(vehicle) {
     return getElementSyncer(vehicle);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getVehicleForNetworkEvent(vehicle) {
     return vehicle;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteGameElement(element) {
     logToConsole(LOG_DEBUG, `Destroying game element ${element.id} (Type: ${element.type})`);
@@ -165,13 +165,13 @@ function deleteGameElement(element) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerInFrontVehicleSeat(client) {
     return (getPlayerVehicleSeat(client) == 0 || getPlayerVehicleSeat(client) == 1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removePlayerFromVehicle(client) {
     logToConsole(LOG_DEBUG, `Removing ${getPlayerDisplayForConsole(client)} from their vehicle`);
@@ -179,20 +179,20 @@ function removePlayerFromVehicle(client) {
     return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerSkin(client, skin) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s skin to ${skin} (${getSkinNameFromId(skin)})`);
     client.player.modelIndex = skin;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerSkin(client) {
     return client.player.modelIndex;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function disconnectPlayer(client) {
     logToConsole(LOG_DEBUG, `Disconnecting (kicking) ${getPlayerDisplayForConsole(client)}`);
@@ -200,44 +200,44 @@ function disconnectPlayer(client) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getElementSyncer(element) {
     return getClients()[element.syncer];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerWeaponAmmo(client) {
     return client.player.weaponAmmunition;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerVelocity(client, velocity) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s velocity to ${velocity.x}, ${velocity.y}, ${velocity.z}`);
     client.player.velocity = velocity;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerVelocity(client, velocity) {
     return client.player.velocity;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getElementDimension(element) {
     return element.dimension;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setElementDimension(element, dimension) {
     return element.dimension = dimension;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function givePlayerHealth(client, amount) {
     if(getPlayerHealth(client)+amount > 100) {
@@ -249,7 +249,7 @@ function givePlayerHealth(client, amount) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function givePlayerArmour(client, amount) {
     if(getPlayerArmour(client)+amount > 100) {
@@ -261,16 +261,16 @@ function givePlayerArmour(client, amount) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendToClient(client, eventName, ...args) {
     triggerNetworkEvent.call(client, eventName, args);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function receiveFromClient(eventName, handlerFunction) {
     addNetworkHandler(eventName, handlerFunction);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

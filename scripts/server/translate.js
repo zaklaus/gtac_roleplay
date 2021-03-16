@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: translate.js
 // DESC: Provides translation functions
 // TYPE: Server (JavaScript)
@@ -151,7 +151,7 @@ let translationLanguages = [
 
 translationCache = [];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 async function translateMessage(messageText, translateFrom = defaultLanguageId, translateTo = defaultLanguageId) {
 	if(translateFrom == translateTo) {
@@ -182,32 +182,32 @@ async function translateMessage(messageText, translateFrom = defaultLanguageId, 
 	});
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addTranslationToCache(originalText, translatedText, fromLanguageId, toLanguageId) {
 	translationCache[fromLanguageId][toLanguageId].push([originalText, translatedText]);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function formatTranslationURL(originalText, fromLanguageId, toLanguageId) {
 	return getServerData().translation.translationBaseURL.format(encodeURI(originalText), getLanguageShortCode(fromLanguageId), getLanguageShortCode(toLanguageId));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getLanguageShortCode(languageId) {
 	return translationLanguages[languageId][1];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getLanguageFullName(languageId) {
 	return translationLanguages[languageId][0];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getLanguageIdFromFullName(languageName) {
 	let languages = translationLanguages;
@@ -219,7 +219,7 @@ function getLanguageIdFromFullName(languageName) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getLanguageIdFromShortCode(languageShortCode) {
 	let languages = translationLanguages;
@@ -231,4 +231,4 @@ function getLanguageIdFromShortCode(languageShortCode) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

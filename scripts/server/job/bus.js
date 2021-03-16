@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: bus.js
 // DESC: Provides bus driver job functions and usage
 // TYPE: Job (JavaScript)
@@ -360,7 +360,7 @@ let busRoutes = [
     ],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getRandomBusRoute(island) {
     if(busRoutes[getServerGame()][island].length == 1) {
@@ -369,7 +369,7 @@ function getRandomBusRoute(island) {
     return getRandom(0, busRoutes[getServerGame()][island].length-1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getNextStopOnBusRoute(island, busRoute, busRouteStop) {
     if(!isLastStopOnBusRoute(island, busRoute, busRouteStop)) {
@@ -379,7 +379,7 @@ function getNextStopOnBusRoute(island, busRoute, busRouteStop) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isLastStopOnBusRoute(island, busRoute, busRouteStop) {
     if(busRouteStop == busRoutes[getServerGame()][island][busRoute].positions.length-1) {
@@ -388,20 +388,20 @@ function isLastStopOnBusRoute(island, busRoute, busRouteStop) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showNextBusStop(client) {
     getPlayerData(client).jobRouteStop = getNextStopOnBusRoute(getPlayerData(client).jobRouteStop, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop);
     showCurrentBusStop(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showCurrentBusStop(client) {
     sendJobRouteStopToPlayer(client, getBusRouteStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop), getColourByName("busDriverGreen"))
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerArrivedAtBusStop(client) {
     if(isLastStopOnBusRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
@@ -426,16 +426,16 @@ function playerArrivedAtBusStop(client) {
     }, 5000);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusRouteStopPosition(island, busRoute, busRouteStop) {
     return busRoutes[getServerGame()][island][busRoute].positions[busRouteStop];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusRouteData(island, busRoute) {
     return busRoutes[getServerGame()][island][busRoute];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

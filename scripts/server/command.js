@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: command.js
 // DESC: Provides command data, functions and usage
 // TYPE: Server (JavaScript)
@@ -23,7 +23,7 @@ let builtInCommands = [
     "dumpdoc",
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initCommandScript() {
     logToConsole(LOG_DEBUG, "[Asshat.Command]: Initializing commands script ...");
@@ -32,7 +32,7 @@ function initCommandScript() {
     logToConsole(LOG_DEBUG, "[Asshat.Command]: Initialized commands script!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadCommands() {
     return {
@@ -363,7 +363,7 @@ function loadCommands() {
     };
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addAllCommandHandlers() {
     for(let i in serverCommands) {
@@ -373,7 +373,7 @@ function addAllCommandHandlers() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCommand(command) {
     let commandGroups = getCommands()
@@ -389,49 +389,49 @@ function getCommand(command) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCommandData(command) {
     return getCommand(command);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCommands() {
     return serverCommands;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function commandData(command, handlerFunction, syntaxString = "", requiredStaffFlags = getStaffFlagValue("none"), requireLogin = true, allowOnDiscord = true, usageHelpMessage) {
     return new serverClasses.commandData(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord, usageHelpMessage);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesCommandRequireLogin(command) {
     return getCommand(command).requireLogin;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCommandRequiredPermissions(command) {
     return getCommand(command).requiredStaffFlags;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getCommandSyntaxText(command) {
     return `/${command} ${getCommand(command).syntaxString}`;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isCommandAllowedOnDiscord(command) {
     return getCommand(command).allowOnDiscord;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function disableCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -451,7 +451,7 @@ function disableCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function enableCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -471,7 +471,7 @@ function enableCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function disableAllCommandsByType(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -494,7 +494,7 @@ function disableAllCommandsByType(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function enableAllCommandsByType(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -517,14 +517,14 @@ function enableAllCommandsByType(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function onPlayerCommand(event, client, command, params) {
     processPlayerCommand(command, params, client)
 }
 addEventHandler("OnPlayerCommand", onPlayerCommand);
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function processPlayerCommand(command, params, client) {
     if(builtInCommands.indexOf(toLowerCase(command)) != -1) {
@@ -578,7 +578,7 @@ function processPlayerCommand(command, params, client) {
     commandData.handlerFunction(toLowerCase(command), params, client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 addCommandHandler("cmd", function(command, params, client) {
     if(!isConsole(client)) {
@@ -592,7 +592,7 @@ addCommandHandler("cmd", function(command, params, client) {
     getCommand(newCommand).handlerFunction(newCommand, newParams, client);
 });
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listAllCommands() {
     for(let i in serverCommands) {
@@ -602,7 +602,7 @@ function listAllCommands() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesCommandExist(command) {
     if(getCommandData(command)) {
@@ -612,4 +612,4 @@ function doesCommandExist(command) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

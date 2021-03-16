@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: trigger.js
 // DESC: Provides trigger system functions and usage
 // TYPE: Server (JavaScript)
@@ -49,7 +49,7 @@ const triggerTypes = {
     onVehicleExtraChange,
 };
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initTriggerScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Trigger]: Initializing trigger script ...");
@@ -57,7 +57,7 @@ function initTriggerScript() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createTriggerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -66,7 +66,7 @@ function createTriggerCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteTriggerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -75,7 +75,7 @@ function deleteTriggerCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addTriggerConditionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -84,7 +84,7 @@ function addTriggerConditionCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removeTriggerConditionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -93,7 +93,7 @@ function removeTriggerConditionCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addTriggerResponseCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -102,7 +102,7 @@ function addTriggerResponseCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removeTriggerResponseCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -111,7 +111,7 @@ function removeTriggerResponseCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listTriggersCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -120,7 +120,7 @@ function listTriggersCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listTriggerConditionsCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -129,7 +129,7 @@ function listTriggerConditionsCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function listTriggerResponsesCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -138,7 +138,7 @@ function listTriggerResponsesCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleTriggerEnabledCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -147,4 +147,4 @@ function toggleTriggerEnabledCommand(command, params, client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

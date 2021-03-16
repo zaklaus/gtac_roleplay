@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: client.js
 // DESC: Provides client communication and cross-endpoint operations
 // TYPE: Server (JavaScript)
@@ -14,7 +14,7 @@ function initClientScript() {
     logToConsole(LOG_DEBUG, "[Asshat.Clan]: Initializing client script ...");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addAllNetworkHandlers() {
     logToConsole(LOG_DEBUG, "[Asshat.Client]: Adding network handlers ...");
@@ -67,14 +67,14 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.player.heading", updateHeadingInPlayerData);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePlayerNameTag(client) {
     //logToConsole(LOG_DEBUG, `[Asshat.Client] Sending ${getPlayerDisplayForConsole(client)}'s updated nametag to all players`);
 	triggerNetworkEvent("ag.nametag", null, client.name, getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updateAllPlayerNameTags() {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending updated nametags to all players`);
@@ -84,14 +84,14 @@ function updateAllPlayerNameTags() {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePlayerPing(client) {
     //logToConsole(LOG_DEBUG, `[Asshat.Client] Sending ${getPlayerDisplayForConsole(client)}'s ping to all players`);
 	triggerNetworkEvent("ag.ping", null, client.name, client.ping);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerClientReady(client) {
 	setEntityData(client, "ag.isReady", true, false);
@@ -101,14 +101,14 @@ function playerClientReady(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerGUIReady(client) {
 	setEntityData(client, "ag.guiReady", true, false);
     logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client GUI is initialized and ready!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerClientStarted(client) {
 	setEntityData(client, "ag.isStarted", true, false);
@@ -118,56 +118,56 @@ function playerClientStarted(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showGameMessage(client, text, colour, duration) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Showing game message to ${getPlayerDisplayForConsole(client)} (${text}) for ${duration} milliseconds`);
     triggerNetworkEvent("ag.smallGameMessage", client, text, colour, duration);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function enableCityAmbienceForPlayer(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
     triggerNetworkEvent("ag.ambience", client, true);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function disableCityAmbienceForPlayer(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
     triggerNetworkEvent("ag.ambience", client, false);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearPlayerOwnedPeds(client) {
 	logToConsole(LOG_DEBUG, `[Asshat.Client] Clearing peds owned by ${getPlayerDisplayForConsole(client)}`);
 	triggerNetworkEvent("ag.clearPeds", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePlayerSpawnedState(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s spawned state ${toUpperCase(getOnOffFromBool(state))}`);
     triggerNetworkEvent("ag.spawned", client, state);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerControlState(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s control state ${toUpperCase(getOnOffFromBool(state))}`);
     triggerNetworkEvent("ag.control", client, state, !state);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePlayerShowLogoState(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s logo state ${toUpperCase(getOnOffFromBool(state))}`);
     triggerNetworkEvent("ag.logo", client, state);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function restorePlayerCamera(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Restoring ${getPlayerDisplayForConsole(client)}'s camera`);
@@ -180,14 +180,14 @@ function setPlayer2DRendering(client, hudState = false, labelState = false, smal
 	triggerNetworkEvent("ag.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function syncPlayerProperties(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to sync ${getPlayerDisplayForConsole(client)}'s player ped properties`);
     triggerNetworkEvent("ag.player.sync", null, client.player);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePlayerSnowState(client) {
     if(doesGameHaveSnow(getServerGame())) {
@@ -196,7 +196,7 @@ function updatePlayerSnowState(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendExcludedModelsForGroundSnowToPlayer(client) {
     if(getGameConfig().excludedGroundSnowModels[getServerGame()].length > 0) {
@@ -207,7 +207,7 @@ function sendExcludedModelsForGroundSnowToPlayer(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendRemovedWorldObjectsToPlayer(client) {
     if(getGameConfig().removedWorldObjects[getServerGame()].length > 0) {
@@ -219,7 +219,7 @@ function sendRemovedWorldObjectsToPlayer(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePlayerHotBar(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending updated hotbar data to ${getPlayerDisplayForConsole(client)}`);
@@ -242,14 +242,14 @@ function updatePlayerHotBar(client) {
     triggerNetworkEvent("ag.hotbar", client, getPlayerData(client).activeHotBarSlot, tempHotBarItems);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerWeaponDamageEnabled(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending weapon damage state for ${getPlayerDisplayForConsole(client)} to all players`);
     triggerNetworkEvent("ag.weaponDamageEnabled", null, client.name, state);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerWeaponDamageEvent(client, eventType) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending weapon damage event (${eventType}) for ${getPlayerDisplayForConsole(client)} to all players`);
@@ -257,244 +257,244 @@ function setPlayerWeaponDamageEvent(client, eventType) {
     getPlayerData(client).weaponDamageEvent = eventType;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendJobRouteStopToPlayer(client, position, colour) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending job route stop data to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showJobRouteStop", client, position, colour);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerLoginSuccessGUI(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending login success GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.loginSuccess", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerLoginFailedGUI(client, errorMessage) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending login failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.loginFailed", client, errorMessage);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerRegistrationSuccessGUI(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending registration success GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.registrationSuccess", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerRegistrationFailedGUI(client, errorMessage) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending registration failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.registrationFailed", client, errorMessage);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerGUIColours(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending GUI colours to ${getPlayerDisplayForConsole(client)}`);
 	triggerNetworkEvent("ag.guiColour", client, getServerConfig().guiColour[0], getServerConfig().guiColour[1], getServerConfig().guiColour[2]);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerGUIInit(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending GUI init signal to ${getPlayerDisplayForConsole(client)}`);
 	triggerNetworkEvent("ag.guiInit", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerLoginGUI(client, errorMessage = "") {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show login GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showLogin", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerRegistrationGUI(client, errorMessage = "") {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show registration GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showRegistration", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerNewCharacterGUI(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show new character GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showNewCharacter", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending character select GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending update character select GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.switchCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerCharacterSelectSuccessGUI(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending character select success GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.characterSelectSuccess", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerCharacterSelectFailedGUI(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending character select failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.characterSelectFailed", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerPromptGUI(client, promptMessage, promptTitle) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show prompt GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${promptTitle}, Message: ${promptMessage})`);
     triggerNetworkEvent("ag.showPrompt", client, promptMessage, promptTitle);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerInfoGUI(client, infoMessage, infoTitle) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show info GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${infoTitle}, Message: ${infoMessage})`);
     triggerNetworkEvent("ag.showInfo", client, infoMessage, infoTitle);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerErrorGUI(client, errorMessage, errorTitle) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending show error GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${errorTitle}, Message: ${errorMessage})`);
     triggerNetworkEvent("ag.showInfo", client, errorMessage, errorTitle);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendRunCodeToClient(client, code, returnTo) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending runcode to ${getPlayerDisplayForConsole(client)} (returnTo: ${getPlayerDisplayForConsole(getClientFromIndex(returnTo))}, Code: ${code})`);
     triggerNetworkEvent("ag.runCode", client, code, returnTo);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerWorkingState(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending working state (${toUpperCase(getYesNoFromBool(state))}) to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.working", client, state);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerJobType(client, jobType) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending job type (${jobType}) to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.jobType", client, jobType);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerStopJobRoute(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to abort job route to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.stopJobRoute", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerMouseCameraToggle(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to toggle mouse camera ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.mouseCamera", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerMouseCursorToggle(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to toggle mouse cursor ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.mouseCursor", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendAddAccountKeyBindToClient(client, key, keyState) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending added keybind to ${getPlayerDisplayForConsole(client)} (Key: ${sdl.getKeyName(key)}, State: ${(keyState) ? "down" : "up"})`);
     triggerNetworkEvent("ag.addKeyBind", client, toInteger(key), (keyState) ? KEYSTATE_DOWN : KEYSTATE_UP);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendRemoveAccountKeyBindToClient(client, key) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending deleted keybind to ${getPlayerDisplayForConsole(client)} (Key: ${sdl.getKeyName(key)})`);
     triggerNetworkEvent("ag.delKeyBind", client, toInteger(key));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerSetPosition(client, position) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set position signal to ${getPlayerDisplayForConsole(client)} (Position: ${position.x}, ${position.y}, ${position.z})`);
     triggerNetworkEvent("ag.position", client, position);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerSetHeading(client, heading) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set heading signal to ${getPlayerDisplayForConsole(client)} (Heading: ${heading})`);
     triggerNetworkEvent("ag.heading", client, heading);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerSetInterior(client, interior) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set interior signal to ${getPlayerDisplayForConsole(client)} (Interior: ${interior})`);
     triggerNetworkEvent("ag.interior", client, interior);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerFrozenState(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending set frozen signal to ${getPlayerDisplayForConsole(client)} (State: ${toUpperCase(getYesNoFromBool(state))})`);
     triggerNetworkEvent("ag.frozen", client, state);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function givePlayerWeapon(client, weaponId, ammo, active) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to give weapon (Weapon: ${weaponId}, Ammo: ${ammo})`);
     triggerNetworkEvent("ag.giveWeapon", client, weaponId, ammo, active);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clearPlayerWeapons(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to clear weapons`);
     triggerNetworkEvent("ag.clearWeapons", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerNewCharacterFailedGUI(client, errorMessage) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending new character failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.newCharacterFailed", client, errorMessage);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerRemoveFromVehicle(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending remove from vehicle signal to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.removeFromVehicle", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendChatBoxMessageToPlayer(client, message, colour) {
     triggerNetworkEvent("ag.m", client, message, colour)
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerItemTakeDelay(client, itemId) {
     if(getItemData(itemId)) {
@@ -509,7 +509,7 @@ function showPlayerItemTakeDelay(client, itemId) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerItemUseDelay(client, itemSlot) {
     if(getItemData(getPlayerData(client).hotBarItems[itemSlot])) {
@@ -524,7 +524,7 @@ function showPlayerItemUseDelay(client, itemSlot) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerItemDropDelay(client, itemSlot) {
     if(getItemData(getPlayerData(client).hotBarItems[itemSlot])) {
@@ -539,7 +539,7 @@ function showPlayerItemDropDelay(client, itemSlot) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerItemPickupDelay(client, itemId) {
     if(getItemData(itemId)) {
@@ -554,7 +554,7 @@ function showPlayerItemPickupDelay(client, itemId) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerItemPutDelay(client, itemSlot) {
     if(getItemData(getPlayerData(client).hotBarItems[itemSlot])) {
@@ -569,7 +569,7 @@ function showPlayerItemPutDelay(client, itemSlot) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showPlayerItemSwitchDelay(client, itemSlot) {
     if(itemSlot != -1) {
@@ -586,21 +586,21 @@ function showPlayerItemSwitchDelay(client, itemSlot) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerDrunkEffect(client, amount, duration) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Setting drunk effect for ${getPlayerDisplayForConsole(client)} to ${amount} for ${duration} milliseconds`);
     triggerNetworkEvent("ag.drunkEffect", client, amount, duration);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendPlayerClearPedState(client) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Clearing ped state for ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("ag.clearPedState", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, healthLoss) {
     let damagerEntity = getClientByName(damagerEntityName);
@@ -639,38 +639,38 @@ function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, he
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayerCameraLookAt(client, cameraPosition, lookAtPosition) {
 	triggerNetworkEvent("ag.cameraLookAt", client, cameraPosition, lookAtPosition);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setTimeMinuteDuration(client, minuteDuration) {
 	triggerNetworkEvent("ag.minuteDuration", client, minuteDuration);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updatePositionInPlayerData(client, position) {
     getPlayerData(client).syncPosition = position;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function updateHeadingInPlayerData(client, heading) {
     getPlayerData(client).syncHeading = heading;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function forcePlayerIntoSkinItemSelect(client, itemId) {
     getPlayerData(client).itemActionItem = itemId;
     triggerNetworkEvent("ag.skinSelect", client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerSkinItemSelectComplete(client, skinId) {
     getPlayerCurrentSubAccount(client).skin = skinId;
@@ -681,4 +681,124 @@ function playerSkinItemSelectComplete(client, skinId) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function updatePlayerCash(client) {
+	triggerNetworkEvent("ag.money", client, getPlayerCurrentSubAccount(client).cash);
+}
+
+// ===========================================================================
+
+function sendAllPoliceStationBlips(client) {
+	if(getGameConfig().blipSprites[getServerGame()].policeStation != -1) {
+		let tempBlips = [];
+		for(let i in getServerData().policeStations[getServerGame()]) {
+			tempBlips.push([
+				getGameConfig().blipSprites[getServerGame()].policeStation,
+				getServerData().policeStations[getServerGame()][i].position.x,
+				getServerData().policeStations[getServerGame()][i].position.y,
+				getServerData().policeStations[getServerGame()][i].position.z,
+				3,
+				getColourByName("policeBlue"),
+			]);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ===========================================================================
+
+function sendAllFireStationBlips(client) {
+	if(getGameConfig().blipSprites[getServerGame()].fireStation != -1) {
+		let tempBlips = [];
+		for(let i in getServerData().fireStations[getServerGame()]) {
+			tempBlips.push([
+				getGameConfig().blipSprites[getServerGame()].fireStation,
+				getServerData().fireStations[getServerGame()][i].position.x,
+				getServerData().fireStations[getServerGame()][i].position.y,
+				getServerData().fireStations[getServerGame()][i].position.z,
+				3,
+				getColourByName("firefighterRed"),
+			]);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ===========================================================================
+
+function sendAllHospitalBlips(client) {
+	if(getGameConfig().blipSprites[getServerGame()].hospital != -1) {
+		let tempBlips = [];
+		for(let i in getServerData().hospitals[getServerGame()]) {
+			tempBlips.push([
+				getGameConfig().blipSprites[getServerGame()].hospital,
+				getServerData().hospitals[getServerGame()][i].position.x,
+				getServerData().hospitals[getServerGame()][i].position.y,
+				getServerData().hospitals[getServerGame()][i].position.z,
+				3,
+				getColourByName("medicPink"),
+			]);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ===========================================================================
+
+function sendAllAmmunationBlips(client) {
+	if(getGameConfig().blipSprites[getServerGame()].ammunation != -1) {
+		let tempBlips = [];
+		for(let i in getServerData().ammunations[getServerGame()]) {
+			tempBlips.push([
+				getGameConfig().blipSprites[getServerGame()].ammunation,
+				getServerData().ammunations[getServerGame()][i].position.x,
+				getServerData().ammunations[getServerGame()][i].position.y,
+				getServerData().ammunations[getServerGame()][i].position.z,
+				3,
+				0
+			]);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ===========================================================================
+
+function sendAllPayAndSprayBlips(client) {
+	if(getGameConfig().blipSprites[getServerGame()].payAndSpray != -1) {
+		let tempBlips = [];
+		for(let i in getServerData().payAndSprays[getServerGame()]) {
+			tempBlips.push([
+				getGameConfig().blipSprites[getServerGame()].payAndSpray,
+				getServerData().payAndSprays[getServerGame()][i].position.x,
+				getServerData().payAndSprays[getServerGame()][i].position.y,
+				getServerData().payAndSprays[getServerGame()][i].position.z,
+				3,
+				0
+			]);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ===========================================================================
+
+function sendAllFuelStationBlips(client) {
+	if(getGameConfig().blipSprites[getServerGame()].fuelStation != -1) {
+		let tempBlips = [];
+		for(let i in getServerData().fuelStations[getServerGame()]) {
+			tempBlips.push([
+				getGameConfig().blipSprites[getServerGame()].fuelStation,
+				getServerData().fuelStations[getServerGame()][i].position.x,
+				getServerData().fuelStations[getServerGame()][i].position.y,
+				getServerData().fuelStations[getServerGame()][i].position.z,
+				3,
+				getColourByName("burntOrange"),
+			]);
+		}
+		triggerNetworkEvent("ag.blips", client, tempBlips);
+	}
+}
+
+// ===========================================================================

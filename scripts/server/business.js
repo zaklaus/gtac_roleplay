@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: business.js
 // DESC: Provides business functions and usage
 // TYPE: Server (JavaScript)
@@ -26,7 +26,7 @@ function initBusinessScript() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadBusinessFromId(businessId) {
 	let dbConnection = connectToDatabase();
@@ -44,7 +44,7 @@ function loadBusinessFromId(businessId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadBusinessesFromDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Business]: Loading businesses from database ...");
@@ -74,7 +74,7 @@ function loadBusinessesFromDatabase() {
 	return tempBusinesses;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadBusinessLocationsFromDatabase(businessId) {
 	//logToConsole(LOG_DEBUG, "[Asshat.Business]: Loading locations from database ...");
@@ -103,7 +103,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 	return tempBusinessLocations;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createBusinessCommand(command, params, client) {
 	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].business, getGameConfig().blipSprites[getServerGame()].business, getPlayerInterior(client), getPlayerDimension(client));
@@ -119,7 +119,7 @@ function createBusinessCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created business [#0099FF]${tempBusinessData.name}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createBusinessLocationCommand(command, params, client) {
 	if(!isPlayerSpawned(client)) {
@@ -145,7 +145,7 @@ function createBusinessLocationCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created location [#0099FF]${params} [#FFFFFF]for business [#0099FF]${tempBusinessData.name}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createBusiness(name, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = -1, exitVirtualWorld = -1, exitPickupModel = -1, exitBlipModel = -1) {
 	let tempBusinessData = new serverClasses.businessData(false);
@@ -168,7 +168,7 @@ function createBusiness(name, entrancePosition, exitPosition, entrancePickupMode
 	return tempBusinessData;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteBusinessCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
@@ -186,7 +186,7 @@ function deleteBusinessCommand(command, params, client) {
 	deleteBusiness(businessId, getPlayerData(client).accountData.databaseId);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteBusinessLocationCommand(command, params, client) {
 	//let businessId = toInteger(splitParams[1]);
@@ -194,7 +194,7 @@ function deleteBusinessLocationCommand(command, params, client) {
 	//messagePlayerSuccess(client, `Business '${tempBusinessData.name} deleted!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessNameCommand(command, params, client) {
 	let newBusinessName = toString(params);
@@ -212,7 +212,7 @@ function setBusinessNameCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]renamed business [#0099FF]${oldBusinessName} [#FFFFFF]to [#0099FF]${newBusinessName}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessOwnerCommand(command, params, client) {
 	let newBusinessOwner = getPlayerFromParams(params);
@@ -233,7 +233,7 @@ function setBusinessOwnerCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner to [#AAAAAA]${newBusinessOwner.name}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessClanCommand(command, params, client) {
 	let clanId = getClanFromParams(params);
@@ -254,7 +254,7 @@ function setBusinessClanCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner to the [#FF9900]${getClanData(clanId).name} [#FFFFFF]clan`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessJobCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
@@ -285,7 +285,7 @@ function setBusinessJobCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner to the [#FFFF00]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessPublicCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
@@ -304,7 +304,7 @@ function setBusinessPublicCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]owner set to [#AAAAAA]public`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function lockBusinessCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
@@ -323,7 +323,7 @@ function lockBusinessCommand(command, params, client) {
 	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessEntranceFeeCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -339,7 +339,7 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]entrance fee to [#AAAAAAA]$${entranceFee}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusinessInfoCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
@@ -380,7 +380,7 @@ function getBusinessInfoCommand(command, params, client) {
 	messagePlayerInfo(client, `🏢 [#0099FF][Business Info] [#FFFFFF]Name: [#AAAAAA]${getBusinessData(businessId).name}, [#FFFFFF]Owner: [#AAAAAA]${ownerName} (${getBusinessOwnerTypeText(getBusinessData(businessId).ownerType)}), [#FFFFFF]Locked: [#AAAAAA]${getYesNoFromBool(intToBool(getBusinessData(businessId).locked))}, [#FFFFFF]ID: [#AAAAAA]${businessId}/${getBusinessData(businessId).databaseId}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessPickupCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -412,7 +412,7 @@ function setBusinessPickupCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]pickup display to [#AAAAAA]${toLowerCase(typeParam)}'!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessInteriorTypeCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -461,7 +461,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 	createBusinessExitPickup(businessId);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessBlipCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -494,7 +494,7 @@ function setBusinessBlipCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function withdrawFromBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -523,7 +523,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	messagePlayerSuccess(client, `You withdrew $${amount} from business [#0099FF]${getBusinessData(businessId).name} till`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessBuyPriceCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -551,7 +551,7 @@ function setBusinessBuyPriceCommand(command, params, client) {
 	messagePlayerSuccess(client, `[#FFFFFF]You set the [#0099FF]${getBusinessData(businessId).name} business's for-sale price to [#AAAAAA]$${amount}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function depositIntoBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -580,7 +580,7 @@ function depositIntoBusinessCommand(command, params, client) {
 	messagePlayerSuccess(client, `You deposited $${amount} into business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function orderItemForBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -625,7 +625,7 @@ function orderItemForBusinessCommand(command, params, client) {
 	showPlayerPrompt(client, AG_PROMPT_BIZORDER, `Ordering ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${pricePerItem} each will cost a total of $${orderTotalCost}`, "Business Order Cost");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function orderItemForBusiness(businessId, itemType, amount) {
 	if(getBusinessData(businessId).till < orderTotalCost) {
@@ -639,7 +639,7 @@ function orderItemForBusiness(businessId, itemType, amount) {
 	//messagePlayerSuccess(client, `You ordered ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${getItemTypeData(itemType).orderPrice} each for business [#0099FF]${getBusinessData(businessId).name}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function viewBusinessTillAmountCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
@@ -656,7 +656,7 @@ function viewBusinessTillAmountCommand(command, params, client) {
 	messagePlayerSuccess(client, `Business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till has [#AAAAAA]$${getBusinessData(businessId).till}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function moveBusinessEntranceCommand(command, params, client) {
 	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
@@ -683,7 +683,7 @@ function moveBusinessEntranceCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]entrance to their position`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function moveBusinessExitCommand(command, params, client) {
 	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
@@ -710,7 +710,7 @@ function moveBusinessExitCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]exit to their position`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusinessDataFromDatabaseId(databaseId) {
 	let matchingBusinesses = getServerData().businesses.filter(b => b.databaseId == businessId)
@@ -720,7 +720,7 @@ function getBusinessDataFromDatabaseId(databaseId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getClosestBusinessEntrance(position) {
 	let closest = 0;
@@ -732,7 +732,7 @@ function getClosestBusinessEntrance(position) {
 	return closest;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerInAnyBusiness(client) {
 	if(doesEntityDataExist(client, "ag.inBusiness")) {
@@ -742,7 +742,7 @@ function isPlayerInAnyBusiness(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerBusiness(client) {
 	if(doesEntityDataExist(client, "ag.inBusiness")) {
@@ -752,7 +752,7 @@ function getPlayerBusiness(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllBusinessesToDatabase() {
 	for(let i in getServerData().businesses) {
@@ -760,7 +760,7 @@ function saveAllBusinessesToDatabase() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveBusinessToDatabase(businessId) {
 	let tempBusinessData = getServerData().businesses[businessId]
@@ -854,7 +854,7 @@ function saveBusinessToDatabase(businessId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllBusinessPickups() {
 	for(let i in getServerData().businesses) {
@@ -863,7 +863,7 @@ function createAllBusinessPickups() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllBusinessBlips() {
 	for(let i in getServerData().businesses) {
@@ -872,7 +872,7 @@ function createAllBusinessBlips() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createBusinessEntrancePickup(businessId) {
 	if(getBusinessData(businessId).entrancePickupModel != -1) {
@@ -897,7 +897,7 @@ function createBusinessEntrancePickup(businessId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createBusinessEntranceBlip(businessId) {
 	if(getBusinessData(businessId).entranceBlipModel != -1) {
@@ -917,7 +917,7 @@ function createBusinessEntranceBlip(businessId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createBusinessExitPickup(businessId) {
 	if(getBusinessData(businessId).hasInterior) {
@@ -940,7 +940,7 @@ function createBusinessExitPickup(businessId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createBusinessExitBlip(businessId) {
 	if(getBusinessData(businessId).hasInterior) {
@@ -962,7 +962,7 @@ function createBusinessExitBlip(businessId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteBusiness(businessId, deletedBy = 0) {
 	let tempBusinessData = getServerData().businesses[businessId];
@@ -989,7 +989,7 @@ function deleteBusiness(businessId, deletedBy = 0) {
 	getServerData().businesses.splice(businessId, 1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removePlayersFromBusiness(businessId) {
 	getClients().forEach(function(client) {
@@ -1003,7 +1003,7 @@ function removePlayersFromBusiness(businessId) {
 	});
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removePlayerFromBusinesses(client) {
 	if(isPlayerInAnyBusiness(client)) {
@@ -1011,7 +1011,7 @@ function removePlayerFromBusinesses(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function exitBusiness(client) {
 	let businessId = getEntityData(client, "ag.inBusiness");
@@ -1023,7 +1023,7 @@ function exitBusiness(client) {
 	removeEntityData(client, "ag.inBusiness");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusinessOwnerTypeText(ownerType) {
 	switch(ownerType) {
@@ -1045,7 +1045,7 @@ function getBusinessOwnerTypeText(ownerType) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusinessData(businessId) {
 	if(typeof getServerData().businesses[businessId] != null) {
@@ -1054,13 +1054,13 @@ function getBusinessData(businessId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesBusinessHaveInterior(businessId) {
 	return getBusinessData(businessId).hasInterior;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteBusinessEntrancePickup(businessId) {
 	if(getBusinessData(businessId).entrancePickup != null) {
@@ -1070,7 +1070,7 @@ function deleteBusinessEntrancePickup(businessId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteBusinessExitPickup(businessId) {
 	if(getBusinessData(businessId).exitPickup != null) {
@@ -1080,7 +1080,7 @@ function deleteBusinessExitPickup(businessId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteBusinessEntranceBlip(businessId) {
 	if(getBusinessData(businessId).entranceBlip != null) {
@@ -1090,7 +1090,7 @@ function deleteBusinessEntranceBlip(businessId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteBusinessExitBlip(businessId) {
 	if(getBusinessData(businessId).exitBlip != null) {
@@ -1100,7 +1100,7 @@ function deleteBusinessExitBlip(businessId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function reloadAllBusinessesCommand(command, params, client) {
 	let clients = getClients();
@@ -1126,7 +1126,7 @@ function reloadAllBusinessesCommand(command, params, client) {
 	messageAdminAction(`All businesses have been reloaded by an admin!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setAllBusinessIndexes() {
 	for(let i in getServerData().businesses) {
@@ -1134,7 +1134,7 @@ function setAllBusinessIndexes() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 	let tempItemData = new serverClasses.itemData(false);
@@ -1152,7 +1152,7 @@ function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 	getServerData().items[index].index = index;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function buyFromBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -1201,7 +1201,7 @@ function buyFromBusinessCommand(command, params, client) {
 	messagePlayerSuccess(client, `You bought ${amount} [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot])).name} [#FFFFFF]for $${getBusinessData(businessId).floorItemCache[itemSlot].buyPrice*amount}!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setBusinessItemSellPriceCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -1236,7 +1236,7 @@ function setBusinessItemSellPriceCommand(command, params, client) {
 	messagePlayerSuccess(client, `You changed the price of the ${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot])).name}s in slot ${itemSlot} from $${oldPrice} to $${newPrice}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function storeItemInBusinessStorageCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -1272,7 +1272,7 @@ function storeItemInBusinessStorageCommand(command, params, client) {
 	messagePlayerSuccess(client, `You moved the ${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[firstSlot])).name}s in slot ${itemSlot} to the business storage in slot ${firstSlot}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function stockItemOnBusinessFloorCommand(command, params, client) {
 	let splitParams = params.split(" ");
@@ -1308,7 +1308,7 @@ function stockItemOnBusinessFloorCommand(command, params, client) {
 	messagePlayerSuccess(client, `You moved the ${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[firstSlot])).name}s in slot ${itemSlot} of the business storage to the business floor slot ${firstSlot}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusinessStorageFirstFreeItemSlot(businessId) {
 	for(let i in getBusinessData(businessId).storageItemCache) {
@@ -1320,7 +1320,7 @@ function getBusinessStorageFirstFreeItemSlot(businessId) {
 	return -1;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBusinessFloorFirstFreeItemSlot(businessId) {
 	for(let i in getBusinessData(businessId).floorItemCache) {
@@ -1332,7 +1332,7 @@ function getBusinessFloorFirstFreeItemSlot(businessId) {
 	return -1;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function cacheAllBusinessItems() {
 	for(let i in getServerData().businesses) {
@@ -1346,4 +1346,4 @@ function cacheAllBusinessItems() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

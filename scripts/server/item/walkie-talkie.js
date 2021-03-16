@@ -2,13 +2,13 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: walkie-talkie.js
 // DESC: Provides features and usage for the walkie-talkie item type
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerActiveWalkieTalkieFrequency(client) {
 	let walkieTalkieSlot = getPlayerFirstItemSlotByUseType(client, AG_ITEM_USETYPE_WALKIETALKIE);
@@ -24,7 +24,7 @@ function getPlayerActiveWalkieTalkieFrequency(client) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
     walkieTalkieOutgoingToNearbyPlayers(transmittingPlayer, messageText);
@@ -43,7 +43,7 @@ function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
@@ -52,7 +52,7 @@ function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function walkieTalkieIncomingToNearbyPlayers(client, messageText) {
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().walkieTalkieSpeakerDistance);
@@ -61,7 +61,7 @@ function walkieTalkieIncomingToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setWalkieTalkieFrequencyCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -104,7 +104,7 @@ function setWalkieTalkieFrequencyCommand(command, params, client) {
 	messagePlayerSuccess(client, `You set the frequency of you walkie talkie in slot ${getPlayerData(client).activeHotbarSlot} to ${getItemValueDisplayForItem(getPlayerActiveItem(client))}`)
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function walkieTalkieChatCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -120,4 +120,4 @@ function walkieTalkieChatCommand(command, params, client) {
 	walkieTalkieTransmit(getPlayerActiveWalkieTalkieFrequency(client), params, client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

@@ -25,6 +25,7 @@
 	<script src="scripts/server/database.js" type="server" language="javascript" />
 	<script src="scripts/server/developer.js" type="server" language="javascript" />
 	<script src="scripts/server/discord.js" type="server" language="javascript" />
+	<script src="scripts/server/economy.js" type="server" language="javascript" />
 	<script src="scripts/server/email.js" type="server" language="javascript" />
 	<script src="scripts/server/event.js" type="server" language="javascript" />
 	<script src="scripts/server/gui.js" type="server" language="javascript" />

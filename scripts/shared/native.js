@@ -455,3 +455,108 @@ function arrayBufferToString(arrayBuffer) {
 }
 
 // ===========================================================================
+
+function vec3ToVec2(pos) {
+	return toVector2(pos[0], pos[1]);
+}
+
+// ===========================================================================
+
+function vec2ToVec3(pos, z) {
+	return toVector3(pos[0], pos[1], z);
+}
+
+// ===========================================================================
+
+function degToRad(deg) {
+	return deg * Math.PI / 180;
+}
+
+// ===========================================================================
+
+function radToDeg(rad) {
+	return rad * 180 / Math.PI;
+}
+
+// ===========================================================================
+
+function getHeadingFromPosToPos(pos1, pos2) {
+	let x = pos2.x-pos1.x;
+	let y = pos2.y-pos1.y;
+	let rad = Math.atan2(y, x);
+	let deg = radToDeg(rad);
+	deg -= 90;
+	deg = deg % 360;
+	return degToRad(deg);
+}
+
+// ===========================================================================
+
+function getAngleInCircleFromCenter(center, total, current) {
+	let gap = 360 / total;
+	let deg = Math.floor(gap*current);
+
+	if(deg <= 0) {
+		deg = 1;
+	} else {
+		if(deg >= 360) {
+			deg = 359;
+		}
+	}
+
+	return degToRad(deg);
+}
+
+// ===========================================================================
+
+function areParamsEmpty(params) {
+	if(!params || params == "" || params.length == 0 || typeof params == "undefined") {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getParamsCount(params, delimiter = " ") {
+	return params.split(delimiter).length;
+}
+
+// ===========================================================================
+
+function areThereEnoughParams(params, requiredAmount, delimiter = " ") {
+	return (params.split(delimiter).length >= requiredAmount);
+}
+
+// ===========================================================================
+
+function getParams(params, delimiter, index) {
+	return params.split(delimiter)[index];
+}
+
+// ===========================================================================
+
+function packData(...args) {
+	for(let i in args) {
+		switch(args[i].constructor.name) {
+			case "Vec3":
+				let x = args[i].x.toFixed(2);
+				let y = args[i].y.toFixed(2);
+				let z = args[i].z.toFixed(2);
+				x = x * 100;
+				y = z * 100;
+				z = z * 100;
+				let result = combine(x, y, z);
+				break;
+		}
+	}
+}
+
+// ===========================================================================
+
+function combine(a, b, c) {
+	return toInteger((a << 20) | (b << 10) | c);
+}
+
+// ===========================================================================

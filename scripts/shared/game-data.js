@@ -2798,6 +2798,68 @@ let gameData = {
 
 		]
 	],
+	policeStations: [
+		[],
+		[ // GTA III
+			[1143.875, -675.1875, 14.97], 	// Portland
+			[340.25, -1123.375, 25.98],		// Staunton Island
+			[-1253.0, -138.1875, 58.75],	// Shoreside Vale
+		],
+
+		[ // GTA Vice City
+			[399.77, -468.90, 11.73],		// Washington Beach
+			[508.96, 512.07, 12.10],		// Vice Point
+			[-657.43, 762.31, 11.59],		// Downtown
+			[-885.08, -470.44, 13.11],		// Little Havana
+		],
+	],
+	fireStations: [
+		[],
+		[ // GTA III
+			[1103.70, -52.45, 7.49], 		// Portland
+			[-78.48, -436.80, 16.17], 		// Staunton Island
+			[-1202.10, -14.67, 53.20],		// Shoreside Vale
+		],
+
+		[ // GTA Vice City
+			[-695.15, 912.58, 11.08],		// Downtown
+		],
+	],
+	hospitals: [
+		[],
+		[ // GTA III
+
+		],
+
+		[ // GTA Vice City
+			[-822.57, 1152.82, 12.41],		// Downtown (Shuman Health Care Center)
+			[-885.08, -470.44, 13.11],		// Little Havana (West Haven Community Health Care Center)
+			[-133.19, -980.76, 10.46], 		// Ocean Beach (Ocean View Hospital)
+		],
+	],
+	payAndSprays: [
+		[],
+		[ // GTA III
+			[925.4, -360.3, 10.83], 		// Portland
+			[-1142.4, 35.01, 58.61],		// Shoreside Vale
+		],
+
+		[ // GTA Vice City
+			[-869.95, -119.06, 10.63],		// Little Haiti
+			[-910.82, -1265.96, 11.79],		// Viceport
+		],
+	],
+	ammuNations: [
+		[],
+		[ // GTA III
+			[1068.3, -400.9, 15.24], 		// Portland
+			[348.2, -717.9, 26.43], 		// Staunton Island
+		],
+
+		[ // GTA Vice City
+			[-676.32, 1204.98, 11.10],		// Downtown
+		],
+	],
 };
 
 // ===========================================================================

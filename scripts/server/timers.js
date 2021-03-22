@@ -8,8 +8,6 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-const { slice } = require("core-js/core/array");
-
 let serverTimers = {};
 
 // ===========================================================================
@@ -81,10 +79,10 @@ function updatePings() {
 function checkPayDays() {
 	let clients = getClients();
 	for(let i in clients) {
-		if(isPlayerLoggedIn(client) && isPlayerSpawned(client)) {
-			if(sdl.ticks-getPlayerData(client).payDayTickStart >= getGlobalConfig().payDayTickCount) {
-				getPlayerData(client).payDayStart = sdl.ticks;
-				playerPayDay(client);
+		if(isPlayerLoggedIn(clients[i]) && isPlayerSpawned(clients[i])) {
+			if(sdl.ticks-getPlayerData(clients[i]).payDayTickStart >= getGlobalConfig().payDayTickCount) {
+				getPlayerData(clients[i]).payDayStart = sdl.ticks;
+				playerPayDay(clients[i]);
 			}
 		}
 	}

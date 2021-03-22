@@ -878,7 +878,7 @@ function saveConnectionToDatabase(client) {
 
 function createDefaultKeybindsForAccount(accountDatabaseId) {
 	for(let i in getGlobalConfig().defaultKeybinds) {
-		let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${getGlobalConfig().defaultKeybinds[i].key}, '${getGlobalConfig().defaultKeybinds[i].commandString}', UNIX_TIMESTAMP(), ${boolToInt(getGlobalConfig().defaultKeybinds[i].keyState)})`;
+		let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeybinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeybinds[i].keyState})`;
 		quickDatabaseQuery(dbQueryString);
 	}
 }
@@ -1087,7 +1087,7 @@ function generateEmailVerificationCode() {
 // ===========================================================================
 
 function sendEmailVerificationEmail(client, emailVerificationCode) {
-	let emailBodyText = getGlobalConfig().emailBody.confirmEmail;
+	let emailBodyText = getEmailConfig().bodyContent.confirmEmail;
 	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", emailVerificationCode);
 
 	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);
@@ -1098,7 +1098,7 @@ function sendEmailVerificationEmail(client, emailVerificationCode) {
 function verifyAccountEmail(accountData, verificationCode) {
 	let emailVerificationCode = generateRandomString(10);
 
-	let emailBodyText = getGlobalConfig().emailBody.confirmEmail;
+	let emailBodyText = getEmailConfig().bodyContent.confirmEmail;
 	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", emailVerificationCode);
 
 	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);

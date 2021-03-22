@@ -101,7 +101,7 @@ function createGroundItemObject(itemId) {
 		deleteGroundItemObject(itemId);
 	}
 
-	getItemData(itemId).object = gta.createObject(getItemTypeData(getItemData(itemId).itemTypeIndex).dropModel, applyOffsetToVector3(getItemData(itemId).position, getItemTypeData(getItemData(itemId).itemTypeIndex).dropPosition));
+	getItemData(itemId).object = gta.createObject(getItemTypeData(getItemData(itemId).itemTypeIndex).dropModel, applyOffsetToPos(getItemData(itemId).position, getItemTypeData(getItemData(itemId).itemTypeIndex).dropPosition));
 	getItemData(itemId).object.setRotation(getItemTypeData(getItemData(itemId).itemTypeIndex).dropRotation);
 	getItemData(itemId).object.dimension = getItemData(itemId).dimension;
 	setEntityData(getItemData(itemId).object, "ag.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
@@ -1013,7 +1013,7 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	if(!getBusinessData(businessId).locked) {
+	if(getBusinessData(businessId).locked) {
 		messagePlayerError(client, "This business is closed!");
 		return false;
 	}
@@ -1027,7 +1027,7 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 		}
 	}
 
-	messagePlayerNormal(client, `🏢 [#0099FF]== Business Items =========================`);
+	messagePlayerNormal(client, `💲 [#0099FF]== Business Items =========================`);
 	let perChunk=5;
 	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
 		const ch = Math.floor(i/perChunk);
@@ -1050,7 +1050,7 @@ function listHouseInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	if(!getHouseData(houseId).locked) {
+	if(getHouseData(houseId).locked) {
 		messagePlayerError(client, "This house is locked!");
 		return false;
 	}
@@ -1117,7 +1117,10 @@ function listItemInventoryCommand(command, params, client) {
 // ===========================================================================
 
 function getItemData(itemId) {
-	return getServerData().items[itemId];
+	if(typeof getServerData().items[itemId] != "undefined") {
+		return getServerData().items[itemId];
+	}
+	return false;
 }
 
 // ===========================================================================

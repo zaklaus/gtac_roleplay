@@ -10,9 +10,7 @@
 
 function initEmailScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Email]: Initializing email script ...");
-
     emailConfig = loadEmailConfiguration();
-
 	logToConsole(LOG_DEBUG, "[Asshat.Email]: Email script initialized successfully!");
 }
 

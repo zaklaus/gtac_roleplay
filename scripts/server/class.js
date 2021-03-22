@@ -154,6 +154,7 @@ function initClassTable() {
 
 				this.jobLockerCache = new Array(9).fill(-1);
 				this.jobEquipmentCache = [];
+				this.jobUniform = 0;
 
 				this.itemActionState = AG_ITEM_ACTION_NONE;
 				this.itemActionItem = -1;
@@ -332,6 +333,8 @@ function initClassTable() {
 				this.pedScale = toVector3(1.0, 1.0, 1.0);
 				this.walkStyle = 0;
 				this.fightStyle = 0;
+				this.health = 100;
+				this.armour = 100;
 
 				this.bodyParts = {
 					hair: [0,0],
@@ -377,6 +380,8 @@ function initClassTable() {
 					this.pedScale = toVector3(toFloat(dbAssoc["sacct_scale_x"]), toFloat(dbAssoc["sacct_scale_y"]), toFloat(dbAssoc["sacct_scale_z"]));
 					this.walkStyle = toInteger(dbAssoc["sacct_walkstyle"]);
 					this.fightStyle = toInteger(dbAssoc["sacct_fightstyle"]);
+					this.health = toInteger(dbAssoc["sacct_health"]);
+					this.armour = toInteger(dbAssoc["sacct_armour"]);
 
 					this.bodyParts = {
 						hair: [toInteger(dbAssoc["sacct_hd_part_hair_model"]) || 0, toInteger(dbAssoc["sacct_hd_part_hair_texture"]) || 0],

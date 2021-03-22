@@ -43,6 +43,7 @@
 	<script src="scripts/server/subaccount.js" type="server" language="javascript" />
 	<script src="scripts/server/timers.js" type="server" language="javascript" />
 	<script src="scripts/server/translate.js" type="server" language="javascript" />
+	<script src="scripts/server/trigger.js" type="server" language="javascript" />
 	<script src="scripts/server/utilities.js" type="server" language="javascript" />
 	<script src="scripts/server/vehicle.js" type="server" language="javascript" />
 	<script src="scripts/server/config.js" type="server" language="javascript" />

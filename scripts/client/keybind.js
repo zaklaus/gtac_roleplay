@@ -16,6 +16,14 @@ let keyBindLongHoldDuration = 1500;
 // -------------------------------------------------------------------------
 
 function bindAccountKey(key, keyState) {
+    bindKey(toInteger(key), keyState, function(event) {
+        if(hasKeyBindDelayElapsed()) {
+            lastKeyBindUse = sdl.ticks;
+            triggerNetworkEvent("ag.useKeyBind", key);
+        }
+    });
+
+    /*
     if(keyState == AG_KEYSTATE_UP) {
         bindKey(toInteger(key), KEYSTATE_UP, function(event) {
             if(hasKeyBindDelayElapsed()) {
@@ -44,6 +52,7 @@ function bindAccountKey(key, keyState) {
             }
         });
     }
+    */
 }
 addNetworkHandler("ag.addKeyBind", bindAccountKey);
 

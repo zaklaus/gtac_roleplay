@@ -130,6 +130,7 @@ let bindableKeys = {
 
 function initKeyBindScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.KeyBind]: Initializing key bind script ...");
+    getServerConfig().keyBind = loadKeyBindConfiguration();
 	logToConsole(LOG_DEBUG, "[Asshat.KeyBind]: Key bind script initialized!");
 }
 
@@ -304,6 +305,13 @@ function getKeyIdFromParams(params) {
             return i;
         }
     }
+}
+
+// ===========================================================================
+
+function loadKeyBindConfiguration() {
+	let keyBindConfigFile = loadTextFile("config/keybind.json");
+	return JSON.parse(keyBindConfigFile);
 }
 
 // ===========================================================================

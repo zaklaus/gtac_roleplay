@@ -1,10 +1,8 @@
 {
-    "databaseConfig": {
-        "host": "",
-        "user": "",
-        "pass": "",
-        "name": "",
-        "port": 3306,
-        "usePersistentConnection": true
-    }
+    "host": "",
+    "user": "",
+    "pass": "",
+    "name": "",
+    "port": 3306,
+    "usePersistentConnection": true
 }

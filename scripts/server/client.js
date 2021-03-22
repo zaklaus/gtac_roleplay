@@ -65,6 +65,8 @@ function addAllNetworkHandlers() {
 
     addNetworkHandler("ag.player.position", updatePositionInPlayerData);
     addNetworkHandler("ag.player.heading", updateHeadingInPlayerData);
+
+    addNetworkHandler("ag.skinSelected", playerFinishedSkinSelection);
 }
 
 // ===========================================================================
@@ -667,18 +669,13 @@ function updateHeadingInPlayerData(client, heading) {
 
 function forcePlayerIntoSkinItemSelect(client, itemId) {
     getPlayerData(client).itemActionItem = itemId;
-    triggerNetworkEvent("ag.skinSelect", client);
+    triggerNetworkEvent("ag.skinSelect", client, true);
 }
 
 // ===========================================================================
 
 function playerSkinItemSelectComplete(client, skinId) {
     getPlayerCurrentSubAccount(client).skin = skinId;
-    if(!isPlayerWorking(client)) {
-        setPlayerSkin(client, skinId);
-    } else {
-        messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.")
-    }
 }
 
 // ===========================================================================
@@ -799,6 +796,35 @@ function sendAllFuelStationBlips(client) {
 		}
 		triggerNetworkEvent("ag.blips", client, tempBlips);
 	}
+}
+
+// ===========================================================================
+
+function sendPlayerSetHealth(client, health) {
+    triggerNetworkEvent("ag.health", client, health);
+}
+
+
+// ===========================================================================
+
+function sendPlayerSetArmour(client, armour) {
+    triggerNetworkEvent("ag.armour", client, armour);
+}
+
+// ===========================================================================
+
+function playerFinishedSkinSelection(client, allowedSkinIndex) {
+    if(allowedSkinIndex == -1) {
+        return false;
+    } else {
+        getPlayerCurrentSubAccount(client).skin = getGameData().allowedSkins[getServerGame()][allowedSkinIndex][0];
+        if(isPlayerWorking(client)) {
+            messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.");
+            setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);
+        }
+        deleteItem(getPlayerData(client).itemActionItem);
+    }
+    triggerNetworkEvent("ag.skinSelect", client, false);
 }
 
 // ===========================================================================

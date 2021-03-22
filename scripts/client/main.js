@@ -24,6 +24,13 @@ let smallGameMessageText = "";
 let smallGameMessageColour = COLOUR_WHITE;
 let smallGameMessageTimer = null;
 
+let skinSelectMessageFontTop = null;
+let skinSelectMessageFontBottom = null;
+let skinSelectMessageTextTop = "Skin Name";
+let skinSelectMessageTextBottom = "Choose a skin using LEFT and RIGHT arrows. Use ENTER to finish or BACKSPACE to cancel.";
+let skinSelectMessageColourTop = COLOUR_YELLOW;
+let skinSelectMessageColourBottom = COLOUR_WHITE;
+
 let inSphere = false;
 let inVehicle = false;
 let inVehicleSeat = false;
@@ -60,8 +67,8 @@ let forceWeaponClipAmmo = 0;
 let itemActionDelayDuration = 0;
 let itemActionDelayStart = 0;
 let itemActionDelayEnabled = false;
-let itemActionDelayPosition = toVector2(gta.width/2, gta.height-100);
-let itemActionDelaySize = toVector2(100, 10);
+let itemActionDelayPosition = toVector2(gta.width/2-100, gta.height-10);
+let itemActionDelaySize = toVector2(200, 5);
 
 let drunkEffectAmount = 0;
 let drunkEffectDurationTimer = null;
@@ -69,6 +76,7 @@ let drunkEffectDurationTimer = null;
 let controlsEnabled = false;
 
 let usingSkinSelector = false;
+let skinSelectorIndex = 0;
 
 // ===========================================================================
 
@@ -86,8 +94,11 @@ bindEventHandler("onResourceReady", thisResource, function(event, resource) {
 		if(fontStream != null) {
             bigMessageFont = lucasFont.createFont(fontStream, 28.0);
             smallGameMessageFont = lucasFont.createFont(fontStream, 20.0);
+            skinSelectMessageFontTop = lucasFont.createFont(fontStream, 20.0);
 			fontStream.close();
 		}
+
+        skinSelectMessageFontBottom = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 
 		let logoStream = openFile(mainLogoPath);
 		if(logoStream != null) {
@@ -123,20 +134,29 @@ bindEventHandler("onResourceStop", thisResource, function(event, resource) {
 
 // ===========================================================================
 
-addEventHandler("onKeyUp", function(event, virtualKey, physicalKey, keyModifiers) {
+addEventHandler("onKeyUp", function(event, keyCode, scanCode, keyModifiers) {
     if(usingSkinSelector) {
-        if(physicalKey == SDLK_d) {
-            if(getGameData(gta.game).allowedSkins.length-1 == skinSelectorIndex) {
+        if(keyCode == SDLK_RIGHT) {
+            if(getGameData().allowedSkins.length-1 == skinSelectorIndex) {
                 skinSelectorIndex = 0;
+            } else {
+                skinSelectorIndex++;
             }
-            localPlayer.skin = getGameData(gta.game).allowedSkins[skinSelectorIndex];
-        } else if(physicalKey == SDLK_a) {
-            if(getGameData(gta.game).allowedSkins.length-1 == 0) {
-                skinSelectorIndex = getGameData(gta.game).allowedSkins.length-1;
+            localPlayer.skin = getGameData().allowedSkins[getGame()][skinSelectorIndex][0];
+            skinSelectMessageTextTop = getGameData().allowedSkins[getGame()][skinSelectorIndex][1];
+        } else if(keyCode == SDLK_LEFT) {
+            if(getGameData().allowedSkins.length-1 == 0) {
+                skinSelectorIndex = getGameData().allowedSkins[getGame()].length-1;
+            } else {
+                skinSelectorIndex--;
             }
-            localPlayer.skin = getGameData(gta.game).allowedSkins[skinSelectorIndex];
-        } else if(physicalKey == SDLK_RETURN) {
-            triggerNetworkEvent("ag.skinSelected", getGameData(gta.game).allowedSkins[skinSelectorIndex]);
+            localPlayer.skin = getGameData().allowedSkins[getGame()][skinSelectorIndex][0];
+            skinSelectMessageTextTop = getGameData().allowedSkins[getGame()][skinSelectorIndex][1];
+        } else if(keyCode == SDLK_RETURN) {
+            triggerNetworkEvent("ag.skinSelected", skinSelectorIndex);
+            usingSkinSelector = false;
+        } else if(keyCode == SDLK_BACKSPACE) {
+            triggerNetworkEvent("ag.skinSelected", -1);
             usingSkinSelector = false;
         }
     }
@@ -477,15 +497,20 @@ addEventHandler("OnDrawnHUD", function (event) {
                 itemActionDelayStart = 0;
                 triggerNetworkEvent("ag.itemActionDelayComplete");
             } else {
-                let progressWidth = itemActionDelaySize.x-Math.ceil((finishTime-sdl.ticks)/100);
-                logToConsole(LOG_DEBUG, `Item action delay in progress - ${Math.ceil((finishTime-sdl.ticks)/100)} - ${progressWidth}/${itemActionDelaySize.x}`);
-                drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2), itemActionDelayPosition.y-(itemActionDelaySize.y/2)], [progressWidth, itemActionDelaySize.y], COLOUR_LIME, COLOUR_LIME, COLOUR_LIME, COLOUR_LIME);
+                let currentTick = sdl.ticks-itemActionDelayStart;
+                let progressPercent = Math.ceil(currentTick*100/itemActionDelayDuration);
+                let width = Math.ceil(getPercentage(itemActionDelaySize.x, progressPercent));
+                logToConsole(LOG_DEBUG, `Item action delay in progress - Current: ${currentTick}/${itemActionDelayDuration} (${progressPercent}%) - Width: ${width}/${itemActionDelaySize.x}`);
+                drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2), itemActionDelayPosition.y-(itemActionDelaySize.y/2)], [width, itemActionDelaySize.y], COLOUR_LIME, COLOUR_LIME, COLOUR_LIME, COLOUR_LIME);
             }
         }
     }
 
     if(usingSkinSelector) {
-
+        if(skinSelectMessageFontTop != null && skinSelectMessageFontBottom != null) {
+            skinSelectMessageFontTop.render(skinSelectMessageTextTop, [0, gta.height-100], gta.width, 0.5, 0.0, skinSelectMessageFontTop.size, skinSelectMessageColourTop, true, true, false, true);
+            skinSelectMessageFontBottom.render(skinSelectMessageTextBottom, [0, gta.height-65], gta.width, 0.5, 0.0, skinSelectMessageFontBottom.size, skinSelectMessageColourBottom, true, true, false, true);
+        }
     }
 });
 
@@ -888,14 +913,27 @@ function getPedFromNetworkEvent(ped) {
 
 // ===========================================================================
 
-addNetworkHandler("ag.skinSelect", function() {
-    usingSkinSelector = true;
-    let frontCameraPosition = getPosInFrontOfPos(localPlayer.position, localPlayer.heading, 5);
-    setCameraLookAt(frontCamPos, localPlayer.position);
-    gui.toggleCursor(true, false);
-    localPlayer.invincible = true;
-    localPlayer.setProofs(true, true, true, true, true);
-    localPlayer.collisionsEnabled = false;
+addNetworkHandler("ag.skinSelect", function(state) {
+    if(state) {
+        skinSelectorIndex = getAllowedSkinDataBySkinId(localPlayer.skin);
+        if(localPlayer.skin != getGameData().allowedSkins[getGame()][skinSelectorIndex][0]) {
+            localPlayer.skin = getGameData().allowedSkins[getGame()][skinSelectorIndex][0];
+        }
+        usingSkinSelector = true;
+        let frontCameraPosition = getPosInFrontOfPos(localPlayer.position, localPlayer.heading, 5);
+        gta.setCameraLookAt(frontCameraPosition, localPlayer.position, true);
+        gui.showCursor(true, false);
+        localPlayer.invincible = true;
+        localPlayer.setProofs(true, true, true, true, true);
+        localPlayer.collisionsEnabled = false;
+    } else {
+        usingSkinSelector = false;
+        gta.restoreCamera(true);
+        gui.showCursor(false, true);
+        localPlayer.invincible = false;
+        localPlayer.setProofs(false, false, false, false, false);
+        localPlayer.collisionsEnabled = true;
+    }
 });
 
 // ===========================================================================
@@ -903,5 +941,11 @@ addNetworkHandler("ag.skinSelect", function() {
 function isSnowEnabled() {
     return (typeof snowing != "undefined");
 }
+
+// ===========================================================================
+
+addNetworkHandler("ag.health", function(health) {
+    localPlayer.health = health;
+});
 
 // ===========================================================================

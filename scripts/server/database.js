@@ -16,7 +16,7 @@ let persistentDatabaseConnection = null;
 
 function initDatabaseScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Initializing database script ...");
-	databaseConfiguration = loadDatabaseConfiguration();
+	databaseConfig = loadDatabaseConfiguration();
 	logToConsole(LOG_DEBUG, "[Asshat.Database]: Database script initialized successfully!");
 }
 

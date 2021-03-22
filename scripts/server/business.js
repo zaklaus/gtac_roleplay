@@ -836,7 +836,7 @@ function saveBusinessToDatabase(businessId) {
 					biz_exit_rot_z=${tempBusinessData.exitRotation},
 					biz_exit_int=${tempBusinessData.exitInterior},
 					biz_exit_vw=${tempBusinessData.exitDimension},
-					biz_has_interior=${boolToInt(tempBusinessData.hasInterior)}
+					biz_has_interior=${boolToInt(tempBusinessData.hasInterior)},
 					biz_buy_price=${tempBusinessData.buyPrice}
 				 WHERE biz_id=${tempBusinessData.databaseId}`;
 

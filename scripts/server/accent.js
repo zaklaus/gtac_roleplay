@@ -8,34 +8,6 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let accents = [
-    "English",
-	"French",
-	"Russian",
-	"Scottish",
-	"Irish",
-	"Spanish",
-	"Southern American",
-	"Italian",
-	"Australian",
-	"Jamaican",
-	"Israeli",
-	"Dutch",
-	"Brazilian",
-	"Portuguese",
-	"German",
-	"Canadian",
-	"Chinese",
-	"Japanese",
-	"Turkish",
-	"Korean",
-	"Estonian",
-	"Sicilian",
-	"Indian",
-];
-
-// ===========================================================================
-
 function getPlayerAccentText(client) {
     return getPlayerCurrentSubAccount(client).accent;
 }

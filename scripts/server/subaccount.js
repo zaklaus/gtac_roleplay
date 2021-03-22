@@ -102,6 +102,8 @@ function saveSubAccountToDatabase(subAccountData) {
 				sacct_skin=${subAccountData.skin},
 				sacct_cash=${subAccountData.cash},
 				sacct_job=${subAccountData.job},
+				sacct_health=${subAccountData.health},
+				sacct_armour=${subAccountData.armour},
 				sacct_int=${subAccountData.interior},
 				sacct_vw=${subAccountData.dimension},
 				sacct_clan=${subAccountData.clan},
@@ -339,6 +341,8 @@ function switchCharacterCommand(command, params, client) {
 	getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
 	getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
 	getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
+	getPlayerCurrentSubAccount(client).health = getPlayerHealth(client);
+	getPlayerCurrentSubAccount(client).armour = getPlayerArmour(client);
 
 	logToConsole(client, `Saving ${getPlayerDisplayForConsole(client)}'s subaccount (${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}] to database`)
 	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));

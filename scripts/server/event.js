@@ -339,11 +339,17 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[Asshat.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
         updatePlayerSpawnedState(client, true);
 
-        //logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
-        //setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
+        setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
 
-        //logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
-        //setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
+        setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
+
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player health for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).health}`);
+        setPlayerHealth(client, getPlayerCurrentSubAccount(client).health);
+
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player armour for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).armour}`);
+        setPlayerArmour(client, getPlayerCurrentSubAccount(client).armour);
 
         logToConsole(LOG_DEBUG, `[Asshat.Event] Updating all player name tags`);
         updateAllPlayerNameTags();

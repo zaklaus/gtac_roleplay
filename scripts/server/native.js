@@ -188,6 +188,32 @@ function getPlayerSkin(client) {
 
 // ===========================================================================
 
+function setPlayerHealth(client, health) {
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s health to ${health}`);
+    sendPlayerSetHealth(client, health);
+}
+
+// ===========================================================================
+
+function getPlayerHealth(client) {
+    return client.player.health;
+}
+
+// ===========================================================================
+
+function setPlayerArmour(client, armour) {
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s armour to ${armour}`);
+    sendPlayerSetArmour(client, armour);
+}
+
+// ===========================================================================
+
+function getPlayerArmour(client) {
+    return client.player.armour;
+}
+
+// ===========================================================================
+
 function setPlayerCash(client, amount) {
 	getPlayerCurrentSubAccount(client).cash = amount;
 	updatePlayerCash(client);

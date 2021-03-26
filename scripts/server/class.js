@@ -313,8 +313,6 @@ function initClassTable() {
 				this.account = 0;
 				this.skin = 0;
 				this.cash = 0;
-				this.placeOfOrigin = "";
-				this.dateOfBirth = "";
 				this.spawnPosition = toVector3(0.0, 0.0, 0.0);
 				this.spawnHeading = 0.0;
 				this.lastLogin = 0;
@@ -365,8 +363,6 @@ function initClassTable() {
 					this.account = toInteger(dbAssoc["sacct_acct"]);
 					this.skin = toInteger(dbAssoc["sacct_skin"]);
 					this.cash = toInteger(dbAssoc["sacct_cash"]);
-					this.placeOfOrigin = dbAssoc["sacct_origin"];
-					this.dateOfBirth = dbAssoc["sacct_when_born"];
 					this.spawnPosition = toVector3(toFloat(dbAssoc["sacct_pos_x"]), toFloat(dbAssoc["sacct_pos_y"]), toFloat(dbAssoc["sacct_pos_z"]));
 					this.spawnHeading = toFloat(dbAssoc["sacct_angle"]);
 					this.lastLogin = toInteger(dbAssoc["sacct_when_lastlogin"]);

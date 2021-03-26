@@ -78,6 +78,11 @@ function onPlayerChat(event, client, messageText) {
             messagePlayerError(client, "You need to login before you can chat!");
             return false;
         }
+
+        if(isPlayerMuted(client)) {
+            messagePlayerError(client, "You are muted and can't chat!");
+            return false;
+        }
     }
 
     messageText = messageText.substring(0, 128);
@@ -325,9 +330,9 @@ function onPlayerSpawn(client) {
     //logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player skin for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).skin}`);
     //setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
 
-    restorePlayerCamera(client);
+    //if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
+        restorePlayerCamera(client);
 
-    //if(getServerGame() != GAME_GTA_IV) {
         logToConsole(LOG_DEBUG, `Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
         getPlayerData(client).ped = client.player;
 
@@ -383,10 +388,6 @@ function onPlayerSpawn(client) {
             setEntityData(client.player, "ag.bodyProps", getPlayerCurrentSubAccount(client).bodyProps, true);
         }
 
-        setTimeout(function() {
-            syncPlayerProperties(client);
-        }, 1000);
-
         logToConsole(LOG_DEBUG, `[Asshat.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
         if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
             updatePlayerShowLogoState(client, true);
@@ -403,6 +404,11 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = AG_PEDSTATE_READY;
+
+        setTimeout(function() {
+            syncPlayerProperties(client);
+        }, 1000);
+    //}
 }
 
 // ===========================================================================

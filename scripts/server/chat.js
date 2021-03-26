@@ -29,6 +29,11 @@ function meActionCommand(command, params, client) {
 // ===========================================================================
 
 function doActionCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -41,6 +46,11 @@ function doActionCommand(command, params, client) {
 // ===========================================================================
 
 function shoutCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -53,6 +63,11 @@ function shoutCommand(command, params, client) {
 // ===========================================================================
 
 function talkCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -65,6 +80,11 @@ function talkCommand(command, params, client) {
 // ===========================================================================
 
 function whisperCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -77,6 +97,11 @@ function whisperCommand(command, params, client) {
 // ===========================================================================
 
 function adminChatCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -88,6 +113,11 @@ function adminChatCommand(command, params, client) {
 // ===========================================================================
 
 function clanChatCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;

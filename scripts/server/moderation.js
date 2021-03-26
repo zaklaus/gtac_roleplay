@@ -91,7 +91,7 @@ function muteClientCommand(command, params, client) {
 	}
 
 	messageAdminAction(`${targetClient.name} has been muted by an admin!`);
-	setEntityData(targetClient, "ag.muted", true, false);
+	getPlayerData(targetClient).muted = true;
 }
 
 // ===========================================================================
@@ -118,7 +118,7 @@ function unMuteClientCommand(command, params, client) {
 	}
 
 	messageAdminAction(`${targetClient.name} has been unmuted by an admin!`);
-	removeEntityData(targetClient, "ag.muted");
+	getPlayerData(targetClient).muted = false;
 }
 
 // ===========================================================================
@@ -144,7 +144,8 @@ function freezeClientCommand(command, params, client) {
 	}
 
 	messageAdminAction(`${toString(targetClient.name)} has been frozen by an admin!`);
-	setPlayerFrozenState(client, state);
+	//setPlayerFrozenState(client, state);
+	setPlayerControlState(client, false);
 }
 
 // ===========================================================================
@@ -170,7 +171,8 @@ function unFreezeClientCommand(command, params, client) {
 	}
 
 	messageAdminAction(`${toString(targetClient.name)} has been un-frozen by an admin!`);
-	sendPlayerFrozenState(client, false);
+	//sendPlayerFrozenState(client, false);
+	setPlayerControlState(client, true);
 }
 
 // ===========================================================================

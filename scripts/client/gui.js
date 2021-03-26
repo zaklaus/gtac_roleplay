@@ -93,8 +93,9 @@ let characterSelect = {
 	window: null,
 	skinImage: null,
 	nameText: null,
-	dateOfBirthText: null,
-	placeOfOriginText: null,
+	cashText: null,
+	clanText: null,
+	lastPlayedText: null,
 	previousCharacterButton: null,
 	nextCharacterButton: null,
 	selectCharacterButton: null,
@@ -116,6 +117,25 @@ let placesOfOrigin = [
 
 let characterData = [];
 let currentCharacter = 0;
+
+let inCharacterSelectScreen = false;
+let creatingCharacter = false;
+
+let newCharacterSkinSelectPedPosition = [
+	[],
+	[139.54, -903.00, 26.16],
+	[-379.16, -535.27, 17.28],
+	[2495.03, -1685.66, 13.51],
+	[904.27, -498.00, 14.522],
+];
+
+let newCharacterSkinSelectPedHeading = [
+	[],
+	[15.0],
+	[0.0],
+	[0.01],
+	[3.127],
+];
 
 app.init = function()
 {
@@ -279,200 +299,86 @@ app.init = function()
 	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating new character GUI ...`);
-
-	newCharacter.window = mexui.window(game.width/2-215, game.height/2-83, 430, 166, 'New Character', {
+	newCharacter.window = mexui.window(game.width/2-130, game.height/2-125, 300, 250, 'Character Name', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, 120),
+			backgroundColour: toColour(0, 0, 0, windowAlpha),
 			transitionTime: 500,
 		},
 		title: {
-			textSize: 11.0,
-			textColour: toColour(0, 0, 0, 255),
+			textSize: 0.0,
+			textColour: toColour(0, 0, 0, 0),
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},
 		icon: {
 			textSize: 0.0,
 			textColour: toColour(0, 0, 0, 0),
-			backgroundColour: toColour(0, 0, 0, 0),
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+		}
+	});
+	newCharacter.window.titleBarIconSize = toVector2(0,0);
+	newCharacter.window.titleBarHeight = 0;
+
+	newCharacter.window.image(115, 10, 65, 65, "files/images/main-logo.png", {
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
+	});
+
+	newCharacter.messageLabel = newCharacter.window.text(20, 75, 260, 20, 'Name your character', {
+		main: {
+			textSize: 10.0,
+			textAlign: 0.5,
+			textColour: toColour(200, 200, 200, 255),
+			textFont: robotoFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},
 	});
 
-	newCharacter.firstNameInput = newCharacter.window.textInput(10, 40, 200, 25, '', {
+	newCharacter.firstNameInput = newCharacter.window.textInput(20, 100, 260, 25, '', {
 		main: {
-			hover: {
-				backgroundColour: toColour(0, 0, 0, 200),
-				textColour:	toColour(200, 200, 200, 255),
-				textSize: 10.0,
-				textFont: robotoFont,
-			},
-			backgroundColour: toColour(0, 0, 0, 200),
-			textColour: toColour(200, 200, 200, 255),
-			textSize: 10.0,
-			textFont: robotoFont,
-		},
-		caret: {
-			lineColour: toColour(255, 255, 255, 255),
-		},
-		placeholder: {
-			backgroundColour: toColour(0, 0, 0, 200),
-			textColour: toColour(200, 200, 200, 200),
-			textSize: 10.0,
-			textFont: robotoFont,
-		},
-		focused: {
-			borderColour: toColour(focusedColour[0], focusedColour[1], focusedColour[2], textInputAlpha),
-		},
-		invalidValue: {
-			borderColour: toColour(invalidValueColour[0], invalidValueColour[1], invalidValueColour[2], textInputAlpha),
-		},
-	});
-	newCharacter.firstNameInput.placeholder = "First Name";
-
-	newCharacter.lastNameInput = newCharacter.window.textInput(10, 70, 200, 25, '', {
-		main: {
-			hover: {
-				backgroundColour: toColour(0, 0, 0, textInputAlpha),
-				textColour:	toColour(200, 200, 200, 255),
-				textSize: 10.0,
-				textFont: robotoFont,
-			},
-			backgroundColour: toColour(0, 0, 0, textInputAlpha),
-			textColour: toColour(200, 200, 200, 255),
-			textSize: 10.0,
-			textFont: robotoFont,
-		},
-		caret: {
-			lineColour: toColour(255, 255, 255, 255),
-		},
-		placeholder: {
-			backgroundColour: toColour(0, 0, 0, textInputAlpha),
-			textColour: toColour(150, 150, 150, 200),
-			textSize: 10.0,
-			textFont: robotoFont,
-		},
-		focused: {
-			borderColour: toColour(focusedColour[0], focusedColour[1], focusedColour[2], 255),
-		},
-		invalidValue: {
-			borderColour: toColour(invalidValueColour[0], invalidValueColour[1], invalidValueColour[2], 255),
-		},
-	});
-	newCharacter.lastNameInput.placeholder = "Last Name";
-
-	newCharacter.dateOfBirth = newCharacter.window.date(10, 130, 200, 25, 'Date of Birth', {
-		main: {
-			hover: {
-				backgroundColour: toColour(0, 0, 0, 200),
-				textColour:	toColour(200, 200, 200, 255),
-				textSize: 10.0,
-				textFont: robotoFont,
-			},
-			backgroundColour: toColour(0, 0, 0, 200),
-			textColour: toColour(200, 200, 200, 255),
-			textSize: 10.0,
-			textFont: robotoFont,
-		},
-		focused: {
-			borderColour: toColour(focusedColour[0], focusedColour[1], focusedColour[2], 255),
-		},
-		invalidValue: {
-			borderColour: toColour(invalidValueColour[0], invalidValueColour[1], invalidValueColour[2], 255),
-		},
-	});
-
-	newCharacter.placeOfOrigin = newCharacter.window.dropDown(10, 100, 200, 25, 'Place of Origin', {
-		main: {
-			hover: {
-				backgroundColour: toColour(0, 0, 0, 200),
-				textColour:	toColour(200, 200, 200, 255),
-				textSize: 10.0,
-				textFont: robotoFont,
-			},
-			backgroundColour: toColour(0, 0, 0, 200),
-			textColour: toColour(200, 200, 200, 255),
-			textSize: 10.0,
-			textFont: robotoFont,
-		},
-		item: {
-			hover: {
-				backgroundColour: toColour(32, 32, 32, 200),
-				textColour:	toColour(200, 200, 200, 255),
-				textSize: 10.0,
-				textFont: robotoFont,
-				width: 200,
-			},
-			backgroundColour: toColour(0, 0, 0, 200),
-			textColour:	toColour(200, 200, 200, 255),
-			textSize: 10.0,
-			textFont: robotoFont,
-			width: 200,
-		},
-		focused: {
-			borderColour: toColour(focusedColour[0], focusedColour[1], focusedColour[2], 255),
-		},
-		invalidValue: {
-			borderColour: toColour(invalidValueColour[0], invalidValueColour[1], invalidValueColour[2], 255),
-		},
-	});
-
-	for(let i in placesOfOrigin) {
-		newCharacter.placeOfOrigin.item(placesOfOrigin[i]);
-	}
-
-	newCharacter.placeOfOrigin.axis.y.scrollBar.styles.innerBar.backgroundColour = toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha);
-	newCharacter.placeOfOrigin.setScrollBarsManual(true);
-
-	newCharacter.skinImage = newCharacter.window.image(250, 32, 110, 70, "files/images/skins/none.png", {
-		focused: {
-			borderColour: toColour(0, 0, 0, 0),
-		},
-	});
-
-	newCharacter.skinDropDown = newCharacter.window.dropDown(220, 100, 200, 25, 'Choose Skin', {
-		main: {
-			hover: {
-				backgroundColour: toColour(0, 0, 0, 200),
-				textColour:	toColour(200, 200, 200, 255),
-				textSize: 10.0,
-				textFont: robotoFont,
-			},
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 255),
 			textSize: 10.0,
 			textFont: robotoFont,
-			width: 200,
 		},
-		item: {
-			hover: {
-				backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 150),
-				textColour:	toColour(200, 200, 200, 255),
-				textSize: 10.0,
-				textFont: robotoFont,
-				width: 200,
-			},
-			backgroundColour: toColour(0, 0, 0, 200),
-			textColour:	toColour(200, 200, 200, 255),
+		caret: {
+			lineColour: toColour(255, 255, 255, 255),
+		},
+		placeholder: {
+			backgroundColour: toColour(0, 0, 0, 120),
+			textColour: toColour(200, 200, 200, 200),
 			textSize: 10.0,
 			textFont: robotoFont,
-			width: 200,
-		},
+		}
 	});
+	newCharacter.firstNameInput.placeholder = "First Name";
 
-	newCharacter.skinDropDown.axis.y.scrollBar.styles.innerBar.backgroundColour = toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha);
-	newCharacter.skinDropDown.setScrollBarsManual(true);
+	newCharacter.lastNameInput = newCharacter.window.textInput(20, 130, 260, 25, '', {
+		main: {
+			backgroundColour: toColour(0, 0, 0, 120),
+			textColour: toColour(200, 200, 200, 255),
+			textSize: 10.0,
+			textFont: robotoFont,
+		},
+		caret: {
+			lineColour: toColour(255, 255, 255, 255),
+		},
+		placeholder: {
+			backgroundColour: toColour(0, 0, 0, 120),
+			textColour: toColour(150, 150, 150, 200),
+			textSize: 10.0,
+			textFont: robotoFont,
+		}
+	});
+	newCharacter.lastNameInput.placeholder = "Last Name";
 
-	for(let i in getGameData().allowedSkins[gta.game]) {
-		newCharacter.skinDropDown.item(getGameData().allowedSkins[gta.game][i][1]);
-	}
-
-	newCharacter.createButton = newCharacter.window.button(220, 130, 200, 25, 'CREATE', {
+	newCharacter.createCharacterButton = newCharacter.window.button(20, 160, 260, 25, 'CREATE CHARACTER', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
-			textColour: toColour(0, 0, 0, 255),
-			textSize: 10.0,
+			textColour: toColour(255, 255, 255, 255),
+			textSize: 12.0,
 			textFont: robotoFont,
 			textAlign: 0.5,
 		},
@@ -806,7 +712,7 @@ app.init = function()
 	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating character select GUI ...`);
-	characterSelect.window = mexui.window(game.width/2-215, game.height/2-83, 430, 166, 'Select Character', {
+	characterSelect.window = mexui.window(game.width/2-215, game.height/2-83, 430, 190, 'Select Character', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
 		},
@@ -822,7 +728,7 @@ app.init = function()
 		}
 	});
 
-	characterSelect.nameText = characterSelect.window.text(10, 40, 200, 25, 'Lastname, Firstname', {
+	characterSelect.nameText = characterSelect.window.text(5, 40, 200, 25, 'Lastname, Firstname', {
 		main: {
 			textSize: 14.0,
 			textAlign: 0.0,
@@ -834,7 +740,7 @@ app.init = function()
 		}
 	});
 
-	characterSelect.dateOfBirthText = characterSelect.window.text(10, 70, 200, 25, 'Born: ', {
+	characterSelect.cashText = characterSelect.window.text(5, 65, 200, 25, 'Cash: $0', {
 		main: {
 			textSize: 9.0,
 			textAlign: 0.0,
@@ -846,7 +752,7 @@ app.init = function()
 		}
 	});
 
-	characterSelect.placeOfOrigin = characterSelect.window.text(10, 90, 200, 25, 'From: ', {
+	characterSelect.clanText = characterSelect.window.text(5, 80, 200, 25, 'Clan: None', {
 		main: {
 			textSize: 9.0,
 			textAlign: 0.0,
@@ -858,19 +764,19 @@ app.init = function()
 		}
 	});
 
-	//characterSelect.lastPlayedText = characterSelect.window.text(10, 90, 200, 25, 'Last Played: ', {
-	//	main: {
-	//		textSize: 9.0,
-	//		textAlign: 0.0,
-	//		textColour: toColour(255, 255, 255, 220),
-	//		textFont: robotoFont,
-	//	},
-	//	focused: {
-	//		borderColour: toColour(0, 0, 0, 0),
-	//	}
-	//});
+	characterSelect.lastPlayedText = characterSelect.window.text(5, 95, 200, 25, 'Last Played: Never', {
+		main: {
+			textSize: 9.0,
+			textAlign: 0.0,
+			textColour: toColour(255, 255, 255, 220),
+			textFont: robotoFont,
+		},
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		}
+	});
 
-	characterSelect.selectCharacterButton = characterSelect.window.button(90, 130, 250, 25, 'SELECT', {
+	characterSelect.selectCharacterButton = characterSelect.window.button(85, 130, 260, 25, 'SELECT', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
@@ -883,7 +789,7 @@ app.init = function()
 		}
 	}, selectThisCharacter);
 
-	characterSelect.newCharacterButton = characterSelect.window.button(140, 180, 150, 25, 'NEW CHARACTER', {
+	characterSelect.newCharacterButton = characterSelect.window.button(5, 160, 420, 25, 'NEW CHARACTER', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
@@ -896,7 +802,7 @@ app.init = function()
 		}
 	}, showNewCharacter);
 
-	characterSelect.previousCharacterButton = characterSelect.window.button(10, 130, 75, 25, '< PREV', {
+	characterSelect.previousCharacterButton = characterSelect.window.button(5, 130, 75, 25, '< PREV', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
@@ -909,7 +815,7 @@ app.init = function()
 		}
 	}, selectPreviousCharacter);
 
-	characterSelect.nextCharacterButton = characterSelect.window.button(345, 130, 75, 25, 'NEXT >', {
+	characterSelect.nextCharacterButton = characterSelect.window.button(350, 130, 75, 25, 'NEXT >', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
@@ -979,19 +885,11 @@ let checkNewCharacter = function() {
 		return false;
 	}
 
-	if(newCharacter.skinDropDown.selectedEntryIndex != -1) {
-		skinId = getGameData().allowedSkins[gta.game][newCharacter.skinDropDown.selectedEntryIndex][0];
-	}
-
-	if(newCharacter.placeOfOrigin.selectedEntryIndex == -1) {
-		placeOfOrigin = 0;
-	}
+	skinId = getGameData().allowedSkins[gta.game][newCharacterSkinSelectorIndex][0];
 
 	triggerNetworkEvent("ag.checkNewCharacter",
 		newCharacter.firstNameInput.lines[0],
 		newCharacter.lastNameInput.lines[0],
-		toString(toString(newCharacter.dateOfBirth.day) + "/" + toString(newCharacter.dateOfBirth.month) + "/" + toString(newCharacter.dateOfBirth.year)),
-		placesOfOrigin[newCharacter.placeOfOrigin.selectedEntryIndex],
 		skinId,
 	);
 }
@@ -1122,14 +1020,15 @@ let showTwoFactorAuth = function() {
 
 // ===========================================================================
 
-let showCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
+let showCharacterSelect = function(firstName, lastName, cash, clan, lastPlayed, skinId) {
 	closeAllWindows();
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing character selection window`);
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
-	characterSelect.nameText.text = lastName + ", " + firstName;
-	characterSelect.dateOfBirthText.text = "Born: " + toString(dateOfBirth);
-	characterSelect.placeOfOrigin.text = "From: " + toString(placeOfOrigin);
+	characterSelect.nameText.text = `${firstName} ${lastName}`;
+	characterSelect.cashText.text = `Money: $${cash}`;
+	characterSelect.clanText.text = `Clan: ${clan}`;
+	characterSelect.lastPlayedText.text = `Last Played: ${lastPlayed}`;
 	characterSelect.skinImage = characterSelect.window.image(310, 32, 100, 90, "files/images/skins/none.png");
 	characterSelect.window.shown = true;
 }
@@ -1172,6 +1071,18 @@ let showNewCharacter = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing info dialog window`);
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
+	setHUDEnabled(false);
+
+	usingNewCharacterSkinSelector = true;
+	newCharacterSkinSelectorIndex = 0;
+	newCharacterSkinSelectPed = gta.createCivilian(getGameData().allowedSkins[getGame()][newCharacterSkinSelectorIndex][0], newCharacterSkinSelectPosition[getGame()]);
+	newCharacterSkinSelectPed.heading = newCharacterSkinSelectHeading[getGame()];
+	let frontCameraPosition = getPosInFrontOfPos(newCharacterSkinSelectPed.position, newCharacterSkinSelectPed.heading, 5);
+	gta.setCameraLookAt(frontCameraPosition, newCharacterSkinSelectPed.position, true);
+	gui.showCursor(true, false);
+	localPlayer.invincible = true;
+	localPlayer.setProofs(true, true, true, true, true);
+	localPlayer.collisionsEnabled = false;
 	newCharacter.window.shown = true;
 }
 
@@ -1198,13 +1109,14 @@ let selectThisCharacter = function() {
 
 // ===========================================================================
 
-let switchCharacterSelect = function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
+let switchCharacterSelect = function(firstName, lastName, cash, clan, lastPlayed, skinId) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Updating character info with data from server`);
 	setChatWindowEnabled(false);
 	characterSelect.window.shown = false;
-	characterSelect.nameText.text = lastName + ", " + firstName;
-	characterSelect.dateOfBirthText.text = "Born: " + toString(dateOfBirth);
-	characterSelect.placeOfOrigin.text = "From: " + toString(placeOfOrigin);
+	characterSelect.nameText.text = `${firstName} ${lastName}`;
+	characterSelect.cashText.text = `Money: $${cash}`;
+	characterSelect.clanText.text = `Clan: ${clan}`;
+	characterSelect.lastPlayedText.text = `Last Played: ${lastPlayed}`;
 	characterSelect.skinImage = characterSelect.window.image(310, 32, 100, 90, "files/images/skins/none.png");
 	characterSelect.window.shown = true;
 }
@@ -1232,16 +1144,16 @@ addNetworkHandler("ag.showNewCharacter", function() {
 
 // ===========================================================================
 
-addNetworkHandler("ag.showCharacterSelect", function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
+addNetworkHandler("ag.showCharacterSelect", function(firstName, lastName, cash, clan, lastPlayed, skinId) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to show character selection window`);
-	showCharacterSelect(firstName, lastName, placeOfOrigin, dateOfBirth, skinId);
+	showCharacterSelect(firstName, lastName, cash, clan, lastPlayed, skinId);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.switchCharacterSelect", function(firstName, lastName, placeOfOrigin, dateOfBirth, skinId) {
+addNetworkHandler("ag.switchCharacterSelect", function(firstName, lastName, cash, clan, lastPlayed, skinId) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received request from server to update character selection window with new info`);
-	switchCharacterSelect(firstName, lastName, placeOfOrigin, dateOfBirth, skinId);
+	switchCharacterSelect(firstName, lastName, cash, clan, lastPlayed, skinId);
 });
 
 // ===========================================================================

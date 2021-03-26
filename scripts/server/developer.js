@@ -299,9 +299,9 @@ function executeClientCodeCommand(command, params, client) {
 // ===========================================================================
 
 function saveAllServerDataCommand(command, params, client) {
-	messageAdmins(`[#FF9900]Saving all server data to database ...`);
+	messageAdmins(`[#FF9900]Vortrex has forced a manual save of all data. Initiating ...`);
 	saveAllServerDataToDatabase();
-	messageAdmins(`[#FF9900]All server data saved to database!`);
+	messageAdmins(`[#FF9900]All server data saved to database successfully!`);
 	return true;
 }
 

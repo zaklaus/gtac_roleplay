@@ -415,6 +415,9 @@ let gameConfig = {
 			sexShop: new serverClasses.interiorTemplateData(toVector3(-106.72, -19.64, 1000.71), 3),
 			bincoStore: new serverClasses.interiorTemplateData(toVector3(207.54, -109.00, 1005.13), 15),
 			wardrobe: new serverClasses.interiorTemplateData(toVector3(255.71, -41.13, 1002.02), 14),
+			cityHall: new serverClasses.interiorTemplateData(toVector3(389.538, 173.652, 1008.38), 1),
+			gantonGym: new serverClasses.interiorTemplateData(toVector3(772.2,-5.06,1000.73), 1),
+			insuranceCompany: new serverClasses.interiorTemplateData(toVector3(-2029.76, -119.624, 1035.17), 1),
 		},
 
 		{ // GTA UG

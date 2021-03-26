@@ -362,26 +362,20 @@ function getCardinalDirection(pos1, pos2) {
 
 // ===========================================================================
 
-function getTimeDifferenceDisplay(unixTimeOne, unixTimeTwo) {
-    let timeDifference = unixTimeOne-unixTimeTwo;
-    let hours = floor(timeDifference/3600);
-    let minutes = floor(timeDifference/60);
-    let hourString = "";
-	let minuteString = "";
+function getTimeDifferenceDisplay(timeStamp1, timeStamp2) {
+    let dateTime1 = new Date(timeStamp1).getTime();
+	let dateTime2 = new Date(timeStamp2).getTime();
 
-    if(hours == 1) {
-        hourString = "1 hour";
-    } else {
-        hourString = toString(hours) + " hours";
+    if(isNaN(dateTime1) || isNaN(dateTime2)) {
+        return "Unknown";
     }
 
-    if(minutes == 1) {
-        minuteString = "1 minute";
-    } else {
-        minuteString = toString(minutes) + " minute";
-    }
+	let millisecondDiff = dateTime2 - dateTime1;
 
-    return hourString + " and " + minuteString;
+    let days = Math.floor(millisecondDiff / 1000 / 60 / (60 * 24));
+    let diffDate = new Date(millisecondDiff);
+
+    return `${days} days, ${diffDate.getHours()} hours, ${diffDate.getMinutes()} minutes`;
 }
 
 // ===========================================================================
@@ -973,11 +967,11 @@ function getPlayerNameForNameTag(client) {
 // -------------------------------------------------------------------------
 
 function isPlayerSpawned(client) {
-	if(client.console) {
+	if(isConsole(client)) {
 		return false;
 	}
 
-	return (client.player != null || getPlayerData(client).syncPosition != null);
+	return ((client.player != null || getPlayerData(client).syncPosition != null) && getPlayerData(client).spawned);
 }
 
 // -------------------------------------------------------------------------
@@ -1287,3 +1281,11 @@ function getClosestPlayer(position, exemptClient) {
 	}
 	return clients[closest];
 }
+
+// ===========================================================================
+
+function isPlayerMuted(client) {
+	return getPlayerData(targetClient).muted;
+}
+
+// ===========================================================================

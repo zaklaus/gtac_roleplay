@@ -331,16 +331,16 @@ function showPlayerNewCharacterGUI(client) {
 
 // ===========================================================================
 
-function showPlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
+function showPlayerCharacterSelectGUI(client, firstName, lastName, cash, clan, lastPlayed, skin) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending character select GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
+    triggerNetworkEvent("ag.showCharacterSelect", client, firstName, lastName, cash, clan, lastPlayed, skin);
 }
 
 // ===========================================================================
 
-function updatePlayerCharacterSelectGUI(client, firstName, lastName, placeOfOrigin, dateOfBirth, skin) {
+function updatePlayerCharacterSelectGUI(client, firstName, lastName, cash, clan, lastPlayed, skin) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Sending update character select GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("ag.switchCharacterSelect", client, firstName, lastName, placeOfOrigin, dateOfBirth, skin);
+    triggerNetworkEvent("ag.switchCharacterSelect", client, firstName, lastName, cash, clan, lastPlayed, skin);
 }
 
 // ===========================================================================

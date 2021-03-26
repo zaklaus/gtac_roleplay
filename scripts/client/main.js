@@ -501,7 +501,10 @@ addEventHandler("OnDrawnHUD", function (event) {
                 let progressPercent = Math.ceil(currentTick*100/itemActionDelayDuration);
                 let width = Math.ceil(getPercentage(itemActionDelaySize.x, progressPercent));
                 logToConsole(LOG_DEBUG, `Item action delay in progress - Current: ${currentTick}/${itemActionDelayDuration} (${progressPercent}%) - Width: ${width}/${itemActionDelaySize.x}`);
-                drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2), itemActionDelayPosition.y-(itemActionDelaySize.y/2)], [width, itemActionDelaySize.y], COLOUR_LIME, COLOUR_LIME, COLOUR_LIME, COLOUR_LIME);
+
+                let backgroundColour = toColour(0, 0, 0, Math.floor(255.0*alpha));
+                drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2)-2, itemActionDelayPosition.y-(itemActionDelaySize.y/2)], [itemActionDelaySize.x+2, itemActionDelaySize.y+2], backgroundColour, backgroundColour, backgroundColour, backgroundColour);
+                drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2), itemActionDelayPosition.y-(itemActionDelaySize.y/2)-2], [width, itemActionDelaySize.y], COLOUR_LIME, COLOUR_LIME, COLOUR_LIME, COLOUR_LIME);
             }
         }
     }

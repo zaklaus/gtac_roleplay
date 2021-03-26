@@ -114,8 +114,6 @@ function saveSubAccountToDatabase(subAccountData) {
 				sacct_fightstyle=${subAccountData.fightStyle},
 				sacct_walkstyle=${subAccountData.walkStyle},
 				sacct_when_lastlogin=${subAccountData.lastLogin},
-				sacct_origin='${subAccountData.placeOfOrigin}',
-				sacct_when_born='${subAccountData.dateOfBirth}',
 				sacct_hd_part_hair_model=${subAccountData.bodyParts.hair[0]},
 				sacct_hd_part_hair_texture=${subAccountData.bodyParts.hair[1]},
 				sacct_hd_part_head_model=${subAccountData.bodyParts.head[0]},
@@ -157,16 +155,15 @@ function saveSubAccountToDatabase(subAccountData) {
 
 // ===========================================================================
 
-function createSubAccount(accountId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin) {
+function createSubAccount(accountId, firstName, lastName, skinId) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
 		let safeFirstName = escapeDatabaseString(dbConnection, firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
-		let safePlaceOfOrigin = escapeDatabaseString(dbConnection, placeOfOrigin);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_origin, sacct_when_born, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, '${safePlaceOfOrigin}', '${dateOfBirth}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
 		}
@@ -193,7 +190,9 @@ function showCharacterSelectToClient(client) {
 		getPlayerData(client).currentSubAccount = 0;
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
-		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
+		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
+		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, new Date().getTime())} ago` : "Never";
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
@@ -201,7 +200,9 @@ function showCharacterSelectToClient(client) {
 		//let emojiNumbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"];
 		messagePlayerNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
 		getPlayerData(client).subAccounts.forEach(function(subAccount, index) {
-			messagePlayerNormal(client, `${index+1} • [#AAAAAA]${subAccount.firstName} ${subAccount.lastName}`);
+			let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
+			let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `Last played ${getTimeDifferenceDisplay(tempSubAccount.lastLogin, new Date().getTime())} ago` : "Never played";
+			messagePlayerNormal(client, `${index+1} • [#BBBBBB]${subAccount.firstName} ${subAccount.lastName} ($${tempSubAccount.cash}, ${lastPlayedText})`);
 		});
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
 	}
@@ -209,7 +210,7 @@ function showCharacterSelectToClient(client) {
 
 // ===========================================================================
 
-function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrigin, skinId) {
+function checkNewCharacter(client, firstName, lastName, skinId) {
 	if(areParamsEmpty(firstName)) {
 		showPlayerNewCharacterFailedGUI(client, "First name cannot be blank!");
 		return false;
@@ -222,21 +223,11 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 	}
 	lastName = lastName.trim();
 
-	if(areParamsEmpty(dateOfBirth)) {
-		showPlayerNewCharacterFailedGUI(client, "Date of birth cannot be blank!");
-		return false;
-	}
-
-	if(areParamsEmpty(placeOfOrigin)) {
-		showPlayerNewCharacterFailedGUI(client, "Place of origin cannot be blank!");
-		return false;
-	}
-
 	if(!skinId) {
 		skinId = getServerConfig().newCharacter.skin;
 	}
 
-	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName, skinId, dateOfBirth, placeOfOrigin);
+	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName, skinId);
 	if(!subAccountData) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerNewCharacterFailedGUI("Your character could not be created!");
@@ -253,7 +244,6 @@ function checkNewCharacter(client, firstName, lastName, dateOfBirth, placeOfOrig
 	showCharacterSelectToClient(client);
 }
 
-
 // ===========================================================================
 
 function checkPreviousCharacter(client) {
@@ -266,8 +256,12 @@ function checkPreviousCharacter(client) {
 
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
+
+		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
+		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, new Date().getTime())} ago` : "Never";
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
+
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
-		updatePlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 }
 
@@ -283,8 +277,12 @@ function checkNextCharacter(client) {
 
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
+
+		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
+		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, new Date().getTime())} ago` : "Never";
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
+
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
-		updatePlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.placeOfOrigin, tempSubAccount.dateOfBirth, tempSubAccount.skin);
 	}
 }
 
@@ -307,12 +305,12 @@ function selectCharacter(client, characterId = -1) {
 
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 	//setPlayerCameraLookAt(client, getPosBehindPos(spawnPosition, spawnHeading, 5), spawnPosition);
+	getPlayerData(client).pedState = AG_PEDSTATE_SPAWNING;
 	if(getServerGame() == GAME_GTA_IV) {
 		spawnPlayer(client, spawnPosition, spawnHeading, skin);
 	} else {
 		spawnPlayer(client, spawnPosition, spawnHeading, skin, spawnInterior, spawnDimension);
 	}
-	//spawnPlayer(p(0), getServerConfig().newCharacter.spawnPosition, 0.0, 26);
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 
 	setTimeout(function() {
@@ -367,7 +365,7 @@ function newCharacterCommand(command, params, client) {
 	let firstName = splitParams[0];
 	let lastName = splitParams[1];
 
-	checkNewCharacter(client, firstName, lastName, "01/01/1901", "Liberty City", getServerConfig().newCharacter.skin);
+	checkNewCharacter(client, firstName, lastName, getServerConfig().newCharacter.skin);
 }
 
 // ===========================================================================
@@ -439,6 +437,28 @@ function getPlayerCurrentSubAccount(client) {
 function getClientSubAccountName(client) {
 	let subAccountData = getPlayerCurrentSubAccount(client);
 	return `${subAccountData.firstName} ${subAccountData.lastName}`;
+}
+
+// ===========================================================================
+
+function setFightStyleCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let fightStyleId = getFightStyleFromParams(params);
+
+	if(!fightStyle) {
+		messagePlayerError(client, `That fight style doesn't exist!`);
+		messagePlayerError(client, `Fight styles: ${getGameData().fightStyles[getServerGame()].map(fs => fs[0]).join(", ")}`);
+		return false;
+	}
+
+	setPlayerFightStyle(client, fightStyleId);
+	messagePlayerSuccess(client, `Your fight style has been set to ${getGameData().fightStyles[getServerGame()][fightStyleId][0]}`)
+
+	return true;
 }
 
 // ===========================================================================

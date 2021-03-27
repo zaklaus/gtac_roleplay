@@ -1172,13 +1172,11 @@ function buyFromBusinessCommand(command, params, client) {
 
 	if(typeof getBusinessData(businessId).floorItemCache[itemSlot] == "undefined") {
 		messagePlayerError(client, `Item slot ${itemSlot} doesn't exist!`);
-		messagePlayerTip(client, `Use /bizitems to see what the business has for sale.`);
 		return false;
 	}
 
 	if(getBusinessData(businessId).floorItemCache[itemSlot] == -1) {
 		messagePlayerError(client, `Item slot ${itemSlot} slot is empty!`);
-		messagePlayerTip(client, `Use /bizitems to see what the business has for sale.`);
 		return false;
 	}
 

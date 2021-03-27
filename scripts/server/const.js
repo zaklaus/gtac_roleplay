@@ -234,49 +234,48 @@ const AG_JOBROUTESTATE_LASTSTOP = 2;            // Player is heading to the last
 const AG_JOBROUTESTATE_PAUSED = 3;              // Route is paused for some reason. For police, this could be player accepted callout and once finished, patrol route will resume
 const AG_JOBROUTESTATE_ATSTOP = 4;              // For bus/trash stops that freeze player, this is the state when they're at one
 
-// Tutorial States
-const AG_TUTORIAL_STATE_NONE = 0;
-const AG_TUTORIAL_STATE_FINISHED = 1;
-const AG_TUTORIAL_STATE_STARTING = 2;
-const AG_TUTORIAL_STATE_PICKUPITEM = 3;
-const AG_TUTORIAL_STATE_SWITCHITEM = 4;
-const AG_TUTORIAL_STATE_USEITEM = 5;
-const AG_TUTORIAL_STATE_PUTITEM = 6;
-const AG_TUTORIAL_STATE_TAKEITEM = 7;
-const AG_TUTORIAL_STATE_EXITBIZ = 9;
-const AG_TUTORIAL_STATE_DROPITEM = 10;
-
 // Item Occupied States
-const AG_ITEM_ACTION_NONE = 0;
-const AG_ITEM_ACTION_USE = 1;
-const AG_ITEM_ACTION_PICKUP = 2;
-const AG_ITEM_ACTION_DROP = 3;
-const AG_ITEM_ACTION_SWITCH = 4;
-const AG_ITEM_ACTION_PUT = 5;
-const AG_ITEM_ACTION_TAKE = 6;
+const AG_ITEM_ACTION_NONE = 0;                  // None
+const AG_ITEM_ACTION_USE = 1;                   // Using item
+const AG_ITEM_ACTION_PICKUP = 2;                // Picking up item
+const AG_ITEM_ACTION_DROP = 3;                  // Dropping item
+const AG_ITEM_ACTION_SWITCH = 4;                // Switching item
+const AG_ITEM_ACTION_PUT = 5;                   // Putting item (into trunk, dash, crate, etc)
+const AG_ITEM_ACTION_TAKE = 6;                  // Taking item (from trunk, dash, crate, etc)
 
 // Ped States
-const AG_PEDSTATE_NONE = 2;
-const AG_PEDSTATE_READY = 1;
-const AG_PEDSTATE_DRIVER = 2;
-const AG_PEDSTATE_PASSENGER = 3;
-const AG_PEDSTATE_DEAD = 4;
-const AG_PEDSTATE_ENTERINGPROPERTY = 5;
-const AG_PEDSTATE_EXITINGPROPERTY = 6;
-const AG_PEDSTATE_ENTERINGVEHICLE = 7;
-const AG_PEDSTATE_EXITINGVEHICLE = 8;
-const AG_PEDSTATE_BINDED = 9;
-const AG_PEDSTATE_TAZED = 10;
-const AG_PEDSTATE_INTRUNK = 11;
-const AG_PEDSTATE_INITEM = 12;
-const AG_PEDSTATE_HANDSUP = 13;
-const AG_PEDSTATE_SPAWNING = 14;
+const AG_PEDSTATE_NONE = 2;                     // None
+const AG_PEDSTATE_READY = 1;                    // Ready
+const AG_PEDSTATE_DRIVER = 2;                   // Driving a vehicle
+const AG_PEDSTATE_PASSENGER = 3;                // In a vehicle as passenger
+const AG_PEDSTATE_DEAD = 4;                     // Dead
+const AG_PEDSTATE_ENTERINGPROPERTY = 5;         // Entering a property
+const AG_PEDSTATE_EXITINGPROPERTY = 6;          // Exiting a property
+const AG_PEDSTATE_ENTERINGVEHICLE = 7;          // Entering a vehicle
+const AG_PEDSTATE_EXITINGVEHICLE = 8;           // Exiting a vehicle
+const AG_PEDSTATE_BINDED = 9;                   // Binded by rope or handcuffs
+const AG_PEDSTATE_TAZED = 10;                   // Under incapacitating effect of tazer
+const AG_PEDSTATE_INTRUNK = 11;                 // In vehicle trunk
+const AG_PEDSTATE_INITEM = 12;                  // In item (crate, box, etc)
+const AG_PEDSTATE_HANDSUP = 13;                 // Has hands up (surrendering)
+const AG_PEDSTATE_SPAWNING = 14;                // Spawning
 
-const AG_2FA_STATE_NONE = 0;
-const AG_2FA_STATE_CODEINPUT = 1;
-const AG_2FA_STATE_SETUP_CODETOAPP = 2;
-const AG_2FA_STATE_SETUP_CODEFROMAPP = 3;
+const AG_2FA_STATE_NONE = 0;                    // None
+const AG_2FA_STATE_CODEINPUT = 1;               // Waiting on player to enter code to play
+const AG_2FA_STATE_SETUP_CODETOAPP = 2;         // Providing player with a code to put in their auth app
+const AG_2FA_STATE_SETUP_CODEFROMAPP = 3;       // Waiting on player to enter code from auth app to set up
 
-const AG_FORGOTPASS_STATE_NONE = 0;
-const AG_FORGOTPASS_STATE_CODEINPUT = 1;
-const AG_FORGOTPASS_STATE_SETPASS = 2;
+const AG_FORGOTPASS_STATE_NONE = 0;             // None
+const AG_FORGOTPASS_STATE_CODEINPUT = 1;        // Waiting on player to enter code sent via email
+const AG_FORGOTPASS_STATE_SETPASS = 2;          // Waiting on player to enter new password
+
+const AG_NPC_COND_MATCH_NONE = 0;               // None (invalid)
+const AG_NPC_COND_MATCH_EQ = 1;                 // Must be equal to
+const AG_NPC_COND_MATCH_GT = 2;                 // Must be greater than
+const AG_NPC_COND_MATCH_LT = 3;                 // Must be less than
+const AG_NPC_COND_MATCH_GTEQ = 4;               // Must be greater than or equal to
+const AG_NPC_COND_MATCH_LTEQ = 5;               // Must be less than or equal to
+const AG_NPC_COND_MATCH_CONTAINS = 6;           // Must contain string (case insensitive)
+const AG_NPC_COND_MATCH_CONTAINS_CASE = 7;      // Must contain string (case sensitive)
+const AG_NPC_COND_MATCH_EXACT = 8;              // Must match string exactly (case insensitive)
+const AG_NPC_COND_MATCH_EXACT_CASE = 9;         // Must match string exactly (case insensitive)

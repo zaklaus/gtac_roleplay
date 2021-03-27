@@ -32,6 +32,12 @@ addNetworkHandler("ag.m", function(messageString, colour) {
 
 // ===========================================================================
 
+addNetworkHandler("ag.chatScrollLines", function(amount) {
+    scrollAmount = amount;
+});
+
+// ===========================================================================
+
 function addToChatBoxHistory(messageString, colour) {
     chatBoxHistory.push([messageString, colour]);
 }

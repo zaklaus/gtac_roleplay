@@ -200,6 +200,31 @@ function changePasswordCommand(command, params, client) {
 
 // ===========================================================================
 
+function setAccountChatScrollLinesCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(isNaN(params)) {
+		messagePlayerError(client, "The line amount must be a number!");
+		return false;
+	}
+
+	if(toInteger(params) < 1 || toInteger(params) > 6) {
+		messagePlayerError(client, "The line amount must be between 1 and 6!");
+		return false;
+	}
+
+	let lines = Math.ceil(toInteger(params));
+
+	getPlayerData(client).accountData.chatScrollLines = lines;
+	sendPlayerChatScrollLines(client, lines);
+	messagePlayerSuccess(client, `Your chatbox will now scroll ${toInteger(lines)} lines at a time!`);
+}
+
+// ===========================================================================
+
 function setAccountEmailCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -214,7 +239,7 @@ function setAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	//if(getPlayerData(client).accountData.emailAddress != "") {
+	//if(.emailAddress != "") {
 	//	messagePlayerError(client, `Your email is already set!`);
 	//	return false;
 	//}
@@ -501,19 +526,19 @@ function saveAccountToDatabase(accountData) {
 		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff title escaped successfully`);
 		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
 		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s email address escaped successfully`);
-		let safeIRCAccount = escapeDatabaseString(dbConnection, accountData.ircAccount);
-		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s irc account escaped successfully`);
 
 		let dbQueryString =
 			`UPDATE acct_main SET
 				 acct_email='${safeEmailAddress}',
 				acct_pass='${safePassword}',
 				acct_settings=${accountData.settings},
+				acct_staff_title=${safeStaffTitle},
 				acct_staff_flags=${accountData.flags.admin},
 				acct_mod_flags=${accountData.flags.moderation},
 				acct_discord=${accountData.discordAccount},
 				acct_ip=INET_ATON('${accountData.ipAddress}'),
-				acct_code_verifyemail='${accountData.emailVerificationCode}'
+				acct_code_verifyemail='${accountData.emailVerificationCode}',
+				acct_chat_scroll_lines='${accountData.chatScrollLines}',
 			 WHERE acct_id=${accountData.databaseId}`;
 
 		//dbQueryString = dbQueryString.trim();

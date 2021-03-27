@@ -828,3 +828,9 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
 }
 
 // ===========================================================================
+
+function sendPlayerChatScrollLines(client, amount) {
+    triggerNetworkEvent("ag.chatScrollLines", client, amount);
+}
+
+// ===========================================================================

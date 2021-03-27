@@ -38,6 +38,7 @@
 	<script src="scripts/server/messaging.js" type="server" language="javascript" />
 	<script src="scripts/server/misc.js" type="server" language="javascript" />
 	<script src="scripts/server/native.js" type="server" language="javascript" />
+	<script src="scripts/server/npc.js" type="server" language="javascript" />
 	<script src="scripts/server/moderation.js" type="server" language="javascript" />
 	<script src="scripts/server/security.js" type="server" language="javascript" />
 	<script src="scripts/server/subaccount.js" type="server" language="javascript" />

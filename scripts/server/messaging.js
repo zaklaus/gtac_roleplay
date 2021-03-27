@@ -144,19 +144,19 @@ function messagePlayerTip(client, messageText) {
 // ===========================================================================
 
 function messagePlayerTalk(client, talkingClient, messageText) {
-    messagePlayerNormal(client, `${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
+    messagePlayerNormal(client, `🗣️ ${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
 }
 
 // ===========================================================================
 
 function messagePlayerWhisper(client, whisperingClient, messageText) {
-    messagePlayerNormal(client, `${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
+    messagePlayerNormal(client, `🤫 ${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
 }
 
 // ===========================================================================
 
 function messagePlayerShout(client, shoutingClient, messageText) {
-    messagePlayerNormal(client, `${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
+    messagePlayerNormal(client, `🗣️ ${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
 
 // ===========================================================================
@@ -176,13 +176,13 @@ function messagePlayerMeAction(client, doingActionClient, messageText) {
 // ===========================================================================
 
 function messagePlayerClanChat(client, clanChattingClient, messageText) {
-    messagePlayerNormal(client, `(${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
+    messagePlayerNormal(client, `👥 (${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
 }
 
 // ===========================================================================
 
 function messagePlayerAdminChat(client, adminChattingClient, messageText) {
-    messagePlayerNormal(client, `[ADMIN CHAT] [#AAAAAA]${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
+    messagePlayerNormal(client, `🛡️ [ADMIN CHAT] [#AAAAAA]${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
 }
 
 // ===========================================================================

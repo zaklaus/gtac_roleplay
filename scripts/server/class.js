@@ -1127,6 +1127,150 @@ function initClassTable() {
 					this.dropDelay = toInteger(dbAssoc["item_type_delay_drop"]);
 				}
 			}
+		},
+		npcData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.server = 0;
+				this.firstName = "John";
+				this.lastName = "Doe";
+				this.middleName = "Q";
+				this.skin = 0;
+				this.cash = 0;
+				this.spawnPosition = toVector3(0.0, 0.0, 0.0);
+				this.spawnHeading = 0.0;
+				this.clan = 0;
+				this.isWorking = false;
+				this.jobUniform = this.skin;
+				this.lastJobVehicle = null;
+				this.job = 0;
+				this.weapons = [];
+				this.interior = 0;
+				this.dimension = 0;
+				this.pedScale = toVector3(1.0, 1.0, 1.0);
+				this.walkStyle = 0;
+				this.fightStyle = 0;
+				this.health = 100;
+				this.armour = 100;
+				this.currentAction = AG_NPCACTION_NONE;
+				this.triggers = [];
+
+				this.bodyParts = {
+					hair: [0,0],
+					head: [0,0],
+					upper: [0,0],
+					lower: [0,0],
+				};
+
+				this.bodyProps = {
+					hair: [0,0],
+					eyes: [0,0],
+					head: [0,0],
+					leftHand: [0,0],
+					rightHand: [0,0],
+					leftWrist: [0,0],
+					rightWrist: [0,0],
+					hip: [0,0],
+					leftFoot: [0,0],
+					rightFoot: [0,0],
+				};
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc["npc_id"]);
+					this.server = toInteger(dbAssoc["npc_server"]);
+					this.firstName = dbAssoc["npc_name_first"];
+					this.lastName = dbAssoc["npc_name_last"];
+					this.middleName = dbAssoc["npc_name_middle"] || "";
+					this.skin = toInteger(dbAssoc["npc_skin"]);
+					this.cash = toInteger(dbAssoc["npc_cash"]);
+					this.spawnPosition = toVector3(toFloat(dbAssoc["npc_pos_x"]), toFloat(dbAssoc["npc_pos_y"]), toFloat(dbAssoc["npc_pos_z"]));
+					this.spawnHeading = toFloat(dbAssoc["npc_angle"]);
+					this.lastLogin = toInteger(dbAssoc["npc_when_lastlogin"]);
+					this.clan = toInteger(dbAssoc["npc_clan"]);
+					this.clanFlags = toInteger(dbAssoc["npc_clan_flags"]);
+					this.clanRank = toInteger(dbAssoc["npc_clan_rank"]);
+					this.clanTitle = toInteger(dbAssoc["npc_clan_title"]);
+					this.job = toInteger(dbAssoc["npc_job"]);
+					this.interior = toInteger(dbAssoc["npc_int"]);
+					this.dimension = toInteger(dbAssoc["npc_vw"]);
+					this.pedScale = toVector3(toFloat(dbAssoc["npc_scale_x"]), toFloat(dbAssoc["npc_scale_y"]), toFloat(dbAssoc["npc_scale_z"]));
+					this.walkStyle = toInteger(dbAssoc["npc_walkstyle"]);
+					this.fightStyle = toInteger(dbAssoc["npc_fightstyle"]);
+					this.health = toInteger(dbAssoc["npc_health"]);
+					this.armour = toInteger(dbAssoc["npc_armour"]);
+
+					this.bodyParts = {
+						hair: [toInteger(dbAssoc["npc_hd_part_hair_model"]) || 0, toInteger(dbAssoc["npc_hd_part_hair_texture"]) || 0],
+						head: [toInteger(dbAssoc["npc_hd_part_head_model"]) || 0, toInteger(dbAssoc["npc_hd_part_head_texture"]) || 0],
+						upper: [toInteger(dbAssoc["npc_hd_part_upper_model"]) || 0, toInteger(dbAssoc["npc_hd_part_upper_texture"]) || 0],
+						lower: [toInteger(dbAssoc["npc_hd_part_lower_model"]) || 0, toInteger(dbAssoc["npc_hd_part_lower_texture"]) || 0],
+					};
+
+					this.bodyProps = {
+						hair: [toInteger(dbAssoc["npc_hd_prop_hair_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_hair_texture"]) || 0],
+						eyes: [toInteger(dbAssoc["npc_hd_prop_eyes_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_eyes_texture"]) || 0],
+						head: [toInteger(dbAssoc["npc_hd_prop_head_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_head_texture"]) || 0],
+						leftHand: [toInteger(dbAssoc["npc_hd_prop_lefthand_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_lefthand_texture"]) || 0],
+						rightHand: [toInteger(dbAssoc["npc_hd_prop_righthand_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_righthand_texture"]) || 0],
+						leftWrist: [toInteger(dbAssoc["npc_hd_prop_leftwrist_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_leftwrist_texture"]) || 0],
+						rightWrist: [toInteger(dbAssoc["npc_hd_prop_rightwrist_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_rightwrist_texture"]) || 0],
+						hip: [toInteger(dbAssoc["npc_hd_prop_hip_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_hip_texture"]) || 0],
+						leftFoot: [toInteger(dbAssoc["npc_hd_prop_leftfoot_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_leftfoot_texture"]) || 0],
+						rightFoot: [toInteger(dbAssoc["npc_hd_prop_rightfoot_model"]) || 0, toInteger(dbAssoc["npc_hd_prop_rightfoot_texture"]) || 0],
+					};
+				}
+			}
+		},
+		npcTriggerData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.npcId = 0;
+				this.index = 0;
+				this.npc = 0;
+				this.triggerType = 0;
+				this.conditions = [];
+				this.responses = [];
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc["npc_trig_id"]);
+					this.npc = toInteger(dbAssoc["npc_trig_npc"]);
+					this.triggerType = toInteger(dbAssoc["npc_trig_type"]);
+				}
+			}
+		},
+		npcTriggerConditionData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.triggerId = 0;
+				this.index = 0;
+				this.conditionType = 0;
+				this.conditionValue = false;
+				this.matchType = false;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc["npc_trig_cond_id"]);
+					this.npc = toInteger(dbAssoc["npc_trig_cond_trig"]);
+					this.conditionType = toInteger(dbAssoc["npc_trig_cond_type"]);
+					this.conditionValue = toInteger(dbAssoc["npc_trig_cond_val"]);
+					this.matchType = toInteger(dbAssoc["npc_trig_cond_val"]);
+				}
+			}
+		},
+		npcTriggerResponseData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.triggerId = 0;
+				this.index = 0;
+				this.responseType = 0;
+				this.responseValue = false;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc["npc_trig_resp_id"]);
+					this.npc = toInteger(dbAssoc["npc_trig_resp_trig"]);
+					this.responseType = toInteger(dbAssoc["npc_trig_resp_type"]);
+					this.responseValue = toInteger(dbAssoc["npc_trig_resp_val"]);
+				}
+			}
 		}
 	}
 

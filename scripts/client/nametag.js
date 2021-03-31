@@ -20,18 +20,30 @@ let playerColours = {};
 let playerPaused = {};
 let playerPing = {};
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-addEventHandler("OnResourceReady", function(event, resource) {
-	if (resource == thisResource) {
-		nametagFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
-		afkStatusFont = lucasFont.createDefaultFont(18.0, "Roboto", "Light");
-	}
-});
+function initNameTagScript() {
+	logToConsole(LOG_DEBUG, "[Asshat.NameTag]: Initializing nametag script ...");
+	nametagFont = loadNameTagFont();
+	afkStatusFont = loadPausedStatusFont();
+	logToConsole(LOG_DEBUG, "[Asshat.NameTag]: Nametag script initialized!");
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-addNetworkHandler("ag.nametag", function(clientName, characterName, colour, paused, ping) {
+function loadNameTagFont() {
+	return lucasFont.createDefaultFont(12.0, "Roboto", "Light");
+}
+
+// ===========================================================================
+
+function loadPausedStatusFont() {
+	return lucasFont.createDefaultFont(18.0, "Roboto", "Light");
+}
+
+// ===========================================================================
+
+function updatePlayerNameTag(clientName, characterName, colour, paused, ping) {
 	playerNames[clientName] = characterName;
 	playerColours[clientName] = colour;
 	playerPaused[clientName] = paused;
@@ -45,15 +57,15 @@ addNetworkHandler("ag.nametag", function(clientName, characterName, colour, paus
 			}
 		}
 	}
-});
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-addNetworkHandler("ag.ping", function(clientName, ping) {
+function updatePlayerPing(clientName, ping) {
 	playerPing[clientName] = ping;
-});
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, afk, skin) {
 	if(nametagFont == null) {
@@ -122,7 +134,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function updateNametags(element) {
 	if(localPlayer != null) {
@@ -175,7 +187,7 @@ function updateNametags(element) {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getClientFromPlayer(player) {
 	getClients().forEach(function(client) {
@@ -185,9 +197,9 @@ function getClientFromPlayer(player) {
 	});
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-addEventHandler("OnDrawnHUD", function(event) {
+function processNameTagRendering(event) {
 	if(gta.game >= GAME_GTA_IV) {
 		return false;
 	}
@@ -197,12 +209,12 @@ addEventHandler("OnDrawnHUD", function(event) {
 			updateNametags(player);
 		}
 	});
-});
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function createColour(alpha, red, green, blue) {
 	return alpha << 24 | red << 16 | green << 8 | blue;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================

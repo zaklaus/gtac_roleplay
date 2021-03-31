@@ -121,7 +121,7 @@ function getPlayerVehicleSeat(client) {
 // ===========================================================================
 
 function isPlayerSpawned(client) {
-    return (client.player != null);
+    return client.player.isType(ELEMENT_PLAYER);
 }
 
 // ===========================================================================

@@ -25,6 +25,8 @@ let windowTitleAlpha = 200;
 let buttonAlpha = 200;
 let textInputAlpha = 200;
 
+// ===========================================================================
+
 let login = {
 	window: null,
 	logoImage: null,
@@ -33,6 +35,8 @@ let login = {
 	passwordInput: null,
 	loginButton: null,
 };
+
+// ===========================================================================
 
 let twoFactorAuth = {
 	window: null,
@@ -44,6 +48,8 @@ let twoFactorAuth = {
 	submitButton: null,
 };
 
+// ===========================================================================
+
 let register = {
 	window: null,
 	logoImage: null,
@@ -53,6 +59,8 @@ let register = {
 	emailInput: null,
 	registerButton: null,
 };
+
+// ===========================================================================
 
 let newCharacter = {
 	window: null,
@@ -64,11 +72,15 @@ let newCharacter = {
 	skinImage: null,
 };
 
+// ===========================================================================
+
 let errorDialog = {
 	window: null,
 	messageLabel: null,
 	okayButton: null,
 };
+
+// ===========================================================================
 
 let infoDialog = {
 	window: null,
@@ -76,11 +88,15 @@ let infoDialog = {
 	okayButton: null,
 };
 
+// ===========================================================================
+
 let listDialog = {
 	window: null,
 	messageLabel: null,
 	listGrid: null,
 };
+
+// ===========================================================================
 
 let yesNoDialog = {
 	window: null,
@@ -88,6 +104,8 @@ let yesNoDialog = {
 	yesButton: null,
 	noButton: null,
 };
+
+// ===========================================================================
 
 let characterSelect = {
 	window: null,
@@ -102,6 +120,8 @@ let characterSelect = {
 	newCharacterButton: null,
 };
 
+// ===========================================================================
+
 let placesOfOrigin = [
 	"Liberty City",
 	"Vice City",
@@ -115,30 +135,24 @@ let placesOfOrigin = [
 	"Other",
 ];
 
+// ===========================================================================
+
 let characterData = [];
 let currentCharacter = 0;
 
 let inCharacterSelectScreen = false;
 let creatingCharacter = false;
 
-let newCharacterSkinSelectPedPosition = [
-	[],
-	[139.54, -903.00, 26.16],
-	[-379.16, -535.27, 17.28],
-	[2495.03, -1685.66, 13.51],
-	[904.27, -498.00, 14.522],
-];
+// ===========================================================================
 
-let newCharacterSkinSelectPedHeading = [
-	[],
-	[15.0],
-	[0.0],
-	[0.01],
-	[3.127],
-];
+function initGUIScript() {
+	logToConsole(LOG_DEBUG, "[Asshat.GUI]: Initializing GUI script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.GUI]: GUI script initialized!");
+}
 
-app.init = function()
-{
+// ===========================================================================
+
+function initGUI() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Initializing GUI ...`);
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating login GUI ...`);
@@ -1225,7 +1239,7 @@ addNetworkHandler("ag.guiColour", function(red, green, blue) {
 
 addNetworkHandler("ag.guiInit", function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Initializing MexUI app`);
-	app.init();
+	initGUI();
 	triggerNetworkEvent("ag.guiReady", true);
 });
 

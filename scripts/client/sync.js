@@ -339,3 +339,28 @@ function syncObjectProperties(object) {
 }
 
 // ===========================================================================
+
+function syncElementProperties(element) {
+    switch(element.type) {
+        case ELEMENT_VEHICLE:
+            syncVehicleProperties(element);
+            break;
+
+        case ELEMENT_CIVILIAN:
+            syncCivilianProperties(element);
+            break;
+
+        case ELEMENT_PLAYER:
+            syncPlayerProperties(element);
+            break;
+
+        case ELEMENT_OBJECT:
+            syncObjectProperties(element);
+            break;
+
+        default:
+            break;
+    }
+}
+
+// ===========================================================================

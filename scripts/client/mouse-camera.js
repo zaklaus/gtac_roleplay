@@ -10,10 +10,22 @@
 // ===========================================================================
 
 // CREDITS TO LUCASC190 FOR MAKING THE MOUSE CAMERA
-// WALKING CODE ADDED BY VORTREX
+// WALKING CODE AND SOME FIXES ADDED BY VORTREX
 
-function SetStandardControlsEnabled(bEnabled)
-{
+// ===========================================================================
+
+let mouseCameraEnabled = false;
+
+// ===========================================================================
+
+function initMouseCameraScript() {
+	logToConsole(LOG_DEBUG, "[Asshat.MouseCamera]: Initializing mouse camera script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.MouseCamera]: Mouse camera script initialized!");
+}
+
+// ===========================================================================
+
+function SetStandardControlsEnabled(bEnabled) {
 	if (gta.standardControls === undefined)
 	{
 		console.warn("gta.standardControls not implemented");
@@ -22,20 +34,17 @@ function SetStandardControlsEnabled(bEnabled)
 	gta.standardControls = bEnabled;
 }
 
-function GetCurrentPlayerIndex()
-{
+function GetCurrentPlayerIndex() {
 	return 0;
 }
 
-function GetPlayerPed(uiIndex)
-{
+function GetPlayerPed(uiIndex) {
 	if (uiIndex >= 1)
 		throw new Error("player index out of range");
 	return localPlayer;
 }
 
-function GetPedVehicle(pPed)
-{
+function GetPedVehicle(pPed) {
 	return pPed.vehicle;
 }
 
@@ -45,8 +54,7 @@ let ENTITYTYPE_PED = 3;
 let ENTITYTYPE_OBJECT = 4;
 let ENTITYTYPE_DUMMY = 5;
 
-function GetEntityType(Entity)
-{
+function GetEntityType(Entity) {
 	if (Entity.isType(ELEMENT_BUILDING))
 		return ENTITYTYPE_BUILDING;
 	if (Entity.isType(ELEMENT_VEHICLE))
@@ -55,38 +63,32 @@ function GetEntityType(Entity)
 		return ENTITYTYPE_PED;
 	if (Entity.isType(ELEMENT_OBJECT))
 		return ENTITYTYPE_OBJECT;
-	//if (Entity.isType(ELEMENT_DUMMY))
-	//	return ENTITYTYPE_DUMMY;
 	return undefined;
 }
 
-function GetPlaceableMatrix(pPlaceable)
-{
-	if (pPlaceable == GetCamera())
+function GetPlaceableMatrix(pPlaceable) {
+	if(pPlaceable == GetCamera()) {
 		return gta.cameraMatrix;
+	}
 	return pPlaceable.matrix;
 }
 
-function GetEntityModel(pEntity)
-{
+function GetEntityModel(pEntity) {
 	return pEntity;
 }
 
-function GetModelBoundingSphere(usModel)
-{
+function GetModelBoundingSphere(usModel) {
 	return [usModel.boundingRadius, usModel.boundingCentre.x, usModel.boundingCentre.y, usModel.boundingCentre.z];
 }
 
-function GetMouseSpeed()
-{
+function GetMouseSpeed() {
 	if (gui.cursorEnabled)
 		return [0,0];
 	let MouseSpeed = gta.getMouseSpeed();
 	return [MouseSpeed.x,-MouseSpeed.y];
 }
 
-function GetMouseSensitivity()
-{
+function GetMouseSensitivity() {
 	if (gta.getMouseSensitivity === undefined)
 	{
 		//console.error("gta.getMouseSensitivity not implemented");
@@ -106,20 +108,16 @@ let GetCamera;
 	}
 }
 
-function AreEntityCollisionsEnabled(pEntity)
-{
+function AreEntityCollisionsEnabled(pEntity) {
 	return pEntity.collisionsEnabled;
 }
 
-function SetEntityCollisionsEnabled(pEntity, bCollisionsEnabled)
-{
+function SetEntityCollisionsEnabled(pEntity, bCollisionsEnabled) {
 	pEntity.collisionsEnabled = bCollisionsEnabled;
 }
 
-function ProcessLineOfSight(vecStartX, vecStartY, vecStartZ, vecEndX, vecEndY, vecEndZ, bCheckBuildings, bCheckVehicles, bCheckPeds, bCheckObjects, bCheckDummies, bCheckSeeThroughStuff, bIgnoreSomeObjectsForCamera)
-{
-	if (gta.processLineOfSight === undefined)
-	{
+function ProcessLineOfSight(vecStartX, vecStartY, vecStartZ, vecEndX, vecEndY, vecEndZ, bCheckBuildings, bCheckVehicles, bCheckPeds, bCheckObjects, bCheckDummies, bCheckSeeThroughStuff, bIgnoreSomeObjectsForCamera) {
+	if (gta.processLineOfSight === undefined) {
 		console.warn("gta.processLineOfSight not implemented");
 		return [null];
 	}
@@ -129,10 +127,8 @@ function ProcessLineOfSight(vecStartX, vecStartY, vecStartZ, vecEndX, vecEndY, v
 	return [Result.position.x, Result.position.y ,Result.position.z, Result.normal.x, Result.normal.y ,Result.normal.z, Result.entity];
 }
 
-function SetPlaceableMatrix(pPlaceable, mat)
-{
-	if (pPlaceable == GetCamera())
-	{
+function SetPlaceableMatrix(pPlaceable, mat) {
+	if (pPlaceable == GetCamera()) {
 		gta.setCameraMatrix(mat);
 		return;
 	}
@@ -145,15 +141,13 @@ let GetTickCount;
 {
 	let FrameCount = 0;
 
-	setInterval(() =>
-	{
+	setInterval(() => {
 		++FrameCount;
 	}, 0);
 
 	let GTAFrameCount = 0;
 
-	addEventHandler("OnProcess", (event, deltaTime) =>
-	{
+	addEventHandler("OnProcess", (event, deltaTime) => {
 		++GTAFrameCount;
 	});
 
@@ -166,15 +160,11 @@ let GetTickCount;
 	}
 }
 
-function easingSinusoidalInOut(t,b,c,d)//TODO: Move this to MathUtil.js
-{
+function easingSinusoidalInOut(t,b,c,d) {
 	return -c/2 * (Math.cos((Math.PI)*t/d) - 1) + b;
 }
 
-//TODO: extract
-
-function applyMultiplierTimeStep(m,t)//TODO: Move this to MathUtil.js
-{
+function applyMultiplierTimeStep(m,t) {
 	return Math.max(Math.min(1.0-(1.0-m)*(t),1),0);
 }
 
@@ -188,8 +178,7 @@ function applyMultiplierTimeStep(m,t)//TODO: Move this to MathUtil.js
 //TODO: confirm
 
 const identityMatrix = new Matrix4x4();
-if (identityMatrix.setIdentity === undefined)
-{
+if (identityMatrix.setIdentity === undefined) {
 	identityMatrix.m11 = 1;
 	identityMatrix.m12 = 0;
 	identityMatrix.m13 = 0;
@@ -375,7 +364,7 @@ function isCameraEasing()
 }
 
 let oldCameraTarget = null;
-let OldPosition = null;//2019 Lucas was here!
+let OldPosition = null;
 let cameraRotZ;
 let cameraRotY;
 
@@ -387,7 +376,7 @@ function getCameraTarget()
 		return vehicle;
 	if (playerPed != null)
 	{
-		//if (playerPed.health <= 1)//Breaks because of fade//2019 Lucas was here!
+		//if (playerPed.health <= 1)//Breaks because of fade
 		//	return null;
 		return playerPed;
 	}
@@ -408,7 +397,7 @@ function isClipped(target)
 	return true;
 }
 
-//2019 Lucas was here!
+
 function ShouldReturnToRestRotation(Target)
 {
 	if (GetEntityType(Target) == ENTITYTYPE_PED)
@@ -433,10 +422,9 @@ function resetCameraRotation()
 	[cameraRotZ, cameraRotY] = getCameraRestRotation(getCameraTarget());
 }
 
-//2019 Lucas was here!
+
 let DeltaTime = 0;
-addEventHandler("OnProcess", (event, deltaTime) =>
-{
+addEventHandler("OnProcess", (event, deltaTime) => {
 	DeltaTime = deltaTime;
 	if(!localPlayer) {
 		return false;
@@ -446,80 +434,28 @@ addEventHandler("OnProcess", (event, deltaTime) =>
 		// We don't need this for GTA SA+
 		return false;
 	}
-
-    /*
-	if(localPlayer.vehicle == null) {
-		let newAngle = 0.0;
-		let moveKeyHeld = false;
-		if(isKeyDown(SDLK_w)) {
-			newAngle = Math.PI;
-			moveKeyHeld = true;
-			if(isKeyDown(SDLK_a)) {
-				newAngle = newAngle+Math.PI/4;
-			} else if(isKeyDown(SDLK_d)) {
-				newAngle = newAngle-Math.PI/4;
-			}
-		} else if(isKeyDown(SDLK_s)) {
-			newAngle = Math.PI*2;
-			moveKeyHeld = true;
-			if(isKeyDown(SDLK_a)) {
-				newAngle = newAngle-Math.PI/4;
-			} else if(isKeyDown(SDLK_d)) {
-				newAngle = newAngle+Math.PI/4;
-			}
-		} else if(isKeyDown(SDLK_a)) {
-			newAngle = -Math.PI/2;
-			moveKeyHeld = true;
-		} else if(isKeyDown(SDLK_d)) {
-			newAngle = Math.PI/2;
-			moveKeyHeld = true;
-		}
-
-		if(moveKeyHeld && !gui.cursorEnabled) {
-			localPlayer.heading = cameraAngle + newAngle;
-		}
-
-		if(sdl.getModState()&KMOD_ALT && !gui.cursorEnabled) {
-			if(moveKeyHeld) {
-				let position = getPosInFrontOfPos(localPlayer.position, localPlayer.heading, 1.0);
-				localPlayer.walkTo(vec3ToVec2(position));
-				isWalking = true;
-				triggerNetworkEvent("ag.walk", true);
-			} else {
-				isWalking = false;
-				triggerNetworkEvent("ag.walk", false);
-			}
-		} else {
-			isWalking = false;
-			triggerNetworkEvent("ag.walk", false);
-		}
-    }
-    */
 });
 
-let IdleTime = 0;//2019 Lucas was here!
+let IdleTime = 0;
 
-function processReturnToRestRotation()
-{
-	//resetCameraRotation();//2019 Lucas was here!
-
-	//2019 Lucas was here!
+function processReturnToRestRotation() {
+	//resetCameraRotation();
 	let Target = getCameraTarget();
-	if (!ShouldReturnToRestRotation(Target))
+	if(!ShouldReturnToRestRotation(Target)) {
 		return;
+	}
 	IdleTime += DeltaTime;
-	if (IdleTime > 1.5)
-	{
+	if(IdleTime > 1.5) {
 		let Velocity = Target.velocity;
 		let Matrix = Target.matrix;
 		let Speed = getDotProduct(Velocity.x,Velocity.y,Velocity.z,Matrix.getElement(1*4+0),Matrix.getElement(1*4+1),Matrix.getElement(1*4+2));
 		let AbsSpeed = Math.abs(Speed);
 		let Multiplier = Math.min(AbsSpeed/0.75, 1);
-		if (Multiplier != 0)
-		{
+		if (Multiplier != 0) {
 			let [TargetCameraRotZ2, TargetCameraRotY2] = getCameraRestRotation(Target);
-			if (Speed < 0)
+			if(Speed < 0) {
 				TargetCameraRotZ2 += Math.PI;
+			}
 			let TimeStep = gta.timeStep/50*60;
 			cameraRotZ += getDifferenceBetweenAngles(cameraRotZ,TargetCameraRotZ2)*applyMultiplierTimeStep(1/20,TimeStep)*Multiplier;
 			cameraRotY += getDifferenceBetweenAngles(cameraRotY,TargetCameraRotY2)*applyMultiplierTimeStep(1/20,TimeStep)*Multiplier;
@@ -527,18 +463,15 @@ function processReturnToRestRotation()
 	}
 }
 
-function cancelReturnToRestRotation()
-{
-	IdleTime = 0;//2019 Lucas was here!
+function cancelReturnToRestRotation() {
+	IdleTime = 0;
 }
 
 let distance;
 let zIncrease;
 
-function getCameraOffsetInfo(target)
-{
-	if (GetEntityType(target) == ENTITYTYPE_PED)
-	{
+function getCameraOffsetInfo(target) {
+	if (GetEntityType(target) == ENTITYTYPE_PED) {
 		let distance = 4;
 		let zIncrease = 0.8;
 		let offsetX = 0;
@@ -557,17 +490,14 @@ function getCameraOffsetInfo(target)
 	let offsetX;
 	let offsetY;
 	let offsetZ;
-	if (radius <= 3.0535011291504)
-	{
+	if(radius <= 3.0535011291504) {
 		minDistance = 4;
 		maxDistance = 8;
 		minZIncrease = 0.5;
 		maxZIncrease = 1;
 		minRadius = 2;
 		maxRadius = 3.0535011291504;
-	}
-	else
-	{
+	} else {
 		minDistance = 8;
 		maxDistance = 16;
 		minZIncrease = 1;
@@ -583,61 +513,56 @@ function getCameraOffsetInfo(target)
 	return [distance, zIncrease, offsetX, offsetY, offsetZ];
 }
 
-function update()
-{
+function update() {
 	let target = getCameraTarget();
-	if (target != null)
-	{
-		if (oldCameraTarget != target)
-		{
-			//if (oldCameraTarget != null)//2019 Lucas was here!
+	if(target != null) {
+		if(oldCameraTarget != target) {
+			//if (oldCameraTarget != null)
 			let Position = target.position;
-			if (OldPosition == null || getLength(Position.x-OldPosition.x,Position.y-OldPosition.y,Position.z-OldPosition.z) < 10)
+			if(OldPosition == null || getLength(Position.x-OldPosition.x,Position.y-OldPosition.y,Position.z-OldPosition.z) < 10) {
 				startCameraEase()
+			}
 			resetCameraRotation()
 		}
 		let [mouseSpeedX, mouseSpeedY] = GetMouseSpeed();
 		let [mouseSensitivityX, mouseSensitivityY] = GetMouseSensitivity();
 		mouseSpeedX = mouseSpeedX*mouseSensitivityX*2;
 		mouseSpeedY = mouseSpeedY*mouseSensitivityY*2;
-		if (mouseSpeedX == 0 && mouseSpeedY == 0)
-		{
+		if(mouseSpeedX == 0 && mouseSpeedY == 0) {
 			processReturnToRestRotation();
-		}
-		else
-		{
+		} else {
 			cameraRotZ = cameraRotZ-mouseSpeedX;
 			cameraRotY = cameraRotY-mouseSpeedY;
 			cancelReturnToRestRotation();
 		}
 		cameraRotY = Math.max(cameraRotY,-Math.PI/2+0.01);
-		if (GetEntityType(target) != ENTITYTYPE_PED)
-			cameraRotY = Math.min(cameraRotY,Math.PI/8.5);//2019 Lucas was here!
-		else
+		if(GetEntityType(target) != ENTITYTYPE_PED) {
+			cameraRotY = Math.min(cameraRotY,Math.PI/8.5);
+		} else {
 			cameraRotY = Math.min(cameraRotY,Math.PI/4);
+		}
 		let camera = GetCamera();
 		let targetMatrix = GetPlaceableMatrix(target);
 		let [distance, zIncrease, offsetX, offsetY, offsetZ] = getCameraOffsetInfo(target);
 		let offsetTranslationMatrix = createTranslationMatrix(offsetX, offsetY, offsetZ);
 		targetMatrix = createMultipliedMatrix(offsetTranslationMatrix,targetMatrix);
 		let targetPosX, targetPosY, targetPosZ;
-		if (isRelativeToTarget(target))
+		if(isRelativeToTarget(target)) {
 			[targetPosX, targetPosY, targetPosZ] = [0,0,0];
-		else
+		} else {
 			[targetPosX, targetPosY, targetPosZ] = [targetMatrix.m41,targetMatrix.m42,targetMatrix.m43];
+		}
 		let distanceTranslationMatrix = createTranslationMatrix(0,-distance,0);
 		targetPosZ = targetPosZ+zIncrease;
 		let targetTranslationMatrix = createTranslationMatrix(targetPosX, targetPosY, targetPosZ);
 		let offsetRotationX = createXRotationMatrix(cameraRotY);
 		let offsetRotationZ = createZRotationMatrix(cameraRotZ);
 		let cameraMatrix = createMultipliedMatrix(cameraIdentityMatrix,distanceTranslationMatrix,offsetRotationX,offsetRotationZ,targetTranslationMatrix);
-		if (isRelativeToTarget(target))
-		{
+		if(isRelativeToTarget(target)) {
 			cameraMatrix = createMultipliedMatrix(cameraMatrix,targetMatrix);
 			targetTranslationMatrix = createMultipliedMatrix(targetTranslationMatrix,targetMatrix);
 		}
-		if (isClipped(target))
-		{
+		if(isClipped(target)) {
 			let startX = targetTranslationMatrix.m41;
 			let startY = targetTranslationMatrix.m42;
 			let startZ = targetTranslationMatrix.m43;
@@ -652,14 +577,14 @@ function update()
 			let checkSeeThroughStuff = false;
 			let ignoreSomeObjectsForCamera = true;
 			let collisionsEnabled = AreEntityCollisionsEnabled(target);
-			if (collisionsEnabled)
+			if(collisionsEnabled) {
 				SetEntityCollisionsEnabled(target,false);
+			}
 			let [positionX,positionY,positionZ,normalX,normalY,normalZ,targetEntity] = ProcessLineOfSight(startX,startY,startZ,endX,endY,endZ,checkBuildings,checkVehicles,checkPeds,checkObjects,checkDummies,checkSeeThroughStuff,ignoreSomeObjectsForCamera);
-			if (collisionsEnabled)
+			if(collisionsEnabled) {
 				SetEntityCollisionsEnabled(target,true);
-			if (positionX != null)
-			{
-				//2019 Lucas was here!
+			}
+			if (positionX != null) {
 				let Distance = 0.3;
 				positionX += normalX*Distance;
 				positionY += normalY*Distance;
@@ -676,17 +601,20 @@ function update()
 		UpdateCamera(camera);
 	}
 	oldCameraTarget = target;
-	OldPosition = (target != null) ? target.position : null;//2019 Lucas was here!
+	OldPosition = (target != null) ? target.position : null;
 	return target != null;
 }
 
-addEventHandler("OnCameraProcess", (event) =>
-{
+// ===========================================================================
+
+addEventHandler("OnCameraProcess", (event) => {
     if(mouseCameraEnabled) {
         update();
         event.preventDefault();
     }
 });
+
+// ===========================================================================
 
 function getPosInFrontOfPos(pos, angle, distance) {
 	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
@@ -699,6 +627,8 @@ function getPosInFrontOfPos(pos, angle, distance) {
 function vec3ToVec2(pos) {
 	return new Vec2(pos[0], pos[1]);
 }
+
+// ===========================================================================
 
 /*
 addEventHandler("OnEntityProcess", function(event, entity) {

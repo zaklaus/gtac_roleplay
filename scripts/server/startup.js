@@ -9,8 +9,8 @@
 // ===========================================================================
 
 function initServerScripts() {
-
 	checkForAllRequiredModules();
+
 	initDatabaseScript();
 	initConfigScript();
 	initEmailScript();
@@ -37,7 +37,7 @@ function initServerScripts() {
 
 	loadGameFixesResource();
 
-	serverStartTime = new Date().getTime()/1000;
+	serverStartTime = getCurrentUnixTimestamp();
 
 	initCommandScript();
 }

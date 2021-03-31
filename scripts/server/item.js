@@ -771,12 +771,6 @@ function createAllGroundItemObjects() {
 
 // ===========================================================================
 
-function showItemInventoryToPlayer(client, itemIndex) {
-
-}
-
-// ===========================================================================
-
 function syncPlayerInventoryWeapons(client) {
 
 }
@@ -934,36 +928,7 @@ function getBestItemToTake(client, slot) {
 // ===========================================================================
 
 function listPlayerInventoryCommand(command, params, client) {
-	let itemDisplay = [];
-	for(let i in getPlayerData(client).hotBarItems) {
-		if(getPlayerData(client).hotBarItems[i] == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA](Empty)`);
-		} else {
-			if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useType) != -1) {
-				if(getPlayerData(client).hotBarItems[i] == getPlayerData(client).hotBarItems[getPlayerData(client).currentHotBarItem]) {
-					if(getPlayerWeaponAmmo(client) <= getItemData(getPlayerData(client).hotBarItems[i]).value) {
-						getItemData(getPlayerData(client).hotBarItems[i]).value = getPlayerWeaponAmmo(client);
-					} else {
-						setPlayerWeaponAmmo(client, getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useId, getItemData(getPlayerData(client).hotBarItems[i]).value);
-					}
-				}
-			}
-
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getPlayerData(client).hotBarItems[i])}]`);
-		}
-	}
-
-	messagePlayerNormal(client, `🎒 [#AAAAAA]== Your Inventory =========================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	}, []);
-
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
-	}
+	showPlayerInventoryToPlayer(client, client);
 }
 
 // ===========================================================================
@@ -981,26 +946,7 @@ function listBusinessStorageInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	let itemDisplay = [];
-	for(let i in getBusinessData(businessId).storageItemCache) {
-		if(getBusinessData(businessId).storageItemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
-		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]`);
-		}
-	}
-
-	messagePlayerNormal(client, `🏢 [#0099FF]== Business Storage =======================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	}, []);
-
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
-	}
+	showBusinessStorageInventoryToPlayer(client, businessId);
 }
 
 // ===========================================================================
@@ -1018,26 +964,7 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	let itemDisplay = [];
-	for(let i in getBusinessData(businessId).floorItemCache) {
-		if(getBusinessData(businessId).floorItemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
-		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}]`);
-		}
-	}
-
-	messagePlayerNormal(client, `💲 [#0099FF]== Business Items =========================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	}, []);
-
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
-	}
+	showBusinessFloorInventoryToPlayer(client, businessId);
 }
 
 // ===========================================================================
@@ -1055,26 +982,7 @@ function listHouseInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	let itemDisplay = [];
-	for(let i in getHouseData(houseId).itemCache) {
-		if(getHouseData(houseId).itemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
-		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(houseId).itemCache[i])}]`);
-		}
-	}
-
-	messagePlayerNormal(client, `🏠 [#11CC11]== House Items ============================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	 }, []);
-
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
-	}
+	showHouseInventoryToPlayer(client, houseId);
 }
 
 // ===========================================================================
@@ -1092,26 +1000,7 @@ function listItemInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	let itemDisplay = [];
-	for(let i in getItemData(itemId).itemCache) {
-		if(getItemData(itemId).itemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
-		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getItemData(itemId).itemCache[i])}]`);
-		}
-	}
-
-	messagePlayerNormal(client, `📦 [#AAAAAA]== Items Inside ===========================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	 }, []);
-
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
-	}
+	showItemInventoryToPlayer(client, itemId);
 }
 
 // ===========================================================================
@@ -1359,6 +1248,137 @@ function clearPlayerItemActionStateAfterDelay(client, delay) {
 	setTimeout(function() {
 		clearPlayerItemActionState(client);
 	}, delay);
+}
+
+// ===========================================================================
+
+function showBusinessFloorInventoryToPlayer(client, businessId) {
+	let itemDisplay = [];
+	for(let i in getBusinessData(businessId).floorItemCache) {
+		if(getBusinessData(businessId).floorItemCache == -1) {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
+		} else {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}]`);
+		}
+	}
+
+	messagePlayerNormal(client, `💲 [#0099FF]== Business Items =========================`);
+	let perChunk=5;
+	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
+		const ch = Math.floor(i/perChunk);
+		all[ch] = [].concat((all[ch]||[]),one);
+		return all
+	}, []);
+
+	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
+		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+	}
+}
+
+// ===========================================================================
+
+function showBusinessStorageInventoryToPlayer(client, businessId) {
+	let itemDisplay = [];
+	for(let i in getBusinessData(businessId).storageItemCache) {
+		if(getBusinessData(businessId).storageItemCache == -1) {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
+		} else {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]`);
+		}
+	}
+
+	messagePlayerNormal(client, `🏢 [#0099FF]== Business Storage =======================`);
+	let perChunk=5;
+	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
+		const ch = Math.floor(i/perChunk);
+		all[ch] = [].concat((all[ch]||[]),one);
+		return all
+	}, []);
+
+	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
+		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+	}
+}
+
+// ===========================================================================
+
+function showItemInventoryToPlayer(client, itemId) {
+	let itemDisplay = [];
+	for(let i in getItemData(itemId).itemCache) {
+		if(getItemData(itemId).itemCache == -1) {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
+		} else {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getItemData(itemId).itemCache[i])}]`);
+		}
+	}
+
+	messagePlayerNormal(client, `📦 [#AAAAAA]== Items Inside ===========================`);
+	let perChunk=5;
+	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
+		const ch = Math.floor(i/perChunk);
+		all[ch] = [].concat((all[ch]||[]),one);
+		return all
+	 }, []);
+
+	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
+		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+	}
+}
+
+// ===========================================================================
+
+function showPlayerInventoryToPlayer(client, targetClient) {
+	resyncWeaponItemAmmo(targetClient);
+	let itemDisplay = [];
+	for(let i in getPlayerData(targetClient).hotBarItems) {
+		if(getPlayerData(targetClient).hotBarItems[i] == -1) {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA](Empty)`);
+		} else {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getPlayerData(targetClient).hotBarItems[i])}]`);
+		}
+	}
+
+	if(client == targetClient) {
+		messagePlayerNormal(client, `🎒 [#AAAAAA]== Your Inventory =========================`);
+	} else {
+		messagePlayerNormal(client, `🎒 [#AAAAAA]== ${getCharacterFullName(targetClient)}'s Inventory =========================`);
+	}
+
+	let perChunk=5;
+	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
+		const ch = Math.floor(i/perChunk);
+		all[ch] = [].concat((all[ch]||[]),one);
+		return all
+	}, []);
+
+	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
+		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+	}
+}
+
+// ===========================================================================
+
+function showHouseInventoryToPlayer(client, houseId) {
+	let itemDisplay = [];
+	for(let i in getHouseData(houseId).itemCache) {
+		if(getHouseData(houseId).itemCache == -1) {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
+		} else {
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(houseId).itemCache[i])}]`);
+		}
+	}
+
+	messagePlayerNormal(client, `🏠 [#11CC11]== House Items ============================`);
+	let perChunk=5;
+	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
+		const ch = Math.floor(i/perChunk);
+		all[ch] = [].concat((all[ch]||[]),one);
+		return all
+	 }, []);
+
+	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
+		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+	}
 }
 
 // ===========================================================================

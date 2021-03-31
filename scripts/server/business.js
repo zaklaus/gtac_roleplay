@@ -1155,13 +1155,15 @@ function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 // ===========================================================================
 
 function buyFromBusinessCommand(command, params, client) {
+	let businessId = getBusinessFromParams(isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
 	if(areParamsEmpty(params)) {
+		showBusinessFloorInventoryToPlayer(client, businessId);
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
 	let splitParams = params.split(" ");
-	let businessId = getBusinessFromParams(splitParams[2]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");

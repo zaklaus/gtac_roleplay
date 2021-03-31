@@ -11,7 +11,7 @@
 function initClientScript() {
     logToConsole(LOG_DEBUG, "[Asshat.Client]: Initializing client script ...");
     addAllNetworkHandlers();
-    logToConsole(LOG_DEBUG, "[Asshat.Clan]: Initializing client script ...");
+    logToConsole(LOG_DEBUG, "[Asshat.Client]: Client script initialized!");
 }
 
 // ===========================================================================

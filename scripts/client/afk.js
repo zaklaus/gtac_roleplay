@@ -8,21 +8,26 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-// -------------------------------------------------------------------------
+function initAFKScript() {
+	logToConsole(LOG_DEBUG, "[Asshat.AFK]: Initializing AFK script ...");
+	logToConsole(LOG_DEBUG, "[Asshat.AFK]: AFK script initialized!");
+}
 
-addEventHandler("OnLostFocus", function(event) {
-	triggerNetworkEvent("ag.afk", true);
+// ===========================================================================
+
+function processLostFocusAFK(event) {
+	sendServerNewAFKStatus(true);
 	if(localPlayer != null) {
 		localPlayer.collisionsEnabled = false;
 		gta.setCiviliansEnabled(false);
 		gta.setTrafficEnabled(false);
 	}
-});
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-addEventHandler("OnFocus", function(event) {
-    triggerNetworkEvent("ag.afk", false);
+function processFocusAFK(event) {
+    sendServerNewAFKStatus(false);
 	if(localPlayer != null) {
 		localPlayer.collisionsEnabled = true;
 		if(gta.game != GAME_GTA_SA) {
@@ -30,6 +35,6 @@ addEventHandler("OnFocus", function(event) {
 		}
         gta.setTrafficEnabled(true);
 	}
-});
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================

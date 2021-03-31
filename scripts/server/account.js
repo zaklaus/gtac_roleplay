@@ -510,6 +510,7 @@ function loginSuccess(client) {
 
 	sendRemovedWorldObjectsToPlayer(client);
 	sendAccountKeyBindsToClient(client);
+	sendPlayerChatScrollLines(client, getPlayerData(client).accountData.chatScrollLines);
 
 	messagePlayerNormal(null, `👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 }

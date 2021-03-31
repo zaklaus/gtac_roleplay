@@ -30,17 +30,42 @@ let renderLabelDistance = 7.5;
 let propertyLabelLockedOffset = 16;
 let propertyLabelNameOffset = 18;
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-bindEventHandler("onResourceReady", thisResource, function(event, resource) {
-    propertyLabelNameFont = lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
-    propertyLabelLockedFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
+function init3DLabelScript() {
+	logToConsole(LOG_DEBUG, "[Asshat.3DLabel]: Initializing 3D label script ...");
+	propertyLabelNameFont = init3DLabelPropertyNameFont();
+	propertyLabelLockedFont = init3DLabelPropertyLockedFont();
+	jobNameLabelFont = init3DLabelJobNameFont();
+	jobHelpLabelFont = init3DLabelJobHelpFont();
+	logToConsole(LOG_DEBUG, "[Asshat.3DLabel]: 3D label script initialized!");
+}
 
-    jobNameLabelFont = lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
-    jobHelpLabelFont = lucasFont.createDefaultFont(10.0, "Roboto", "Light");
-});
+// ===========================================================================
 
-// -------------------------------------------------------------------------
+function init3DLabelPropertyNameFont() {
+    return lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
+}
+
+// ===========================================================================
+
+function init3DLabelPropertyLockedFont() {
+    return lucasFont.createDefaultFont(12.0, "Roboto", "Light");
+}
+
+// ===========================================================================
+
+function init3DLabelJobNameFont() {
+    return lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
+}
+
+// ===========================================================================
+
+function init3DLabelJobHelpFont() {
+    return lucasFont.createDefaultFont(10.0, "Roboto", "Light");
+}
+
+// ===========================================================================
 
 function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) {
     if(localPlayer == null) {
@@ -166,32 +191,34 @@ function renderJobLabel(name, position, jobType) {
 // -------------------------------------------------------------------------
 
 function processLabelRendering() {
-    if(localPlayer != null) {
-        let pickups = getElementsByType(ELEMENT_PICKUP);
-        for(let i in pickups) {
-            if(pickups[i].getData("ag.label.type") != null) {
-                if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
-                    let price = 0;
-                    if(pickups[i].getData("ag.label.price") != null) {
-                        price = pickups[i].getData("ag.label.price");
-                    }
+    if(renderLabels && gta.game != GAME_GTA_IV) {
+        if(localPlayer != null) {
+            let pickups = getElementsByType(ELEMENT_PICKUP);
+            for(let i in pickups) {
+                if(pickups[i].getData("ag.label.type") != null) {
+                    if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
+                        let price = 0;
+                        if(pickups[i].getData("ag.label.price") != null) {
+                            price = pickups[i].getData("ag.label.price");
+                        }
 
-                    switch(pickups[i].getData("ag.label.type")) {
-                        case AG_LABEL_BUSINESS:
-                            renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
-                            break;
+                        switch(pickups[i].getData("ag.label.type")) {
+                            case AG_LABEL_BUSINESS:
+                                renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
+                                break;
 
-                        case AG_LABEL_HOUSE:
-                            renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
-                            break;
+                            case AG_LABEL_HOUSE:
+                                renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
+                                break;
 
-                        case AG_LABEL_JOB:
-                            renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
-                            break;
+                            case AG_LABEL_JOB:
+                                renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
+                                break;
 
-                        case AG_LABEL_EXIT:
-                            renderPropertyExitLabel(pickups[i].position);
-                            break;
+                            case AG_LABEL_EXIT:
+                                renderPropertyExitLabel(pickups[i].position);
+                                break;
+                        }
                     }
                 }
             }

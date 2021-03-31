@@ -19,8 +19,25 @@ let maxChatBoxLines = 6;
 
 // ===========================================================================
 
-bindKey(SDLK_PAGEUP, KEYSTATE_DOWN, chatBoxScrollUp);
-bindKey(SDLK_PAGEDOWN, KEYSTATE_DOWN, chatBoxScrollDown);
+function initChatBoxScript() {
+    logToConsole(LOG_DEBUG, "[Asshat.ChatBox]: Initializing chatbox script ...");
+    bindChatBoxKeys();
+    logToConsole(LOG_DEBUG, "[Asshat.ChatBox]: Chatbox script initialized!");
+}
+
+// ===========================================================================
+
+function bindChatBoxKeys() {
+    bindKey(SDLK_PAGEUP, KEYSTATE_DOWN, chatBoxScrollUp);
+    bindKey(SDLK_PAGEDOWN, KEYSTATE_DOWN, chatBoxScrollDown);
+}
+
+// ===========================================================================
+
+function unBindChatBoxKeys() {
+    unbindKey(SDLK_PAGEUP);
+    unbindKey(SDLK_PAGEDOWN);
+}
 
 // ===========================================================================
 

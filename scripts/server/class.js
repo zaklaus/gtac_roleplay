@@ -143,7 +143,6 @@ function initClassTable() {
 
 				this.switchingCharacter = false;
 
-				this.tutorialState = AG_TUTORIAL_STATE_NONE;
 				this.tutorialStep = -1;
 				this.tutorialItem = null;
 				this.tutorialVehicle = null;
@@ -207,6 +206,8 @@ function initClassTable() {
 				this.emailVerificationCode = "";
 				this.twoFactorAuthVerificationCode = "";
 
+				this.chatScrollLines = 1;
+
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["acct_id"];
 					this.name = dbAssoc["acct_name"];
@@ -232,6 +233,7 @@ function initClassTable() {
 
 					this.emailVerificationCode = dbAssoc["acct_code_verifyemail"];
 					this.twoFactorAuthVerificationCode = dbAssoc["acct_code_2fa"];
+					this.chatScrollLines = dbAssoc["acct_chat_scroll_lines"];
 				}
 			}
 		},
@@ -788,8 +790,8 @@ function initClassTable() {
 				this.crimeType = crimeType;
 				this.suspectId = suspectId;
 				this.reporterId = reporterId;
-				this.whenCommitted = new Date().getTime();
-				this.whenReported = new Date().getTime();
+				this.whenCommitted = 0;
+				this.whenReported = 0;
 				this.databaseId = 0;
 			}
 		},

@@ -191,7 +191,7 @@ function showCharacterSelectToClient(client) {
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
 		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
-		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, new Date().getTime())} ago` : "Never";
+		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {
@@ -201,7 +201,7 @@ function showCharacterSelectToClient(client) {
 		messagePlayerNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
 		getPlayerData(client).subAccounts.forEach(function(subAccount, index) {
 			let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
-			let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `Last played ${getTimeDifferenceDisplay(tempSubAccount.lastLogin, new Date().getTime())} ago` : "Never played";
+			let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `Last played ${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never played";
 			messagePlayerNormal(client, `${index+1} • [#BBBBBB]${subAccount.firstName} ${subAccount.lastName} ($${tempSubAccount.cash}, ${lastPlayedText})`);
 		});
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
@@ -258,7 +258,7 @@ function checkPreviousCharacter(client) {
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 
 		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
-		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, new Date().getTime())} ago` : "Never";
+		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
@@ -279,7 +279,7 @@ function checkNextCharacter(client) {
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 
 		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
-		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, new Date().getTime())} ago` : "Never";
+		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
@@ -317,7 +317,7 @@ function selectCharacter(client, characterId = -1) {
 		onPlayerSpawn(client);
 	}, 1000);
 
-	getPlayerCurrentSubAccount(client).lastLogin = new Date().getTime();
+	getPlayerCurrentSubAccount(client).lastLogin = getCurrentUnixTimestamp();
 }
 
 // ===========================================================================
@@ -325,12 +325,12 @@ function selectCharacter(client, characterId = -1) {
 function switchCharacterCommand(command, params, client) {
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is requesting to switch characters (current character: ${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}])`);
 	if(!isPlayerSpawned(client)) {
-		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is allowed to switch characters (not spawned)`);
+		logToConsole(LOG_WARN, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is not allowed to switch characters (not spawned)`);
 		return false;
 	}
 
 	if(isPlayerSwitchingCharacter(client)) {
-		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is not allowed to switch characters (already in switch char mode)`);
+		logToConsole(LOG_WARN, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is not allowed to switch characters (already in switch char mode)`);
 		messagePlayerError(client, "You are already selecting/switching characters!");
 		return false;
 	}

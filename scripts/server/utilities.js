@@ -362,15 +362,12 @@ function getCardinalDirection(pos1, pos2) {
 
 // ===========================================================================
 
-function getTimeDifferenceDisplay(timeStamp1, timeStamp2) {
-    let dateTime1 = new Date(timeStamp1).getTime();
-	let dateTime2 = new Date(timeStamp2).getTime();
-
-    if(isNaN(dateTime1) || isNaN(dateTime2)) {
+function getTimeDifferenceDisplay(timeStamp2, timeStamp1) {
+    if(isNaN(timeStamp1) || isNaN(timeStamp2)) {
         return "Unknown";
     }
 
-	let millisecondDiff = dateTime2 - dateTime1;
+	let millisecondDiff = timeStamp2 - timeStamp1;
 
     let days = Math.floor(millisecondDiff / 1000 / 60 / (60 * 24));
     let diffDate = new Date(millisecondDiff);
@@ -1286,6 +1283,12 @@ function getClosestPlayer(position, exemptClient) {
 
 function isPlayerMuted(client) {
 	return getPlayerData(targetClient).muted;
+}
+
+// ===========================================================================
+
+function getCurrentUnixTimestamp() {
+	return new Date().getTime()/1000;
 }
 
 // ===========================================================================

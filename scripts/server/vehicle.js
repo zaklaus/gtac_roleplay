@@ -442,7 +442,7 @@ function rentVehicleCommand(command, params, client) {
 
 	getVehicleData(vehicle).rentedBy = client;
 	getPlayerCurrentSubAccount(client).rentingVehicle = vehicle;
-	getVehicleData(vehicle).rentStart = new Date().getTime();
+	getVehicleData(vehicle).rentStart = getCurrentUnixTimestamp();
 
 	meActionToNearbyPlayers(client, `rents the ${getVehicleName(vehicle)} and receives a set of vehicle keys!`);
 	messagePlayerAlert(client, `You will be charged ${getVehicleData(vehicle).rentPrice} per minute to use this vehicle. To stop renting this vehicle, use /vehrent again.`);

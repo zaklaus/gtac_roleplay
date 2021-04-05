@@ -16,6 +16,47 @@
 
 let mouseCameraEnabled = false;
 
+let DeltaTime = 0;
+
+let ENTITYTYPE_BUILDING = 1;
+let ENTITYTYPE_VEHICLE = 2;
+let ENTITYTYPE_PED = 3;
+let ENTITYTYPE_OBJECT = 4;
+let ENTITYTYPE_DUMMY = 5;
+
+let UpdateCamera = gta.updateCamera;
+
+let distance;
+let zIncrease;
+
+let identityMatrix = new Matrix4x4();
+
+let cameraIdentityMatrix = new Matrix4x4();
+cameraIdentityMatrix.m11 = -1;
+cameraIdentityMatrix.m12 = 0;
+cameraIdentityMatrix.m13 = 0;
+cameraIdentityMatrix.m14 = 0;
+cameraIdentityMatrix.m21 = 0;
+cameraIdentityMatrix.m22 = 1;
+cameraIdentityMatrix.m23 = 0;
+cameraIdentityMatrix.m24 = 0;
+cameraIdentityMatrix.m31 = 0;
+cameraIdentityMatrix.m32 = 0;
+cameraIdentityMatrix.m33 = 1;
+cameraIdentityMatrix.m34 = 0;
+cameraIdentityMatrix.m41 = 0;
+cameraIdentityMatrix.m42 = 0;
+cameraIdentityMatrix.m43 = 0;
+cameraIdentityMatrix.m44 = 1;
+
+let GetCamera;
+
+const Camera = Symbol();
+
+GetCamera = function() {
+	return Camera;
+}
+
 // ===========================================================================
 
 function initMouseCameraScript() {
@@ -47,12 +88,6 @@ function GetPlayerPed(uiIndex) {
 function GetPedVehicle(pPed) {
 	return pPed.vehicle;
 }
-
-let ENTITYTYPE_BUILDING = 1;
-let ENTITYTYPE_VEHICLE = 2;
-let ENTITYTYPE_PED = 3;
-let ENTITYTYPE_OBJECT = 4;
-let ENTITYTYPE_DUMMY = 5;
 
 function GetEntityType(Entity) {
 	if (Entity.isType(ELEMENT_BUILDING))
@@ -98,16 +133,6 @@ function GetMouseSensitivity() {
 	return [MouseSensitivity.x,MouseSensitivity.y];
 }
 
-let GetCamera;
-{
-	const Camera = Symbol();
-
-	GetCamera = function()
-	{
-		return Camera;
-	}
-}
-
 function AreEntityCollisionsEnabled(pEntity) {
 	return pEntity.collisionsEnabled;
 }
@@ -134,8 +159,6 @@ function SetPlaceableMatrix(pPlaceable, mat) {
 	}
 	pPlaceable.matrix = mat;
 }
-
-const UpdateCamera = gta.updateCamera;
 
 let GetTickCount;
 {
@@ -177,7 +200,6 @@ function applyMultiplierTimeStep(m,t) {
 //TODO: alert
 //TODO: confirm
 
-const identityMatrix = new Matrix4x4();
 if (identityMatrix.setIdentity === undefined) {
 	identityMatrix.m11 = 1;
 	identityMatrix.m12 = 0;
@@ -197,54 +219,31 @@ if (identityMatrix.setIdentity === undefined) {
 	identityMatrix.m44 = 1;
 }
 
-const cameraIdentityMatrix = new Matrix4x4();
-cameraIdentityMatrix.m11 = -1;
-cameraIdentityMatrix.m12 = 0;
-cameraIdentityMatrix.m13 = 0;
-cameraIdentityMatrix.m14 = 0;
-cameraIdentityMatrix.m21 = 0;
-cameraIdentityMatrix.m22 = 1;
-cameraIdentityMatrix.m23 = 0;
-cameraIdentityMatrix.m24 = 0;
-cameraIdentityMatrix.m31 = 0;
-cameraIdentityMatrix.m32 = 0;
-cameraIdentityMatrix.m33 = 1;
-cameraIdentityMatrix.m34 = 0;
-cameraIdentityMatrix.m41 = 0;
-cameraIdentityMatrix.m42 = 0;
-cameraIdentityMatrix.m43 = 0;
-cameraIdentityMatrix.m44 = 1;
-
-function createMultipliedMatrix()
-{
+function createMultipliedMatrix() {
 	let matrix = new Matrix4x4();
 	matrix.setMultiply.apply(matrix, arguments);
 	return matrix;
 }
 
-function createXRotationMatrix(x)
-{
+function createXRotationMatrix(x) {
 	let matrix = new Matrix4x4();
 	matrix.setRotateX(x);
 	return matrix;
 }
 
-function createYRotationMatrix(x)
-{
+function createYRotationMatrix(x) {
 	let matrix = new Matrix4x4();
 	matrix.setRotateY(x);
 	return matrix;
 }
 
-function createZRotationMatrix(z)
-{
+function createZRotationMatrix(z) {
 	let matrix = new Matrix4x4();
 	matrix.setRotateZ(z);
 	return matrix;
 }
 
-function createTranslationMatrix(x,y,z)
-{
+function createTranslationMatrix(x,y,z) {
 	let matrix = new Matrix4x4();
 	matrix.setTranslate([x,y,z]);
 	return matrix;
@@ -252,31 +251,26 @@ function createTranslationMatrix(x,y,z)
 
 //TODO: createScaleMatrix
 
-function getDotProduct(x,y,z,x2,y2,z2)
-{
+function getDotProduct(x,y,z,x2,y2,z2) {
 	return x*x2 + y*y2 + z*z2;
 }
 
-function getCrossProduct(x,y,z,x2,y2,z2)
-{
+function getCrossProduct(x,y,z,x2,y2,z2) {
 	return [y*z2-z*y2, z*x2-x*z2, x*y2-y*x2];
 }
 
-function getLength(x,y,z)
-{
+function getLength(x,y,z) {
 	return Math.sqrt(getDotProduct(x,y,z,x,y,z));
 }
 
-function normalise(x,y,z)
-{
+function normalise(x,y,z) {
 	let length = getLength(x,y,z);
 	if (length == 0)
 		throw new Error("an attempt was made to normalise a three dimensional vector with a length of zero");
 	return [x/length, y/length, z/length];
 }
 
-function createLookAtLHMatrix(eyeX, eyeY, eyeZ, atX, atY, atZ, upX,upY,upZ)
-{
+function createLookAtLHMatrix(eyeX, eyeY, eyeZ, atX, atY, atZ, upX,upY,upZ) {
 	let matrix = new Matrix4x4();
 	let [lookX, lookY, lookZ] = normalise(atX-eyeX,atY-eyeY,atZ-eyeZ);
 	let [rightX, rightY, rightZ] = normalise.apply(null,getCrossProduct(upX,upY,upZ,lookX, lookY, lookZ));
@@ -308,8 +302,7 @@ function createLookAtLHMatrix(eyeX, eyeY, eyeZ, atX, atY, atZ, upX,upY,upZ)
 	return matrix;
 }
 
-function getDifferenceBetweenAngles(current,target)
-{
+function getDifferenceBetweenAngles(current,target) {
 	let f = (((target-current)+Math.PI)/(Math.PI*2));
 	return ((f-Math.floor(f))*(Math.PI*2))-Math.PI;
 }
@@ -321,13 +314,11 @@ let easeStartPosX, easeStartPosY, easeStartPosZ;
 let easeStartLookX, easeStartLookY, easeStartLookZ;
 let easeStartUpX, easeStartUpY, easeStartUpZ;
 
-function getCameraPositionInfo(matrix)
-{
+function getCameraPositionInfo(matrix) {
 	return [matrix.m41, matrix.m42, matrix.m43, matrix.m21, matrix.m22, matrix.m23, matrix.m31, matrix.m32, matrix.m33];
 }
 
-function startCameraEase()
-{
+function startCameraEase() {
 	easeCamera = true;
 	easeStartTicks = GetTickCount(true,false);
 	easeDuration = 1000;
@@ -335,8 +326,7 @@ function startCameraEase()
 	[easeStartPosX, easeStartPosY, easeStartPosZ, easeStartLookX, easeStartLookY, easeStartLookZ, easeStartUpX, easeStartUpY, easeStartUpZ] = getCameraPositionInfo(matrix);
 }
 
-function applyCameraEase(matrix)
-{
+function applyCameraEase(matrix) {
 	if (!easeCamera)
 		return matrix;
 	let ease = (GetTickCount(true,false)-easeStartTicks)/easeDuration;
@@ -368,8 +358,7 @@ let OldPosition = null;
 let cameraRotZ;
 let cameraRotY;
 
-function getCameraTarget()
-{
+function getCameraTarget() {
 	let playerPed = GetPlayerPed(GetCurrentPlayerIndex());
 	let vehicle = GetPedVehicle(playerPed);
 	if (vehicle != null)
@@ -383,30 +372,26 @@ function getCameraTarget()
 	return null;
 }
 
-function isRelativeToTarget(target)
-{
+function isRelativeToTarget(target) {
 	if (GetEntityType(target) == ENTITYTYPE_PED)
 		return false;
 	return false
 }
 
-function isClipped(target)
-{
+function isClipped(target) {
 	if (GetEntityType(target) == ENTITYTYPE_PED)
 		return true;
 	return true;
 }
 
 
-function ShouldReturnToRestRotation(Target)
-{
+function ShouldReturnToRestRotation(Target) {
 	if (GetEntityType(Target) == ENTITYTYPE_PED)
 		return false;
 	return true;
 }
 
-function getCameraRestRotation(target)
-{
+function getCameraRestRotation(target) {
 	let targetMatrix = GetPlaceableMatrix(target);
 	let rotZ;
 	if (isRelativeToTarget(target))
@@ -417,24 +402,14 @@ function getCameraRestRotation(target)
 	return [rotZ, rotY];
 }
 
-function resetCameraRotation()
-{
+function resetCameraRotation() {
 	[cameraRotZ, cameraRotY] = getCameraRestRotation(getCameraTarget());
 }
 
 
-let DeltaTime = 0;
-addEventHandler("OnProcess", (event, deltaTime) => {
-	DeltaTime = deltaTime;
-	if(!localPlayer) {
-		return false;
-	}
-
-	if(gta.game >= GAME_GTA_SA) {
-		// We don't need this for GTA SA+
-		return false;
-	}
-});
+function processMouseCamera() {
+	return false;
+}
 
 let IdleTime = 0;
 
@@ -466,9 +441,6 @@ function processReturnToRestRotation() {
 function cancelReturnToRestRotation() {
 	IdleTime = 0;
 }
-
-let distance;
-let zIncrease;
 
 function getCameraOffsetInfo(target) {
 	if (GetEntityType(target) == ENTITYTYPE_PED) {
@@ -513,7 +485,7 @@ function getCameraOffsetInfo(target) {
 	return [distance, zIncrease, offsetX, offsetY, offsetZ];
 }
 
-function update() {
+function updateMouseCamera() {
 	let target = getCameraTarget();
 	if(target != null) {
 		if(oldCameraTarget != target) {
@@ -606,50 +578,3 @@ function update() {
 }
 
 // ===========================================================================
-
-addEventHandler("OnCameraProcess", (event) => {
-    if(mouseCameraEnabled) {
-        update();
-        event.preventDefault();
-    }
-});
-
-// ===========================================================================
-
-function getPosInFrontOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
-	let z = pos.z;
-
-	return new Vec3(x,y,z);
-}
-
-function vec3ToVec2(pos) {
-	return new Vec2(pos[0], pos[1]);
-}
-
-// ===========================================================================
-
-/*
-addEventHandler("OnEntityProcess", function(event, entity) {
-	if(entity.type == ELEMENT_PLAYER) {
-		if(entity != localPlayer) {
-			let isPlayerWalking = entity.getData("ag.walk");
-			if(isPlayerWalking == true) {
-				let position = getPosInFrontOfPos(entity.position, entity.heading, 1.0);
-				entity.walkTo(position);
-			}
-		}
-	}
-});
-
-function getHeadingFromPosToPos(pos1, pos2) {
-	let x = pos2.x-pos1.x;
-	let y = pos2.y-pos1.y;
-	let rad = Math.atan2(y, x);
-	let deg = radToDeg(rad);
-	deg -= 90;
-	deg = deg % 360;
-	return degToRad(deg);
-}
-*/

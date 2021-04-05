@@ -16,7 +16,7 @@ function initClientScripts() {
     initMessagingScript();
     initServerScript();
     initLogoScript();
-    init3DLabelScript();
+    initLabelScript();
     initChatBoxScript();
     initAFKScript();
     initKeyBindScript();

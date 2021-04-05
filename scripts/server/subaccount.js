@@ -9,8 +9,8 @@
 // ===========================================================================
 
 function initSubAccountScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.SubAccount]: Initializing subaccount script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.SubAccount]: SubAccount script initialized!");
+	logToConsole(LOG_INFO, "[Asshat.SubAccount]: Initializing subaccount script ...");
+	logToConsole(LOG_INFO, "[Asshat.SubAccount]: SubAccount script initialized!");
 }
 
 // ===========================================================================
@@ -146,7 +146,7 @@ function saveSubAccountToDatabase(subAccountData) {
 
 		//dbQueryString = dbQueryString.trim();
 		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-		logToConsole(LOG_DEBUG, dbQueryString);
+
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);

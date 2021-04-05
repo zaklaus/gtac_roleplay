@@ -9,7 +9,7 @@
 // ===========================================================================
 
 function initJobScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Job]: Initializing job script ...");
+	logToConsole(LOG_INFO, "[Asshat.Job]: Initializing job script ...");
 	getServerData().jobs = loadJobsFromDatabase();
 
 	if(getServerConfig().createJobPickups) {
@@ -21,7 +21,7 @@ function initJobScript() {
 	}
 
 	setAllJobDataIndexes();
-	logToConsole(LOG_DEBUG, "[Asshat.Job]: Job script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Job]: Job script initialized successfully!");
 	return true;
 }
 
@@ -1353,7 +1353,7 @@ function saveJobLocationToDatabase(jobLocationData) {
 		// If job location hasn't been added to database, ID will be 0
 		if(jobLocationData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO job_loc (job_loc_job, job_loc_enabled, job_loc_pos_x, job_loc_pos_y, job_loc_pos_z, job_loc_int, job_loc_vw) VALUES (${jobLocationData.job}, ${boolToInt(jobLocationData.enabled)}, ${jobLocationData.position.x}, ${jobLocationData.position.y}, ${jobLocationData.position.z}, ${jobLocationData.interior}, ${jobLocationData.dimension})`;
-			logToConsole(LOG_DEBUG, dbQueryString);
+
 			queryDatabase(dbConnection, dbQueryString);
 			jobLocationData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {

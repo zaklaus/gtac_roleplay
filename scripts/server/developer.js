@@ -9,7 +9,7 @@
 // ===========================================================================
 
 function initDeveloperScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Developer]: Initializing developer script ...");
+	logToConsole(LOG_INFO, "[Asshat.Developer]: Initializing developer script ...");
 
 	// Use GTAC command handlers for these since they need to be available on console
 	//addCommandHandler("sc", executeServerCodeCommand);
@@ -18,7 +18,7 @@ function initDeveloperScript() {
 	//addCommandHandler("allcmd", simulateCommandForAllPlayersCommand);
 	//addCommandHandler("addloglvl", setServerLogLevelCommand);
 
-	logToConsole(LOG_DEBUG, "[Asshat.Developer]: Developer script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Developer]: Developer script initialized successfully!");
 	return true;
 }
 
@@ -28,61 +28,91 @@ function p(params) {
 	return getPlayerFromParams(params);
 }
 
+// ===========================================================================
+
 function o(params) {
 	return getElementsByType(ELEMENT_OBJECT)[params];
 }
+
+// ===========================================================================
 
 function io(params) {
 	return getItemData(params).object;
 }
 
+// ===========================================================================
+
 function pd(params) {
 	return getPlayerData(getPlayerFromParams(params));
 }
+
+// ===========================================================================
 
 function cv(params) {
 	return getClosestVehicle(getPlayerPosition(getPlayerFromParams(params)));
 }
 
+// ===========================================================================
+
 function iv(params) {
 	return getPlayerVehicle(getPlayerFromParams(params));
 }
+
+// ===========================================================================
 
 function bd(params) {
 	return getBusinessFromParams(params);
 }
 
+// ===========================================================================
+
 function hd(params) {
 	return getHouseFromParams(params);
 }
+
+// ===========================================================================
 
 function jd(params) {
 	return getJobFromParams(params);
 }
 
+// ===========================================================================
+
 function jld(params, jobLocationIndex) {
 	return getJobFromParams(params).locations[jobLocationIndex];
 }
+
+// ===========================================================================
 
 function vd(params) {
 	return getVehicleData(getVehicleFromParams(params));
 }
 
+// ===========================================================================
+
 function pad(params) {
 	return getPlayerData(getPlayerFromParams(params)).accountData;
 }
+
+// ===========================================================================
 
 function pcsd(params) {
 	return getPlayerCurrentSubAccount(getPlayerFromParams(params));
 }
 
+// ===========================================================================
+
 function psd(params, subAccountIndex) {
 	return getPlayerData(getPlayerFromParams(params)).subAccounts[subAccountIndex];
 }
 
+// ===========================================================================
+
 function pv(params) {
 	return getPlayerVehicle(getPlayerFromParams(params));
 }
+
+// ===========================================================================
 
 function pvd(params) {
 	return getVehicleData(getPlayerVehicle(getPlayerFromParams(params)));

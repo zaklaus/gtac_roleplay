@@ -25,7 +25,7 @@ let renderHUD = true;
 let renderLabels = true;
 let renderLogo = true;
 let renderSmallGameMessage = true;
-let renderScoreboard = true;
+let renderScoreBoard = true;
 let renderHotBar = true;
 let renderItemActionDelay = true;
 
@@ -41,6 +41,6 @@ let forceWeaponClipAmmo = 0;
 let drunkEffectAmount = 0;
 let drunkEffectDurationTimer = null;
 
-let controlsEnabled = false;
+let controlsEnabled = true;
 
 // ===========================================================================

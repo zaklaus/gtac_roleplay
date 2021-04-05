@@ -8,6 +8,11 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+function initMessagingScript() {
+	logToConsole(LOG_INFO, "[Asshat.Messaging]: Initializing messaging script ...");
+	logToConsole(LOG_INFO, "[Asshat.Messaging]: Messaging script initialized successfully!");
+}
+
 // ===========================================================================
 
 function messageAdminAction(messageText) {

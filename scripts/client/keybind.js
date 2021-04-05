@@ -23,6 +23,7 @@ function initKeyBindScript() {
 // ===========================================================================
 
 function bindAccountKey(key, keyState) {
+    logToConsole(LOG_DEBUG, `[Asshat.KeyBind]: Binded key ${sdl.getKeyName(key)} (${key})`);
     bindKey(toInteger(key), keyState, function(event) {
         if(hasKeyBindDelayElapsed()) {
             lastKeyBindUse = sdl.ticks;
@@ -34,6 +35,7 @@ function bindAccountKey(key, keyState) {
 // ===========================================================================
 
 function unBindAccountKey(key) {
+    logToConsole(LOG_DEBUG, `[Asshat.KeyBind]: Unbinded key ${sdl.getKeyName(key)} (${key})`);
     unbindKey(key);
     return true;
 }

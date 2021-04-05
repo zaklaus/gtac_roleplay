@@ -345,3 +345,6 @@ For example, the /tempveh command adds a vehicle and provides both a reference t
 Some commands already implement a final, optional command to override the default chosen entity to act on (for example, `/bizname Some Business 3` will set business ID 3's name instead of the closest business to the player. Only works for staff with the manageBusinesses permission or if the player using it owns or is in the clan that owns business ID 3 and has the ability to set it's name.
 So this: `/tempveh infernus | /vehrgb 0 0 0 0 {RETURN} | /vehrgb 1 {2} {3} {4} {RETURN}` Would spawn a temporary infernus and immediately set both colours as completely black RGB values.
 ---
+### Real time display
+Steam has the player's local time on it's overlay. Something like that. Toggleable in account settings of course.
+---

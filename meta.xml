@@ -95,7 +95,6 @@
 	<script src="scripts/client/keybind.js" type="client" language="javascript" />
 	<script src="scripts/client/chatbox.js" type="client" language="javascript" />
 	<script src="scripts/client/label.js" type="client" language="javascript" />
-	<script src="scripts/client/mouse-camera.js" type="client" language="javascript" />
 	<script src="scripts/client/skin-select.js" type="client" language="javascript" />
 	<script src="scripts/client/server.js" type="client" language="javascript" />
 	<script src="scripts/client/job.js" type="client" language="javascript" />

@@ -10,6 +10,8 @@
 
 let serverCommands = [];
 
+// ===========================================================================
+
 let builtInCommands = [
     "refresh",
     "restart",
@@ -26,10 +28,10 @@ let builtInCommands = [
 // ===========================================================================
 
 function initCommandScript() {
-    logToConsole(LOG_DEBUG, "[Asshat.Command]: Initializing commands script ...");
+    logToConsole(LOG_INFO, "[Asshat.Command]: Initializing commands script ...");
     serverCommands = loadCommands();
     //addAllCommandHandlers();
-    logToConsole(LOG_DEBUG, "[Asshat.Command]: Initialized commands script!");
+    logToConsole(LOG_INFO, "[Asshat.Command]: Initialized commands script!");
 }
 
 // ===========================================================================
@@ -217,6 +219,14 @@ function loadCommands() {
             //commandData("speakerphone", togglePhoneSpeakerCommand, "", getStaffFlagValue("none"), true, false),
             commandData("radio", walkieTalkieChatCommand, "", getStaffFlagValue("none"), true, false),
             commandData("r", walkieTalkieChatCommand, "", getStaffFlagValue("none"), true, false),
+
+            commandData("additemtype", createItemType, "<name>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemusetype", setItemTypeUseTypeCommand, "<item type> <use type>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemuseval", setItemTypeUseValueCommand, "<item type> <use value>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemorderprice", setItemTypeOrderPriceCommand, "<item type> <price>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemriskmult", setItemTypeRiskMultiplierCommand, "<item type> <risk multiplier>", getStaffFlagValue("manageItems"), true, false),
+
+
         ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),

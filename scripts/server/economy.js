@@ -8,6 +8,11 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+function initEconomyScript() {
+	logToConsole(LOG_INFO, "[Asshat.Economy]: Initializing economy script ...");
+	logToConsole(LOG_INFO, "[Asshat.Economy]: Economy script initialized successfully!");
+}
+
 // ===========================================================================
 
 function getTimeDisplayUntilPlayerPayDay(client) {

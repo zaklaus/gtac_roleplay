@@ -9,12 +9,14 @@
 // ===========================================================================
 
 function initItemScript() {
+	logToConsole(LOG_INFO, "[Asshat.Item]: Initializing item script ...");
 	getServerData().itemTypes = loadItemTypesFromDatabase();
 	getServerData().items = loadItemsFromDatabase();
 
 	setItemDataIndexes();
 
 	createAllGroundItemObjects();
+	logToConsole(LOG_INFO, "[Asshat.Item]: Item script initialized successfully!");
 	return true;
 }
 
@@ -369,6 +371,123 @@ function takeItemCommand(command, params, client) {
 	showPlayerItemTakeDelay(client, itemId);
 
 	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+}
+
+// ===========================================================================
+
+function createItemTypeCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let itemTypeIndex = createItemType(params);
+	messageAdmins(`[#AAAAAA]${client.name} created new item [#AAAAAA]${params}. [#FFFFFF]ID: ${itemTypeIndex}/${getItemTypeData(itemTypeIndex).databaseId}!`);
+}
+
+// ===========================================================================
+
+function setItemTypeDropModelCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
+	let modelId = splitParams[splitParams.length-1];
+
+	if(!getItemTypeData(itemTypeIndex)) {
+		messagePlayerError(client, `Invalid item type`);
+		return false;
+	}
+
+	getItemTypeData(itemTypeIndex).dropModel = modelId;
+	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} dropped object model to ${modelId}`);
+}
+
+// ===========================================================================
+
+function setItemTypeOrderPriceCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
+	let orderPrice = splitParams[splitParams.length-1];
+
+	if(!getItemTypeData(itemTypeIndex)) {
+		messagePlayerError(client, `Invalid item type`);
+		return false;
+	}
+
+	getItemTypeData(itemTypeIndex).orderPrice = orderPrice;
+	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} [#FFFFFF]base price to [#AAAAAA]$${orderPrice}`);
+}
+
+// ===========================================================================
+
+function setItemTypeRiskMultiplierCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
+	let riskMultiplier = splitParams[splitParams.length-1];
+
+	if(!getItemTypeData(itemTypeIndex)) {
+		messagePlayerError(client, `Invalid item type`);
+		return false;
+	}
+
+	getItemTypeData(itemTypeIndex).riskMultiplier = riskMultiplier;
+	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} [#FFFFFF]risk multilier to [#AAAAAA]$${riskMultiplier}`);
+}
+
+// ===========================================================================
+
+function setItemTypeUseTypeCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
+	let useType = splitParams[splitParams.length-1];
+
+	if(!getItemTypeData(itemTypeIndex)) {
+		messagePlayerError(client, `Invalid item type`);
+		return false;
+	}
+
+	getItemTypeData(itemTypeIndex).useType = useType;
+	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} [#FFFFFF]use type to [#AAAAAA]$${useType}`);
+}
+
+// ===========================================================================
+
+function setItemTypeUseValueCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
+	let useValue = splitParams[splitParams.length-1];
+
+	if(!getItemTypeData(itemTypeIndex)) {
+		messagePlayerError(client, `Invalid item type`);
+		return false;
+	}
+
+	getItemTypeData(itemTypeIndex).useValue = useValue;
+	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} [#FFFFFF]use value to [#AAAAAA]$${useValue}`);
 }
 
 // ===========================================================================
@@ -1032,19 +1151,21 @@ function saveAllItemsToDatabase() {
 
 function saveItemToDatabase(itemId) {
 	let tempItemData = getServerData().items[itemId];
-	logToConsole(LOG_DEBUG, `[Asshat.Item]: Saving item '${itemId}' to database ...`);
+	logToConsole(LOG_VERBOSE, `[Asshat.Item]: Saving item '${itemId}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		if(tempItemData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO item_main (item_server, item_type, item_owner_type, item_owner_id, item_value, item_amount, item_pos_x, item_pos_y, item_pos_z, item_int, item_vw) VALUE (${getServerId()}, ${tempItemData.itemType}, ${tempItemData.ownerType}, ${tempItemData.ownerId}, ${tempItemData.value}, ${tempItemData.amount}, ${tempItemData.position.x},${tempItemData.position.y}, ${tempItemData.position.z}, ${tempItemData.interior}, ${tempItemData.dimension})`;
+
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().items[itemId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
 			let dbQueryString = `UPDATE item_main SET item_server=${getServerId()}, item_type=${tempItemData.itemType}, item_owner_type=${tempItemData.ownerType}, item_owner_id=${tempItemData.ownerId}, item_value=${tempItemData.value}, item_amount=${tempItemData.amount}, item_pos_x=${tempItemData.position.x}, item_pos_y=${tempItemData.position.y}, item_pos_z=${tempItemData.position.z}, item_int=${tempItemData.interior}, item_vw=${tempItemData.dimension}`;
+
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
-		logToConsole(LOG_DEBUG, `[Asshat.Item]: Saved item '${tempItemData.name}' to database!`);
+		logToConsole(LOG_VERBOSE, `[Asshat.Item]: Saved item '${tempItemData.name}' to database!`);
 		return true;
 	}
 

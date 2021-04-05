@@ -8,12 +8,10 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ===========================================================================
-
 function initEventScript() {
-    logToConsole(LOG_DEBUG, "[Asshat.Event]: Initializing event script ...");
+    logToConsole(LOG_INFO, "[Asshat.Event]: Initializing event script ...");
     addAllEventHandlers();
-    logToConsole(LOG_DEBUG, "[Asshat.Event]: Event script initialized!");
+    logToConsole(LOG_INFO, "[Asshat.Event]: Event script initialized!");
 }
 
 // ===========================================================================

@@ -223,6 +223,7 @@ function initClassTable() {
 					this.discordAccount = dbAssoc["acct_discord"];
 					this.settings = dbAssoc["acct_settings"];
 					this.emailAddress = dbAssoc["acct_email"];
+					this.whenRegistered = dbAssoc["acct_when_registered"];
 					this.ipAddress = dbAssoc["ipstring"];
 
 					this.notes = [];

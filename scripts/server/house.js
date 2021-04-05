@@ -9,7 +9,7 @@
 // ===========================================================================
 
 function initHouseScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.House]: Initializing house script ...");
+	logToConsole(LOG_INFO, "[Asshat.House]: Initializing house script ...");
 	getServerData().houses = loadHousesFromDatabase();
 
 	if(getServerConfig().createHousePickups) {
@@ -21,14 +21,14 @@ function initHouseScript() {
 	}
 
 	setAllHouseIndexes();
-	logToConsole(LOG_DEBUG, "[Asshat.House]: House script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.House]: House script initialized successfully!");
 	return true;
 }
 
 // ===========================================================================
 
 function loadHousesFromDatabase() {
-	logToConsole(LOG_DEBUG, "[Asshat.House]: Loading houses from database ...");
+	logToConsole(LOG_INFO, "[Asshat.House]: Loading houses from database ...");
 	let tempHouses = [];
 	let dbConnection = connectToDatabase();
 	let dbAssoc;
@@ -40,14 +40,14 @@ function loadHousesFromDatabase() {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempHouseData = new serverClasses.houseData(dbAssoc);
 					tempHouses.push(tempHouseData);
-					logToConsole(LOG_DEBUG, `[Asshat.House]: House '${tempHouseData.description}' (ID ${tempHouseData.databaseId}) loaded!`);
+					logToConsole(LOG_VERBOSE, `[Asshat.House]: House '${tempHouseData.description}' (ID ${tempHouseData.databaseId}) loaded!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.House]: ${tempHouses.length} houses loaded from database successfully!`);
+	logToConsole(LOG_INFO, `[Asshat.House]: ${tempHouses.length} houses loaded from database successfully!`);
 	return tempHouses;
 }
 
@@ -414,9 +414,11 @@ function getPlayerHouse(client) {
 // ===========================================================================
 
 function saveAllHousesToDatabase() {
+	logToConsole(LOG_INFO, `[Asshat.House]: Saving all server houses to database ...`);
 	for(let i in getServerData().houses) {
 		saveHouseToDatabase(i);
 	}
+	logToConsole(LOG_INFO, `[Asshat.House]: Saving all server houses to database ...`);
 }
 
 // ===========================================================================
@@ -424,12 +426,13 @@ function saveAllHousesToDatabase() {
 function saveHouseToDatabase(houseId) {
 	let tempHouseData = getServerData().houses[houseId];
 
-	logToConsole(LOG_DEBUG, `[Asshat.House]: Saving house '${tempHouseData.databaseId}' to database ...`);
+	logToConsole(LOG_VERBOSE, `[Asshat.House]: Saving house '${tempHouseData.databaseId}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeHouseDescription = escapeDatabaseString(dbConnection, tempHouseData.description);
 		if(tempHouseData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO house_main (house_server, house_description, house_owner_type, house_owner_id, house_locked, house_entrance_pos_x, house_entrance_pos_y, house_entrance_pos_z, house_entrance_rot_z, house_entrance_int, house_entrance_vw, house_exit_pos_x, house_exit_pos_y, house_exit_pos_z, house_exit_rot_z, house_exit_int, house_exit_vw, house_has_interior) VALUES (${getServerId()}, '${safeHouseDescription}', ${tempHouseData.ownerType}, ${tempHouseData.ownerId}, ${boolToInt(tempHouseData.locked)}, ${tempHouseData.entrancePosition.x}, ${tempHouseData.entrancePosition.y}, ${tempHouseData.entrancePosition.z}, ${tempHouseData.entranceRotation}, ${tempHouseData.entranceInterior}, ${tempHouseData.entranceDimension}, ${tempHouseData.exitPosition.x}, ${tempHouseData.exitPosition.y}, ${tempHouseData.exitPosition.z}, ${tempHouseData.exitRotation}, ${tempHouseData.exitInterior}, ${tempHouseData.exitDimension}, ${boolToInt(tempHouseData.hasInterior)})`;
+
 			queryDatabase(dbConnection, dbQueryString);
 			getServerData().houses[houseId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
@@ -459,7 +462,7 @@ function saveHouseToDatabase(houseId) {
 
 			//dbQueryString = dbQueryString.trim();
 			dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-			logToConsole(LOG_DEBUG, dbQueryString);
+
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			freeDatabaseQuery(dbQuery);
 			disconnectFromDatabase(dbConnection);
@@ -467,7 +470,7 @@ function saveHouseToDatabase(houseId) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.House]: Saved house '${tempHouseData.description}' to database!`);
+	logToConsole(LOG_VERBOSE, `[Asshat.House]: Saved house '${tempHouseData.description}' to database!`);
 
 	return false;
 }

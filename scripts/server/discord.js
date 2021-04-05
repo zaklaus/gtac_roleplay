@@ -8,6 +8,13 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+function initDiscordScript() {
+	logToConsole(LOG_INFO, "[Asshat.Discord]: Initializing discord script ...");
+	logToConsole(LOG_INFO, "[Asshat.Discord]: Discord script initialized successfully!");
+}
+
+// ===========================================================================
+
 /*
 addEventHandler("OnDiscordCommand", function(command, params, discordUser) {
     let commandData = getCommand(command);

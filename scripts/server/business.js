@@ -9,7 +9,7 @@
 // ===========================================================================
 
 function initBusinessScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Business]: Initializing business script ...");
+	logToConsole(LOG_INFO, "[Asshat.Business]: Initializing business script ...");
 	getServerData().businesses = loadBusinessesFromDatabase();
 
 	if(getServerConfig().createBusinessPickups) {
@@ -22,7 +22,7 @@ function initBusinessScript() {
 
 	setAllBusinessIndexes();
 	cacheAllBusinessItems();
-	logToConsole(LOG_DEBUG, "[Asshat.Business]: Business script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Business]: Business script initialized successfully!");
 	return true;
 }
 
@@ -47,7 +47,7 @@ function loadBusinessFromId(businessId) {
 // ===========================================================================
 
 function loadBusinessesFromDatabase() {
-	logToConsole(LOG_DEBUG, "[Asshat.Business]: Loading businesses from database ...");
+	logToConsole(LOG_INFO, "[Asshat.Business]: Loading businesses from database ...");
 
 	let tempBusinesses = [];
 	let dbConnection = connectToDatabase();
@@ -62,7 +62,7 @@ function loadBusinessesFromDatabase() {
 					let tempBusinessData = new serverClasses.businessData(dbAssoc);
 					tempBusinessData.locations = loadBusinessLocationsFromDatabase(tempBusinessData.databaseId);
 					tempBusinesses.push(tempBusinessData);
-					logToConsole(LOG_DEBUG, `[Asshat.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully!`);
+					logToConsole(LOG_INFO, `[Asshat.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -70,28 +70,30 @@ function loadBusinessesFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Business]: ${tempBusinesses.length} businesses loaded from database successfully!`);
+	logToConsole(LOG_INFO, `[Asshat.Business]: ${tempBusinesses.length} businesses loaded from database successfully!`);
 	return tempBusinesses;
 }
 
 // ===========================================================================
 
 function loadBusinessLocationsFromDatabase(businessId) {
-	//logToConsole(LOG_DEBUG, "[Asshat.Business]: Loading locations from database ...");
+	logToConsole(LOG_VERBOSE, `[Asshat.Business]: Loading business locations for business ${businessId} from database ...`);
 
 	let tempBusinessLocations = [];
 	let dbConnection = connectToDatabase();
 	let dbQuery = null;
 	let dbAssoc;
+	let dbQueryString = "";
 
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `biz_loc` WHERE `biz_loc_biz` = " + toString(businessId));
+		bbQueryString = `SELECT * FROM biz_loc WHERE biz_loc_biz = ${businessId}`;
+		dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempBusinessLocationData = new serverClasses.businessLocationData(dbAssoc);
 					tempBusinessLocations.push(tempBusinessLocationData);
-					//logToConsole(LOG_DEBUG, `[Asshat.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
+					logToConsole(LOG_VERBOSE, `[Asshat.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -99,7 +101,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	//logToConsole(LOG_DEBUG, `[Asshat.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
+	logToConsole(LOG_VERBOSE, `[Asshat.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
 	return tempBusinessLocations;
 }
 
@@ -841,7 +843,7 @@ function saveBusinessToDatabase(businessId) {
 				 WHERE biz_id=${tempBusinessData.databaseId}`;
 
 			dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-			logToConsole(LOG_DEBUG, dbQueryString);
+
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			freeDatabaseQuery(dbQuery);
 			disconnectFromDatabase(dbConnection);

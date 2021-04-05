@@ -11,8 +11,8 @@
 // ===========================================================================
 
 function initBanScript() {
-    logToConsole(LOG_DEBUG, "[Asshat.Ban]: Initializing ban script ...");
-    logToConsole(LOG_DEBUG, "[Asshat.Ban]: Ban script initialized!");
+    logToConsole(LOG_INFO, "[Asshat.Ban]: Initializing ban script ...");
+    logToConsole(LOG_INFO, "[Asshat.Ban]: Ban script initialized!");
 }
 
 // ===========================================================================
@@ -29,8 +29,14 @@ function accountBanCommand(command, params, client) {
         return false;
 	}
 
-	messageAdminAction(`${getPlayerData(targetClient).accountData.name} has been banned from the server (account ban).`);
-	banAccount(getPlayerData(targetClient).accountData.databaseId, getPlayerData(client).accountData.databaseId, "");
+    let splitParams = params.split(" ");
+    let targetClient = getPlayerFromParams(splitParams[0]);
+    let reason = splitParams.slice(1).join(" ");
+
+    logToConsole(LOG_WARN, `[Asshat.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) account was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
+
+	messageAdminAction(`${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) has been account banned.`);
+	banAccount(getPlayerData(targetClient).accountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
 	disconnectPlayer(client);
 }
 
@@ -52,7 +58,9 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
     let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
-	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
+    logToConsole(LOG_WARN, `[Asshat.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name})'s subaccount was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
+
+	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been character banned.`);
     banSubAccount(getPlayerData(targetClient).currentSubAccountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
     disconnectPlayer(client);
 }
@@ -75,7 +83,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
     let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
-    messageAdminAction(`${targetClient.name} has been banned from the server (IP ban).`);
+    messageAdminAction(`${targetClient.name} has been IP banned.`);
     banIPAddress(targetClient.ip, getPlayerData(client).accountData.databaseId, reason);
     server.banIP(targetClient.ip);
     targetClient.disconnect();

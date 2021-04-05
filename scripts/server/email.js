@@ -9,12 +9,12 @@
 // ===========================================================================
 
 function initEmailScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Email]: Initializing email script ...");
+	logToConsole(LOG_INFO, "[Asshat.Email]: Initializing email script ...");
     emailConfig = loadEmailConfiguration();
-	logToConsole(LOG_DEBUG, "[Asshat.Email]: Email script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Email]: Email script initialized successfully!");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function sendEmail(toEmail, toName, subject, body) {
     module.smtp.send(
@@ -31,11 +31,11 @@ function sendEmail(toEmail, toName, subject, body) {
         emailConfig.fromName);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function loadEmailConfiguration() {
     let emailConfigFile = loadTextFile("config/email.json");
 	return JSON.parse(emailConfigFile);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================

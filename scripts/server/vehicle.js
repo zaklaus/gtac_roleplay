@@ -9,17 +9,17 @@
 // ===========================================================================
 
 function initVehicleScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Vehicle]: Initializing vehicle script ...");
+	logToConsole(LOG_INFO, "[Asshat.Vehicle]: Initializing vehicle script ...");
 	getServerData().vehicles = loadVehiclesFromDatabase();
 	spawnAllVehicles();
-	logToConsole(LOG_DEBUG, "[Asshat.Vehicle]: Vehicle script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Vehicle]: Vehicle script initialized successfully!");
 	return true;
 }
 
 // ===========================================================================
 
 function loadVehiclesFromDatabase() {
-	logToConsole(LOG_DEBUG, "[Asshat.Vehicle]: Loading vehicles from database ...");
+	logToConsole(LOG_INFO, "[Asshat.Vehicle]: Loading vehicles from database ...");
 	let dbConnection = connectToDatabase();
 	let tempVehicles = [];
 	let dbAssoc;
@@ -36,19 +36,19 @@ function loadVehiclesFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Vehicle]: ${tempVehicles.length} vehicles loaded from database successfully!`);
+	logToConsole(LOG_INFO, `[Asshat.Vehicle]: ${tempVehicles.length} vehicles loaded from database successfully!`);
 	return tempVehicles;
 }
 
 // ===========================================================================
 
 function saveAllVehiclesToDatabase() {
-	logToConsole(LOG_DEBUG, "[Asshat.Vehicle]: Saving all vehicles to database ...");
+	logToConsole(LOG_INFO, "[Asshat.Vehicle]: Saving all vehicles to database ...");
 	let vehicles = getServerData().vehicles;
 	for(let i in vehicles) {
 		saveVehicleToDatabase(vehicles[i]);
 	}
-	logToConsole(LOG_DEBUG, "[Asshat.Vehicle]: Saved all vehicles to database!");
+	logToConsole(LOG_INFO, "[Asshat.Vehicle]: Saved all vehicles to database!");
 
 	return true;
 }
@@ -66,7 +66,7 @@ function saveVehicleToDatabase(vehicleData) {
 		return false;
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Vehicle]: Saving vehicle ${vehicleData.databaseId} to database ...`);
+	logToConsole(LOG_VERBOSE, `[Asshat.Vehicle]: Saving vehicle ${vehicleData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		if(!vehicleData.spawnLocked) {
@@ -91,7 +91,7 @@ function saveVehicleToDatabase(vehicleData) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.Vehicle]: Saved vehicle ${vehicleData.vehicle.id} to database!`);
+	logToConsole(LOG_VERBOSE, `[Asshat.Vehicle]: Saved vehicle ${vehicleData.vehicle.id} to database!`);
 
 	return false;
 }

@@ -50,6 +50,8 @@ function addAllEventHandlers() {
 
     addEventHandler("OnLostFocus", onLostFocus);
     addEventHandler("OnFocus", onFocus);
+
+    addEventHandler("OnCameraProcess", onCameraProcess);
 }
 
 // ===========================================================================
@@ -82,6 +84,8 @@ function onResourceReady(event, resource) {
 // ===========================================================================
 
 function onProcess(event, deltaTime) {
+    DeltaTime = deltaTime;
+
     if(gta.game != GAME_GTA_IV) {
         gta.clearMessages();
     }
@@ -94,7 +98,6 @@ function onProcess(event, deltaTime) {
         return false;
     }
 
-    processMouseCamera();
     destroyAutoCreatedPickups();
     processLocalPlayerControlState();
     clearLocalPlayerWantedLevel();
@@ -123,8 +126,8 @@ function onDrawnHUD(event) {
     }
 
     processSmallGameMessageRendering();
-    processScoreboardRendering();
-    process3DLabelRendering();
+    processScoreBoardRendering();
+    processLabelRendering();
     processLogoRendering();
     processItemActionRendering();
     processSkinSelectRendering();
@@ -218,6 +221,11 @@ function onFocus(event) {
 // ===========================================================================
 
 function onLocalPlayerSwitchWeapon(oldWeapon, newWeapon) {
+}
+
+// ===========================================================================
+
+function onCameraProcess(event) {
 }
 
 // ===========================================================================

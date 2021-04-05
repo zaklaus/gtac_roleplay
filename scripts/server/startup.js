@@ -32,6 +32,11 @@ function initServerScripts() {
 	initAntiCheatScript();
 	initItemScript();
 	initClientScript();
+	initMessagingScript();
+	initHelpScript();
+	initFishingScript();
+	initGUIScript();
+	initEconomyScript();
 
 	initTimers();
 

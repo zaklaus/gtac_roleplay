@@ -8,6 +8,11 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+function initGUIScript() {
+	logToConsole(LOG_INFO, "[Asshat.GUI]: Initializing GUI script ...");
+	logToConsole(LOG_INFO, "[Asshat.GUI]: GUI script initialized successfully!");
+}
+
 // ===========================================================================
 
 function playerPromptAnswerNo(client) {
@@ -19,7 +24,8 @@ function playerPromptAnswerNo(client) {
 
     switch(getPlayerData(client).promptType) {
         case AG_PROMPT_CREATEFIRSTCHAR:
-            showPlayerErrorGUI(client, "You don't have a character to play. Goodbye!", "No Characters")
+            logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} chose not to create a first character. Kicking them from the server ...`);
+            showPlayerErrorGUI(client, "You don't have a character to play. Goodbye!", "No Characters");
             setTimeout(function() { client.disconnect(); }, 5000);
             break;
 

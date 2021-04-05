@@ -12,6 +12,8 @@ let serverConfig = {};
 let databaseConfig = {};
 let emailConfig = {};
 
+// ===========================================================================
+
 let globalConfig = {
 	accountPasswordHash: "SHA512",
 	npcFarProximity: 100,
@@ -50,6 +52,8 @@ let globalConfig = {
 	],
 	itemActionStateReset: 5000,
 };
+
+// ===========================================================================
 
 let gameConfig = {
 	blipSprites: [
@@ -539,13 +543,13 @@ let gameConfig = {
 
 };
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function initConfigScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Config]: Initializing config script ...");
+	logToConsole(LOG_INFO, "[Asshat.Config]: Initializing config script ...");
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
 	applyConfigToServer(serverConfig);
-	logToConsole(LOG_DEBUG, "[Asshat.Config]: Config script initialized!");
+	logToConsole(LOG_INFO, "[Asshat.Config]: Config script initialized!");
 }
 
 // ===========================================================================
@@ -588,7 +592,7 @@ function loadServerConfigFromId(tempServerId) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function applyConfigToServer(tempServerConfig) {
 	server.name = tempServerConfig.name;
@@ -600,7 +604,7 @@ function applyConfigToServer(tempServerConfig) {
 	updateServerRules();
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function saveServerConfigToDatabase(serverConfigData) {
 	logToConsole(LOG_DEBUG, `[Asshat.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
@@ -616,31 +620,31 @@ function saveServerConfigToDatabase(serverConfigData) {
 	logToConsole(LOG_DEBUG, `[Asshat.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getServerConfig() {
 	return serverConfig;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getGameConfig() {
 	return gameConfig;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getGlobalConfig() {
 	return globalConfig;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getServerId() {
 	return getServerConfig().databaseId;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setTimeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -670,7 +674,7 @@ function setTimeCommand(command, params, client) {
 }
 
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setMinuteDurationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -829,4 +833,4 @@ function reloadDatabaseConfigurationCommand(command, params, client) {
 	return true;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================

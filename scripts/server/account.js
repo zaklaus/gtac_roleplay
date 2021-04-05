@@ -544,7 +544,7 @@ function saveAccountToDatabase(accountData) {
 
 		//dbQueryString = dbQueryString.trim();
 		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-		logToConsole(LOG_DEBUG, dbQueryString);
+
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
@@ -625,7 +625,7 @@ function createAccount(name, password, email = "") {
 		let safeName = escapeDatabaseString(dbConnection, name);
 		let safeEmail = escapeDatabaseString(dbConnection, email);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}')`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email, acct_when_registered) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}', UNIX_TIMESTAMP())`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			let accountData = loadAccountFromId(getDatabaseInsertId(dbConnection), true);
 			createDefaultKeybindsForAccount(accountData.databaseId);

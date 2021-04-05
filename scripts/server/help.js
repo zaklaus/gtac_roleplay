@@ -8,7 +8,12 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// -------------------------------------------------------------------------
+function initHelpScript() {
+	logToConsole(LOG_INFO, "[Asshat.Help]: Initializing help script ...");
+	logToConsole(LOG_INFO, "[Asshat.Help]: Help script initialized successfully!");
+}
+
+// ===========================================================================
 
 let randomTips = [
     `[#FFFFFF]Hold [#0066FF]E [#FFFFFF]to hail a nearby taxi if you need a ride.`,
@@ -29,7 +34,7 @@ let randomTips = [
     `[#FFFFFF]Press I to see your inventory, and use number keys to select an item`,
 ];
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function helpCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -120,7 +125,7 @@ function helpCommand(command, params, client) {
 // == Clothes ==================================
 // == Business =================================
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showMainHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Help [#FF9900]=================================");
@@ -129,7 +134,7 @@ function showMainHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#A9A9A9]ammunation, skins, mechanic, dealership, discord, colours, keys");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showAccountHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Account Help [#FF9900]=============================");
@@ -138,7 +143,7 @@ function showAccountHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some settings you can use: [#AAAAAA]/gui, /logo, /iplogin, /autolastchar, /2fa, /loginalert");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showVehicleHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Vehicle Help [#FF9900]=============================");
@@ -149,7 +154,7 @@ function showVehicleHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Don't forget to register and insure your vehicle! Use [#AAAAAA]/gps [#FFFFFF]to find a DMV for this.");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showVehicleDealershipHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Vehicle Dealerships [#FF9900]======================");
@@ -159,7 +164,7 @@ function showVehicleDealershipHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]A new car for sale will appear when you drive away from the dealer.");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showJobHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Job Help [#FF9900]=================================");
@@ -170,7 +175,7 @@ function showJobHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]When entering a job vehicle, information on how to do the job will be shown to you.");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showChatHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Chat Help [#FF9900]================================");
@@ -180,7 +185,7 @@ function showChatHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some have shorter names available ([#AAAAAA]/t [#FFFFFF]for talk, [#AAAAAA]/s [#FFFFFF]for shout, etc)");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showRulesHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Server Rules [#FF9900]=============================");
@@ -191,28 +196,28 @@ function showRulesHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Keep English in main chats. If you aren't good at English, use [#AAAAAA]/help language");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showWebsiteHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Website [#FF9900]=============================");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]The website is [#AAAAAA]https://asshatgaming.com");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showDiscordHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Discord [#FF9900]=============================");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Join our discord! [#AAAAAA]https://discord.gg/4TQ3TGB529");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showAnimationHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Animations [#FF9900]===============================");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Animations are not yet available.");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showAmmunationHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Ammunation [#FF9900]===============================");
@@ -222,7 +227,7 @@ function showAmmunationHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Weapons can also be purchased illegally from weapon dealers and clans.");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showClothesHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Clothes [#FF9900]==================================");
@@ -231,7 +236,7 @@ function showClothesHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Some skins are restricted to jobs, clans, or for other reasons.");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showBindKeysHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Bindable Keys [#FF9900]============================");
@@ -242,7 +247,7 @@ function showBindKeysHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Your keybinds will automatically be usable on all servers");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showBusinessHelpMessage(client) {
     messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Business [#FF9900]=================================");
@@ -252,7 +257,7 @@ function showBusinessHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]A new car for sale will appear when you drive away from the dealer.");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showEnteredDriverSeatHasKeysHelpTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.enteredDriverSeat) {
@@ -261,7 +266,7 @@ function showEnteredDriverSeatHasKeysHelpTip(client) {
     }
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showApproachJobWhileUnemployedTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachJobWhileUnemployed) {
@@ -270,7 +275,7 @@ function showApproachJobWhileUnemployedTip(client) {
     }
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showTakeNearbyJobTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.takeJobWhileUnemployed) {
@@ -279,7 +284,7 @@ function showTakeNearbyJobTip(client) {
     }
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showApproachCurrentJobTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
@@ -289,7 +294,7 @@ function showApproachCurrentJobTip(client) {
     }
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showApproachOtherJobTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachCurrentJob) {
@@ -299,7 +304,7 @@ function showApproachOtherJobTip(client) {
     }
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showStartedWorkingTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.startedWorking) {
@@ -309,7 +314,7 @@ function showStartedWorkingTip(client) {
     }
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showApproachOwnedVehicleTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachOwnedVehicle) {
@@ -318,7 +323,7 @@ function showApproachOwnedVehicleTip(client) {
     }
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showApproachClanVehicleTip(client) {
     if(getPlayerData(client).accountData.shownTips & !shownTipsFlags.approachAnyVehicle) {
@@ -327,4 +332,4 @@ function showApproachClanVehicleTip(client) {
     }
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================

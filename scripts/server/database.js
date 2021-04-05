@@ -15,9 +15,9 @@ let persistentDatabaseConnection = null;
 // -------------------------------------------------------------------------
 
 function initDatabaseScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Database]: Initializing database script ...");
+	logToConsole(LOG_INFO, "[Asshat.Database]: Initializing database script ...");
 	databaseConfig = loadDatabaseConfiguration();
-	logToConsole(LOG_DEBUG, "[Asshat.Database]: Database script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Database]: Database script initialized successfully!");
 }
 
 // -------------------------------------------------------------------------
@@ -35,7 +35,7 @@ function connectToDatabase() {
 		logToConsole(LOG_DEBUG, "[Asshat.Database] Database connection successful!");
 		return persistentDatabaseConnection;
 	} else {
-		//logToConsole(LOG_DEBUG, "[Asshat.Database] Using existing database connection.");
+		logToConsole(LOG_DEBUG, "[Asshat.Database] Using existing database connection.");
 		return persistentDatabaseConnection;
 	}
 }
@@ -44,7 +44,12 @@ function connectToDatabase() {
 
 function disconnectFromDatabase(dbConnection) {
 	if(!databaseConfig.usePersistentConnection) {
-		dbConnection.close();
+		try {
+			dbConnection.close();
+			logToConsole(LOG_DEBUG, `Database connection closed successfully`);
+		} catch(error) {
+			logToConsole(LOG_ERROR, `Database connection could not be closed! (Error: ${error})`);
+		}
 	}
 	return true;
 }
@@ -107,13 +112,20 @@ function quickDatabaseQuery(queryString) {
 	let dbConnection = connectToDatabase();
 	let insertId = 0;
 	if(dbConnection) {
+		logToConsole(LOG_DEBUG, queryString);
 		let dbQuery = queryDatabase(dbConnection, queryString);
 		if(getDatabaseInsertId(dbConnection)) {
 			insertId = getDatabaseInsertId(dbConnection);
+			logToConsole(LOG_DEBUG, `Query returned insert id ${insertId}`);
 		}
 
 		if(dbQuery) {
-			freeDatabaseQuery(dbQuery);
+			try {
+				freeDatabaseQuery(dbQuery);
+				logToConsole(LOG_DEBUG, `Query result free'd successfully`);
+			} catch(error) {
+				logToConsole(LOG_ERROR, `Query result could not be free'd! (Error: ${error})`);
+			}
 		}
 
 		disconnectFromDatabase(dbConnection);

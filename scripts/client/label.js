@@ -32,36 +32,36 @@ let propertyLabelNameOffset = 18;
 
 // ===========================================================================
 
-function init3DLabelScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.3DLabel]: Initializing 3D label script ...");
-	propertyLabelNameFont = init3DLabelPropertyNameFont();
-	propertyLabelLockedFont = init3DLabelPropertyLockedFont();
-	jobNameLabelFont = init3DLabelJobNameFont();
-	jobHelpLabelFont = init3DLabelJobHelpFont();
-	logToConsole(LOG_DEBUG, "[Asshat.3DLabel]: 3D label script initialized!");
+function initLabelScript() {
+	logToConsole(LOG_DEBUG, "[Asshat.Label]: Initializing label script ...");
+	propertyLabelNameFont = initLabelPropertyNameFont();
+	propertyLabelLockedFont = initLabelPropertyLockedFont();
+	jobNameLabelFont = initLabelJobNameFont();
+	jobHelpLabelFont = initLabelJobHelpFont();
+	logToConsole(LOG_DEBUG, "[Asshat.Label]: Label script initialized!");
 }
 
 // ===========================================================================
 
-function init3DLabelPropertyNameFont() {
+function initLabelPropertyNameFont() {
     return lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
 }
 
 // ===========================================================================
 
-function init3DLabelPropertyLockedFont() {
+function initLabelPropertyLockedFont() {
     return lucasFont.createDefaultFont(12.0, "Roboto", "Light");
 }
 
 // ===========================================================================
 
-function init3DLabelJobNameFont() {
+function initLabelJobNameFont() {
     return lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
 }
 
 // ===========================================================================
 
-function init3DLabelJobHelpFont() {
+function initLabelJobHelpFont() {
     return lucasFont.createDefaultFont(10.0, "Roboto", "Light");
 }
 

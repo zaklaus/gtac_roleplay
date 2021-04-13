@@ -605,7 +605,7 @@ function sendPlayerClearPedState(client) {
 // ===========================================================================
 
 function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, healthLoss) {
-    let damagerEntity = getClientByName(damagerEntityName);
+    let damagerEntity = getClientFromParams(damagerEntityName);
 
     if(isNull(damagerEntity)) {
         logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)}'s damager entity from ID is null`);
@@ -831,6 +831,12 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
 
 function sendPlayerChatScrollLines(client, amount) {
     triggerNetworkEvent("ag.chatScrollLines", client, amount);
+}
+
+// ===========================================================================
+
+function sendPlayerAllowedSkins(client) {
+    triggerNetworkEvent("ag.allowedSkins", client, getGameData().allowedSkins[getServerGame()]);
 }
 
 // ===========================================================================

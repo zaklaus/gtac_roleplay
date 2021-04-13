@@ -144,7 +144,7 @@ function syncCivilianProperties(civilian) {
     if(getGame() == GAME_GTA_SA) {
         if(doesEntityDataExist(civilian, "ag.fightStyle")) {
             let fightStyle = getEntityData(civilian, "ag.fightStyle");
-            civilian.setFightStyle(getGameData().fightStyles[gta.game][0][1]);
+            civilian.setFightStyle(fightStyle[0], fightStyle[1]);
         }
     }
 

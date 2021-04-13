@@ -12,7 +12,6 @@ function initClientScripts() {
     initGUIScript();
     initNameTagScript();
     initScoreBoardScript();
-    initMouseCameraScript();
     initMessagingScript();
     initServerScript();
     initLogoScript();

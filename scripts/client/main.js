@@ -8,8 +8,6 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-
-
 let inSphere = false;
 let inVehicle = false;
 let inVehicleSeat = false;
@@ -42,5 +40,7 @@ let drunkEffectAmount = 0;
 let drunkEffectDurationTimer = null;
 
 let controlsEnabled = true;
+
+let allowedSkins = [];
 
 // ===========================================================================

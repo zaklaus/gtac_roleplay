@@ -899,7 +899,7 @@ let checkNewCharacter = function() {
 		return false;
 	}
 
-	skinId = getGameData().allowedSkins[gta.game][newCharacterSkinSelectorIndex][0];
+	skinId = allowedSkins[newCharacterSkinSelectorIndex][0];
 
 	triggerNetworkEvent("ag.checkNewCharacter",
 		newCharacter.firstNameInput.lines[0],
@@ -1089,7 +1089,7 @@ let showNewCharacter = function() {
 
 	usingNewCharacterSkinSelector = true;
 	newCharacterSkinSelectorIndex = 0;
-	newCharacterSkinSelectPed = gta.createCivilian(getGameData().allowedSkins[getGame()][newCharacterSkinSelectorIndex][0], newCharacterSkinSelectPosition[getGame()]);
+	newCharacterSkinSelectPed = gta.createCivilian(allowedSkins[newCharacterSkinSelectorIndex][0], newCharacterSkinSelectPosition[getGame()]);
 	newCharacterSkinSelectPed.heading = newCharacterSkinSelectHeading[getGame()];
 	let frontCameraPosition = getPosInFrontOfPos(newCharacterSkinSelectPed.position, newCharacterSkinSelectPed.heading, 5);
 	gta.setCameraLookAt(frontCameraPosition, newCharacterSkinSelectPed.position, true);

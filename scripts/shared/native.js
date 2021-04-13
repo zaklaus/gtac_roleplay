@@ -247,16 +247,6 @@ function getDistance(vec1, vec2) {
 
 // ===========================================================================
 
-function isConsole(client) {
-	if(client == null) {
-		return false;
-	}
-
-	return client.console;
-}
-
-// ===========================================================================
-
 function logToConsole(tempLogLevel, text) {
 	if((logLevel & tempLogLevel) || logLevel == LOG_ALL) {
 		if(tempLogLevel == LOG_ERROR) {
@@ -275,136 +265,6 @@ function logToConsole(tempLogLevel, text) {
 
 // ===========================================================================
 
-function isSamePlayer(client1, client2) {
-	return (client1 == client2);
-}
-
-// ===========================================================================
-
-function getClientFromIndex(index) {
-	let clients = getClients();
-	for(let i in clients) {
-		if(clients[i].index == index) {
-			return clients[i];
-		}
-	}
-}
-
-// ===========================================================================
-
-function getConsoleClient() {
-	let clients = getClients();
-	for(let i in clients) {
-		if(isConsole(clients[i])) {
-			return clients[i];
-		}
-	}
-}
-
-// ===========================================================================
-
-function getPlayerFromParams(params) {
-	let clients = getClients();
-	if(isNaN(params)) {
-		for(let i in clients) {
-			if(!clients[i].console) {
-				if(toLowerCase(clients[i].name).indexOf(toLowerCase(params)) != -1) {
-					return clients[i];
-				}
-
-				if(toLowerCase(getCharacterFullName(clients[i])).indexOf(toLowerCase(params)) != -1) {
-					return clients[i];
-				}
-			}
-		}
-	} else {
-		if(typeof clients[toInteger(params)] != "undefined") {
-			return clients[toInteger(params)];
-		}
-	}
-
-	return false;
-}
-
-// ===========================================================================
-
-function getPosToRightOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos((-angle+1.57)+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin((-angle+1.57)+(Math.PI/2)))*distance));
-
-	let rightPos = toVector3(x, y, pos.z);
-
-	return rightPos;
-}
-
-// ===========================================================================
-
-function getPosToLeftOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos((angle+1.57)+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin((angle+1.57)+(Math.PI/2)))*distance));
-
-	let leftPos = toVector3(x, y, pos.z);
-
-	return leftPos;
-}
-
-// ===========================================================================
-
-function getPosInFrontOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
-	let z = pos.z;
-
-	return toVector3(x, y, z);
-}
-
-// ===========================================================================
-
-function getPosBehindPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos(angle-(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin(angle-(Math.PI/2)))*distance));
-	let z = pos.z;
-
-	return toVector3(x,y,z);
-}
-
-// ===========================================================================
-
-function getPosAbovePos(pos, distance) {
-	return toVector3(pos.x, pos.y, pos.z+distance);
-}
-
-// ===========================================================================
-
-function getPosBelowPos(pos, distance) {
-	return toVector3(pos.x, pos.y, pos.z-distance);
-}
-
-// ===========================================================================
-
-function applyOffsetToPos(position, position2) {
-	return toVector3(position.x+position2.x, position.y+position2.y, position.z+position2.z);
-}
-
-// ===========================================================================
-
-function getRandom(min, max) {
-	return Math.floor(Math.random() * (toInteger(max) - toInteger(min) + 1)) + toInteger(min)
-}
-
-// ===========================================================================
-
-function getArrayOfElementId(elements) {
-	let tempArray = [];
-	for(let i in elements) {
-		tempArray.push(elements[i].id);
-	}
-
-	return tempArray;
-}
-
-// ===========================================================================
-
 function Enum(constantsList) {
     let tempTable = {};
 	for(let i in constantsList) {
@@ -413,12 +273,7 @@ function Enum(constantsList) {
 	return tempTable;
 }
 
-// ===========================================================================
 
-function getSyncerFromId(syncerId) {
-	let clients = getClients();
-	return clients[syncerId];
-}
 
 // ===========================================================================
 
@@ -446,117 +301,6 @@ function doesGameHaveSnow(gameId) {
 
 function isGTAIV() {
 	return (getGame() == GAME_GTA_IV);
-}
-
-// ===========================================================================
-
-function arrayBufferToString(arrayBuffer) {
-	return String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
-}
-
-// ===========================================================================
-
-function vec3ToVec2(pos) {
-	return toVector2(pos[0], pos[1]);
-}
-
-// ===========================================================================
-
-function vec2ToVec3(pos, z) {
-	return toVector3(pos[0], pos[1], z);
-}
-
-// ===========================================================================
-
-function degToRad(deg) {
-	return deg * Math.PI / 180;
-}
-
-// ===========================================================================
-
-function radToDeg(rad) {
-	return rad * 180 / Math.PI;
-}
-
-// ===========================================================================
-
-function getHeadingFromPosToPos(pos1, pos2) {
-	let x = pos2.x-pos1.x;
-	let y = pos2.y-pos1.y;
-	let rad = Math.atan2(y, x);
-	let deg = radToDeg(rad);
-	deg -= 90;
-	deg = deg % 360;
-	return degToRad(deg);
-}
-
-// ===========================================================================
-
-function getAngleInCircleFromCenter(center, total, current) {
-	let gap = 360 / total;
-	let deg = Math.floor(gap*current);
-
-	if(deg <= 0) {
-		deg = 1;
-	} else {
-		if(deg >= 360) {
-			deg = 359;
-		}
-	}
-
-	return degToRad(deg);
-}
-
-// ===========================================================================
-
-function areParamsEmpty(params) {
-	if(!params || params == "" || params.length == 0 || typeof params == "undefined") {
-		return true;
-	}
-
-	return false;
-}
-
-// ===========================================================================
-
-function getParamsCount(params, delimiter = " ") {
-	return params.split(delimiter).length;
-}
-
-// ===========================================================================
-
-function areThereEnoughParams(params, requiredAmount, delimiter = " ") {
-	return (params.split(delimiter).length >= requiredAmount);
-}
-
-// ===========================================================================
-
-function getParams(params, delimiter, index) {
-	return params.split(delimiter)[index];
-}
-
-// ===========================================================================
-
-function packData(...args) {
-	for(let i in args) {
-		switch(args[i].constructor.name) {
-			case "Vec3":
-				let x = args[i].x.toFixed(2);
-				let y = args[i].y.toFixed(2);
-				let z = args[i].z.toFixed(2);
-				x = x * 100;
-				y = z * 100;
-				z = z * 100;
-				let result = combine(x, y, z);
-				break;
-		}
-	}
-}
-
-// ===========================================================================
-
-function combine(a, b, c) {
-	return toInteger((a << 20) | (b << 10) | c);
 }
 
 // ===========================================================================

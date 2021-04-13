@@ -65,7 +65,7 @@ function playerPromptAnswerYes(client) {
 
         case AG_PROMPT_BIZORDER:
             if(getPlayerData(client).businessOrderAmount > 0) {
-                if(getPlayerData(client).businessOrderCost > getBusinessData(getPlayerData(client).businessOrderBusiness).till) {
+                if(getBusinessData(getPlayerData(client).businessOrderBusiness).till < getPlayerData(client).businessOrderCost) {
                     logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} failed to order ${getPlayerData(client).businessOrderAmount} ${getPlayerData(client).businessOrderItem} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness)} (Reason: Not enough money in business till)`);
                     showPlayerErrorGUI(client, "This business doesn't have enough money! Deposit some using /bizdeposit", "Business Order Canceled");
                     getPlayerData(client).businessOrderAmount = 0;
@@ -75,7 +75,6 @@ function playerPromptAnswerYes(client) {
                 } else {
                     logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} successfully ordered ${getPlayerData(client).businessOrderAmount} ${getPlayerData(client).businessOrderItem} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness)}`);
                     showPlayerInfoGUI(client, `You ordered ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} (${getItemValueDisplay(getPlayerData(client).businessOrderItem, getPlayerData(client).businessOrderValue)}) for ${getPlayerData(client).businessOrderCost}!`, "Business Order Successful");
-
                     getPlayerData(client).businessOrderAmount = 0;
                     getPlayerData(client).businessOrderBusiness = false;
                     getPlayerData(client).businessOrderItem = -1;

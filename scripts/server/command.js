@@ -220,7 +220,7 @@ function loadCommands() {
             commandData("radio", walkieTalkieChatCommand, "", getStaffFlagValue("none"), true, false),
             commandData("r", walkieTalkieChatCommand, "", getStaffFlagValue("none"), true, false),
 
-            commandData("additemtype", createItemType, "<name>", getStaffFlagValue("manageItems"), true, false),
+            commandData("additemtype", createItemTypeCommand, "<name>", getStaffFlagValue("manageItems"), true, false),
             commandData("itemusetype", setItemTypeUseTypeCommand, "<item type> <use type>", getStaffFlagValue("manageItems"), true, false),
             commandData("itemuseval", setItemTypeUseValueCommand, "<item type> <use value>", getStaffFlagValue("manageItems"), true, false),
             commandData("itemorderprice", setItemTypeOrderPriceCommand, "<item type> <price>", getStaffFlagValue("manageItems"), true, false),

@@ -16,6 +16,7 @@ let skinSelectMessageColourTop = COLOUR_YELLOW;
 let skinSelectMessageColourBottom = COLOUR_WHITE;
 
 let usingSkinSelector = false;
+let usingNewCharacterSkinSelector = false;
 let skinSelectorIndex = 0;
 
 let newCharacterSkinSelectPedPosition = [
@@ -60,21 +61,21 @@ function loadSkinSelectMessageFontBottom() {
 function processSkinSelectKeyPress(keyCode) {
 	if(usingSkinSelector) {
         if(keyCode == SDLK_RIGHT) {
-            if(getGameData().allowedSkins.length-1 == skinSelectorIndex) {
+            if(allowedSkins.length-1 == skinSelectorIndex) {
                 skinSelectorIndex = 0;
             } else {
                 skinSelectorIndex++;
             }
-            localPlayer.skin = getGameData().allowedSkins[getGame()][skinSelectorIndex][0];
-            skinSelectMessageTextTop = getGameData().allowedSkins[getGame()][skinSelectorIndex][1];
+            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+            skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
         } else if(keyCode == SDLK_LEFT) {
-            if(getGameData().allowedSkins.length-1 == 0) {
-                skinSelectorIndex = getGameData().allowedSkins[getGame()].length-1;
+            if(allowedSkins.length-1 == 0) {
+                skinSelectorIndex = allowedSkins.length-1;
             } else {
                 skinSelectorIndex--;
             }
-            localPlayer.skin = getGameData().allowedSkins[getGame()][skinSelectorIndex][0];
-            skinSelectMessageTextTop = getGameData().allowedSkins[getGame()][skinSelectorIndex][1];
+            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+            skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
         } else if(keyCode == SDLK_RETURN) {
             triggerNetworkEvent("ag.skinSelected", skinSelectorIndex);
             usingSkinSelector = false;
@@ -101,8 +102,8 @@ function processSkinSelectRendering() {
 function toggleSkinSelect(state) {
     if(state) {
         skinSelectorIndex = getAllowedSkinDataBySkinId(localPlayer.skin);
-        if(localPlayer.skin != getGameData().allowedSkins[getGame()][skinSelectorIndex][0]) {
-            localPlayer.skin = getGameData().allowedSkins[getGame()][skinSelectorIndex][0];
+        if(localPlayer.skin != allowedSkins[skinSelectorIndex][0]) {
+            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
         }
         usingSkinSelector = true;
         let frontCameraPosition = getPosInFrontOfPos(localPlayer.position, localPlayer.heading, 5);

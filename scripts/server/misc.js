@@ -11,8 +11,8 @@
 // ===========================================================================
 
 function initMiscScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Misc]: Initializing misc script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.Misc]: Misc script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Misc]: Initializing misc script ...");
+	logToConsole(LOG_INFO, "[Asshat.Misc]: Misc script initialized successfully!");
 	return true;
 }
 

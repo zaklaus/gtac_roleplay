@@ -41,17 +41,17 @@ function unBindChatBoxKeys() {
 
 // ===========================================================================
 
-addNetworkHandler("ag.m", function(messageString, colour) {
+function receiveChatBoxMessageFromServer(messageString, colour) {
     message(messageString, colour);
     addToChatBoxHistory(messageString, colour);
     bottomMessageIndex = chatBoxHistory.length-1;
-});
+}
 
 // ===========================================================================
 
-addNetworkHandler("ag.chatScrollLines", function(amount) {
+function setChatScrollLines(amount) {
     scrollAmount = amount;
-});
+}
 
 // ===========================================================================
 

@@ -22,7 +22,7 @@ function initJobScript() {
 
 // ===========================================================================
 
-function setLocalPlayerJobType() {
+function setLocalPlayerJobType(tempJobType) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Set local player job type to ${tempJobType}`);
     localPlayerJobType = tempJobType;
 }

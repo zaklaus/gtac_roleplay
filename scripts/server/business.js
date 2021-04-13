@@ -86,7 +86,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 	let dbQueryString = "";
 
 	if(dbConnection) {
-		bbQueryString = `SELECT * FROM biz_loc WHERE biz_loc_biz = ${businessId}`;
+		dbQueryString = `SELECT * FROM biz_loc WHERE biz_loc_biz = ${businessId}`;
 		dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
@@ -623,6 +623,7 @@ function orderItemForBusinessCommand(command, params, client) {
 	getPlayerData(client).businessOrderBusiness = businessId;
 	getPlayerData(client).businessOrderItem = itemType;
 	getPlayerData(client).businessOrderValue = value;
+	getPlayerData(client).businessOrderCost = orderTotalCost;
 
 	showPlayerPrompt(client, AG_PROMPT_BIZORDER, `Ordering ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${pricePerItem} each will cost a total of $${orderTotalCost}`, "Business Order Cost");
 }

@@ -848,6 +848,7 @@ function initClient(client) {
 		return false;
 	}
 
+	sendPlayerAllowedSkins(client);
 	sendPlayerGUIColours(client);
 	sendPlayerGUIInit(client);
 

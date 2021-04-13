@@ -1292,3 +1292,259 @@ function getCurrentUnixTimestamp() {
 }
 
 // ===========================================================================
+
+function msToTime(duration) {
+	let milliseconds = toInteger((duration % 1000) / 100);
+	let seconds = toInteger((duration / 1000) % 60);
+	let minutes = toInteger((duration / (1000 * 60)) % 60);
+	let hours = toInteger((duration / (1000 * 60 * 60)) % 24);
+	let days = toInteger((duration / (1000 * 60 * 60 * 24)) % 365);
+
+	hours = (hours < 10) ? "0" + hours : hours;
+	minutes = (minutes < 10) ? "0" + minutes : minutes;
+	seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+	if (days !== 0) {
+		return `${days} days ${hours}:${minutes}:${seconds}`;
+	} else {
+		return `${hours}:${minutes}:${seconds}`;
+	}
+}
+
+// ===========================================================================
+
+function isSamePlayer(client1, client2) {
+	return (client1 == client2);
+}
+
+// ===========================================================================
+
+function getClientFromIndex(index) {
+	let clients = getClients();
+	for(let i in clients) {
+		if(clients[i].index == index) {
+			return clients[i];
+		}
+	}
+}
+
+// ===========================================================================
+
+function getConsoleClient() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(isConsole(clients[i])) {
+			return clients[i];
+		}
+	}
+}
+
+// ===========================================================================
+
+function getPlayerFromParams(params) {
+	let clients = getClients();
+	if(isNaN(params)) {
+		for(let i in clients) {
+			if(!clients[i].console) {
+				if(toLowerCase(clients[i].name).indexOf(toLowerCase(params)) != -1) {
+					return clients[i];
+				}
+
+				if(toLowerCase(getCharacterFullName(clients[i])).indexOf(toLowerCase(params)) != -1) {
+					return clients[i];
+				}
+			}
+		}
+	} else {
+		if(typeof clients[toInteger(params)] != "undefined") {
+			return clients[toInteger(params)];
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getPosToRightOfPos(pos, angle, distance) {
+	let x = (pos.x+((Math.cos((-angle+1.57)+(Math.PI/2)))*distance));
+	let y = (pos.y+((Math.sin((-angle+1.57)+(Math.PI/2)))*distance));
+
+	let rightPos = toVector3(x, y, pos.z);
+
+	return rightPos;
+}
+
+// ===========================================================================
+
+function getPosToLeftOfPos(pos, angle, distance) {
+	let x = (pos.x+((Math.cos((angle+1.57)+(Math.PI/2)))*distance));
+	let y = (pos.y+((Math.sin((angle+1.57)+(Math.PI/2)))*distance));
+
+	let leftPos = toVector3(x, y, pos.z);
+
+	return leftPos;
+}
+
+// ===========================================================================
+
+function getPosInFrontOfPos(pos, angle, distance) {
+	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
+	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
+	let z = pos.z;
+
+	return toVector3(x, y, z);
+}
+
+// ===========================================================================
+
+function getPosBehindPos(pos, angle, distance) {
+	let x = (pos.x+((Math.cos(angle-(Math.PI/2)))*distance));
+	let y = (pos.y+((Math.sin(angle-(Math.PI/2)))*distance));
+	let z = pos.z;
+
+	return toVector3(x,y,z);
+}
+
+// ===========================================================================
+
+function getPosAbovePos(pos, distance) {
+	return toVector3(pos.x, pos.y, pos.z+distance);
+}
+
+// ===========================================================================
+
+function getPosBelowPos(pos, distance) {
+	return toVector3(pos.x, pos.y, pos.z-distance);
+}
+
+// ===========================================================================
+
+function applyOffsetToPos(position, position2) {
+	return toVector3(position.x+position2.x, position.y+position2.y, position.z+position2.z);
+}
+
+// ===========================================================================
+
+function getRandom(min, max) {
+	return Math.floor(Math.random() * (toInteger(max) - toInteger(min) + 1)) + toInteger(min)
+}
+
+// ===========================================================================
+
+function getArrayOfElementId(elements) {
+	let tempArray = [];
+	for(let i in elements) {
+		tempArray.push(elements[i].id);
+	}
+
+	return tempArray;
+}
+
+// ===========================================================================
+
+function getSyncerFromId(syncerId) {
+	let clients = getClients();
+	return clients[syncerId];
+}
+
+// ===========================================================================
+
+// ===========================================================================
+
+function arrayBufferToString(arrayBuffer) {
+	return String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
+}
+
+// ===========================================================================
+
+function vec3ToVec2(pos) {
+	return toVector2(pos[0], pos[1]);
+}
+
+// ===========================================================================
+
+function vec2ToVec3(pos, z) {
+	return toVector3(pos[0], pos[1], z);
+}
+
+// ===========================================================================
+
+function degToRad(deg) {
+	return deg * Math.PI / 180;
+}
+
+// ===========================================================================
+
+function radToDeg(rad) {
+	return rad * 180 / Math.PI;
+}
+
+// ===========================================================================
+
+function getHeadingFromPosToPos(pos1, pos2) {
+	let x = pos2.x-pos1.x;
+	let y = pos2.y-pos1.y;
+	let rad = Math.atan2(y, x);
+	let deg = radToDeg(rad);
+	deg -= 90;
+	deg = deg % 360;
+	return degToRad(deg);
+}
+
+// ===========================================================================
+
+function getAngleInCircleFromCenter(center, total, current) {
+	let gap = 360 / total;
+	let deg = Math.floor(gap*current);
+
+	if(deg <= 0) {
+		deg = 1;
+	} else {
+		if(deg >= 360) {
+			deg = 359;
+		}
+	}
+
+	return degToRad(deg);
+}
+
+// ===========================================================================
+
+function areParamsEmpty(params) {
+	if(!params || params == "" || params.length == 0 || typeof params == "undefined") {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getParamsCount(params, delimiter = " ") {
+	return params.split(delimiter).length;
+}
+
+// ===========================================================================
+
+function areThereEnoughParams(params, requiredAmount, delimiter = " ") {
+	return (params.split(delimiter).length >= requiredAmount);
+}
+
+// ===========================================================================
+
+function getParams(params, delimiter, index) {
+	return params.split(delimiter)[index];
+}
+
+// ===========================================================================
+
+function isConsole(client) {
+	if(client == null) {
+		return false;
+	}
+
+	return client.console;
+}
+
+// ===========================================================================

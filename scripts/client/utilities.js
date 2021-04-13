@@ -8,6 +8,115 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
+let weaponSlots = [
+    false,
+    [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+    ],
+    [
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5,
+        5,
+        5,
+        5,
+        6,
+        6,
+        8,
+        8,
+        7,
+        7,
+        7,
+        7,
+        9,
+        -1,
+        9,
+    ],
+    [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        8,
+        8,
+        8,
+        -1,
+        -1,
+        -1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        5,
+        5,
+        4,
+        6,
+        6,
+        7,
+        7,
+        7,
+        7,
+        8,
+        12,
+        9,
+        9,
+        9,
+        9,
+        9,
+        11,
+        9,
+        9,
+        9,
+    ],
+];
+
 function openAllGarages() {
     switch(gta.game) {
         case GAME_GTA_III:
@@ -207,7 +316,7 @@ function setLocalPlayerHeading(position) {
 function setLocalPlayerInterior(interior) {
     logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting interior to ${interior}`);
     localPlayer.interior = interior;
-    cameraInterior = interior;
+    gta.cameraInterior = interior;
 }
 
 // ===========================================================================
@@ -215,7 +324,7 @@ function setLocalPlayerInterior(interior) {
 function setLocalPlayerInterior(interior) {
     logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting interior to ${interior}`);
     localPlayer.interior = interior;
-    cameraInterior = interior;
+    gta.cameraInterior = interior;
 }
 
 // ===========================================================================
@@ -257,7 +366,7 @@ function clearLocalPedState() {
 // ===========================================================================
 
 function getWeaponSlot(weaponId) {
-	return getGameData().weaponSlots[gta.game][weaponId];
+	return weaponSlots[gta.game][weaponId];
 }
 
 // ===========================================================================
@@ -487,6 +596,13 @@ function processLocalPlayerVehicleEntryExitHandling() {
             inVehicleSeat = false;
         }
     }
+}
+
+// ===========================================================================
+
+function getVehicleForNetworkEvent(vehicleArg) {
+    // Soon this will also be used to get the IV vehicle via it's ID
+    return vehicleArg;
 }
 
 // ===========================================================================

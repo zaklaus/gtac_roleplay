@@ -623,7 +623,8 @@ function saveClansToDatabase() {
 function saveClanToDatabase(clanData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = `UPDATE clan_main SET clan_name = '${escapeDatabaseString(dbConnection, clanData.name)}', clan_owner = ${clanData.ownerId}`;
+		let safeClanName = escapeDatabaseString(dbConnection, clanData.name);
+		let dbQueryString = `UPDATE clan_main SET clan_name = '${safeClanName}', clan_owner = ${clanData.ownerId} WHERE clan_id = ${clanData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);

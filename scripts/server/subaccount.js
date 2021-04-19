@@ -194,10 +194,10 @@ function showCharacterSelectToClient(client) {
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 
-		spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
-		setTimeout(function() {
-			showCharacterSelectCameraToPlayer(client);
-		}, 500);
+		//spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
+		//setTimeout(function() {
+		//	showCharacterSelectCameraToPlayer(client);
+		//}, 500);
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
@@ -358,8 +358,8 @@ function switchCharacterCommand(command, params, client) {
 
 	client.despawnPlayer();
 	getPlayerData(client).switchingCharacter = true;
-	spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
-	showCharacterSelectCameraToPlayer(client);
+	//spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
+	//showCharacterSelectCameraToPlayer(client);
 	showCharacterSelectToClient(client);
 }
 

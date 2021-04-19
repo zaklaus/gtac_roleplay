@@ -194,7 +194,7 @@ function loadGameConfig() {
 				house: 1273,
 				clothes: 1275,
 				misc: 1239,
-				exit: 1247,
+				exit: 1318,
 			}
 		],
 		pickupTypes: [
@@ -344,6 +344,7 @@ function loadGameConfig() {
 				rosenberg: new serverClasses.interiorTemplateData(toVector3(120.82, -827.98, 10.62), 6),
 				arena: new serverClasses.interiorTemplateData(toVector3(-1080.49, 1331.16, 13.91), 15),
 				ghettoShack: new serverClasses.interiorTemplateData(toVector3(-962.72, 146.11, 9.395), 12),
+				hotel2: new serverClasses.interiorTemplateData(toVector3(226.47, -1274.98, 19.271), 2.933),
 			},
 
 			{ // GTA SA

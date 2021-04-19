@@ -121,7 +121,7 @@ function getPlayerVehicleSeat(client) {
 // ===========================================================================
 
 function isPlayerSpawned(client) {
-    return client.player.isType(ELEMENT_PLAYER);
+    return getPlayerData(client).spawned;
 }
 
 // ===========================================================================
@@ -222,14 +222,14 @@ function setPlayerCash(client, amount) {
 // ===========================================================================
 
 function givePlayerCash(client, amount) {
-	getPlayerCurrentSubAccount(client).cash += amount;
+	getPlayerCurrentSubAccount(client).cash = getPlayerCurrentSubAccount(client).cash + amount;
 	updatePlayerCash(client);
 }
 
 // ===========================================================================
 
 function takePlayerCash(client, amount) {
-	getPlayerCurrentSubAccount(client).cash -= amount;
+	getPlayerCurrentSubAccount(client).cash = getPlayerCurrentSubAccount(client).cash - amount;
 	updatePlayerCash(client);
 }
 

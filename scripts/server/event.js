@@ -325,6 +325,20 @@ function onPlayerSpawn(client) {
 
     logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player data is valid. Continuing spawn processing ...`);
 
+    if(getServerGame() == GAME_GTA_IV) {
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped body parts and props`);
+        setEntityData(client.player, "ag.bodyParts", getPlayerCurrentSubAccount(client).bodyParts, true);
+        setEntityData(client.player, "ag.bodyProps", getPlayerCurrentSubAccount(client).bodyProps, true);
+    }
+
+    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped scale (${getPlayerCurrentSubAccount(client).pedScale})`);
+    setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
+
+    if(isPlayerSwitchingCharacter(client) || isPlayerCreatingCharacter(client)) {
+        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s ped is being used for character selection/creation. No further spawn processing needed'`);
+        return false;
+    }
+
     //logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player skin for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).skin}`);
     //setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
 
@@ -375,15 +389,9 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[Asshat.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
         sendRemovedWorldObjectsToPlayer(client);
 
-        //setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
         if(getServerGame() == GAME_GTA_SA) {
             setEntityData(client.player, "ag.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
             setEntityData(client.player, "ag.fightStyle", getPlayerCurrentSubAccount(client).fightStyle, true);
-        }
-
-        if(getServerGame() == GAME_GTA_IV) {
-            setEntityData(client.player, "ag.bodyParts", getPlayerCurrentSubAccount(client).bodyParts, true);
-            setEntityData(client.player, "ag.bodyProps", getPlayerCurrentSubAccount(client).bodyProps, true);
         }
 
         logToConsole(LOG_DEBUG, `[Asshat.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
@@ -403,9 +411,9 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = AG_PEDSTATE_READY;
 
-        setTimeout(function() {
-            syncPlayerProperties(client);
-        }, 1000);
+        //setTimeout(function() {
+        //    syncPlayerProperties(client);
+        //}, 1000);
     //}
 }
 

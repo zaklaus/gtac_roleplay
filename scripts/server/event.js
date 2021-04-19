@@ -60,7 +60,7 @@ function onPlayerJoined(event, client) {
 function onPlayerQuit(event, client, quitReasonId) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
 
-    //savePlayerToDatabase(client);
+    savePlayerToDatabase(client);
     resetClientStuff(client);
 
     getServerData().clients[client.index] = null;
@@ -404,6 +404,9 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
         updatePlayerHotBar(client);
+
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending custom keybinds to ${getPlayerDisplayForConsole(client)}`);
+        sendAccountKeyBindsToClient(client);
 
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;

@@ -43,6 +43,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.clientReady", playerClientReady);
     addNetworkHandler("ag.guiReady", playerGUIReady);
     addNetworkHandler("ag.clientStarted", playerClientStarted);
+    addNetworkHandler("ag.clientStopped", playerClientStopped);
 
     // Account
     addNetworkHandler("ag.checkLogin", checkLogin);
@@ -122,6 +123,13 @@ function playerClientStarted(client) {
 
 // ===========================================================================
 
+function playerClientStopped(client) {
+    logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s client resources have stopped (possibly error?). Kicking them from the server ...`);
+	client.disconnect();
+}
+
+// ===========================================================================
+
 function showGameMessage(client, text, colour, duration) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Showing game message to ${getPlayerDisplayForConsole(client)} (${text}) for ${duration} milliseconds`);
     triggerNetworkEvent("ag.smallGameMessage", client, text, colour, duration);
@@ -152,6 +160,7 @@ function clearPlayerOwnedPeds(client) {
 
 function updatePlayerSpawnedState(client, state) {
     logToConsole(LOG_DEBUG, `[Asshat.Client] Setting ${getPlayerDisplayForConsole(client)}'s spawned state ${toUpperCase(getOnOffFromBool(state))}`);
+    getPlayerData(client).spawned = true;
     triggerNetworkEvent("ag.spawned", client, state);
 }
 
@@ -176,7 +185,7 @@ function restorePlayerCamera(client) {
     triggerNetworkEvent("ag.restoreCamera", client);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setPlayer2DRendering(client, hudState = false, labelState = false, smallGameMessageState = false, scoreboardState = false, hotBarState = false, itemActionDelayState = false) {
 	triggerNetworkEvent("ag.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState);
@@ -667,8 +676,7 @@ function updateHeadingInPlayerData(client, heading) {
 
 // ===========================================================================
 
-function forcePlayerIntoSkinItemSelect(client, itemId) {
-    getPlayerData(client).itemActionItem = itemId;
+function forcePlayerIntoSkinSelect(client) {
     triggerNetworkEvent("ag.skinSelect", client, true);
 }
 
@@ -817,12 +825,18 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
     if(allowedSkinIndex == -1) {
         return false;
     } else {
-        getPlayerCurrentSubAccount(client).skin = getGameData().allowedSkins[getServerGame()][allowedSkinIndex][0];
-        if(isPlayerWorking(client)) {
-            messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.");
-            setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);
+        if(isPlayerCreatingCharacter(client)) {
+            getPlayerData(client).creatingCharacterSkin = allowedSkinIndex;
+            showPlayerNewCharacterGUI(client);
+        } else {
+            getPlayerCurrentSubAccount(client).skin = getGameData().allowedSkins[getServerGame()][allowedSkinIndex][0];
+            if(isPlayerWorking(client)) {
+                messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.");
+                setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);
+            }
+            deleteItem(getPlayerData(client).itemActionItem);
+            restorePlayerCamera(client);
         }
-        deleteItem(getPlayerData(client).itemActionItem);
     }
     triggerNetworkEvent("ag.skinSelect", client, false);
 }

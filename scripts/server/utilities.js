@@ -943,7 +943,7 @@ function getClosestPoliceStation(position) {
 	return getServerData().policeStations[getServerGame()][closest];
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerDisplayForConsole(client) {
 	if(isNull(client)) {
@@ -952,7 +952,7 @@ function getPlayerDisplayForConsole(client) {
 	return `${client.name}[${client.index}]`;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerNameForNameTag(client) {
 	if(isPlayerSpawned(client)) {
@@ -961,35 +961,31 @@ function getPlayerNameForNameTag(client) {
 	return client.name;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerSpawned(client) {
-	if(isConsole(client)) {
-		return false;
-	}
-
-	return ((client.player != null || getPlayerData(client).syncPosition != null) && getPlayerData(client).spawned);
+	return getPlayerData(client).spawned;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getLockedUnlockedTextFromBool(boolVal) {
 	return (boolVal) ? "locked" : "unlocked";
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getLockedUnlockedEmojiFromBool(boolVal) {
 	return (boolVal) ? "🔒" : "🔓";
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerIsland(client) {
 	return getIsland(getPlayerPosition(client));
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function isAtPayAndSpray(position) {
 	for(let i in payAndSprays[getServerGame()]) {
@@ -1001,7 +997,7 @@ function isAtPayAndSpray(position) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 async function waitUntil(condition) {
     return new Promise((resolve) => {
@@ -1016,7 +1012,7 @@ async function waitUntil(condition) {
     });
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function resetClientStuff(client) {
 	logToConsole(LOG_DEBUG, `[Asshat.Utilities] Resetting client data for ${getPlayerDisplayForConsole(client)}`);
@@ -1038,7 +1034,7 @@ function resetClientStuff(client) {
 	getPlayerData(client).lastVehicle = null;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerFromCharacterId(subAccountId) {
 	let clients = getClients();
@@ -1053,7 +1049,7 @@ function getPlayerFromCharacterId(subAccountId) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function doesWordStartWithVowel(word) {
 	switch(word.substr(0,1).toLowerCase()) {
@@ -1071,7 +1067,7 @@ function doesWordStartWithVowel(word) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getProperDeterminerForName(word) {
 	switch(word.substr(0,1).toLowerCase()) {
@@ -1086,13 +1082,13 @@ function getProperDeterminerForName(word) {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getPluralForm(name) {
 	return name;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function removeColoursFromString(str) {
 	let matchRegex = /#([a-f0-9]{3}|[a-f0-9]{4}(?:[a-f0-9]{2}){0,2})\b/gi;
@@ -1104,7 +1100,7 @@ function removeColoursFromString(str) {
 	return [str, matchedHexes];
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function checkPlayerPedStates() {
 	let clients = getClients();
@@ -1121,11 +1117,17 @@ function checkPlayerPedStates() {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function showConnectCameraToPlayer(client) {
 	fadeCamera(client, true, 1);
 	setPlayerCameraLookAt(client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
+}
+
+// ===========================================================================
+
+function showCharacterSelectCameraToPlayer(client) {
+	setPlayerCameraLookAt(client, getServerConfig().characterSelectCameraPosition, getServerConfig().characterSelectCameraPosition);
 }
 
 // ===========================================================================

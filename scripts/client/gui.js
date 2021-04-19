@@ -69,7 +69,6 @@ let newCharacter = {
 	skinDropDown: null,
 	spawnAreaDropDown: null,
 	createButton: null,
-	skinImage: null,
 };
 
 // ===========================================================================
@@ -313,7 +312,7 @@ function initGUI() {
 	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating new character GUI ...`);
-	newCharacter.window = mexui.window(game.width/2-130, game.height/2-125, 300, 250, 'Character Name', {
+	newCharacter.window = mexui.window(game.width/2-130, game.height/2-100, 300, 200, 'Character Name', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
 			transitionTime: 500,
@@ -1081,16 +1080,16 @@ let showInfo = function(infoMessage, infoTitle) {
 
 let showNewCharacter = function() {
 	closeAllWindows();
-	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing info dialog window`);
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Showing new character dialog window`);
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	setHUDEnabled(false);
-
-	gui.showCursor(true, false);
-	localPlayer.invincible = true;
-	localPlayer.setProofs(true, true, true, true, true);
-	localPlayer.collisionsEnabled = false;
 	newCharacter.window.shown = true;
+
+	//gui.showCursor(true, false);
+	//localPlayer.invincible = true;
+	//localPlayer.setProofs(true, true, true, true, true);
+	//localPlayer.collisionsEnabled = false;
 }
 
 // ===========================================================================

@@ -220,9 +220,9 @@ function clearLocalPlayerOwnedPeds() {
 
 // ===========================================================================
 
-function setLocalCameraLookAt(cameraPosition, cameraLookat) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Set camera to look at ${cameraPosition.x}, ${cameraPosition.y}, ${cameraPosition.z}`);
-    gta.setCameraLookAt(cameraPosition, cameraLookat, true);
+function setLocalCameraLookAt(cameraPosition, cameraLookAt) {
+    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Set camera to look at [${cameraLookAt.x}, ${cameraLookAt.y}, ${cameraLookAt.z}] from [${cameraPosition.x}, ${cameraPosition.y}, ${cameraPosition.z}]`);
+    gta.setCameraLookAt(cameraPosition, cameraLookAt, true);
 }
 
 // ===========================================================================
@@ -603,6 +603,16 @@ function processLocalPlayerVehicleEntryExitHandling() {
 function getVehicleForNetworkEvent(vehicleArg) {
     // Soon this will also be used to get the IV vehicle via it's ID
     return vehicleArg;
+}
+
+// ===========================================================================
+
+function getPosInFrontOfPos(pos, angle, distance) {
+	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
+	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
+	let z = pos.z;
+
+	return toVector3(x, y, z);
 }
 
 // ===========================================================================

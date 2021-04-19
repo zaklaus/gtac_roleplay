@@ -16,6 +16,7 @@ function initServerScripts() {
 	initConfigScript();
 	initEmailScript();
 	initBitFlagScript();
+	initItemScript();
 	initBusinessScript();
 	initClanScript();
 	initHouseScript();
@@ -30,7 +31,6 @@ function initServerScripts() {
 	initKeyBindScript();
 	initEventScript();
 	initAntiCheatScript();
-	initItemScript();
 	initClientScript();
 	initMessagingScript();
 	initHelpScript();

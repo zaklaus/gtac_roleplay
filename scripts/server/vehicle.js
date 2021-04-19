@@ -925,7 +925,7 @@ function setVehicleLocked(vehicle, locked) {
 	vehicle.locked = locked;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getVehicleOwnerTypeText(ownerType) {
 	switch(ownerType) {
@@ -946,7 +946,7 @@ function getVehicleOwnerTypeText(ownerType) {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function isVehicleOwnedByJob(vehicle, jobId) {
 	if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
@@ -955,7 +955,7 @@ function isVehicleOwnedByJob(vehicle, jobId) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 async function getPlayerNewVehicle(client) {
 	while(true) {
@@ -966,7 +966,7 @@ async function getPlayerNewVehicle(client) {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, dealershipId) {
 	let vehicleDataSlot = getServerData().vehicles.length;
@@ -992,7 +992,7 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 	getServerData().vehicles.push(tempVehicleData);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function createTemporaryVehicle(modelId, position, heading) {
 	let vehicle = gta.createVehicle(modelId, position, heading);
@@ -1007,7 +1007,7 @@ function createTemporaryVehicle(modelId, position, heading) {
 	return vehicle;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function createPermanentVehicle(modelId, position, heading) {
 	let vehicle = gta.createVehicle(modelId, position, heading);
@@ -1021,7 +1021,7 @@ function createPermanentVehicle(modelId, position, heading) {
 	return vehicle;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function checkVehicleBuying() {
 	let clients = getClients();
@@ -1058,7 +1058,7 @@ function checkVehicleBuying() {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function checkVehicleBurning() {
 	let vehicles = getElementsByType(ELEMENT_VEHICLE);
@@ -1067,7 +1067,7 @@ function checkVehicleBurning() {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function cacheAllVehicleItems() {
 	for(let i in getServerData().vehicles) {
@@ -1081,4 +1081,4 @@ function cacheAllVehicleItems() {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================

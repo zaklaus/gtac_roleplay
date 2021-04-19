@@ -193,6 +193,11 @@ function showCharacterSelectToClient(client) {
 		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
+
+		spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
+		setTimeout(function() {
+			showCharacterSelectCameraToPlayer(client);
+		}, 500);
 		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
@@ -210,7 +215,7 @@ function showCharacterSelectToClient(client) {
 
 // ===========================================================================
 
-function checkNewCharacter(client, firstName, lastName, skinId) {
+function checkNewCharacter(client, firstName, lastName) {
 	if(areParamsEmpty(firstName)) {
 		showPlayerNewCharacterFailedGUI(client, "First name cannot be blank!");
 		return false;
@@ -223,7 +228,8 @@ function checkNewCharacter(client, firstName, lastName, skinId) {
 	}
 	lastName = lastName.trim();
 
-	if(!skinId) {
+	let skinId = getPlayerData(client).creatingCharacterSkin;
+	if(skinId == -1) {
 		skinId = getServerConfig().newCharacter.skin;
 	}
 
@@ -240,6 +246,7 @@ function checkNewCharacter(client, firstName, lastName, skinId) {
 
 	getPlayerData(client).subAccounts = loadSubAccountsFromAccount(getPlayerData(client).accountData.databaseId);
 	getPlayerData(client).currentSubAccount = 0;
+	getPlayerData(client).creatingCharacter = false;
 	let tempSubAccount = getPlayerData(client).subAccounts[0];
 	showCharacterSelectToClient(client);
 }
@@ -303,6 +310,8 @@ function selectCharacter(client, characterId = -1) {
 	let spawnDimension = getPlayerCurrentSubAccount(client).dimension;
 	let skin = getPlayerCurrentSubAccount(client).skin;
 
+	getPlayerData(client).switchingCharacter = false;
+
 	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 	//setPlayerCameraLookAt(client, getPosBehindPos(spawnPosition, spawnHeading, 5), spawnPosition);
 	getPlayerData(client).pedState = AG_PEDSTATE_SPAWNING;
@@ -348,8 +357,9 @@ function switchCharacterCommand(command, params, client) {
 	resetClientStuff(client);
 
 	client.despawnPlayer();
-
-	showConnectCameraToPlayer(client);
+	getPlayerData(client).switchingCharacter = true;
+	spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
+	showCharacterSelectCameraToPlayer(client);
 	showCharacterSelectToClient(client);
 }
 
@@ -415,6 +425,12 @@ function getCharacterFullName(client) {
 
 function isPlayerSwitchingCharacter(client) {
 	return getPlayerData(client).switchingCharacter;
+}
+
+// ===========================================================================
+
+function isPlayerCreatingCharacter(client) {
+	return getPlayerData(client).creatingCharacter;
 }
 
 // ===========================================================================

@@ -509,7 +509,6 @@ function loginSuccess(client) {
 	getPlayerData(client).accountData.ipAddress = client.ip;
 
 	sendRemovedWorldObjectsToPlayer(client);
-	sendAccountKeyBindsToClient(client);
 	sendPlayerChatScrollLines(client, getPlayerData(client).accountData.chatScrollLines);
 
 	messagePlayerNormal(null, `👋 ${client.name} has joined the server`, getColourByName("softYellow"));
@@ -534,8 +533,7 @@ function saveAccountToDatabase(accountData) {
 				acct_pass='${safePassword}',
 				acct_discord=${accountData.discordAccount},
 				acct_ip=INET_ATON('${accountData.ipAddress}'),
-				acct_code_verifyemail='${accountData.emailVerificationCode}',
-				acct_chat_scroll_lines='${accountData.chatScrollLines}'
+				acct_code_verifyemail='${accountData.emailVerificationCode}'
 			 WHERE acct_id=${accountData.databaseId}`;
 
 			 /*
@@ -559,6 +557,7 @@ function saveAccountToDatabase(accountData) {
 				acct_svr_staff_title='${safeStaffTitle}',
 				acct_svr_staff_flags=${accountData.flags.admin},
 				acct_svr_mod_flags=${accountData.flags.moderation},
+				acct_svr_chat_scroll_lines=${accountData.chatScrollLines}
 			 WHERE acct_svr_acct=${accountData.databaseId} AND acct_svr_svr = ${getServerId()}`;
 
 		//dbQueryString = dbQueryString.trim();
@@ -804,9 +803,11 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	getPlayerData(client).loggedIn = true;
 
 	messagePlayerSuccess(client, "Your account has been created!");
+	messagePlayerAlert(client, "Don't forget to verify your email! A verification code has been sent to you");
 	messagePlayerAlert(client, "To play on the server, you will need to make a character.");
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		sendEmailVerificationEmail(client, emailVerificationCode);
 		showPlayerRegistrationSuccessGUI(client);
 		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
 		getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
@@ -924,10 +925,18 @@ function saveConnectionToDatabase(client) {
 // ===========================================================================
 
 function createDefaultKeybindsForAccount(accountDatabaseId) {
-	for(let i in getGlobalConfig().defaultKeybinds) {
-		let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeybinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeybinds[i].keyState})`;
-		quickDatabaseQuery(dbQueryString);
+	logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybinds for account ${accountDatabaseId} ...`);
+	for(let j = 1 ; j <= 4 ; j++) {
+		logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybinds for account ${accountDatabaseId} on server ${j} ...`);
+		for(let i in getGlobalConfig().keyBind.defaultKeyBinds) {
+			logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())} ...`);
+			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_server, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${j}, ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeyBinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeyBinds[i].keyState})`;
+			quickDatabaseQuery(dbQueryString);
+			logToConsole(LOG_DEBUG, `[Asshat.Account]: Created default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}!`);
+		}
+		logToConsole(LOG_DEBUG, `[Asshat.Account]: Create default keybinds for account ${accountDatabaseId} on server ${j}!`);
 	}
+	logToConsole(LOG_DEBUG, `[Asshat.Account]: Created default keybinds for account ${accountDatabaseId} successfully!`);
 }
 
 // ===========================================================================
@@ -950,7 +959,7 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	let dbAssoc;
 
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID}`);
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID} AND acct_hotkey_server = ${getServerId()}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -1125,7 +1134,6 @@ function isAccountTwoFactorAuthenticationVerified(accountData) {
 
 function setAccountEmail(accountData, emailAddress) {
 	accountData.emailAddress = emailAddress;
-	accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
 }
 
 // ===========================================================================

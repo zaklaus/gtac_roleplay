@@ -37,7 +37,7 @@ function processItemActionRendering() {
                 let progressPercent = Math.ceil(currentTick*100/itemActionDelayDuration);
                 let width = Math.ceil(getPercentage(itemActionDelaySize.x, progressPercent));
 
-                let backgroundColour = toColour(0, 0, 0, Math.floor(255.0*alpha));
+                let backgroundColour = toColour(0, 0, 0, 255);
                 drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2)-2, itemActionDelayPosition.y-(itemActionDelaySize.y/2)], [itemActionDelaySize.x+2, itemActionDelaySize.y+2], backgroundColour, backgroundColour, backgroundColour, backgroundColour);
                 drawing.drawRectangle(null, [itemActionDelayPosition.x-(itemActionDelaySize.x/2), itemActionDelayPosition.y-(itemActionDelaySize.y/2)-2], [width, itemActionDelaySize.y], COLOUR_LIME, COLOUR_LIME, COLOUR_LIME, COLOUR_LIME);
             }

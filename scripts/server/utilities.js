@@ -1284,7 +1284,7 @@ function getClosestPlayer(position, exemptClient) {
 // ===========================================================================
 
 function isPlayerMuted(client) {
-	return getPlayerData(targetClient).muted;
+	return getPlayerData(client).muted;
 }
 
 // ===========================================================================

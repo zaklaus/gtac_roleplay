@@ -30,7 +30,7 @@ function loadClansFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempClanData = getClasses().clanData(dbAssoc);
+					let tempClanData = new serverClasses.clanData(dbAssoc);
 					tempClanData.members = loadClanMembersFromDatabase(tempClanData.databaseId);
 					tempClanData.ranks = loadClanRanksFromDatabase(tempClanData.databaseId);
 					tempClans.push(tempClanData);
@@ -44,6 +44,90 @@ function loadClansFromDatabase() {
 
 	logToConsole(LOG_INFO, `[Asshat.Clan]: ${tempClans.length} clans loaded from database successfully!`);
 	return tempClans;
+}
+
+// ===========================================================================
+
+function loadClanMembersFromDatabase() {
+	logToConsole(LOG_INFO, "[Asshat.Clan]: Loading clans from database ...");
+
+	let tempClans = [];
+	let dbConnection = connectToDatabase();
+	let dbAssoc;
+
+	if(dbConnection) {
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM clan_main WHERE clan_deleted = 0 AND clan_server = ${getServerId()}`);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempClanData = new serverClasses.clanData(dbAssoc);
+					tempClanData.members = loadClanMembersFromDatabase(tempClanData.databaseId);
+					tempClanData.ranks = loadClanRanksFromDatabase(tempClanData.databaseId);
+					tempClans.push(tempClanData);
+					logToConsole(LOG_VERBOSE, `[Asshat.Clan]: Clan '${tempClanData.name}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_INFO, `[Asshat.Clan]: ${tempClans.length} clans loaded from database successfully!`);
+	return tempClans;
+}
+
+// ===========================================================================
+
+function loadClanRanksFromDatabase(clanDatabaseId) {
+	logToConsole(LOG_INFO, `[Asshat.Clan]: Loading ranks for clan ${clanDatabaseId} from database ...`);
+
+	let dbConnection = connectToDatabase();
+	let dbAssoc;
+	let tempClanRanks = [];
+
+	if(dbConnection) {
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM clan_rank WHERE clan_rank_clan = ${clanDatabaseId}`);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				let dbAssoc = fetchQueryAssoc(dbQuery)
+				let tempClanRankData = new serverClasses.clanRankData(dbAssoc);
+				tempClanRanks.push(tempClanRankData);
+				logToConsole(LOG_VERBOSE, `[Asshat.Clan]: Clan rank '${tempClanRankData.name}' loaded from database successfully!`);
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_INFO, `[Asshat.Clan]: Loaded ranks for clan ${clanDatabaseId} from database successfully!`);
+	return tempClanRanks;
+}
+
+// ===========================================================================
+
+function loadClanMembersFromDatabase(clanDatabaseId) {
+	logToConsole(LOG_INFO, `[Asshat.Clan]: Loading members for clan ${clanDatabaseId} from database ...`);
+
+	let dbConnection = connectToDatabase();
+	let dbAssoc;
+	let tempClanMembers = [];
+
+	if(dbConnection) {
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM clan_member WHERE clan_member_clan = ${clanDatabaseId}`);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				let dbAssoc = fetchQueryAssoc(dbQuery)
+				let tempClanMemberData = new serverClasses.clanMemberData(dbAssoc);
+				tempClanMembers.push(tempClanMemberData);
+				logToConsole(LOG_VERBOSE, `[Asshat.Clan]: Clan member '${tempClanMemberData.subAccount}' loaded from database successfully!`);
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_INFO, `[Asshat.Clan]: Loaded members for clan ${clanDatabaseId} from database successfully!`);
+	return tempClanMembers;
 }
 
 // ===========================================================================
@@ -451,14 +535,13 @@ function createClan(name) {
 
 	if(dbConnection) {
 		escapedName = escapeDatabaseString(dbConnection, escapedName)
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO clan_main (clan_server, clan_name) VALUES (${getServerId()}, '${escapedName}')`);
-		disconnectFromDatabase(dbConnection);
+		queryDatabase(dbConnection, `INSERT INTO clan_main (clan_server, clan_name) VALUES (${getServerId()}, '${escapedName}')`);
+		let tempClan = new serverClasses.clanData();
+		tempClan.databaseId = getDatabaseInsertId(dbConnection);
+		tempClan.name = name;
+		getServerData().clans.push(tempClan);
 
-		let tempClanData = loadClanFromDatabaseById(getDatabaseInsertId(dbConnection));
-		if(tempClanData != false) {
-			let tempClan = serverClasses.clanData(tempClanData);
-			getServerData().clans.push(tempClan);
-		}
+		setAllClanDataIndexes();
 	}
 	return true;
 }

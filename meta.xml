@@ -4,8 +4,6 @@
 	<!-- Shared -->
 	<script src="scripts/shared/native.js" type="server" language="javascript" />
 	<script src="scripts/shared/native.js" type="client" language="javascript" />
-	<script src="scripts/shared/game-data.js" type="server" language="javascript" />
-	<script src="scripts/shared/game-data.js" type="client" language="javascript" />
 	<script src="scripts/shared/const.js" type="server" language="javascript" />
 	<script src="scripts/shared/const.js" type="client" language="javascript" />
 
@@ -51,6 +49,7 @@
 	<script src="scripts/server/config.js" type="server" language="javascript" />
 	<script src="scripts/server/core.js" type="server" language="javascript" />
 	<script src="scripts/server/command.js" type="server" language="javascript" />
+	<script src="scripts/server/gamedata.js" type="server" language="javascript" />
 
 	<script src="scripts/server/business/bakery.js" type="server" language="javascript" />
 	<script src="scripts/server/business/bar.js" type="server" language="javascript" />

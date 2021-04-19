@@ -19,6 +19,9 @@ let usingSkinSelector = false;
 let usingNewCharacterSkinSelector = false;
 let skinSelectorIndex = 0;
 
+let skinSelectPosition = null;
+let skinSelectHeading = null;
+
 let newCharacterSkinSelectPedPosition = [
 	[],
 	[139.54, -903.00, 26.16],
@@ -119,7 +122,7 @@ function toggleSkinSelect(state) {
     } else {
         usingSkinSelector = false;
         //gta.restoreCamera(true);
-        //gui.showCursor(false, true);
+        gui.showCursor(false, true);
         localPlayer.invincible = false;
         localPlayer.setProofs(false, false, false, false, false);
         localPlayer.collisionsEnabled = true;

@@ -862,7 +862,7 @@ function saveBusinessToDatabase(businessId) {
 function createAllBusinessPickups() {
 	for(let i in getServerData().businesses) {
 		createBusinessEntrancePickup(i);
-		//createBusinessExitPickup(i);
+		createBusinessExitPickup(i);
 	}
 }
 
@@ -1158,7 +1158,7 @@ function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 // ===========================================================================
 
 function buyFromBusinessCommand(command, params, client) {
-	let businessId = getBusinessFromParams(isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(areParamsEmpty(params)) {
 		showBusinessFloorInventoryToPlayer(client, businessId);

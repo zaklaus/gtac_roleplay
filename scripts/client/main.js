@@ -41,6 +41,4 @@ let drunkEffectDurationTimer = null;
 
 let controlsEnabled = true;
 
-let allowedSkins = [];
-
 // ===========================================================================

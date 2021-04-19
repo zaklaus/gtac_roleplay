@@ -581,7 +581,7 @@ function initClassTable() {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.name = "";
-				this.owner = 0;
+				this.ownerId = 0;
 				this.tag = "";
 				this.enabled = false;
 				this.index = -1;

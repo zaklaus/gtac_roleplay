@@ -47,7 +47,7 @@ function initSkinSelectScript() {
 // ===========================================================================
 
 function loadSkinSelectMessageFontTop() {
-	return lucasFont.createFont(fontStream, 20.0);
+	return lucasFont.createDefaultFont(20.0, "Roboto");
 }
 
 // ===========================================================================
@@ -69,7 +69,7 @@ function processSkinSelectKeyPress(keyCode) {
             localPlayer.skin = allowedSkins[skinSelectorIndex][0];
             skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
         } else if(keyCode == SDLK_LEFT) {
-            if(allowedSkins.length-1 == 0) {
+            if(skinSelectorIndex <= 0) {
                 skinSelectorIndex = allowedSkins.length-1;
             } else {
                 skinSelectorIndex--;
@@ -78,10 +78,8 @@ function processSkinSelectKeyPress(keyCode) {
             skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
         } else if(keyCode == SDLK_RETURN) {
             triggerNetworkEvent("ag.skinSelected", skinSelectorIndex);
-            usingSkinSelector = false;
         } else if(keyCode == SDLK_BACKSPACE) {
             triggerNetworkEvent("ag.skinSelected", -1);
-            usingSkinSelector = false;
         }
     }
 }
@@ -94,6 +92,10 @@ function processSkinSelectRendering() {
             skinSelectMessageFontTop.render(skinSelectMessageTextTop, [0, gta.height-100], gta.width, 0.5, 0.0, skinSelectMessageFontTop.size, skinSelectMessageColourTop, true, true, false, true);
             skinSelectMessageFontBottom.render(skinSelectMessageTextBottom, [0, gta.height-65], gta.width, 0.5, 0.0, skinSelectMessageFontBottom.size, skinSelectMessageColourBottom, true, true, false, true);
         }
+
+        localPlayer.position = skinSelectPosition;
+        localPlayer.heading = skinSelectHeading;
+        localPlayer.clearObjective();
     }
 }
 
@@ -112,10 +114,12 @@ function toggleSkinSelect(state) {
         localPlayer.invincible = true;
         localPlayer.setProofs(true, true, true, true, true);
         localPlayer.collisionsEnabled = false;
+        skinSelectPosition = localPlayer.position;
+        skinSelectHeading = localPlayer.heading;
     } else {
         usingSkinSelector = false;
-        gta.restoreCamera(true);
-        gui.showCursor(false, true);
+        //gta.restoreCamera(true);
+        //gui.showCursor(false, true);
         localPlayer.invincible = false;
         localPlayer.setProofs(false, false, false, false, false);
         localPlayer.collisionsEnabled = true;

@@ -511,7 +511,7 @@ function playerUseItem(client, hotBarSlot) {
 			//}
 			//setPlayerSkin(client, newSkin);
 			//getItemData(itemIndex).value = oldSkin;
-			getPlayerData(client).itemActionItem = itemId;
+			getPlayerData(client).itemActionItem = itemIndex;
 			forcePlayerIntoSkinSelect(client);
 			break;
 
@@ -910,6 +910,10 @@ function getPlayerFirstEmptyHotBarSlot(client) {
 // ===========================================================================
 
 function cachePlayerHotBarItems(client) {
+	for(let i = 0 ; i <= 9 ; i++) {
+		getPlayerData(client).hotBarItems[i] = -1;
+	}
+
 	for(let i in getServerData().items) {
 		if(getItemData(i).ownerType == AG_ITEM_OWNER_PLAYER) {
 			if(getItemData(i).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
@@ -1059,11 +1063,11 @@ function listBusinessStorageInventoryCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, "Business not found!");
 		return false;
 	}
 
-	if(!getBusinessData(businessId).locked) {
+	if(getBusinessData(businessId).locked) {
 		messagePlayerError(client, "This business is closed!");
 		return false;
 	}
@@ -1253,6 +1257,9 @@ function playerItemActionDelayComplete(client) {
 // ===========================================================================
 
 function getItemValueDisplayForItem(itemId) {
+	if(!getItemData(itemId)) {
+		return "unknown";
+	}
 	return getItemValueDisplay(getItemData(itemId).itemTypeIndex, getItemData(itemId).value);
 }
 
@@ -1380,9 +1387,9 @@ function showBusinessFloorInventoryToPlayer(client, businessId) {
 	let itemDisplay = [];
 	for(let i in getBusinessData(businessId).floorItemCache) {
 		if(getBusinessData(businessId).floorItemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
+			itemDisplay.push(`[#FFFF00]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}]`);
+			itemDisplay.push(`[#FFFF00]${toInteger(i)+1}: [#FFFFFF]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[#AAAAAA][${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`);
 		}
 	}
 
@@ -1405,9 +1412,9 @@ function showBusinessStorageInventoryToPlayer(client, businessId) {
 	let itemDisplay = [];
 	for(let i in getBusinessData(businessId).storageItemCache) {
 		if(getBusinessData(businessId).storageItemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
+			itemDisplay.push(`[#FFFF00]${toInteger(i)+1}[#AAAAAA](Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]`);
+			itemDisplay.push(`[#FFFF00]${toInteger(i)+1}: [#FFFFFF]${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}[#AAAAAA][${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]  - [#CCCCCC]${getItemData(getBusinessData(businessId).storageItemCache[i]).amount} available`);
 		}
 	}
 

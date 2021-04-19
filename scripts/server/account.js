@@ -370,7 +370,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		accountName = escapeDatabaseString(dbConnection, accountName);
-		let dbQueryString = `SELECT *, INET_NTOA(acct_ip) AS ipstring FROM acct_main WHERE acct_name = '${accountName}' LIMIT 1;`;
+		let dbQueryString = `SELECT acct_main.*, acct_svr.*, INET_NTOA(acct_ip) AS ipstring FROM acct_main INNER JOIN acct_svr ON acct_svr.acct_svr_acct = acct_main.acct_id AND acct_svr.acct_svr_svr = ${getServerId()} WHERE acct_name = '${accountName}' LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
@@ -532,20 +532,39 @@ function saveAccountToDatabase(accountData) {
 			`UPDATE acct_main SET
 				 acct_email='${safeEmailAddress}',
 				acct_pass='${safePassword}',
-				acct_settings=${accountData.settings},
-				acct_staff_title=${safeStaffTitle},
-				acct_staff_flags=${accountData.flags.admin},
-				acct_mod_flags=${accountData.flags.moderation},
 				acct_discord=${accountData.discordAccount},
 				acct_ip=INET_ATON('${accountData.ipAddress}'),
 				acct_code_verifyemail='${accountData.emailVerificationCode}',
-				acct_chat_scroll_lines='${accountData.chatScrollLines}',
+				acct_chat_scroll_lines='${accountData.chatScrollLines}'
 			 WHERE acct_id=${accountData.databaseId}`;
+
+			 /*
+			 	acct_settings=${accountData.settings},
+				acct_staff_title='${safeStaffTitle}',
+				acct_staff_flags=${accountData.flags.admin},
+				acct_mod_flags=${accountData.flags.moderation},
+			*/
 
 		//dbQueryString = dbQueryString.trim();
 		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
 
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		freeDatabaseQuery(dbQuery);
+		dbQuery = null;
+
+		dbQueryString =
+			`UPDATE acct_svr SET
+				 acct_svr_acct='${accountData.databaseId}',
+			 	acct_svr_settings=${accountData.settings},
+				acct_svr_staff_title='${safeStaffTitle}',
+				acct_svr_staff_flags=${accountData.flags.admin},
+				acct_svr_mod_flags=${accountData.flags.moderation},
+			 WHERE acct_svr_acct=${accountData.databaseId} AND acct_svr_svr = ${getServerId()}`;
+
+		//dbQueryString = dbQueryString.trim();
+		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
+
+		dbQuery = queryDatabase(dbConnection, dbQueryString);
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 	}
@@ -629,6 +648,7 @@ function createAccount(name, password, email = "") {
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			let accountData = loadAccountFromId(getDatabaseInsertId(dbConnection), true);
 			createDefaultKeybindsForAccount(accountData.databaseId);
+			createDefaultAccountServerData(accountData.databaseId);
 			return accountData;
 		}
 	}
@@ -906,6 +926,15 @@ function saveConnectionToDatabase(client) {
 function createDefaultKeybindsForAccount(accountDatabaseId) {
 	for(let i in getGlobalConfig().defaultKeybinds) {
 		let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeybinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeybinds[i].keyState})`;
+		quickDatabaseQuery(dbQueryString);
+	}
+}
+
+// ===========================================================================
+
+function createDefaultAccountServerData(accountDatabaseId) {
+	for(let i = 1 ; i <= 4 ; i++) {
+		let dbQueryString = `INSERT INTO acct_svr (acct_svr_acct, acct_svr_svr) VALUES (${accountDatabaseId}, ${i})`;
 		quickDatabaseQuery(dbQueryString);
 	}
 }

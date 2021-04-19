@@ -163,7 +163,7 @@ function createSubAccount(accountId, firstName, lastName, skinId) {
 		let safeFirstName = escapeDatabaseString(dbConnection, firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${skinId}, ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${getServerConfig().newCharacter.skin}, ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
 		}
@@ -228,10 +228,7 @@ function checkNewCharacter(client, firstName, lastName) {
 	}
 	lastName = lastName.trim();
 
-	let skinId = getPlayerData(client).creatingCharacterSkin;
-	if(skinId == -1) {
-		skinId = getServerConfig().newCharacter.skin;
-	}
+	let skinId = allowedSkins[getServerGame()][getPlayerData(client).creatingCharacterSkin];
 
 	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName, skinId);
 	if(!subAccountData) {
@@ -375,7 +372,7 @@ function newCharacterCommand(command, params, client) {
 	let firstName = splitParams[0];
 	let lastName = splitParams[1];
 
-	checkNewCharacter(client, firstName, lastName, getServerConfig().newCharacter.skin);
+	checkNewCharacter(client, firstName, lastName);
 }
 
 // ===========================================================================

@@ -130,7 +130,7 @@ let bindableKeys = {
 
 function initKeyBindScript() {
 	logToConsole(LOG_INFO, "[Asshat.KeyBind]: Initializing key bind script ...");
-    getServerConfig().keyBind = loadKeyBindConfiguration();
+    getGlobalConfig().keyBind = loadKeyBindConfiguration();
 	logToConsole(LOG_INFO, "[Asshat.KeyBind]: Key bind script initialized!");
 }
 

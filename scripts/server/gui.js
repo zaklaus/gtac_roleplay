@@ -60,12 +60,13 @@ function playerPromptAnswerYes(client) {
 
     switch(getPlayerData(client).promptType) {
         case AG_PROMPT_CREATEFIRSTCHAR:
-            getPlayerData(client).creatingCharacter = true;
-            spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getGameData().allowedSkins[getServerGame()][0][0], getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
-            showCharacterSelectCameraToPlayer(client);
-            setTimeout(function() {
-                forcePlayerIntoSkinSelect(client);
-            }, 750);
+            //getPlayerData(client).creatingCharacter = true;
+            //spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, allowedSkins[getServerGame()][0][0], getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
+            //showCharacterSelectCameraToPlayer(client);
+            //setTimeout(function() {
+            //    forcePlayerIntoSkinSelect(client);
+            //}, 750);
+            showPlayerNewCharacterGUI(client);
             break;
 
         case AG_PROMPT_BIZORDER:

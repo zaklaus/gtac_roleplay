@@ -825,20 +825,15 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
     if(allowedSkinIndex == -1) {
         return false;
     } else {
-        if(isPlayerCreatingCharacter(client)) {
-            getPlayerData(client).creatingCharacterSkin = allowedSkinIndex;
-            showPlayerNewCharacterGUI(client);
-        } else {
-            getPlayerCurrentSubAccount(client).skin = getGameData().allowedSkins[getServerGame()][allowedSkinIndex][0];
-            if(isPlayerWorking(client)) {
-                messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.");
-                setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);
-            }
-            deleteItem(getPlayerData(client).itemActionItem);
-            restorePlayerCamera(client);
-            cachePlayerHotBarItems(client);
-            meActionToNearbyPlayers(client, `changes their skin to ${getGameData().allowedSkins[getServerGame()][allowedSkinIndex][1]}`);
+        getPlayerCurrentSubAccount(client).skin = allowedSkins[getServerGame()][allowedSkinIndex][0];
+        if(isPlayerWorking(client)) {
+            messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.");
+            setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);
         }
+        deleteItem(getPlayerData(client).itemActionItem);
+        restorePlayerCamera(client);
+        cachePlayerHotBarItems(client);
+        meActionToNearbyPlayers(client, `changes their skin to ${allowedSkins[getServerGame()][allowedSkinIndex][1]}`);
     }
     triggerNetworkEvent("ag.skinSelect", client, false);
 }
@@ -847,12 +842,6 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
 
 function sendPlayerChatScrollLines(client, amount) {
     triggerNetworkEvent("ag.chatScrollLines", client, amount);
-}
-
-// ===========================================================================
-
-function sendPlayerAllowedSkins(client) {
-    triggerNetworkEvent("ag.allowedSkins", client, getGameData().allowedSkins[getServerGame()]);
 }
 
 // ===========================================================================

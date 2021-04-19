@@ -71,15 +71,18 @@ function playerPromptAnswerYes(client) {
         case AG_PROMPT_BIZORDER:
             if(getPlayerData(client).businessOrderAmount > 0) {
                 if(getBusinessData(getPlayerData(client).businessOrderBusiness).till < getPlayerData(client).businessOrderCost) {
-                    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} failed to order ${getPlayerData(client).businessOrderAmount} ${getPlayerData(client).businessOrderItem} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness)} (Reason: Not enough money in business till)`);
+                    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} failed to order ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness).name} (Reason: Not enough money in business till)`);
                     showPlayerErrorGUI(client, "This business doesn't have enough money! Deposit some using /bizdeposit", "Business Order Canceled");
                     getPlayerData(client).businessOrderAmount = 0;
                     getPlayerData(client).businessOrderBusiness = false;
                     getPlayerData(client).businessOrderItem = -1;
                     getPlayerData(client).businessOrderValue = -1;
                 } else {
-                    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} successfully ordered ${getPlayerData(client).businessOrderAmount} ${getPlayerData(client).businessOrderItem} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness)}`);
+                    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} successfully ordered ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness).name}`);
                     showPlayerInfoGUI(client, `You ordered ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} (${getItemValueDisplay(getPlayerData(client).businessOrderItem, getPlayerData(client).businessOrderValue)}) for ${getPlayerData(client).businessOrderCost}!`, "Business Order Successful");
+                    createItem(getPlayerData(client).businessOrderItem, getPlayerData(client).businessOrderValue, AG_ITEM_OWNER_BIZFLOOR, getBusinessData(getPlayerData(client).businessOrderBusiness).databaseId, getPlayerData(client).businessOrderAmount);
+                    cacheBusinessItems(getPlayerData(client).businessOrderBusiness);
+                    getBusinessData(getPlayerData(client).businessOrderBusiness).till -= getPlayerData(client).businessOrderCost;
                     getPlayerData(client).businessOrderAmount = 0;
                     getPlayerData(client).businessOrderBusiness = false;
                     getPlayerData(client).businessOrderItem = -1;

@@ -64,21 +64,21 @@ function loadSkinSelectMessageFontBottom() {
 function processSkinSelectKeyPress(keyCode) {
 	if(usingSkinSelector) {
         if(keyCode == SDLK_RIGHT) {
-            if(allowedSkins.length-1 == skinSelectorIndex) {
+            if(allowedSkins[gta.game].length-1 == skinSelectorIndex) {
                 skinSelectorIndex = 0;
             } else {
                 skinSelectorIndex++;
             }
-            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
-            skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
+            localPlayer.skin = allowedSkins[gta.game][skinSelectorIndex][0];
+            skinSelectMessageTextTop = allowedSkins[gta.game][skinSelectorIndex][1];
         } else if(keyCode == SDLK_LEFT) {
             if(skinSelectorIndex <= 0) {
-                skinSelectorIndex = allowedSkins.length-1;
+                skinSelectorIndex = allowedSkins[gta.game].length-1;
             } else {
                 skinSelectorIndex--;
             }
-            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
-            skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
+            localPlayer.skin = allowedSkins[gta.game][skinSelectorIndex][0];
+            skinSelectMessageTextTop = allowedSkins[gta.game][skinSelectorIndex][1];
         } else if(keyCode == SDLK_RETURN) {
             triggerNetworkEvent("ag.skinSelected", skinSelectorIndex);
         } else if(keyCode == SDLK_BACKSPACE) {
@@ -92,13 +92,17 @@ function processSkinSelectKeyPress(keyCode) {
 function processSkinSelectRendering() {
 	if(usingSkinSelector) {
         if(skinSelectMessageFontTop != null && skinSelectMessageFontBottom != null) {
-            skinSelectMessageFontTop.render(skinSelectMessageTextTop, [0, gta.height-100], gta.width, 0.5, 0.0, skinSelectMessageFontTop.size, skinSelectMessageColourTop, true, true, false, true);
-            skinSelectMessageFontBottom.render(skinSelectMessageTextBottom, [0, gta.height-65], gta.width, 0.5, 0.0, skinSelectMessageFontBottom.size, skinSelectMessageColourBottom, true, true, false, true);
+            if(gta.game != GAME_GTA_VC) {
+                skinSelectMessageFontTop.render(skinSelectMessageTextTop, [0, gta.height-100], gta.width, 0.5, 0.0, skinSelectMessageFontTop.size, skinSelectMessageColourTop, true, true, false, true);
+                skinSelectMessageFontBottom.render(skinSelectMessageTextBottom, [0, gta.height-65], gta.width, 0.5, 0.0, skinSelectMessageFontBottom.size, skinSelectMessageColourBottom, true, true, false, true);
+            }
         }
 
         localPlayer.position = skinSelectPosition;
         localPlayer.heading = skinSelectHeading;
-        localPlayer.clearObjective();
+        if(gta.game == GAME_GTA_III || gta.game == GAME_GTA_VC) {
+            localPlayer.clearObjective();
+        }
     }
 }
 
@@ -107,8 +111,8 @@ function processSkinSelectRendering() {
 function toggleSkinSelect(state) {
     if(state) {
         skinSelectorIndex = getAllowedSkinDataBySkinId(localPlayer.skin);
-        if(localPlayer.skin != allowedSkins[skinSelectorIndex][0]) {
-            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        if(localPlayer.skin != allowedSkins[gta.game][skinSelectorIndex][0]) {
+            localPlayer.skin = allowedSkins[gta.game][skinSelectorIndex][0];
         }
         usingSkinSelector = true;
         let frontCameraPosition = getPosInFrontOfPos(localPlayer.position, localPlayer.heading, 5);
@@ -123,9 +127,11 @@ function toggleSkinSelect(state) {
         usingSkinSelector = false;
         //gta.restoreCamera(true);
         gui.showCursor(false, true);
-        localPlayer.invincible = false;
-        localPlayer.setProofs(false, false, false, false, false);
-        localPlayer.collisionsEnabled = true;
+        if(localPlayer) {
+            localPlayer.invincible = false;
+            localPlayer.setProofs(false, false, false, false, false);
+            localPlayer.collisionsEnabled = true;
+        }
     }
 }
 

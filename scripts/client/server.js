@@ -67,8 +67,6 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.nametag", updatePlayerNameTag);
     addNetworkHandler("ag.ping", updatePlayerPing);
 
-    addNetworkHandler("ag.allowedSkins", receiveAllowedSkins);
-
     addNetworkHandler("ag.m", receiveChatBoxMessageFromServer);
     addNetworkHandler("ag.chatScrollLines", setChatScrollLines);
 }
@@ -168,12 +166,6 @@ function tellServerItemActionDelayComplete() {
 
 function sendServerNewAFKStatus(state) {
     triggerNetworkEvent("ag.afk", state);
-}
-
-// ===========================================================================
-
-function receiveAllowedSkins(skinArray) {
-    allowedSkins = skinArray;
 }
 
 // ===========================================================================

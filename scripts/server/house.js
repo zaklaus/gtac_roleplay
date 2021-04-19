@@ -183,7 +183,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 	let houseId = getHouseFromParams(splitParams[1]) || (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "Business not found!");
+		messagePlayerError(client, "House not found!");
 		return false;
 	}
 
@@ -747,6 +747,24 @@ function exitHouse(client) {
 function setAllHouseIndexes() {
 	for(let i in getServerData().houses) {
 		getServerData().houses[i].index = i;
+	}
+}
+
+// ===========================================================================
+
+function cacheAllHouseItems() {
+	for(let i in getServerData().houses) {
+		cacheHouseItems(i);
+	}
+}
+
+// ===========================================================================
+
+function cacheHouseItems(houseId) {
+	for(let i in getServerData().items) {
+		if(getItemData(i).ownerType == AG_ITEM_OWNER_HOUSE && getItemData(i).ownerId == getHouseData(houseId).databaseId) {
+			getHouseData(houseId).itemCache.push(i);
+		}
 	}
 }
 

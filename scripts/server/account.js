@@ -553,7 +553,7 @@ function saveAccountToDatabase(accountData) {
 		dbQueryString =
 			`UPDATE acct_svr SET
 				 acct_svr_acct='${accountData.databaseId}',
-			 	acct_svr_settings=${accountData.settings},
+			 	acct_svr_settings=${accountData.flags.settings},
 				acct_svr_staff_title='${safeStaffTitle}',
 				acct_svr_staff_flags=${accountData.flags.admin},
 				acct_svr_mod_flags=${accountData.flags.moderation},
@@ -807,10 +807,13 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	messagePlayerAlert(client, "To play on the server, you will need to make a character.");
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-		sendEmailVerificationEmail(client, emailVerificationCode);
 		showPlayerRegistrationSuccessGUI(client);
 		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
 		getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
+
+		let emailVerificationCode = generateEmailVerificationCode();
+		setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+		sendEmailVerificationEmail(client, emailVerificationCode);
 	} else {
 		messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
 	}
@@ -869,7 +872,6 @@ function initClient(client) {
 		return false;
 	}
 
-	sendPlayerAllowedSkins(client);
 	sendPlayerGUIColours(client);
 	sendPlayerGUIInit(client);
 

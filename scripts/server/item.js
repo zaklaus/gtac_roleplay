@@ -511,7 +511,8 @@ function playerUseItem(client, hotBarSlot) {
 			//}
 			//setPlayerSkin(client, newSkin);
 			//getItemData(itemIndex).value = oldSkin;
-			forcePlayerIntoSkinItemSelect(client, itemIndex);
+			getPlayerData(client).itemActionItem = itemId;
+			forcePlayerIntoSkinSelect(client);
 			break;
 
 		case AG_ITEM_USETYPE_WEAPON:
@@ -975,7 +976,9 @@ function deleteItem(itemId) {
 
 	}
 
-	quickDatabaseQuery(`DELETE FROM item_main WHERE item_id = ${getItemData(itemId).databaseId}`);
+	if(getItemData(itemId).databaseId > 0) {
+		quickDatabaseQuery(`DELETE FROM item_main WHERE item_id = ${getItemData(itemId).databaseId}`);
+	}
 	getServerData().items.splice(itemId, 1);
 }
 

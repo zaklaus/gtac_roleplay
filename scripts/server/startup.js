@@ -11,10 +11,10 @@
 function initServerScripts() {
 	checkForAllRequiredModules();
 
+	initClassScript();
 	initDatabaseScript();
 	initConfigScript();
 	initEmailScript();
-	initClassScript();
 	initBitFlagScript();
 	initBusinessScript();
 	initClanScript();

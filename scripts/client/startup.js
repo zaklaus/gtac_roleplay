@@ -20,6 +20,7 @@ function initClientScripts() {
     initAFKScript();
     initKeyBindScript();
     initEventScript();
+    initSkinSelectScript();
 }
 
 // ===========================================================================

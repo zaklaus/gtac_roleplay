@@ -18,17 +18,17 @@ function initEmailScript() {
 
 function sendEmail(toEmail, toName, subject, body) {
     module.smtp.send(
-        emailConfig.host,
-        emailConfig.port,
-        emailConfig.useTLS,
-        emailConfig.username,
-        emailConfig.password,
+        emailConfig.smtp.host,
+        emailConfig.smtp.port,
+        emailConfig.smtp.useTLS,
+        emailConfig.smtp.username,
+        emailConfig.smtp.password,
         toEmail,
         toName,
         subject,
         body,
-        emailConfig.from,
-        emailConfig.fromName);
+        emailConfig.smtp.from,
+        emailConfig.smtp.fromName);
 }
 
 // ===========================================================================
@@ -36,6 +36,12 @@ function sendEmail(toEmail, toName, subject, body) {
 function loadEmailConfiguration() {
     let emailConfigFile = loadTextFile("config/email.json");
 	return JSON.parse(emailConfigFile);
+}
+
+// ===========================================================================
+
+function getEmailConfig() {
+    return emailConfig;
 }
 
 // ===========================================================================

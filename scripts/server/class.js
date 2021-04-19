@@ -8,11 +8,14 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let serverClasses = initClassTable();
+let serverClasses = {};
 
 // ===========================================================================
 
 function initClassScript() {
+	logToConsole(LOG_INFO, "[Asshat.Class]: Initializing class script ...");
+	serverClasses = initClassTable();
+	logToConsole(LOG_INFO, "[Asshat.Class]: Class script initialized successfully!");
 }
 
 // ===========================================================================
@@ -36,6 +39,14 @@ function initClassTable() {
 
 				this.connectCameraPosition = false;
 				this.connectCameraLookAt = false;
+
+				this.characterSelectCameraPosition = false;
+				this.characterSelectCameraLookAt = false;
+				this.characterSelectPedPosition = false;
+				this.characterSelectPedHeading = false;
+				this.characterSelectInterior = false;
+				this.characterSelectDimension = false;
+
 				this.hour = 0;
 				this.minute = 0
 				this.weather = 0
@@ -79,6 +90,14 @@ function initClassTable() {
 
 					this.connectCameraPosition = toVector3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
 					this.connectCameraLookAt = toVector3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
+
+					this.characterSelectCameraPosition = toVector3(dbAssoc["svr_charselect_cam_pos_x"], dbAssoc["svr_charselect_cam_pos_y"], dbAssoc["svr_charselect_cam_pos_z"]);
+					this.characterSelectCameraLookAt = toVector3(dbAssoc["svr_charselect_cam_lookat_x"], dbAssoc["svr_charselect_cam_lookat_y"], dbAssoc["svr_charselect_cam_lookat_z"]);
+					this.characterSelectPedPosition = toVector3(dbAssoc["svr_charselect_ped_pos_x"], dbAssoc["svr_charselect_ped_pos_y"], dbAssoc["svr_charselect_ped_pos_z"]);
+					this.characterSelectPedHeading = toFloat(dbAssoc["svr_charselect_ped_rot_z"]);
+					this.characterSelectInterior = toInteger(dbAssoc["svr_charselect_int"]);
+					this.characterSelectDimension = toInteger(dbAssoc["svr_charselect_int"]);
+
 					this.hour = toInteger(dbAssoc["svr_start_time_hour"]);
 					this.minute = toInteger(dbAssoc["svr_start_time_min"]);
 					this.minuteDuration = toInteger(dbAssoc["svr_time_min_duration"]);
@@ -177,6 +196,9 @@ function initClassTable() {
 
 				this.payDayAmount = 0;
 				this.payDayTickStart = 0;
+
+				this.creatingCharacter = false;
+				this.creatingCharacterSkin = -1;
 			}
 		},
 		accountData: class {
@@ -214,14 +236,14 @@ function initClassTable() {
 					this.password = dbAssoc["acct_pass"];
 					this.registerDate = dbAssoc["acct_when_made"];
 					this.flags = {
-						moderation: dbAssoc["acct_mod_flags"],
-						settings: dbAssoc["acct_settings"],
-						admin: dbAssoc["acct_staff_flags"],
+						moderation: dbAssoc["acct_svr_mod_flags"],
+						settings: dbAssoc["acct_svr_settings"],
+						admin: dbAssoc["acct_svr_staff_flags"],
 					};
-					this.staffTitle = dbAssoc["acct_staff_title"];
-					this.ircAccount = dbAssoc["acct_irc"] || "None";
+					this.staffTitle = dbAssoc["acct_svr_staff_title"];
+					this.ircAccount = dbAssoc["acct_irc"];
 					this.discordAccount = dbAssoc["acct_discord"];
-					this.settings = dbAssoc["acct_settings"];
+					this.settings = dbAssoc["acct_svr_settings"];
 					this.emailAddress = dbAssoc["acct_email"];
 					this.whenRegistered = dbAssoc["acct_when_registered"];
 					this.ipAddress = dbAssoc["ipstring"];

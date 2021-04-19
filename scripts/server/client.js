@@ -836,6 +836,8 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
             }
             deleteItem(getPlayerData(client).itemActionItem);
             restorePlayerCamera(client);
+            cachePlayerHotBarItems(client);
+            meActionToNearbyPlayers(client, `changes their skin to ${getGameData().allowedSkins[getServerGame()][allowedSkinIndex][1]}`);
         }
     }
     triggerNetworkEvent("ag.skinSelect", client, false);

@@ -25,7 +25,7 @@ function initKeyBindScript() {
 function bindAccountKey(key, keyState) {
     logToConsole(LOG_DEBUG, `[Asshat.KeyBind]: Binded key ${sdl.getKeyName(key)} (${key})`);
     bindKey(toInteger(key), keyState, function(event) {
-        if(hasKeyBindDelayElapsed()) {
+        if(hasKeyBindDelayElapsed() && canLocalPlayerUseKeyBinds()) {
             lastKeyBindUse = sdl.ticks;
             tellServerPlayerUsedKeyBind(key);
         }
@@ -63,6 +63,12 @@ function hasKeyBindHoldElapsed(keyState) {
     }
 
     return false;
+}
+
+// ===========================================================================
+
+function canLocalPlayerUseKeyBinds() {
+    return (!usingSkinSelector && isSpawned && !itemActionDelayEnabled);
 }
 
 // ===========================================================================

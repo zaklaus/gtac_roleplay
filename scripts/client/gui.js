@@ -518,7 +518,7 @@ function initGUI() {
 	// ===========================================================================
 
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Creating error GUI ...`);
-	errorDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'ERROR', {
+	errorDialog.window = mexui.window(game.width/2-200, game.height/2-70, 500, 140, 'ERROR', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, windowAlpha),
 			transitionTime: 500,
@@ -535,7 +535,7 @@ function initGUI() {
 		},
 	});
 
-	errorDialog.messageLabel = errorDialog.window.text(15, 50, 370, 20, 'Error Message', {
+	errorDialog.messageLabel = errorDialog.window.text(15, 50, 470, 75, 'Error Message', {
 		main: {
 			textSize: 10.0,
 			textAlign: 0.5,
@@ -899,12 +899,9 @@ let checkNewCharacter = function() {
 		return false;
 	}
 
-	skinId = allowedSkins[newCharacterSkinSelectorIndex][0];
-
 	triggerNetworkEvent("ag.checkNewCharacter",
 		newCharacter.firstNameInput.lines[0],
 		newCharacter.lastNameInput.lines[0],
-		skinId,
 	);
 }
 
@@ -993,6 +990,7 @@ let closeAllWindows = function() {
 let yesNoDialogAnswerNo = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Responding with answer NO to server prompt`);
 	triggerNetworkEvent("ag.promptAnswerNo");
+	closeAllWindows();
 }
 
 // ===========================================================================
@@ -1000,6 +998,7 @@ let yesNoDialogAnswerNo = function() {
 let yesNoDialogAnswerYes = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Responding with answer YES to server prompt`);
 	triggerNetworkEvent("ag.promptAnswerYes");
+	closeAllWindows();
 }
 
 // ===========================================================================
@@ -1087,12 +1086,6 @@ let showNewCharacter = function() {
 	mexui.setInput(true);
 	setHUDEnabled(false);
 
-	usingNewCharacterSkinSelector = true;
-	newCharacterSkinSelectorIndex = 0;
-	newCharacterSkinSelectPed = gta.createCivilian(allowedSkins[newCharacterSkinSelectorIndex][0], newCharacterSkinSelectPosition[getGame()]);
-	newCharacterSkinSelectPed.heading = newCharacterSkinSelectHeading[getGame()];
-	let frontCameraPosition = getPosInFrontOfPos(newCharacterSkinSelectPed.position, newCharacterSkinSelectPed.heading, 5);
-	gta.setCameraLookAt(frontCameraPosition, newCharacterSkinSelectPed.position, true);
 	gui.showCursor(true, false);
 	localPlayer.invincible = true;
 	localPlayer.setProofs(true, true, true, true, true);

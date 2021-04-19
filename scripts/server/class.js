@@ -256,7 +256,7 @@ function initClassTable() {
 
 					this.emailVerificationCode = dbAssoc["acct_code_verifyemail"];
 					this.twoFactorAuthVerificationCode = dbAssoc["acct_code_2fa"];
-					this.chatScrollLines = dbAssoc["acct_chat_scroll_lines"];
+					this.chatScrollLines = dbAssoc["acct_svr_chat_scroll_lines"];
 				}
 			}
 		},

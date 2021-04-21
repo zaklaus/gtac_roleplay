@@ -75,6 +75,8 @@ function getPlayerInterior(client) {
             return getPlayerCurrentSubAccount(client).interior;
         }
     }
+
+    return 0;
 }
 
 // ===========================================================================
@@ -232,7 +234,6 @@ function takePlayerCash(client, amount) {
 	getPlayerCurrentSubAccount(client).cash = getPlayerCurrentSubAccount(client).cash - amount;
 	updatePlayerCash(client);
 }
-
 
 // ===========================================================================
 

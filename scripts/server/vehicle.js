@@ -440,8 +440,24 @@ function rentVehicleCommand(command, params, client) {
 		return false;
 	}
 
+	if(getPlayerData(client).rentingVehicle) {
+		messagePlayerAlert(client, `You are no longer renting the ${getVehicleName(vehicle)}`);
+		stopRentingVehicle(client);
+		return false;
+	}
+
+	if(getVehicleData(vehicle).rentedBy != false) {
+		if(getVehicleData(vehicle).rentedBy != client) {
+			messagePlayerAlert(client, `Someone else is already renting this vehicle!`);
+			return false;
+		} else {
+			messagePlayerAlert(client, `You are already renting this vehicle!`);
+			return false;
+		}
+	}
+
 	getVehicleData(vehicle).rentedBy = client;
-	getPlayerCurrentSubAccount(client).rentingVehicle = vehicle;
+	getPlayerData(client).rentingVehicle = vehicle;
 	getVehicleData(vehicle).rentStart = getCurrentUnixTimestamp();
 
 	meActionToNearbyPlayers(client, `rents the ${getVehicleName(vehicle)} and receives a set of vehicle keys!`);
@@ -834,10 +850,10 @@ function respawnAllVehiclesCommand(command, params, client) {
 // ===========================================================================
 
 function stopRentingVehicle(client) {
-	let vehicleData = getPlayerData(client).rentingVehicle;
+	let vehicle = getPlayerData(client).rentingVehicle;
 	getPlayerData(client).rentingVehicle = false;
-	vehicleData.rentedBy = false;
-	respawnVehicle(vehicleData);
+	getVehicleData(vehicle).rentedBy = false;
+	respawnVehicle(vehicle);
 }
 
 // ===========================================================================

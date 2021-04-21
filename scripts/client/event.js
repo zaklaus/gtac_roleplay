@@ -92,10 +92,11 @@ function onProcess(event, deltaTime) {
         return false;
     }
 
-    if(isSpawned) {
+    if(!isSpawned) {
         return false;
     }
 
+    processSync();
     destroyAutoCreatedPickups();
     processLocalPlayerControlState();
     clearLocalPlayerWantedLevel();
@@ -130,6 +131,8 @@ function onDrawnHUD(event) {
     processItemActionRendering();
     processSkinSelectRendering();
     processNameTagRendering();
+
+    localPlayer.wantedLevel = 0;
 }
 
 // ===========================================================================
@@ -149,7 +152,7 @@ function onElementStreamIn(event, element) {
 
 function onLocalPlayerExitedVehicle(event, vehicle, seat) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] Local player exited vehicle`);
-    triggerNetworkEvent("ag.onPlayerExitVehicle");
+    triggerNetworkEvent("ag.onPlayerExitVehicle", getVehicleForNetworkEvent(vehicle), seat);
     if(inVehicleSeat) {
         parkedVehiclePosition = false;
         parkedVehicleHeading = false;

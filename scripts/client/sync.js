@@ -10,73 +10,79 @@
 
 // ===========================================================================
 
-addEventHandler("onProcess", function(event, deltaTime) {
-    if(localPlayer != null && isSpawned) {
+function processSync(event, deltaTime) {
+    if(localPlayer != null) {
         if(gta.game == GAME_GTA_IV) {
             triggerNetworkEvent("ag.player.position", localPlayer.position);
             triggerNetworkEvent("ag.player.heading", localPlayer.heading);
         }
 
-        if(localPlayer.health <= 1) {
+        if(localPlayer.health <= 0) {
+            logToConsole(LOG_DEBUG, `Local player died`);
             localPlayer.clearWeapons();
-            triggerNetworkEvent("ag.player.death", localPlayer.position);
+            triggerNetworkEvent("ag.playerDeath", localPlayer.position);
         }
     }
-});
+}
 
 // ===========================================================================
 
-addNetworkHandler("ag.veh.engine", function(vehicle, state) {
+function toggleVehicleEngine(vehicle, state) {
     vehicle.engine = state;
-});
+}
 
 // ===========================================================================
 
-addNetworkHandler("ag.veh.lights", function(vehicle, state) {
+function toggleVehicleLights(vehicle, state) {
     vehicle.lights = state;
-});
+}
 
 // ===========================================================================
 
-addNetworkHandler("ag.veh.repair", function(syncId) {
+function repairVehicle(syncId) {
     getVehicleFromSyncId(syncId).fix();
-});
-
-// ===========================================================================
-
-addNetworkHandler("ag.veh.sync", function(event, vehicle) {
-    if(vehicle != null) {
-        syncVehicleProperties(vehicle);
-    }
-});
-
-// ===========================================================================
-
-addNetworkHandler("ag.civ.sync", function(event, civilian) {
-    if(civilian != null) {
-        syncCivilianProperties(civilian);
-    }
-});
-
-// ===========================================================================
-
-addNetworkHandler("ag.player.sync", function(event, player) {
-    if(player != null) {
-        syncPlayerProperties(player);
-    }
-});
-
-// ===========================================================================
-
-addNetworkHandler("ag.obj.sync", function(event, object) {
-    if(object != null) {
-        syncObjectProperties(object);
-    }
-});
+}
 
 // ===========================================================================
 
 function syncVehicleProperties(vehicle) {
+    if(vehicle != null) {
+        syncVehicleProperties(vehicle);
+    }
+}
+
+// ===========================================================================
+
+function syncCivilianProperties(civilian) {
+    if(civilian != null) {
+        syncCivilianProperties(civilian);
+    }
+}
+
+// ===========================================================================
+
+function syncPlayerProperties(player) {
+    if(player != null) {
+        syncPlayerProperties(player);
+    }
+}
+
+// ===========================================================================
+
+function syncObjectProperties(object) {
+    if(object != null) {
+        syncObjectProperties(object);
+    }
+}
+
+// ===========================================================================
+
+function syncVehicleProperties(vehicle) {
+    if(doesEntityDataExist(vehicle, "ag.lights")) {
+        let lightStatus = getEntityData(vehicle, "ag.lights");
+        vehicle.lights = lightStatus;
+    }
+
     if(doesEntityDataExist(vehicle, "ag.panelStatus")) {
         let panelsStatus = getEntityData(vehicle, "ag.panelStatus");
         for(let i in panelsStatus) {

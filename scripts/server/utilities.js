@@ -1008,7 +1008,7 @@ async function waitUntil(condition) {
 
             clearInterval(interval);
             resolve();
-        }, 1)
+        }, 1);
     });
 }
 
@@ -1296,20 +1296,20 @@ function getCurrentUnixTimestamp() {
 // ===========================================================================
 
 function msToTime(duration) {
-	let milliseconds = toInteger((duration % 1000) / 100);
-	let seconds = toInteger((duration / 1000) % 60);
-	let minutes = toInteger((duration / (1000 * 60)) % 60);
-	let hours = toInteger((duration / (1000 * 60 * 60)) % 24);
-	let days = toInteger((duration / (1000 * 60 * 60 * 24)) % 365);
+	let milliseconds = Math.floor(toInteger((duration % 1000) / 100));
+	let seconds = Math.floor(toInteger((duration / 1000) % 60));
+	let minutes = Math.floor(toInteger((duration / (1000 * 60)) % 60));
+	let hours = Math.floor(toInteger((duration / (1000 * 60 * 60)) % 24));
+	let days = Math.floor(toInteger((duration / (1000 * 60 * 60 * 24)) % 365));
 
-	hours = (hours < 10) ? "0" + hours : hours;
-	minutes = (minutes < 10) ? "0" + minutes : minutes;
-	seconds = (seconds < 10) ? "0" + seconds : seconds;
+	//hours = (hours < 10) ? "0" + hours : hours;
+	//minutes = (minutes < 10) ? "0" + minutes : minutes;
+	//seconds = (seconds < 10) ? "0" + seconds : seconds;
 
 	if (days !== 0) {
-		return `${days} days ${hours}:${minutes}:${seconds}`;
+		return `${days} days, ${hours} hours, ${minutes} minutes`;
 	} else {
-		return `${hours}:${minutes}:${seconds}`;
+		return `${hours} hours, ${minutes} minutes`;
 	}
 }
 

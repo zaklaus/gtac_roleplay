@@ -220,7 +220,7 @@ function gotoVehicleCommand(command, params, client) {
 	setTimeout(function() {
 		setPlayerPosition(client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
 		setPlayerInterior(client, 0);
-		setPlayerDimension(client, getVehicleDimension(vehicle));
+		setPlayerDimension(client, getElementDimension(vehicle));
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to a [#CC22CC]${getVehicleName(vehicle)} [#AAAAAA](ID ${vehicle.id})`);

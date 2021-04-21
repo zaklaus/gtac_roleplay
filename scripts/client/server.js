@@ -23,7 +23,6 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.working", setLocalPlayerWorkingState);
     addNetworkHandler("ag.jobType", setLocalPlayerJobType);
     addNetworkHandler("ag.passenger", enterVehicleAsPassenger);
-    addNetworkHandler("ag.passenger", enterVehicleAsPassenger);
 
     addNetworkHandler("ag.freeze", setLocalPlayerFrozenState);
     addNetworkHandler("ag.control", setLocalPlayerControlState);
@@ -69,6 +68,19 @@ function addAllNetworkHandlers() {
 
     addNetworkHandler("ag.m", receiveChatBoxMessageFromServer);
     addNetworkHandler("ag.chatScrollLines", setChatScrollLines);
+
+    addNetworkHandler("ag.radioStream", playStreamingRadio);
+    addNetworkHandler("ag.radioVolume", setStreamingRadioVolume);
+
+    addNetworkHandler("ag.veh.lights", toggleVehicleLights);
+    addNetworkHandler("ag.veh.engine", toggleVehicleEngine);
+
+    addNetworkHandler("ag.veh.sync", syncVehicleProperties);
+    addNetworkHandler("ag.civ.sync", syncCivilianProperties);
+    addNetworkHandler("ag.plr.sync", syncPlayerProperties);
+    addNetworkHandler("ag.obj.sync", syncObjectProperties);
+
+    addNetworkHandler("ag.veh.repair", repairVehicle);
 }
 
 // ===========================================================================
@@ -105,17 +117,45 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
 
 // ===========================================================================
 
-function onServerSpawnedPlayer(client, state) {
+function onServerSpawnedPlayer(state) {
     logToConsole(LOG_DEBUG, `[Asshat.Main] Setting spawned state to ${state}`);
     isSpawned = state;
     if(state) {
-        if(gta.game == GTA_GAME_III || gta.game == GTA_GAME_VC) {
+        if(gta.game == GAME_GTA_III) {
             gta.SET_PLAYER_NEVER_GETS_TIRED(gta.GET_PLAYER_ID(), 0);
             gta.setGameStat(STAT_PROGRESSMADE, 9999);
             gta.setGameStat(STAT_TOTALPROGRESSINGAME, 9999);
         }
 
-        if(gta.game == GTA_GAME_SA) {
+        if(gta.game == GAME_GTA_VC) {
+            gta.SET_PLAYER_NEVER_GETS_TIRED(gta.GET_PLAYER_ID(), 0);
+            gta.setGameStat(STAT_PROGRESSMADE, 9999);
+            gta.setGameStat(STAT_TOTALPROGRESSINGAME, 9999);
+
+            gta.REQUEST_ANIMATION("bikev");
+            gta.REQUEST_ANIMATION("bikeh");
+            gta.REQUEST_ANIMATION("biked");
+            gta.REQUEST_ANIMATION("knife");
+            gta.REQUEST_ANIMATION("python");
+            gta.REQUEST_ANIMATION("shotgun");
+            gta.REQUEST_ANIMATION("buddy");
+            gta.REQUEST_ANIMATION("tec");
+            gta.REQUEST_ANIMATION("uzi");
+            gta.REQUEST_ANIMATION("rifle");
+            gta.REQUEST_ANIMATION("m60");
+            gta.REQUEST_ANIMATION("sniper");
+            gta.REQUEST_ANIMATION("grenade");
+            gta.REQUEST_ANIMATION("flame");
+            gta.REQUEST_ANIMATION("medic");
+            gta.REQUEST_ANIMATION("sunbathe");
+            gta.REQUEST_ANIMATION("playidles");
+            gta.REQUEST_ANIMATION("riot");
+            gta.REQUEST_ANIMATION("strip");
+            gta.REQUEST_ANIMATION("lance");
+            gta.REQUEST_ANIMATION("skate");
+        }
+
+        if(gta.game == GAME_GTA_SA) {
             gta.setGameStat(STAT_WEAPONTYPE_PISTOL_SKILL, 400);
             gta.setGameStat(STAT_WEAPONTYPE_PISTOL_SILENCED_SKILL, 400);
             gta.setGameStat(STAT_WEAPONTYPE_DESERT_EAGLE_SKILL, 400);
@@ -166,6 +206,33 @@ function tellServerItemActionDelayComplete() {
 
 function sendServerNewAFKStatus(state) {
     triggerNetworkEvent("ag.afk", state);
+}
+
+// ===========================================================================
+
+function playStreamingRadio(url) {
+    //gta.forceRadioChannel(-1);
+    if(url == "") {
+        if(streamingRadio != null) {
+            streamingRadio.stop();
+        }
+        return true;
+    }
+
+    if(streamingRadio != null) {
+        streamingRadio.stop();
+    }
+
+    streamingRadio = audio.createSoundFromURL(url);
+    streamingRadio.play();
+}
+
+// ===========================================================================
+
+function setStreamingRadioVolume(volume) {
+    if(streamingRadio != null) {
+        streamingRadio.volume = volume;
+    }
 }
 
 // ===========================================================================

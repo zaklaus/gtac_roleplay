@@ -199,6 +199,14 @@ function initClassTable() {
 
 				this.creatingCharacter = false;
 				this.creatingCharacterSkin = -1;
+
+				this.streamingRadioStation = -1;
+				this.streamingRadioVolume = 25;
+
+				this.returnToPosition = null;
+				this.returnToHeading = null;
+				this.returnToInterior = null;
+				this.returnToDimension = null;
 			}
 		},
 		accountData: class {
@@ -728,7 +736,7 @@ function initClassTable() {
 					this.ownerType = toInteger(dbAssoc["veh_owner_type"]);
 					this.ownerId = toInteger(dbAssoc["veh_owner_id"]);
 					this.buyPrice = toInteger(dbAssoc["veh_buy_price"]);
-					this.rentPrice = toInteger(dbAssoc["veh_buy_price"]);
+					this.rentPrice = toInteger(dbAssoc["veh_rent_price"]);
 
 					// Position and Rotation
 					this.spawnPosition = toVector3(dbAssoc["veh_pos_x"], dbAssoc["veh_pos_y"], dbAssoc["veh_pos_z"]);
@@ -783,6 +791,8 @@ function initClassTable() {
 					this.whoAdded = toInteger(dbAssoc["veh_who_added"]);
 					this.whenAdded = toInteger(dbAssoc["veh_when_added"]);
 				}
+
+				this.streamingRadioStation = -1;
 			}
 		},
 		commandData: class {
@@ -1059,6 +1069,23 @@ function initClassTable() {
 				this.exitInterior = exitInterior;
 			}
 		},
+		radioStationData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.name = "";
+				this.url = "";
+				this.genre = "";
+				this.codec = "";
+
+				if(dbAssoc) {
+					this.databaseId = dbAssoc["radio_id"];
+					this.name = dbAssoc["radio_name"];
+					this.url = dbAssoc["radio_url"];
+					this.genre = dbAssoc["radio_genre"];
+					this.codec = dbAssoc["radio_codec"];
+				}
+			}
+		},
 		itemData: class {
 			constructor(dbAssoc = false) {
 				this.databaseId = 0;
@@ -1112,6 +1139,7 @@ function initClassTable() {
 				this.dropScale = toVector3(0.0, 0.0, 0.0);
 				this.dropModel = 0;
 				this.orderPrice = 0;
+				this.orderValue = 0;
 				this.demandMultiplier = 1;
 				this.supplyMultiplier = 1;
 				this.riskMultiplier = 1;
@@ -1138,6 +1166,7 @@ function initClassTable() {
 					this.useValue = toInteger(dbAssoc["item_type_use_value"]);
 					this.maxValue = toInteger(dbAssoc["item_type_max_value"]);
 					this.orderPrice = toInteger(dbAssoc["item_type_order_price"]);
+					this.orderValue = toInteger(dbAssoc["item_type_order_value"]);
 					this.demandMultiplier = toFloat(dbAssoc["item_type_demand_multiplier"]);
 					this.supplyMultiplier = toFloat(dbAssoc["item_type_supply_multiplier"]);
 					this.riskMultiplier = toFloat(dbAssoc["item_type_risk_multiplier"]);

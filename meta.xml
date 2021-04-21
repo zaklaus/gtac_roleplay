@@ -39,6 +39,7 @@
 	<script src="scripts/server/native.js" type="server" language="javascript" />
 	<script src="scripts/server/npc.js" type="server" language="javascript" />
 	<script src="scripts/server/moderation.js" type="server" language="javascript" />
+	<script src="scripts/server/radio.js" type="server" language="javascript" />
 	<script src="scripts/server/security.js" type="server" language="javascript" />
 	<script src="scripts/server/subaccount.js" type="server" language="javascript" />
 	<script src="scripts/server/timers.js" type="server" language="javascript" />

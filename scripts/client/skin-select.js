@@ -110,12 +110,14 @@ function processSkinSelectRendering() {
 
 function toggleSkinSelect(state) {
     if(state) {
-        skinSelectorIndex = getAllowedSkinDataBySkinId(localPlayer.skin);
+        skinSelectorIndex = getAllowedSkinIndexBySkinId(localPlayer.skin);
         if(localPlayer.skin != allowedSkins[gta.game][skinSelectorIndex][0]) {
             localPlayer.skin = allowedSkins[gta.game][skinSelectorIndex][0];
         }
         usingSkinSelector = true;
-        let frontCameraPosition = getPosInFrontOfPos(localPlayer.position, localPlayer.heading, 5);
+        let tempPosition = localPlayer.position;
+        tempPosition.z += 0.5;
+        let frontCameraPosition = getPosInFrontOfPos(tempPosition, localPlayer.heading, 3);
         gta.setCameraLookAt(frontCameraPosition, localPlayer.position, true);
         gui.showCursor(true, false);
         localPlayer.invincible = true;

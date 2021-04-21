@@ -33,14 +33,14 @@ function saveAllServerDataToDatabase() {
 // ===========================================================================
 
 function initTimers() {
-	if(!isDevelopmentServer()) {
+	//if(!isDevelopmentServer()) {
 		serverTimers.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
 		serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
 		serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
 		serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
 		serverTimers.garbageCollectorTimer = setInterval(collectAllGarbage, 60000);
 		serverTimers.payDayTimer = setInterval(checkPayDays, 60000);
-	}
+	//}
 }
 
 // ===========================================================================
@@ -51,11 +51,11 @@ function vehicleRentCheck() {
 			if(getServerData().vehicles[i].rentPrice > 0) {
 				if(getServerData().vehicles[i].rentedBy) {
 					let rentedBy = getServerData().vehicles[i].rentedBy;
-					if(getPlayerData(rentedBy).cash < getServerData().vehicles[i].rentPrice) {
+					if(getPlayerCurrentSubAccount(rentedBy).cash < getServerData().vehicles[i].rentPrice) {
 						messagePlayerAlert(rentedBy, `You do not have enough money to continue renting this vehicle!`);
 						stopRentingVehicle(rentedBy);
 					} else {
-						getPlayerData(rentedBy).cash -= getServerData().vehicles[i].rentPrice;
+						takePlayerCash(rentedBy, getServerData().vehicles[i].rentPrice);
 					}
 				}
 			}

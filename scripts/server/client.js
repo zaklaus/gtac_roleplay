@@ -34,7 +34,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.exitedSphere", onPlayerExitedSphere);
     addNetworkHandler("ag.playerDeath", onPlayerDeath);
     addNetworkHandler("ag.onPlayerEnterVehicle", onPlayerEnteredVehicle);
-    //addNetworkHandler("ag.onPlayerExitVehicle", onPlayerExitedVehicle);
+    addNetworkHandler("ag.onPlayerExitVehicle", onPlayerExitedVehicle);
 
     // Job
     addNetworkHandler("ag.arrivedAtJobRouteStop", playerArrivedAtJobRouteStop);
@@ -677,6 +677,18 @@ function updateHeadingInPlayerData(client, heading) {
 // ===========================================================================
 
 function forcePlayerIntoSkinSelect(client) {
+    if(getGameConfig().skinChangePosition[getServerGame()].length != 0) {
+        getPlayerData(client).returnToPosition = getPlayerPosition(client);
+        getPlayerData(client).returnToHeading = getPlayerHeading(client);
+        getPlayerData(client).returnToInterior = getPlayerInterior(client);
+        getPlayerData(client).returnToDimension = getPlayerDimension(client);
+
+        setPlayerPosition(client, getGameConfig().skinChangePosition[getServerGame()][0]);
+        setPlayerHeading(client, getGameConfig().skinChangePosition[getServerGame()][1]);
+        setPlayerInterior(client, getGameConfig().skinChangePosition[getServerGame()][2]);
+        setPlayerDimension(client, client.index+100);
+    }
+
     triggerNetworkEvent("ag.skinSelect", client, true);
 }
 
@@ -833,6 +845,16 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
         deleteItem(getPlayerData(client).itemActionItem);
         restorePlayerCamera(client);
         cachePlayerHotBarItems(client);
+        setPlayerPosition(client, getPlayerData(client).returnToPosition);
+        setPlayerHeading(client, getPlayerData(client).returnToHeading);
+        setPlayerInterior(client, getPlayerData(client).returnToInterior);
+        setPlayerDimension(client, getPlayerData(client).returnToDimension);
+
+        getPlayerData(client).returnToPosition = null;
+        getPlayerData(client).returnToHeading = null;
+        getPlayerData(client).returnToInterior = null;
+        getPlayerData(client).returnToDimension = null;
+
         meActionToNearbyPlayers(client, `changes their skin to ${allowedSkins[getServerGame()][allowedSkinIndex][1]}`);
     }
     triggerNetworkEvent("ag.skinSelect", client, false);
@@ -842,6 +864,18 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
 
 function sendPlayerChatScrollLines(client, amount) {
     triggerNetworkEvent("ag.chatScrollLines", client, amount);
+}
+
+// ===========================================================================
+
+function playRadioStreamForPlayer(client, streamURL) {
+    triggerNetworkEvent("ag.radioStream", client, streamURL);
+}
+
+// ===========================================================================
+
+function setPlayerStreamingRadioVolume(client, volumeLevel) {
+    triggerNetworkEvent("ag.radioVolume", client, volumeLevel);
 }
 
 // ===========================================================================

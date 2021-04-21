@@ -15,6 +15,7 @@ function initItemScript() {
 
 	setItemDataIndexes();
 
+	cacheAllGroundItems();
 	createAllGroundItemObjects();
 	logToConsole(LOG_INFO, "[Asshat.Item]: Item script initialized successfully!");
 	return true;
@@ -513,21 +514,26 @@ function playerUseItem(client, hotBarSlot) {
 			//getItemData(itemIndex).value = oldSkin;
 			getPlayerData(client).itemActionItem = itemIndex;
 			forcePlayerIntoSkinSelect(client);
+			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_WEAPON:
 			messagePlayerError(client, `The ${getItemName(itemIndex)} is a weapon. To use it, switch to it from your items. The use key has no effect.`);
+			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_PHONE:
 			showPlayerPhoneGUI(client);
+			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_STORAGE:
 			showItemInventoryToPlayer(client, itemIndex);
+			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_FOOD:
+			meActionToNearbyPlayers(client, `takes a bite of their ${getItemName(itemIndex)}`);
 			tempUseValue = (getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > getItemData(itemIndex).value) ? getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue : getItemData(itemIndex).value;
 			givePlayerHealth(client, tempUseValue);
 			if(getItemData(itemIndex).value-tempUseValue <= 0) {
@@ -536,10 +542,11 @@ function playerUseItem(client, hotBarSlot) {
 			} else {
 				getItemData(itemIndex).value = getItemData(itemIndex).value-tempUseValue;
 			}
-			meActionToNearbyPlayers(client, `takes a bite of their ${getItemName(itemIndex)}`);
+			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_DRINK:
+			meActionToNearbyPlayers(client, `takes a drink of their ${getItemName(itemIndex)}`);
 			tempUseValue = (getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > getItemData(itemIndex).value) ? getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue : getItemData(itemIndex).value;
 			givePlayerHealth(client, tempUseValue);
 			getItemData(itemIndex).value = getItemData(itemIndex).value - tempUseValue;
@@ -548,8 +555,8 @@ function playerUseItem(client, hotBarSlot) {
 				deleteItem(itemIndex);
 			} else {
 				getItemData(itemIndex).value = getItemData(itemIndex).value-tempUseValue;
-				meActionToNearbyPlayers(client, `takes a drink of their ${getItemName(itemIndex)}`);
 			}
+			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_ROPE:
@@ -582,6 +589,7 @@ function playerUseItem(client, hotBarSlot) {
 				ropeTiePlayer(closestPlayer);
 				meActionToNearbyPlayers(client, `takes their rope and ties ${getCharacterFullName(closestPlayer)}'s hands and feet together.`);
 			}
+			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_HANDCUFF:
@@ -609,6 +617,7 @@ function playerUseItem(client, hotBarSlot) {
 				handCuffPlayer(closestPlayer);
 				meActionToNearbyPlayers(client, `takes their cuffs and places them on ${getCharacterFullName(closestPlayer)}`);
 			}
+			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_NONE:
@@ -627,6 +636,7 @@ function playerUseItem(client, hotBarSlot) {
 			} else {
 				messagePlayerAlert(client, `You turned OFF your phone in slot ${getPlayerData(client).activeHotBarSlot+1}`);
 			}
+			cachePlayerHotBarItems(client);
 			break;
 
 		default:
@@ -874,7 +884,15 @@ function setItemDataIndexes() {
 	for(let i in getServerData().items) {
 		getServerData().items[i].index = i;
 		getServerData().items[i].itemTypeIndex = getItemTypeIndexFromDatabaseId(getServerData().items[i].itemType);
+	}
+}
 
+// ===========================================================================
+
+function cacheAllGroundItems() {
+	getServerData().groundItemCache = [];
+
+	for(let i in getServerData().items) {
 		if(getServerData().items[i].ownerType == AG_ITEM_OWNER_GROUND) {
 			getServerData().groundItemCache.push(i);
 		}
@@ -1385,25 +1403,29 @@ function clearPlayerItemActionStateAfterDelay(client, delay) {
 
 function showBusinessFloorInventoryToPlayer(client, businessId) {
 	let itemDisplay = [];
+	messagePlayerNormal(client, `💲 [#0099FF]== Business Items =========================`);
 	for(let i in getBusinessData(businessId).floorItemCache) {
 		if(getBusinessData(businessId).floorItemCache == -1) {
-			itemDisplay.push(`[#FFFF00]${toInteger(i)+1}[#AAAAAA](Empty)`);
+			//itemDisplay.push(`[#FFFF00]${toInteger(i)+1}[#AAAAAA](Empty)`);
+			messagePlayerNormal(client, `[#FFFF00]${toInteger(i)+1}[#AAAAAA](Empty)`, COLOUR_WHITE);
 		} else {
-			itemDisplay.push(`[#FFFF00]${toInteger(i)+1}: [#FFFFFF]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[#AAAAAA][${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`);
+			//itemDisplay.push(`[#FFFF00]${toInteger(i)+1}: [#FFFFFF]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[#AAAAAA][${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`);
+			messagePlayerNormal(client, `[#FFFF00]${toInteger(i)+1}: [#FFFFFF]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[#AAAAAA][${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`, COLOUR_WHITE);
 		}
+
+		//messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
 	}
 
-	messagePlayerNormal(client, `💲 [#0099FF]== Business Items =========================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	}, []);
-
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
-	}
+	//messagePlayerNormal(client, `💲 [#0099FF]== Business Items =========================`);
+	//let perChunk=5;
+	//let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
+	//	const ch = Math.floor(i/perChunk);
+	//	all[ch] = [].concat((all[ch]||[]),one);
+	//	return all
+	//}, []);
+	//for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
+	//	messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+	//}
 }
 
 // ===========================================================================

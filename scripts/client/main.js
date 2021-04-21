@@ -41,4 +41,7 @@ let drunkEffectDurationTimer = null;
 
 let controlsEnabled = true;
 
+let streamingRadio = null;
+
+
 // ===========================================================================

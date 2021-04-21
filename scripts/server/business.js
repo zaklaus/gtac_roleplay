@@ -498,6 +498,41 @@ function setBusinessBlipCommand(command, params, client) {
 
 // ===========================================================================
 
+function giveDefaultItemsToBusinessCommand(command, params, client) {
+	let splitParams = params.split(" ");
+
+	let typeParam = splitParams[0] || "business";
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(isNaN(typeParam)) {
+		if(isNull(getGameConfig().defaultBusinessItems[getServerGame()][typeParam])) {
+			messagePlayerError(client, "Invalid business items type! Use a business items type name");
+			messagePlayerInfo(client, `Blip Types: [#AAAAAA]${Object.keys(getGameConfig().defaultBusinessItems[getServerGame()]).join(", ")}`)
+			return false;
+		}
+
+		for(let i in getGameConfig().defaultBusinessItems[getServerGame()][typeParam]) {
+			let itemTypeId = getItemTypeFromParams(getGameConfig().defaultBusinessItems[getServerGame()][typeParam][i][0]);
+			let itemTypeData = getItemTypeData(itemTypeId);
+			if(itemTypeData) {
+				let newItemIndex = createItem(itemTypeId, itemTypeData.orderValue, AG_ITEM_OWNER_BIZFLOOR, getBusinessData(businessId).databaseId, getGameConfig().defaultBusinessItems[getServerGame()][typeParam][i][1]);
+				getItemData(newItemIndex).buyPrice = itemTypeData.orderPrice*getGameConfig().defaultBusinessItems[getServerGame()][typeParam][i][2];
+			}
+		}
+
+		cacheBusinessItems(businessId);
+	}
+
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]gave business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]the default items for ${toLowerCase(typeParam)}`);
+}
+
+// ===========================================================================
+
 function withdrawFromBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -786,12 +821,16 @@ function saveBusinessToDatabase(businessId) {
 					biz_entrance_rot_z,
 					biz_entrance_int,
 					biz_entrance_vw,
+					biz_entrance_pickup,
+					biz_entrance_blip,
 					biz_exit_pos_x,
 					biz_exit_pos_y,
 					biz_exit_pos_z,
 					biz_exit_rot_z,
 					biz_exit_int,
 					biz_exit_vw,
+					biz_exit_pickup,
+					biz_exit_blip,
 					biz_has_interior
 				) VALUES (
 					${getServerId()},
@@ -1372,6 +1411,9 @@ function cacheAllBusinessItems() {
 // ===========================================================================
 
 function cacheBusinessItems(businessId) {
+	getBusinessData(businessId).floorItemCache = [];
+	getBusinessData(businessId).storageItemCache = [];
+
 	logToConsole(LOG_VERBOSE, `[Asshat.Business] Caching business items for business ${businessId} (${getBusinessData(businessId).name}) ...`);
 	for(let i in getServerData().items) {
 		if(getItemData(i).ownerType == AG_ITEM_OWNER_BIZFLOOR && getItemData(i).ownerId == getBusinessData(businessId).databaseId) {

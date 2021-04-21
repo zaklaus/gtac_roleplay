@@ -37,6 +37,7 @@ function initServerScripts() {
 	initFishingScript();
 	initGUIScript();
 	initEconomyScript();
+	initRadioScript();
 
 	initTimers();
 

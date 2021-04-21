@@ -853,10 +853,17 @@ function savePlayerToDatabase(client) {
 		let subAccountData = getPlayerCurrentSubAccount(client);
 
 		if(client.player != null) {
-			subAccountData.spawnPosition = getPlayerPosition(client);
-			subAccountData.spawnHeading = getPlayerHeading(client);
-			subAccountData.interior = getPlayerInterior(client);
-			subAccountData.dimension = getPlayerDimension(client);
+			if(getPlayerData(client).returnToPosition != null) {
+				subAccountData.spawnPosition = getPlayerData(client).returnToPosition;
+				subAccountData.spawnHeading = getPlayerData(client).returnToHeading;
+				subAccountData.interior = getPlayerData(client).returnToInterior;
+				subAccountData.dimension = getPlayerData(client).returnToDimension;
+			} else {
+				subAccountData.spawnPosition = getPlayerPosition(client);
+				subAccountData.spawnHeading = getPlayerHeading(client);
+				subAccountData.interior = getPlayerInterior(client);
+				subAccountData.dimension = getPlayerDimension(client);
+			}
 		}
 
 		saveSubAccountToDatabase(subAccountData);

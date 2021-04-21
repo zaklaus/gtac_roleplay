@@ -128,6 +128,10 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
 // ===========================================================================
 
 function onPedExitingVehicle(event, ped, vehicle) {
+    if(!getVehicleData(vehicle)) {
+        return false;
+    }
+
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
         getPlayerData(client).pedState = AG_PEDSTATE_EXITINGVEHICLE;
@@ -172,81 +176,98 @@ function onPlayerExitedSphere(client, sphere) {
 
 // ===========================================================================
 
-async function onPlayerEnteredVehicle(client) {
+async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
+    if(client == null) {
+        return false;
+    }
+
     if(client.player == null) {
         return false;
     }
 
-    await waitUntil(() => client.player.vehicle != null);
-    let vehicle = client.player.vehicle;
+    await waitUntil(() => client != null && client.player != null && client.player.vehicle != null);
+    //setTimeout(function() {
+        //if(client.player.vehicle == null) {
+        //    onPlayerEnteredVehicle(client, clientVehicle, seat);
+        //}
 
-    if(vehicle.syncer != client.index) {
+        let vehicle = client.player.vehicle;
+
+        if(vehicle.syncer != client.index) {
+            if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
+                vehicle.setSyncer(client, true);
+            }
+        }
+
+        if(vehicle.owner != -1) {
+            return false;
+        }
+
+        if(!getVehicleData(vehicle)) {
+            return false;
+        }
+
+        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+
+        getPlayerData(client).lastVehicle = vehicle;
+
         if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
-            vehicle.setSyncer(client, true);
-        }
-    }
+            vehicle.engine = getVehicleData(vehicle).engine;
 
-    if(vehicle.owner != -1) {
-        return false;
-    }
-
-    if(!getVehicleData(vehicle)) {
-        return false;
-    }
-
-    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
-
-    getPlayerData(client).lastVehicle = vehicle;
-
-    if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
-        vehicle.engine = getVehicleData(vehicle).engine;
-
-        if(getVehicleData(vehicle).buyPrice > 0) {
-            messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: [#AAAAAA]$${getVehicleData(vehicle).buyPrice}`);
-            messagePlayerTip(client, `Use /vehbuy if you want to buy it.`);
-        } else if(getVehicleData(vehicle).rentPrice > 0) {
-            messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: [#AAAAAA]$${getVehicleData(vehicle).rentPrice} per minute`);
-            messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
-        } else {
-            if(!getVehicleData(vehicle).engine) {
-                if(doesClientHaveVehicleKeys(client, vehicle)) {
-                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
-                    if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                        messagePlayerTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} [#FFFFFF]to start and stop the engine.`);
+            if(getVehicleData(vehicle).buyPrice > 0) {
+                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: [#AAAAAA]$${getVehicleData(vehicle).buyPrice}`);
+                messagePlayerTip(client, `Use /vehbuy if you want to buy it.`);
+            } else if(getVehicleData(vehicle).rentPrice > 0) {
+                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: [#AAAAAA]$${getVehicleData(vehicle).rentPrice} per minute`);
+                messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
+            } else {
+                if(!getVehicleData(vehicle).engine) {
+                    if(doesClientHaveVehicleKeys(client, vehicle)) {
+                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
+                        if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
+                            messagePlayerTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} [#FFFFFF]to start and stop the engine.`);
+                        }
+                    } else {
+                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
                     }
-                } else {
-                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
-                }
-                //setPlayerControlState(client, false);
-            }
-        }
-
-        let currentSubAccount = getPlayerCurrentSubAccount(client);
-
-        if(isPlayerWorking(client)) {
-            if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
-                if(getVehicleData(vehicle).ownerId == getPlayerCurrentSubAccount(client).job) {
-                    getPlayerCurrentSubAccount(client).lastJobVehicle = vehicle;
+                    //setPlayerControlState(client, false);
                 }
             }
-        }
 
-        if(isPlayerWorking(client)) {
-            if(isPlayerOnJobRoute(client)) {
-                if(vehicle == getPlayerJobRouteVehicle(client)) {
-                    stopReturnToJobVehicleCountdown(client);
+            let currentSubAccount = getPlayerCurrentSubAccount(client);
+
+            if(isPlayerWorking(client)) {
+                if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
+                    if(getVehicleData(vehicle).ownerId == getPlayerCurrentSubAccount(client).job) {
+                        getPlayerCurrentSubAccount(client).lastJobVehicle = vehicle;
+                    }
+                }
+            }
+
+            if(isPlayerWorking(client)) {
+                if(isPlayerOnJobRoute(client)) {
+                    if(vehicle == getPlayerJobRouteVehicle(client)) {
+                        stopReturnToJobVehicleCountdown(client);
+                    }
                 }
             }
         }
-    }
+
+        if(getVehicleData(vehicle).streamingRadioStation != -1) {
+            if(getPlayerData(client).streamingRadioStation != getVehicleData(vehicle).streamingRadioStation) {
+                playRadioStreamForPlayer(client, radioStations[getVehicleData(vehicle).streamingRadioStation].url);
+                setPlayerStreamingRadioVolume(client, getPlayerData(client).streamingRadioVolume);
+            }
+        }
+    //}, client.ping+500);
 }
 
 // ===========================================================================
 
-function onPlayerExitedVehicle(client) {
+function onPlayerExitedVehicle(client, vehicle) {
     getPlayerData(client).pedState = AG_PEDSTATE_READY;
 
-    let vehicle = getPlayerData(client).lastVehicle;
+    //let vehicle = getPlayerData(client).lastVehicle;
 
     if(!getVehicleData(vehicle)) {
         return false;
@@ -261,16 +282,19 @@ function onPlayerExitedVehicle(client) {
             }
         }
     }
+
+    playRadioStreamForPlayer(client, "");
 }
 
 // ===========================================================================
 
 function onPlayerDeath(client, position) {
+    logToConsole(LOG_INFO, `${getPlayerDisplayForConsole(client)} died.`);
     getPlayerData(client).pedState = AG_PEDSTATE_DEAD;
 	updatePlayerSpawnedState(client, false);
     setPlayerControlState(client, false);
 	setTimeout(function() {
-		fadePlayerCamera(client, false, 1.0);
+		fadeCamera(client, false, 1.0);
 		setTimeout(function() {
 			client.despawnPlayer();
 			if(getPlayerCurrentSubAccount(client).inJail) {
@@ -280,8 +304,11 @@ function onPlayerDeath(client, position) {
                 if(getServerGame() == GAME_GTA_IV) {
                     spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
                 } else {
-                    spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin, closestJail.interior, closestJail.dimension);
+                    spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
                 }
+
+                fadeCamera(client, true, 1.0);
+                updatePlayerSpawnedState(client, true);
 			} else {
                 let closestHospital = getClosestHospital(position);
                 getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
@@ -289,8 +316,11 @@ function onPlayerDeath(client, position) {
                 if(getServerGame() == GAME_GTA_IV) {
                     spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
                 } else {
-                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin, closestHospital.interior, closestHospital.dimension);
+                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
                 }
+
+                fadeCamera(client, true, 1.0);
+                updatePlayerSpawnedState(client, true);
 			}
 		}, 2000);
 	}, 1000);
@@ -345,10 +375,10 @@ function onPlayerSpawn(client) {
     //if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
         restorePlayerCamera(client);
 
-        logToConsole(LOG_DEBUG, `Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
         getPlayerData(client).ped = client.player;
 
-        logToConsole(LOG_DEBUG, `Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
         messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
         messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
         messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
@@ -390,6 +420,7 @@ function onPlayerSpawn(client) {
         sendRemovedWorldObjectsToPlayer(client);
 
         if(getServerGame() == GAME_GTA_SA) {
+            logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
             setEntityData(client.player, "ag.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
             setEntityData(client.player, "ag.fightStyle", getPlayerCurrentSubAccount(client).fightStyle, true);
         }

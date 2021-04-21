@@ -147,8 +147,8 @@ function enterExitPropertyCommand(command, params, client) {
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "ag.inHouse");
+			return true;
 		}
-		return true;
 	}
 
 	if(isPlayerInAnyBusiness(client)) {
@@ -179,13 +179,13 @@ function enterExitPropertyCommand(command, params, client) {
 			}, 1100);
 			removeEntityData(client, "ag.inBusiness");
 			logToConsole(LOG_DEBUG, `[Asshat.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
+			return true;
 		}
-		return true;
 	}
 
 	if(getServerData().businesses.length > 0) {
 		let closestBusinessId = getClosestBusinessEntrance(getPlayerPosition(client));
-		let closestBusiness = getBusinessData(closestBusinessId)
+		let closestBusiness = getBusinessData(closestBusinessId);
 		if(getDistance(closestBusiness.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
 			if(!doesBusinessHaveInterior(closestBusinessId)) {
 				messagePlayerAlert(client, "This business does not have an interior.");

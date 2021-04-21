@@ -306,17 +306,9 @@ function setLocalPlayerPosition(position) {
 
 // ===========================================================================
 
-function setLocalPlayerHeading(position) {
+function setLocalPlayerHeading(heading) {
     logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting heading to ${heading}`);
     localPlayer.heading = heading;
-}
-
-// ===========================================================================
-
-function setLocalPlayerInterior(interior) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting interior to ${interior}`);
-    localPlayer.interior = interior;
-    gta.cameraInterior = interior;
 }
 
 // ===========================================================================
@@ -613,6 +605,17 @@ function getPosInFrontOfPos(pos, angle, distance) {
 	let z = pos.z;
 
 	return toVector3(x, y, z);
+}
+
+// ===========================================================================
+
+function getAllowedSkinIndexBySkinId(skinId) {
+    for(let i in allowedSkins[gta.game]) {
+        if(skinId == allowedSkins[gta.game][i][0]) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 // ===========================================================================

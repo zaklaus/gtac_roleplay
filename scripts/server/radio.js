@@ -83,7 +83,7 @@ function playStreamingRadioCommand(command, params, client) {
 
 	getVehicleData(getPlayerVehicle(client)).streamingRadioStation = radioStationId-1;
 	getPlayerData(client).streamingRadioStation = radioStationId-1;
-	meActionToNearbyPlayers(client, `changes their vehicle's radio station to ${radioStations[radioStationId-1].name}`);
+	meActionToNearbyPlayers(client, `changes their vehicle's radio station to ${radioStations[radioStationId-1].name} (${radioStations[radioStationId-1].genre})`);
 
 	let clients = getClients();
 	for(let i in clients) {

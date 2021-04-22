@@ -59,12 +59,13 @@ function onPlayerJoined(event, client) {
 
 function onPlayerQuit(event, client, quitReasonId) {
     logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
-
-    savePlayerToDatabase(client);
-    resetClientStuff(client);
-
-    getServerData().clients[client.index] = null;
-    messagePlayerNormal(null, `👋 ${client.name} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
+    updateConnectionLogOnQuit(client, quitReasonId);
+    if(isPlayerLoggedIn(client)) {
+        messagePlayerNormal(null, `👋 ${client.name} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
+        savePlayerToDatabase(client);
+        resetClientStuff(client);
+        getServerData().clients[client.index] = null;
+    }
 }
 
 // ===========================================================================
@@ -113,7 +114,7 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
         }
 
         if(getVehicleData(vehicle).locked) {
-            if(doesClientHaveVehicleKeys(client, vehicle)) {
+            if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                 messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
                 if(doesPlayerHaveKeyBindForCommand(client, "lock")) {
                     messagePlayerTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "lock").key)} [#FFFFFF]to lock and unlock vehicles.`);
@@ -135,6 +136,11 @@ function onPedExitingVehicle(event, ped, vehicle) {
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
         getPlayerData(client).pedState = AG_PEDSTATE_EXITINGVEHICLE;
+    }
+
+    if(!getVehicleData(vehicle).spawnLocked) {
+        getVehicleData(vehicle).spawnPosition = getVehiclePosition(vehicle);
+        getVehicleData(vehicle).spawnRotation = getVehicleHeading(vehicle);
     }
 }
 
@@ -222,7 +228,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
                 messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
             } else {
                 if(!getVehicleData(vehicle).engine) {
-                    if(doesClientHaveVehicleKeys(client, vehicle)) {
+                    if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                         messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
                         if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
                             messagePlayerTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} [#FFFFFF]to start and stop the engine.`);
@@ -448,6 +454,8 @@ function onPlayerSpawn(client) {
         //setTimeout(function() {
         //    syncPlayerProperties(client);
         //}, 1000);
+
+        getPlayerData(client).payDayTickStart = sdl.ticks;
     //}
 }
 

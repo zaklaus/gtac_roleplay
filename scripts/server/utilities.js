@@ -533,17 +533,6 @@ function getPlayerData(client) {
 
 // ===========================================================================
 
-function createAllLocationBlips() {
-    createAllPoliceStationBlips();
-    createAllFireStationBlips();
-    createAllHospitalBlips();
-    createAllPayAndSprayBlips();
-    createAllFuelStationBlips();
-    createAllAmmunationBlips();
-}
-
-// ===========================================================================
-
 function createAllPoliceStationBlips() {
 	if(getGameConfig().blipSprites[getServerGame()].policeStation != -1) {
 		for(let i in getServerData().policeStations[getServerGame()]) {
@@ -988,8 +977,8 @@ function getPlayerIsland(client) {
 // ===========================================================================
 
 function isAtPayAndSpray(position) {
-	for(let i in payAndSprays[getServerGame()]) {
-		if(getDistance(position, payAndSprays[getServerGame()][i]) <= getGlobalConfig().payAndSprayDistance) {
+	for(let i in getGameData().payAndSprays[getServerGame()]) {
+		if(getDistance(position, getGameData().payAndSprays[getServerGame()][i]) <= getGlobalConfig().payAndSprayDistance) {
 			return true;
 		}
 	}
@@ -1452,8 +1441,6 @@ function getSyncerFromId(syncerId) {
 
 // ===========================================================================
 
-// ===========================================================================
-
 function arrayBufferToString(arrayBuffer) {
 	return String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
 }
@@ -1547,6 +1534,30 @@ function isConsole(client) {
 	}
 
 	return client.console;
+}
+
+// ===========================================================================
+
+function updateConnectionLogOnQuit(client, quitReasonId) {
+	quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=UNIX_TIMESTAMP(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${toInteger(getEntityData(client, "ag.connection"))}`);
+}
+
+// ===========================================================================
+
+function updateConnectionLogOnAuth(client, authId) {
+	quickDatabaseQuery(`UPDATE conn_main SET conn_auth=${authId} WHERE conn_id = ${toInteger(getEntityData(client, "ag.connection"))}`);
+}
+
+// ===========================================================================
+
+function updateConnectionLogOnClientInfoReceive(client, clientVersion, screenWidth, screenHeight) {
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let safeClientVersion = escapeDatabaseString(dbConnection, clientVersion);
+		let safeScreenWidth = escapeDatabaseString(dbConnection, toString(screenWidth));
+		let safeScreenHeight = escapeDatabaseString(dbConnection, toString(screenHeight));
+    	quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${toInteger(getEntityData(client, "ag.connection"))}`);
+	}
 }
 
 // ===========================================================================

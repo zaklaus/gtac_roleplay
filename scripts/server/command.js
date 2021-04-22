@@ -97,6 +97,8 @@ function loadCommands() {
             commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Moves the exit (interior point) of the business"),
             commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageBusinesses"), true, true, "Changes the business' interior"),
             commandData("bizdefaultitems", giveDefaultItemsToBusinessCommand, "<item template>", getStaffFlagValue("manageBusinesses"), true, true, "Gives the business the default items based on template name"),
+            commandData("bizdelflooritems", deleteBusinessFloorItemsCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Destroys all items on the business floor (for-sale items)"),
+            commandData("bizdelstorageitems", deleteBusinessStorageItemsCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Destroys all items in the business's storage"),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),

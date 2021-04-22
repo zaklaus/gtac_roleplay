@@ -85,7 +85,7 @@ function saveVehicleToDatabase(vehicleData) {
 			queryDatabase(dbConnection, dbQueryString);
 			getVehicleData(vehicleData.vehicle).databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId}, veh_col1=${vehicleData.colour1}, veh_col2=${vehicleData.colour2}, veh_col3=${vehicleData.colour3}, veh_col4=${vehicleData.colour4} WHERE veh_id=${vehicleData.databaseId}`;
+			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId}, veh_col1=${vehicleData.colour1}, veh_col2=${vehicleData.colour2}, veh_col3=${vehicleData.colour3}, veh_col4=${vehicleData.colour4}, veh_buy_price=${vehicleData.buyPrice}, veh_rent_price=${vehicleData.rentPrice} WHERE veh_id=${vehicleData.databaseId}`;
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -180,7 +180,7 @@ function vehicleLockCommand(command, params, client) {
 			return false;
 		}
 	} else {
-		if(!doesClientHaveVehicleKeys(client, vehicle)) {
+		if(!doesPlayerHaveVehicleKeys(client, vehicle)) {
 			messagePlayerError(client, "You don't have keys to this vehicle!");
 			return false;
 		}
@@ -213,9 +213,10 @@ function vehicleLightsCommand(command, params, client) {
 	}
 
 	getVehicleData(vehicle).lights = !getVehicleData(vehicle).lights;
-	vehicle.lights = true;
+	setEntityData(vehicle, "ag.lights", getVehicleData(vehicle).lights);
+	setVehicleLightsState(vehicle, getVehicleData(vehicle).lights);
 
-	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s lights ${toLowerCase(getOnOffFromBool(vehicle))}`);
+	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s lights ${toLowerCase(getOnOffFromBool(getVehicleData(vehicle).lights))}`);
 }
 
 // ===========================================================================
@@ -257,7 +258,7 @@ function vehicleEngineCommand(command, params, client) {
 
 	let vehicle = getPlayerVehicle(client);
 
-	if(!doesClientHaveVehicleKeys(client, vehicle)) {
+	if(!doesPlayerHaveVehicleKeys(client, vehicle)) {
 		messagePlayerError(client, "You don't have keys to this vehicle!");
 		return false;
 	}
@@ -293,7 +294,7 @@ function vehicleSirenCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesClientHaveVehicleKeys(client, vehicle)) {
+	if(!doesPlayerHaveVehicleKeys(client, vehicle)) {
 		messagePlayerError(client, "You don't have keys to this vehicle!");
 		return false;
 	}
@@ -482,7 +483,7 @@ function stopRentingVehicleCommand(command, params, client) {
 
 // ===========================================================================
 
-function doesClientHaveVehicleKeys(client, vehicle) {
+function doesPlayerHaveVehicleKeys(client, vehicle) {
 	let vehicleData = getVehicleData(vehicle);
 
 	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
@@ -494,7 +495,7 @@ function doesClientHaveVehicleKeys(client, vehicle) {
 	}
 
 	if(vehicleData.ownerType == AG_VEHOWNER_PLAYER) {
-		if(vehicleData.ownerId == getPlayerData(client).accountData.databaseId) {
+		if(vehicleData.ownerId == getPlayerCurrentSubAccount(client).databaseId) {
 			return true;
 		}
 	}
@@ -519,6 +520,10 @@ function doesClientHaveVehicleKeys(client, vehicle) {
 		if(getJobType(vehicleData.ownerId) == getJobType(getPlayerCurrentSubAccount(client).job)) {
 			return true;
 		}
+	}
+
+	if(vehicleData.rentedBy == client) {
+		return true;
 	}
 
 	return false;
@@ -672,9 +677,9 @@ function setVehicleOwnerCommand(command, params, client) {
 	}
 
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_PLAYER;
-	getVehicleData(vehicle).ownerId = getPlayerCurrentSubAccount(client).databaseId;
+	getVehicleData(vehicle).ownerId = getPlayerCurrentSubAccount(targetClient).databaseId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to [#AAAAAA]${getClientSubAccountName(client)}`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to [#AAAAAA]${getClientSubAccountName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -912,8 +917,8 @@ function isVehicleAtPayAndSpray(vehicle) {
 
 // ===========================================================================
 
-function repairVehicle(vehicleData) {
-	vehicleData.vehicle.fix();
+function repairVehicle(vehicle) {
+	vehicle.fix();
 }
 
 // ===========================================================================

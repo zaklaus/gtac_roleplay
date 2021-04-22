@@ -40,7 +40,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.heading", setLocalPlayerHeading);
     addNetworkHandler("ag.interior", setLocalPlayerInterior);
 
-    addNetworkHandler("ag.showRouteStop", showJobRouteStop);
+    addNetworkHandler("ag.showJobRouteStop", showJobRouteStop);
     addNetworkHandler("ag.snow", setSnowState);
     addNetworkHandler("ag.health", setLocalPlayerHealth);
     addNetworkHandler("ag.skinSelect", toggleSkinSelect);
@@ -193,13 +193,19 @@ function tellServerPlayerUsedKeyBind(key) {
 // ===========================================================================
 
 function tellServerPlayerArrivedAtJobRouteStop() {
-    triggerNetworkEvent("ag.arrivedAtBusStop");
+    triggerNetworkEvent("ag.arrivedAtJobRouteStop");
 }
 
 // ===========================================================================
 
 function tellServerItemActionDelayComplete() {
     triggerNetworkEvent("ag.itemActionDelayComplete");
+}
+
+// ===========================================================================
+
+function sendServerClientInfo() {
+    triggerNetworkEvent("ag.clientInfo", `${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_PATCH}.${CLIENT_VERSION_BUILD}`, gta.width, gta.height);
 }
 
 // ===========================================================================

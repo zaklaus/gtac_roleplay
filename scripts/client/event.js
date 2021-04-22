@@ -105,6 +105,7 @@ function onProcess(event, deltaTime) {
     processLocalPlayerVehicleEntryExitHandling();
     processJobRouteSphere();
     forceLocalPlayerEquippedWeaponItem();
+    processWantedLevelReset();
 }
 
 // ===========================================================================
@@ -124,6 +125,10 @@ function onDrawnHUD(event) {
         return false;
     }
 
+    //if(gta.game == GAME_GTA_VC) {
+    //    return false;
+    //}
+
     processSmallGameMessageRendering();
     processScoreBoardRendering();
     processLabelRendering();
@@ -131,8 +136,6 @@ function onDrawnHUD(event) {
     processItemActionRendering();
     processSkinSelectRendering();
     processNameTagRendering();
-
-    localPlayer.wantedLevel = 0;
 }
 
 // ===========================================================================

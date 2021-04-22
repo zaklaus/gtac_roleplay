@@ -34,7 +34,7 @@ function toggleVehicleEngine(vehicle, state) {
 // ===========================================================================
 
 function toggleVehicleLights(vehicle, state) {
-    vehicle.lights = state;
+    getElementFromId(vehicle).lights = state;
 }
 
 // ===========================================================================

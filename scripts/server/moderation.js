@@ -268,12 +268,12 @@ function gotoGameLocationCommand(command, params, client) {
 
 	setPlayerVelocity(client, toVector3(0.0, 0.0, 0.0));
 	setTimeout(function() {
-		setPlayerPosition(client, getGameData().locations[businessId][1]);
+		setPlayerPosition(client, getGameData().locations[gameLocationId][1]);
 		setPlayerInterior(client, 0);
 		setPlayerDimension(client, 0);
 	}, 500);
 
-	messagePlayerSuccess(client, `You teleported to game location [#AAAAAA]${getGameData().locations[businessId][0]}`);
+	messagePlayerSuccess(client, `You teleported to game location [#AAAAAA]${getGameData().locations[gameLocationId][0]}`);
 }
 
 // ===========================================================================

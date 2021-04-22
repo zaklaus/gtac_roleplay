@@ -96,9 +96,9 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		let hx = x-width/2;
 		let hy = y-10/2;
 		let colourB = toColour(0, 0, 0, Math.floor(255.0*alpha)); // Background colour (black)
-		gta.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
+		graphics.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
 		let colour = toColour(Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0, Math.floor(255.0*alpha)); // Health bar colour (varies, depending on health)
-		gta.drawRectangle(null, [hx+2, hy+2], [(width-4)*health, 10-6], colour, colour, colour, colour);
+		graphics.drawRectangle(null, [hx+2, hy+2], [(width-4)*health, 10-6], colour, colour, colour, colour);
 	}
 
     // Armour Bar
@@ -109,9 +109,9 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		let hx = x-width/2;
 		let hy = y-10/2;
 		let colourB = toColour(255, 0, 0, 0); // Background colour (black)
-		gta.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
+		graphics.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
 		let colour = toColour(255, 255, 255, 255); // Armour bar colour (white)
-		gta.drawRectangle(null, [hx+2, hy+2], [(width-4)*armour, 10-6], colour, colour, colour, colour);
+		graphics.drawRectangle(null, [hx+2, hy+2], [(width-4)*armour, 10-6], colour, colour, colour, colour);
 	}
 
 	y -= 20;

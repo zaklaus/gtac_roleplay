@@ -38,7 +38,7 @@ function loadLogoImage() {
 function processLogoRendering() {
     if(renderLogo) {
         if(logoImage != null) {
-            gta.drawRectangle(logoImage, logoPos, logoSize);
+            graphics.drawRectangle(logoImage, logoPos, logoSize);
         }
     }
 }

@@ -70,13 +70,7 @@ function getPlayerDimension(client) {
 // ===========================================================================
 
 function getPlayerInterior(client) {
-    if(getPlayerData(client)) {
-        if(getPlayerCurrentSubAccount(client)) {
-            return getPlayerCurrentSubAccount(client).interior;
-        }
-    }
-
-    return 0;
+    return getPlayerCurrentSubAccount(client).interior || 0;
 }
 
 // ===========================================================================

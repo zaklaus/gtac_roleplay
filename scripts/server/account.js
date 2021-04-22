@@ -488,6 +488,8 @@ function loginSuccess(client) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} successfully logged in.`);
 	getPlayerData(client).loggedIn = true;
 
+	updateConnectionLogOnAuth(client, getPlayerData(client).accountData.databaseId);
+
 	if(doesPlayerHaveStaffPermission(client, "developer") || doesPlayerHaveStaffPermission(client, "manageServer")) {
 		logToConsole(LOG_WARN, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has needed permissions and is being given administrator access`);
 		client.administrator = true;
@@ -850,23 +852,23 @@ function savePlayerToDatabase(client) {
 	saveAccountToDatabase(getPlayerData(client).accountData);
 
 	if(getPlayerData(client).currentSubAccount != -1) {
-		let subAccountData = getPlayerCurrentSubAccount(client);
+		//let subAccountData = getPlayerCurrentSubAccount(client);
 
 		if(client.player != null) {
 			if(getPlayerData(client).returnToPosition != null) {
-				subAccountData.spawnPosition = getPlayerData(client).returnToPosition;
-				subAccountData.spawnHeading = getPlayerData(client).returnToHeading;
-				subAccountData.interior = getPlayerData(client).returnToInterior;
-				subAccountData.dimension = getPlayerData(client).returnToDimension;
+				getPlayerCurrentSubAccount(client).spawnPosition = getPlayerData(client).returnToPosition;
+				getPlayerCurrentSubAccount(client).spawnHeading = getPlayerData(client).returnToHeading;
+				getPlayerCurrentSubAccount(client).interior = getPlayerData(client).returnToInterior;
+				getPlayerCurrentSubAccount(client).dimension = getPlayerData(client).returnToDimension;
 			} else {
-				subAccountData.spawnPosition = getPlayerPosition(client);
-				subAccountData.spawnHeading = getPlayerHeading(client);
-				subAccountData.interior = getPlayerInterior(client);
-				subAccountData.dimension = getPlayerDimension(client);
+				getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
+				getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
+				getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
+				getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
 			}
 		}
 
-		saveSubAccountToDatabase(subAccountData);
+		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
 	}
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Saved client ${getPlayerDisplayForConsole(client)} to database successfully!`);
 	return true;
@@ -927,8 +929,13 @@ function initClient(client) {
 // ===========================================================================
 
 function saveConnectionToDatabase(client) {
-	let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0')`;
-	return quickDatabaseQuery(dbQueryString);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, client.name);
+		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', INET_ATON('${client.ip}'))`;
+		let query = queryDatabase(dbConnection, dbQueryString);
+		setEntityData(client, "ag.connection", getDatabaseInsertId(dbConnection));
+	}
 }
 
 // ===========================================================================

@@ -22,7 +22,7 @@ function getTimeDisplayUntilPlayerPayDay(client) {
 // ===========================================================================
 
 function applyServerInflationMultiplier(value) {
-	return value*getServerConfig().inflationMultiplier;
+	return toInteger(Math.round(value*getServerConfig().inflationMultiplier))
 }
 
 // ===========================================================================

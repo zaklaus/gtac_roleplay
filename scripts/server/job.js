@@ -698,7 +698,6 @@ function jobDepartmentRadioCommand(command, params, client) {
 		return false;
 	}
 
-
 	return true;
 }
 
@@ -711,7 +710,7 @@ function getJobType(jobId) {
 // ===========================================================================
 
 function doesPlayerHaveJobType(client, jobType) {
-	return (getJobType(getPlayerCurrentSubAccount(client).job) == jobType) ? true : false;
+	return (getJobType(getJobIdFromDatabaseId(getPlayerCurrentSubAccount(client).job)) == jobType) ? true : false;
 }
 
 // ===========================================================================
@@ -728,7 +727,7 @@ function getJobData(jobId) {
 
 function quitJob(client) {
 	stopWorking(client);
-	getPlayerCurrentSubAccount(client).job = AG_JOB_NONE;
+	getPlayerCurrentSubAccount(client).job = 0;
 	sendPlayerJobType(client, -1);
 }
 
@@ -1125,15 +1124,10 @@ function stopJobRoute(client, successful = false, alertPlayer = true) {
 // ===========================================================================
 
 function isPlayerOnJobRoute(client) {
-	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
-		if(getPlayerData(client).busRoute) {
-			return true;
-		}
-	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
-		if(getPlayerData(client).garbageRoute) {
-			return true;
-		}
+	if(typeof getPlayerData(client).jobRoute == "number") {
+		return true;
 	}
+
 	return false;
 }
 
@@ -1144,11 +1138,7 @@ function getPlayerJobRouteVehicle(client) {
 		return false;
 	}
 
-	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
-		return getPlayerData(client).busRouteVehicle;
-	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
-		return getPlayerData(client).garbageRouteVehicle;
-	}
+	return getPlayerData(client).jobRouteVehicle;
 }
 
 // ===========================================================================

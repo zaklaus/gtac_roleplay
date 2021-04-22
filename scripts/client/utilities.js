@@ -301,6 +301,7 @@ function getClosestVehicle(pos) {
 
 function setLocalPlayerPosition(position) {
     logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting position to ${position.x}, ${position.y}, ${position.z}`);
+    localPlayer.velocity = toVector3(0.0, 0.0, 0.0);
     localPlayer.position = position;
 }
 
@@ -516,7 +517,7 @@ function processLocalPlayerSphereEntryExitHandling() {
     let position = getLocalPlayerPosition();
 
     getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
-        if(position.distance(sphere.position) <= sphere.radius) {
+        if(getDistance(position, sphere.position) <= sphere.radius) {
             if(!inSphere) {
                 inSphere = sphere;
                 triggerEvent("OnLocalPlayerEnterSphere", null, sphere);
@@ -534,8 +535,9 @@ function processLocalPlayerSphereEntryExitHandling() {
 
 function processJobRouteSphere() {
     if(gta.game == GAME_GTA_SA) {
+        let position = getLocalPlayerPosition();
         if(jobRouteStopSphere != null) {
-            if(position.distance(jobRouteStopSphere.position) <= 2.0) {
+            if(getDistance(position, jobRouteStopSphere.position) <= 2.0) {
                 enteredJobRouteSphere();
             }
         }
@@ -616,6 +618,12 @@ function getAllowedSkinIndexBySkinId(skinId) {
         }
     }
     return -1;
+}
+
+// ===========================================================================
+
+function processWantedLevelReset() {
+    localPlayer.wantedLevel = 0;
 }
 
 // ===========================================================================

@@ -521,7 +521,7 @@ function giveDefaultItemsToBusinessCommand(command, params, client) {
 			let itemTypeData = getItemTypeData(itemTypeId);
 			if(itemTypeData) {
 				let newItemIndex = createItem(itemTypeId, itemTypeData.orderValue, AG_ITEM_OWNER_BIZFLOOR, getBusinessData(businessId).databaseId, getGameConfig().defaultBusinessItems[getServerGame()][typeParam][i][1]);
-				getItemData(newItemIndex).buyPrice = itemTypeData.orderPrice*getGameConfig().defaultBusinessItems[getServerGame()][typeParam][i][2];
+				getItemData(newItemIndex).buyPrice = applyServerInflationMultiplier(itemTypeData.orderPrice)*getGameConfig().defaultBusinessItems[getServerGame()][typeParam][i][2];
 			}
 		}
 
@@ -529,6 +529,50 @@ function giveDefaultItemsToBusinessCommand(command, params, client) {
 	}
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]gave business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]the default items for ${toLowerCase(typeParam)}`);
+}
+
+// ===========================================================================
+
+function deleteBusinessFloorItemsCommand(command, params, client) {
+	let splitParams = params.split(" ");
+
+	let typeParam = splitParams[0] || "business";
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	for(let i in getBusinessData(businessId).floorItemCache) {
+		destroyItem(getBusinessData(businessId).floorItemCache);
+	}
+
+	cacheBusinessItems(businessId);
+
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted all on-sale items for business [#0099FF]${getBusinessData(businessId).name}`);
+}
+
+// ===========================================================================
+
+function deleteBusinessStorageItemsCommand(command, params, client) {
+	let splitParams = params.split(" ");
+
+	let typeParam = splitParams[0] || "business";
+	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	for(let i in getBusinessData(businessId).storageItemCache) {
+		destroyItem(getBusinessData(businessId).storageItemCache);
+	}
+
+	cacheBusinessItems(businessId);
+
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted all stored items for business [#0099FF]${getBusinessData(businessId).name}`);
 }
 
 // ===========================================================================
@@ -846,12 +890,16 @@ function saveBusinessToDatabase(businessId) {
 					${tempBusinessData.entranceRotation},
 					${tempBusinessData.entranceInterior},
 					${tempBusinessData.entranceDimension},
+					${tempBusinessData.entrancePickupModel},
+					${tempBusinessData.entranceBlipModel},
 					${tempBusinessData.exitPosition.x},
 					${tempBusinessData.exitPosition.y},
 					${tempBusinessData.exitPosition.z},
 					${tempBusinessData.exitRotation},
 					${tempBusinessData.exitInterior},
 					${tempBusinessData.databaseId+getGlobalConfig().businessDimensionStart},
+					${tempBusinessData.exitPickupModel},
+					${tempBusinessData.exitBlipModel},
 					${boolToInt(tempBusinessData.hasInterior)}
 				)`;
 			queryDatabase(dbConnection, dbQueryString);
@@ -872,12 +920,16 @@ function saveBusinessToDatabase(businessId) {
 					biz_entrance_rot_z=${tempBusinessData.entranceRotation},
 					biz_entrance_int=${tempBusinessData.entranceInterior},
 					biz_entrance_vw=${tempBusinessData.entranceDimension},
+					biz_entrance_pickup=${tempBusinessData.entrancePickupModel},
+					biz_entrance_blip=${tempBusinessData.entranceBlipModel},
 					biz_exit_pos_x=${tempBusinessData.exitPosition.x},
 					biz_exit_pos_y=${tempBusinessData.exitPosition.y},
 					biz_exit_pos_z=${tempBusinessData.exitPosition.z},
 					biz_exit_rot_z=${tempBusinessData.exitRotation},
 					biz_exit_int=${tempBusinessData.exitInterior},
 					biz_exit_vw=${tempBusinessData.exitDimension},
+					biz_exit_pickup=${tempBusinessData.exitPickupModel},
+					biz_exit_blip=${tempBusinessData.exitBlipModel},
 					biz_has_interior=${boolToInt(tempBusinessData.hasInterior)},
 					biz_buy_price=${tempBusinessData.buyPrice}
 				 WHERE biz_id=${tempBusinessData.databaseId}`;
@@ -1210,6 +1262,17 @@ function buyFromBusinessCommand(command, params, client) {
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
 		return false;
+	}
+
+	if(getBusinessData(businessId).locked) {
+		messagePlayerError(client, `This business is closed!`);
+		return false;
+	}
+
+	if(getBusinessData(businessId).hasInterior) {
+		if(!getPlayerBusiness(client)) {
+			return false;
+		}
 	}
 
 	let itemSlot = toInteger(splitParams[0]) || 1;

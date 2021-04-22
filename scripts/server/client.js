@@ -68,6 +68,8 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.player.heading", updateHeadingInPlayerData);
 
     addNetworkHandler("ag.skinSelected", playerFinishedSkinSelection);
+
+    addNetworkHandler("ag.clientInfo", updateConnectionLogOnClientInfoReceive);
 }
 
 // ===========================================================================
@@ -614,7 +616,7 @@ function sendPlayerClearPedState(client) {
 // ===========================================================================
 
 function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, healthLoss) {
-    let damagerEntity = getClientFromParams(damagerEntityName);
+    let damagerEntity = getPlayerFromParams(damagerEntityName);
 
     if(isNull(damagerEntity)) {
         logToConsole(LOG_DEBUG, `[Asshat.Client] ${getPlayerDisplayForConsole(client)}'s damager entity from ID is null`);
@@ -845,6 +847,8 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
         deleteItem(getPlayerData(client).itemActionItem);
         restorePlayerCamera(client);
         cachePlayerHotBarItems(client);
+
+        setPlayerSkin(client, allowedSkins[getServerGame()][allowedSkinIndex][0]);
         setPlayerPosition(client, getPlayerData(client).returnToPosition);
         setPlayerHeading(client, getPlayerData(client).returnToHeading);
         setPlayerInterior(client, getPlayerData(client).returnToInterior);
@@ -876,6 +880,12 @@ function playRadioStreamForPlayer(client, streamURL) {
 
 function setPlayerStreamingRadioVolume(client, volumeLevel) {
     triggerNetworkEvent("ag.radioVolume", client, volumeLevel);
+}
+
+// ===========================================================================
+
+function setVehicleLightsState(vehicle, state) {
+    triggerNetworkEvent("ag.veh.lights", null, vehicle.id, state);
 }
 
 // ===========================================================================

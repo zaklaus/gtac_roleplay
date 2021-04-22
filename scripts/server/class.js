@@ -142,13 +142,10 @@ function initClassTable() {
 				this.clientVersion = "0.0.0";
 				this.loginAttemptsRemaining = 3;
 
-				this.busRoute = null;
-				this.busRouteStop = null;
-				this.busRouteIsland = null;
-
-				this.garbageRoute = null;
-				this.garbageRouteStop = null;
-				this.garbageRouteIsland = null;
+				this.jobRoute = false;
+				this.jobRouteStop = false;
+				this.jobRouteIsland = false;
+				this.jobRouteVehicle = false;
 
 				this.spawned = false;
 

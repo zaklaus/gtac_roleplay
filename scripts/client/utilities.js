@@ -122,14 +122,14 @@ function openAllGarages() {
         case GAME_GTA_III:
             for(let i=0;i<=26;i++) {
                 openGarage(i);
-                gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
+                //gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
         case GAME_GTA_VC:
             for(let i=0;i<=32;i++) {
                 openGarage(i);
-                gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
+                //gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
@@ -151,14 +151,14 @@ function closeAllGarages() {
         case GAME_GTA_III:
             for(let i=0;i<=26;i++) {
                 closeGarage(i);
-                gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
+                //gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
         case GAME_GTA_VC:
             for(let i=0;i<=32;i++) {
                 closeGarage(i);
-                gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
+                //gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 

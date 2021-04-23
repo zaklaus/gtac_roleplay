@@ -58,11 +58,10 @@ function addAllEventHandlers() {
 
 function onResourceStart(event, resource) {
     sendResourceStartedSignalToServer();
-    closeAllGarages();
+    //closeAllGarages();
 
     if(getGame() == GAME_GTA_SA) {
         gta.setDefaultInteriors(false);
-        gta.setCiviliansEnabled(false);
     }
 
     garbageCollectorInterval = setInterval(collectAllGarbage, 1000*60);
@@ -78,7 +77,7 @@ function onResourceStop(event, resource) {
 
 function onResourceReady(event, resource) {
     sendResourceReadySignalToServer();
-    closeAllGarages();
+    //closeAllGarages();
 }
 
 // ===========================================================================

@@ -885,6 +885,7 @@ function initClient(client) {
 	sendPlayerGUIInit(client);
 
 	showConnectCameraToPlayer(client);
+	//playRadioStreamForPlayer(client, getServerConfig().introMusicURL, true);
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
 
 	setTimeout(function() {

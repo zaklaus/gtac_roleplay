@@ -1561,3 +1561,9 @@ function updateConnectionLogOnClientInfoReceive(client, clientVersion, screenWid
 }
 
 // ===========================================================================
+
+function generateRandomPhoneNumber() {
+	return getRandom(100000,999999);
+}
+
+// ===========================================================================

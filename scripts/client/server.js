@@ -216,7 +216,7 @@ function sendServerNewAFKStatus(state) {
 
 // ===========================================================================
 
-function playStreamingRadio(url) {
+function playStreamingRadio(url, loop) {
     //gta.forceRadioChannel(-1);
     if(url == "") {
         if(streamingRadio != null) {
@@ -229,7 +229,8 @@ function playStreamingRadio(url) {
         streamingRadio.stop();
     }
 
-    streamingRadio = audio.createSoundFromURL(url);
+    streamingRadio = audio.createSoundFromURL(url, loop);
+    streamingRadio.volume = 0.5;
     streamingRadio.play();
 }
 

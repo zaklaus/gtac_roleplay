@@ -77,6 +77,7 @@ function loadCommands() {
             commandData("bizreloadall", reloadAllBusinessesCommand, "", getStaffFlagValue("manageBusinesses"), true, false, "Reloads all businesses from the database"),
 
             commandData("bizlock", lockBusinessCommand, "", getStaffFlagValue("none"), true, true, "Locks a business"),
+            commandData("bizbuy", buyBusinessCommand, "", getStaffFlagValue("none"), true, true, "Purchases a business"),
             commandData("bizfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true, "Sets a fee to charge players when they enter the business."),
             commandData("biztill", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true, "Shows the business's till (cash register) amount"),
             commandData("bizbalance", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true, "Shows the business's till (cash register) amount"),
@@ -96,9 +97,9 @@ function loadCommands() {
             commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Shows business information"),
             commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Moves the exit (interior point) of the business"),
             commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageBusinesses"), true, true, "Changes the business' interior"),
-            commandData("bizdefaultitems", giveDefaultItemsToBusinessCommand, "<item template>", getStaffFlagValue("manageBusinesses"), true, true, "Gives the business the default items based on template name"),
-            commandData("bizdelflooritems", deleteBusinessFloorItemsCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Destroys all items on the business floor (for-sale items)"),
-            commandData("bizdelstorageitems", deleteBusinessStorageItemsCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Destroys all items in the business's storage"),
+            commandData("bizdefaultitems", giveDefaultItemsToBusinessCommand, "<item template>", getStaffFlagValue("manageItems"), true, true, "Gives the business the default items based on template name"),
+            commandData("bizdelflooritems", deleteBusinessFloorItemsCommand, "", getStaffFlagValue("manageItems"), true, true, "Destroys all items on the business floor (for-sale items)"),
+            commandData("bizdelstorageitems", deleteBusinessStorageItemsCommand, "", getStaffFlagValue("manageItems"), true, true, "Destroys all items in the business's storage"),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
@@ -193,7 +194,6 @@ function loadCommands() {
             //commandData("houserentprice", setHouseRentPriceCommand, "", getStaffFlagValue("none"), true, false),
             commandData("houseblip", setHouseBlipCommand, "<type name/model id>", getStaffFlagValue("manageHouses"), true, true),
             commandData("housepickup", setHousePickupCommand, "<type name/model id>", getStaffFlagValue("manageHouses"), true, true),
-            commandData("houseinfo", getHouseInfoCommand, "[id]", getStaffFlagValue("none"), true, true),
             commandData("houseentrance", moveHouseEntranceCommand, "", getStaffFlagValue("manageHouses"), true, true),
             commandData("houseexit", moveHouseExitCommand, "", getStaffFlagValue("manageHouses"), true, true),
             commandData("houseinttype", setHouseInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("manageHouses"), true, true),

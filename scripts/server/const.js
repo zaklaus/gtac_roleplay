@@ -279,3 +279,8 @@ const AG_NPC_COND_MATCH_CONTAINS = 6;           // Must contain string (case ins
 const AG_NPC_COND_MATCH_CONTAINS_CASE = 7;      // Must contain string (case sensitive)
 const AG_NPC_COND_MATCH_EXACT = 8;              // Must match string exactly (case insensitive)
 const AG_NPC_COND_MATCH_EXACT_CASE = 9;         // Must match string exactly (case insensitive)
+
+const AG_BIZ_TYPE_NONE = 0;                     // None (invalid)
+const AG_BIZ_TYPE_NORMAL = 1;                   // Normal business (sells items)
+const AG_BIZ_TYPE_BANK = 2;                     // Bank
+const AG_BIZ_TYPE_PUBLIC = 3;                   // Public business (Government, public service, etc)

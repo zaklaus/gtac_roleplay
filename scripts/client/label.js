@@ -67,7 +67,7 @@ function initLabelJobHelpFont() {
 
 // ===========================================================================
 
-function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) {
+function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, shouldShowBuyInfo) {
     if(localPlayer == null) {
         return false;
     }
@@ -92,7 +92,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
     if(price > 0) {
         text = `For sale: $${price}`;
         let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
-        propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(0, 150, 0, 255), false, true, false, true);
+        propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(200, 200, 200, 255), false, true, false, true);
 
         screenPosition.y -= propertyLabelLockedOffset;
     }
@@ -100,6 +100,13 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
     text = (locked) ? "LOCKED" : "UNLOCKED";
     if(isBusiness) {
         text = (locked) ? "CLOSED" : "OPEN";
+        if(!locked && shouldShowBuyInfo) {
+            if(getDistance(localPlayer.position, position) <= renderLabelDistance-2) {
+                let size = propertyLabelLockedFont.measure(`Use /buy to purchase items`, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
+                propertyLabelLockedFont.render(`Use /buy to purchase items`, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(234, 198, 126, 255), false, true, false, true);
+                screenPosition.y -= propertyLabelLockedOffset;
+            }
+        }
     }
 
     let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
@@ -198,13 +205,18 @@ function processLabelRendering() {
                 if(pickups[i].getData("ag.label.type") != null) {
                     if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
                         let price = 0;
+                        let shouldShowBuyHelp = false;
                         if(pickups[i].getData("ag.label.price") != null) {
                             price = pickups[i].getData("ag.label.price");
                         }
 
+                        if(pickups[i].getData("ag.label.buyhelp") != null) {
+                            shouldShowBuyHelp = pickups[i].getData("ag.label.buyhelp");
+                        }
+
                         switch(pickups[i].getData("ag.label.type")) {
                             case AG_LABEL_BUSINESS:
-                                renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
+                                renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price, shouldShowBuyHelp);
                                 break;
 
                             case AG_LABEL_HOUSE:

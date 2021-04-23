@@ -20,7 +20,7 @@ function loadSubAccountFromName(firstName, lastName) {
 	if(dbConnection) {
 		firstName = escapeDatabaseString(dbConnection, firstName);
 		lastName = escapeDatabaseString(dbConnection, lastName);
-		let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_name_first = '${firstName}' AND sacct_name_last = '${lastName}' LIMIT 1;`;
+		let dbQueryString = `SELECT * FROM sacct_main INNER JOIN sacct_svr ON sacct_svr.sacct_svr_sacct=sacct_main.sacct_id AND sacct_svr.sacct_svr_server=${getServerId()} WHERE sacct_name_first = '${firstName}' AND sacct_name_last = '${lastName}' LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
@@ -38,7 +38,7 @@ function loadSubAccountFromName(firstName, lastName) {
 function loadSubAccountFromId(subAccountId) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_id = ${subAccountId} LIMIT 1;`;
+		let dbQueryString = `SELECT * FROM sacct_main INNER JOIN sacct_svr ON sacct_svr.sacct_svr_sacct=sacct_main.sacct_id AND sacct_svr.sacct_svr_server=${getServerId()} WHERE sacct_id = ${subAccountId} LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
@@ -59,7 +59,7 @@ function loadSubAccountsFromAccount(accountId) {
 	if(accountId > 0) {
 		let dbConnection = connectToDatabase();
 		if(dbConnection) {
-			let dbQueryString = `SELECT * FROM sacct_main WHERE sacct_acct = ${accountId} AND sacct_server = ${getServerId()}`;
+			let dbQueryString = `SELECT * FROM sacct_main INNER JOIN sacct_svr ON sacct_svr.sacct_svr_sacct=sacct_main.sacct_id AND sacct_svr.sacct_svr_server=${getServerId()} WHERE sacct_acct = ${accountId} AND sacct_server = ${getServerId()}`;
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			if(dbQuery) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -92,63 +92,74 @@ function saveSubAccountToDatabase(subAccountData) {
 				 sacct_name_first='${safeFirstName}',
 				sacct_name_last='${safeLastName}',
 				sacct_name_middle='${safeMiddleName}',
+				sacct_cash=${subAccountData.cash},
+				sacct_when_lastlogin=${subAccountData.lastLogin},
 				sacct_pos_x=${subAccountData.spawnPosition.x},
 				sacct_pos_y=${subAccountData.spawnPosition.y},
 				sacct_pos_z=${subAccountData.spawnPosition.z},
-				sacct_scale_x=${subAccountData.pedScale.x},
-				sacct_scale_y=${subAccountData.pedScale.y},
-				sacct_scale_z=${subAccountData.pedScale.z},
 				sacct_angle=${subAccountData.spawnHeading},
-				sacct_skin=${subAccountData.skin},
-				sacct_cash=${subAccountData.cash},
-				sacct_job=${subAccountData.job},
-				sacct_health=${subAccountData.health},
-				sacct_armour=${subAccountData.armour},
 				sacct_int=${subAccountData.interior},
 				sacct_vw=${subAccountData.dimension},
-				sacct_clan=${subAccountData.clan},
-				sacct_clan_rank=${subAccountData.clanRank},
-				sacct_clan_tag='${safeClanTag}',
-				sacct_clan_title='${safeClanTitle}',
-				sacct_clan_flags=${subAccountData.clanFlags},
-				sacct_fightstyle=${subAccountData.fightStyle},
-				sacct_walkstyle=${subAccountData.walkStyle},
-				sacct_when_lastlogin=${subAccountData.lastLogin},
-				sacct_hd_part_hair_model=${subAccountData.bodyParts.hair[0]},
-				sacct_hd_part_hair_texture=${subAccountData.bodyParts.hair[1]},
-				sacct_hd_part_head_model=${subAccountData.bodyParts.head[0]},
-				sacct_hd_part_head_texture=${subAccountData.bodyParts.head[1]},
-				sacct_hd_part_upper_model=${subAccountData.bodyParts.upper[0]},
-				sacct_hd_part_upper_texture=${subAccountData.bodyParts.upper[1]},
-				sacct_hd_part_lower_model=${subAccountData.bodyParts.lower[0]},
-				sacct_hd_part_lower_texture=${subAccountData.bodyParts.lower[1]},
-				sacct_hd_prop_hair_model=${subAccountData.bodyProps.hair[0]},
-				sacct_hd_prop_hair_texture=${subAccountData.bodyProps.hair[1]},
-				sacct_hd_prop_eyes_model=${subAccountData.bodyProps.eyes[0]},
-				sacct_hd_prop_eyes_texture=${subAccountData.bodyProps.eyes[1]},
-				sacct_hd_prop_head_model=${subAccountData.bodyProps.head[0]},
-				sacct_hd_prop_head_texture=${subAccountData.bodyProps.head[1]},
-				sacct_hd_prop_lefthand_model=${subAccountData.bodyProps.leftHand[0]},
-				sacct_hd_prop_lefthand_texture=${subAccountData.bodyProps.leftHand[1]},
-				sacct_hd_prop_righthand_model=${subAccountData.bodyProps.rightHand[0]},
-				sacct_hd_prop_righthand_texture=${subAccountData.bodyProps.rightHand[1]},
-				sacct_hd_prop_leftwrist_model=${subAccountData.bodyProps.leftWrist[0]},
-				sacct_hd_prop_leftwrist_texture=${subAccountData.bodyProps.leftWrist[1]},
-				sacct_hd_prop_rightwrist_model=${subAccountData.bodyProps.rightWrist[0]},
-				sacct_hd_prop_rightwrist_texture=${subAccountData.bodyProps.rightWrist[1]},
-				sacct_hd_prop_hip_model=${subAccountData.bodyProps.hip[0]},
-				sacct_hd_prop_hip_texture=${subAccountData.bodyProps.hip[1]},
-				sacct_hd_prop_leftfoot_model=${subAccountData.bodyProps.leftFoot[0]},
-				sacct_hd_prop_leftfoot_texture=${subAccountData.bodyProps.leftFoot[1]},
-				sacct_hd_prop_rightfoot_model=${subAccountData.bodyProps.rightFoot[0]},
-				sacct_hd_prop_rightfoot_texture=${subAccountData.bodyProps.rightFoot[1]}
+				sacct_inhouse=${(subAccountData.inHouse > 0) ? getHouseData(subAccountData.inHouse).databaseId : 0},
+				sacct_inbusiness=${(subAccountData.inBusiness > 0) ? getBusinessData(subAccountData.inBusiness).databaseId : 0},
+				sacct_health=${subAccountData.health},
+				sacct_armour=${subAccountData.armour}
 			 WHERE sacct_id=${subAccountData.databaseId}`;
 
 		//dbQueryString = dbQueryString.trim();
 		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		freeDatabaseQuery(dbQuery);
+		dbQuery = null;
+
+		dbQueryString = `
+			UPDATE sacct_svr SET
+				 sacct_svr_job=${subAccountData.job},
+				sacct_svr_clan=${subAccountData.clan},
+				sacct_svr_clan_rank=${subAccountData.clanRank},
+				sacct_svr_clan_tag='${safeClanTag}',
+				sacct_svr_clan_title='${safeClanTitle}',
+				sacct_svr_clan_flags=${subAccountData.clanFlags},
+				sacct_svr_scale_x=${subAccountData.pedScale.x},
+				sacct_svr_scale_y=${subAccountData.pedScale.y},
+				sacct_svr_scale_z=${subAccountData.pedScale.z},
+				sacct_svr_skin=${subAccountData.skin},
+				sacct_svr_fightstyle=${subAccountData.fightStyle},
+				sacct_svr_walkstyle=${subAccountData.walkStyle},
+				sacct_svr_hd_part_hair_model=${subAccountData.bodyParts.hair[0]},
+				sacct_svr_hd_part_hair_texture=${subAccountData.bodyParts.hair[1]},
+				sacct_svr_hd_part_head_model=${subAccountData.bodyParts.head[0]},
+				sacct_svr_hd_part_head_texture=${subAccountData.bodyParts.head[1]},
+				sacct_svr_hd_part_upper_model=${subAccountData.bodyParts.upper[0]},
+				sacct_svr_hd_part_upper_texture=${subAccountData.bodyParts.upper[1]},
+				sacct_svr_hd_part_lower_model=${subAccountData.bodyParts.lower[0]},
+				sacct_svr_hd_part_lower_texture=${subAccountData.bodyParts.lower[1]},
+				sacct_svr_hd_prop_hair_model=${subAccountData.bodyProps.hair[0]},
+				sacct_svr_hd_prop_hair_texture=${subAccountData.bodyProps.hair[1]},
+				sacct_svr_hd_prop_eyes_model=${subAccountData.bodyProps.eyes[0]},
+				sacct_svr_hd_prop_eyes_texture=${subAccountData.bodyProps.eyes[1]},
+				sacct_svr_hd_prop_head_model=${subAccountData.bodyProps.head[0]},
+				sacct_svr_hd_prop_head_texture=${subAccountData.bodyProps.head[1]},
+				sacct_svr_hd_prop_lefthand_model=${subAccountData.bodyProps.leftHand[0]},
+				sacct_svr_hd_prop_lefthand_texture=${subAccountData.bodyProps.leftHand[1]},
+				sacct_svr_hd_prop_righthand_model=${subAccountData.bodyProps.rightHand[0]},
+				sacct_svr_hd_prop_righthand_texture=${subAccountData.bodyProps.rightHand[1]},
+				sacct_svr_hd_prop_leftwrist_model=${subAccountData.bodyProps.leftWrist[0]},
+				sacct_svr_hd_prop_leftwrist_texture=${subAccountData.bodyProps.leftWrist[1]},
+				sacct_svr_hd_prop_rightwrist_model=${subAccountData.bodyProps.rightWrist[0]},
+				sacct_svr_hd_prop_rightwrist_texture=${subAccountData.bodyProps.rightWrist[1]},
+				sacct_svr_hd_prop_hip_model=${subAccountData.bodyProps.hip[0]},
+				sacct_svr_hd_prop_hip_texture=${subAccountData.bodyProps.hip[1]},
+				sacct_svr_hd_prop_leftfoot_model=${subAccountData.bodyProps.leftFoot[0]},
+				sacct_svr_hd_prop_leftfoot_texture=${subAccountData.bodyProps.leftFoot[1]},
+				sacct_svr_hd_prop_rightfoot_model=${subAccountData.bodyProps.rightFoot[0]},
+				sacct_svr_hd_prop_rightfoot_texture=${subAccountData.bodyProps.rightFoot[1]}
+			 WHERE sacct_svr_sacct=${subAccountData.databaseId} AND sacct_svr_server = ${getServerId()}`;
+
+		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
+		dbQuery = queryDatabase(dbConnection, dbQueryString);
+		freeDatabaseQuery(dbQuery);
+
 		disconnectFromDatabase(dbConnection);
     }
 }
@@ -164,8 +175,13 @@ function createSubAccount(accountId, firstName, lastName, skinId) {
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 
 		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${getServerConfig().newCharacter.skin}, ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
-		if(getDatabaseInsertId(dbConnection) > 0) {
-			return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
+		if(dbQuery) {
+			if(getDatabaseInsertId(dbConnection) > 0) {
+				let dbInsertId = getDatabaseInsertId(dbConnection);
+				createDefaultSubAccountServerData(dbInsertId)
+				return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
+			}
+			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -474,6 +490,15 @@ function setFightStyleCommand(command, params, client) {
 	messagePlayerSuccess(client, `Your fight style has been set to ${getGameData().fightStyles[getServerGame()][fightStyleId][0]}`)
 
 	return true;
+}
+
+// ===========================================================================
+
+function createDefaultSubAccountServerData(databaseId) {
+	for(let i = 1 ; i <= 4 ; i++) {
+		let dbQueryString = `INSERT INTO sacct_svr (sacct_svr_sacct, sacct_svr_server) VALUES (${databaseId}, ${i})`;
+		quickDatabaseQuery(dbQueryString);
+	}
 }
 
 // ===========================================================================

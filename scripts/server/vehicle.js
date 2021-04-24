@@ -575,7 +575,7 @@ function setVehicleJobCommand(command, params, client) {
 	let jobId = closestJobLocation.job;
 
 	if(!areParamsEmpty(params)) {
-		jobId = getJobIdFromParams(params);
+		jobId = getJobFromParams(params);
 	}
 
 	//if(!jobId) {

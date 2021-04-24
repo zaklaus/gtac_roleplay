@@ -64,6 +64,9 @@ function loadSubAccountsFromAccount(accountId) {
 			if(dbQuery) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempSubAccount = new serverClasses.subAccountData(dbAssoc);
+					if(tempSubAccount.skin == -1) {
+						tempSubAccount.skin = getServerConfig().newCharacter.skin;
+					}
 					tempSubAccounts.push(tempSubAccount);
 				}
 				freeDatabaseQuery(dbQuery);
@@ -166,23 +169,25 @@ function saveSubAccountToDatabase(subAccountData) {
 
 // ===========================================================================
 
-function createSubAccount(accountId, firstName, lastName, skinId) {
+function createSubAccount(accountId, firstName, lastName) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
 	let dbConnection = connectToDatabase();
+	let dbQuery = false;
 
 	if(dbConnection) {
 		let safeFirstName = escapeDatabaseString(dbConnection, firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_skin, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${getServerConfig().newCharacter.skin}, ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
-		if(dbQuery) {
+		dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
+		//if(dbQuery) {
 			if(getDatabaseInsertId(dbConnection) > 0) {
 				let dbInsertId = getDatabaseInsertId(dbConnection);
-				createDefaultSubAccountServerData(dbInsertId)
-				return loadSubAccountFromId(getDatabaseInsertId(dbConnection));
+				createDefaultSubAccountServerData(dbInsertId, getServerConfig().newCharacter.skin);
+				let tempSubAccount = loadSubAccountFromId(dbInsertId);
+				return tempSubAccount;
 			}
-			freeDatabaseQuery(dbQuery);
-		}
+			//freeDatabaseQuery(dbQuery);
+		//}
 		disconnectFromDatabase(dbConnection);
 	}
 
@@ -247,10 +252,10 @@ function checkNewCharacter(client, firstName, lastName) {
 
 	let skinId = allowedSkins[getServerGame()][getPlayerData(client).creatingCharacterSkin];
 
-	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName, skinId);
+	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName);
 	if(!subAccountData) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerNewCharacterFailedGUI("Your character could not be created!");
+			showPlayerNewCharacterFailedGUI(client, "Your character could not be created!");
 		} else {
 			messagePlayerAlert(client, "Your character could not be created!");
 		}
@@ -494,10 +499,15 @@ function setFightStyleCommand(command, params, client) {
 
 // ===========================================================================
 
-function createDefaultSubAccountServerData(databaseId) {
+function createDefaultSubAccountServerData(databaseId, thisServerSkin) {
 	for(let i = 1 ; i <= 4 ; i++) {
-		let dbQueryString = `INSERT INTO sacct_svr (sacct_svr_sacct, sacct_svr_server) VALUES (${databaseId}, ${i})`;
-		quickDatabaseQuery(dbQueryString);
+		if(i == getServerId()) {
+			let dbQueryString = `INSERT INTO sacct_svr (sacct_svr_sacct, sacct_svr_server, sacct_svr_skin) VALUES (${databaseId}, ${i}, ${thisServerSkin})`;
+			quickDatabaseQuery(dbQueryString);
+		} else {
+			let dbQueryString = `INSERT INTO sacct_svr (sacct_svr_sacct, sacct_svr_server, sacct_svr_skin) VALUES (${databaseId}, ${i}, -1)`;
+			quickDatabaseQuery(dbQueryString);
+		}
 	}
 }
 

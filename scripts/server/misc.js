@@ -146,7 +146,7 @@ function enterExitPropertyCommand(command, params, client) {
 					}, 2000);
 				}, 1000);
 			}, 1100);
-			getPlayerData(client).inHouse = false;
+			removeEntityData(client, "ag.inHouse");
 			return true;
 		}
 	}
@@ -177,7 +177,7 @@ function enterExitPropertyCommand(command, params, client) {
 					}, 2000);
 				}, 1000);
 			}, 1100);
-			getPlayerData(client).inBusiness = false;
+			removeEntityData(client, "ag.inBusiness");
 			logToConsole(LOG_DEBUG, `[Asshat.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
 			return true;
 		}
@@ -212,8 +212,8 @@ function enterExitPropertyCommand(command, params, client) {
 					fadeCamera(client, true, 1.0);
 					getPlayerData(client).pedState = AG_PEDSTATE_READY;
 				}, 1000);
-			}, 1100);x
-			getPlayerData(client).inBusiness = closestBusinessId;
+			}, 1100);
+			setEntityData(client, "ag.inBusiness", closestBusinessId);
 			return true;
 		}
 	}
@@ -249,7 +249,7 @@ function enterExitPropertyCommand(command, params, client) {
 					getPlayerData(client).pedState = AG_PEDSTATE_READY;
 				}, 1000);
 			}, 1100);
-			getPlayerData(client).inHouse = closestHouseId;
+			setEntityData(client, "ag.inHouse", closestHouseId);
 			return true;
 		}
 	}

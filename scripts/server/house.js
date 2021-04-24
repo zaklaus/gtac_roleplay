@@ -404,8 +404,8 @@ function getClosestHouseEntrance(position) {
 // ===========================================================================
 
 function getPlayerHouse(client) {
-	if(getPlayerData(client).inHouse > 0) {
-		return getPlayerData(client).inHouse;
+	if(doesEntityDataExist(client, "ag.inHouse")) {
+		return getEntityData(client, "ag.inHouse");
 	}
 
 	return false;
@@ -648,11 +648,7 @@ function getHouseInfoCommand(command, params, client) {
 // ===========================================================================
 
 function isPlayerInAnyHouse(client) {
-	if(getPlayerData(client).inHouse > 0) {
-		return true;
-	}
-
-	return false;
+	return doesEntityDataExist(client, "ag.inHouse");
 }
 
 // ===========================================================================
@@ -743,7 +739,7 @@ function exitHouse(client) {
 		setPlayerDimension(client, getServerData().house[houseId].entranceDimension);
 		setPlayerPosition(client, getServerData().house[houseId].entrancePosition);
 	}
-	getPlayerData(client).inHouse = 0;
+	removeEntityData(client, "ag.inHouse");
 }
 
 // ===========================================================================
@@ -772,18 +768,6 @@ function cacheHouseItems(houseId) {
 			getHouseData(houseId).itemCache.push(i);
 		}
 	}
-}
-
-// ===========================================================================
-
-function getHouseIdFromDatabaseId(databaseId) {
-	for(let i in getServerData().houses) {
-		if(getHouseData(i).databaseId == databaseId) {
-			return i;
-		}
-	}
-
-	return false;
 }
 
 // ===========================================================================

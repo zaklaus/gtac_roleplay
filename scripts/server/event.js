@@ -115,9 +115,10 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
 
         if(getVehicleData(vehicle).locked) {
             if(doesPlayerHaveVehicleKeys(client, vehicle)) {
-                messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
                 if(doesPlayerHaveKeyBindForCommand(client, "lock")) {
-                    messagePlayerTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "lock").key)} [#FFFFFF]to lock and unlock vehicles.`);
+                    messagePlayerTip(client, `🔒 This ${getVehicleName(vehicle)} is locked. Press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "lock").key)} [#FFFFFF]to unlock it.`);
+                } else {
+                    messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
                 }
             } else {
                 messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked and you don't have the keys to unlock it`);
@@ -448,12 +449,15 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
 
+        getPlayerData(client).inBusiness = (getPlayerCurrentSubAccount(client).inBusiness != 0) ? getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness) : -1;
+        getPlayerData(client).inHouse = (getPlayerCurrentSubAccount(client).inHouse != 0) ? getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse) : -1;
+
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = AG_PEDSTATE_READY;
 
-        //setTimeout(function() {
-        //    syncPlayerProperties(client);
-        //}, 1000);
+        setTimeout(function() {
+            syncPlayerProperties(client);
+        }, 1000);
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
     //}

@@ -332,7 +332,7 @@ function lockBusinessCommand(command, params, client) {
 function setBusinessEntranceFeeCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let entranceFee = toInteger(splitParams[0]) || 0;
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -389,7 +389,7 @@ function getBusinessInfoCommand(command, params, client) {
 function setBusinessPickupCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let typeParam = splitParams[0] || "business";
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -421,7 +421,7 @@ function setBusinessPickupCommand(command, params, client) {
 function setBusinessInteriorTypeCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let typeParam = splitParams[0] || "business";
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -471,7 +471,7 @@ function setBusinessBlipCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let typeParam = splitParams[0] || "business";
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -504,7 +504,7 @@ function giveDefaultItemsToBusinessCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let typeParam = splitParams[0] || "business";
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -540,7 +540,7 @@ function deleteBusinessFloorItemsCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let typeParam = splitParams[0] || "business";
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -562,7 +562,7 @@ function deleteBusinessStorageItemsCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let typeParam = splitParams[0] || "business";
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -589,7 +589,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let amount = toInteger(splitParams[0]) || 0;
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -618,7 +618,7 @@ function setBusinessBuyPriceCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let amount = toInteger(splitParams[0]) || 0;
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -646,7 +646,7 @@ function depositIntoBusinessCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let amount = toInteger(splitParams[0]) || 0;
-	let businessId = getBusinessFromParams(splitParams[1]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -849,7 +849,7 @@ function getClosestBusinessEntrance(position) {
 // ===========================================================================
 
 function isPlayerInAnyBusiness(client) {
-	if(getPlayerData(client).inBusiness > 0) {
+	if(getPlayerData(client).inBusiness != -1) {
 		return true;
 	}
 
@@ -859,11 +859,11 @@ function isPlayerInAnyBusiness(client) {
 // ===========================================================================
 
 function getPlayerBusiness(client) {
-	if(getPlayerData(client).inBusiness > 0) {
+	if(getPlayerData(client).inBusiness != -1) {
 		return getPlayerData(client).inBusiness;
 	}
 
-	return false;
+	return -1;
 }
 
 // ===========================================================================
@@ -1136,7 +1136,7 @@ function exitBusiness(client) {
 		setPlayerDimension(client, client, getServerData().businesses[businessId].entranceDimension);
 		setPlayerPosition(client, client, getServerData().businesses[businessId].entrancePosition);
 	}
-	getPlayerData(client).inBusiness = 0;
+	getPlayerData(client).inBusiness = -1;
 }
 
 // ===========================================================================
@@ -1427,7 +1427,7 @@ function storeItemInBusinessStorageCommand(command, params, client) {
 
 function stockItemOnBusinessFloorCommand(command, params, client) {
 	let splitParams = params.split(" ");
-	let businessId = getBusinessFromParams(splitParams[2]) || (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");

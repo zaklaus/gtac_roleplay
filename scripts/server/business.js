@@ -548,7 +548,7 @@ function deleteBusinessFloorItemsCommand(command, params, client) {
 	}
 
 	for(let i in getBusinessData(businessId).floorItemCache) {
-		destroyItem(getBusinessData(businessId).floorItemCache);
+		deleteItem(getBusinessData(businessId).floorItemCache);
 	}
 
 	cacheBusinessItems(businessId);
@@ -570,7 +570,7 @@ function deleteBusinessStorageItemsCommand(command, params, client) {
 	}
 
 	for(let i in getBusinessData(businessId).storageItemCache) {
-		destroyItem(getBusinessData(businessId).storageItemCache);
+		deleteItem(getBusinessData(businessId).storageItemCache);
 	}
 
 	cacheBusinessItems(businessId);
@@ -849,7 +849,7 @@ function getClosestBusinessEntrance(position) {
 // ===========================================================================
 
 function isPlayerInAnyBusiness(client) {
-	if(getPlayerData(client).inBusiness != -1) {
+	if(doesEntityDataExist(client, "ag.inBusiness")) {
 		return true;
 	}
 
@@ -859,8 +859,8 @@ function isPlayerInAnyBusiness(client) {
 // ===========================================================================
 
 function getPlayerBusiness(client) {
-	if(getPlayerData(client).inBusiness != -1) {
-		return getPlayerData(client).inBusiness;
+	if(doesEntityDataExist(client, "ag.inBusiness")) {
+		return getEntityData(client, "ag.inBusiness");
 	}
 
 	return -1;
@@ -1130,13 +1130,13 @@ function removePlayerFromBusinesses(client) {
 // ===========================================================================
 
 function exitBusiness(client) {
-	let businessId = getPlayerData(client).inBusiness;
+	let businessId = getEntityData(client, "ag.inBusiness");
 	if(isPlayerSpawned(client)) {
 		setPlayerInterior(client, getServerData().businesses[businessId].entranceInterior);
 		setPlayerDimension(client, client, getServerData().businesses[businessId].entranceDimension);
 		setPlayerPosition(client, client, getServerData().businesses[businessId].entrancePosition);
 	}
-	getPlayerData(client).inBusiness = -1;
+	removeEntityData(client, "ag.inBusiness");
 }
 
 // ===========================================================================
@@ -1293,6 +1293,11 @@ function buyFromBusinessCommand(command, params, client) {
 
 	if(getBusinessData(businessId).hasInterior) {
 		if(!getPlayerBusiness(client)) {
+			if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
+				messagePlayerTip(client, `You need to enter the business first! Press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "enter").key)} [#FFFFFF]to enter and exit a business`);
+			} else {
+				messagePlayerNormal(client, `You need to enter the business first! Use /enter to enter and exit a business`);
+			}
 			return false;
 		}
 	}

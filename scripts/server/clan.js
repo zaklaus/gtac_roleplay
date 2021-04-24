@@ -2,24 +2,24 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: clan.js
 // DESC: Provides clan functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
 function initClanScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Clan]: Initializing clans script ...");
+	logToConsole(LOG_INFO, "[Asshat.Clan]: Initializing clans script ...");
 	getServerData().clans = loadClansFromDatabase();
 	setAllClanDataIndexes();
-	logToConsole(LOG_DEBUG, "[Asshat.Clan]: Clan script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Clan]: Clan script initialized successfully!");
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadClansFromDatabase() {
-	logToConsole(LOG_DEBUG, "[Asshat.Clan]: Loading clans from database ...");
+	logToConsole(LOG_INFO, "[Asshat.Clan]: Loading clans from database ...");
 
 	let tempClans = [];
 	let dbConnection = connectToDatabase();
@@ -30,11 +30,11 @@ function loadClansFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempClanData = getClasses().clanData(dbAssoc);
+					let tempClanData = new serverClasses.clanData(dbAssoc);
 					tempClanData.members = loadClanMembersFromDatabase(tempClanData.databaseId);
 					tempClanData.ranks = loadClanRanksFromDatabase(tempClanData.databaseId);
 					tempClans.push(tempClanData);
-					logToConsole(LOG_DEBUG, `[Asshat.Clan]: Clan '${tempClanData.name}' loaded from database successfully!`);
+					logToConsole(LOG_VERBOSE, `[Asshat.Clan]: Clan '${tempClanData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -42,11 +42,95 @@ function loadClansFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Clan]: ${tempClans.length} clans loaded from database successfully!`);
+	logToConsole(LOG_INFO, `[Asshat.Clan]: ${tempClans.length} clans loaded from database successfully!`);
 	return tempClans;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
+
+function loadClanMembersFromDatabase() {
+	logToConsole(LOG_INFO, "[Asshat.Clan]: Loading clans from database ...");
+
+	let tempClans = [];
+	let dbConnection = connectToDatabase();
+	let dbAssoc;
+
+	if(dbConnection) {
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM clan_main WHERE clan_deleted = 0 AND clan_server = ${getServerId()}`);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempClanData = new serverClasses.clanData(dbAssoc);
+					tempClanData.members = loadClanMembersFromDatabase(tempClanData.databaseId);
+					tempClanData.ranks = loadClanRanksFromDatabase(tempClanData.databaseId);
+					tempClans.push(tempClanData);
+					logToConsole(LOG_VERBOSE, `[Asshat.Clan]: Clan '${tempClanData.name}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_INFO, `[Asshat.Clan]: ${tempClans.length} clans loaded from database successfully!`);
+	return tempClans;
+}
+
+// ===========================================================================
+
+function loadClanRanksFromDatabase(clanDatabaseId) {
+	logToConsole(LOG_INFO, `[Asshat.Clan]: Loading ranks for clan ${clanDatabaseId} from database ...`);
+
+	let dbConnection = connectToDatabase();
+	let dbAssoc;
+	let tempClanRanks = [];
+
+	if(dbConnection) {
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM clan_rank WHERE clan_rank_clan = ${clanDatabaseId}`);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				let dbAssoc = fetchQueryAssoc(dbQuery)
+				let tempClanRankData = new serverClasses.clanRankData(dbAssoc);
+				tempClanRanks.push(tempClanRankData);
+				logToConsole(LOG_VERBOSE, `[Asshat.Clan]: Clan rank '${tempClanRankData.name}' loaded from database successfully!`);
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_INFO, `[Asshat.Clan]: Loaded ranks for clan ${clanDatabaseId} from database successfully!`);
+	return tempClanRanks;
+}
+
+// ===========================================================================
+
+function loadClanMembersFromDatabase(clanDatabaseId) {
+	logToConsole(LOG_INFO, `[Asshat.Clan]: Loading members for clan ${clanDatabaseId} from database ...`);
+
+	let dbConnection = connectToDatabase();
+	let dbAssoc;
+	let tempClanMembers = [];
+
+	if(dbConnection) {
+		let dbQuery = queryDatabase(dbConnection, `SELECT * FROM clan_member WHERE clan_member_clan = ${clanDatabaseId}`);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				let dbAssoc = fetchQueryAssoc(dbQuery)
+				let tempClanMemberData = new serverClasses.clanMemberData(dbAssoc);
+				tempClanMembers.push(tempClanMemberData);
+				logToConsole(LOG_VERBOSE, `[Asshat.Clan]: Clan member '${tempClanMemberData.subAccount}' loaded from database successfully!`);
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_INFO, `[Asshat.Clan]: Loaded members for clan ${clanDatabaseId} from database successfully!`);
+	return tempClanMembers;
+}
+
+// ===========================================================================
 
 function createClanCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -64,7 +148,7 @@ function createClanCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created clan[#FF9900]${params}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteClanCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -83,7 +167,7 @@ function deleteClanCommand(command, params, client) {
 	deleteClan(clanId);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanOwnerCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("owner"))) {
@@ -116,7 +200,7 @@ function setClanOwnerCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set clan[#FF9900]${getClanData(clanId).name} [#FFFFFF]owner to [#AAAAAA]${getCharacterFullName(targetClient)}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanTagCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("clanTag"))) {
@@ -141,7 +225,7 @@ function setClanTagCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set clan[#FF9900]${getClanData(clanId).index} [#FFFFFF]tag to [#AAAAAA]${params}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanNameCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("clanName"))) {
@@ -166,7 +250,7 @@ function setClanNameCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set clan[#FF9900]${getClanData(clanId).index} [#FFFFFF]name to [#AAAAAA]${params}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanMemberTagCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("memberTag"))) {
@@ -199,7 +283,7 @@ function setClanMemberTagCommand(command, params, client) {
 	messagePlayerAlert(client, `[#AAAAAA]${getCharacterFullName(targetClient)} [#FFFFFF]set your clan tag to [#AAAAAA]${tag}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanRankTagCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("rankTag"))) {
@@ -229,7 +313,7 @@ function setClanRankTagCommand(command, params, client) {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function addClanMemberFlagCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("memberFlags"))) {
@@ -266,7 +350,7 @@ function addClanMemberFlagCommand(command, params, client) {
 	messagePlayerSuccess(client, `You added the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag to [#AAAAAA]${getCharacterFullName(client)}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function removeClanMemberFlagCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("memberFlags"))) {
@@ -303,7 +387,7 @@ function removeClanMemberFlagCommand(command, params, client) {
 	messagePlayerSuccess(client, `You removed the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag from [#AAAAAA]${getCharacterFullName(client)}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function addClanRankFlagCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("rankFlags"))) {
@@ -341,7 +425,7 @@ function addClanRankFlagCommand(command, params, client) {
 	messagePlayerSuccess(client, `You added the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag to rank [#AAAAAA]${getClanRankData(clanId, rankId).name}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function removeClanRankFlagCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("rankFlags"))) {
@@ -379,7 +463,7 @@ function removeClanRankFlagCommand(command, params, client) {
 	messagePlayerSuccess(client, `You removed the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag from rank [#AAAAAA]${getClanRankData(clanId, rankId).name}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanMemberTitleCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("memberTitle"))) {
@@ -411,7 +495,7 @@ function setClanMemberTitleCommand(command, params, client) {
 	messagePlayerSuccess(client, `You changed the name of [#AAAAAA]${getCharacterFullName(client)} [#FFFFFF]from [#AAAAAA]${oldMemberTitle} [#FFFFFF]to [#AAAAAA]${params}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanRankTitleCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("rankTitle"))) {
@@ -443,7 +527,7 @@ function setClanRankTitleCommand(command, params, client) {
 	messagePlayerSuccess(client, `You changed the name of rank ${rankId} from [#AAAAAA]${oldRankName} [#FFFFFF]to [#AAAAAA]${params}`);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function createClan(name) {
 	let dbConnection = connectToDatabase();
@@ -451,19 +535,18 @@ function createClan(name) {
 
 	if(dbConnection) {
 		escapedName = escapeDatabaseString(dbConnection, escapedName)
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO clan_main (clan_server, clan_name) VALUES (${getServerId()}, '${escapedName}')`);
-		disconnectFromDatabase(dbConnection);
+		queryDatabase(dbConnection, `INSERT INTO clan_main (clan_server, clan_name) VALUES (${getServerId()}, '${escapedName}')`);
+		let tempClan = new serverClasses.clanData();
+		tempClan.databaseId = getDatabaseInsertId(dbConnection);
+		tempClan.name = name;
+		getServerData().clans.push(tempClan);
 
-		let tempClanData = loadClanFromDatabaseById(getDatabaseInsertId(dbConnection));
-		if(tempClanData != false) {
-			let tempClan = serverClasses.clanData(tempClanData);
-			getServerData().clans.push(tempClan);
-		}
+		setAllClanDataIndexes();
 	}
 	return true;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteClan(clanId) {
 	saveClansToDatabase();
@@ -481,7 +564,7 @@ function deleteClan(clanId) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getClanData(clanId) {
 	let clans = getServerData().clans;
@@ -494,7 +577,7 @@ function getClanData(clanId) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function doesClanNameExist(name) {
 	let clans = getServerData().clans;
@@ -507,7 +590,7 @@ function doesClanNameExist(name) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function doesClanIdExist(clanId) {
 	let clans = getServerData().clans;
@@ -520,13 +603,13 @@ function doesClanIdExist(clanId) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function reloadAllClans() {
 	getServerData().clans = loadClansFromDatabase();
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function saveClansToDatabase() {
 	let clans = getServerData().clans;
@@ -535,12 +618,13 @@ function saveClansToDatabase() {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function saveClanToDatabase(clanData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = `UPDATE clan_main SET clan_name = '${escapeDatabaseString(dbConnection, clanData.name)}', clan_owner = ${clanData.ownerId}`;
+		let safeClanName = escapeDatabaseString(dbConnection, clanData.name);
+		let dbQueryString = `UPDATE clan_main SET clan_name = '${safeClanName}', clan_owner = ${clanData.ownerId} WHERE clan_id = ${clanData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
@@ -550,55 +634,55 @@ function saveClanToDatabase(clanData) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanTag(clanId, tag) {
 	getClanData(clanId).tag = tag;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanOwner(clanId, ownerId) {
 	getClanData(clanId).ownerId = ownerId;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanMemberTag(memberId, tag) {
 	// finish this later, need to query db
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanMemberFlags(memberId, flags) {
 	// finish this later, need to query db
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanMemberTitle(memberId, title) {
 	// finish this later, need to query db
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanRankTag(clanId, rankId, tag) {
 	getClanRankData(clanId, rankId).tag = tag;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanRankFlags(clanId, rankId, flags) {
 	getClanRankData(clanId, rankId).flags = flags;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function setClanRankTitle(clanId, rankId, title) {
 	getClanRankData(clanId, rankId).title = title;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllClansToDatabase() {
 	for(let i in getServerData().clans) {
@@ -606,7 +690,7 @@ function saveAllClansToDatabase() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setAllClanDataIndexes() {
 	for(let i in getServerData().clans) {
@@ -624,7 +708,7 @@ function setAllClanDataIndexes() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function arePlayersInSameClan(client1, client2) {
 	if(getPlayerClan(client1) == getPlayerClan(client2)) {
@@ -634,4 +718,4 @@ function arePlayersInSameClan(client1, client2) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

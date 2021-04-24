@@ -2,10 +2,17 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: discord.js
 // DESC: Provides discord bridging and connection functions and usage
 // TYPE: Server (JavaScript)
+// ===========================================================================
+
+function initDiscordScript() {
+	logToConsole(LOG_INFO, "[Asshat.Discord]: Initializing discord script ...");
+	logToConsole(LOG_INFO, "[Asshat.Discord]: Discord script initialized successfully!");
+}
+
 // ===========================================================================
 
 /*
@@ -31,7 +38,7 @@ addEventHandler("OnDiscordCommand", function(command, params, discordUser) {
 });
 */
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messageDiscordUser(discordUser, messageText) {
     let socketData = JSON.stringify({
@@ -44,7 +51,7 @@ function messageDiscordUser(discordUser, messageText) {
 	sendDiscordSocketData(socketData);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendDiscordSocketData(socketData) {
     if(!getDiscordSocket()) {
@@ -54,7 +61,7 @@ function sendDiscordSocketData(socketData) {
     getDiscordSocket().send(module.hash.encodeBase64(socketData) + "\r\n");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isClientFromDiscord(client) {
     if(client == null) {
@@ -68,34 +75,34 @@ function isClientFromDiscord(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getDiscordSocket() {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getDiscordUserData(discordUserId) {
     return loadAccountFromDiscordUserId(discordUserId);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messageDiscordChatChannel(message) {
     let gameEmoji = getGameEmojiForDiscord(getServerGame());
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messageDiscordAdminChannel(message) {
     let gameEmoji = getGameEmojiForDiscord(getServerGame());
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messageDiscordEventChannel(message) {
     let gameEmoji = getGameEmojiForDiscord(getServerGame());
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

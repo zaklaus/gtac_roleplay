@@ -2,19 +2,19 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: chat.js
 // DESC: Provides chat functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
 function initChatScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Chat]: Initializing chat script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.Chat]: Chat script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Chat]: Initializing chat script ...");
+	logToConsole(LOG_INFO, "[Asshat.Chat]: Chat script initialized successfully!");
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function meActionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -26,9 +26,14 @@ function meActionCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doActionCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -38,9 +43,14 @@ function doActionCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function shoutCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -50,9 +60,14 @@ function shoutCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function talkCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -62,9 +77,14 @@ function talkCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function whisperCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -74,9 +94,14 @@ function whisperCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function adminChatCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -85,9 +110,14 @@ function adminChatCommand(command, params, client) {
 	messageAdmins(`[#FFFF00][Admin Chat] [#AAAAAA]${client.name} [#CCCCCC](${getPlayerStaffTitle(client)})[#FFFFFF]: ${params}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clanChatCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -96,18 +126,18 @@ function clanChatCommand(command, params, client) {
 	clanChat(client, params);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function talkToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
-			messagePlayerTalk(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerTalk(clients[i], client, messageText);
 		//}
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function phoneOutgoingToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
@@ -116,7 +146,7 @@ function phoneOutgoingToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function phoneIncomingToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().radioSpeakerDistance);
@@ -125,59 +155,59 @@ function phoneIncomingToNearbyPlayers(client, messageText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function whisperToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().talkDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
 		//if(clients[i] != client) {
-			messagePlayerWhisper(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerWhisper(clients[i], client, messageText);
 		//}
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function shoutToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().shoutDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().shoutDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messagePlayerShout(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerShout(clients[i], client, messageText);
 		//}
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doActionToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().doActionDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().doActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messagePlayerDoAction(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerDoAction(clients[i], client, messageText);
 		//}
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function meActionToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(client.player.position, getGlobalConfig().meActionDistance);
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().meActionDistance);
 	for(let i in clients) {
 		//if(clients[i].index != client.index) {
-			messagePlayerMeAction(getClientFromPlayerElement(clients[i]), client, messageText);
+			messagePlayerMeAction(clients[i], client, messageText);
 		//}
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clanChat(client, messageText) {
 	let clients = getClients();
 	for(let i in clients) {
 		if(getPlayerCurrentSubAccount(client).clan != getPlayerCurrentSubAccount(clients[i]).clan) {
-			messageClientClanChat(getClientFromPlayerElement(clients[i]), client, messageText);
+			messageClientClanChat(clients[i], client, messageText);
 		}
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

@@ -2,28 +2,20 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: bans.js
 // DESC: Provides ban functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-const banType = {
-    none: 0,
-    account: 1,
-    subAccount: 3,
-    ipAddress: 4,
-    uid: 5,
-};
-
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initBanScript() {
-    logToConsole(LOG_DEBUG, "[Asshat.Ban]: Initializing ban script ...");
-    logToConsole(LOG_DEBUG, "[Asshat.Ban]: Ban script initialized!");
+    logToConsole(LOG_INFO, "[Asshat.Ban]: Initializing ban script ...");
+    logToConsole(LOG_INFO, "[Asshat.Ban]: Ban script initialized!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function accountBanCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -37,12 +29,18 @@ function accountBanCommand(command, params, client) {
         return false;
 	}
 
-	messageAdminAction(`${getPlayerData(targetClient).accountData.name} has been banned from the server (account ban).`);
-	banAccount(getPlayerData(targetClient).accountData.databaseId, getPlayerData(client).accountData.databaseId, "");
+    let splitParams = params.split(" ");
+    let targetClient = getPlayerFromParams(splitParams[0]);
+    let reason = splitParams.slice(1).join(" ");
+
+    logToConsole(LOG_WARN, `[Asshat.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) account was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
+
+	messageAdminAction(`${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) has been account banned.`);
+	banAccount(getPlayerData(targetClient).accountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
 	disconnectPlayer(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function subAccountBanCommand(command, params, client, fromDiscord) {
 	if(areParamsEmpty(params)) {
@@ -60,12 +58,14 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
     let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
-	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been banned from the server (character ban).`);
+    logToConsole(LOG_WARN, `[Asshat.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name})'s subaccount was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
+
+	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been character banned.`);
     banSubAccount(getPlayerData(targetClient).currentSubAccountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
     disconnectPlayer(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function ipBanCommand(command, params, client, fromDiscord) {
 	if(areParamsEmpty(params)) {
@@ -83,13 +83,13 @@ function ipBanCommand(command, params, client, fromDiscord) {
     let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
-    messageAdminAction(`${targetClient.name} has been banned from the server (IP ban).`);
+    messageAdminAction(`${targetClient.name} has been IP banned.`);
     banIPAddress(targetClient.ip, getPlayerData(client).accountData.databaseId, reason);
     server.banIP(targetClient.ip);
     targetClient.disconnect();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function subNetBanCommand(command, params, client, fromDiscord) {
 	if(areParamsEmpty(params)) {
@@ -112,7 +112,7 @@ function subNetBanCommand(command, params, client, fromDiscord) {
 	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getPlayerData(client).accountData.databaseId, reason);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function banAccount(accountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
@@ -127,7 +127,7 @@ function banAccount(accountId, adminAccountId, reason) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function banSubAccount(subAccountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
@@ -142,7 +142,7 @@ function banSubAccount(subAccountId, adminAccountId, reason) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function banIPAddress(ipAddress, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
@@ -157,7 +157,7 @@ function banIPAddress(ipAddress, adminAccountId, reason) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function banSubNet(ipAddressStart, ipAddressEnd, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
@@ -172,7 +172,7 @@ function banSubNet(ipAddressStart, ipAddressEnd, adminAccountId, reason) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function unbanAccount(accountId, adminAccountId) {
     let dbConnection = connectToDatabase();
@@ -186,7 +186,7 @@ function unbanAccount(accountId, adminAccountId) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function unbanSubAccount(subAccountId, adminAccountId) {
     let dbConnection = connectToDatabase();
@@ -200,7 +200,7 @@ function unbanSubAccount(subAccountId, adminAccountId) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function unbanIPAddress(ipAddress, adminAccountId) {
     let dbConnection = connectToDatabase();
@@ -214,7 +214,7 @@ function unbanIPAddress(ipAddress, adminAccountId) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function unbanSubNet(ipAddressStart, ipAddressEnd, adminAccountId) {
     let dbConnection = connectToDatabase();
@@ -228,7 +228,7 @@ function unbanSubNet(ipAddressStart, ipAddressEnd, adminAccountId) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isAccountBanned(accountId) {
     let bans = getServerData().bans;
@@ -243,7 +243,7 @@ function isAccountBanned(accountId) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isSubAccountBanned(subAccountId) {
     let bans = getServerData().bans;
@@ -258,7 +258,7 @@ function isSubAccountBanned(subAccountId) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isIpAddressBanned(ipAddress) {
     let bans = getServerData().bans;
@@ -273,5 +273,5 @@ function isIpAddressBanned(ipAddress) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 

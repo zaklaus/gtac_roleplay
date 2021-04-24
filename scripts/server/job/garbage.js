@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: garbage.js
 // DESC: Provides garbage collector job functions and usage
 // TYPE: Job (JavaScript)
@@ -15,6 +15,7 @@ let garbageRoutes = [
             { // ROUTE 0
                 name: "Portland #1",
                 island: 0,
+                payout: 150,
                 positions: [
                     toVector3(1169.8, -45.54, 10.4),
                     toVector3(928, -59.1, 8.61),
@@ -37,6 +38,7 @@ let garbageRoutes = [
             { // ROUTE 0
                 name: "Staunton #1",
                 island: 1,
+                payout: 150,
                 positions: [
                     toVector3(49.85, -1539.9, 26.6),
                     toVector3(49.71, -1458.1, 26.6),
@@ -70,7 +72,7 @@ let garbageRoutes = [
     ],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getRandomGarbageRoute(island) {
     if(garbageRoutes[getServerGame()][island].length == 1) {
@@ -79,7 +81,7 @@ function getRandomGarbageRoute(island) {
     return getRandom(0, garbageRoutes[getServerGame()][island].length-1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getNextStopOnGarbageRoute(island, garbageRoute, garbageRouteStop) {
     if(!isLastStopOnGarbageRoute(island, garbageRoute, garbageRouteStop)) {
@@ -89,7 +91,7 @@ function getNextStopOnGarbageRoute(island, garbageRoute, garbageRouteStop) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isLastStopOnGarbageRoute(island, garbageRoute, garbageRouteStop) {
     if(garbageRouteStop == garbageRoutes[getServerGame()][island][garbageRoute].positions.length-1) {
@@ -98,27 +100,27 @@ function isLastStopOnGarbageRoute(island, garbageRoute, garbageRouteStop) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showNextGarbageStop(client) {
     getPlayerData(client).jobRouteStop = getNextStopOnGarbageRoute(getPlayerData(client).jobRouteStop, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop);
     showCurrentGarbageStop(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showCurrentGarbageStop(client) {
     triggerNetworkEvent("ag.showGarbageStop", client, getGarbageRouteStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop), getColourByName("garbageDriverGreen"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerArrivedAtGarbageStop(client) {
     if(isLastStopOnGarbageRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
         respawnVehicle(getPlayerData(client).jobRouteVehicle);
-        messagePlayerNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! You earned $${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout} and your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
-        getPlayerCurrentSubAccount(client).cash += getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout;
-        updatePlayerCash(client);
+        getPlayerData(client).payDayAmount += getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier;
+        messagePlayerNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! Your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
+        messagePlayerNormal(client, `You earned $${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier}. Your total paycheck of [#AAAAAA]${getPlayerData(client).payDayAmount} will be received in [#AAAAAA]${getTimeDifferenceDisplay(sdl.ticks-getPlayerData(client).payDayTickStart)}: $${getPlayerData(client).payDayAmount}`);
 		getPlayerData(client).jobRouteVehicle = false;
 		getPlayerData(client).jobRoute = 0;
 		getPlayerData(client).jobRouteStop = 0;
@@ -135,16 +137,16 @@ function playerArrivedAtGarbageStop(client) {
     }, 5000);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getGarbageRouteStopPosition(island, garbageRoute, garbageRouteStop) {
     return garbageRoutes[getServerGame()][island][garbageRoute].positions[garbageRouteStop];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getGarbageRouteData(island, garbageRoute) {
     return garbageRoutes[getServerGame()][island][garbageRoute];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

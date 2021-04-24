@@ -1,8 +1,8 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
+// ===========================================================================
 // FILE: nametags.js
 // DESC: Provides nametag rendering
 // TYPE: Client (JavaScript)
@@ -20,31 +20,52 @@ let playerColours = {};
 let playerPaused = {};
 let playerPing = {};
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-addEventHandler("OnResourceReady", function(event, resource) {
-	if (resource == thisResource) {
-		nametagFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
-		afkStatusFont = lucasFont.createDefaultFont(18.0, "Roboto", "Light");
-	}
-});
+function initNameTagScript() {
+	logToConsole(LOG_DEBUG, "[Asshat.NameTag]: Initializing nametag script ...");
+	nametagFont = loadNameTagFont();
+	afkStatusFont = loadPausedStatusFont();
+	logToConsole(LOG_DEBUG, "[Asshat.NameTag]: Nametag script initialized!");
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-addNetworkHandler("ag.nametag", function(clientName, characterName, colour, paused, ping) {
+function loadNameTagFont() {
+	return lucasFont.createDefaultFont(12.0, "Roboto", "Light");
+}
+
+// ===========================================================================
+
+function loadPausedStatusFont() {
+	return lucasFont.createDefaultFont(18.0, "Roboto", "Light");
+}
+
+// ===========================================================================
+
+function updatePlayerNameTag(clientName, characterName, colour, paused, ping) {
 	playerNames[clientName] = characterName;
 	playerColours[clientName] = colour;
 	playerPaused[clientName] = paused;
 	playerPing[clientName] = ping;
-});
 
-// -------------------------------------------------------------------------
+	if(gta.game == GAME_GTA_IV) {
+		let client = getPlayerFromParams(clientName);
+		if(client != false) {
+			if(client.player != null) {
+				client.player.setNametag(characterName, colour);
+			}
+		}
+	}
+}
 
-addNetworkHandler("ag.ping", function(clientName, ping) {
+// ===========================================================================
+
+function updatePlayerPing(clientName, ping) {
 	playerPing[clientName] = ping;
-});
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, afk, skin) {
 	if(nametagFont == null) {
@@ -75,9 +96,9 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		let hx = x-width/2;
 		let hy = y-10/2;
 		let colourB = toColour(0, 0, 0, Math.floor(255.0*alpha)); // Background colour (black)
-		drawing.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
-		let colour = toColour(Math.floor(255.0*alpha), Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0); // Health bar colour (varies, depending on health)
-		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*health, 10-6], colour, colour, colour, colour);
+		graphics.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
+		let colour = toColour(Math.floor(255.0-(health*255.0)), Math.floor(health*255.0), 0, Math.floor(255.0*alpha)); // Health bar colour (varies, depending on health)
+		graphics.drawRectangle(null, [hx+2, hy+2], [(width-4)*health, 10-6], colour, colour, colour, colour);
 	}
 
     // Armour Bar
@@ -88,9 +109,9 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 		let hx = x-width/2;
 		let hy = y-10/2;
 		let colourB = toColour(255, 0, 0, 0); // Background colour (black)
-		drawing.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
+		graphics.drawRectangle(null, [hx, hy], [width, 8], colourB, colourB, colourB, colourB);
 		let colour = toColour(255, 255, 255, 255); // Armour bar colour (white)
-		drawing.drawRectangle(null, [hx+2, hy+2], [(width-4)*armour, 10-6], colour, colour, colour, colour);
+		graphics.drawRectangle(null, [hx+2, hy+2], [(width-4)*armour, 10-6], colour, colour, colour, colour);
 	}
 
 	y -= 20;
@@ -113,7 +134,7 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function updateNametags(element) {
 	if(localPlayer != null) {
@@ -166,7 +187,7 @@ function updateNametags(element) {
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getClientFromPlayer(player) {
 	getClients().forEach(function(client) {
@@ -176,9 +197,9 @@ function getClientFromPlayer(player) {
 	});
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-addEventHandler("OnDrawnHUD", function(event) {
+function processNameTagRendering(event) {
 	if(gta.game >= GAME_GTA_IV) {
 		return false;
 	}
@@ -188,12 +209,12 @@ addEventHandler("OnDrawnHUD", function(event) {
 			updateNametags(player);
 		}
 	});
-});
+}
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function createColour(alpha, red, green, blue) {
 	return alpha << 24 | red << 16 | green << 8 | blue;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================

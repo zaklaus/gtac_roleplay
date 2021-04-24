@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: police.js
 // DESC: Provides police officer job functions and usage
 // TYPE: Job (JavaScript)
@@ -73,7 +73,7 @@ let patrolRoutes = [
     ],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function policeTazerCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) {
@@ -99,7 +99,7 @@ function policeTazerCommand(command, params, client) {
     return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function policeCuffCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) {
@@ -125,7 +125,7 @@ function policeCuffCommand(command, params, client) {
     return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function policeArrestCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) {
@@ -151,7 +151,7 @@ function policeArrestCommand(command, params, client) {
     return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function policeSearchCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) {
@@ -177,7 +177,7 @@ function policeSearchCommand(command, params, client) {
     return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function policeDragCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) {
@@ -203,7 +203,7 @@ function policeDragCommand(command, params, client) {
     return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function policeDetainCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) {
@@ -229,13 +229,13 @@ function policeDetainCommand(command, params, client) {
     return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerArivedAtPolicePatrolPoint(client) {
     if(isLastStopOnPolicePatrolRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
-        messagePlayerNormal(client, `You finished the ${getPatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} patrol route! You earned $${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout}`, getColourByName("yellow"));
+        messagePlayerNormal(client, `You finished the ${getPatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} patrol route! You earned $${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier}`, getColourByName("yellow"));
         messagePlayerNormal(client, `You can either continue driving the patrol route again, or use /stoproute to end your patrol.`, getColourByName("yellow"));
-        getPlayerCurrentSubAccount(client).cash += getPolicePatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout;
+        getPlayerCurrentSubAccount(client).cash += getPolicePatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier;
         updatePlayerCash(client);
 		getPlayerData(client).jobRouteVehicle = false;
 		getPlayerData(client).jobRoute = 0;
@@ -250,4 +250,4 @@ function playerArivedAtPolicePatrolPoint(client) {
     showCurrentPolicePatrolPoint(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

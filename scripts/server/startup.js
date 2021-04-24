@@ -2,21 +2,21 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: startup.js
 // DESC: Provides startup/shutdown procedures
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
 function initServerScripts() {
-
 	checkForAllRequiredModules();
-
-	initConfigScript();
 
 	initClassScript();
 	initDatabaseScript();
+	initConfigScript();
+	initEmailScript();
 	initBitFlagScript();
+	initItemScript();
 	initBusinessScript();
 	initClanScript();
 	initHouseScript();
@@ -31,19 +31,24 @@ function initServerScripts() {
 	initKeyBindScript();
 	initEventScript();
 	initAntiCheatScript();
-	initItemScript();
 	initClientScript();
+	initMessagingScript();
+	initHelpScript();
+	initFishingScript();
+	initGUIScript();
+	initEconomyScript();
+	initRadioScript();
 
 	initTimers();
 
 	loadGameFixesResource();
 
-	serverStartTime = new Date().getTime()/1000;
+	serverStartTime = getCurrentUnixTimestamp();
 
 	initCommandScript();
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkForHashingModule() {
 	if(typeof module.hashing == "undefined") {
@@ -52,7 +57,7 @@ function checkForHashingModule() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkForMySQLModule() {
 	if(typeof module.mysql == "undefined") {
@@ -62,7 +67,17 @@ function checkForMySQLModule() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function checkForSMTPModule() {
+	if(typeof module.smtp == "undefined") {
+		return false;
+	}
+
+	return true;
+}
+
+// ===========================================================================
 
 function checkForAllRequiredModules() {
 	logToConsole(LOG_DEBUG, "[Asshat.Startup]: Checking for required modules ...");
@@ -79,12 +94,18 @@ function checkForAllRequiredModules() {
 		thisResource.stop();
 	}
 
+	if(!checkForSMTPModule()) {
+		console.warn("[Asshat.Startup]: SMTP Email module is not loaded!");
+		console.warn("[Asshat.Startup]: This resource will now shutdown.");
+		thisResource.stop();
+	}
+
 	logToConsole(LOG_DEBUG, "[Asshat.Startup]: All required modules loaded!");
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 initServerScripts();
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

@@ -2,13 +2,18 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: messaging.js
 // DESC: Provides messaging functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+function initMessagingScript() {
+	logToConsole(LOG_INFO, "[Asshat.Messaging]: Initializing messaging script ...");
+	logToConsole(LOG_INFO, "[Asshat.Messaging]: Messaging script initialized successfully!");
+}
+
+// ===========================================================================
 
 function messageAdminAction(messageText) {
     messagePlayerNormal(null, `⚠️ ${messageText}`, getColourByName("orange"));
@@ -18,7 +23,7 @@ function messageAdminAction(messageText) {
     //logToConsole(LOG_INFO, `[Asshat.Messaging] ADMIN: ${messageText}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
     if(isConsole(client)) {
@@ -35,7 +40,7 @@ function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
     //}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messageAdmins(messageText, colour = COLOUR_WHITE) {
     let clients = getClients();
@@ -51,7 +56,7 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerError(client, messageText) {
     if(isConsole(client)) {
@@ -66,7 +71,7 @@ function messagePlayerError(client, messageText) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerSyntax(client, messageText) {
     if(isConsole(client)) {
@@ -81,7 +86,7 @@ function messagePlayerSyntax(client, messageText) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerAlert(client, messageText) {
     if(isConsole(client)) {
@@ -96,7 +101,7 @@ function messagePlayerAlert(client, messageText) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerSuccess(client, messageText) {
     if(isConsole(client)) {
@@ -111,7 +116,7 @@ function messagePlayerSuccess(client, messageText) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerInfo(client, messageText) {
     if(isConsole(client)) {
@@ -126,7 +131,7 @@ function messagePlayerInfo(client, messageText) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerTip(client, messageText) {
     if(isConsole(client)) {
@@ -141,25 +146,25 @@ function messagePlayerTip(client, messageText) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerTalk(client, talkingClient, messageText) {
-    messagePlayerNormal(client, `${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
+    messagePlayerNormal(client, `🗣️ ${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerWhisper(client, whisperingClient, messageText) {
-    messagePlayerNormal(client, `${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
+    messagePlayerNormal(client, `🤫 ${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerShout(client, shoutingClient, messageText) {
-    messagePlayerNormal(client, `${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
+    messagePlayerNormal(client, `🗣️ ${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerDoAction(client, doingActionClient, messageText) {
     if(!isClientFromDiscord(client)) {
@@ -167,22 +172,22 @@ function messagePlayerDoAction(client, doingActionClient, messageText) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerMeAction(client, doingActionClient, messageText) {
     messagePlayerNormal(client, `${getClientSubAccountName(doingActionClient)} ${messageText}`, getColourByType("meActionMessage"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerClanChat(client, clanChattingClient, messageText) {
-    messagePlayerNormal(client, `(${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
+    messagePlayerNormal(client, `👥 (${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function messagePlayerAdminChat(client, adminChattingClient, messageText) {
-    messagePlayerNormal(client, `[ADMIN CHAT] [#AAAAAA]${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
+    messagePlayerNormal(client, `🛡️ [ADMIN CHAT] [#AAAAAA]${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================

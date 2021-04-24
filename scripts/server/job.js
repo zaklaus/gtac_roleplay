@@ -2,23 +2,30 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: job.js
 // DESC: Provides job functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
 function initJobScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Job]: Initializing job script ...");
+	logToConsole(LOG_INFO, "[Asshat.Job]: Initializing job script ...");
 	getServerData().jobs = loadJobsFromDatabase();
-	createAllJobPickups();
-	createAllJobBlips();
+
+	if(getServerConfig().createJobPickups) {
+		createAllJobPickups();
+	}
+
+	if(getServerConfig().createJobBlips) {
+		createAllJobBlips();
+	}
+
 	setAllJobDataIndexes();
-	logToConsole(LOG_DEBUG, "[Asshat.Job]: Job script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Job]: Job script initialized successfully!");
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadJobsFromDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Job]: Loading jobs from database ...");
@@ -50,7 +57,7 @@ function loadJobsFromDatabase() {
 	return tempJobs;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAllJobEquipmentFromDatabase() {
 	for(let i in getServerData().jobs) {
@@ -58,7 +65,7 @@ function loadAllJobEquipmentFromDatabase() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAllJobUniformsFromDatabase() {
 	for(let i in getServerData().jobs) {
@@ -66,7 +73,7 @@ function loadAllJobUniformsFromDatabase() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAllJobLocationsFromDatabase() {
 	for(let i in getServerData().jobs) {
@@ -74,7 +81,7 @@ function loadAllJobLocationsFromDatabase() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadJobEquipmentsFromDatabase(jobDatabaseId) {
 	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job equipments for job ${jobDatabaseId} from database ...`);
@@ -104,7 +111,7 @@ function loadJobEquipmentsFromDatabase(jobDatabaseId) {
 	return tempJobEquipments;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadJobLocationsFromDatabase(jobDatabaseId) {
 	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job locations for job ${jobDatabaseId} from database ...`);
@@ -133,7 +140,7 @@ function loadJobLocationsFromDatabase(jobDatabaseId) {
 	return tempJobLocations;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadJobUniformsFromDatabase(jobDatabaseId) {
 	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job uniforms for job ${jobDatabaseId} from database ...`);
@@ -162,7 +169,7 @@ function loadJobUniformsFromDatabase(jobDatabaseId) {
 	return tempJobUniforms;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadJobEquipmentItemsFromDatabase(jobEquipmentDatabaseId) {
 	logToConsole(LOG_DEBUG, `[Asshat.Job]: Loading job equipment items for job equipment ${jobEquipmentDatabaseId} from database ...`);
@@ -191,7 +198,7 @@ function loadJobEquipmentItemsFromDatabase(jobEquipmentDatabaseId) {
 	return tempJobEquipmentItems;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllJobBlips() {
 	logToConsole(LOG_DEBUG, `[Asshat.Job] Spawning all job location blips ...`);
@@ -205,7 +212,7 @@ function createAllJobBlips() {
 	logToConsole(LOG_DEBUG, `[Asshat.Job] All job location blips spawned!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAllJobPickups() {
 	logToConsole(LOG_DEBUG, `[Asshat.Job] Spawning all job location pickups ...`);
@@ -231,7 +238,7 @@ function createAllJobPickups() {
 	logToConsole(LOG_DEBUG, `[Asshat.Job] All job location pickups (${pickupCount}) spawned!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function showJobInformationToPlayer(client, jobType) {
 	if(!canPlayerUseJobs(client)){
@@ -267,7 +274,7 @@ function showJobInformationToPlayer(client, jobType) {
 			break;
 
 		case AG_JOB_FIRE:
-			if(!canClientUseFireJob(client)){
+			if(!canClientUseFireJob(client)) {
 				return false;
 			}
 			messagePlayerInfo(client, "== Job Help =================================");
@@ -319,7 +326,7 @@ function showJobInformationToPlayer(client, jobType) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function takeJobCommand(command, params, client) {
 	if(!canPlayerUseJobs(client)) {
@@ -336,7 +343,7 @@ function takeJobCommand(command, params, client) {
 	}
 
 	if(getPlayerCurrentSubAccount(client).job > AG_JOB_NONE) {
-		messagePlayerError(client, "You already have a job! Use /quitjob to quit your job.");
+		messagePlayerError(client, `[#FFFFFF]You already have a job! Use [#AAAAAA]/quitjob [#FFFFFF]to quit your current job.`);
 		return false;
 	}
 
@@ -346,11 +353,11 @@ function takeJobCommand(command, params, client) {
 	}
 
 	takeJob(client, closestJobLocation.jobIndex);
-	messagePlayerSuccess(client, "You now have the " + toString(jobData.name) + " job");
+	messagePlayerSuccess(client, `[#FFFFFF]You now have the [#FFFF00]${jobData.name} [#FFFFFF]job`);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function startWorkingCommand(command, params, client) {
 	if(!canPlayerUseJobs(client)){
@@ -383,7 +390,7 @@ function startWorkingCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function stopWorkingCommand(command, params, client) {
 	if(!canPlayerUseJobs(client)) {
@@ -407,13 +414,14 @@ function stopWorkingCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function startWorking(client) {
 	if(!canPlayerUseJobs(client)){
 		return false;
 	}
 
+	getPlayerCurrentSubAccount(client).skin = getPlayerSkin(client);
 	storePlayerItemsInJobLocker(client);
 	messagePlayerInfo(client, "Your personal items have been stored in your locker while you work");
 
@@ -460,7 +468,7 @@ function startWorking(client) {
 	//showStartedWorkingTip(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobInfoCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
@@ -468,7 +476,7 @@ function getJobInfoCommand(command, params, client) {
 	messagePlayerInfo(client, `[#FFFF00][Job Info] [#FFFFFF]Name: [#AAAAAA]${getJobData(closestJobLocation.job).name}, [#FFFFFF]Enabled: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).enabled))}, [#FFFFFF]Whitelisted: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).whiteListEnabled))}, [#FFFFFF]Blacklisted: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).blackListEnabled))}, [#FFFFFF]ID: [#AAAAAA]${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobLocationInfoCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
@@ -476,7 +484,7 @@ function getJobLocationInfoCommand(command, params, client) {
 	messagePlayerInfo(client, `[#FFFF00][Job Location Info] [#FFFFFF]Job: [#AAAAAA]${getJobData(closestJobLocation.job).name} (${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}), [#FFFFFF]Enabled: [#AAAAAA]${getYesNoFromBool(closestJobLocation.enabled)}, [#FFFFFF]Database ID: [#AAAAAA]${closestJobLocation.databaseId}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function givePlayerJobEquipment(client, equipmentId) {
 	if(!canPlayerUseJobs(client)) {
@@ -499,7 +507,7 @@ function givePlayerJobEquipment(client, equipmentId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function stopWorking(client) {
 	if(!canPlayerUseJobs(client)){
@@ -533,6 +541,8 @@ function stopWorking(client) {
 		getPlayerCurrentSubAccount(client).lastJobVehicle = false;
 	}
 
+	setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
+	deleteJobItems(client);
 	restorePlayerJobLockerItems(client);
 
 	let jobId = getPlayerCurrentSubAccount(client).job;
@@ -575,7 +585,7 @@ function stopWorking(client) {
 	sendPlayerWorkingState(client, false);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function jobUniformCommand(command, params, client) {
 	if(!getPlayerJob(client)) {
@@ -606,16 +616,18 @@ function jobUniformCommand(command, params, client) {
 		return false;
 	}
 
-	messagePlayerSuccess(client, `You have been given a [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform and you can put it on from your inventory.`);
+	setPlayerSkin(client, getJobData(jobId).uniforms[uniformId-1].skin);
 
-	let itemId = createItem(getItemTypeFromParams("Uniform"), getJobData(jobId).uniforms[uniformId].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
-	let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
-	getPlayerData(client).hotBarItems[freeSlot] = itemId;
-	getPlayerData(client).jobEquipmentCache.push(itemId);
-	updatePlayerHotBar(client);
+	//messagePlayerSuccess(client, `You have been given a [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform and you can put it on from your inventory.`);
+	meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(getJobData(jobId).uniforms[uniformId-1].name)} ${getJobData(jobId).uniforms[uniformId-1].name} uniform`);
+	//let itemId = createItem(getItemTypeFromParams("Outfit"), getJobData(jobId).uniforms[uniformId-1].skin, AG_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
+	//let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
+	//getPlayerData(client).hotBarItems[freeSlot] = itemId;
+	//getPlayerData(client).jobEquipmentCache.push(itemId);
+	//updatePlayerHotBar(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function jobEquipmentCommand(command, params, client) {
 	if(!getPlayerJob(client)) {
@@ -652,11 +664,12 @@ function jobEquipmentCommand(command, params, client) {
 		return false;
 	}
 
+	deleteJobItems(client);
 	givePlayerJobEquipment(client, equipmentId-1);
 	messagePlayerSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function quitJobCommand(command, params, client) {
 	if(!canPlayerUseJobs(client)){
@@ -668,7 +681,7 @@ function quitJobCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function jobRadioCommand(command, params, client) {
 	if(!canPlayerUseJobs(client)){
@@ -678,30 +691,29 @@ function jobRadioCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function jobDepartmentRadioCommand(command, params, client) {
 	if(!canPlayerUseJobs(client)){
 		return false;
 	}
 
-
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobType(jobId) {
 	return getJobData(jobId).type;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveJobType(client, jobType) {
-	return (getJobType(getPlayerCurrentSubAccount(client).job) == jobType) ? true : false;
+	return (getJobType(getJobIdFromDatabaseId(getPlayerCurrentSubAccount(client).job)) == jobType) ? true : false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobData(jobId) {
 	if(typeof getServerData().jobs[jobId] != "undefined") {
@@ -711,22 +723,22 @@ function getJobData(jobId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function quitJob(client) {
 	stopWorking(client);
-	getPlayerCurrentSubAccount(client).job = AG_JOB_NONE;
-	sendPlayerJobType(client, 0);
+	getPlayerCurrentSubAccount(client).job = 0;
+	sendPlayerJobType(client, -1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function takeJob(client, jobId) {
 	getPlayerCurrentSubAccount(client).job = getJobData(jobId).databaseId;
 	sendPlayerJobType(client, getJobData(jobId).databaseId);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function reloadAllJobsCommand(command, params, client) {
 	forceAllPlayersToStopWorking();
@@ -746,7 +758,7 @@ function reloadAllJobsCommand(command, params, client) {
 	messageAdminAction(`All server jobs have been reloaded by an admin!`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createJobLocationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -766,7 +778,7 @@ function createJobLocationCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteJobLocationCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
@@ -781,7 +793,7 @@ function deleteJobLocationCommand(command, params, client) {
 	getJobData(tempJob).locations.splice(tempIndex, 1);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleJobLocationEnabledCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -795,7 +807,7 @@ function toggleJobLocationEnabledCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(closestJobLocation.enabled)} location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${getJobData(closestJobLocation.jobIndex).name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleJobEnabledCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -809,7 +821,7 @@ function toggleJobEnabledCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).enabled)} [#FFFFFF]the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleJobWhiteListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -823,7 +835,7 @@ function toggleJobWhiteListCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).whiteListEnabled)} [#FFFFFF]the whitelist for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleJobBlackListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -837,7 +849,7 @@ function toggleJobBlackListCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).blackListEnabled)} [#FFFFFF]the blacklist for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addPlayerToJobBlackListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -867,7 +879,7 @@ function addPlayerToJobBlackListCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]added ${getCharacterFullName(targetClient)} [#FFFFFF]to the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removePlayerFromJobBlackListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -897,7 +909,7 @@ function removePlayerFromJobBlackListCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]removed ${getCharacterFullName(targetClient)} [#FFFFFF]from the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addPlayerToJobWhiteListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -927,7 +939,7 @@ function addPlayerToJobWhiteListCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]added ${getCharacterFullName(targetClient)} [#FFFFFF]to the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removePlayerFromJobWhiteListCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -957,7 +969,7 @@ function removePlayerFromJobWhiteListCommand(command, params, client) {
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]removed ${getCharacterFullName(targetClient)} [#FFFFFF]from the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function forceAllPlayersToStopWorking() {
 	getClients().forEach(function(client) {
@@ -967,7 +979,7 @@ function forceAllPlayersToStopWorking() {
 	});
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function jobStartRouteCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) {
@@ -995,7 +1007,7 @@ function jobStartRouteCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function jobStopRouteCommand(command, params, client) {
     if(!canPlayerUseJobs(client)) {
@@ -1022,7 +1034,7 @@ function jobStopRouteCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerInJobVehicle(client) {
 	if(getPlayerVehicle(client)) {
@@ -1035,7 +1047,7 @@ function isPlayerInJobVehicle(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerWorking(client) {
 	if(!getPlayerCurrentSubAccount(client)) {
@@ -1044,7 +1056,7 @@ function isPlayerWorking(client) {
 	return getPlayerCurrentSubAccount(client).isWorking;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function startJobRoute(client) {
 	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
@@ -1070,59 +1082,66 @@ function startJobRoute(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
-function stopJobRoute(client, successful = false) {
+function stopJobRoute(client, successful = false, alertPlayer = true) {
 	stopReturnToJobVehicleCountdown(client);
 	sendPlayerStopJobRoute(client);
 
 	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
-		respawnVehicle(getPlayerData(client).busRouteVehicle);
-		messagePlayerAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).busRouteIsland, getPlayerData(client).busRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
-		getPlayerData(client).busRouteVehicle = false;
-		getPlayerData(client).busRoute = false;
-		getPlayerData(client).busRouteStop = false;
-		getPlayerData(client).busRouteIsland = false;
+		respawnVehicle(getPlayerData(client).jobRouteVehicle);
+		getPlayerData(client).jobRouteVehicle = false;
+		getPlayerData(client).jobRoute = false;
+		getPlayerData(client).jobRouteStop = false;
+		getPlayerData(client).jobRouteIsland = false;
+
+		if(alertPlayer) {
+			messagePlayerAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route! Your bus has been returned to the bus depot.`, getColourByName("yellow"));
+		}
 	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
-		respawnVehicle(getPlayerData(client).garbageRouteVehicle);
-		messagePlayerAlert(client, `You stopped the ${getBusRouteData(getPlayerData(client).garbageRouteIsland, getPlayerData(client).garbageRoute).name} garbage route! Your trashmaster has been returned to the bus depot.`, getColourByName("yellow"));
-		getPlayerData(client).garbageRouteVehicle = false;
-		getPlayerData(client).garbageRoute = false;
-		getPlayerData(client).garbageRouteStop = false;
-		getPlayerData(client).garbageRouteIsland = false;
+		respawnVehicle(getPlayerData(client).jobRouteVehicle);
+		getPlayerData(client).jobRouteVehicle = false;
+		getPlayerData(client).jobRoute = false;
+		getPlayerData(client).jobRouteStop = false;
+		getPlayerData(client).jobRouteIsland = false;
+
+		if(alertPlayer) {
+			messagePlayerAlert(client, `You stopped the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! Your trashmaster has been returned to the bus depot.`, getColourByName("yellow"));
+		}
+	} else if(doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+		respawnVehicle(getPlayerData(client).jobRouteVehicle);
+		getPlayerData(client).jobRouteVehicle = false;
+		getPlayerData(client).jobRoute = false;
+		getPlayerData(client).jobRouteStop = false;
+		getPlayerData(client).jobRouteIsland = false;
+
+		if(alertPlayer) {
+			messagePlayerAlert(client, `You stopped the ${getPolicePatrolRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} patrol route! Your police car has been returned to the station.`, getColourByName("yellow"));
+		}
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerOnJobRoute(client) {
-	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
-		if(getPlayerData(client).busRoute) {
-			return true;
-		}
-	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
-		if(getPlayerData(client).garbageRoute) {
-			return true;
-		}
+	if(typeof getPlayerData(client).jobRoute == "number") {
+		return true;
 	}
+
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerJobRouteVehicle(client) {
 	if(!isPlayerOnJobRoute(client)) {
 		return false;
 	}
 
-	if(doesPlayerHaveJobType(client, AG_JOB_BUS)) {
-		return getPlayerData(client).busRouteVehicle;
-	} else if(doesPlayerHaveJobType(client, AG_JOB_GARBAGE)) {
-		return getPlayerData(client).garbageRouteVehicle;
-	}
+	return getPlayerData(client).jobRouteVehicle;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function startReturnToJobVehicleCountdown(client) {
 	getPlayerData(client).returnToJobVehicleTick = getGlobalConfig().returnToJobVehicleTime;
@@ -1141,7 +1160,7 @@ function startReturnToJobVehicleCountdown(client) {
 	}, 1000);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function stopReturnToJobVehicleCountdown(client) {
 	if(getPlayerData(client).returnToJobVehicleTimer != null) {
@@ -1152,7 +1171,7 @@ function stopReturnToJobVehicleCountdown(client) {
 	//getPlayerData(client).returnToJobVehicleTick = 0;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function canPlayerUseJob(client, jobId) {
 	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageJobs"))) {
@@ -1178,29 +1197,29 @@ function canPlayerUseJob(client, jobId) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteJobLocation(jobLocationData) {
 	if(jobLocationData.pickup) {
-		destroyElement(jobLocationData.pickup);
+		deleteGameElement(jobLocationData.pickup);
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function freezeJobVehicleForRouteStop(client) {
     getVehicleData(getPlayerVehicle(client)).engine = false;
 	getPlayerVehicle(client).engine = false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function unFreezeJobVehicleForRouteStop(client) {
     getVehicleData(getPlayerVehicle(client)).engine = true;
 	getPlayerVehicle(client).engine = true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobIdFromDatabaseId(databaseId) {
 	for(let i in getServerData().jobs) {
@@ -1211,7 +1230,7 @@ function getJobIdFromDatabaseId(databaseId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setAllJobDataIndexes() {
 	for(let i in getServerData().jobs) {
@@ -1248,7 +1267,7 @@ function setAllJobDataIndexes() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createJobLocation(jobId, position, interior, dimension) {
 	let jobLocationData = new serverClasses.jobLocationData(false);
@@ -1266,7 +1285,7 @@ function createJobLocation(jobId, position, interior, dimension) {
 	saveJobLocationToDatabase(jobLocationData);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveJobToDatabase(jobData) {
 	if(jobData == null) {
@@ -1284,7 +1303,22 @@ function saveJobToDatabase(jobData) {
 			queryDatabase(dbConnection, dbQueryString);
 			jobData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE job_main SET job_name='${safeName}', job_enabled=${boolToInt(jobData.enabled)}, job_pickup=${jobData.pickupModel}, job_blip=${jobData.blipModel}, job_type=${jobData.type}, job_colour_r=${jobData.colourArray[0]}, job_colour_g=${jobData.colourArray[1]}, job_colour_b=${jobData.colourArray[2]} WHERE job_id=${jobData.databaseId}`;
+
+			let dbQueryString =
+				`UPDATE job_main SET
+					job_name='${safeName}',
+					job_enabled=${boolToInt(jobData.enabled)},
+					job_pickup=${jobData.pickupModel},
+					job_blip=${jobData.blipModel},
+					job_type=${jobData.type},
+					job_colour_r=${jobData.colourArray[0]},
+					job_colour_g=${jobData.colourArray[1]},
+					job_colour_b=${jobData.colourArray[2]},
+					job_walkietalkiefreq=${jobData.walkieTalkieFrequency},
+					job_wl=${jobData.whiteListEnabled},
+					job_bl=${jobData.blackListEnabled}
+				WHERE job_id=${jobData.databaseId}`;
+
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -1295,7 +1329,7 @@ function saveJobToDatabase(jobData) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveJobLocationToDatabase(jobLocationData) {
 	if(jobLocationData == null) {
@@ -1309,7 +1343,7 @@ function saveJobLocationToDatabase(jobLocationData) {
 		// If job location hasn't been added to database, ID will be 0
 		if(jobLocationData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO job_loc (job_loc_job, job_loc_enabled, job_loc_pos_x, job_loc_pos_y, job_loc_pos_z, job_loc_int, job_loc_vw) VALUES (${jobLocationData.job}, ${boolToInt(jobLocationData.enabled)}, ${jobLocationData.position.x}, ${jobLocationData.position.y}, ${jobLocationData.position.z}, ${jobLocationData.interior}, ${jobLocationData.dimension})`;
-			logToConsole(LOG_DEBUG, dbQueryString);
+
 			queryDatabase(dbConnection, dbQueryString);
 			jobLocationData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
@@ -1324,7 +1358,7 @@ function saveJobLocationToDatabase(jobLocationData) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveJobEquipmentToDatabase(jobEquipmentData) {
 	if(jobEquipmentData == null) {
@@ -1353,7 +1387,7 @@ function saveJobEquipmentToDatabase(jobEquipmentData) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveJobEquipmentItemToDatabase(jobEquipmentItemData) {
 	if(jobEquipmentItemData == null) {
@@ -1381,7 +1415,7 @@ function saveJobEquipmentItemToDatabase(jobEquipmentItemData) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveJobUniformToDatabase(jobUniformData) {
 	if(jobUniformData == null) {
@@ -1410,7 +1444,7 @@ function saveJobUniformToDatabase(jobUniformData) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllJobsToDatabase() {
 	for(let i in getServerData().jobs) {
@@ -1434,25 +1468,25 @@ function saveAllJobsToDatabase() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteJobLocationBlip(jobId, locationId) {
 	if(getJobData(jobId).locations[locationId].blip != null) {
-		destroyElement(getJobData(jobId).locations[locationId].blip);
+		deleteGameElement(getJobData(jobId).locations[locationId].blip);
 		getJobData(jobId).locations[locationId].blip = null;
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function deleteJobLocationPickup(jobId, locationId) {
 	if(getServerData().jobs[jobId].locations[locationId].pickup != null) {
-		destroyElement(getJobData(jobId).locations[locationId].pickup);
+		deleteGameElement(getJobData(jobId).locations[locationId].pickup);
 		getServerData().jobs[jobId].locations[locationId].pickup = null;
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createJobLocationPickup(jobId, locationId) {
 	if(getJobData(jobId).pickupModel != -1) {
@@ -1464,16 +1498,16 @@ function createJobLocationPickup(jobId, locationId) {
 
 		getJobData(jobId).locations[locationId].pickup = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
 		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
-		addToWorld(getJobData(jobId).locations[locationId].pickup);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.owner.type", AG_PICKUP_JOB, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, locationId, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, AG_LABEL_JOB, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, getServerData().jobs[jobId].name, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, jobId, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.owner.id", locationId, false);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.type", AG_LABEL_JOB, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.name", getJobData(jobId).name, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.jobType", getJobData(jobId).databaseId, true);
+		addToWorld(getJobData(jobId).locations[locationId].pickup);
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createJobLocationBlip(jobId, locationId) {
 	if(getJobData(jobId).blipModel != -1) {
@@ -1490,7 +1524,7 @@ function createJobLocationBlip(jobId, locationId) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerJob(client) {
 	let jobDatabaseId = getPlayerCurrentSubAccount(client).job;
@@ -1503,7 +1537,7 @@ function getPlayerJob(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function canPlayerUseJobs(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getServerBitFlags().moderationFlags.jobBanned)) {
@@ -1513,7 +1547,7 @@ function canPlayerUseJobs(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getJobIndexFromDatabaseId(databaseId) {
 	for(let i in getServerData().jobs) {
@@ -1524,13 +1558,13 @@ function getJobIndexFromDatabaseId(databaseId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isJobWhiteListed(jobId) {
 	return getJobData(jobId).whiteListEnabled;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerOnJobWhiteList(client, jobId) {
 	for(let i in getJobData(jobId).whiteList) {
@@ -1542,13 +1576,13 @@ function isPlayerOnJobWhiteList(client, jobId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isJobBlackListed(jobId) {
 	return getJobData(jobId).blackListEnabled;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerOnJobBlackList(client, jobId) {
 	for(let i in getJobData(jobId).blackList) {
@@ -1560,7 +1594,7 @@ function isPlayerOnJobBlackList(client, jobId) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerArrivedAtJobRouteStop(client) {
 	if(!isPlayerOnJobRoute(client)) {
@@ -1576,4 +1610,19 @@ function playerArrivedAtJobRouteStop(client) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function deleteJobItems(client) {
+	for(let i in getPlayerData(client).jobEquipmentCache) {
+		for(let j in getPlayerData(client).hotBarItems) {
+			if(getPlayerData(client).hotBarItems[j] == getPlayerData(client).jobEquipmentCache[i]) {
+				getPlayerData(client).hotBarItems[j] = -1;
+			}
+		}
+		deleteItem(getPlayerData(client).jobEquipmentCache[i]);
+	}
+
+	updatePlayerHotBar(client);
+}
+
+// ===========================================================================

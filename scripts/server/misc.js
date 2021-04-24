@@ -2,45 +2,45 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: misc.js
 // DESC: Provides any uncategorized functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initMiscScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Misc]: Initializing misc script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.Misc]: Misc script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Misc]: Initializing misc script ...");
+	logToConsole(LOG_INFO, "[Asshat.Misc]: Misc script initialized successfully!");
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPositionCommand(command, params, client) {
-	let position = client.player.position;
+	let position = getPlayerPosition(client);
 
 	messagePlayerNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
 	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleMouseCursorCommand(command, params, client) {
 	sendPlayerMouseCursorToggle(client);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleMouseCameraCommand(command, params, client) {
 	sendPlayerMouseCameraToggle(client);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setNewCharacterSpawnPositionCommand(command, params, client) {
 	let position = client.player.position;
@@ -51,7 +51,7 @@ function setNewCharacterSpawnPositionCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setNewCharacterMoneyCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -68,7 +68,7 @@ function setNewCharacterMoneyCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function setNewCharacterSkinCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -89,7 +89,7 @@ function setNewCharacterSkinCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function submitIdeaCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -103,7 +103,7 @@ function submitIdeaCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function submitBugReportCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -117,17 +117,9 @@ function submitBugReportCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function enterExitPropertyCommand(command, params, client) {
-	if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
-		if(getPlayerData(client).pedState == AG_PEDSTATE_ENTERINGVEHICLE) {
-			sendPlayerClearPedState(client);
-		} else {
-			return false;
-		}
-	}
-
 	if(isPlayerInAnyHouse(client)) {
 		let inHouse = getServerData().houses[getPlayerHouse(client)];
 		if(getDistance(inHouse.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
@@ -135,6 +127,7 @@ function enterExitPropertyCommand(command, params, client) {
 				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
 				return false;
 			}
+			clearPlayerStateToEnterExitProperty(client);
 			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
 			fadeCamera(client, false, 1.0);
@@ -154,8 +147,8 @@ function enterExitPropertyCommand(command, params, client) {
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "ag.inHouse");
+			return true;
 		}
-		return true;
 	}
 
 	if(isPlayerInAnyBusiness(client)) {
@@ -166,6 +159,7 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
+			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
@@ -185,13 +179,13 @@ function enterExitPropertyCommand(command, params, client) {
 			}, 1100);
 			removeEntityData(client, "ag.inBusiness");
 			logToConsole(LOG_DEBUG, `[Asshat.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
+			return true;
 		}
-		return true;
 	}
 
 	if(getServerData().businesses.length > 0) {
 		let closestBusinessId = getClosestBusinessEntrance(getPlayerPosition(client));
-		let closestBusiness = getBusinessData(closestBusinessId)
+		let closestBusiness = getBusinessData(closestBusinessId);
 		if(getDistance(closestBusiness.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
 			if(!doesBusinessHaveInterior(closestBusinessId)) {
 				messagePlayerAlert(client, "This business does not have an interior.");
@@ -204,8 +198,8 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 
+			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
-
 			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
@@ -240,8 +234,8 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 
+			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
-
 			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
 			disableCityAmbienceForPlayer(client);
@@ -265,12 +259,14 @@ function enterExitPropertyCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadGameFixesResource() {
 	switch(getServerGame()) {
 		case GAME_GTA_III:
-			findResourceByName("asshat-gta3").start();
+			if(findResourceByName("asshat-gta3") != null) {
+				findResourceByName("asshat-gta3").start();
+			}
 			break;
 
 		default:
@@ -279,7 +275,7 @@ function loadGameFixesResource() {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerInfoCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -296,7 +292,7 @@ function getPlayerInfoCommand(command, params, client) {
 	messagePlayerInfo(client, `[#AAAAAA][Player Info] [#FFFFFF]Account: [#AAAAAA]${getPlayerData(targetClient).accountData.name}[${getPlayerData(targetClient).accountData.databaseId}], [#FFFFFF]Character: [#AAAAAA]${getCharacterFullName(client)}[${getPlayerCurrentSubAccount(client).databaseId}], [#FFFFFF]Connected: [#AAAAAA]${getTimeDifferenceDisplay(Math.ceil(sdl.tick/1000), getPlayerData(targetClient).connectTime)} ago, [#FFFFFF]Game Version: [#AAAAAA]${targetClient.gameVersion}, [#FFFFFFF]Client Version: [#AAAAAA]${getPlayerData(targetClient).clientVersion}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerChangeAFKState(client, afkState) {
     if(afkState) {
@@ -306,4 +302,41 @@ function playerChangeAFKState(client, afkState) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function checkPlayerSpawning() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(!isConsole(clients[i])) {
+			if(getPlayerData(clients[i])) {
+				if(getPlayerData(clients[i]).loggedIn) {
+					if(!getPlayerData(clients[i]).ped) {
+						if(clients[i].player != null) {
+							//getPlayerData(clients[i]).ped = clients[i].player;
+							onPlayerSpawn(clients[i].player);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// ===========================================================================
+
+function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
+	if(promptType == AG_PROMPT_NONE) {
+		return false;
+	}
+
+	getPlayerData(client).promptType = promptType;
+
+	if(canPlayerUseGUI(client)) {
+		showPlayerPromptGUI(client, promptMessage, promptTitle);
+	} else {
+		messagePlayerNormal(client, `❓ ${promptMessage}`);
+		messagePlayerInfo(client, `[#FFFFFF]Use [#AAAAAA]/yes or [#AAAAAA]/no`);
+	}
+}
+
+// ===========================================================================

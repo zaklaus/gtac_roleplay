@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: anticheat.js
 // DESC: Provides anticheat functions and usage
 // TYPE: Server (JavaScript)
@@ -14,7 +14,7 @@ function initAntiCheatScript() {
     getServerData().antiCheat.blackListedGameScripts = loadAntiCheatGameScriptBlackListFromDatabase();
 	logToConsole(LOG_DEBUG, "[Asshat.AntiCheat]: Anticheat script initialized!");
 }
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAntiCheatGameScriptWhiteListFromDatabase() {
     logToConsole(LOG_DEBUG, `[Asshat.AntiCheat] Loading whitelisted game scripts ...`);
@@ -38,7 +38,7 @@ function loadAntiCheatGameScriptWhiteListFromDatabase() {
     return tempWhiteListedGameScripts;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAntiCheatGameScriptBlackListFromDatabase() {
     logToConsole(LOG_DEBUG, `[Asshat.AntiCheat] Loading blacklisted game scripts ...`);
@@ -62,4 +62,17 @@ function loadAntiCheatGameScriptBlackListFromDatabase() {
     return tempBlackListedGameScripts;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function clearPlayerStateToEnterExitProperty(client) {
+    if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
+		if(getPlayerData(client).pedState == AG_PEDSTATE_ENTERINGVEHICLE) {
+			sendPlayerClearPedState(client);
+			getPlayerData(client).pedState = AG_PEDSTATE_READY;
+		} else {
+			return false;
+		}
+	}
+}
+
+// ===========================================================================

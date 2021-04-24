@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: colour.js
 // DESC: Provides colours, functions and usage
 // TYPE: Server (JavaScript)
@@ -30,17 +30,18 @@ let serverColours = {
 		royalBlue: toColour(0, 0, 255, 255),
 		teal: toColour(0, 255, 255, 255),
 		orange: toColour(255, 128, 0, 255),
-		softRed: toColour(205, 92, 92, 255),
+		softRed: toColour(205, 60, 60, 255),
 		softGreen: toColour(50, 205, 50, 255),
 		lightPurple: toColour(150, 0, 150, 255),
 		lightGrey: toColour(200, 200, 200, 255),
 		mediumGrey: toColour(150, 150, 150, 255),
 		darkGrey: toColour(64, 64, 64, 255),
-		policeBlue: toColour(70, 130, 180, 255),
+		policeBlue: toColour(50, 80, 200, 255),
 		medicPink: toColour(219, 112, 147, 255),
-		firefighterRed: toColour(205, 92, 92, 255),
-		busDriverGreen: toColour(50, 205, 50, 255),
-		taxiDriverYellow: toColour(240, 230, 140, 255),
+		firefighterRed: toColour(205, 60, 60, 255),
+		busDriverGreen: toColour(50, 160, 50, 255),
+		taxiDriverYellow: toColour(240, 230, 100, 255),
+		deliveryPurple: toColour(177, 156, 217, 255),
 		civilianWhite: toColour(200, 200, 200, 255),
 		burntYellow: toColour(210, 210, 0, 255),
 		burntOrange: toColour(210, 120, 0, 255),
@@ -49,28 +50,28 @@ let serverColours = {
 		businessBlue: toColour(0, 153, 255, 255),
 		houseGreen: toColour(17, 204, 17, 255),
 		clanOrange: toColour(255, 153, 0, 255),
-	}
+	},
 };
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getServerColours() {
 	return serverColours;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getColourByType(typeName) {
 	return getServerColours().byType[typeName];
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getColourByName(colourName) {
 	return getServerColours().byName[colourName];
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerColour(client) {
 	if(getPlayerData(client) != false) {
@@ -86,10 +87,49 @@ function getPlayerColour(client) {
 	return getColourByName("civilianWhite");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getBoolRedGreenInlineColour(boolVal) {
-	return (!boolVal) ? "[#AA2222]" : "[#22AA22]";
+	return (!boolVal) ? "[#cd3c3c]" : "[#32cd32]";
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function hexToRgb(h) {
+	return [
+		'0x'+h[1]+h[2]|0,
+		'0x'+h[3]+h[4]|0,
+		'0x'+h[5]+h[6]|0
+	];
+}
+
+// ===========================================================================
+
+function rgbToHex(r, g, b) {
+	return "#"+((1<<24)+(r<<16)+(g<<8)+ b).toString(16).slice(1);
+}
+
+// ===========================================================================
+
+function getClientChatColour(client) {
+	let tempJob = getPlayerCurrentSubAccount(client).job;
+	if(tempJob != -1) {
+		if(getPlayerData(client).isWorking) {
+			return getJobData(tempJob).jobColour;
+		}
+	}
+	return getColourByName("white");
+}
+
+// ===========================================================================
+
+function getRandomRGB() {
+	return toColour.apply(null, [
+		getRandom(0, 255),
+		getRandom(0, 255),
+		getRandom(0, 255),
+		255
+	]);
+}
+
+// ===========================================================================

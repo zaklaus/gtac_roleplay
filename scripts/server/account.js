@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: account.js
 // DESC: Provides account functions and usage
 // TYPE: Server (JavaScript)
@@ -13,7 +13,7 @@ function initAccountScript() {
 	logToConsole(LOG_DEBUG, "[Asshat.Account]: Account script initialized!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loginCommand(command, params, client) {
 	if(!isPlayerRegistered(client)) {
@@ -30,7 +30,7 @@ function loginCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function autoLoginByIPCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
@@ -45,7 +45,7 @@ function autoLoginByIPCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function autoSelectLastCharacterCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
@@ -60,7 +60,7 @@ function autoSelectLastCharacterCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleAccountGUICommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noGUI");
@@ -97,7 +97,7 @@ function toggleAccountGUICommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function toggleAccountServerLogoCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("noServerLogo");
@@ -119,38 +119,40 @@ function toggleAccountServerLogoCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 // UNFINISHED!
 // TO-DO: Make GUI, add command to generate code to add to auth app and command to input code returned by auth app
 function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("twoStepAuth");
 
-	if(getPlayerData(client).emailAddress != "") {
+	if(getPlayerData(client).accountData.emailAddress != "") {
 		messagePlayerError(client, "You need to add your email to your account to use two-factor authentication.");
 		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add your email.");
 		return false;
 	}
 
-	if(!isValidEmailAddress(getPlayerData(client).emailAddress)) {
-		messagePlayerError(client, "The email you previously added is not valid.");
-		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add a valid email.");
+	if(isAccountEmailVerified(getPlayerData(client).accountData)) {
+		messagePlayerError(client, "You need to verify your email to your account to use two-factor authentication.");
+		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/verifyemail [#FFFFFF]to verify your email.");
 		return false;
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerSuccess(client, `[#FFFFFF]Use this code to add your account into your authenticator app: [#AAAAAA]${addtoAuthenticatorCode}`);
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
+		messagePlayerSuccess(client, `[#FFFFFF]You have turned ${getBoolRedGreenInlineColour(false)}ON [#FFFFFF] two factor authentication![#AAAAAA]${addtoAuthenticatorCode}`);
+		messagePlayerAlert(client, "You will be required to enter a code sent to your email every time you log on.");
 		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF [#FFFFFF]two-factor authentication for login.`);
+		messagePlayerAlert(client, "You won't be required to enter a code sent to your email every time you log on anymore.");
 		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function registerCommand(command, params, client) {
 	if(isPlayerRegistered(client)) {
@@ -169,7 +171,7 @@ function registerCommand(command, params, client) {
 	//messagePlayerAlert(client, "To play on the server, you will need to make a character.");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function changePasswordCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -196,12 +198,34 @@ function changePasswordCommand(command, params, client) {
 	messagePlayerSuccess(client, "Your password has been changed!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function setAccountChatScrollLinesCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(isNaN(params)) {
+		messagePlayerError(client, "The line amount must be a number!");
+		return false;
+	}
+
+	if(toInteger(params) < 1 || toInteger(params) > 6) {
+		messagePlayerError(client, "The line amount must be between 1 and 6!");
+		return false;
+	}
+
+	let lines = Math.ceil(toInteger(params));
+
+	getPlayerData(client).accountData.chatScrollLines = lines;
+	sendPlayerChatScrollLines(client, lines);
+	messagePlayerSuccess(client, `Your chatbox will now scroll ${toInteger(lines)} lines at a time!`);
+}
+
+// ===========================================================================
 
 function setAccountEmailCommand(command, params, client) {
-	messagePlayerError(client, `This command is not yet finished and will be available soon!`);
-	return false;
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -215,12 +239,61 @@ function setAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
-	//getPlayerData(client).accountData.emailAddress = emailAddress;
-	messagePlayerSuccess(client, "Your password has been changed!");
+	//if(.emailAddress != "") {
+	//	messagePlayerError(client, `Your email is already set!`);
+	//	return false;
+	//}
+
+	if(getPlayerData(client).accountData.emailAddress != "" && isAccountEmailVerified(getPlayerData(client).accountData)) {
+		messagePlayerError(client, `You already set your email and verified it!`);
+		return false;
+	}
+
+	setAccountEmail(getPlayerData(client).accountData, emailAddress);
+
+	let emailVerificationCode = generateEmailVerificationCode();
+	setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+	sendEmailVerificationEmail(client, emailVerificationCode);
+
+	messagePlayerSuccess(client, `Your email has been set!`);
+	messagePlayerAlert(client, `Please verify your email to enable extra account security and recovery features.`);
+	messagePlayerAlert(client, `A verification code and instructions have been sent to your email.`);
+	saveAccountToDatabase(getPlayerData(client).accountData);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function verifyAccountEmailCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let verificationCode = splitParams[0];
+
+	if(isAccountEmailVerified(getPlayerData(client).accountData)) {
+		messagePlayerError(client, `You already verified your email!`);
+		return false;
+	}
+
+	if(module.hashing.sha512(verificationCode) != getPlayerData(client).accountData.emailVerificationCode) {
+		messagePlayerError(client, `Invalid email verification code! A new one has been created and sent to your email.`);
+		let emailVerificationCode = generateEmailVerificationCode();
+		setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+		sendEmailVerificationEmail(client, emailVerificationCode);
+		return false;
+	}
+
+	getPlayerData(client).accountData.flags.moderation = addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("emailVerified"));
+	getPlayerData(client).accountData.emailVerificationCode = "";
+
+	messagePlayerSuccess(client, `Your email has been verified!`);
+	messagePlayerAlert(client, `You can now use your email for password resets, two-factor authentication, alerts, and more!`);
+	saveAccountToDatabase(getPlayerData(client).accountData);
+}
+
+// ===========================================================================
 
 function setAccountDiscordCommand(command, params, client) {
 	messagePlayerError(client, `This command is not yet finished and will be available soon!`);
@@ -239,12 +312,12 @@ function setAccountDiscordCommand(command, params, client) {
 		return false;
 	}
 
-	// TO-DO: Command (like /verifyemail or use this one for second step too) to input verification code sent to email.
+	// TO-DO: Command (like /verifydiscord or use this one for second step too) to input verification code sent to email.
 	//getPlayerData(client).accountData.emailAddress = emailAddress;
 	//messagePlayerSuccess(client, "Your discord account has been attached to your game account!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerLoggedIn(client) {
 	if(isConsole(client)) {
@@ -258,7 +331,7 @@ function isPlayerLoggedIn(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isPlayerRegistered(client) {
 	if(isConsole(client)) {
@@ -274,14 +347,14 @@ function isPlayerRegistered(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPasswordMeetRequirements(password) {
 	// Will be added soon
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isAccountPasswordCorrect(accountData, password) {
 	if(accountData.password == password) {
@@ -291,13 +364,13 @@ function isAccountPasswordCorrect(accountData, password) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountFromName(accountName, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		accountName = escapeDatabaseString(dbConnection, accountName);
-		let dbQueryString = `SELECT *, INET_NTOA(acct_ip) AS ipstring FROM acct_main WHERE acct_name = '${accountName}' LIMIT 1;`;
+		let dbQueryString = `SELECT acct_main.*, acct_svr.*, INET_NTOA(acct_ip) AS ipstring FROM acct_main INNER JOIN acct_svr ON acct_svr.acct_svr_acct = acct_main.acct_id AND acct_svr.acct_svr_svr = ${getServerId()} WHERE acct_name = '${accountName}' LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
@@ -319,7 +392,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountFromId(accountId, fullLoad = false) {
 	let dbConnection = connectToDatabase();
@@ -345,7 +418,7 @@ function loadAccountFromId(accountId, fullLoad = false) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getAccountHashingFunction() {
 	switch(toLowerCase(getGlobalConfig().accountPasswordHash)) {
@@ -384,7 +457,7 @@ function getAccountHashingFunction() {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isNameRegistered(name) {
 	let accountData = loadAccountFromName(name, true);
@@ -395,7 +468,7 @@ function isNameRegistered(name) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function hashAccountPassword(name, password) {
 	let hashFunction = getAccountHashingFunction();
@@ -403,17 +476,19 @@ function hashAccountPassword(name, password) {
 	return hashFunction(saltedInfo);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saltAccountInfo(name, password) {
 	return "ag.gaming." + toString(accountSaltHash) + "." + toString(name) + "." + toString(password);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loginSuccess(client) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} successfully logged in.`);
 	getPlayerData(client).loggedIn = true;
+
+	updateConnectionLogOnAuth(client, getPlayerData(client).accountData.databaseId);
 
 	if(doesPlayerHaveStaffPermission(client, "developer") || doesPlayerHaveStaffPermission(client, "manageServer")) {
 		logToConsole(LOG_WARN, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has needed permissions and is being given administrator access`);
@@ -423,7 +498,7 @@ function loginSuccess(client) {
 	if(getPlayerData(client).subAccounts.length == 0) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No characters");
-			setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+			getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
 			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters prompt GUI`);
 		} else {
 			messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
@@ -436,34 +511,74 @@ function loginSuccess(client) {
 	getPlayerData(client).accountData.ipAddress = client.ip;
 
 	sendRemovedWorldObjectsToPlayer(client);
-	sendAccountKeyBindsToClient(client);
+	sendPlayerChatScrollLines(client, getPlayerData(client).accountData.chatScrollLines);
 
 	messagePlayerNormal(null, `👋 ${client.name} has joined the server`, getColourByName("softYellow"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAccountToDatabase(accountData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
+		//logToConsole(LOG_VERBOSE, `Escaping account data for ${getPlayerDisplayForConsole(client)}`);
 		let safePassword = escapeDatabaseString(dbConnection, accountData.password);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(accountData.name)}'s password escaped successfully`);
 		let safeStaffTitle = escapeDatabaseString(dbConnection, accountData.staffTitle);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff title escaped successfully`);
 		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
-		//let safeIRCAccount = dbConnection.escapetoString(accountData.ircAccount);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s email address escaped successfully`);
 
-		let dbQueryString = `UPDATE acct_main SET acct_pass='${safePassword}', acct_settings=${accountData.settings}, acct_staff_flags=${accountData.flags.admin}, acct_staff_title='${safeStaffTitle}', acct_mod_flags=${toString(accountData.flags.moderation)}, acct_discord=${toString(accountData.discordAccount)}, acct_email='${safeEmailAddress}', acct_ip=INET_ATON('${accountData.ipAddress}') WHERE acct_id=${accountData.databaseId}`;
+		let dbQueryString =
+			`UPDATE acct_main SET
+				 acct_email='${safeEmailAddress}',
+				acct_pass='${safePassword}',
+				acct_discord=${accountData.discordAccount},
+				acct_ip=INET_ATON('${accountData.ipAddress}'),
+				acct_code_verifyemail='${accountData.emailVerificationCode}'
+			 WHERE acct_id=${accountData.databaseId}`;
+
+			 /*
+			 	acct_settings=${accountData.settings},
+				acct_staff_title='${safeStaffTitle}',
+				acct_staff_flags=${accountData.flags.admin},
+				acct_mod_flags=${accountData.flags.moderation},
+			*/
+
+		//dbQueryString = dbQueryString.trim();
+		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
+
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		//freeDatabaseQuery(dbQuery);
+		freeDatabaseQuery(dbQuery);
+		dbQuery = null;
+
+		dbQueryString =
+			`UPDATE acct_svr SET
+				 acct_svr_acct='${accountData.databaseId}',
+			 	acct_svr_settings=${accountData.flags.settings},
+				acct_svr_staff_title='${safeStaffTitle}',
+				acct_svr_staff_flags=${accountData.flags.admin},
+				acct_svr_mod_flags=${accountData.flags.moderation},
+				acct_svr_chat_scroll_lines=${accountData.chatScrollLines}
+			 WHERE acct_svr_acct=${accountData.databaseId} AND acct_svr_svr = ${getServerId()}`;
+
+		//dbQueryString = dbQueryString.trim();
+		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
+
+		dbQuery = queryDatabase(dbConnection, dbQueryString);
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAccountKeyBindsDatabase(keyBindData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
+		//logToConsole(LOG_VERBOSE, `Escaping account keybinds data for ${getPlayerDisplayForConsole(client)}`);
 		let safeCommandString = escapeDatabaseString(dbConnection, keyBindData.commandString);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s keybind command string escaped successfully`);
 		if(keyBindData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_cmdstr, acct_hotkey_key, acct_hotkey_down, acct_hotkey_enabled) VALUES ('${safeCommandString}', ${keyBindData.key}, ${boolToInt(keyBindData.keyState)}, ${boolToInt(keyBindData.enabled)}, ${keyBindData.account}`;
 			keyBindData.databaseId = getDatabaseInsertId(dbConnection);
@@ -479,12 +594,13 @@ function saveAccountKeyBindsDatabase(keyBindData) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAccountStaffNotesDatabase(staffNoteData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeNoteContent = escapeDatabaseString(dbConnection, staffNoteData.note);
+		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff note string escaped successfully`);
 		if(staffNoteData.databaseId == 0) {
 			let dbQueryString = `INSERT INTO acct_note (acct_note_message, acct_note_who_added, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${getServerId()}, ${staffNoteData.account}`;
 			staffNoteData.databaseId = getDatabaseInsertId(dbConnection);
@@ -496,7 +612,7 @@ function saveAccountStaffNotesDatabase(staffNoteData) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 /*
 function saveAccountContactsDatabase(accountContactData) {
@@ -519,7 +635,7 @@ function saveAccountContactsDatabase(accountContactData) {
 }
 */
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createAccount(name, password, email = "") {
 	let dbConnection = connectToDatabase();
@@ -529,10 +645,11 @@ function createAccount(name, password, email = "") {
 		let safeName = escapeDatabaseString(dbConnection, name);
 		let safeEmail = escapeDatabaseString(dbConnection, email);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}')`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email, acct_when_registered) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}', UNIX_TIMESTAMP())`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			let accountData = loadAccountFromId(getDatabaseInsertId(dbConnection), true);
 			createDefaultKeybindsForAccount(accountData.databaseId);
+			createDefaultAccountServerData(accountData.databaseId);
 			return accountData;
 		}
 	}
@@ -540,10 +657,13 @@ function createAccount(name, password, email = "") {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkLogin(client, password) {
 	getPlayerData(client).loginAttemptsRemaining = getPlayerData(client).loginAttemptsRemaining-1;
+	if(getPlayerData(client).loginAttemptsRemaining <= 0) {
+		client.disconnect();
+	}
 
 	if(isPlayerLoggedIn(client)) {
 		logToConsole(LOG_WARN, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is already logged in`);
@@ -599,7 +719,7 @@ function checkLogin(client, password) {
 	loginSuccess(client);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function checkRegistration(client, password, confirmPassword = "", emailAddress = "") {
 	logToConsole(LOG_DEBUG, "[Asshat.Account]: Checking registration for " + toString(client.name));
@@ -685,24 +805,29 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	getPlayerData(client).loggedIn = true;
 
 	messagePlayerSuccess(client, "Your account has been created!");
+	messagePlayerAlert(client, "Don't forget to verify your email! A verification code has been sent to you");
 	messagePlayerAlert(client, "To play on the server, you will need to make a character.");
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		showPlayerRegistrationSuccessGUI(client);
 		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
-		setEntityData(client, "ag.prompt", AG_PROMPT_CREATEFIRSTCHAR, false);
+		getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
+
+		let emailVerificationCode = generateEmailVerificationCode();
+		setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+		sendEmailVerificationEmail(client, emailVerificationCode);
 	} else {
 		messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
 	}
 };
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isValidEmailAddress(emailAddress) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllClientsToDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Account]: Saving all clients to database ...");
@@ -712,7 +837,7 @@ function saveAllClientsToDatabase() {
 	logToConsole(LOG_DEBUG, "[Asshat.Account]: All clients saved to database successfully!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function savePlayerToDatabase(client) {
 	if(getPlayerData(client) == null) {
@@ -727,22 +852,29 @@ function savePlayerToDatabase(client) {
 	saveAccountToDatabase(getPlayerData(client).accountData);
 
 	if(getPlayerData(client).currentSubAccount != -1) {
-		let subAccountData = getPlayerCurrentSubAccount(client);
+		//let subAccountData = getPlayerCurrentSubAccount(client);
 
 		if(client.player != null) {
-			subAccountData.spawnPosition = getPlayerPosition(client);
-			subAccountData.spawnHeading = getPlayerHeading(client);
-			subAccountData.interior = getPlayerInterior(client);
-			subAccountData.dimension = getPlayerDimension(client);
+			if(getPlayerData(client).returnToPosition != null) {
+				getPlayerCurrentSubAccount(client).spawnPosition = getPlayerData(client).returnToPosition;
+				getPlayerCurrentSubAccount(client).spawnHeading = getPlayerData(client).returnToHeading;
+				getPlayerCurrentSubAccount(client).interior = getPlayerData(client).returnToInterior;
+				getPlayerCurrentSubAccount(client).dimension = getPlayerData(client).returnToDimension;
+			} else {
+				getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
+				getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
+				getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
+				getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
+			}
 		}
 
-		saveSubAccountToDatabase(subAccountData);
+		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
 	}
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Saved client ${getPlayerDisplayForConsole(client)} to database successfully!`);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initClient(client) {
 	if(isConsole(client)) {
@@ -753,6 +885,7 @@ function initClient(client) {
 	sendPlayerGUIInit(client);
 
 	showConnectCameraToPlayer(client);
+	//playRadioStreamForPlayer(client, getServerConfig().introMusicURL, true);
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
 
 	setTimeout(function() {
@@ -794,23 +927,45 @@ function initClient(client) {
 	}, 2500);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveConnectionToDatabase(client) {
-	let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0')`;
-	return quickDatabaseQuery(dbQueryString);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, client.name);
+		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', INET_ATON('${client.ip}'))`;
+		let query = queryDatabase(dbConnection, dbQueryString);
+		setEntityData(client, "ag.connection", getDatabaseInsertId(dbConnection));
+	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function createDefaultKeybindsForAccount(accountDatabaseId) {
-	for(let i in getGlobalConfig().defaultKeybinds) {
-		let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${getGlobalConfig().defaultKeybinds[i].key}, '${getGlobalConfig().defaultKeybinds[i].commandString}', UNIX_TIMESTAMP(), ${boolToInt(getGlobalConfig().defaultKeybinds[i].keyState)})`;
+	logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybinds for account ${accountDatabaseId} ...`);
+	for(let j = 1 ; j <= 4 ; j++) {
+		logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybinds for account ${accountDatabaseId} on server ${j} ...`);
+		for(let i in getGlobalConfig().keyBind.defaultKeyBinds) {
+			logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())} ...`);
+			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_server, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${j}, ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeyBinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeyBinds[i].keyState})`;
+			quickDatabaseQuery(dbQueryString);
+			logToConsole(LOG_DEBUG, `[Asshat.Account]: Created default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}!`);
+		}
+		logToConsole(LOG_DEBUG, `[Asshat.Account]: Create default keybinds for account ${accountDatabaseId} on server ${j}!`);
+	}
+	logToConsole(LOG_DEBUG, `[Asshat.Account]: Created default keybinds for account ${accountDatabaseId} successfully!`);
+}
+
+// ===========================================================================
+
+function createDefaultAccountServerData(accountDatabaseId) {
+	for(let i = 1 ; i <= 4 ; i++) {
+		let dbQueryString = `INSERT INTO acct_svr (acct_svr_acct, acct_svr_svr) VALUES (${accountDatabaseId}, ${i})`;
 		quickDatabaseQuery(dbQueryString);
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account keybinds for account ${accountDatabaseID} from database ...`);
@@ -821,7 +976,7 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	let dbAssoc;
 
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID}`);
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID} AND acct_hotkey_server = ${getServerId()}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -839,7 +994,7 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	return tempAccountKeybinds;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account staff notes for account ${accountDatabaseID} from database ...`);
@@ -868,7 +1023,7 @@ function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
 	return tempAccountStaffNotes;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountContactsFromDatabase(accountDatabaseID) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account contacts for account ${accountDatabaseID} from database ...`);
@@ -897,7 +1052,7 @@ function loadAccountContactsFromDatabase(accountDatabaseID) {
 	return tempAccountContacts;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function loadAccountMessagesFromDatabase(accountDatabaseID) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account messages for account ${accountDatabaseID} from database ...`);
@@ -926,7 +1081,7 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 	return tempAccountMessages;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isAccountAutoIPLoginEnabled(accountData) {
 	let accountSettings = accountData.settings;
@@ -934,7 +1089,7 @@ function isAccountAutoIPLoginEnabled(accountData) {
 	return hasBitFlag(accountSettings, flagValue);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveGUIEnabled(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noGUI"))) {
@@ -944,7 +1099,7 @@ function doesPlayerHaveGUIEnabled(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveLogoEnabled(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noServerLogo"))) {
@@ -954,7 +1109,7 @@ function doesPlayerHaveLogoEnabled(client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveAutoLoginByIPEnabled(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
@@ -964,20 +1119,73 @@ function doesPlayerHaveAutoLoginByIPEnabled(client) {
 	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
 	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"))) {
 		return true;
 	}
 
-	return true;
+	return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerStaffTitle(client) {
 	return getPlayerData(client).accountData.staffTitle;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function isAccountEmailVerified(accountData) {
+	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("emailVerified"));
+}
+
+// ===========================================================================
+
+function isAccountTwoFactorAuthenticationVerified(accountData) {
+	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("twoFactorAuthVerified"));
+}
+
+// ===========================================================================
+
+function setAccountEmail(accountData, emailAddress) {
+	accountData.emailAddress = emailAddress;
+}
+
+// ===========================================================================
+
+function setAccountEmailVerificationCode(accountData, emailVerificationCode) {
+	accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
+}
+
+// ===========================================================================
+
+function generateEmailVerificationCode() {
+	return generateRandomString(10);
+}
+
+// ===========================================================================
+
+function sendEmailVerificationEmail(client, emailVerificationCode) {
+	let emailBodyText = getEmailConfig().bodyContent.confirmEmail;
+	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", emailVerificationCode);
+
+	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);
+}
+
+// ===========================================================================
+
+function verifyAccountEmail(accountData, verificationCode) {
+	let emailVerificationCode = generateRandomString(10);
+
+	let emailBodyText = getEmailConfig().bodyContent.confirmEmail;
+	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", emailVerificationCode);
+
+	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);
+
+	getPlayerData(client).accountData.emailAddress = emailAddress;
+	getPlayerData(client).accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
+}
+
+// ===========================================================================

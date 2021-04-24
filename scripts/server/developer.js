@@ -2,14 +2,14 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: developer.js
 // DESC: Provides developer operation, commands, functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
 function initDeveloperScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Developer]: Initializing developer script ...");
+	logToConsole(LOG_INFO, "[Asshat.Developer]: Initializing developer script ...");
 
 	// Use GTAC command handlers for these since they need to be available on console
 	//addCommandHandler("sc", executeServerCodeCommand);
@@ -18,69 +18,107 @@ function initDeveloperScript() {
 	//addCommandHandler("allcmd", simulateCommandForAllPlayersCommand);
 	//addCommandHandler("addloglvl", setServerLogLevelCommand);
 
-	logToConsole(LOG_DEBUG, "[Asshat.Developer]: Developer script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Developer]: Developer script initialized successfully!");
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function p(params) {
 	return getPlayerFromParams(params);
 }
 
+// ===========================================================================
+
+function o(params) {
+	return getElementsByType(ELEMENT_OBJECT)[params];
+}
+
+// ===========================================================================
+
+function io(params) {
+	return getItemData(params).object;
+}
+
+// ===========================================================================
+
 function pd(params) {
 	return getPlayerData(getPlayerFromParams(params));
 }
+
+// ===========================================================================
 
 function cv(params) {
 	return getClosestVehicle(getPlayerPosition(getPlayerFromParams(params)));
 }
 
+// ===========================================================================
+
 function iv(params) {
 	return getPlayerVehicle(getPlayerFromParams(params));
 }
+
+// ===========================================================================
 
 function bd(params) {
 	return getBusinessFromParams(params);
 }
 
+// ===========================================================================
+
 function hd(params) {
 	return getHouseFromParams(params);
 }
+
+// ===========================================================================
 
 function jd(params) {
 	return getJobFromParams(params);
 }
 
+// ===========================================================================
+
 function jld(params, jobLocationIndex) {
 	return getJobFromParams(params).locations[jobLocationIndex];
 }
+
+// ===========================================================================
 
 function vd(params) {
 	return getVehicleData(getVehicleFromParams(params));
 }
 
+// ===========================================================================
+
 function pad(params) {
 	return getPlayerData(getPlayerFromParams(params)).accountData;
 }
+
+// ===========================================================================
 
 function pcsd(params) {
 	return getPlayerCurrentSubAccount(getPlayerFromParams(params));
 }
 
+// ===========================================================================
+
 function psd(params, subAccountIndex) {
 	return getPlayerData(getPlayerFromParams(params)).subAccounts[subAccountIndex];
 }
+
+// ===========================================================================
 
 function pv(params) {
 	return getPlayerVehicle(getPlayerFromParams(params));
 }
 
+// ===========================================================================
+
 function pvd(params) {
 	return getVehicleData(getPlayerVehicle(getPlayerFromParams(params)));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addServerLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -118,7 +156,7 @@ function addServerLogLevelCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removeServerLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -156,7 +194,7 @@ function removeServerLogLevelCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function simulateCommandForPlayerCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
@@ -197,7 +235,7 @@ function simulateCommandForPlayerCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function simulateCommandForAllPlayersCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
@@ -237,7 +275,7 @@ function simulateCommandForAllPlayersCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function executeServerCodeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -259,7 +297,7 @@ function executeServerCodeCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function executeClientCodeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
@@ -288,16 +326,23 @@ function executeClientCodeCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function saveAllServerDataCommand(command, params, client) {
-	messageAdmins(`[#FF9900]Saving all server data to database ...`);
+	messageAdmins(`[#FF9900]Vortrex has forced a manual save of all data. Initiating ...`);
 	saveAllServerDataToDatabase();
-	messageAdmins(`[#FF9900]All server data saved to database!`);
+	messageAdmins(`[#FF9900]All server data saved to database successfully!`);
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function testEmailCommand(command, params, client) {
+	sendEmail(params, "Player",  "Test email", "Just testing the SMTP module for the server!");
+	return true;
+}
+
+// ===========================================================================
 
 function restartGameModeCommand(command, params, client) {
 	messagePlayerNormal(null, `[#FF9900]The server game mode is restarting!`, getColourByName("orange"));
@@ -306,10 +351,10 @@ function restartGameModeCommand(command, params, client) {
 	return true;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clientRunCodeFail(client, returnTo, code) {
-	let returnClient = getClients()[returnTo];
+	let returnClient = getClientFromIndex(returnTo);
 	if(!returnClient) {
 		return false;
 	}
@@ -318,10 +363,10 @@ function clientRunCodeFail(client, returnTo, code) {
 	messagePlayerNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function clientRunCodeSuccess(client, returnTo, returnVal, code) {
-	let returnClient = getClients()[returnTo];
+	let returnClient = getClientFromIndex(returnTo);
 	if(!returnClient) {
 		return false;
 	}
@@ -331,7 +376,7 @@ function clientRunCodeSuccess(client, returnTo, returnVal, code) {
 	messagePlayerNormal(returnClient, `Returns: ${returnVal}`, getColourByName("yellow"));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function submitIdea(client, ideaText) {
 	let position = (getPlayerVehicle(client)) ? getVehiclePosition(getPlayerVehicle(client)) : getPlayerPosition(client);
@@ -352,7 +397,7 @@ function submitIdea(client, ideaText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function submitBugReport(client, bugText) {
 	let position = (getPlayerVehicle(client)) ? getVehiclePosition(getPlayerVehicle(client)) : getPlayerPosition(client);
@@ -373,10 +418,32 @@ function submitBugReport(client, bugText) {
 	}
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function isDevelopmentServer() {
-	return intToBool(server.getCVar("devserver"));
+	return intToBool(server.getCVar("devserver") || 0);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function migrateSubAccountsToPerServerData() {
+	let dbConnection = connectToDatabase();
+	let dbQuery = false;
+	let dbAssoc = false;
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM sacct_main`);
+		if(dbQuery) {
+			while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+				createDefaultSubAccountServerData(dbAssoc["sacct_id"]);
+
+				let dbQuery2 = queryDatabase(dbConnection, `UPDATE sacct_svr SET sacct_svr_skin = ${dbAssoc["sacct_skin"]}, sacct_svr_job = ${dbAssoc["sacct_job"]} WHERE sacct_svr_sacct=${dbAssoc["sacct_id"]} AND sacct_svr_server=${dbAssoc["sacct_server"]}`);
+				if(dbQuery2) {
+					freeDatabaseQuery(dbQuery2);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+	}
+}
+
+// ===========================================================================

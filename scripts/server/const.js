@@ -2,14 +2,16 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: const.js
 // DESC: Provides constants
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
 // Prompts (used for client GUI prompt responses)
+const AG_PROMPT_NONE = 0;
 const AG_PROMPT_CREATEFIRSTCHAR = 1;
+const AG_PROMPT_BIZORDER = 2;
 
 // Job Types
 const AG_JOB_NONE = 0;
@@ -22,7 +24,7 @@ const AG_JOB_GARBAGE = 6;
 const AG_JOB_WEAPON = 7;
 const AG_JOB_DRUG = 8;
 
-// Pickup Owner Types
+// Pickup Types
 const AG_PICKUP_NONE = 0;
 const AG_PICKUP_JOB = 1;
 const AG_PICKUP_BUSINESS_ENTRANCE = 2;
@@ -31,54 +33,48 @@ const AG_PICKUP_HOUSE_ENTRANCE = 4;
 const AG_PICKUP_HOUSE_EXIT = 5;
 const AG_PICKUP_EXIT = 5;
 
-// Sphere Types
-const AG_SPHERE_NONE = 0;
-const AG_SPHERE_JOB = 1;
-const AG_SPHERE_BUSINESS = 2;
-const AG_SPHERE_HOUSE = 3;
-
 // Vehicle Owner Types
-const AG_VEHOWNER_NONE = 0;
-const AG_VEHOWNER_PLAYER = 1;
-const AG_VEHOWNER_JOB = 2;
-const AG_VEHOWNER_CLAN = 3;
-const AG_VEHOWNER_FACTION = 4;
-const AG_VEHOWNER_PUBLIC = 5;
-const AG_VEHOWNER_BIZ = 6;
+const AG_VEHOWNER_NONE = 0;                     // Not owned
+const AG_VEHOWNER_PLAYER = 1;                   // Owned by a player (character/subaccount)
+const AG_VEHOWNER_JOB = 2;                      // Owned by a job
+const AG_VEHOWNER_CLAN = 3;                     // Owned by a clan
+const AG_VEHOWNER_FACTION = 4;                  // Owned by a faction (not used at the moment)
+const AG_VEHOWNER_PUBLIC = 5;                   // Public vehicle. Anybody can drive it.
+const AG_VEHOWNER_BIZ = 6;                      // Owned by a business (also includes dealerships since they're businesses)
 
 // Business Owner Types
-const AG_BIZOWNER_NONE = 0;
-const AG_BIZOWNER_PLAYER = 1;
-const AG_BIZOWNER_JOB = 2;
-const AG_BIZOWNER_CLAN = 3;
-const AG_BIZOWNER_FACTION = 4;
-const AG_BIZOWNER_PUBLIC = 5;
+const AG_BIZOWNER_NONE = 0;                     // Not owned
+const AG_BIZOWNER_PLAYER = 1;                   // Owned by a player (character/subaccount)
+const AG_BIZOWNER_JOB = 2;                      // Owned by a job
+const AG_BIZOWNER_CLAN = 3;                     // Owned by a clan
+const AG_BIZOWNER_FACTION = 4;                  // Owned by a faction (not used at the moment)
+const AG_BIZOWNER_PUBLIC = 5;                   // Public Business. Used for goverment/official places like police, fire, city hall, DMV, etc
 
 // House Owner Types
-const AG_HOUSEOWNER_NONE = 0;
-const AG_HOUSEOWNER_PLAYER = 1;
-const AG_HOUSEOWNER_JOB = 2;
-const AG_HOUSEOWNER_CLAN = 3;
-const AG_HOUSEOWNER_FACTION = 4;
-const AG_HOUSEOWNER_PUBLIC = 5;
+const AG_HOUSEOWNER_NONE = 0;                   // Not owned
+const AG_HOUSEOWNER_PLAYER = 1;                 // Owner is a player (character/subaccount)
+const AG_HOUSEOWNER_JOB = 2;                    // Owned by a job
+const AG_HOUSEOWNER_CLAN = 3;                   // Owned by a clan
+const AG_HOUSEOWNER_FACTION = 4;                // Owned by a faction
+const AG_HOUSEOWNER_PUBLIC = 5;                 // Is a public house. Technically not owned. This probably won't be used.
 
 // Business Location Types
-const AG_BIZLOC_NONE = 0;
-const AG_BIZLOC_FUEL = 1;
-const AG_BIZLOC_DRIVETHRU = 2;
-const AG_BIZLOC_VENDMACHINE = 3;
+const AG_BIZLOC_NONE = 0;                       // None
+const AG_BIZLOC_FUEL = 1;                       // Fuel pump
+const AG_BIZLOC_DRIVETHRU = 2;                  // Drivethrough
+const AG_BIZLOC_VENDMACHINE = 3;                // Vending machine
 
 // Account Contact Types
 const AG_CONTACT_NONE = 0;
-const AG_CONTACT_NEUTRAL = 1;
-const AG_CONTACT_FRIEND = 2;
-const AG_CONTACT_BLOCKED = 3;
+const AG_CONTACT_NEUTRAL = 1;                   // Contact is neutral. Used for general contacts with no special additional features
+const AG_CONTACT_FRIEND = 2;                    // Contact is a friend. Shows when they're online.
+const AG_CONTACT_BLOCKED = 3;                   // Contact is blocked. Prevents all communication to/from them except for RP
 
 // Job Work Types (Currently Unused)
 const AG_JOBWORKTYPE_NONE = 0;
-const AG_JOBWORKTYPE_ROUTE = 1; // Jobs that use routes. Bus, trash collector, mail, etc
-const AG_JOBWORKTYPE_SELL = 2; // Jobs that sell items to other players and NPCs. Drugs, guns, etc
-const AG_JOBWORKTYPE_SERVICE = 3; // Services to other players and NPCs. Taxi ride, mechanic fix, etc
+const AG_JOBWORKTYPE_ROUTE = 1;                 // Jobs that use routes. Bus, trash collector, mail, etc
+const AG_JOBWORKTYPE_SELL = 2;                  // Jobs that sell items to other players and NPCs. Drugs, guns, etc
+const AG_JOBWORKTYPE_SERVICE = 3;               // Services to other players and NPCs. Taxi ride, mechanic fix, etc
 
 // Vehicle Seats
 const AG_VEHSEAT_DRIVER = 0;
@@ -181,7 +177,7 @@ const AG_ITEM_USETYPE_BEER = 20;                // Subtle drunk effect. Replenis
 const AG_ITEM_USETYPE_WINE = 21;                // Moderate drunk effect. Replenishes moderate amount of health.
 const AG_ITEM_USETYPE_LIQUOR = 22;              // Heavy drunk effect. Replenishes large amount of health.
 const AG_ITEM_USETYPE_COFFEE = 23;              // Replenishes moderate amount of health.
-const AG_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine.
+const AG_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine. Not used at the moment
 const AG_ITEM_USETYPE_HANDCUFF = 24;            //
 const AG_ITEM_USETYPE_ROPE = 25;                //
 const AG_ITEM_USETYPE_BLINDFOLD = 26;           //
@@ -198,6 +194,7 @@ const AG_ITEM_USETYPE_EXTINGUISHER = 36;        //
 const AG_ITEM_USETYPE_SPRAYPAINT = 37;          //
 const AG_ITEM_USETYPE_PEPPERSPRAY = 38;         //
 const AG_ITEM_USETYPE_FLASHLIGHT = 39;          //
+const AG_ITEM_USETYPE_AIRPLANETICKET = 40;      //
 
 // Item Drop Types
 const AG_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped
@@ -237,34 +234,53 @@ const AG_JOBROUTESTATE_LASTSTOP = 2;            // Player is heading to the last
 const AG_JOBROUTESTATE_PAUSED = 3;              // Route is paused for some reason. For police, this could be player accepted callout and once finished, patrol route will resume
 const AG_JOBROUTESTATE_ATSTOP = 4;              // For bus/trash stops that freeze player, this is the state when they're at one
 
-// Tutorial States
-const AG_TUTORIAL_STATE_NONE = 0;
-const AG_TUTORIAL_STATE_FINISHED = 1;
-const AG_TUTORIAL_STATE_STARTING = 2;
-const AG_TUTORIAL_STATE_PICKUPITEM = 3;
-const AG_TUTORIAL_STATE_SWITCHITEM = 4;
-const AG_TUTORIAL_STATE_USEITEM = 5;
-const AG_TUTORIAL_STATE_PUTITEM = 6;
-const AG_TUTORIAL_STATE_TAKEITEM = 7;
-const AG_TUTORIAL_STATE_EXITBIZ = 9;
-const AG_TUTORIAL_STATE_DROPITEM = 10;
-
 // Item Occupied States
-const AG_ITEM_ACTION_NONE = 0;
-const AG_ITEM_ACTION_USE = 1;
-const AG_ITEM_ACTION_PICKUP = 2;
-const AG_ITEM_ACTION_DROP = 3;
-const AG_ITEM_ACTION_SWITCH = 4;
-const AG_ITEM_ACTION_PUT = 5;
-const AG_ITEM_ACTION_TAKE = 6;
+const AG_ITEM_ACTION_NONE = 0;                  // None
+const AG_ITEM_ACTION_USE = 1;                   // Using item
+const AG_ITEM_ACTION_PICKUP = 2;                // Picking up item
+const AG_ITEM_ACTION_DROP = 3;                  // Dropping item
+const AG_ITEM_ACTION_SWITCH = 4;                // Switching item
+const AG_ITEM_ACTION_PUT = 5;                   // Putting item (into trunk, dash, crate, etc)
+const AG_ITEM_ACTION_TAKE = 6;                  // Taking item (from trunk, dash, crate, etc)
 
 // Ped States
-const AG_PEDSTATE_NONE = 2;
-const AG_PEDSTATE_READY = 1;
-const AG_PEDSTATE_DRIVER = 2;
-const AG_PEDSTATE_PASSENGER = 3;
-const AG_PEDSTATE_DEAD = 4;
-const AG_PEDSTATE_ENTERINGPROPERTY = 5;
-const AG_PEDSTATE_EXITINGPROPERTY = 6;
-const AG_PEDSTATE_ENTERINGVEHICLE = 7;
-const AG_PEDSTATE_EXITINGVEHICLE = 8;
+const AG_PEDSTATE_NONE = 2;                     // None
+const AG_PEDSTATE_READY = 1;                    // Ready
+const AG_PEDSTATE_DRIVER = 2;                   // Driving a vehicle
+const AG_PEDSTATE_PASSENGER = 3;                // In a vehicle as passenger
+const AG_PEDSTATE_DEAD = 4;                     // Dead
+const AG_PEDSTATE_ENTERINGPROPERTY = 5;         // Entering a property
+const AG_PEDSTATE_EXITINGPROPERTY = 6;          // Exiting a property
+const AG_PEDSTATE_ENTERINGVEHICLE = 7;          // Entering a vehicle
+const AG_PEDSTATE_EXITINGVEHICLE = 8;           // Exiting a vehicle
+const AG_PEDSTATE_BINDED = 9;                   // Binded by rope or handcuffs
+const AG_PEDSTATE_TAZED = 10;                   // Under incapacitating effect of tazer
+const AG_PEDSTATE_INTRUNK = 11;                 // In vehicle trunk
+const AG_PEDSTATE_INITEM = 12;                  // In item (crate, box, etc)
+const AG_PEDSTATE_HANDSUP = 13;                 // Has hands up (surrendering)
+const AG_PEDSTATE_SPAWNING = 14;                // Spawning
+
+const AG_2FA_STATE_NONE = 0;                    // None
+const AG_2FA_STATE_CODEINPUT = 1;               // Waiting on player to enter code to play
+const AG_2FA_STATE_SETUP_CODETOAPP = 2;         // Providing player with a code to put in their auth app
+const AG_2FA_STATE_SETUP_CODEFROMAPP = 3;       // Waiting on player to enter code from auth app to set up
+
+const AG_FORGOTPASS_STATE_NONE = 0;             // None
+const AG_FORGOTPASS_STATE_CODEINPUT = 1;        // Waiting on player to enter code sent via email
+const AG_FORGOTPASS_STATE_SETPASS = 2;          // Waiting on player to enter new password
+
+const AG_NPC_COND_MATCH_NONE = 0;               // None (invalid)
+const AG_NPC_COND_MATCH_EQ = 1;                 // Must be equal to
+const AG_NPC_COND_MATCH_GT = 2;                 // Must be greater than
+const AG_NPC_COND_MATCH_LT = 3;                 // Must be less than
+const AG_NPC_COND_MATCH_GTEQ = 4;               // Must be greater than or equal to
+const AG_NPC_COND_MATCH_LTEQ = 5;               // Must be less than or equal to
+const AG_NPC_COND_MATCH_CONTAINS = 6;           // Must contain string (case insensitive)
+const AG_NPC_COND_MATCH_CONTAINS_CASE = 7;      // Must contain string (case sensitive)
+const AG_NPC_COND_MATCH_EXACT = 8;              // Must match string exactly (case insensitive)
+const AG_NPC_COND_MATCH_EXACT_CASE = 9;         // Must match string exactly (case insensitive)
+
+const AG_BIZ_TYPE_NONE = 0;                     // None (invalid)
+const AG_BIZ_TYPE_NORMAL = 1;                   // Normal business (sells items)
+const AG_BIZ_TYPE_BANK = 2;                     // Bank
+const AG_BIZ_TYPE_PUBLIC = 3;                   // Public business (Government, public service, etc)

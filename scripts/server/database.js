@@ -2,33 +2,25 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: database.js
 // DESC: Provides database handling, functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// -------------------------------------------------------------------------
-
-let databaseConfig = {
-	host: "127.0.0.1",
-	user: "gtac_main",
-	pass: "d8NEzoNIFadanisuKuzEgOSOxOjiG6",
-	name: "gtac_main",
-	port: 3306,
-	usePersistentConnection: true,
-}
+// ===========================================================================
 
 let persistentDatabaseConnection = null;
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function initDatabaseScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Database]: Initializing database script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.Database]: Database script initialized successfully!");
+	logToConsole(LOG_INFO, "[Asshat.Database]: Initializing database script ...");
+	databaseConfig = loadDatabaseConfiguration();
+	logToConsole(LOG_INFO, "[Asshat.Database]: Database script initialized successfully!");
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function connectToDatabase() {
 	if(persistentDatabaseConnection == null) {
@@ -43,79 +35,98 @@ function connectToDatabase() {
 		logToConsole(LOG_DEBUG, "[Asshat.Database] Database connection successful!");
 		return persistentDatabaseConnection;
 	} else {
-		//logToConsole(LOG_DEBUG, "[Asshat.Database] Using existing database connection.");
+		logToConsole(LOG_DEBUG, "[Asshat.Database] Using existing database connection.");
 		return persistentDatabaseConnection;
 	}
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function disconnectFromDatabase(dbConnection) {
 	if(!databaseConfig.usePersistentConnection) {
-		dbConnection.close();
+		try {
+			dbConnection.close();
+			logToConsole(LOG_DEBUG, `[Asshat.Database] Database connection closed successfully`);
+		} catch(error) {
+			logToConsole(LOG_ERROR, `[Asshat.Database] Database connection could not be closed! (Error: ${error})`);
+		}
 	}
 	return true;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function queryDatabase(dbConnection, queryString) {
+	logToConsole(LOG_DEBUG, `[Asshat.Database] Query string: ${queryString}`);
 	return dbConnection.query(queryString);
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
-function escapeDatabaseString(dbConnection, unsafeString) {
+function escapeDatabaseString(dbConnection, unsafeString = "") {
 	if(!dbConnection) {
 		dbConnection = connectToDatabase();
 	}
-	return dbConnection.escapeString(unsafeString);
+
+	if(typeof unsafeString == "string") {
+		return dbConnection.escapeString(unsafeString);
+	}
+	return unsafeString;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getDatabaseInsertId(dbConnection) {
 	return dbConnection.insertId;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getQueryNumRows(dbQuery) {
 	return dbQuery.numRows;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function getDatabaseError(dbConnection) {
 	return dbConnection.error;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function freeDatabaseQuery(dbQuery) {
-	dbQuery.free();
+	if(dbQuery != null) {
+		dbQuery.free();
+	}
 	return;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function fetchQueryAssoc(dbQuery) {
 	return dbQuery.fetchAssoc();
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function quickDatabaseQuery(queryString) {
 	let dbConnection = connectToDatabase();
 	let insertId = 0;
 	if(dbConnection) {
+		logToConsole(LOG_DEBUG, `[Asshat.Database] Query string: ${queryString}`);
 		let dbQuery = queryDatabase(dbConnection, queryString);
 		if(getDatabaseInsertId(dbConnection)) {
 			insertId = getDatabaseInsertId(dbConnection);
+			logToConsole(LOG_DEBUG, `[Asshat.Database] Query returned insert id ${insertId}`);
 		}
 
 		if(dbQuery) {
-			freeDatabaseQuery(dbQuery);
+			try {
+				freeDatabaseQuery(dbQuery);
+				logToConsole(LOG_DEBUG, `[Asshat.Database] Query result free'd successfully`);
+			} catch(error) {
+				logToConsole(LOG_ERROR, `[Asshat.Database] Query result could not be free'd! (Error: ${error})`);
+			}
 		}
 
 		disconnectFromDatabase(dbConnection);
@@ -129,21 +140,9 @@ function quickDatabaseQuery(queryString) {
 	return false;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
 
 function executeDatabaseQueryCommand(command, params, client) {
-	if(getCommand(command).requireLogin) {
-		if(!isPlayerLoggedIn(client)) {
-			messagePlayerError(client, "You must be logged in to use this command!");
-			return false;
-		}
-	}
-
-	if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(command))) {
-		messagePlayerError(client, "You do not have permission to use this command!");
-		return false;
-	}
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -172,4 +171,22 @@ function executeDatabaseQueryCommand(command, params, client) {
 	return true;
 }
 
-// -------------------------------------------------------------------------
+// ===========================================================================
+
+function setConstantsAsGlobalVariablesInDatabase() {
+	let dbConnection = connectToDatabase();
+	let entries = Object.entries(global);
+	for(let i in entries) {
+		logToConsole(LOG_DEBUG, `[Asshat.Database] Checking entry ${i} (${entries[i]})`);
+		if(toString(i).slice(0, 3).indexOf("AG_") != -1) {
+			logToConsole(LOG_DEBUG, `[Asshat.Database] Adding ${i} (${entries[i]}) to database global variables`);
+		}
+	}
+}
+
+// ===========================================================================
+
+function loadDatabaseConfiguration() {
+	let databaseConfigFile = loadTextFile("config/database.json");
+	return JSON.parse(databaseConfigFile);
+}

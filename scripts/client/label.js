@@ -1,8 +1,8 @@
 // ===========================================================================
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2020 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
+// ===========================================================================
 // FILE: labels.js
 // DESC: Provides functionality for world labels (3D labels)
 // TYPE: Client (JavaScript)
@@ -25,19 +25,49 @@ let unlockedColour = toColour(50, 205, 50, 255);
 let lockedColour = toColour(205, 92, 92, 255);
 let jobHelpColour = toColour(234, 198, 126, 255);
 
-// -------------------------------------------------------------------------
+let renderLabelDistance = 7.5;
 
-bindEventHandler("onResourceReady", thisResource, function(event, resource) {
-    propertyLabelNameFont = lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
-    propertyLabelLockedFont = lucasFont.createDefaultFont(12.0, "Roboto", "Light");
+let propertyLabelLockedOffset = 16;
+let propertyLabelNameOffset = 18;
 
-    jobNameLabelFont = lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
-    jobHelpLabelFont = lucasFont.createDefaultFont(10.0, "Roboto", "Light");
-});
+// ===========================================================================
 
-// -------------------------------------------------------------------------
+function initLabelScript() {
+	logToConsole(LOG_DEBUG, "[Asshat.Label]: Initializing label script ...");
+	propertyLabelNameFont = initLabelPropertyNameFont();
+	propertyLabelLockedFont = initLabelPropertyLockedFont();
+	jobNameLabelFont = initLabelJobNameFont();
+	jobHelpLabelFont = initLabelJobHelpFont();
+	logToConsole(LOG_DEBUG, "[Asshat.Label]: Label script initialized!");
+}
 
-function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) {
+// ===========================================================================
+
+function initLabelPropertyNameFont() {
+    return lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
+}
+
+// ===========================================================================
+
+function initLabelPropertyLockedFont() {
+    return lucasFont.createDefaultFont(12.0, "Roboto", "Light");
+}
+
+// ===========================================================================
+
+function initLabelJobNameFont() {
+    return lucasFont.createDefaultFont(16.0, "Roboto", "Regular");
+}
+
+// ===========================================================================
+
+function initLabelJobHelpFont() {
+    return lucasFont.createDefaultFont(10.0, "Roboto", "Light");
+}
+
+// ===========================================================================
+
+function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, shouldShowBuyInfo) {
     if(localPlayer == null) {
         return false;
     }
@@ -54,24 +84,35 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price) 
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
+    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+        return false;
+    }
+
     let text = "";
     if(price > 0) {
         text = `For sale: $${price}`;
         let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
-        propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(0, 150, 0, 255), false, true, false, true);
+        propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(200, 200, 200, 255), false, true, false, true);
 
-        screenPosition.y -= 18;
+        screenPosition.y -= propertyLabelLockedOffset;
     }
 
     text = (locked) ? "LOCKED" : "UNLOCKED";
     if(isBusiness) {
         text = (locked) ? "CLOSED" : "OPEN";
+        if(!locked && shouldShowBuyInfo) {
+            if(getDistance(localPlayer.position, position) <= renderLabelDistance-2) {
+                let size = propertyLabelLockedFont.measure(`Use /buy to purchase items`, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
+                propertyLabelLockedFont.render(`Use /buy to purchase items`, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(234, 198, 126, 255), false, true, false, true);
+                screenPosition.y -= propertyLabelLockedOffset;
+            }
+        }
     }
 
     let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
     propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, (locked) ? lockedColour : unlockedColour, false, true, false, true);
 
-    screenPosition.y -= 22;
+    screenPosition.y -= propertyLabelNameOffset;
 
     text = name || " ";
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
@@ -97,6 +138,10 @@ function renderPropertyExitLabel(position) {
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
+    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+        return false;
+    }
+
     let text = "EXIT";
     size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
     propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);
@@ -120,6 +165,10 @@ function renderJobLabel(name, position, jobType) {
     let tempPosition = position;
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
+
+    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+        return false;
+    }
 
     let text = "";
     if(jobType == localPlayerJobType) {
@@ -149,32 +198,39 @@ function renderJobLabel(name, position, jobType) {
 // -------------------------------------------------------------------------
 
 function processLabelRendering() {
-    if(localPlayer != null) {
-        let pickups = getElementsByType(ELEMENT_PICKUP);
-        for(let i in pickups) {
-            if(pickups[i].getData("ag.label.type") != null) {
-                if(getDistance(localPlayer.position, pickups[i].position) <= 7.5) {
-                    let price = 0;
-                    if(pickups[i].getData("ag.label.price") != null) {
-                        price = pickups[i].getData("ag.label.price");
-                    }
+    if(renderLabels && gta.game != GAME_GTA_IV) {
+        if(localPlayer != null) {
+            let pickups = getElementsByType(ELEMENT_PICKUP);
+            for(let i in pickups) {
+                if(pickups[i].getData("ag.label.type") != null) {
+                    if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
+                        let price = 0;
+                        let shouldShowBuyHelp = false;
+                        if(pickups[i].getData("ag.label.price") != null) {
+                            price = pickups[i].getData("ag.label.price");
+                        }
 
-                    switch(pickups[i].getData("ag.label.type")) {
-                        case AG_LABEL_BUSINESS:
-                            renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price);
-                            break;
+                        if(pickups[i].getData("ag.label.buyhelp") != null) {
+                            shouldShowBuyHelp = pickups[i].getData("ag.label.buyhelp");
+                        }
 
-                        case AG_LABEL_HOUSE:
-                            renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
-                            break;
+                        switch(pickups[i].getData("ag.label.type")) {
+                            case AG_LABEL_BUSINESS:
+                                renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price, shouldShowBuyHelp);
+                                break;
 
-                        case AG_LABEL_JOB:
-                            renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
-                            break;
+                            case AG_LABEL_HOUSE:
+                                renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price);
+                                break;
 
-                        case AG_LABEL_EXIT:
-                            renderPropertyExitLabel(pickups[i].position);
-                            break;
+                            case AG_LABEL_JOB:
+                                renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
+                                break;
+
+                            case AG_LABEL_EXIT:
+                                renderPropertyExitLabel(pickups[i].position);
+                                break;
+                        }
                     }
                 }
             }

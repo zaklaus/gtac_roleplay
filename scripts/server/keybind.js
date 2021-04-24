@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: keybind.js
 // DESC: Provides keybind handlers and functions
 // TYPE: Server (JavaScript)
@@ -126,14 +126,15 @@ let bindableKeys = {
     SDLK_RALT: "rightalt",
 };
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function initKeyBindScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.KeyBind]: Initializing key bind script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.KeyBind]: Key bind script initialized!");
+	logToConsole(LOG_INFO, "[Asshat.KeyBind]: Initializing key bind script ...");
+    getGlobalConfig().keyBind = loadKeyBindConfiguration();
+	logToConsole(LOG_INFO, "[Asshat.KeyBind]: Key bind script initialized!");
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addKeyBindCommand(command, params, client) {
     let splitParams = params.split(" ");
@@ -163,7 +164,7 @@ function addKeyBindCommand(command, params, client) {
     messagePlayerSuccess(client, `You binded the [#AAAAAA]${sdl.getKeyName(keyId)} [#FFFFFF]key to command: [#AAAAAA]/${tempCommand} ${tempParams}`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removeKeyBindCommand(command, params, client) {
     let splitParams = params.split(" ");
@@ -186,7 +187,7 @@ function removeKeyBindCommand(command, params, client) {
     messagePlayerSuccess(client, `You removed the keybind for the [#AAAAAA]${sdl.getKeyName(keyId)} [#FFFFFF]key`);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function addPlayerKeyBind(client, keyId, tempCommand, tempParams) {
     let keyBindData = new serverClasses.keyBindData(keyId, `${tempCommand} ${tempParams}`);
@@ -194,7 +195,7 @@ function addPlayerKeyBind(client, keyId, tempCommand, tempParams) {
     sendAddAccountKeyBindToClient(client, getPlayerKeyBindForKey(client, keyId));
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function removePlayerKeyBind(client, keyId) {
     quickDatabaseQuery(`DELETE FROM acct_hotkey WHERE acct_hotkey_acct = ${getPlayerData(client).accountData.databaseId} AND acct_hotkey_key = ${keyId}`);
@@ -206,7 +207,7 @@ function removePlayerKeyBind(client, keyId) {
     sendRemoveAccountKeyBindToClient(client, keyId);
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveKeyBindForCommand(client, command) {
     let accountKeyBinds = getPlayerData(client).accountData.keyBinds;
@@ -218,7 +219,7 @@ function doesPlayerHaveKeyBindForCommand(client, command) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerKeyBindForCommand(client, command) {
     let accountKeyBinds = getPlayerData(client).accountData.keyBinds;
@@ -230,7 +231,7 @@ function getPlayerKeyBindForCommand(client, command) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function doesPlayerHaveKeyBindForKey(client, key) {
     let accountKeyBinds = getPlayerData(client).accountData.keyBinds;
@@ -242,7 +243,7 @@ function doesPlayerHaveKeyBindForKey(client, key) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getPlayerKeyBindForKey(client, key) {
     let accountKeyBinds = getPlayerData(client).accountData.keyBinds;
@@ -254,7 +255,7 @@ function getPlayerKeyBindForKey(client, key) {
     return false;
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function playerUsedKeyBind(client, key) {
     if(!isPlayerLoggedIn(client)) {
@@ -281,7 +282,7 @@ function playerUsedKeyBind(client, key) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function sendAccountKeyBindsToClient(client) {
     for(let i in getPlayerData(client).accountData.keyBinds) {
@@ -289,7 +290,7 @@ function sendAccountKeyBindsToClient(client) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 function getKeyIdFromParams(params) {
     let tempParams = toLowerCase(toString(params));
@@ -306,4 +307,11 @@ function getKeyIdFromParams(params) {
     }
 }
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function loadKeyBindConfiguration() {
+	let keyBindConfigFile = loadTextFile("config/keybind.json");
+	return JSON.parse(keyBindConfigFile);
+}
+
+// ===========================================================================

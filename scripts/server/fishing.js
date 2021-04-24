@@ -2,7 +2,7 @@
 // Asshat-Gaming Roleplay
 // https://github.com/VortrexFTW/gtac_asshat_rp
 // Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // FILE: fishing.js
 // DESC: Provides fishing functions and commands
 // TYPE: Server (JavaScript)
@@ -37,7 +37,7 @@ let fishingLocations = [
     ],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 
 let fishingCatchables = [
     // Fish
@@ -65,4 +65,11 @@ let fishingCatchables = [
     ["Soggy Dildo", 0, 0, 0, 0],
 ];
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
+
+function initFishingScript() {
+	logToConsole(LOG_INFO, "[Asshat.Fishing]: Initializing fishing script ...");
+	logToConsole(LOG_INFO, "[Asshat.Fishing]: Fishing script initialized successfully!");
+}
+
+// ===========================================================================

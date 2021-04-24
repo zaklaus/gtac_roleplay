@@ -917,6 +917,16 @@ let registrationFailed = function(errorMessage) {
 
 // ===========================================================================
 
+let newCharacterFailed = function(errorMessage) {
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports new character creation failed. Reason: ${errorMessage}`);
+	newCharacter.messageLabel.text = errorMessage;
+	newCharacter.messageLabel.styles.main.textColour = toColour(180, 32, 32, 255);
+	newCharacter.firstNameInput.text = "";
+	newCharacter.lastNameInput.text = "";
+}
+
+// ===========================================================================
+
 let registrationSuccess = function() {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Server reports registration was successful`);
 	closeAllWindows();
@@ -1217,6 +1227,13 @@ addNetworkHandler("ag.registrationSuccess", function() {
 addNetworkHandler("ag.registrationFailed", function(errorMessage) {
 	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of failed registration from server`);
 	registrationFailed(errorMessage);
+});
+
+// ===========================================================================
+
+addNetworkHandler("ag.newCharacterFailed", function(errorMessage) {
+	logToConsole(LOG_DEBUG, `[Asshat.GUI] Received signal of failed registration from server`);
+	newCharacterFailed(errorMessage);
 });
 
 // ===========================================================================

@@ -503,16 +503,27 @@ function initClassTable() {
 		businessLocationData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
-				this.name = "";
-				this.type = 0;
+				this.name = "Unnamed";
 				this.business = 0;
 				this.enabled = false;
-				this.index = -1;
-				this.needsSaved = false;
 
-				this.position = toVector3(0.0, 0.0, 0.0);
-				this.interior = 0;
-				this.dimension = 0;
+				this.entrancePosition = false;
+				this.entranceRotation = 0.0;
+				this.entranceInterior = 0;
+				this.entranceDimension = 0;
+				this.entrancePickupModel = -1;
+				this.entranceBlipModel = -1;
+				this.entrancePickup = null;
+				this.entranceBlip = null;
+
+				this.exitPosition = false;
+				this.exitRotation = 0.0;
+				this.exitInterior = 0;
+				this.exitDimension = -1;
+				this.exitPickupModel = -1;
+				this.exitBlipModel = -1;
+				this.exitPickup = null;
+				this.exitBlip = null;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc("biz_loc_id"));
@@ -520,11 +531,68 @@ function initClassTable() {
 					this.type = toInteger(dbAssoc("biz_loc_type"));
 					this.business = toInteger(dbAssoc("biz_loc_biz"));
 					this.enabled = intToBool(toInteger(dbAssoc("biz_loc_enabled")));
-					this.index = -1;
 
-					this.position = toVector3(toFloat(dbAssoc["biz_loc_pos_x"]), toFloat(dbAssoc["biz_loc_pos_y"]), toFloat(dbAssoc["biz_loc_pos_z"]));
-					this.interior = toInteger(dbAssoc["biz_loc_int"]);
-					this.dimension = toInteger(dbAssoc["biz_loc_vw"]);
+					this.entrancePosition = toVector3(toFloat(dbAssoc["biz_loc_entrance_pos_x"]), toFloat(dbAssoc["biz_loc_entrance_pos_y"]), toFloat(dbAssoc["biz_loc_entrance_pos_z"]));
+					this.entranceRotation = toFloat(dbAssoc["biz_loc_entrance_rot_z"]);
+					this.entranceInterior = toInteger(dbAssoc["biz_loc_entrance_int"]);
+					this.entranceDimension = toInteger(dbAssoc["biz_loc_entrance_vw"]);
+					this.entrancePickupModel = toInteger(dbAssoc["biz_loc_entrance_pickup"]);
+					this.entranceBlipModel = toInteger(dbAssoc["biz_loc_entrance_blip"]);
+
+					this.exitPosition = toVector3(toFloat(dbAssoc["biz_loc_exit_pos_x"]), toFloat(dbAssoc["biz_loc_exit_pos_y"]), toFloat(dbAssoc["biz_loc_exit_pos_z"]));
+					this.exitRotation = toFloat(dbAssoc["biz_loc_exit_rot_z"]);
+					this.exitInterior = toInteger(dbAssoc["biz_loc_exit_int"]);
+					this.exitDimension = toInteger(dbAssoc["biz_loc_exit_vw"]);
+					this.exitPickupModel = toInteger(dbAssoc["biz_loc_exit_pickup"]);
+					this.exitBlipModel = toInteger(dbAssoc["biz_loc_exit_blip"]);
+				}
+			}
+		},
+		houseLocationData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.name = "Unnamed";
+				this.house = 0;
+				this.enabled = false;
+
+				this.entrancePosition = false;
+				this.entranceRotation = 0.0;
+				this.entranceInterior = 0;
+				this.entranceDimension = 0;
+				this.entrancePickupModel = -1;
+				this.entranceBlipModel = -1;
+				this.entrancePickup = null;
+				this.entranceBlip = null;
+
+				this.exitPosition = false;
+				this.exitRotation = 0.0;
+				this.exitInterior = 0;
+				this.exitDimension = -1;
+				this.exitPickupModel = -1;
+				this.exitBlipModel = -1;
+				this.exitPickup = null;
+				this.exitBlip = null;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc("house_loc_id"));
+					this.name = toString(dbAssoc("house_loc_name"));
+					this.type = toInteger(dbAssoc("house_loc_type"));
+					this.business = toInteger(dbAssoc("house_loc_biz"));
+					this.enabled = intToBool(toInteger(dbAssoc("house_loc_enabled")));
+
+					this.entrancePosition = toVector3(toFloat(dbAssoc["house_loc_entrance_pos_x"]), toFloat(dbAssoc["house_loc_entrance_pos_y"]), toFloat(dbAssoc["house_loc_entrance_pos_z"]));
+					this.entranceRotation = toFloat(dbAssoc["house_loc_entrance_rot_z"]);
+					this.entranceInterior = toInteger(dbAssoc["house_loc_entrance_int"]);
+					this.entranceDimension = toInteger(dbAssoc["house_loc_entrance_vw"]);
+					this.entrancePickupModel = toInteger(dbAssoc["house_loc_entrance_pickup"]);
+					this.entranceBlipModel = toInteger(dbAssoc["house_loc_entrance_blip"]);
+
+					this.exitPosition = toVector3(toFloat(dbAssoc["house_loc_exit_pos_x"]), toFloat(dbAssoc["house_loc_exit_pos_y"]), toFloat(dbAssoc["house_loc_exit_pos_z"]));
+					this.exitRotation = toFloat(dbAssoc["house_loc_exit_rot_z"]);
+					this.exitInterior = toInteger(dbAssoc["house_loc_exit_int"]);
+					this.exitDimension = toInteger(dbAssoc["house_loc_exit_vw"]);
+					this.exitPickupModel = toInteger(dbAssoc["house_loc_exit_pickup"]);
+					this.exitBlipModel = toInteger(dbAssoc["house_loc_exit_blip"]);
 				}
 			}
 		},
@@ -561,30 +629,28 @@ function initClassTable() {
 				this.exitPickup = null;
 				this.exitBlip = null;
 
-				if(dbAssoc) {
-					this.databaseId = toInteger(dbAssoc["house_id"]);
-					this.description = toString(dbAssoc["house_description"]);
-					this.ownerType = toInteger(dbAssoc["house_owner_type"]);
-					this.ownerId = toInteger(dbAssoc["house_owner_id"]);
-					this.buyPrice = toInteger(dbAssoc["house_buy_price"]);
-					this.rentPrice = toInteger(dbAssoc["house_rent_price"]);
-					this.renter = toInteger(dbAssoc["house_renter"]);
-					this.locked = intToBool(toInteger(dbAssoc["house_locked"]));
-					this.hasInterior = intToBool(toInteger(dbAssoc["house_has_interior"]));
+				if(houseAssoc != false) {
+					this.databaseId = toInteger(houseAssoc["house_id"]);
+					this.description = toString(houseAssoc["house_description"]);
+					this.ownerType = toInteger(houseAssoc["house_owner_type"]);
+					this.ownerId = toInteger(houseAssoc["house_owner_id"]);
+					this.buyPrice = toInteger(houseAssoc["house_buy_price"]);
+					this.locked = intToBool(toInteger(houseAssoc["house_locked"]));
+					this.hasInterior = intToBool(toInteger(houseAssoc["house_has_interior"]));
 
-					this.entrancePosition = toVector3(toFloat(dbAssoc["house_entrance_pos_x"]), toFloat(dbAssoc["house_entrance_pos_y"]), toFloat(dbAssoc["house_entrance_pos_z"]));
-					this.entranceRotation = toFloat(dbAssoc["house_entrance_rot_z"]);
-					this.entranceInterior = toInteger(dbAssoc["house_entrance_int"]);
-					this.entranceDimension = toInteger(dbAssoc["house_entrance_vw"]);
-					this.entrancePickupModel = toInteger(dbAssoc["house_entrance_pickup"]);
-					this.entranceBlipModel = toInteger(dbAssoc["house_entrance_blip"]);
+					this.entrancePosition = toVector3(toFloat(houseAssoc["house_entrance_pos_x"]), toFloat(houseAssoc["house_entrance_pos_y"]), toFloat(houseAssoc["house_entrance_pos_z"]));
+					this.entranceRotation = toFloat(houseAssoc["house_entrance_rot_z"]);
+					this.entranceInterior = toInteger(houseAssoc["house_entrance_int"]);
+					this.entranceDimension = toInteger(houseAssoc["house_entrance_vw"]);
+					this.entrancePickupModel = toInteger(houseAssoc["house_entrance_pickup"]);
+					this.entranceBlipModel = toInteger(houseAssoc["house_entrance_blip"]);
 
-					this.exitPosition = toVector3(toFloat(dbAssoc["house_exit_pos_x"]), toFloat(dbAssoc["house_exit_pos_y"]), toFloat(dbAssoc["house_exit_pos_z"]));
-					this.exitRotation = toFloat(dbAssoc["house_exit_rot_z"]);
-					this.exitInterior = toInteger(dbAssoc["house_exit_int"]);
-					this.exitDimension = toInteger(dbAssoc["house_exit_vw"]);
-					this.exitPickupModel = toInteger(dbAssoc["house_exit_pickup"]);
-					this.exitBlipModel = toInteger(dbAssoc["house_exit_blip"]);
+					this.exitPosition = toVector3(toFloat(houseAssoc["house_exit_pos_x"]), toFloat(houseAssoc["house_exit_pos_y"]), toFloat(houseAssoc["house_exit_pos_z"]));
+					this.exitRotation = toFloat(houseAssoc["house_exit_rot_z"]);
+					this.exitInterior = toInteger(houseAssoc["house_exit_int"]);
+					this.exitDimension = toInteger(houseAssoc["house_exit_vw"]);
+					this.exitPickupModel = toInteger(houseAssoc["house_exit_pickup"]);
+					this.exitBlipModel = toInteger(houseAssoc["house_exit_blip"]);
 				}
 			}
 		},
@@ -863,7 +929,6 @@ function initClassTable() {
 					this.whiteListEnabled = dbAssoc["job_wl"];
 					this.blackListEnabled = dbAssoc["job_bl"];
 					this.walkieTalkieFrequency = dbAssoc["job_walkietalkiefreq"];
-
 					this.equipment = [];
 					this.uniforms = [];
 					this.locations = [];

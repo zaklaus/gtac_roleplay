@@ -448,15 +448,12 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
 
-        getPlayerData(client).inBusiness = (getPlayerCurrentSubAccount(client).inBusiness > 0) ? getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness) : false;
-        getPlayerData(client).inHouse = (getPlayerCurrentSubAccount(client).inHouse > 0) ? getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse) : false;
-
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = AG_PEDSTATE_READY;
 
-        setTimeout(function() {
-            syncPlayerProperties(client);
-        }, 1000);
+        //setTimeout(function() {
+        //    syncPlayerProperties(client);
+        //}, 1000);
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
     //}

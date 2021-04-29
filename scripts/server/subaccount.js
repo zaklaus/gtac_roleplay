@@ -171,10 +171,13 @@ function saveSubAccountToDatabase(subAccountData) {
 
 function createSubAccount(accountId, firstName, lastName) {
 	logToConsole(LOG_DEBUG, `[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
+
 	let dbConnection = connectToDatabase();
 	let dbQuery = false;
 
 	if(dbConnection) {
+		firstName = fixCharacterName(firstName);
+		lastName = fixCharacterName(lastName);
 		let safeFirstName = escapeDatabaseString(dbConnection, firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 
@@ -249,6 +252,12 @@ function checkNewCharacter(client, firstName, lastName) {
 		return false;
 	}
 	lastName = lastName.trim();
+
+	if(doesNameContainInvalidCharacters(firstName) || doesNameContainInvalidCharacters(lastName)) {
+		logToConsole(LOG_WARN, `[Asshat.Account] Subaccount ${firstName} ${lastName} could not be created (invalid characters in name)`);
+		showPlayerNewCharacterFailedGUI(client, "Invalid characters in name!");
+		return false;
+	}
 
 	let skinId = allowedSkins[getServerGame()][getPlayerData(client).creatingCharacterSkin];
 

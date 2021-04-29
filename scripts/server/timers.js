@@ -39,7 +39,7 @@ function initTimers() {
 		serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
 		serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
 		serverTimers.garbageCollectorTimer = setInterval(collectAllGarbage, 60000);
-		serverTimers.payDayTimer = setInterval(checkPayDays, 60000);
+		serverTimers.payDayTimer = setInterval(checkPayDays, 30000);
 	//}
 }
 

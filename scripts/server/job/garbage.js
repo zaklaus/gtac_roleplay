@@ -117,14 +117,7 @@ function showCurrentGarbageStop(client) {
 
 function playerArrivedAtGarbageStop(client) {
     if(isLastStopOnGarbageRoute(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop)) {
-        respawnVehicle(getPlayerData(client).jobRouteVehicle);
-        getPlayerData(client).payDayAmount += getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier;
-        messagePlayerNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! Your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
-        messagePlayerNormal(client, `You earned $${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier}. Your total paycheck of [#AAAAAA]${getPlayerData(client).payDayAmount} will be received in [#AAAAAA]${getTimeDifferenceDisplay(sdl.ticks-getPlayerData(client).payDayTickStart)}: $${getPlayerData(client).payDayAmount}`);
-		getPlayerData(client).jobRouteVehicle = false;
-		getPlayerData(client).jobRoute = 0;
-		getPlayerData(client).jobRouteStop = 0;
-		getPlayerData(client).jobRouteIsland = 0;
+        finishSuccessfulGarbageRoute(client);
         return false;
     }
 
@@ -147,6 +140,20 @@ function getGarbageRouteStopPosition(island, garbageRoute, garbageRouteStop) {
 
 function getGarbageRouteData(island, garbageRoute) {
     return garbageRoutes[getServerGame()][island][garbageRoute];
+}
+
+// ===========================================================================
+
+function finishSuccessfulGarbageRoute(client) {
+    respawnVehicle(getPlayerData(client).jobRouteVehicle);
+    let payout = toInteger(applyServerInflationMultiplier(getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout));
+    getPlayerData(client).payDayAmount = getPlayerData(client).payDayAmount + payout;
+    messagePlayerNormal(client, `You finished the ${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} garbage route! Your trashmaster has been returned to the garbage depot.`, getColourByName("yellow"));
+    messagePlayerNormal(client, `You earned $${getGarbageRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout*getServerData().inflationMultiplier}. Your total paycheck of [#AAAAAA]${getPlayerData(client).payDayAmount} will be received in [#AAAAAA]${getTimeDifferenceDisplay(sdl.ticks-getPlayerData(client).payDayTickStart)}: $${getPlayerData(client).payDayAmount}`);
+    getPlayerData(client).jobRouteVehicle = false;
+    getPlayerData(client).jobRoute = 0;
+    getPlayerData(client).jobRouteStop = 0;
+    getPlayerData(client).jobRouteIsland = 0;
 }
 
 // ===========================================================================

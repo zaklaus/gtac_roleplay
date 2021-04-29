@@ -62,7 +62,7 @@ function setNewCharacterMoneyCommand(command, params, client) {
 	let splitParams = params.split();
 	let amount = toInteger(splitParams[0]) || 1000;
 
-	getServerConfig().newCharacter.cash = skinId;
+	getServerConfig().newCharacter.cash = amount;
 
     messagePlayerNormal(client, `The new character money has been set to $${amount}`);
 	return true;

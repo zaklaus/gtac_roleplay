@@ -26,3 +26,39 @@ function applyServerInflationMultiplier(value) {
 }
 
 // ===========================================================================
+
+function playerPayDay(client) {
+	let wealth = calculateWealth(client);
+	let taxAmount = calculateTax(wealth);
+	let grossIncome = getPlayerData(client).payDayAmount;
+
+	// Public Beta Bonus
+	taxAmount = 0;
+	grossIncome = grossIncome*2;
+	grossIncome = grossIncome + 2000;
+
+	let netIncome = grossIncome-taxAmount;
+
+	messagePlayerAlert(client, "== Payday! =============================");
+	messagePlayerInfo(client, `Your paycheck: [#AAAAAA]$${grossIncome}`);
+	messagePlayerInfo(client, `Taxes: [#AAAAAA]$${taxAmount}`);
+	messagePlayerInfo(client, `You receive: [#AAAAAA]$${netIncome}`);
+
+	givePlayerCash(client, netIncome);
+}
+
+// ===========================================================================
+
+function calculateWealth(client) {
+	// To-do
+	return 0;
+}
+
+// ===========================================================================
+
+function calculateTax(client) {
+	// To-do
+	return 0;
+}
+
+// ===========================================================================

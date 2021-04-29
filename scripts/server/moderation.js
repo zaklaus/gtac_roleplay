@@ -702,7 +702,7 @@ function givePlayerMoneyCommand(command, params, client) {
         return false;
 	}
 
-	getPlayerCurrentSubAccount(targetClient).cash += amount;
+	givePlayerMoney(client, toInteger(amount));
 	updatePlayerCash(targetClient);
 	messagePlayerSuccess(client, `You gave [#AAAAAA]$${amount} [#FFFFFF]to [#AAAAAA]${getCharacterFullName(targetClient)}`);
 	messagePlayerAlert(client, `An admin gave you [#AAAAAA]$${amount}`);

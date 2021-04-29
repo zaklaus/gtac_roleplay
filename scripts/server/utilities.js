@@ -1567,3 +1567,22 @@ function generateRandomPhoneNumber() {
 }
 
 // ===========================================================================
+
+function doesNameContainInvalidCharacters(name) {
+	for(let i = 0; i < name.length; i++) {
+		let strChar = totalCharacterCount.charAt(i);
+		if(getGlobalConfig().subAccountNameAllowedCharacters.indexOf(strChar) != -1) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function fixCharacterName(name) {
+	return String(name.charAt(0).toUpperCase()) + String(name.slice(1));
+}
+
+// ===========================================================================

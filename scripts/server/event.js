@@ -224,20 +224,24 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             if(getVehicleData(vehicle).buyPrice > 0) {
                 messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: [#AAAAAA]$${getVehicleData(vehicle).buyPrice}`);
                 messagePlayerTip(client, `Use /vehbuy if you want to buy it.`);
+                resetVehiclePosition(vehicle);
             } else if(getVehicleData(vehicle).rentPrice > 0) {
                 messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: [#AAAAAA]$${getVehicleData(vehicle).rentPrice} per minute`);
                 messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
+                resetVehiclePosition(vehicle);
             } else {
                 if(!getVehicleData(vehicle).engine) {
                     if(doesPlayerHaveVehicleKeys(client, vehicle)) {
-                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
                         if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                            messagePlayerTip(client, `You can also press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} [#FFFFFF]to start and stop the engine.`);
+                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} [#FFFFFF]to start it.`);
+                        } else {
+                            messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
                         }
                     } else {
                         messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
+
                     }
-                    //setPlayerControlState(client, false);
+                    resetVehiclePosition(vehicle);
                 }
             }
 

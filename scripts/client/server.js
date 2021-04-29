@@ -43,6 +43,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.showJobRouteStop", showJobRouteStop);
     addNetworkHandler("ag.snow", setSnowState);
     addNetworkHandler("ag.health", setLocalPlayerHealth);
+    addNetworkHandler("ag.enterPropertyKey", setEnterPropertyKey);
     addNetworkHandler("ag.skinSelect", toggleSkinSelect);
     addNetworkHandler("ag.hotbar", updatePlayerHotBar);
     addNetworkHandler("ag.pedSpeech", playPedSpeech);
@@ -240,6 +241,18 @@ function setStreamingRadioVolume(volume) {
     if(streamingRadio != null) {
         streamingRadio.volume = volume;
     }
+}
+
+// ===========================================================================
+
+function anchorBoat(vehicleId) {
+
+}
+
+// ===========================================================================
+
+function setEnterPropertyKey(key) {
+    enterPropertyKey(key);
 }
 
 // ===========================================================================

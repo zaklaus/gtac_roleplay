@@ -54,6 +54,8 @@ function loadGlobalConfig() {
 			AG_ITEM_USETYPE_PEPPERSPRAY,
 		],
 		itemActionStateReset: 5000,
+		subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+		emailValidationRegex: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
 	};
 }
 

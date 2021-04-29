@@ -341,7 +341,7 @@ function setVehicleColourCommand(command, params, client) {
 	let colour1 = toInteger(splitParams[0]) || 0;
 	let colour2 = toInteger(splitParams[1]) || 0;
 
-	getPlayerCurrentSubAccount(client).cash -= getGlobalConfig().resprayVehicleCost;
+	takePlayerCash(client, getGlobalConfig().resprayVehicleCost);
 	updatePlayerCash(client);
 	vehicle.colour1 = colour1;
 	vehicle.colour2 = colour2;
@@ -378,7 +378,7 @@ function vehicleRepairCommand(command, params, client) {
 		return false;
 	}
 
-	getPlayerCurrentSubAccount(client).cash -= getGlobalConfig().repairVehicleCost;
+	takePlayerCash(client, getGlobalConfig().repairVehicleCost);
 	repairVehicle(vehicle);
 
 	meActionToNearbyPlayers(client, `repairs the ${getVehicleName(vehicle)}!`);
@@ -1059,7 +1059,7 @@ function checkVehicleBuying() {
 						}
 
 						createNewDealershipVehicle(getVehicleData(getPlayerData(clients[i]).buyingVehicle).model, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice, getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId);
-						getPlayerCurrentSubAccount(clients[i]).cash -= getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice;
+						takePlayerCash(client, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice);
 						updatePlayerCash(clients[i]);
 						getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId = getPlayerCurrentSubAccount(clients[i]).databaseId;
 						getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerType = AG_VEHOWNER_PLAYER;

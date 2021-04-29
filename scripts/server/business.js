@@ -602,7 +602,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).till -= amount;
-	getPlayerCurrentSubAccount(client).cash += amount;
+	givePlayerCash(client, amount);
 	updatePlayerCash(client);
 	messagePlayerSuccess(client, `You withdrew $${amount} from business [#0099FF]${getBusinessData(businessId).name} till`);
 }
@@ -659,7 +659,7 @@ function depositIntoBusinessCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).till += amount;
-	getPlayerCurrentSubAccount(client).cash -= amount;
+	takePlayerCash(getPlayerCurrentSubAccount(client).cash, amount);
 	updatePlayerCash(client);
 	messagePlayerSuccess(client, `You deposited $${amount} into business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till`);
 }
@@ -1535,9 +1535,15 @@ function updateBusinessPickupLabelData(businessId) {
 	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.type", AG_LABEL_BUSINESS, true);
 	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.name", getBusinessData(businessId).name, true);
 	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.locked", getBusinessData(businessId).locked, true);
-	if(getBusinessData(businessId).floorItemCache.length > 0) {
-		setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.buyhelp", true, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.help", AG_BIZLABEL_INFO_NONE, true);
+	if(getBusinessData(businessId).hasInterior) {
+		setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.help", AG_BIZLABEL_INFO_ENTER, true);
+	} else {
+		if(getBusinessData(businessId).floorItemCache.length > 0) {
+			setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.help", AG_BIZLABEL_INFO_BUY, true);
+		}
 	}
+
 	if(getBusinessData(businessId).buyPrice > 0) {
 		setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.price", getBusinessData(businessId).buyPrice, true);
 	}

@@ -348,3 +348,17 @@ So this: `/tempveh infernus | /vehrgb 0 0 0 0 {RETURN} | /vehrgb 1 {2} {3} {4} {
 ### Real time display
 Steam has the player's local time on it's overlay. Something like that. Toggleable in account settings of course.
 ---
+# New items
+	**Street Vendors/Fairgrounds**
+	* Corndog
+	* Hotdog
+	* Ice cream cone
+
+	**Coffee/Donut Shop**
+	* Cup of Coffee
+	* Mocha Latte
+	* Glazed Donut
+	* Jelly Donut
+	* Chocolate Donut
+	* Bagel
+---

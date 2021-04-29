@@ -889,3 +889,7 @@ function setVehicleLightsState(vehicle, state) {
 }
 
 // ===========================================================================
+
+function sendPlayerEnterPropertyKey(client, key) {
+    triggerNetworkEvent("ag.enterPropertyKey", client, key);
+}

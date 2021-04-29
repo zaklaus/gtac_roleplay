@@ -43,4 +43,6 @@ let controlsEnabled = true;
 
 let streamingRadio = null;
 
+let enterPropertyKey = null;
+
 // ===========================================================================

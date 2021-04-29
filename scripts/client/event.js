@@ -124,10 +124,6 @@ function onDrawnHUD(event) {
         return false;
     }
 
-    //if(gta.game == GAME_GTA_VC) {
-    //    return false;
-    //}
-
     processSmallGameMessageRendering();
     processScoreBoardRendering();
     processLabelRendering();

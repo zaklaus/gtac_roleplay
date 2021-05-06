@@ -131,7 +131,7 @@ function enterExitPropertyCommand(command, params, client) {
 			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
 			fadeCamera(client, false, 1.0);
-			disableCityAmbienceForPlayer(client);
+			//disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, inHouse.entrancePosition);
 				setPlayerHeading(client, inHouse.entranceRotation);
@@ -162,7 +162,7 @@ function enterExitPropertyCommand(command, params, client) {
 			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
 			fadeCamera(client, false, 1.0);
-			disableCityAmbienceForPlayer(client);
+			//disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, inBusiness.entrancePosition);
 				setPlayerHeading(client, inBusiness.entranceRotation);
@@ -202,7 +202,7 @@ function enterExitPropertyCommand(command, params, client) {
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
 			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
-			disableCityAmbienceForPlayer(client);
+			//disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, closestBusiness.exitPosition);
 				setPlayerHeading(client, closestBusiness.exitRotation);
@@ -213,7 +213,7 @@ function enterExitPropertyCommand(command, params, client) {
 					getPlayerData(client).pedState = AG_PEDSTATE_READY;
 				}, 1000);
 			}, 1100);
-			setEntityData(client, "ag.inBusiness", closestBusinessId);
+			setEntityData(client, "ag.inBusiness", closestBusinessId, true);
 			return true;
 		}
 	}
@@ -238,7 +238,7 @@ function enterExitPropertyCommand(command, params, client) {
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
 			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
-			disableCityAmbienceForPlayer(client);
+			//disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, closestHouse.exitPosition);
 				setPlayerHeading(client, closestHouse.exitRotation);
@@ -249,7 +249,7 @@ function enterExitPropertyCommand(command, params, client) {
 					getPlayerData(client).pedState = AG_PEDSTATE_READY;
 				}, 1000);
 			}, 1100);
-			setEntityData(client, "ag.inHouse", closestHouseId);
+			setEntityData(client, "ag.inHouse", closestHouseId, true)
 			return true;
 		}
 	}

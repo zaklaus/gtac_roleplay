@@ -200,7 +200,7 @@ function initClassTable() {
 				this.creatingCharacterSkin = -1;
 
 				this.streamingRadioStation = -1;
-				this.streamingRadioVolume = 25;
+				this.streamingRadioVolume = 50;
 
 				this.returnToPosition = null;
 				this.returnToHeading = null;

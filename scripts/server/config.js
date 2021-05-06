@@ -116,6 +116,9 @@ function loadGameConfig() {
 				club: 48,
 				gym: 54,
 				repairGarage: 27,
+				trophy: 33,
+				race2: 53,
+				job: 56,
 			},
 			{	// GTA UG
 				policeStation: 8,

@@ -505,25 +505,12 @@ function playerUseItem(client, hotBarSlot) {
 
 	switch(getItemTypeData(getItemData(itemIndex).itemTypeIndex).useType) {
 		case AG_ITEM_USETYPE_SKIN:
-			//let oldSkin = getPlayerSkin(client);
-			//if(isPlayerWorking(client)) {
-			//	oldSkin = getPlayerCurrentSubAccount(client).skin;
-			//}
-
-			//let newSkin = getItemData(itemIndex).value;
-			//if(isPlayerWorking(client)) {
-			//	newSkin = getPlayerCurrentSubAccount(client).skin;
-			//}
-			//setPlayerSkin(client, newSkin);
-			//getItemData(itemIndex).value = oldSkin;
 			getPlayerData(client).itemActionItem = itemIndex;
 			forcePlayerIntoSkinSelect(client);
-			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_WEAPON:
 			messagePlayerError(client, `The ${getItemName(itemIndex)} is a weapon. To use it, switch to it from your items. The use key has no effect.`);
-			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_PHONE:
@@ -536,39 +523,38 @@ function playerUseItem(client, hotBarSlot) {
 				messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your phone in slot ${getPlayerData(client).activeHotBarSlot+1} [#AAAAAA](${getItemValueDisplayForItem(itemIndex)})`);
 			}
 			//showPlayerPhoneGUI(client);
-			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_STORAGE:
 			showItemInventoryToPlayer(client, itemIndex);
-			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_FOOD:
 			meActionToNearbyPlayers(client, `takes a bite of their ${getItemName(itemIndex)}`);
-			tempUseValue = (getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > getItemData(itemIndex).value) ? getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue : getItemData(itemIndex).value;
-			givePlayerHealth(client, tempUseValue);
-			if(getItemData(itemIndex).value-tempUseValue <= 0) {
-				getPlayerData(client).hotBarItems[getPlayerData(client).hotBarItems.indexOf(itemIndex)] = -1;
-				deleteItem(itemIndex);
-			} else {
-				getItemData(itemIndex).value = getItemData(itemIndex).value-tempUseValue;
-			}
-			cachePlayerHotBarItems(client);
+			deleteItem(itemIndex);
+			switchPlayerActiveHotBarSlot(client, -1);
+			//tempUseValue = (getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > getItemData(itemIndex).value) ? getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue : getItemData(itemIndex).value;
+			//givePlayerHealth(client, tempUseValue);
+			//if(getItemData(itemIndex).value-tempUseValue <= 0) {
+			//
+			//} else {
+			//	getItemData(itemIndex).value = getItemData(itemIndex).value-tempUseValue;
+			//}
 			break;
 
 		case AG_ITEM_USETYPE_DRINK:
 			meActionToNearbyPlayers(client, `takes a drink of their ${getItemName(itemIndex)}`);
-			tempUseValue = (getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > getItemData(itemIndex).value) ? getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue : getItemData(itemIndex).value;
-			givePlayerHealth(client, tempUseValue);
-			getItemData(itemIndex).value = getItemData(itemIndex).value - tempUseValue;
-			if(getItemData(itemIndex).value-tempUseValue <= 0) {
-				getPlayerData(client).hotBarItems[getPlayerData(client).hotBarItems.indexOf(itemIndex)] = -1;
-				deleteItem(itemIndex);
-			} else {
-				getItemData(itemIndex).value = getItemData(itemIndex).value-tempUseValue;
-			}
-			cachePlayerHotBarItems(client);
+			deleteItem(itemIndex);
+			switchPlayerActiveHotBarSlot(client, -1);
+			//tempUseValue = (getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > getItemData(itemIndex).value) ? getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue : getItemData(itemIndex).value;
+			//givePlayerHealth(client, tempUseValue);
+			//getItemData(itemIndex).value = getItemData(itemIndex).value - tempUseValue;
+			//if(getItemData(itemIndex).value-tempUseValue <= 0) {
+			//	getPlayerData(client).hotBarItems[getPlayerData(client).hotBarItems.indexOf(itemIndex)] = -1;
+			//
+			//} else {
+			//	getItemData(itemIndex).value = getItemData(itemIndex).value-tempUseValue;
+			//}
 			break;
 
 		case AG_ITEM_USETYPE_ROPE:
@@ -601,7 +587,6 @@ function playerUseItem(client, hotBarSlot) {
 				ropeTiePlayer(closestPlayer);
 				meActionToNearbyPlayers(client, `takes their rope and ties ${getCharacterFullName(closestPlayer)}'s hands and feet together.`);
 			}
-			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_HANDCUFF:
@@ -629,7 +614,6 @@ function playerUseItem(client, hotBarSlot) {
 				handCuffPlayer(closestPlayer);
 				meActionToNearbyPlayers(client, `takes their cuffs and places them on ${getCharacterFullName(closestPlayer)}`);
 			}
-			cachePlayerHotBarItems(client);
 			break;
 
 		case AG_ITEM_USETYPE_NONE:
@@ -648,7 +632,7 @@ function playerUseItem(client, hotBarSlot) {
 			} else {
 				messagePlayerAlert(client, `You turned OFF your phone in slot ${getPlayerData(client).activeHotBarSlot+1}`);
 			}
-			cachePlayerHotBarItems(client);
+
 			break;
 
 		default:
@@ -656,6 +640,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 	}
 
+	cachePlayerHotBarItems(client);
 	getItemData(itemIndex).needsSaved = true;
 	updatePlayerHotBar(client);
 }
@@ -869,11 +854,7 @@ function playerSwitchHotBarSlotCommand(command, params, client) {
 		return false;
 	}
 
-	getPlayerData(client).itemActionItem = hotBarSlot;
-	getPlayerData(client).itemActionState = AG_ITEM_ACTION_SWITCH;
-	showPlayerItemSwitchDelay(client, hotBarSlot);
-
-	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+	switchPlayerActiveHotBarSlot(client, hotBarSlot);
 }
 
 // ===========================================================================
@@ -1543,6 +1524,17 @@ function showHouseInventoryToPlayer(client, houseId) {
 	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
 		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
 	}
+}
+
+// ===========================================================================
+
+function switchPlayerActiveHotBarSlot(client, slotId) {
+	getPlayerData(client).itemActionItem = slotId;
+	getPlayerData(client).itemActionState = AG_ITEM_ACTION_SWITCH;
+	if(slotId != -1) {
+		showPlayerItemSwitchDelay(client, slotId);
+	}
+	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ===========================================================================

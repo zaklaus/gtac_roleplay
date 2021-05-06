@@ -361,4 +361,8 @@ Steam has the player's local time on it's overlay. Something like that. Toggleab
 	* Jelly Donut
 	* Chocolate Donut
 	* Bagel
+
+	* Gas can
+	* Vehicle repair kit
+	* (All vehicle mod types)
 ---

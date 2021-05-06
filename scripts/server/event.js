@@ -72,8 +72,14 @@ function onPlayerQuit(event, client, quitReasonId) {
 
 function onPlayerChat(event, client, messageText) {
     event.preventDefault();
+
     if(!isNull(getPlayerData(client))) {
-        if(!getPlayerData(client).loggedIn) {
+        if(!isPlayerLoggedIn(client)) {
+            messagePlayerError(client, "You need to login before you can chat!");
+            return false;
+        }
+
+        if(!isPlayerSpawned(client)) {
             messagePlayerError(client, "You need to login before you can chat!");
             return false;
         }
@@ -412,8 +418,7 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[Asshat.Event] Updating all player name tags`);
         updateAllPlayerNameTags();
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
-        updatePlayerCash(client);
+
 
         logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
         sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
@@ -453,8 +458,14 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
 
-        getPlayerData(client).inBusiness = (getPlayerCurrentSubAccount(client).inBusiness != 0) ? getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness) : -1;
-        getPlayerData(client).inHouse = (getPlayerCurrentSubAccount(client).inHouse != 0) ? getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse) : -1;
+        setEntityData(client.player, "ag.inBusiness", (getPlayerCurrentSubAccount(client).inBusiness != 0) ? getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness) : -1, true);
+        setEntityData(client.player, "ag.inHouse", (getPlayerCurrentSubAccount(client).inHouse != 0) ? getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse) : -1, true);
+
+        if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
+            let keyId = getPlayerKeyBindForCommand(client, "enter");
+            logToConsole(LOG_DEBUG, `[Asshat.Event] Sending custom enter property key ID (${keyId}, ${sdl.getKeyName(keyId)}) to ${getPlayerDisplayForConsole(client)}`);
+            sendPlayerEnterPropertyKey(client, keyId);
+        }
 
         logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = AG_PEDSTATE_READY;
@@ -462,6 +473,9 @@ function onPlayerSpawn(client) {
         setTimeout(function() {
             syncPlayerProperties(client);
         }, 1000);
+
+        logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
+        updatePlayerCash(client);
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
     //}

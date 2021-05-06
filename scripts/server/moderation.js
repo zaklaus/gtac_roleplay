@@ -505,17 +505,15 @@ function getPlayerCommand(command, params, client) {
 	removePlayerFromVehicle(targetClient);
 	setPlayerPosition(targetClient, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), 2));
 	setPlayerHeading(targetClient, getPlayerHeading(client));
+	setPlayerInterior(targetClient, getPlayerInterior(client));
+	setPlayerDimension(targetClient, getPlayerDimension(client));
 
 	if(isPlayerInAnyBusiness(client)) {
-		let businessData = getBusinessData(getPlayerBusiness(client));
-		setPlayerInterior(targetClient, businessData.exitInterior);
-		setPlayerDimension(targetClient, businessData.exitDimension);
+		setEntityData(client, "ag.inBusiness", getPlayerBusiness(client));
 	}
 
-	if(isPlayerInAnyHouse(client)) {
-		let houseData = getHouseData(getPlayerHouse(client));
-		setPlayerInterior(targetClient, houseData.exitInterior);
-		setPlayerDimension(client, houseData.exitDimension);
+	if(isPlayerInAnyBusiness(client)) {
+		setEntityData(client, "ag.inHouse", getPlayerBusiness(client));
 	}
 
 	messagePlayerSuccess(client, `You teleported [#AAAAAA]${targetClient.name} [#FFFFFF]to you.`);

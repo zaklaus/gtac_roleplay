@@ -134,7 +134,7 @@ function createVehicleCommand(command, params, client) {
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
 	let vehicle = createPermanentVehicle(modelId, frontPos, getPlayerHeading(client));
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a [#AAAAAA]${getVehicleName(vehicle)}!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a [#CC22CC]${getVehicleName(vehicle)}!`);
 }
 
 // ===========================================================================
@@ -155,7 +155,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
 	let vehicle = createTemporaryVehicle(modelId, frontPos, getPlayerHeading(client));
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a temporary ${getVehicleName(vehicle)}!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a temporary [#CC22CC]${getVehicleName(vehicle)}`);
 }
 
 // ===========================================================================
@@ -587,7 +587,7 @@ function setVehicleJobCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_JOB;
 	getVehicleData(vehicle).ownerId = jobId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job! (Job ID ${jobId})`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#FFFF00]${getJobData(jobId).name} [#FFFFFF]job! (Job ID ${jobId})`);
 }
 
 // ===========================================================================
@@ -614,10 +614,10 @@ function setVehicleRankCommand(command, params, client) {
 			return false;
 		}
 		getVehicleData(vehicle).rank = getClanRankData(getVehicleData(vehicle).ownerId, rankId).databaseId;
-		messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]rank to [#AAAAAA]${getClanRankData(getVehicleData(vehicle).ownerId, rankId).name} [#FFFFFF]of the [#FF9900]${getClanData(getVehicleData(vehicle).ownerId).name} [#FFFFFFclan!`);
+		messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]rank to [#AAAAAA]${getClanRankData(getVehicleData(vehicle).ownerId, rankId).name} [#FFFFFF]of the [#FF9900]${getClanData(getVehicleData(vehicle).ownerId).name} [#FFFFFFclan!`);
 	} else if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
 		getVehicleData(vehicle).rank = rankId;
-		messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]rank to [#AAAAAA]${rankId} [#FFFFFF]of the [#FFFF00]${getJobData(getVehicleData(vehicle).ownerId).name} [#FFFFFF]job!`);
+		messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]rank to [#AAAAAA]${rankId} [#FFFFFF]of the [#FFFF00]${getJobData(getVehicleData(vehicle).ownerId).name} [#FFFFFF]job!`);
 	}
 }
 
@@ -640,7 +640,7 @@ function setVehicleClanCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_CLAN;
 	getVehicleData(vehicle).ownerId = getClanData(clanId).databaseId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#AAAAAA]${getClanData(clanId).name} [#FFFFFF]clan`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#FF9900]${getClanData(clanId).name} [#FFFFFF]clan`);
 }
 
 // ===========================================================================
@@ -657,7 +657,7 @@ function setVehicleToBusinessCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_BIZ;
 	getVehicleData(vehicle).ownerId = getBusinessData(businessId).databaseId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#AAAAAA]${getBusinessData(businessId).name} [#FFFFFF]business`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]business`);
 }
 
 // ===========================================================================
@@ -679,7 +679,7 @@ function setVehicleOwnerCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_PLAYER;
 	getVehicleData(vehicle).ownerId = getPlayerCurrentSubAccount(targetClient).databaseId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to [#AAAAAA]${getClientSubAccountName(targetClient)}`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to [#AAAAAA]${getClientSubAccountName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -702,7 +702,7 @@ function setVehicleRentPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).rentPrice = amount;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]rent price to [#AAAAAA]$${amount}`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]rent price to [#AAAAAA]$${amount}`);
 }
 
 // ===========================================================================
@@ -725,7 +725,7 @@ function setVehicleBuyPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).buyPrice = amount;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)}'s buy price to $${amount}!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)}'s [#FFFFFF]buy price to [#AAAAAA]$${amount}!`);
 }
 
 // ===========================================================================
@@ -747,7 +747,7 @@ function removeVehicleOwnerCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = AG_VEHOWNER_NONE;
 	getVehicleData(vehicle).ownerId = 0;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]owner to nobody!`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to nobody!`);
 	messagePlayerInfo(client, `Nobody will be able to use this vehicle until it receives a new owner (either bought or set by admin).`);
 }
 
@@ -818,7 +818,7 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 		getVehicleData(vehicle).spawnLocked = spawnLocked;
 	}
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#AAAAAA]${getVehicleName(vehicle)} [#FFFFFF]to spawn [#AAAAAA]${(spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
+	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]to spawn [#AAAAAA]${(spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
 }
 
 // ===========================================================================

@@ -115,6 +115,10 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
                     bizInfoText = `Use /buy to purchase items`;
                     break;
 
+                case AG_BIZLABEL_INFO_ENTERVEH:
+                    bizInfoText = "Enter a vehicle to purchase it";
+                    break;
+
                 case AG_BIZLABEL_INFO_NONE:
                 default:
                     bizInfoText = "";
@@ -224,13 +228,13 @@ function processLabelRendering() {
                 if(pickups[i].getData("ag.label.type") != null) {
                     if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
                         let price = 0;
-                        let shouldShowBuyHelp = false;
+                        let bizLabelInfoType = AG_BIZLABEL_INFO_NONE;
                         if(pickups[i].getData("ag.label.price") != null) {
-                            price = pickups[i].getData("ag.label.price");
+                            price = makeLargeNumberReadable(pickups[i].getData("ag.label.price"));
                         }
 
-                        if(pickups[i].getData("ag.label.buyhelp") != null) {
-                            shouldShowBuyHelp = pickups[i].getData("ag.label.buyhelp");
+                        if(pickups[i].getData("ag.label.help") != null) {
+                            bizLabelInfoType = pickups[i].getData("ag.label.help");
                         }
 
                         switch(pickups[i].getData("ag.label.type")) {

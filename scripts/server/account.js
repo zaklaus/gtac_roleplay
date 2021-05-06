@@ -647,10 +647,14 @@ function createAccount(name, password, email = "") {
 
 		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email, acct_when_registered) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}', UNIX_TIMESTAMP())`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
-			let accountData = loadAccountFromId(getDatabaseInsertId(dbConnection), true);
-			createDefaultKeybindsForAccount(accountData.databaseId);
-			createDefaultAccountServerData(accountData.databaseId);
-			return accountData;
+			let tempAccountData = loadAccountFromId(getDatabaseInsertId(dbConnection), false);
+			createDefaultKeybindsForAccount(tempAccountData.databaseId);
+			createDefaultAccountServerData(tempAccountData.databaseId);
+			tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
+			tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
+			tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
+			tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
+			return tempAccountData;
 		}
 	}
 

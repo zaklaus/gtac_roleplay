@@ -1278,3 +1278,11 @@ let allowedSkins = [
 		[809067472,"Male Tourist",false]
 	]
 ];
+
+// ===========================================================================
+
+function makeLargeNumberReadable(num) {
+	return new Number(num).toLocaleString("en-US");
+}
+
+// ===========================================================================

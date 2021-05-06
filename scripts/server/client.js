@@ -845,10 +845,17 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
             setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);
         }
         deleteItem(getPlayerData(client).itemActionItem);
+        switchPlayerActiveHotBarSlot(client, -1);
         restorePlayerCamera(client);
         cachePlayerHotBarItems(client);
 
-        setPlayerSkin(client, allowedSkins[getServerGame()][allowedSkinIndex][0]);
+        if(isPlayerWorking(client)) {
+            messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.");
+            setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);
+        } else {
+            setPlayerSkin(client, allowedSkins[getServerGame()][allowedSkinIndex][0]);
+        }
+
         setPlayerPosition(client, getPlayerData(client).returnToPosition);
         setPlayerHeading(client, getPlayerData(client).returnToHeading);
         setPlayerInterior(client, getPlayerData(client).returnToInterior);
@@ -873,12 +880,13 @@ function sendPlayerChatScrollLines(client, amount) {
 // ===========================================================================
 
 function playRadioStreamForPlayer(client, streamURL) {
-    triggerNetworkEvent("ag.radioStream", client, streamURL);
+    triggerNetworkEvent("ag.radioStream", client, streamURL, getPlayerData(client).streamingRadioVolume);
 }
 
 // ===========================================================================
 
 function setPlayerStreamingRadioVolume(client, volumeLevel) {
+    getPlayerData(client).streamingRadioVolume = volumeLevel;
     triggerNetworkEvent("ag.radioVolume", client, volumeLevel);
 }
 
@@ -893,3 +901,5 @@ function setVehicleLightsState(vehicle, state) {
 function sendPlayerEnterPropertyKey(client, key) {
     triggerNetworkEvent("ag.enterPropertyKey", client, key);
 }
+
+// ===========================================================================

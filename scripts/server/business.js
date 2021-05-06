@@ -632,7 +632,7 @@ function setBusinessBuyPriceCommand(command, params, client) {
 
 	getBusinessData(businessId).buyPrice = amount;
 	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.price", getBusinessData(businessId).buyPrice, true);
-	messagePlayerSuccess(client, `[#FFFFFF]You set business [#0099FF]${getBusinessData(businessId).name}'s [#FFFFFF]for-sale price to [#AAAAAA]$${amount}`);
+	messagePlayerSuccess(client, `[#FFFFFF]You set business [#0099FF]${getBusinessData(businessId).name}'s [#FFFFFF]for-sale price to [#AAAAAA]$${makeLargeNumberReadable(amount)}`);
 }
 
 // ===========================================================================
@@ -659,7 +659,7 @@ function depositIntoBusinessCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).till += amount;
-	takePlayerCash(getPlayerCurrentSubAccount(client).cash, amount);
+	takePlayerCash(client, amount);
 	updatePlayerCash(client);
 	messagePlayerSuccess(client, `You deposited $${amount} into business [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]till`);
 }
@@ -707,7 +707,7 @@ function orderItemForBusinessCommand(command, params, client) {
 	getPlayerData(client).businessOrderValue = value;
 	getPlayerData(client).businessOrderCost = orderTotalCost;
 
-	showPlayerPrompt(client, AG_PROMPT_BIZORDER, `Ordering ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${pricePerItem} each will cost a total of $${orderTotalCost}`, "Business Order Cost");
+	showPlayerPrompt(client, AG_PROMPT_BIZORDER, `Ordering ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${makeLargeNumberReadable(pricePerItem)} each will cost a total of $${makeLargeNumberReadable(orderTotalCost)}`, "Business Order Cost");
 }
 
 // ===========================================================================
@@ -1389,7 +1389,7 @@ function setBusinessItemSellPriceCommand(command, params, client) {
 
 	getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).buyPrice = newPrice;
 
-	messagePlayerSuccess(client, `You changed the price of the [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).itemTypeIndex).name}'s [#FFFFFF]in slot [#AAAAAA]${itemSlot} [#FFFFFF]from $${oldPrice} to $${newPrice}`);
+	messagePlayerSuccess(client, `You changed the price of the [#AAAAAA]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).itemTypeIndex).name}'s [#FFFFFF]in slot [#AAAAAA]${itemSlot} [#FFFFFF]from $${makeLargeNumberReadable(oldPrice)} to $${makeLargeNumberReadable(newprice)}`);
 }
 
 // ===========================================================================

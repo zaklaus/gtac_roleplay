@@ -18,6 +18,10 @@ let serverBitFlags = {
 	accountSettingsFlags: {},
 	subAccountSettingsFlags: {},
 	accountFlags: {},
+	seenHelpTipsFlags: {},
+	npcTriggerTypeKeys: {},
+	npcTriggerConditionTypeKeys: {},
+	npcTriggerResponseTypeKeys: {},
 };
 
 // ===========================================================================
@@ -117,6 +121,7 @@ let serverBitFlagKeys = {
 		"showActionTips",
 	],
 	npcTriggerTypeKeys: [
+		"none",
 		"farProximity",               // Comes within a far distance of NPC
 		"mediumProximity",            // Comes within a medium distance of NPC
 		"nearProximity",              // Comes within a close distance of NPC
@@ -142,6 +147,7 @@ let serverBitFlagKeys = {
 		"attackedByFist",             // Any element is attacked by fist
 	],
 	npcTriggerConditionTypeKeys: [
+		"none",
 		"isInLineOfSight",
 		"isFarProximity",
 		"isMediumProximity",
@@ -179,6 +185,7 @@ let serverBitFlagKeys = {
 		"isWhispering",
 	],
 	npcTriggerResponseTypeKeys: [
+		"none",
 		"shout",
 		"talk",
 		"whisper",
@@ -206,7 +213,14 @@ let serverBitFlagKeys = {
 		"enterProperty",
 		"searchArea",
 	],
-}
+	seenHelpTipsKeys: [
+		"none",
+		"vehicleEngineOffWhenEntering",
+		"vehicleLockedAfterEntryAttempt",
+		"showItemsAfterPurchase",
+		"buyCommandAfterEnterBusiness",
+	],
+};
 
 // ===========================================================================
 

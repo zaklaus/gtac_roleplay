@@ -73,6 +73,14 @@ function getColourByName(colourName) {
 
 // ===========================================================================
 
+function getHexColourByName(colourName) {
+	let rgbaColour = getServerColours().byName[colourName];
+	let rgbaArray = rgbaArrayFromToColour(rgbaColour);
+	return rgbToHex(rgbaArray[0], rgbaArray[1], rgbaArray[2]);
+}
+
+// ===========================================================================
+
 function getPlayerColour(client) {
 	if(getPlayerData(client) != false) {
 		if(!isPlayerLoggedIn(client)) {
@@ -90,7 +98,7 @@ function getPlayerColour(client) {
 // ===========================================================================
 
 function getBoolRedGreenInlineColour(boolVal) {
-	return (!boolVal) ? "[#cd3c3c]" : "[#32cd32]";
+	return (!boolVal) ? "[#CD3C3C]" : "[#32CD32]";
 }
 
 // ===========================================================================

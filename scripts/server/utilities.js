@@ -1570,8 +1570,8 @@ function generateRandomPhoneNumber() {
 
 function doesNameContainInvalidCharacters(name) {
 	for(let i = 0; i < name.length; i++) {
-		let strChar = totalCharacterCount.charAt(i);
-		if(getGlobalConfig().subAccountNameAllowedCharacters.indexOf(strChar) != -1) {
+		let strChar = name.charAt(i).toLowerCase();
+		if(getGlobalConfig().subAccountNameAllowedCharacters.toLowerCase().indexOf(strChar) == -1) {
 			return true;
 		}
 	}

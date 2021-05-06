@@ -676,6 +676,7 @@ function quitJobCommand(command, params, client) {
 		return false;
 	}
 
+	stopWorking(client);
 	quitJob(client);
 	messagePlayerSuccess(client, "You are now unemployed!");
 	return true;

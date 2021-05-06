@@ -252,7 +252,7 @@ function anchorBoat(vehicleId) {
 // ===========================================================================
 
 function setEnterPropertyKey(key) {
-    enterPropertyKey(key);
+    enterPropertyKey = key;
 }
 
 // ===========================================================================

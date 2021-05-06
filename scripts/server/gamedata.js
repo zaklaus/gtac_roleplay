@@ -531,7 +531,7 @@ let gameData = {
 			"Mr.Whoopee",
 			"BF-Injection",
 			"Hunter",
-			"Police",
+			"Police Car",
 			"Enforcer",
 			"Securicar",
 			"Banshee",
@@ -1957,78 +1957,160 @@ let gameData = {
 
 		[ // GTA III
 			// Police Stations
-			["Portland Police Station", [1143.875, -675.1875, 14.97], 0.0],
-			["Staunton Island Police Station", [340.25, -1123.375, 25.98], 0.0],
-			["Shoreside Vale Police Station", [-1253.0, -138.1875, 58.75], 0.0],
+			["Portland Police Station", [1143.875, -675.1875, 14.97], 0.0, [1127.95, -666.06, 14.413]],
+			["Staunton Island Police Station", [340.25, -1123.375, 25.98], 0.0, null],
+			["Shoreside Vale Police Station", [-1253.0, -138.1875, 58.75], 0.0, null],
 
 			// Hospitals
-			["Portland Hospital", [1144.25, -596.875, 14.97], 0.0],
-			["Staunton Island Hospital", [183.5, -17.75, 16.21], 0.0],
-			["Shoreside Vale Hospital", [-1259.5, -44.5, 58.89], 0.0],
+			["Portland Hospital", [1144.25, -596.875, 14.97], 0.0, [1127.64, -586.84, 14.414]],
+			["Staunton Island Hospital", [183.5, -17.75, 16.21], 0.0, null],
+			["Shoreside Vale Hospital", [-1259.5, -44.5, 58.89], 0.0, null],
 
 			// Fire Stations
-			["Portland Fire Station", [1103.70, -52.45, 7.49], 0.0],
-			["Staunton Island Fire Station", [-78.48, -436.80, 16.17], 0.0],
-			["Shoreside Vale Fire Station", [-1202.10, -14.67, 53.20], 0.0],
+			["Portland Fire Station", [1103.70, -52.45, 7.49], 0.0, null],
+			["Staunton Island Fire Station", [-78.48, -436.80, 16.17], 0.0, null],
+			["Shoreside Vale Fire Station", [-1202.10, -14.67, 53.20], 0.0, null],
 
 			// Pay and Sprays
-			["Portland Pay and Spray", [925.4, -360.3, 10.83], 0.0],
-			["Staunton Island Pay and Spray", [381.8, -493.8, 25.95], 0.0],
-			["Shoreside Vale Pay and Spray", [-1142.4, 35.01, 58.61], 0.0],
+			["Portland Pay and Spray", [925.4, -360.3, 10.83], 0.0, [928.35, -335.53, 9.413]],
+			["Staunton Island Pay and Spray", [381.8, -493.8, 25.95], 0.0, null],
+			["Shoreside Vale Pay and Spray", [-1142.4, 35.01, 58.61], 0.0, null],
 
 			// Ammunations
-			["Portland Ammunation", [1068.3, -400.9, 15.24], 0.0],
-			["Staunton Island Ammunation", [348.2, -717.9, 26.43], 0.0],
+			["Portland Ammunation", [1068.3, -400.9, 15.24], 0.0, null],
+			["Staunton Island Ammunation", [348.2, -717.9, 26.43], 0.0, null],
 
 			// Train Stations
-			["Bedford Point Train Station", [178.52, -1551.40, 26.162], -3.105],
-			["Francis International Airport Train Station", [-633.42, -760.06, 18.919], 1.586],
-			["Rockford Train Station", [225.66, -69.07, 20.998], -3.115],
-			["Saint Marks Train Station", [1306.69, -512.38, 40.078], -2.458],
-			["Hepburn Heights Train Station", [1029.07, -164.18, 4.972], 0.005],
-			["Chinatown Train Station", [775.27, -622.28, 14.747], 0.006],
+			["Bedford Point Train Station (Subway)", [178.52, -1551.40, 26.162], -3.105, [188.24, -1603.86, 25.700]],
+			["Francis International Airport Train Station (Subway)", [-633.42, -760.06, 18.919], 1.586, [-693.17, -725.14, 8.313]],
+			["Rockford Train Station (Subway)", [225.66, -69.07, 20.998], -3.115, [227.01, -59.56, 20.697]],
+			["Saint Marks Train Station (Portland EL)", [1306.69, -512.38, 40.078], -2.458, [1312.85, -506.36, 40.641]],
+			["Hepburn Heights Train Station (Portland EL)", [1029.07, -164.18, 4.972], 0.005, [1020.75, -166.69, 4.412]],
+			["Chinatown Train Station (Portland EL)", [775.27, -622.28, 14.747], 0.006, [812.43, -630.49, 14.413]],
 
 			// Safehouses
-			["Portland Safehouse", [885.52, -308.47, 8.615], -1.532],
+			["Portland Safehouse", [885.52, -308.47, 8.615], -1.532, [839.16, -298.12, 4.717]],
 
 			// Other
-			["St Mathias College", [201.59, -281.42, 15.779], -0.005],
-			["Newport Parking Garage", [294.22, -547.87, 25.780], 3.119],
-			["City Hall", [96.60, -951.61, 26.168], 3.138],
-			["Belleville Park East", [109.15, -695.76, 26.168], 1.594],
-			["Belleville Park Bathroom", [38.69, -724.96, 22.756], -3.104],
-			["Belleville Park West", [0.40, -773.05, 26.056], -1.476],
-			["Stadium Entrance", [-18.65, -231.80, 29.861], 0.002],
-			["Kenji's Casino", [454.10, -1421.26, 26.124], -0.769],
-			["Saint Marks Bistro", [1345.48, -457.41, 49.549], 1.537],
-			["Leone Mansion", [1417.94, -194.18, 49.905], -1.570],
-			["Ciprianis Ristorante", [1202.50, -320.78, 24.973], -1.553],
-			["Luigi's Club", [904.82, -425.37, 14.929], 1.602],
-			["Portland Fuel Station", [1157.34, -75.45, 7.065], -0.027],
-			["Easy Credit Autos", [1217.81, -113.87, 14.973], -3.051],
-			["Head Radio Headquarters", [986.40, -46.40, 7.473], -1.615],
-			["Borgnine Taxi Headquarters", [929.36, -48.59, 7.473], -2.935],
-			["Fuzz Ball", [1000.03, -877.82, 14.547], -3.136],
-			["Portland Docks Entrance", [1360.55, -818.08, 14.415], -1.574],
-			["Punk Noodle Diner", [1040.10, -653.10, 14.973], 1.551],
-			["Greasy Joe's Diner", [864.45, -999.86, 4.646], -0.020],
+			["St Mathias College", [201.59, -281.42, 15.779], -0.005, null],
+			["Newport Parking Garage", [294.22, -547.87, 25.780], 3.119, null],
+			["City Hall", [96.60, -951.61, 26.168], 3.138, null],
+			["Belleville Park East", [109.15, -695.76, 26.168], 1.594, null],
+			["Belleville Park Bathroom", [38.69, -724.96, 22.756], -3.104, null],
+			["Belleville Park West", [0.40, -773.05, 26.056], -1.476, null],
+			["Stadium Entrance", [-18.65, -231.80, 29.861], 0.002, null],
+			["Kenji's Casino", [454.10, -1421.26, 26.124], -0.769, null],
+			["Saint Marks Bistro", [1345.48, -457.41, 49.549], 1.537, null],
+			["Leone Mansion", [1417.94, -194.18, 49.905], -1.570, [1378.31, -296.16, 49.414]],
+			["Ciprianis Ristorante", [1202.50, -320.78, 24.973], -1.553, [1199.28, -321.10, 24.413]],
+			["Luigi's Club", [904.82, -425.37, 14.929], 1.602, [907.36, -423.80, 14.413]],
+			["Portland Fuel Station", [1157.34, -75.45, 7.065], -0.027, null],
+			["Easy Credit Autos", [1217.81, -113.87, 14.973], -3.051, null],
+			["Head Radio Headquarters", [986.40, -46.40, 7.473], -1.615, null],
+			["Borgnine Taxi Headquarters", [929.36, -48.59, 7.473], -2.935, null],
+			["Fuzz Ball", [1000.03, -877.82, 14.547], -3.136, null],
+			["Portland Docks", [1360.55, -818.08, 14.415], -1.574, [1356.94, -816.28, 14.413]],
+			["Punk Noodle Diner", [1040.10, -653.10, 14.973], 1.551, [1042.29, -656.87, 14.413]],
+			["Greasy Joe's Diner", [864.45, -999.86, 4.646], -0.020, null],
+			["Hepburn Heights Projects", [913.98, -227.83, 4.413], 0.001, null],
 		],
 
 		[ // GTA VC
 			// Police Stations
-			["Washington Beach Police Station", [399.77, -468.90, 11.73], 0.0],
-			["Vice Point Police Station", [508.96, 512.07, 12.10], 0.0],
-			["Downtown Police Station", [-657.43, 762.31, 11.59], 0.0],
-			["Little Havana Police Station", [-885.08, -470.44, 13.11], 0.0],
+			["Washington Beach Police Station", [399.77, -468.90, 11.73], 0.0, null],
+			["Vice Point Police Station", [508.96, 512.07, 12.10], 0.0, null],
+			["Downtown Police Station", [-657.43, 762.31, 11.59], 0.0, null],
+			["Little Havana Police Station", [-885.08, -470.44, 13.11], 0.0, null],
 
 			// Hospitals
-			["Downtown Hospital", [-822.57, 1152.82, 12.41], 0.0],
-			["Little Havana Medical Center", [-885.08, -470.44, 13.11], 0.0],
-			["Ocean Beach Hospital", [-133.19, -980.76, 10.46], 0.0],
+			["Downtown Hospital", [-822.57, 1152.82, 12.41], 0.0, null],
+			["Little Havana Medical Center", [-885.08, -470.44, 13.11], 0.0, null],
+			["Ocean Beach Hospital", [-133.19, -980.76, 10.46], 0.0, null],
+
+			// Misc/Other
+			["Paper Products", [-1085.83, -232.72, 11.446], -3.139, null],
+			["Little Haiti Slums", [-958.90, 116.41, 9.300], 0.031, null],
+			["Kaufman Cabs", [-1013.35, 198.70, 11.266], -1.680, null],
+			["Moist Palms Hotel", [-703.50, 545.30, 11.099], -3.105, null],
+			["North Point Mall", [486.50, 1124.89, 16.348], 1.610, null],
+			["Ocean View Hotel", [238.14, -1280.48, 11.071], 1.282, null],
+			["Ocean Beach Fuel Station", [63.32, -1074.50, 10.006], 0.102, null],
+			["Ken Rosenberg's Office", [115.48, -823.76, 10.463], -2.221, null]
+
+			// Bar, Restaurants and Food
+			["Little Havana Donut Shop", [-856.28, -649.32, 11.047], 1.700, null],
+			["Robina's Cafe", [-1170.36, -604.25, 11.640], -2.973, null],
+			["Biker Bar", [-601.72, 654.60, 11.073], -1.463, null],
+
+			// Clubs
+			["Malibu Club", [492.23, -81.41, 11.261], -2.306, null],
+			["Poll Position Club", [100.09, -1477.78, 10.432], 0.484, null],
+
+			// Tool Shops
+			["Little Havana Tool Shop", [-969.01, -684.27, 11.456], -2.994, null],
+			["Washington Beach Tool Shop", [197.83, -486.04, 11.127], 0.000, null]
+
+			// Gunshops
+			["Ocean Beach Ammunation", [-53.41, -1482.25, 10.293], 1.441, null],
+
+			// Pay-n-sprays
+			["Ocean Beach Pay-n-spray", [-18.51, -1256.76, 10.463], -1.556, null]
+
 		],
 
 		[ // GTA SA
-			// Coming Soon!
+			// Police Stations
+			["Los Santos Police Department", [1545.53, -1675.64, 13.561], -1.575, null],
+
+			// Ammunations
+			["Market Ammunation", [1364.84, -1283.79, 13.547], -0.541, null],
+
+			// Hospitals
+			["All Saints General Hospital", [1182.67, -1323.81, 13.579], 1.543, null],
+			["County General Hospital", [2034.7567,-1403.1083,17.2931], 0.0, null],
+
+			// Strip Clubs
+			["Pig Pen Strip Club", [2420.906982,-1222.321777,25.348423], 0.0, null],
+
+			// Night/Dance Clubs
+			["Club Tableau", [551.877502, -1506.095581, 14.550004], 1.0, null],
+			["Club Alhambra", [1832.55, -1681.91, 13.510], -1.561, null],
+
+			// Bars
+			["Ten Green Bottles Bar", [2305.922363,-1646.797241,14.461124], 1.0, null],
+
+			// Restaurants and Food
+			["Market Donut Shop", [1040.932006,-1336.229492,13.550251], 1.0, null],
+			["Idlewood Pizza Stack", [2099.827636,-1806.375610,13.554687], 0.0, null],
+			["Temple Burger Shot", [1212.020019,-924.311462,42.930198], 1.0, null],
+
+			// Clothes Shops
+			["Ganton Binco", [2244.837402,-1664.232299,15.476562], 1.0, null],
+			["Los Santos Victim ", [456.31, -1501.53, 31.041], -1.378, null],
+			["Los Santos Didier Sachs", [449.68, -1479.94, 30.639], -1.149, null],
+			["ProLaps Los Santos", [502.37, -1355.58, 16.133], 2.659, null],
+			["Market Cluckin Bell", [923.53, -1352.72, 13.377], -1.596, null],
+			["Marina Burger Shot", [816.55, -1617.00, 13.859], 1.396, null],
+
+			// Airports
+			["Los Santos International Airport", [1958.201049,-2182.789794,13.546875], 1.0, null],
+			["Los Santos International Airport Runway", [2054.12, -2493.84, 13.547], 1.569, null],
+			["Los Santos Stadium", [2694.261474,-1703.194335,11.506717], 1.0, null],
+
+			// Sex Shops
+			["El Corona Sex Shop", [1944.994873,-2116.641113,13.550632], 1.0, null],
+			["Temple Sex Shop", [1090.181884,-927.265869,43.182197], 1.0, null],
+			["Market Sex Shop", [1090.181884,-927.265869,43.182197], 1.0, null]
+
+			// Misc/Other
+			["Grotti Dealership", [540.6011,-1291.2489,17.2422], 0.0, null],
+			["Santa Maria Beach", [302.994567,-1900.099121,1.938840], 0.0, null],
+			["Glen Park Bridge", [1968.33, -1195.10, 25.70], 0.0, null],
+
+			// Train Stations
+			["Unity Station", [1742.60, -1859.98, 13.414], -3.112, null],
+			["Market Station", [814.26, -1345.38, 13.532], -1.624, null],
+
 		],
 
 		[ // GTA UG
@@ -2037,113 +2119,116 @@ let gameData = {
 
 		[ // GTA IV
 			// Police Stations
-			["Broker Police Station", [894.99, -357.39, 18.185], 2.923],
-			["South Bohan Police Station", [435.40, 1592.29, 17.353], 3.087],
-			["Northern Gardens Police Station", [974.93, 1870.45, 23.073], -1.621],
-			["South Slopes Police Station", [1233.25, -89.13, 28.034], 1.568],
-			["Middle Part East Police Station", [50.12, 679.88, 15.316], 1.569],
-			["East Holland Police Station", [85.21, 1189.82, 14.755], 3.127],
-			["Francis International Airport Police Station", [2170.87, 448.87, 6.085], 1.501],
-			["Chinatown Police Station", [213.12, -211.70, 10.752], 0.200],
-			["Acter Police Station", [-1714.95, 276.31, 22.134], 1.127],
-			["Port Tudor Police Station", [-1220.73, -231.53, 3.024], 2.210],
-			["Leftwood Police Station", [-927.66, 1263.63, 24.587], -0.913],
+			["Broker Police Station", [894.99, -357.39, 18.185], 2.923, null],
+			["South Bohan Police Station", [435.40, 1592.29, 17.353], 3.087, null],
+			["Northern Gardens Police Station", [974.93, 1870.45, 23.073], -1.621, null],
+			["South Slopes Police Station", [1233.25, -89.13, 28.034], 1.568, null],
+			["Middle Part East Police Station", [50.12, 679.88, 15.316], 1.569, null],
+			["East Holland Police Station", [85.21, 1189.82, 14.755], 3.127, null],
+			["Francis International Airport Police Station", [2170.87, 448.87, 6.085], 1.501, null],
+			["Chinatown Police Station", [213.12, -211.70, 10.752], 0.200, null],
+			["Acter Police Station", [-1714.95, 276.31, 22.134], 1.127, null],
+			["Port Tudor Police Station", [-1220.73, -231.53, 3.024], 2.210, null],
+			["Leftwood Police Station", [-927.66, 1263.63, 24.587], -0.913, null],
 
 			// Fire Stations
-			["Broker Fire Station", [953.13, 95.90, 35.004], 1.595],
-			["Northwood Fire Station", [-271.02, 1542.15, 20.420], -1.160],
-			["Northern Gardens Fire Station", [1120.47, 1712.36, 10.534], -0.682],
-			["Francis International Airport Fire Station", [2364.87, 166.83, 5.813], 0.156],
-			["Chinatown Fire Station", [295.40, -336.88, 4.963], 2.887],
-			["Berchem Fire Station", [-1574.90, 546.54, 25.449], -0.509],
-			["Tudor Fire Station", [-2144.97, 164.15, 12.051], -2.149],
+			["Broker Fire Station", [953.13, 95.90, 35.004], 1.595, null],
+			["Northwood Fire Station", [-271.02, 1542.15, 20.420], -1.160, null],
+			["Northern Gardens Fire Station", [1120.47, 1712.36, 10.534], -0.682, null],
+			["Francis International Airport Fire Station", [2364.87, 166.83, 5.813], 0.156, null],
+			["Chinatown Fire Station", [295.40, -336.88, 4.963], 2.887, null],
+			["Berchem Fire Station", [-1574.90, 546.54, 25.449], -0.509, null],
+			["Tudor Fire Station", [-2144.97, 164.15, 12.051], -2.149, null],
 
 			// Safehouses
-			["Hove Beach Safehouse Parking", [904.27, -498.00, 14.522], 3.127],
-			["South Bohan Safehouse", [589.42, 1402.15, 10.364], 0.007],
+			["Hove Beach Safehouse Parking", [904.27, -498.00, 14.522], 3.127, null],
+			["South Bohan Safehouse", [589.42, 1402.15, 10.364], 0.007, null],
 
 			// Hospitals
-			["Schottler Medical Center", [1199.59, 196.78, 33.554], 1.633],
-			["Northern Gardens Medical Center", [980.71, 1831.61, 23.898], -0.049],
-			["Leftwood Hospital", [-1317.27, 1277.20, 22.370], 2.246],
-			["Acter Medical Center", [-1538.43, 344.58, 20.943], -0.156],
+			["Schottler Medical Center", [1199.59, 196.78, 33.554], 1.633, null],
+			["Northern Gardens Medical Center", [980.71, 1831.61, 23.898], -0.049, null],
+			["Leftwood Hospital", [-1317.27, 1277.20, 22.370], 2.246, null],
+			["Acter Medical Center", [-1538.43, 344.58, 20.943], -0.156, null],
 
 			// Fuel Stations
-			["Hove Beach Fuel Station", [1128.51, -359.55, 18.441], -0.052],
-			["Lancaster Fuel Station", [108.37, 1135.13, 13.975], 0.007],
-			["The Meat Quarter Fuel Station", [-434.30, -19.47, 9.864], 1.469],
-			["Cerveza Heights Fuel Station", [1123.50, 328.84, 29.245], -0.154],
-			["Tudor Fuel Station", [-1389.91, 29.19, 6.875], 0.982],
+			["Hove Beach Fuel Station", [1128.51, -359.55, 18.441], -0.052, null],
+			["Lancaster Fuel Station", [108.37, 1135.13, 13.975], 0.007, null],
+			["The Meat Quarter Fuel Station", [-434.30, -19.47, 9.864], 1.469, null],
+			["Cerveza Heights Fuel Station", [1123.50, 328.84, 29.245], -0.154, null],
+			["Tudor Fuel Station", [-1389.91, 29.19, 6.875], 0.982, null],
 
 			// Restaurants
-			["Star Junction Burger Shot", [-174.00, 276.96, 14.818], -0.029],
-			["South Bohan Burger Shot", [441.95, 1516.64, 16.289], -2.682],
-			["Industrial Burger Shot", [1096.93, 1598.33, 16.721], -2.289],
+			["Star Junction Burger Shot", [-174.00, 276.96, 14.818], -0.029, null],
+			["South Bohan Burger Shot", [441.95, 1516.64, 16.289], -2.682, null],
+			["Industrial Burger Shot", [1096.93, 1598.33, 16.721], -2.289, null],
 
 			// Night Clubs/Strip Clubs/Bars
-			["Perestroika Club", [957.58, -292.58, 19.644], -0.009],
-			["Triangle Club", [1210.90, 1718.18, 16.667], 1.819],
+			["Perestroika Club", [957.58, -292.58, 19.644], -0.009, null],
+			["Triangle Club", [1210.90, 1718.18, 16.667], 1.819, null],
+			["Bahama Mamas Club", [-387.33, 412.33, 5.674], 2.997, null],
+			["Maisonette Club", [-482.28, 155.56, 7.555], -1.559, null],
 
 			// TW@ Cafes
-			["Outlook Internet Cafe", [977.42, -169.11, 24.013], 1.844],
-			["Berchem Internet Cafe", [-1584.46, 466.05, 25.398], -2.441],
+			["Outlook Internet Cafe", [977.42, -169.11, 24.013], 1.844, null],
+			["Berchem Internet Cafe", [-1584.46, 466.05, 25.398], -2.441, null],
 
 			// Pay-n-Sprays
-			["Hove Beach Pay-n-Spray", [1058.57, -282.58, 20.760], -3.135],
-			["Leftwood Pay-n-Spray", [-1148.69, 1171.52, 16.457], -0.059],
+			["Hove Beach Pay-n-Spray", [1058.57, -282.58, 20.760], -3.135, null],
+			["Leftwood Pay-n-Spray", [-1148.69, 1171.52, 16.457], -0.059, null],
 
 			// Clothes Shops
-			["Hove Beach Russian Clothes Shop", [896.31, -442.59, 15.888], 1.500],
+			["Hove Beach Russian Clothes Shop", [896.31, -442.59, 15.888], 1.500, null],
 
 			// Car Wash
-			["Willis Car Wash", [1831.02, 360.20, 22.061], -1.515],
-			["Tudor Car Wash", [-1371.68, 35.13, 7.028], 1.029],
+			["Willis Car Wash", [1831.02, 360.20, 22.061], -1.515, null],
+			["Tudor Car Wash", [-1371.68, 35.13, 7.028], 1.029, null],
 
 			// Gun Shops
-			["Downtown Broker Gun Shop", [1054.11, 86.84, 33.408], -1.574],
-			["Chinatown Gun Shop", [65.43, -342.36, 14.767], -1.589],
-			["Port Tudor Gun Shop", [-1338.77, 307.61, 13.378], -1.530],
+			["Downtown Broker Gun Shop", [1054.11, 86.84, 33.408], -1.574, null],
+			["Chinatown Gun Shop", [65.43, -342.36, 14.767], -1.589, null],
+			["Port Tudor Gun Shop", [-1338.77, 307.61, 13.378], -1.530, null],
 
 			// Train Stations
-			["Hove Beach Train Station", [1000.41, -544.82, 14.854], -1.576],
-			["Schottler Train Station", [1303.93, -37.75, 28.377], 3.065],
-			["Cerveza Heights Train Station", [1386.87, 374.13, 23.063], 3.111],
-			["Lynch Street Train Station", [1594.73, 364.80, 25.226], -0.965],
-			["East Park Train Station", [-35.78, 634.79, 14.663], -0.050],
-			["West Park Train Station", [-377.13, 677.05, 14.679], -0.069],
-			["North Park Train Station", [-135.08, 1153.95, 14.773], -1.567],
-			["Vespucci Circus Train Station", [-85.11, 1427.04, 20.421], 1.501],
-			["Frankfort Low Train Station", [-331.94, 1427.05, 12.617], 1.541],
-			["Frankfort High Train Station", [-343.79, 1433.12, 12.283], 0.113],
-			["Vauxite Train Station", [-483.38, 1333.91, 17.481], 1.509],
-			["Quartz Street West Train Station", [-545.54, 926.22, 9.945], -1.524],
-			["Manganese West Train Station", [-461.60, 530.56, 9.857], 3.091],
-			["Frankfort Ave Train Station", [-377.52, 371.91, 14.762], -3.125],
-			["Suffolk Train Station", [-252.77, -171.83, 14.447], 1.594],
-			["Feldspar Train Station", [-350.62, -335.35, 4.909], -2.287],
-			["City Hall Train Station", [-115.31, -501.22, 14.755], -1.365],
-			["Castle Gardens Train Station", [82.95, -757.81, 4.965], -1.006],
-			["Emerald Train Station", [116.57, -318.15, 14.768], 1.499],
-			["Easton Train Station", [-35.76, -18.50, 14.769], 3.137],
-			["Manganese East Train Station", [131.46, 522.74, 14.661], 0.005],
-			["Quartz Street East Train Station", [134.35, 910.15, 14.717], -0.112],
-			["San Quentin Ave Train Station", [373.12, 1625.93, 16.347], -2.249],
-			["Windmill Street Train Station", [749.97, 1447.44, 14.252], -0.120],
-			["Francis International Airport Train Station", [2297.57, 474.62, 6.086], 0.066],
+			["Hove Beach Train Station", [1000.41, -544.82, 14.854], -1.576, null],
+			["Schottler Train Station", [1303.93, -37.75, 28.377], 3.065, null],
+			["Cerveza Heights Train Station", [1386.87, 374.13, 23.063], 3.111, null],
+			["Lynch Street Train Station", [1594.73, 364.80, 25.226], -0.965, null],
+			["East Park Train Station", [-35.78, 634.79, 14.663], -0.050, null],
+			["West Park Train Station", [-377.13, 677.05, 14.679], -0.069, null],
+			["North Park Train Station", [-135.08, 1153.95, 14.773], -1.567, null],
+			["Vespucci Circus Train Station", [-85.11, 1427.04, 20.421], 1.501, null],
+			["Frankfort Low Train Station", [-331.94, 1427.05, 12.617], 1.541, null],
+			["Frankfort High Train Station", [-343.79, 1433.12, 12.283], 0.113, null],
+			["Vauxite Train Station", [-483.38, 1333.91, 17.481], 1.509, null],
+			["Quartz Street West Train Station", [-545.54, 926.22, 9.945], -1.524, null],
+			["Manganese West Train Station", [-461.60, 530.56, 9.857], 3.091, null],
+			["Frankfort Ave Train Station", [-377.52, 371.91, 14.762], -3.125, null],
+			["Suffolk Train Station", [-252.77, -171.83, 14.447], 1.594, null],
+			["Feldspar Train Station", [-350.62, -335.35, 4.909], -2.287, null],
+			["City Hall Train Station", [-115.31, -501.22, 14.755], -1.365, null],
+			["Castle Gardens Train Station", [82.95, -757.81, 4.965], -1.006, null],
+			["Emerald Train Station", [116.57, -318.15, 14.768], 1.499, null],
+			["Easton Train Station", [-35.76, -18.50, 14.769], 3.137, null],
+			["Manganese East Train Station", [131.46, 522.74, 14.661], 0.005, null],
+			["Quartz Street East Train Station", [134.35, 910.15, 14.717], -0.112, null],
+			["San Quentin Ave Train Station", [373.12, 1625.93, 16.347], -2.249, null],
+			["Windmill Street Train Station", [749.97, 1447.44, 14.252], -0.120, null],
+			["Francis International Airport Train Station", [2297.57, 474.62, 6.086], 0.066, null],
 
 			// Misc
-			["Hove Beach Laundromat", [1011.74, -325.33, 20.339], -1.402],
-			["The Exchange Docks", [-354.68, -661.62, 4.791], 2.066],
-			["Firefly Island Bowling", [1198.99, -681.49, 16.445], -0.017],
-			["Broker Bus Depot", [1004.15, 279.19, 31.512], -2.193],
-			["The Lost MC Clubhouse", [-1713.29, 358.25, 25.449], 2.566],
-			["Alderney State Correctional Facility", [-1155.21, -374.34, 2.885], -1.680],
-			["Chinatown Bank of Liberty", [-34.92, -466.80, 14.75], -1.52],
+			["Hove Beach Laundromat", [1011.74, -325.33, 20.339], -1.402, null],
+			["The Exchange Docks", [-354.68, -661.62, 4.791], 2.066, null],
+			["Firefly Island Bowling", [1198.99, -681.49, 16.445], -0.017, null],
+			["Broker Bus Depot", [1004.15, 279.19, 31.512], -2.193, null],
+			["The Lost MC Clubhouse", [-1713.29, 358.25, 25.449], 2.566, null],
+			["Alderney State Correctional Facility (Prison)", [-1155.21, -374.34, 2.885], -1.680, null],
+			["Chinatown Bank of Liberty", [-34.92, -466.80, 14.75], -1.52, null],
 			["Suffolk Church", [-274.30, -281.63, 14.36], 1.56],
+			["Francis International Airport Runway", [2610.75, 262.42, 5.875], 2.381, null],
+			["Happiness Island", [-621.81, -963.22, 4.843], -0.109, null],
 
 			// More will be added soon!
 		],
-		[],
 	],
 	gtaivSkinModels: [
 		//["Nico Bellic", 1862763509],

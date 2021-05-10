@@ -18,17 +18,17 @@ function initEmailScript() {
 
 function sendEmail(toEmail, toName, subject, body) {
     module.smtp.send(
-        emailConfig.smtp.host,
-        emailConfig.smtp.port,
-        emailConfig.smtp.useTLS,
-        emailConfig.smtp.username,
-        emailConfig.smtp.password,
+        getEmailConfig().smtp.host,
+        getEmailConfig().smtp.port,
+        getEmailConfig().smtp.useTLS,
+        getEmailConfig().smtp.username,
+        getEmailConfig().smtp.password,
         toEmail,
         toName,
         subject,
         body,
-        emailConfig.smtp.from,
-        emailConfig.smtp.fromName);
+        getEmailConfig().smtp.from,
+        getEmailConfig().smtp.fromName);
 }
 
 // ===========================================================================

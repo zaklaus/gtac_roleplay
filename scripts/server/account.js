@@ -126,16 +126,18 @@ function toggleAccountServerLogoCommand(command, params, client) {
 function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("twoStepAuth");
 
-	if(getPlayerData(client).accountData.emailAddress != "") {
-		messagePlayerError(client, "You need to add your email to your account to use two-factor authentication.");
-		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add your email.");
-		return false;
-	}
+	if(getEmailConfig().enabled) {
+		if(getPlayerData(client).accountData.emailAddress != "") {
+			messagePlayerError(client, "You need to add your email to your account to use two-factor authentication.");
+			messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add your email.");
+			return false;
+		}
 
-	if(isAccountEmailVerified(getPlayerData(client).accountData)) {
-		messagePlayerError(client, "You need to verify your email to your account to use two-factor authentication.");
-		messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/verifyemail [#FFFFFF]to verify your email.");
-		return false;
+		if(isAccountEmailVerified(getPlayerData(client).accountData)) {
+			messagePlayerError(client, "You need to verify your email to your account to use two-factor authentication.");
+			messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/verifyemail [#FFFFFF]to verify your email.");
+			return false;
+		}
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
@@ -817,9 +819,11 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
 		getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
 
-		let emailVerificationCode = generateEmailVerificationCode();
-		setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
-		sendEmailVerificationEmail(client, emailVerificationCode);
+		if(getEmailConfig().enabled) {
+			let emailVerificationCode = generateEmailVerificationCode();
+			setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+			sendEmailVerificationEmail(client, emailVerificationCode);
+		}
 	} else {
 		messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
 	}

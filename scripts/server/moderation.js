@@ -707,3 +707,89 @@ function givePlayerMoneyCommand(command, params, client) {
 }
 
 // ===========================================================================
+
+function forcePlayerAccentCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let newAccent = splitParams[1] || "none";
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!");
+        return false;
+	}
+
+	if(toLowerCase(newAccent) == "none") {
+		newAccent = "";
+	}
+
+	setPlayerAccentText(client, newAccent);
+
+	if(newAccent == "") {
+		messagePlayerSuccess(client, `You removed [#AAAAAA]${getCharacterFullName(targetClient)}'s [#FFFFFF]accent.`);
+		messagePlayerAlert(client, `An admin removed your accent.`);
+	} else {
+		messagePlayerSuccess(client, `You set [#AAAAAA]${getCharacterFullName(targetClient)}'s [#FFFFFF]accent to [#AAAAAA]${newAccent}`);
+		messagePlayerAlert(client, `An admin set your accent to [#AAAAAA]${newAccent}`);
+	}
+}
+
+// ===========================================================================
+
+function forceCharacterNameChangeCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!");
+        return false;
+	}
+
+	messagePlayerSuccess(client, `You forced [#AAAAAA]${targetClient.name} (${getCharacterFullName(targetClient)}) [#FFFFFF]to change their character's name.`);
+	showPlayerNewCharacterFailedGUI(client, "Non-RP name! Choose a new one:");
+}
+
+// ===========================================================================
+
+function forceCharacterNameCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(areThereEnoughParams(params, 3, " ")) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let firstName = splitParams[1];
+	let lastName = splitParams[2];
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!");
+        return false;
+	}
+
+	firstName = fixCharacterName(firstName);
+	lastName = fixCharacterName(lastName);
+	let newName = `${firstName} ${lastName}`;
+	let oldName = getCharacterFullName(targetClient);
+
+	getPlayerCurrentSubAccount(client).firstName = firstName;
+	getPlayerCurrentSubAccount(client).lastName = lastName;
+
+	messagePlayerSuccess(client, `You forced [#AAAAAA]${targetClient.name}'s [#FFFFFF]current character name from [#AAAAAA]${oldName} [#FFFFFF]to [#AAAAAA]${newName}`);
+}
+
+// ===========================================================================

@@ -22,6 +22,7 @@ function initClassScript() {
 
 function initClassTable() {
 	let tempClasses = {
+		/** @class serverConfigData Representing server configuration loaded/saved in database */
 		serverConfigData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -132,6 +133,8 @@ function initClassTable() {
 				}
 			}
 		},
+
+		/** @class clientData Representing extra data for a client */
 		clientData: class {
 			constructor(client, accountData, subAccounts) {
 				this.accountData = accountData;
@@ -208,6 +211,8 @@ function initClassTable() {
 				this.returnToDimension = null;
 			}
 		},
+
+		/** @class clientData Representing an account, loaded/saved in the database */
 		accountData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -267,6 +272,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class accountContactData Representing an account's contact list, loaded/saved in the database */
 		accountContactData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -285,6 +291,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class accountMessageData Representing an account's messages, loaded/saved in the database */
 		accountMessageData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -311,6 +318,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class accountStaffNoteData Representing an account's staff notes. Visible only to staff and loaded/saved in the database */
 		accountStaffNoteData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -335,6 +343,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class subAccountData Representing a character's (subaccount) data. Loaded and saved in the database */
 		subAccountData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -437,6 +446,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class businessData Representing a businesses' data. Loaded and saved in the database */
 		businessData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -500,6 +510,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class businessLocationData Representing a business's location data. Multiple can be used for a single business. Used for things like doors, fuel pumps, drive thru positions, etc. Loaded and saved in the database */
 		businessLocationData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -528,6 +539,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class houseData Representing a house's data. Loaded and saved in the database */
 		houseData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0
@@ -588,6 +600,36 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class houseLocationData Representing a houses's location data. Multiple can be used for a single house. Used for things like doors, garage entry/exit/vehspawn, gates, etc. Loaded and saved in the database */
+		houseLocationData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.name = "";
+				this.type = 0;
+				this.house = 0;
+				this.enabled = false;
+				this.index = -1;
+				this.needsSaved = false;
+
+				this.position = toVector3(0.0, 0.0, 0.0);
+				this.interior = 0;
+				this.dimension = 0;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc("house_loc_id"));
+					this.name = toString(dbAssoc("house_loc_name"));
+					this.type = toInteger(dbAssoc("house_loc_type"));
+					this.house = toInteger(dbAssoc("house_loc_house"));
+					this.enabled = intToBool(toInteger(dbAssoc("house_loc_enabled")));
+					this.index = -1;
+
+					this.position = toVector3(toFloat(dbAssoc["house_loc_pos_x"]), toFloat(dbAssoc["house_loc_pos_y"]), toFloat(dbAssoc["house_loc_pos_z"]));
+					this.interior = toInteger(dbAssoc["house_loc_int"]);
+					this.dimension = toInteger(dbAssoc["house_loc_vw"]);
+				}
+			}
+		},
+		/** @class clanData Representing a clan's data. Loaded and saved in the database */
 		clanData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -612,6 +654,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class clanRankData Representing a clan rank's data. Loaded and saved in the database */
 		clanRankData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -637,6 +680,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class clanMemberData Representing a clan member's data. Loaded and saved in the database */
 		clanMemberData: class {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
@@ -664,6 +708,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class vehicleData Representing a vehicle's data. Loaded and saved in the database */
 		vehicleData: class {
 			constructor(dbAssoc = false, vehicle = false) {
 				// General Info
@@ -798,6 +843,7 @@ function initClassTable() {
 				this.streamingRadioStation = -1;
 			}
 		},
+		/** @class commandData Representing a command's data. Loaded and saved in the database */
 		commandData: class {
 			enable() {
 				this.enabled = true;
@@ -811,16 +857,19 @@ function initClassTable() {
 				this.enabled = !this.enabled;
 			}
 
-			constructor(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord) {
+			constructor(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord, helpDescription) {
 				this.command = command;
 				this.handlerFunction = handlerFunction;
 				this.syntaxString = syntaxString;
 				this.requiredStaffFlags = requiredStaffFlags;
 				this.enabled = true;
 				this.requireLogin = requireLogin;
-				this.allowOnDiscord = allowOnDiscord
+				this.allowOnDiscord = allowOnDiscord;
+				this.helpDescription = helpDescription;
+				this.aliases = [];
 			}
 		},
+		/** @class crimeData Representing a crime's data. Loaded and saved in the database */
 		crimeData: class {
 			constructor(suspectId, crimeType, reporterId = 0) {
 				this.crimeType = crimeType;
@@ -831,6 +880,7 @@ function initClassTable() {
 				this.databaseId = 0;
 			}
 		},
+		/** @class jobData Representing a job's data. Loaded and saved in the database */
 		jobData: class {
 			constructor(dbAssoc = false) {
 				this.databaseId = 0;
@@ -872,6 +922,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class jobEquipmentData Representing a job equipment set's data. Loaded and saved in the database */
 		jobEquipmentData: class {
 			constructor(dbAssoc = false) {
 				this.databaseId = 0;
@@ -893,6 +944,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class jobEquipmentItemData Representing a job equipment set item's data. Loaded and saved in the database */
 		jobEquipmentItemData: class {
 			constructor(dbAssoc = false) {
 				this.databaseId = 0;
@@ -913,6 +965,7 @@ function initClassTable() {
 				}
 			}
 		},
+		/** @class jobUniformData Representing a job uniform's data. Loaded and saved in the database */
 		jobUniformData: class {
 			constructor(dbAssoc = false) {
 				this.databaseId = 0;
@@ -925,6 +978,26 @@ function initClassTable() {
 				this.jobIndex = -1;
 				this.needsSaved = false;
 
+				this.bodyParts = {
+					hair: [0,0],
+					head: [0,0],
+					upper: [0,0],
+					lower: [0,0],
+				};
+
+				this.bodyProps = {
+					hair: [0,0],
+					eyes: [0,0],
+					head: [0,0],
+					leftHand: [0,0],
+					rightHand: [0,0],
+					leftWrist: [0,0],
+					rightWrist: [0,0],
+					hip: [0,0],
+					leftFoot: [0,0],
+					rightFoot: [0,0],
+				};
+
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["job_uniform_id"];
 					this.job = dbAssoc["job_uniform_job"];
@@ -932,6 +1005,26 @@ function initClassTable() {
 					this.requiredRank = dbAssoc["job_uniform_minrank"];
 					this.skin = dbAssoc["job_uniform_skin"];
 					this.enabled = intToBool(dbAssoc["job_uniform_enabled"]);
+
+					this.bodyParts = {
+						hair: [toInteger(dbAssoc["job_uniform_hd_part_hair_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_part_hair_texture"]) || 0],
+						head: [toInteger(dbAssoc["job_uniform_hd_part_head_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_part_head_texture"]) || 0],
+						upper: [toInteger(dbAssoc["job_uniform_hd_part_upper_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_part_upper_texture"]) || 0],
+						lower: [toInteger(dbAssoc["job_uniform_hd_part_lower_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_part_lower_texture"]) || 0],
+					};
+
+					this.bodyProps = {
+						hair: [toInteger(dbAssoc["job_uniform_hd_prop_hair_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_hair_texture"]) || 0],
+						eyes: [toInteger(dbAssoc["job_uniform_hd_prop_eyes_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_eyes_texture"]) || 0],
+						head: [toInteger(dbAssoc["job_uniform_hd_prop_head_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_head_texture"]) || 0],
+						leftHand: [toInteger(dbAssoc["job_uniform_hd_prop_lefthand_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_lefthand_texture"]) || 0],
+						rightHand: [toInteger(dbAssoc["job_uniform_hd_prop_righthand_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_righthand_texture"]) || 0],
+						leftWrist: [toInteger(dbAssoc["job_uniform_hd_prop_leftwrist_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_leftwrist_texture"]) || 0],
+						rightWrist: [toInteger(dbAssoc["job_uniform_hd_prop_rightwrist_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_rightwrist_texture"]) || 0],
+						hip: [toInteger(dbAssoc["job_uniform_hd_prop_hip_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_hip_texture"]) || 0],
+						leftFoot: [toInteger(dbAssoc["job_uniform_hd_prop_leftfoot_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_leftfoot_texture"]) || 0],
+						rightFoot: [toInteger(dbAssoc["job_uniform_hd_prop_rightfoot_model"]) || 0, toInteger(dbAssoc["job_uniform_hd_prop_rightfoot_texture"]) || 0],
+					};
 				}
 			}
 		},

@@ -1563,7 +1563,7 @@ function updateConnectionLogOnClientInfoReceive(client, clientVersion, screenWid
 // ===========================================================================
 
 function generateRandomPhoneNumber() {
-	return getRandom(100000,999999);
+	return getRandom(100000, 999999);
 }
 
 // ===========================================================================
@@ -1582,7 +1582,7 @@ function doesNameContainInvalidCharacters(name) {
 // ===========================================================================
 
 function fixCharacterName(name) {
-	return String(name.charAt(0).toUpperCase()) + String(name.slice(1));
+	return String(name.charAt(0).toUpperCase()) + String(name.slice(1).toLowerCase());
 }
 
 // ===========================================================================

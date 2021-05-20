@@ -13,3 +13,15 @@ function getPlayerAccentText(client) {
 }
 
 // ===========================================================================
+
+function setPlayerAccentText(client, text) {
+    getPlayerCurrentSubAccount(client).accent = text;
+}
+
+// ===========================================================================
+
+function doesPlayerHaveAccent(client, text) {
+    return (getPlayerCurrentSubAccount(client).accent != "");
+}
+
+// ===========================================================================

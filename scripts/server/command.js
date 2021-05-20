@@ -62,11 +62,11 @@ function loadCommands() {
             //commandData("ac", getGlobalAntiCheatStatusCommand, "<0/1 state>", getStaffFlagValue("developer"), true, true),
         ],
         ban: [
-            commandData("aban", accountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's account."),
-            commandData("cban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's character."),
-            commandData("saban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's character (subaccount)."),
-            commandData("ipban", ipBanCommand, "<player name/id> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's IP."),
-            commandData("subnetban", subNetBanCommand, "<player name/id> <range> <reason>", getStaffFlagValue("manageBans"), true, true, "Bans a player's subnet."),
+            commandData("aban", accountBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's account."),
+            commandData("cban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's character."),
+            commandData("saban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's character (subaccount)."),
+            commandData("ipban", ipBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's IP."),
+            commandData("subnetban", subNetBanCommand, "<player name/id> <range> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's subnet."),
         ],
         bitFlag: [],
         business: [
@@ -102,36 +102,36 @@ function loadCommands() {
             commandData("bizdelstorageitems", deleteBusinessStorageItemsCommand, "", getStaffFlagValue("manageItems"), true, true, "Destroys all items in the business's storage"),
         ],
         chat: [
-            commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("do", doActionCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("s", shoutCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("shout", shoutCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("talk", talkCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("local", talkCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("l", talkCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("w", whisperCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("whisper", whisperCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("clanchat", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("clan", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("c", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false),
-            commandData("adminchat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("a", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("achat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false, "Shows a custom action message in chat"),
+            commandData("do", doActionCommand, "<message>", getStaffFlagValue("none"), true, false, "Shows a custom action description in chat"),
+            commandData("s", shoutCommand, "<message>", getStaffFlagValue("none"), true, false, "Shout a message to others in the area"),
+            commandData("shout", shoutCommand, "<message>", getStaffFlagValue("none"), true, false, "Shout a message to others in the area"),
+            commandData("talk", talkCommand, "<message>", getStaffFlagValue("none"), true, false, "Say a message to others nearby"),
+            commandData("local", talkCommand, "<message>", getStaffFlagValue("none"), true, false, "Say a message to others nearby"),
+            commandData("l", talkCommand, "<message>", getStaffFlagValue("none"), true, false, "Say a message to others nearby"),
+            commandData("w", whisperCommand, "<message>", getStaffFlagValue("none"), true, false, "Whisper a message to players very close to you"),
+            commandData("whisper", whisperCommand, "<message>", getStaffFlagValue("none"), true, false, "Whisper a message to players very close to you"),
+            commandData("clanchat", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false, "Sends an OOC chat message to members in your clan"),
+            commandData("clan", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false, "Sends an OOC chat message to members in your clan"),
+            commandData("c", clanChatCommand, "<message>", getStaffFlagValue("none"), true, false, "Sends an OOC chat message to members in your clan"),
+            commandData("adminchat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true, "Sends an OOC chat message to other admins"),
+            commandData("a", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true, "Sends an OOC chat message to other admins"),
+            commandData("achat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true, "Sends an OOC chat message to other admins"),
         ],
         clan: [
-            commandData("addclan", createClanCommand, "<name>", getStaffFlagValue("manageClans"), true, true),
-            commandData("delclan", deleteClanCommand, "<clan id>", getStaffFlagValue("manageClans"), true, true),
+            commandData("addclan", createClanCommand, "<name>", getStaffFlagValue("manageClans"), true, true, "Creates an new empty, unowned clan."),
+            commandData("delclan", deleteClanCommand, "<clan id>", getStaffFlagValue("manageClans"), true, true, "Deletes a clan by ID or name"),
 
-            commandData("clanowner", setClanOwnerCommand, "<clan id> <player name/id>", getStaffFlagValue("none"), true, true),
-            commandData("clantag", setClanTagCommand, "<tag>", getStaffFlagValue("none"), true, true),
-            commandData("clanranktag", setClanRankTagCommand, "<rank id> <tag>", getStaffFlagValue("none"), true, true),
-            commandData("clanmembertag", setClanMemberTagCommand, "<player name/id> <tag>", getStaffFlagValue("none"), true, true),
-            commandData("clanranktitle", setClanRankTitleCommand, "<rank id> <title>", getStaffFlagValue("none"), true, true),
-            commandData("clanmembertitle", setClanMemberTitleCommand, "<player name/id> <title>", getStaffFlagValue("none"), true, true),
-            commandData("addclanrankflag", addClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true),
-            commandData("delclanrankflag", removeClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true),
-            commandData("addclanmemberflag", addClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true),
-            commandData("delclanmemberflag", removeClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true),
+            commandData("clanowner", setClanOwnerCommand, "<clan id> <player name/id>", getStaffFlagValue("none"), true, true, "Gives ownership of the clan to a player"),
+            commandData("clantag", setClanTagCommand, "<tag>", getStaffFlagValue("none"), true, true, "Sets a clan's main tag"),
+            commandData("clanranktag", setClanRankTagCommand, "<rank id> <tag>", getStaffFlagValue("none"), true, true, "Sets a clan rank's custom tag"),
+            commandData("clanmembertag", setClanMemberTagCommand, "<player name/id> <tag>", getStaffFlagValue("none"), true, true, "Sets a clan members's custom tag"),
+            commandData("clanranktitle", setClanRankTitleCommand, "<rank id> <title>", getStaffFlagValue("none"), true, true, "Sets a clan rank's title"),
+            commandData("clanmembertitle", setClanMemberTitleCommand, "<player name/id> <title>", getStaffFlagValue("none"), true, true, "Sets a clan members's custom title"),
+            commandData("addclanrankflag", addClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true, "Gives a clan rank a clan permission."),
+            commandData("delclanrankflag", removeClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true, "Takes a clan permission from a clan rank"),
+            commandData("addclanmemberflag", addClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true, "Gives a clan member a clan permission"),
+            commandData("delclanmemberflag", removeClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true, "Takes a clan permission from a clan member"),
         ],
         class: [],
         client: [],
@@ -228,8 +228,6 @@ function loadCommands() {
             commandData("itemuseval", setItemTypeUseValueCommand, "<item type> <use value>", getStaffFlagValue("manageItems"), true, false),
             commandData("itemorderprice", setItemTypeOrderPriceCommand, "<item type> <price>", getStaffFlagValue("manageItems"), true, false),
             commandData("itemriskmult", setItemTypeRiskMultiplierCommand, "<item type> <risk multiplier>", getStaffFlagValue("manageItems"), true, false),
-
-
         ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),
@@ -291,35 +289,38 @@ function loadCommands() {
             commandData("radiovolume", setStreamingRadioVolumeCommand, "<volume level>", getStaffFlagValue("none"), true, false),
         ],
         moderation: [
-            commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
-            commandData("mute", muteClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
-            commandData("freeze", freezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
-            commandData("unmute", unMuteClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
-            commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true),
-            commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("basicModeration"), true, true),
-            commandData("gotoveh", gotoVehicleCommand, "<vehicle id>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("gotobiz", gotoBusinessCommand, "<business id/name>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("gotohouse", gotoHouseCommand, "<house id/name>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("gotojob", gotoJobLocationCommand, "<job id/name> <location id>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("gotoloc", gotoGameLocationCommand, "<location name>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("fr", teleportForwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("ba", teleportBackwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("lt", teleportLeftCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("rt", teleportRightCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("up", teleportUpCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("int", playerInteriorCommand, "<interior id>", getStaffFlagValue("basicModeration"), true, true),
-            commandData("vw", playerVirtualWorldCommand, "<virtual world id>", getStaffFlagValue("basicModeration"), true, true),
+            commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true, "Kicks a player from the server"),
+            commandData("mute", muteClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true, "Mutes a player, preventing them from using any chat."),
+            commandData("freeze", freezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true, "Freeze a player, preventing them from moving."),
+            commandData("unmute", unMuteClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true, "Unmutes a player, allowing them to chat again."),
+            commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true, "Unfreezes a player, allowing them to move again."),
+            commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a player."),
+            commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Teleports a player to you."),
+            commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("basicModeration"), true, true, "Teleports you to specific coordinates with optional interior and dimension."),
+            commandData("gotoveh", gotoVehicleCommand, "<vehicle id>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a vehicle by ID."),
+            commandData("gotobiz", gotoBusinessCommand, "<business id/name>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a business by ID or name."),
+            commandData("gotohouse", gotoHouseCommand, "<house id/name>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a house by ID or description."),
+            commandData("gotojob", gotoJobLocationCommand, "<job id/name> <location id>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a job location by name and location ID."),
+            commandData("gotoloc", gotoGameLocationCommand, "<location name>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a game location by name."),
+            commandData("fr", teleportForwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you forward a certain distance in meters."),
+            commandData("ba", teleportBackwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you backward a certain distance in meters."),
+            commandData("lt", teleportLeftCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to the left a certain distance in meters."),
+            commandData("rt", teleportRightCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to the right a certain distance in meters."),
+            commandData("up", teleportUpCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you upward a certain distance in meters."),
+            commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you downward a certain distance in meters."),
+            commandData("int", playerInteriorCommand, "<interior id>", getStaffFlagValue("basicModeration"), true, true, "Gets or sets a player's game interior."),
+            commandData("vw", playerVirtualWorldCommand, "<virtual world id>", getStaffFlagValue("basicModeration"), true, true, "Gets or sets a player's virtual world/dimension."),
 
-            commandData("addstaffflag", addStaffFlagCommand, "<player name/id> [flag name]", getStaffFlagValue("manageAdmins"), true, true),
-            commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> [flag name]", getStaffFlagValue("manageAdmins"), true, true),
-            commandData("getstaffflags", getStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true),
-            commandData("clearstaffflags", clearStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true),
-            commandData("staffflags", allStaffFlagsCommand, "", getStaffFlagValue("manageAdmins"), true, true),
+            commandData("addstaffflag", addStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("manageAdmins"), true, true, "Gives a player a staff flaf (this server only)."),
+            commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("manageAdmins"), true, true, "Takes a player's staff flag by name (this server only)."),
+            commandData("getstaffflags", getStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true, "Shows a list of all staff flags a player has (this server only)."),
+            commandData("clearstaffflags", clearStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true, "Removes all staff flags for a player (this server only)."),
+            commandData("staffflags", allStaffFlagsCommand, "", getStaffFlagValue("manageAdmins"), true, true, "Shows a list of all valid staff flag names."),
 
             commandData("givemoney", givePlayerMoneyCommand, "<player name/id> <amount>", getStaffFlagValue("serverManager"), true, true),
+
+            commandData("nonrpname", forceCharacterNameChangeCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Forces a player to change their current character's name."),
+            commandData("forcename", forceCharacterNameCommand, "<player name/id> <first name> <last name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's name directly."),
         ],
         security: [],
         startup: [],
@@ -624,6 +625,34 @@ function doesCommandExist(command) {
     }
 
     return false;
+}
+
+// ===========================================================================
+
+function cacheAllCommandsAliases() {
+    for(let i in serverCommands) {
+        for(let j in serverCommands[i]) {
+            for(let k in serverCommands) {
+                for(let m in serverCommands[k]) {
+                    if(serverCommands[i][j].handlerFunction == serverCommands[k][m].handlerFunction) {
+                        serverCommands[i][j].aliases.push(serverCommands[k][m]);
+                        serverCommands[k][m].aliases.push(serverCommands[i][j]);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ===========================================================================
+
+function getCommandAliasesNames(command) {
+    let commandAliases = [];
+    for(let i in command.aliases) {
+        commandAliases.push(command.aliases[i].name);
+    }
+
+    return commandAliases;
 }
 
 // ===========================================================================

@@ -16,21 +16,10 @@ function initHelpScript() {
 // ===========================================================================
 
 let randomTips = [
-    //`[#FFFFFF]Hold [#0066FF]E [#FFFFFF]to hail a nearby taxi if you need a ride.`,
-    //`[#FFFFFF]Press [#0066FF]G [#FFFFFF]to enter a vehicle as passenger.`,
-    //`[#FFFFFF]Banks can provide loans. Use [#AAAAAA]/help loans [#FFFFFF] for more details.`,
-    //`[#FFFFFF]Want to make a clan? Use [#AAAAAA]/help clans [#FFFFFF] for details.`,
-    //`[#FFFFFF]Weapons can be legally purchased at ammunation, if you have a weapon license.`,
     `[#FFFFFF]Look for yellow dots on your map for job locations.`,
     `[#FFFFFF]You can set custom key binds. Use [#AAAAAA]/help keys [#FFFFFF] for details.`,
-    //`[#FFFFFF]Tax is based on your total wealth. This includes money, vehicles, businesses and more.`,
-    //`[#FFFFFF]Don't go broke because of a hospital bill! Get insured today by visiting an insurance agency!`,
-    //`[#FFFFFF]Don't go broke because your car was destroyed. Visit an insurance agency today!`,
-    //`[#FFFFFF]You can find most locations by using [#AAAAAA]/gps`,
     `[#FFFFFF]Use /notips if you don't want to see tips and extra information`,
-    //`[#FFFFFF]Want to advertise your business? Visit the news station and place an /ad today!`,
     `[#FFFFFF]You can edit your keybinds using [#AAAAAA]/keybinds`,
-    //`[#FFFFFF]You can change your quick item display. Choices are GTAV-style pie menu or Minecraft-style hotbar`,
     `[#FFFFFF]Press I to see your inventory, and use number keys to select an item`,
     `[#FFFFFF]Use /buy at a business to purchase items.`,
     `[#FFFFFF]Found a bug? Report it with [#AAAAAA]/bug`,
@@ -38,6 +27,19 @@ let randomTips = [
     `[#FFFFFF]Want to buy a business? Use /bizbuy at one for sale`,
     `[#FFFFFF]Want to buy a house? Use /housebuy at one for sale`,
     `[#FFFFFF]Want to buy a vehicle? Visit a dealership and enter one for info on how to buy it!`,
+    `[#FFFFFF]Visit the forum at [#AAAAAA]asshatgaming.com`,
+    `[#FFFFFF]Chat with us on discord: [#AAAAAA]discord.asshatgaming.com`,
+    //`[#FFFFFF]Tax is based on your total wealth. This includes money, vehicles, businesses and more.`,
+    //`[#FFFFFF]Don't go broke because of a hospital bill! Get insured today by visiting an insurance agency!`,
+    //`[#FFFFFF]Don't go broke because your car was destroyed. Visit an insurance agency today!`,
+    //`[#FFFFFF]You can find most locations by using [#AAAAAA]/gps`,
+    //`[#FFFFFF]Want to advertise your business? Visit the news station and place an /ad today!`,
+    //`[#FFFFFF]You can change your quick item display. Choices are GTAV-style pie menu or Minecraft-style hotbar`,
+    //`[#FFFFFF]Hold [#0066FF]E [#FFFFFF]to hail a nearby taxi if you need a ride.`,
+    //`[#FFFFFF]Press [#0066FF]G [#FFFFFF]to enter a vehicle as passenger.`,
+    //`[#FFFFFF]Banks can provide loans. Use [#AAAAAA]/help loans [#FFFFFF] for more details.`,
+    //`[#FFFFFF]Want to make a clan? Use [#AAAAAA]/help clans [#FFFFFF] for details.`,
+    //`[#FFFFFF]Weapons can be legally purchased at ammunation, if you have a weapon license.`,
 ];
 
 // ===========================================================================
@@ -48,7 +50,9 @@ function helpCommand(command, params, client) {
         return false;
     }
 
-    switch(toLowerCase(params)) {
+    let splitParams = params.split(" ");
+
+    switch(toLowerCase(splitParams[0])) {
         case "account":
             showAccountHelpMessage(client);
             break;
@@ -109,6 +113,15 @@ function helpCommand(command, params, client) {
             showBindKeysHelpMessage(client);
             break;
 
+        case "command":
+        case "cmd":
+            if(areThereEnoughParams(params, 2, " ")) {
+                showCommandHelpMessage(client, splitParams[2]);
+            } else {
+                showCommandHelpMessage(client, false);
+            }
+            break;
+
         default:
             showMainHelpMessage(client);
             break;
@@ -130,6 +143,7 @@ function helpCommand(command, params, client) {
 // == Bindable Keys ============================
 // == Clothes ==================================
 // == Business =================================
+// == Command Info =============================
 
 // ===========================================================================
 
@@ -261,6 +275,39 @@ function showBusinessHelpMessage(client) {
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Businesses are shown with blue names above the icon at their entrance.");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]Business owner commands: [#AAAAAA]/bizorder, /biz");
     messagePlayerNormal(client, "[#FF9900]• [#FFFFFF]A new car for sale will appear when you drive away from the dealer.");
+}
+
+// ===========================================================================
+
+function showCommandHelpMessage(client, commandName) {
+    if(!commandName) {
+        messagePlayerSyntax(client, `${getCommandSyntaxText("help")} <command name>`);
+        return false;
+    }
+
+    commandName = toLowerCase(commandName);
+    commandName = commandName.trim();
+
+    if(commandName.slice(0, 1) == "/") {
+        commandName = commandName.slice(1);
+    }
+
+    let command = getCommandData(commandName);
+    let aliases = getCommandAliasesNames(command);
+
+    messagePlayerInfo(client, "[#FF9900]== [#FFFF00]Command Info [#FF9900]=============================");
+    messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Description: ${command.description}`);
+
+    if(aliases.length > 0) {
+        messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Aliases: ${aliases.join(", ")}`);
+    } else {
+        messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Aliases: (None)`);
+    }
+
+    if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
+        //messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Required Flags: `);
+        messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Usable on Discord: ${getYesNoFromBool(command.allowOnDiscord)}`);
+    }
 }
 
 // ===========================================================================

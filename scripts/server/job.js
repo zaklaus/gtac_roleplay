@@ -1332,6 +1332,35 @@ function saveJobToDatabase(jobData) {
 
 // ===========================================================================
 
+function saveJobToDatabase(jobData) {
+	if(jobData == null) {
+		// Invalid job data
+		return false;
+	}
+
+	console.log(`[Asshat.Job]: Saving job ${jobData.name} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, jobData.name);
+		// If job hasn't been added to database, ID will be 0
+		if(jobData.databaseId == 0) {
+			let dbQueryString = `INSERT INTO job_main (job_name, job_enabled, job_pickup, job_blip, job_type, job_colour_r, job_colour_g, job_colour_b, job_whitelist, job_blacklist) VALUES ('${safeName}', ${boolToInt(jobData.enabled)}, ${jobData.pickupModel}, ${jobData.blipModel}, ${jobData.type}, ${jobData.colourArray[0]}, ${jobData.colourArray[1]}, ${jobData.colourArray[2]})`;
+			queryDatabase(dbConnection, dbQueryString);
+			jobData.databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let dbQueryString = `UPDATE job_main SET job_name='${safeName}', job_enabled=${boolToInt(jobData.enabled)}, job_pickup=${jobData.pickupModel}, job_blip=${jobData.blipModel}, job_type=${jobData.type}, job_colour_r=${jobData.colourArray[0]}, job_colour_g=${jobData.colourArray[1]}, job_colour_b=${jobData.colourArray[2]} WHERE job_id=${jobData.databaseId}`;
+			queryDatabase(dbConnection, dbQueryString);
+		}
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	console.log(`[Asshat.Job]: Saved job ${jobData.name} to database!`);
+
+	return false;
+}
+
+// ---------------------------------------------------------------------------
+
 function saveJobLocationToDatabase(jobLocationData) {
 	if(jobLocationData == null) {
 		// Invalid job location data

@@ -1,7 +1,6 @@
 // ===========================================================================
-// Asshat-Gaming Roleplay
-// https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
 // FILE: const.js
 // DESC: Provides constants
@@ -160,8 +159,8 @@ const AG_ITEM_USETYPE_PHONE = 3;                // Pulls out phone
 const AG_ITEM_USETYPE_GPS = 4;                  // Not sure how I want this to work yet
 const AG_ITEM_USETYPE_MAP = 5;                  // Shows minimap on HUD
 const AG_ITEM_USETYPE_SKIN = 6;                 // Changes skin (item skin is replaced with previous skin before changing)
-const AG_ITEM_USETYPE_CLOTHESUPPER = 7;         // Changes upper clothing (GTA IV shirts)
-const AG_ITEM_USETYPE_CLOTHESLOWER = 8;         // Changes lower clothing (GTA IV pants)
+const AG_ITEM_USETYPE_PEDPART = 7;              // Changes ped part (clothing, skin, hair, etc) (UNUSED)
+const AG_ITEM_USETYPE_PEDPROP = 8;              // Changes ped prop (watches, glasses, hats, etc) (UNUSED)
 const AG_ITEM_USETYPE_STORAGE = 9;              // Shows stored items. Backpack, crate, briefcase, wallet, etc
 const AG_ITEM_USETYPE_VEHKEY = 10;              // Locks/unlocks a vehicle and allows starting engine without hotwire
 const AG_ITEM_USETYPE_BIZKEY = 11;              // Locks/unlocks a business
@@ -195,6 +194,10 @@ const AG_ITEM_USETYPE_SPRAYPAINT = 37;          //
 const AG_ITEM_USETYPE_PEPPERSPRAY = 38;         //
 const AG_ITEM_USETYPE_FLASHLIGHT = 39;          //
 const AG_ITEM_USETYPE_AIRPLANETICKET = 40;      //
+const AG_ITEM_USETYPE_TRAINTICKET = 41;         //
+const AG_ITEM_USETYPE_VEHUPGRADE_PART = 42;     //
+const AG_ITEM_USETYPE_VEHTIRE = 43;             //
+const AG_ITEM_USETYPE_FUELCAN = 44;             //
 
 // Item Drop Types
 const AG_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped

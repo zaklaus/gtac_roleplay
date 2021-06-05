@@ -1,7 +1,6 @@
 // ===========================================================================
-// Asshat-Gaming Roleplay
-// https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
 // FILE: startup.js
 // DESC: Provides startup/shutdown procedures

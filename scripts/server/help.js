@@ -1,7 +1,6 @@
 // ===========================================================================
-// Asshat-Gaming Roleplay
-// https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
 // FILE: help.js
 // DESC: Provides update info, help commands, and documentation
@@ -304,10 +303,11 @@ function showCommandHelpMessage(client, commandName) {
         messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Aliases: (None)`);
     }
 
-    if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
-        //messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Required Flags: `);
-        messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Usable on Discord: ${getYesNoFromBool(command.allowOnDiscord)}`);
-    }
+    //messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Usable on Discord: ${getYesNoFromBool(command.allowOnDiscord)}`);
+
+    //if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
+    //    messagePlayerNormal(client, `[#FF9900]• [#FFFFFF]Usable on Discord: ${getYesNoFromBool(command.allowOnDiscord)}`);
+    //}
 }
 
 // ===========================================================================

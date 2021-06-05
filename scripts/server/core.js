@@ -1,7 +1,6 @@
 // ===========================================================================
-// Asshat-Gaming Roleplay
-// https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
 // FILE: core.js
 // DESC: Provides core data structures, function, and operations

@@ -1,7 +1,6 @@
 // ===========================================================================
-// Asshat-Gaming Roleplay
-// https://github.com/VortrexFTW/gtac_asshat_rp
-// Copyright (c) 2021 Asshat-Gaming (https://asshatgaming.com)
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
 // FILE: utilities.js
 // DESC: Provides util functions and arrays with data
@@ -1569,9 +1568,10 @@ function generateRandomPhoneNumber() {
 // ===========================================================================
 
 function doesNameContainInvalidCharacters(name) {
+	let disallowedCharacters = getGlobalConfig().subAccountNameAllowedCharacters;
+	name = toLowerCase(name);
 	for(let i = 0; i < name.length; i++) {
-		let strChar = name.charAt(i).toLowerCase();
-		if(getGlobalConfig().subAccountNameAllowedCharacters.toLowerCase().indexOf(strChar) == -1) {
+		if(disallowedCharacters.toLowerCase().indexOf(name.charAt(i)) == -1) {
 			return true;
 		}
 	}

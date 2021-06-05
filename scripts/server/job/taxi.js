@@ -23,7 +23,7 @@ function taxiSetFareCommand(command, params, client) {
         return false;
     }
 
-    if(!doesPlayerHaveJobType(client, AG_JOB_TAXI)) {
+    if(!doesPlayerHaveJobType(client, VRR_JOB_TAXI)) {
         messagePlayerError(client, "You don't have a taxi job.");
         return false;
     }

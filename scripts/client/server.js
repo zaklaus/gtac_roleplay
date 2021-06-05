@@ -8,15 +8,15 @@
 // ===========================================================================
 
 function initServerScript() {
-    logToConsole(LOG_DEBUG, "[Asshat.Server]: Initializing server script ...");
+    logToConsole(LOG_DEBUG, "[VRR.Server]: Initializing server script ...");
     addAllNetworkHandlers();
-    logToConsole(LOG_DEBUG, "[Asshat.Server]: Server script initialized!");
+    logToConsole(LOG_DEBUG, "[VRR.Server]: Server script initialized!");
 }
 
 // ===========================================================================
 
 function addAllNetworkHandlers() {
-    logToConsole(LOG_DEBUG, "[Asshat.Server]: Adding network handlers ...");
+    logToConsole(LOG_DEBUG, "[VRR.Server]: Adding network handlers ...");
 
     addNetworkHandler("ag.smallGameMessage", showSmallGameMessage);
     addNetworkHandler("ag.working", setLocalPlayerWorkingState);
@@ -104,7 +104,7 @@ function sendResourceStoppedSignalToServer() {
 // ===========================================================================
 
 function setPlayer2DRendering(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState) {
-    logToConsole(LOG_DEBUG, `[Asshat.Main] Updating render states (HUD: ${hudState}, Labels: ${labelState}, Bottom Text: ${smallGameMessageState}, Scoreboard: ${scoreboardState}, HotBar: ${hotBarState}, Item Action Delay: ${itemActionDelayState})`);
+    logToConsole(LOG_DEBUG, `[VRR.Main] Updating render states (HUD: ${hudState}, Labels: ${labelState}, Bottom Text: ${smallGameMessageState}, Scoreboard: ${scoreboardState}, HotBar: ${hotBarState}, Item Action Delay: ${itemActionDelayState})`);
     renderHUD = hudState;
     setHUDEnabled(hudState);
 
@@ -118,7 +118,7 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
 // ===========================================================================
 
 function onServerSpawnedPlayer(state) {
-    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting spawned state to ${state}`);
+    logToConsole(LOG_DEBUG, `[VRR.Main] Setting spawned state to ${state}`);
     isSpawned = state;
     if(state) {
         if(gta.game == GAME_GTA_III) {

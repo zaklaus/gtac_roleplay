@@ -22,10 +22,10 @@ let playerPing = {};
 // ===========================================================================
 
 function initNameTagScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.NameTag]: Initializing nametag script ...");
+	logToConsole(LOG_DEBUG, "[VRR.NameTag]: Initializing nametag script ...");
 	nametagFont = loadNameTagFont();
 	afkStatusFont = loadPausedStatusFont();
-	logToConsole(LOG_DEBUG, "[Asshat.NameTag]: Nametag script initialized!");
+	logToConsole(LOG_DEBUG, "[VRR.NameTag]: Nametag script initialized!");
 }
 
 // ===========================================================================

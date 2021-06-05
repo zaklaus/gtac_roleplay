@@ -67,8 +67,8 @@ let fishingCatchables = [
 // ===========================================================================
 
 function initFishingScript() {
-	logToConsole(LOG_INFO, "[Asshat.Fishing]: Initializing fishing script ...");
-	logToConsole(LOG_INFO, "[Asshat.Fishing]: Fishing script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Fishing]: Initializing fishing script ...");
+	logToConsole(LOG_INFO, "[VRR.Fishing]: Fishing script initialized successfully!");
 }
 
 // ===========================================================================

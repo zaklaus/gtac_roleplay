@@ -15,28 +15,28 @@ let jobRouteStopSphere = null;
 // ===========================================================================
 
 function initJobScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Job]: Initializing job script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.Job]: Job script initialized!");
+	logToConsole(LOG_DEBUG, "[VRR.Job]: Initializing job script ...");
+	logToConsole(LOG_DEBUG, "[VRR.Job]: Job script initialized!");
 }
 
 // ===========================================================================
 
 function setLocalPlayerJobType(tempJobType) {
-    logToConsole(LOG_DEBUG, `[Asshat.Main] Set local player job type to ${tempJobType}`);
+    logToConsole(LOG_DEBUG, `[VRR.Main] Set local player job type to ${tempJobType}`);
     localPlayerJobType = tempJobType;
 }
 
 // ===========================================================================
 
 function setLocalPlayerWorkingState(tempWorking) {
-    logToConsole(LOG_DEBUG, `[Asshat.Main] Setting working state to ${tempWorking}`);
+    logToConsole(LOG_DEBUG, `[VRR.Main] Setting working state to ${tempWorking}`);
     localPlayerWorking = tempWorking;
 }
 
 // ===========================================================================
 
 function showJobRouteStop() {
-    logToConsole(LOG_DEBUG, `[Asshat.Job] Showing route stop`);
+    logToConsole(LOG_DEBUG, `[VRR.Job] Showing route stop`);
     if(gta.game == GAME_GTA_SA) {
         jobRouteStopSphere = gta.createPickup(1318, position, 1);
     } else {
@@ -50,7 +50,7 @@ function showJobRouteStop() {
 // ===========================================================================
 
 function showJobRouteStop(position, colour) {
-    logToConsole(LOG_DEBUG, `[Asshat.Job] Showing route stop`);
+    logToConsole(LOG_DEBUG, `[VRR.Job] Showing route stop`);
     if(gta.game == GAME_GTA_SA) {
         jobRouteStopSphere = gta.createPickup(1318, position, 1);
     } else {
@@ -64,7 +64,7 @@ function showJobRouteStop(position, colour) {
 // ===========================================================================
 
 function enteredJobRouteSphere() {
-    logToConsole(LOG_DEBUG, `[Asshat.Job] Entered job route sphere`);
+    logToConsole(LOG_DEBUG, `[VRR.Job] Entered job route sphere`);
     tellServerPlayerArrivedAtJobRouteStop();
     destroyElement(jobRouteStopSphere);
     destroyElement(jobRouteStopBlip);

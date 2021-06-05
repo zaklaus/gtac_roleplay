@@ -8,8 +8,8 @@
 // ===========================================================================
 
 function initSubAccountScript() {
-	logToConsole(LOG_INFO, "[Asshat.SubAccount]: Initializing subaccount script ...");
-	logToConsole(LOG_INFO, "[Asshat.SubAccount]: SubAccount script initialized!");
+	logToConsole(LOG_INFO, "[VRR.SubAccount]: Initializing subaccount script ...");
+	logToConsole(LOG_INFO, "[VRR.SubAccount]: SubAccount script initialized!");
 }
 
 // ===========================================================================
@@ -169,7 +169,7 @@ function saveSubAccountToDatabase(subAccountData) {
 // ===========================================================================
 
 function createSubAccount(accountId, firstName, lastName) {
-	logToConsole(LOG_DEBUG, `[Asshat.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
+	logToConsole(LOG_DEBUG, `[VRR.Account] Attempting to create subaccount ${firstName} ${lastName} in database`);
 
 	let dbConnection = connectToDatabase();
 	let dbQuery = false;
@@ -203,7 +203,7 @@ function showCharacterSelectToClient(client) {
 
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
 		if(getPlayerData(client).subAccounts.length > 0) {
-			logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being auto-spawned as character ID ${getPlayerLastUsedSubAccount(client)}`);
+			logToConsole(LOG_DEBUG, `[VRR.SubAccount] ${getPlayerDisplayForConsole(client)} is being auto-spawned as character ID ${getPlayerLastUsedSubAccount(client)}`);
 			selectCharacter(client, getPlayerLastUsedSubAccount(client));
 			return true;
 		}
@@ -211,7 +211,7 @@ function showCharacterSelectToClient(client) {
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).currentSubAccount = 0;
-		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
+		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
 		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
@@ -221,7 +221,7 @@ function showCharacterSelectToClient(client) {
 		//setTimeout(function() {
 		//	showCharacterSelectCameraToPlayer(client);
 		//}, 500);
-		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
+		logToConsole(LOG_DEBUG, `[VRR.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select GUI`);
 	} else {
 		//let emojiNumbers = ["➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒"];
 		//let emojiNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
@@ -233,7 +233,7 @@ function showCharacterSelectToClient(client) {
 			let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
 			messagePlayerNormal(client, `${index+1} • [#BBBBBB]${subAccount.firstName} ${subAccount.lastName} ($${tempSubAccount.cash}, ${lastPlayedText})`);
 		});
-		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
+		logToConsole(LOG_DEBUG, `[VRR.SubAccount] ${getPlayerDisplayForConsole(client)} is being shown the character select/list message (GUI disabled)`);
 	}
 }
 
@@ -253,7 +253,7 @@ function checkNewCharacter(client, firstName, lastName) {
 	lastName = lastName.trim();
 
 	if(doesNameContainInvalidCharacters(firstName) || doesNameContainInvalidCharacters(lastName)) {
-		logToConsole(LOG_WARN, `[Asshat.Account] Subaccount ${firstName} ${lastName} could not be created (invalid characters in name)`);
+		logToConsole(LOG_WARN, `[VRR.Account] Subaccount ${firstName} ${lastName} could not be created (invalid characters in name)`);
 		showPlayerNewCharacterFailedGUI(client, "Invalid characters in name!");
 		return false;
 	}
@@ -295,7 +295,7 @@ function checkPreviousCharacter(client) {
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 
-		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
+		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 	}
 }
 
@@ -316,16 +316,16 @@ function checkNextCharacter(client) {
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 
-		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
+		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 	}
 }
 
 // ===========================================================================
 
 function selectCharacter(client, characterId = -1) {
-	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} character select called (Character ID ${characterId})`);
+	logToConsole(LOG_DEBUG, `[VRR.SubAccount] ${getPlayerDisplayForConsole(client)} character select called (Character ID ${characterId})`);
 	if(characterId != -1) {
-		logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} provided character ID (${characterId}) to spawn with`);
+		logToConsole(LOG_DEBUG, `[VRR.SubAccount] ${getPlayerDisplayForConsole(client)} provided character ID (${characterId}) to spawn with`);
 		getPlayerData(client).currentSubAccount = characterId;
 	}
 
@@ -339,15 +339,15 @@ function selectCharacter(client, characterId = -1) {
 
 	getPlayerData(client).switchingCharacter = false;
 
-	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
+	logToConsole(LOG_DEBUG, `[VRR.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 	//setPlayerCameraLookAt(client, getPosBehindPos(spawnPosition, spawnHeading, 5), spawnPosition);
-	getPlayerData(client).pedState = AG_PEDSTATE_SPAWNING;
+	getPlayerData(client).pedState = VRR_PEDSTATE_SPAWNING;
 	if(getServerGame() == GAME_GTA_IV) {
 		spawnPlayer(client, spawnPosition, spawnHeading, skin);
 	} else {
 		spawnPlayer(client, spawnPosition, spawnHeading, skin, spawnInterior, spawnDimension);
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
+	logToConsole(LOG_DEBUG, `[VRR.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 
 	setTimeout(function() {
 		onPlayerSpawn(client);
@@ -359,14 +359,14 @@ function selectCharacter(client, characterId = -1) {
 // ===========================================================================
 
 function switchCharacterCommand(command, params, client) {
-	logToConsole(LOG_DEBUG, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is requesting to switch characters (current character: ${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}])`);
+	logToConsole(LOG_DEBUG, `[VRR.SubAccount] ${getPlayerDisplayForConsole(client)} is requesting to switch characters (current character: ${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}])`);
 	if(!isPlayerSpawned(client)) {
-		logToConsole(LOG_WARN, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is not allowed to switch characters (not spawned)`);
+		logToConsole(LOG_WARN, `[VRR.SubAccount] ${getPlayerDisplayForConsole(client)} is not allowed to switch characters (not spawned)`);
 		return false;
 	}
 
 	if(isPlayerSwitchingCharacter(client)) {
-		logToConsole(LOG_WARN, `[Asshat.SubAccount] ${getPlayerDisplayForConsole(client)} is not allowed to switch characters (already in switch char mode)`);
+		logToConsole(LOG_WARN, `[VRR.SubAccount] ${getPlayerDisplayForConsole(client)} is not allowed to switch characters (already in switch char mode)`);
 		messagePlayerError(client, "You are already selecting/switching characters!");
 		return false;
 	}

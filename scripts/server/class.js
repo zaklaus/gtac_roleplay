@@ -12,9 +12,9 @@ let serverClasses = {};
 // ===========================================================================
 
 function initClassScript() {
-	logToConsole(LOG_INFO, "[Asshat.Class]: Initializing class script ...");
+	logToConsole(LOG_INFO, "[VRR.Class]: Initializing class script ...");
 	serverClasses = initClassTable();
-	logToConsole(LOG_INFO, "[Asshat.Class]: Class script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Class]: Class script initialized successfully!");
 }
 
 // ===========================================================================
@@ -175,14 +175,14 @@ function initClassTable() {
 				this.jobEquipmentCache = [];
 				this.jobUniform = 0;
 
-				this.itemActionState = AG_ITEM_ACTION_NONE;
+				this.itemActionState = VRR_ITEM_ACTION_NONE;
 				this.itemActionItem = -1;
 
 				this.alcoholLevel = 0;
 
-				this.pedState = AG_PEDSTATE_NONE;
+				this.pedState = VRR_PEDSTATE_NONE;
 
-				this.promptType = AG_PROMPT_NONE;
+				this.promptType = VRR_PROMPT_NONE;
 
 				this.businessOrderAmount = 0;
 				this.businessOrderBusiness = -1;
@@ -192,7 +192,7 @@ function initClassTable() {
 				this.syncPosition = null;
 				this.syncHeading = null;
 
-				this.twoFactorAuthenticationState = AG_2FA_STATE_NONE;
+				this.twoFactorAuthenticationState = VRR_2FA_STATE_NONE;
 				this.twoFactorAuthenticationCode = 0;
 
 				this.payDayAmount = 0;
@@ -450,7 +450,7 @@ function initClassTable() {
 			constructor(dbAssoc) {
 				this.databaseId = 0;
 				this.name = "";
-				this.ownerType = AG_BIZOWNER_NONE;
+				this.ownerType = VRR_BIZOWNER_NONE;
 				this.ownerId = 0;
 				this.buyPrice = 0;
 				this.locked = false;
@@ -611,7 +611,7 @@ function initClassTable() {
 			constructor(dbAssoc) {
 				this.databaseId = 0
 				this.description = "";
-				this.ownerType = AG_HOUSEOWNER_NONE;
+				this.ownerType = VRR_HOUSEOWNER_NONE;
 				this.ownerId = 0;
 				this.buyPrice = 0;
 				this.rentPrice = 0;
@@ -785,7 +785,7 @@ function initClassTable() {
 				this.needsSaved = false;
 
 				// Ownership
-				this.ownerType = AG_VEHOWNER_NONE;
+				this.ownerType = VRR_VEHOWNER_NONE;
 				this.ownerId = 0;
 				this.buyPrice = 0;
 				this.rentPrice = 0;
@@ -949,7 +949,7 @@ function initClassTable() {
 		jobData: class {
 			constructor(dbAssoc = false) {
 				this.databaseId = 0;
-				this.type = AG_JOB_NONE;
+				this.type = VRR_JOB_NONE;
 				this.name = "Unnamed";
 				this.enabled = true;
 				this.blipModel = -1
@@ -1155,7 +1155,7 @@ function initClassTable() {
 			}
 		},
 		keyBindData: class {
-			constructor(dbAssoc = false, key = 0, commandString = "", keyState = AG_KEYSTATE_UP) {
+			constructor(dbAssoc = false, key = 0, commandString = "", keyState = VRR_KEYSTATE_UP) {
 				this.databaseId = 0;
 				this.key = key;
 				this.account = 0;
@@ -1252,7 +1252,7 @@ function initClassTable() {
 				this.index = 0;
 				this.itemTypeIndex = 0;
 				this.itemType = 0;
-				this.ownerType = AG_ITEM_OWNER_NONE;
+				this.ownerType = VRR_ITEM_OWNER_NONE;
 				this.ownerId = 0;
 				this.ownerIndex = -1;
 				this.position = toVector3(0.0, 0.0, 0.0);
@@ -1289,11 +1289,11 @@ function initClassTable() {
 				this.index = 0;
 				this.name = "Unknown";
 				this.enabled = false;
-				this.useType = AG_ITEM_USETYPE_NONE;
+				this.useType = VRR_ITEM_USETYPE_NONE;
 				this.useId = 0;
 				this.useValue = 0;
 				this.maxValue = 0;
-				this.dropType = AG_ITEM_DROPTYPE_NONE;
+				this.dropType = VRR_ITEM_DROPTYPE_NONE;
 				this.useId = 0;
 				this.dropPosition = toVector3(0.0, 0.0, 0.0);
 				this.dropRotation = toVector3(0.0, 0.0, 0.0);
@@ -1367,7 +1367,7 @@ function initClassTable() {
 				this.fightStyle = 0;
 				this.health = 100;
 				this.armour = 100;
-				this.currentAction = AG_NPCACTION_NONE;
+				this.currentAction = VRR_NPCACTION_NONE;
 				this.triggers = [];
 
 				this.bodyParts = {

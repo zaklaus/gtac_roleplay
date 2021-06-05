@@ -40,10 +40,10 @@ let newCharacterSkinSelectPedHeading = [
 // ===========================================================================
 
 function initSkinSelectScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.SkinSelect]: Initializing skin selector script ...");
+	logToConsole(LOG_DEBUG, "[VRR.SkinSelect]: Initializing skin selector script ...");
 	skinSelectMessageFontTop = loadSkinSelectMessageFontTop();
 	skinSelectMessageFontBottom = loadSkinSelectMessageFontBottom();
-	logToConsole(LOG_DEBUG, "[Asshat.SkinSelect]: Skin selector script initialized!");
+	logToConsole(LOG_DEBUG, "[VRR.SkinSelect]: Skin selector script initialized!");
 }
 
 // ===========================================================================

@@ -10,8 +10,8 @@
 // ===========================================================================
 
 function initBanScript() {
-    logToConsole(LOG_INFO, "[Asshat.Ban]: Initializing ban script ...");
-    logToConsole(LOG_INFO, "[Asshat.Ban]: Ban script initialized!");
+    logToConsole(LOG_INFO, "[VRR.Ban]: Initializing ban script ...");
+    logToConsole(LOG_INFO, "[VRR.Ban]: Ban script initialized!");
 }
 
 // ===========================================================================
@@ -32,7 +32,7 @@ function accountBanCommand(command, params, client) {
     let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
-    logToConsole(LOG_WARN, `[Asshat.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) account was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
+    logToConsole(LOG_WARN, `[VRR.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) account was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
 
 	messageAdminAction(`${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) has been account banned.`);
 	banAccount(getPlayerData(targetClient).accountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
@@ -57,7 +57,7 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
     let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
-    logToConsole(LOG_WARN, `[Asshat.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name})'s subaccount was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
+    logToConsole(LOG_WARN, `[VRR.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name})'s subaccount was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
 
 	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been character banned.`);
     banSubAccount(getPlayerData(targetClient).currentSubAccountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
@@ -117,7 +117,7 @@ function banAccount(accountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapetoString(reason);
-        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${AG_BANTYPE_ACCOUNT}, ${accountId}, ${adminAccountId}, '${safeReason}');`);
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${VRR_BANTYPE_ACCOUNT}, ${accountId}, ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -132,7 +132,7 @@ function banSubAccount(subAccountId, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapetoString(reason);
-        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${AG_BANTYPE_SUBACCOUNT}, ${subAccountId}, ${adminAccountId}, '${safeReason}');`);
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${VRR_BANTYPE_SUBACCOUNT}, ${subAccountId}, ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -147,7 +147,7 @@ function banIPAddress(ipAddress, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapetoString(reason);
-        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${AG_BANTYPE_IPADDRESS}, INET_ATON(${ipAddress}), ${adminAccountId}, '${safeReason}');`);
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_detail, ban_who_banned, ban_reason) VALUES (${VRR_BANTYPE_IPADDRESS}, INET_ATON(${ipAddress}), ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -162,7 +162,7 @@ function banSubNet(ipAddressStart, ipAddressEnd, adminAccountId, reason) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
         let safeReason = dbConnection.escapetoString(reason);
-        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_ip_start, ban_ip_end, ban_who_banned, ban_reason) VALUES (${AG_BANTYPE_SUBNET}, INET_ATON(${ipAddressStart}), INET_ATON(${ipAddressEnd}), ${adminAccountId}, '${safeReason}');`);
+        let dbQuery = queryDatabase(dbConnection, `INSERT INTO ban_main (ban_type, ban_ip_start, ban_ip_end, ban_who_banned, ban_reason) VALUES (${VRR_BANTYPE_SUBNET}, INET_ATON(${ipAddressStart}), INET_ATON(${ipAddressEnd}), ${adminAccountId}, '${safeReason}');`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -176,7 +176,7 @@ function banSubNet(ipAddressStart, ipAddressEnd, adminAccountId, reason) {
 function unbanAccount(accountId, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${AG_BANTYPE_ACCOUNT} AND ban_detail=${accountId}`);
+        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${VRR_BANTYPE_ACCOUNT} AND ban_detail=${accountId}`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -190,7 +190,7 @@ function unbanAccount(accountId, adminAccountId) {
 function unbanSubAccount(subAccountId, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${AG_BANTYPE_SUBACCOUNT} AND ban_detail=${subAccountId}`);
+        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${VRR_BANTYPE_SUBACCOUNT} AND ban_detail=${subAccountId}`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -204,7 +204,7 @@ function unbanSubAccount(subAccountId, adminAccountId) {
 function unbanIPAddress(ipAddress, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${AG_BANTYPE_IPADDRESS} AND ban_detail=INET_ATON(${ipAddress})`);
+        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${VRR_BANTYPE_IPADDRESS} AND ban_detail=INET_ATON(${ipAddress})`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -218,7 +218,7 @@ function unbanIPAddress(ipAddress, adminAccountId) {
 function unbanSubNet(ipAddressStart, ipAddressEnd, adminAccountId) {
     let dbConnection = connectToDatabase();
     if(dbConnection) {
-        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${AG_BANTYPE_SUBNET} AND ban_ip_start=INET_ATON(${ipAddressStart}) AND ban_ip_end=INET_ATON(${ipAddressEnd})`);
+        let dbQuery = queryDatabase(dbConnection, `UPDATE ban_main SET ban_who_removed=${adminAccountId}, ban_removed=1 WHERE ban_type=${VRR_BANTYPE_SUBNET} AND ban_ip_start=INET_ATON(${ipAddressStart}) AND ban_ip_end=INET_ATON(${ipAddressEnd})`);
         freeDatabaseQuery(dbQuery);
         dbConnection.close();
         return true;
@@ -232,7 +232,7 @@ function unbanSubNet(ipAddressStart, ipAddressEnd, adminAccountId) {
 function isAccountBanned(accountId) {
     let bans = getServerData().bans;
     for(let i in bans) {
-        if(bans[i].type == AG_BANTYPE_ACCOUNT) {
+        if(bans[i].type == VRR_BANTYPE_ACCOUNT) {
             if(bans[i].detail == accountId) {
                 return true;
             }
@@ -247,7 +247,7 @@ function isAccountBanned(accountId) {
 function isSubAccountBanned(subAccountId) {
     let bans = getServerData().bans;
     for(let i in bans) {
-        if(bans[i].type == AG_BANTYPE_SUBACCOUNT) {
+        if(bans[i].type == VRR_BANTYPE_SUBACCOUNT) {
             if(bans[i].detail == subAccountId) {
                 return true;
             }
@@ -262,7 +262,7 @@ function isSubAccountBanned(subAccountId) {
 function isIpAddressBanned(ipAddress) {
     let bans = getServerData().bans;
     for(let i in bans) {
-        if(bans[i].type == AG_BANTYPE_IPADDRESS) {
+        if(bans[i].type == VRR_BANTYPE_IPADDRESS) {
             if(bans[i].detail == ipAddress) {
                 return true;
             }

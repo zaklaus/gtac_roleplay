@@ -12,16 +12,16 @@ let radioStations = [];
 // ===========================================================================
 
 function initRadioScript() {
-	logToConsole(LOG_INFO, "[Asshat.Radio]: Initializing radio script ...");
+	logToConsole(LOG_INFO, "[VRR.Radio]: Initializing radio script ...");
     radioStations = loadRadioStationsFromDatabase();
-	logToConsole(LOG_INFO, "[Asshat.Radio]: Radio script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Radio]: Radio script initialized successfully!");
 	return true;
 }
 
 // ===========================================================================
 
 function loadRadioStationsFromDatabase() {
-	logToConsole(LOG_INFO, "[Asshat.Radio]: Loading radio stations from database ...");
+	logToConsole(LOG_INFO, "[VRR.Radio]: Loading radio stations from database ...");
 	let dbConnection = connectToDatabase();
 	let tempRadioStations = [];
 	let dbAssoc;
@@ -38,7 +38,7 @@ function loadRadioStationsFromDatabase() {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_INFO, `[Asshat.Radio]: ${tempRadioStations.length} radio stations loaded from database successfully!`);
+	logToConsole(LOG_INFO, `[VRR.Radio]: ${tempRadioStations.length} radio stations loaded from database successfully!`);
 	return tempRadioStations;
 }
 

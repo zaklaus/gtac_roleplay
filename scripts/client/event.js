@@ -8,10 +8,10 @@
 // ===========================================================================
 
 function initEventScript() {
-    logToConsole(LOG_DEBUG, "[Asshat.Event]: Initializing event script ...");
+    logToConsole(LOG_DEBUG, "[VRR.Event]: Initializing event script ...");
     addCustomEvents();
     addAllEventHandlers();
-    logToConsole(LOG_DEBUG, "[Asshat.Event]: Event script initialized!");
+    logToConsole(LOG_DEBUG, "[VRR.Event]: Event script initialized!");
 }
 
 // ===========================================================================
@@ -135,7 +135,7 @@ function onDrawnHUD(event) {
 // ===========================================================================
 
 function onPedWasted(event, wastedPed, killerPed, weapon, pedPiece) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Ped ${wastedPed.name} died`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Ped ${wastedPed.name} died`);
     wastedPed.clearWeapons();
 }
 
@@ -148,7 +148,7 @@ function onElementStreamIn(event, element) {
 // ===========================================================================
 
 function onLocalPlayerExitedVehicle(event, vehicle, seat) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Local player exited vehicle`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Local player exited vehicle`);
     triggerNetworkEvent("ag.onPlayerExitVehicle", getVehicleForNetworkEvent(vehicle), seat);
     if(inVehicleSeat) {
         parkedVehiclePosition = false;
@@ -159,7 +159,7 @@ function onLocalPlayerExitedVehicle(event, vehicle, seat) {
 // ===========================================================================
 
 function onLocalPlayerEnteredVehicle(event, vehicle, seat) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Local player entered vehicle`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Local player entered vehicle`);
     triggerNetworkEvent("ag.onPlayerEnterVehicle", getVehicleForNetworkEvent(vehicle), seat);
 
     if(inVehicleSeat == 0) {
@@ -179,7 +179,7 @@ function onPedInflictDamage(event, damagedEntity, damagerEntity, weaponId, healt
     let damagerEntityString = (!isNull(damagedEntity)) ? `${damagerEntity.name} (${damagerEntity.name}, ${damagerEntity.type} - ${typeof damagerEntity})` : `Unknown ped`;
     let damagedEntityString = (!isNull(damagedEntity)) ? `${damagedEntity.name} (${damagedEntity.name}, ${damagedEntity.type} - ${typeof damagedEntity})` : `Unknown ped`;
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] ${damagerEntityString} damaged ${damagedEntityString}'s '${pedPiece} with weapon ${weaponId}`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] ${damagerEntityString} damaged ${damagedEntityString}'s '${pedPiece} with weapon ${weaponId}`);
     if(!isNull(damagedEntity) && !isNull(damagerEntity)) {
         if(damagedEntity.isType(ELEMENT_PLAYER)) {
             if(damagedEntity == localPlayer) {
@@ -195,7 +195,7 @@ function onPedInflictDamage(event, damagedEntity, damagerEntity, weaponId, healt
 // ===========================================================================
 
 function onLocalPlayerEnterSphere(event, sphere) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Local player entered sphere`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Local player entered sphere`);
     if(sphere == jobRouteStopSphere) {
         enteredJobRouteSphere();
     }
@@ -204,7 +204,7 @@ function onLocalPlayerEnterSphere(event, sphere) {
 // ===========================================================================
 
 function onLocalPlayerExitSphere(event, sphere) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Local player exited sphere`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Local player exited sphere`);
 }
 
 // ===========================================================================

@@ -46,11 +46,11 @@ function loadGlobalConfig() {
 		phoneTalkDistance: 15,
 		tazerEffectDuration: 15000,
 		weaponEquippableTypes: [
-			AG_ITEM_USETYPE_WEAPON,
-			AG_ITEM_USETYPE_TAZER,
-			AG_ITEM_USETYPE_EXTINGUISHER,
-			AG_ITEM_USETYPE_SPRAYPAINT,
-			AG_ITEM_USETYPE_PEPPERSPRAY,
+			VRR_ITEM_USETYPE_WEAPON,
+			VRR_ITEM_USETYPE_TAZER,
+			VRR_ITEM_USETYPE_EXTINGUISHER,
+			VRR_ITEM_USETYPE_SPRAYPAINT,
+			VRR_ITEM_USETYPE_PEPPERSPRAY,
 		],
 		itemActionStateReset: 5000,
 		subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -928,12 +928,12 @@ function loadGameConfig() {
 // ===========================================================================
 
 function initConfigScript() {
-	logToConsole(LOG_INFO, "[Asshat.Config]: Initializing config script ...");
+	logToConsole(LOG_INFO, "[VRR.Config]: Initializing config script ...");
 	globalConfig = loadGlobalConfig();
 	gameConfig = loadGameConfig();
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
 	applyConfigToServer(serverConfig);
-	logToConsole(LOG_INFO, "[Asshat.Config]: Config script initialized!");
+	logToConsole(LOG_INFO, "[VRR.Config]: Config script initialized!");
 }
 
 // ===========================================================================
@@ -991,7 +991,7 @@ function applyConfigToServer(tempServerConfig) {
 // ===========================================================================
 
 function saveServerConfigToDatabase(serverConfigData) {
-	logToConsole(LOG_DEBUG, `[Asshat.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeServerName = escapeDatabaseString(dbConnection, serverConfigData.name);
@@ -1001,7 +1001,7 @@ function saveServerConfigToDatabase(serverConfigData) {
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		disconnectFromDatabase(dbConnection);
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
+	logToConsole(LOG_DEBUG, `[VRR.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
 }
 
 // ===========================================================================
@@ -1201,7 +1201,7 @@ function reloadEmailConfigurationCommand(command, params, client) {
 function reloadDatabaseConfigurationCommand(command, params, client) {
 	//if(!databaseInUse) {
 		if(databaseConfig.usePersistentConnection && isDatabaseConnected(persistentDatabaseConnection)) {
-			console.warn(`[Asshat.Database] Closing persistent database connection`);
+			console.warn(`[VRR.Database] Closing persistent database connection`);
 			persistentDatabaseConnection.close();
 			persistentDatabaseConnection = null;
 		}

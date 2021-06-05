@@ -8,7 +8,7 @@
 // ===========================================================================
 
 function initHouseScript() {
-	logToConsole(LOG_INFO, "[Asshat.House]: Initializing house script ...");
+	logToConsole(LOG_INFO, "[VRR.House]: Initializing house script ...");
 	getServerData().houses = loadHousesFromDatabase();
 
 	if(getServerConfig().createHousePickups) {
@@ -20,14 +20,14 @@ function initHouseScript() {
 	}
 
 	setAllHouseIndexes();
-	logToConsole(LOG_INFO, "[Asshat.House]: House script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.House]: House script initialized successfully!");
 	return true;
 }
 
 // ===========================================================================
 
 function loadHousesFromDatabase() {
-	logToConsole(LOG_INFO, "[Asshat.House]: Loading houses from database ...");
+	logToConsole(LOG_INFO, "[VRR.House]: Loading houses from database ...");
 	let tempHouses = [];
 	let dbConnection = connectToDatabase();
 	let dbAssoc;
@@ -40,21 +40,21 @@ function loadHousesFromDatabase() {
 					let tempHouseData = new serverClasses.houseData(dbAssoc);
 					tempHouseData.locations = loadHouseLocationsFromDatabase(tempHouseData.databaseId);
 					tempHouses.push(tempHouseData);
-					logToConsole(LOG_VERBOSE, `[Asshat.House]: House '${tempHouseData.description}' (ID ${tempHouseData.databaseId}) loaded!`);
+					logToConsole(LOG_VERBOSE, `[VRR.House]: House '${tempHouseData.description}' (ID ${tempHouseData.databaseId}) loaded!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
-	logToConsole(LOG_INFO, `[Asshat.House]: ${tempHouses.length} houses loaded from database successfully!`);
+	logToConsole(LOG_INFO, `[VRR.House]: ${tempHouses.length} houses loaded from database successfully!`);
 	return tempHouses;
 }
 
 // ===========================================================================
 
 function loadHouseLocationsFromDatabase(houseId) {
-	console.log(`[Asshat.House]: Loading locations for business '${getBusinessData(businessId).name}' from database ...`);
+	console.log(`[VRR.House]: Loading locations for business '${getBusinessData(businessId).name}' from database ...`);
 
 	let tempHouseLocations = [];
 	let dbConnection = connectToDatabase();
@@ -68,7 +68,7 @@ function loadHouseLocationsFromDatabase(houseId) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempHouseLocationData = new serverClasses.houseLocationData(dbAssoc);
 					tempHouseLocations.push(tempHouseLocationData);
-					console.log(`[Asshat.House]: Location for house '${getHouseData(houseId).name}' loaded from database successfully!`);
+					console.log(`[VRR.House]: Location for house '${getHouseData(houseId).name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -76,7 +76,7 @@ function loadHouseLocationsFromDatabase(houseId) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	console.log(`[Asshat.House]: ${tempHouseLocations.length} locations for house '${getHouseData(houseId).name}' loaded from database successfully`);
+	console.log(`[VRR.House]: ${tempHouseLocations.length} locations for house '${getHouseData(houseId).name}' loaded from database successfully`);
 	return tempHouseLocations;
 }
 
@@ -142,7 +142,7 @@ function setHouseOwnerCommand(command, params, client) {
 		return false;
 	}
 
-	getHouseData(houseId).ownerType = AG_HOUSEOWNER_PLAYER;
+	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_PLAYER;
 	getHouseData(houseId).ownerId = getServerData().clients[newHouseOwner.index].accountData.databaseId;
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]owner to [#AAAAAA]${newHouseOwner.name}`);
 }
@@ -164,7 +164,7 @@ function setHouseClanCommand(command, params, client) {
 		return false;
 	}
 
-	getHouseData(houseId).ownerType = AG_HOUSEOWNER_CLAN;
+	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_CLAN;
 	getHouseData(houseId).ownerId = getClanData(clanId).databaseId;
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]owner to the [#FF9900]${getClanData(clanId).name} [#FFFFFF]clan!`);
 }
@@ -445,11 +445,11 @@ function getPlayerHouse(client) {
 // ===========================================================================
 
 function saveAllHousesToDatabase() {
-	logToConsole(LOG_INFO, `[Asshat.House]: Saving all server houses to database ...`);
+	logToConsole(LOG_INFO, `[VRR.House]: Saving all server houses to database ...`);
 	for(let i in getServerData().houses) {
 		saveHouseToDatabase(i);
 	}
-	logToConsole(LOG_INFO, `[Asshat.House]: Saving all server houses to database ...`);
+	logToConsole(LOG_INFO, `[VRR.House]: Saving all server houses to database ...`);
 }
 
 // ===========================================================================
@@ -457,7 +457,7 @@ function saveAllHousesToDatabase() {
 function saveHouseToDatabase(houseId) {
 	let tempHouseData = getServerData().houses[houseId];
 
-	logToConsole(LOG_VERBOSE, `[Asshat.House]: Saving house '${tempHouseData.databaseId}' to database ...`);
+	logToConsole(LOG_VERBOSE, `[VRR.House]: Saving house '${tempHouseData.databaseId}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeHouseDescription = escapeDatabaseString(dbConnection, tempHouseData.description);
@@ -501,7 +501,7 @@ function saveHouseToDatabase(houseId) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	logToConsole(LOG_VERBOSE, `[Asshat.House]: Saved house '${tempHouseData.description}' to database!`);
+	logToConsole(LOG_VERBOSE, `[VRR.House]: Saved house '${tempHouseData.description}' to database!`);
 
 	return false;
 }
@@ -511,7 +511,7 @@ function saveHouseToDatabase(houseId) {
 function saveHouseLocationToDatabase(houseId, locationId) {
 	let tempHouseLocationData = getHouseData(houseId).locations[locationId];
 
-	console.log(`[Asshat.House]: Saving house location ${tempHouseLocationData.databaseId} to database ...`);
+	console.log(`[VRR.House]: Saving house location ${tempHouseLocationData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		if(tempHouseLocationData.databaseId == 0) {
@@ -525,7 +525,7 @@ function saveHouseLocationToDatabase(houseId, locationId) {
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	console.log(`[Asshat.house]: Saved house location ${tempHouseLocationData.databaseId} to database!`);
+	console.log(`[VRR.house]: Saved house location ${tempHouseLocationData.databaseId} to database!`);
 
 	return false;
 }
@@ -565,9 +565,9 @@ function createHouseEntrancePickup(houseId, locationId) {
 		getHouseData(houseId).locations[locationId].entrancePickup = gta.createPickup(pickupModelId, getHouseData(houseId).locations[locationId].entrancePosition);
 		getHouseData(houseId).locations[locationId].entrancePickup.onAllDimensions = false;
 		getHouseData(houseId).locations[locationId].entrancePickup.dimension = getHouseData(houseId).locations[locationId].entranceDimension;
-		getHouseData(houseId).locations[locationId].entrancePickup.setData("ag.owner.type", AG_PICKUP_HOUSE_ENTRANCE, false);
+		getHouseData(houseId).locations[locationId].entrancePickup.setData("ag.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
 		getHouseData(houseId).locations[locationId].entrancePickup.setData("ag.owner.id", houseId, false);
-		getHouseData(houseId).locations[locationId].entrancePickup.setData("ag.label.type", AG_LABEL_HOUSE, true);
+		getHouseData(houseId).locations[locationId].entrancePickup.setData("ag.label.type", VRR_LABEL_HOUSE, true);
 		getHouseData(houseId).locations[locationId].entrancePickup.setData("ag.label.name", getHouseData(houseId).description, true);
 		getHouseData(houseId).locations[locationId].entrancePickup.setData("ag.label.locked", getHouseData(houseId).locked, true);
 		if(getHouseData(houseId).buyPrice > 0) {
@@ -590,7 +590,7 @@ function createHouseEntranceBlip(houseId, locationId) {
 		getHouseData(houseId).locations[locationId].entranceBlip = gta.createBlip(getHouseData(houseId).locations[locationId].entrancePosition, blipModelId, 1, getColourByName("houseGreen"));
 		getHouseData(houseId).locations[locationId].entranceBlip.onAllDimensions = false;
 		getHouseData(houseId).locations[locationId].entranceBlip.dimension = getHouseData(houseId).locations[locationId].entranceDimension;
-		getHouseData(houseId).locations[locationId].entranceBlip.setData("ag.owner.type", AG_BLIP_HOUSE_ENTRANCE, false);
+		getHouseData(houseId).locations[locationId].entranceBlip.setData("ag.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
 		getHouseData(houseId).locations[locationId].entranceBlip.setData("ag.owner.id", houseId, false);
 		addToWorld(getHouseData(houseId).locations[locationId].entranceBlip);
 	}
@@ -610,9 +610,9 @@ function createHouseExitPickup(houseId, locationId) {
 			getHouseData(houseId).locations[locationId].exitPickup = gta.createPickup(pickupModelId, getHouseData(houseId).locations[locationId].exitPosition);
 			getHouseData(houseId).locations[locationId].exitPickup.onAllDimensions = false;
 			getHouseData(houseId).locations[locationId].exitPickup.dimension = getHouseData(houseId).locations[locationId].exitDimension;
-			getHouseData(houseId).locations[locationId].exitPickup.setData("ag.owner.type", AG_PICKUP_HOUSE_EXIT, false);
+			getHouseData(houseId).locations[locationId].exitPickup.setData("ag.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
 			getHouseData(houseId).locations[locationId].exitPickup.setData("ag.owner.id", houseId, false);
-			getHouseData(houseId).locations[locationId].exitPickup.setData("ag.label.type", AG_LABEL_EXIT, true);
+			getHouseData(houseId).locations[locationId].exitPickup.setData("ag.label.type", VRR_LABEL_EXIT, true);
 			addToWorld(getHouseData(houseId).locations[locationId].exitPickup);
 		}
 	}
@@ -632,7 +632,7 @@ function createHouseExitBlip(houseId, locationId) {
 			getHouseData(houseId).locations[locationId].exitBlip = gta.createBlip(getHouseData(houseId).locations[locationId].exitPosition, blipModelId, 1, getColourByName("houseGreen"));
 			getHouseData(houseId).locations[locationId].exitBlip.onAllDimensions = false;
 			getHouseData(houseId).locations[locationId].exitBlip.dimension = getHouseData(houseId).locations[locationId].entranceDimension;
-			getHouseData(houseId).locations[locationId].exitBlip.setData("ag.owner.type", AG_BLIP_HOUSE_EXIT, false);
+			getHouseData(houseId).locations[locationId].exitBlip.setData("ag.owner.type", VRR_BLIP_HOUSE_EXIT, false);
 			getHouseData(houseId).locations[locationId].exitBlip.setData("ag.owner.id", houseId, false);
 			addToWorld(getHouseData(houseId).locations[locationId].exitBlip);
 		}
@@ -643,19 +643,19 @@ function createHouseExitBlip(houseId, locationId) {
 
 function getHouseOwnerTypeText(ownerType) {
 	switch(ownerType) {
-		case AG_HOUSEOWNER_CLAN:
+		case VRR_HOUSEOWNER_CLAN:
 			return "clan";
 
-		case AG_HOUSEOWNER_PLAYER:
+		case VRR_HOUSEOWNER_PLAYER:
 			return "player";
 
-		case AG_BIZOWNER_NONE:
+		case VRR_BIZOWNER_NONE:
 			return "not owned";
 
-		case AG_BIZOWNER_PUBLIC:
+		case VRR_BIZOWNER_PUBLIC:
 			return "not owned";
 
-		case AG_BIZOWNER_JOB:
+		case VRR_BIZOWNER_JOB:
 			return "job";
 
 		default:
@@ -679,24 +679,24 @@ function getHouseInfoCommand(command, params, client) {
 
 	let ownerName = "Unknown";
 	switch(getHouseData(houseId).ownerType) {
-		case AG_HOUSEOWNER_CLAN:
+		case VRR_HOUSEOWNER_CLAN:
 			ownerName = getClanData(getHouseData(houseId).ownerId).name;
 			break;
 
-		case AG_HOUSEOWNER_PLAYER:
+		case VRR_HOUSEOWNER_PLAYER:
 			let subAccountData = loadSubAccountFromId(getHouseData(houseId).ownerId);
 			ownerName = `${subAccountData.firstName} ${subAccountData.lastName} [${subAccountData.databaseId}]`;
 			break;
 
-		case AG_HOUSEOWNER_NONE:
+		case VRR_HOUSEOWNER_NONE:
 			ownerName = "None";
 			break;
 
-		case AG_HOUSEOWNER_PUBLIC:
+		case VRR_HOUSEOWNER_PUBLIC:
 			ownerName = "Public";
 			break;
 
-		case AG_HOUSEOWNER_JOB:
+		case VRR_HOUSEOWNER_JOB:
 			ownerName = getJobData(getHouseData(houseId).ownerId).name;
 			break;
 	}
@@ -817,7 +817,7 @@ function cacheHouseItems(houseId) {
 	getHouseData(houseId).itemCache = [];
 
 	for(let i in getServerData().items) {
-		if(getItemData(i).ownerType == AG_ITEM_OWNER_HOUSE && getItemData(i).ownerId == getHouseData(houseId).databaseId) {
+		if(getItemData(i).ownerType == VRR_ITEM_OWNER_HOUSE && getItemData(i).ownerId == getHouseData(houseId).databaseId) {
 			getHouseData(houseId).itemCache.push(i);
 		}
 	}

@@ -8,8 +8,8 @@
 // ===========================================================================
 
 function initAccountScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Account]: Initializing account script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.Account]: Account script initialized!");
+	logToConsole(LOG_DEBUG, "[VRR.Account]: Initializing account script ...");
+	logToConsole(LOG_DEBUG, "[VRR.Account]: Account script initialized!");
 }
 
 // ===========================================================================
@@ -67,29 +67,29 @@ function toggleAccountGUICommand(command, params, client) {
 	if(!doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerNormal(client, `⚙️ You will now be shown GUI (if enabled on current server)`);
-		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account ON.`);
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messagePlayerNormal(client, `⚙️ You will not be shown GUI anymore. Any GUI stuff will be shown as messages in the chatbox instead.`);
-		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account OFF.`);
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account OFF.`);
 	}
 
 	if(!isPlayerLoggedIn(client)) {
 		if(getPlayerData().accountData.databaseId != 0) {
 			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 				showPlayerLoginGUI(client);
-				logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI`);
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI`);
 			} else {
 				messagePlayerNormal(client, `👋 Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, getColourByName("softGreen"));
-				logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
 			}
 		} else {
 			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 				showPlayerRegistrationGUI(client);
-				logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 			} else {
 				messagePlayerNormal(client, `👋 Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, getColourByName("softGreen"));
-				logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
 			}
 		}
 	}
@@ -104,14 +104,14 @@ function toggleAccountServerLogoCommand(command, params, client) {
 	if(!doesPlayerHaveLogoEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now [#FFFFFF]be shown the server logo (if enabled on current server)`);
-		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo ON for their account`);
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo ON for their account`);
 		if(getServerConfig().showLogo) {
 			updatePlayerShowLogoState(client, true);
 		}
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not [#FFFFFF]be shown the server logo.`);
-		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo OFF for their account`);
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo OFF for their account`);
 		updatePlayerShowLogoState(client, false);
 	}
 
@@ -143,12 +143,12 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `[#FFFFFF]You have turned ${getBoolRedGreenInlineColour(false)}ON [#FFFFFF] two factor authentication![#AAAAAA]${addtoAuthenticatorCode}`);
 		messagePlayerAlert(client, "You will be required to enter a code sent to your email every time you log on.");
-		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF [#FFFFFF]two-factor authentication for login.`);
 		messagePlayerAlert(client, "You won't be required to enter a code sent to your email every time you log on anymore.");
-		logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
 	return true;
 }
@@ -486,24 +486,24 @@ function saltAccountInfo(name, password) {
 // ===========================================================================
 
 function loginSuccess(client) {
-	logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} successfully logged in.`);
+	logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} successfully logged in.`);
 	getPlayerData(client).loggedIn = true;
 
 	updateConnectionLogOnAuth(client, getPlayerData(client).accountData.databaseId);
 
 	if(doesPlayerHaveStaffPermission(client, "developer") || doesPlayerHaveStaffPermission(client, "manageServer")) {
-		logToConsole(LOG_WARN, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} has needed permissions and is being given administrator access`);
+		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has needed permissions and is being given administrator access`);
 		client.administrator = true;
 	}
 
 	if(getPlayerData(client).subAccounts.length == 0) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No characters");
-			getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
-			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters prompt GUI`);
+			getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters prompt GUI`);
 		} else {
 			messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
-			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters message (GUI disabled)`);
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters message (GUI disabled)`);
 		}
 	} else {
 		showCharacterSelectToClient(client);
@@ -671,7 +671,7 @@ function checkLogin(client, password) {
 	}
 
 	if(isPlayerLoggedIn(client)) {
-		logToConsole(LOG_WARN, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is already logged in`);
+		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is already logged in`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			sendPlayerLoginSuccess(client);
 		} else {
@@ -682,37 +682,37 @@ function checkLogin(client, password) {
 	}
 
 	if(!isPlayerRegistered(client)) {
-		logToConsole(LOG_WARN, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is not registered`);
+		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is not registered`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerRegistratonGUI(client);
-			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 		} else {
 			messagePlayerError(client, "Your name is not registered! Use /register to make an account.");
-			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
 		}
 		return false;
 	}
 
 	if(areParamsEmpty(password)) {
-		logToConsole(LOG_WARN, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (empty password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
+		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (empty password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginFailedGUI(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
-			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		} else {
 			messagePlayerError(client, `You must enter a password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
-			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		}
 		return false;
 	}
 
 	if(!isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(client.name, password))) {
-		logToConsole(LOG_WARN, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (wrong password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
+		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (wrong password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginFailedGUI(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
-			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		} else {
 			messagePlayerError(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
-			logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		}
 		return false;
 	}
@@ -727,7 +727,7 @@ function checkLogin(client, password) {
 // ===========================================================================
 
 function checkRegistration(client, password, confirmPassword = "", emailAddress = "") {
-	logToConsole(LOG_DEBUG, "[Asshat.Account]: Checking registration for " + toString(client.name));
+	logToConsole(LOG_DEBUG, "[VRR.Account]: Checking registration for " + toString(client.name));
 
 	if(isPlayerRegistered(client)) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -816,7 +816,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		showPlayerRegistrationSuccessGUI(client);
 		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
-		getPlayerData(client).promptType = AG_PROMPT_CREATEFIRSTCHAR;
+		getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
 
 		if(getEmailConfig().enabled) {
 			let emailVerificationCode = generateEmailVerificationCode();
@@ -837,11 +837,11 @@ function isValidEmailAddress(emailAddress) {
 // ===========================================================================
 
 function saveAllClientsToDatabase() {
-	logToConsole(LOG_DEBUG, "[Asshat.Account]: Saving all clients to database ...");
+	logToConsole(LOG_DEBUG, "[VRR.Account]: Saving all clients to database ...");
 	getClients().forEach(function(client) {
 		savePlayerToDatabase(client);
 	});
-	logToConsole(LOG_DEBUG, "[Asshat.Account]: All clients saved to database successfully!");
+	logToConsole(LOG_DEBUG, "[VRR.Account]: All clients saved to database successfully!");
 }
 
 // ===========================================================================
@@ -855,7 +855,7 @@ function savePlayerToDatabase(client) {
 		return false;
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: Saving client ${client.name} to database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Saving client ${client.name} to database ...`);
 	saveAccountToDatabase(getPlayerData(client).accountData);
 
 	if(getPlayerData(client).currentSubAccount != -1) {
@@ -877,7 +877,7 @@ function savePlayerToDatabase(client) {
 
 		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: Saved client ${getPlayerDisplayForConsole(client)} to database successfully!`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Saved client ${getPlayerDisplayForConsole(client)} to database successfully!`);
 	return true;
 }
 
@@ -914,19 +914,19 @@ function initClient(client) {
 					loginSuccess(client);
 				} else {
 					if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-						logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);
+						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);
 						showPlayerLoginGUI(client);
 					} else {
-						logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
+						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
 						messagePlayerNormal(client, `Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, getColourByName("softGreen"));
 					}
 				}
 			} else {
 				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-					logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI.`);
+					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI.`);
 					showPlayerRegistrationGUI(client);
 				} else {
-					logToConsole(LOG_DEBUG, `[Asshat.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
+					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
 					messagePlayerNormal(client, `Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, getColourByName("softGreen"));
 				}
 			}
@@ -949,18 +949,18 @@ function saveConnectionToDatabase(client) {
 // ===========================================================================
 
 function createDefaultKeybindsForAccount(accountDatabaseId) {
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybinds for account ${accountDatabaseId} ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybinds for account ${accountDatabaseId} ...`);
 	for(let j = 1 ; j <= 4 ; j++) {
-		logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybinds for account ${accountDatabaseId} on server ${j} ...`);
+		logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybinds for account ${accountDatabaseId} on server ${j} ...`);
 		for(let i in getGlobalConfig().keyBind.defaultKeyBinds) {
-			logToConsole(LOG_DEBUG, `[Asshat.Account]: Creating default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())} ...`);
+			logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())} ...`);
 			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_server, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${j}, ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeyBinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeyBinds[i].keyState})`;
 			quickDatabaseQuery(dbQueryString);
-			logToConsole(LOG_DEBUG, `[Asshat.Account]: Created default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}!`);
+			logToConsole(LOG_DEBUG, `[VRR.Account]: Created default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}!`);
 		}
-		logToConsole(LOG_DEBUG, `[Asshat.Account]: Create default keybinds for account ${accountDatabaseId} on server ${j}!`);
+		logToConsole(LOG_DEBUG, `[VRR.Account]: Create default keybinds for account ${accountDatabaseId} on server ${j}!`);
 	}
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: Created default keybinds for account ${accountDatabaseId} successfully!`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Created default keybinds for account ${accountDatabaseId} successfully!`);
 }
 
 // ===========================================================================
@@ -975,7 +975,7 @@ function createDefaultAccountServerData(accountDatabaseId) {
 // ===========================================================================
 
 function loadAccountKeybindsFromDatabase(accountDatabaseID) {
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account keybinds for account ${accountDatabaseID} from database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Loading account keybinds for account ${accountDatabaseID} from database ...`);
 
 	let tempAccountKeybinds = [];
 	let dbConnection = connectToDatabase();
@@ -989,7 +989,7 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempAccountKeyBindData = new serverClasses.keyBindData(dbAssoc);
 					tempAccountKeybinds.push(tempAccountKeyBindData);
-					logToConsole(LOG_DEBUG, `[Asshat.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${sdl.getKeyName(tempAccountKeyBindData.key)}') loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[VRR.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${sdl.getKeyName(tempAccountKeyBindData.key)}') loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -997,14 +997,14 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: ${tempAccountKeybinds.length} account keybinds for account ${accountDatabaseID} loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: ${tempAccountKeybinds.length} account keybinds for account ${accountDatabaseID} loaded from database successfully!`);
 	return tempAccountKeybinds;
 }
 
 // ===========================================================================
 
 function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account staff notes for account ${accountDatabaseID} from database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Loading account staff notes for account ${accountDatabaseID} from database ...`);
 
 	let tempAccountStaffNotes = [];
 	let dbConnection = connectToDatabase();
@@ -1018,7 +1018,7 @@ function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempAccountStaffNoteData = new serverClasses.accountStaffNoteData(dbAssoc);
 					tempAccountStaffNotes.push(tempAccountStaffNoteData);
-					logToConsole(LOG_DEBUG, `[Asshat.Account]: Account staff note '${tempAccountStaffNoteData.databaseId}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[VRR.Account]: Account staff note '${tempAccountStaffNoteData.databaseId}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -1026,14 +1026,14 @@ function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: ${tempAccountStaffNotes.length} account staff notes for account ${accountDatabaseID} loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: ${tempAccountStaffNotes.length} account staff notes for account ${accountDatabaseID} loaded from database successfully!`);
 	return tempAccountStaffNotes;
 }
 
 // ===========================================================================
 
 function loadAccountContactsFromDatabase(accountDatabaseID) {
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account contacts for account ${accountDatabaseID} from database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Loading account contacts for account ${accountDatabaseID} from database ...`);
 
 	let tempAccountContacts = [];
 	let dbConnection = connectToDatabase();
@@ -1047,7 +1047,7 @@ function loadAccountContactsFromDatabase(accountDatabaseID) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempAccountContactData = new serverClasses.accountContactData(dbAssoc);
 					tempAccountContacts.push(tempAccountContactData);
-					logToConsole(LOG_DEBUG, `[Asshat.Account]: Account contact '${tempAccountContactData.databaseId}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[VRR.Account]: Account contact '${tempAccountContactData.databaseId}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -1055,14 +1055,14 @@ function loadAccountContactsFromDatabase(accountDatabaseID) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: ${tempAccountContacts.length} account contacts for account ${accountDatabaseID} loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: ${tempAccountContacts.length} account contacts for account ${accountDatabaseID} loaded from database successfully!`);
 	return tempAccountContacts;
 }
 
 // ===========================================================================
 
 function loadAccountMessagesFromDatabase(accountDatabaseID) {
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: Loading account messages for account ${accountDatabaseID} from database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Loading account messages for account ${accountDatabaseID} from database ...`);
 
 	let tempAccountMessages = [];
 	let dbConnection = connectToDatabase();
@@ -1076,7 +1076,7 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempAccountMessageData = new serverClasses.accountContactData(dbAssoc);
 					tempAccountMessages.push(tempAccountMessageData);
-					logToConsole(LOG_DEBUG, `[Asshat.Account]: Account contact '${tempAccountMessageData.databaseId}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[VRR.Account]: Account contact '${tempAccountMessageData.databaseId}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -1084,7 +1084,7 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	logToConsole(LOG_DEBUG, `[Asshat.Account]: ${tempAccountMessages.length} account messages for account ${accountDatabaseID} loaded from database successfully!`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: ${tempAccountMessages.length} account messages for account ${accountDatabaseID} loaded from database successfully!`);
 	return tempAccountMessages;
 }
 

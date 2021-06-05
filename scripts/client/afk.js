@@ -8,8 +8,8 @@
 // ===========================================================================
 
 function initAFKScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.AFK]: Initializing AFK script ...");
-	logToConsole(LOG_DEBUG, "[Asshat.AFK]: AFK script initialized!");
+	logToConsole(LOG_DEBUG, "[VRR.AFK]: Initializing AFK script ...");
+	logToConsole(LOG_DEBUG, "[VRR.AFK]: AFK script initialized!");
 }
 
 // ===========================================================================

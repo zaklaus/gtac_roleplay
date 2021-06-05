@@ -128,9 +128,9 @@ let bindableKeys = {
 // ===========================================================================
 
 function initKeyBindScript() {
-	logToConsole(LOG_INFO, "[Asshat.KeyBind]: Initializing key bind script ...");
+	logToConsole(LOG_INFO, "[VRR.KeyBind]: Initializing key bind script ...");
     getGlobalConfig().keyBind = loadKeyBindConfiguration();
-	logToConsole(LOG_INFO, "[Asshat.KeyBind]: Key bind script initialized!");
+	logToConsole(LOG_INFO, "[VRR.KeyBind]: Key bind script initialized!");
 }
 
 // ===========================================================================
@@ -265,7 +265,7 @@ function playerUsedKeyBind(client, key) {
         return false;
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.KeyBind] ${getPlayerDisplayForConsole(client)} used keybind ${sdl.getKeyName(key)} (${key})`);
+    logToConsole(LOG_DEBUG, `[VRR.KeyBind] ${getPlayerDisplayForConsole(client)} used keybind ${sdl.getKeyName(key)} (${key})`);
     if(doesPlayerHaveKeyBindForKey(client, key)) {
         let keyBindData = getPlayerKeyBindForKey(client, key);
         if(keyBindData.enabled) {

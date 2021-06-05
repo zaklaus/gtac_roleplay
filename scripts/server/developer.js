@@ -8,7 +8,7 @@
 // ===========================================================================
 
 function initDeveloperScript() {
-	logToConsole(LOG_INFO, "[Asshat.Developer]: Initializing developer script ...");
+	logToConsole(LOG_INFO, "[VRR.Developer]: Initializing developer script ...");
 
 	// Use GTAC command handlers for these since they need to be available on console
 	//addCommandHandler("sc", executeServerCodeCommand);
@@ -17,7 +17,7 @@ function initDeveloperScript() {
 	//addCommandHandler("allcmd", simulateCommandForAllPlayersCommand);
 	//addCommandHandler("addloglvl", setServerLogLevelCommand);
 
-	logToConsole(LOG_INFO, "[Asshat.Developer]: Developer script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Developer]: Developer script initialized successfully!");
 	return true;
 }
 

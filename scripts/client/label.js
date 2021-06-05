@@ -32,12 +32,12 @@ let propertyLabelNameOffset = 18;
 // ===========================================================================
 
 function initLabelScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Label]: Initializing label script ...");
+	logToConsole(LOG_DEBUG, "[VRR.Label]: Initializing label script ...");
 	propertyLabelNameFont = initLabelPropertyNameFont();
 	propertyLabelLockedFont = initLabelPropertyLockedFont();
 	jobNameLabelFont = initLabelJobNameFont();
 	jobHelpLabelFont = initLabelJobHelpFont();
-	logToConsole(LOG_DEBUG, "[Asshat.Label]: Label script initialized!");
+	logToConsole(LOG_DEBUG, "[VRR.Label]: Label script initialized!");
 }
 
 // ===========================================================================
@@ -99,10 +99,10 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
     text = (locked) ? "LOCKED" : "UNLOCKED";
     if(isBusiness) {
         text = (locked) ? "CLOSED" : "OPEN";
-        if(!locked && bizLabelInfoType != AG_BIZLABEL_INFO_NONE) {
+        if(!locked && bizLabelInfoType != VRR_BIZLABEL_INFO_NONE) {
             let bizInfoText = "";
             switch(bizLabelInfoType) {
-                case AG_BIZLABEL_INFO_ENTER:
+                case VRR_BIZLABEL_INFO_ENTER:
                     if(enterPropertyKey != null) {
                         bizInfoText = `Press ${sdl.getKeyName(enterPropertyKey)} to enter`;
                     } else {
@@ -110,15 +110,15 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
                     }
                     break;
 
-                case AG_BIZLABEL_INFO_BUY:
+                case VRR_BIZLABEL_INFO_BUY:
                     bizInfoText = `Use /buy to purchase items`;
                     break;
 
-                case AG_BIZLABEL_INFO_ENTERVEH:
+                case VRR_BIZLABEL_INFO_ENTERVEH:
                     bizInfoText = "Enter a vehicle to purchase it";
                     break;
 
-                case AG_BIZLABEL_INFO_NONE:
+                case VRR_BIZLABEL_INFO_NONE:
                 default:
                     bizInfoText = "";
                     break;
@@ -227,7 +227,7 @@ function processLabelRendering() {
                 if(pickups[i].getData("ag.label.type") != null) {
                     if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
                         let price = 0;
-                        let bizLabelInfoType = AG_BIZLABEL_INFO_NONE;
+                        let bizLabelInfoType = VRR_BIZLABEL_INFO_NONE;
                         if(pickups[i].getData("ag.label.price") != null) {
                             price = makeLargeNumberReadable(pickups[i].getData("ag.label.price"));
                         }
@@ -237,19 +237,19 @@ function processLabelRendering() {
                         }
 
                         switch(pickups[i].getData("ag.label.type")) {
-                            case AG_LABEL_BUSINESS:
+                            case VRR_LABEL_BUSINESS:
                                 renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price, bizLabelInfoType);
                                 break;
 
-                            case AG_LABEL_HOUSE:
+                            case VRR_LABEL_HOUSE:
                                 renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price, bizLabelInfoType);
                                 break;
 
-                            case AG_LABEL_JOB:
+                            case VRR_LABEL_JOB:
                                 renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
                                 break;
 
-                            case AG_LABEL_EXIT:
+                            case VRR_LABEL_EXIT:
                                 renderPropertyExitLabel(pickups[i].position);
                                 break;
                         }

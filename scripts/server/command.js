@@ -27,10 +27,10 @@ let builtInCommands = [
 // ===========================================================================
 
 function initCommandScript() {
-    logToConsole(LOG_INFO, "[Asshat.Command]: Initializing commands script ...");
+    logToConsole(LOG_INFO, "[VRR.Command]: Initializing commands script ...");
     serverCommands = loadCommands();
     //addAllCommandHandlers();
-    logToConsole(LOG_INFO, "[Asshat.Command]: Initialized commands script!");
+    logToConsole(LOG_INFO, "[VRR.Command]: Initialized commands script!");
 }
 
 // ===========================================================================
@@ -553,20 +553,20 @@ function processPlayerCommand(command, params, client) {
     }
 
     if(!doesCommandExist(toLowerCase(command))) {
-        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
+        console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
         messagePlayerError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
         return false;
     }
 
     if(!commandData.enabled) {
-        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (command is disabled): /${command} ${paramsDisplay}`);
+        console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (command is disabled): /${command} ${paramsDisplay}`);
         messagePlayerError(client, `The command [#AAAAAA]/${command} [#FFFFFF]is disabled!`);
         return false;
     }
 
 	if(doesCommandRequireLogin(toLowerCase(command))) {
 		if(!isPlayerLoggedIn(client)) {
-            console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (requires login first): /${command} ${paramsDisplay}`);
+            console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (requires login first): /${command} ${paramsDisplay}`);
 			messagePlayerError(client, `You must be logged in to use the [#AAAAAA]/${command} [#FFFFFF]command!`);
 			return false;
 		}
@@ -574,7 +574,7 @@ function processPlayerCommand(command, params, client) {
 
 	//if(isClientFromDiscord(client)) {
 	//	if(!isCommandAllowedOnDiscord(command)) {
-    //        console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
+    //        console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
 	//		messagePlayerError(client, `The [#AAAAAA]/${command} [#FFFFFF] command isn't available on discord!`);
 	//		return false;
 	//	}
@@ -582,13 +582,13 @@ function processPlayerCommand(command, params, client) {
 
     if(!client.console) {
         if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(toLowerCase(command)))) {
-            console.warn(`[Asshat.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);
+            console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);
             messagePlayerError(client, `You do not have permission to use the [#AAAAAA]/${toLowerCase(command)} [#FFFFFF]command!`);
             return false;
         }
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.Command] ${getPlayerDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
+    logToConsole(LOG_DEBUG, `[VRR.Command] ${getPlayerDisplayForConsole(client)} used command: /${command} ${paramsDisplay}`);
     commandData.handlerFunction(toLowerCase(command), params, client);
 }
 

@@ -8,8 +8,8 @@
 // ===========================================================================
 
 function initHelpScript() {
-	logToConsole(LOG_INFO, "[Asshat.Help]: Initializing help script ...");
-	logToConsole(LOG_INFO, "[Asshat.Help]: Help script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Help]: Initializing help script ...");
+	logToConsole(LOG_INFO, "[VRR.Help]: Help script initialized successfully!");
 }
 
 // ===========================================================================

@@ -20,7 +20,7 @@ let patrolRoutes = [
                 name: "Staunton Island Sector 1",
                 island: 0,
                 payout: 175,
-                type: AG_PATROLTYPE_VEHICLE,
+                type: VRR_PATROLTYPE_VEHICLE,
                 positions: [
                     toVector3(404.5, -1209.73, 25.8024),
                     toVector3(334.831, -1388.93, 25.8005),
@@ -90,7 +90,7 @@ function policeTazerCommand(command, params, client) {
         return false;
     }
 
-    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+    if(!doesPlayerHaveJobType(client, VRR_JOB_POLICE)) {
         messagePlayerError(client, "You don't have a police job.");
         return false;
     }
@@ -116,7 +116,7 @@ function policeCuffCommand(command, params, client) {
         return false;
     }
 
-    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+    if(!doesPlayerHaveJobType(client, VRR_JOB_POLICE)) {
         messagePlayerError(client, "You don't have a police job.");
         return false;
     }
@@ -142,7 +142,7 @@ function policeArrestCommand(command, params, client) {
         return false;
     }
 
-    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+    if(!doesPlayerHaveJobType(client, VRR_JOB_POLICE)) {
         messagePlayerError(client, "You don't have a police job.");
         return false;
     }
@@ -168,7 +168,7 @@ function policeSearchCommand(command, params, client) {
         return false;
     }
 
-    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+    if(!doesPlayerHaveJobType(client, VRR_JOB_POLICE)) {
         messagePlayerError(client, "You don't have a police job.");
         return false;
     }
@@ -194,7 +194,7 @@ function policeDragCommand(command, params, client) {
         return false;
     }
 
-    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+    if(!doesPlayerHaveJobType(client, VRR_JOB_POLICE)) {
         messagePlayerError(client, "You don't have a police job.");
         return false;
     }
@@ -220,7 +220,7 @@ function policeDetainCommand(command, params, client) {
         return false;
     }
 
-    if(!doesPlayerHaveJobType(client, AG_JOB_POLICE)) {
+    if(!doesPlayerHaveJobType(client, VRR_JOB_POLICE)) {
         messagePlayerError(client, "You don't have a police job.");
         return false;
     }
@@ -240,7 +240,7 @@ function playerArivedAtPolicePatrolPoint(client) {
 		getPlayerData(client).jobRoute = 0;
 		getPlayerData(client).jobRouteStop = 0;
         getPlayerData(client).jobRouteIsland = 0;
-        getPlayerData(client).jobRouteState = AG_JOBROUTE_INPROGRESS;
+        getPlayerData(client).jobRouteState = VRR_JOBROUTE_INPROGRESS;
         return false;
     }
 

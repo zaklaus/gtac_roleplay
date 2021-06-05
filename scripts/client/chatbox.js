@@ -19,9 +19,9 @@ let maxChatBoxLines = 6;
 // ===========================================================================
 
 function initChatBoxScript() {
-    logToConsole(LOG_DEBUG, "[Asshat.ChatBox]: Initializing chatbox script ...");
+    logToConsole(LOG_DEBUG, "[VRR.ChatBox]: Initializing chatbox script ...");
     bindChatBoxKeys();
-    logToConsole(LOG_DEBUG, "[Asshat.ChatBox]: Chatbox script initialized!");
+    logToConsole(LOG_DEBUG, "[VRR.ChatBox]: Chatbox script initialized!");
 }
 
 // ===========================================================================

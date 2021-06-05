@@ -11,7 +11,7 @@
 
 function getItemWithPhoneNumber(phoneNumber) {
     for(let i in getServerData().items) {
-        if(getItemTypeData(getItemData(i).itemTypeIndex).useType == AG_ITEM_USETYPE_PHONE) {
+        if(getItemTypeData(getItemData(i).itemTypeIndex).useType == VRR_ITEM_USETYPE_PHONE) {
             if(getItemData(i).value == phoneNumber) {
                 return i;
             }

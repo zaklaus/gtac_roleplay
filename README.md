@@ -1,13 +1,12 @@
-# Asshat Gaming
-## GTA Connected Roleplay Division
+# Vortrex's Roleplay Resource
 
 ### Description
-This is the roleplay resource for Asshat Gaming's GTAC servers
+This is Vortrex's Roleplay Resource
 
 ### Git Branches
 * master/main - The current release. *Never commit to this branch directly*
-* testing - The next upcoming release. All feature/fix/change branches are merged into this one
-* feature/fix/change - This is where the stuff you're currently working on goes into.
+* nightly - The next upcoming release. All feature/fix/change branches are merged into this one
+* feature/fix/change - This is where the stuff currently being working on goes into.
 
 ### Scripting Style
 * Always use camelCase, even for event names.
@@ -15,7 +14,8 @@ This is the roleplay resource for Asshat Gaming's GTAC servers
 * Keep opening curly brackets in-line. Don't linebreak before an opening curly brackets.
 * Use sentence case instead of adjacent uppercase letters in class/member names. (i.e. Id instead of ID)
 * Use generic, non-specific class member names wherever possible. (i.e. databaseId instead of accountId)
-* All communications from server to client are handled in `client.js` script file via utils
+* All communications from server to client are handled in server-side `client.js` script file via utils
+* All communications from client to server are handled in client-side `server.js` script file via utils
 * All server events are handled in `event.js` script file, sometimes with utils.
 
 ### Database Style
@@ -29,7 +29,5 @@ This is the roleplay resource for Asshat Gaming's GTAC servers
 
 ### Notes
 * The resource is designed to load the script files first, then initialize after that's done.
-* Never edit scripts directly on the server. Always edit in the cloned repo on your PC.
-* Never upload scripts to the main server. Vortrex will handle deployment of public releases.
 * The IDEAS.md file is not a to-do list. It's just a random file to throw ideas into when they come to mind.
 * Delete the row containing the bug or idea from the database once you've scripted and tested it and it works.

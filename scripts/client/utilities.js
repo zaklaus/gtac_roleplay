@@ -175,14 +175,14 @@ function closeAllGarages() {
 // ===========================================================================
 
 function setLocalPlayerFrozenState(state) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting frozen state to ${state}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting frozen state to ${state}`);
     gui.showCursor(state, !state);
 }
 
 // ===========================================================================
 
 function setLocalPlayerControlState(controlState, cursorState = false) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting control state to ${controlState} (Cursor: ${cursorState})`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting control state to ${controlState} (Cursor: ${cursorState})`);
     controlsEnabled = controlState;
     localPlayer.invincible = true;
     localPlayer.collisionsEnabled = controlState;
@@ -192,7 +192,7 @@ function setLocalPlayerControlState(controlState, cursorState = false) {
 // ===========================================================================
 
 function fadeLocalCamera(state, time) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Fading camera ${(state)?"in":"out"} for ${time} seconds`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Fading camera ${(state)?"in":"out"} for ${time} seconds`);
     gta.fadeCamera(state, time);
 }
 
@@ -205,29 +205,29 @@ function removeLocalPlayerFromVehicle() {
 // ===========================================================================
 
 function restoreLocalCamera() {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Camera restored`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Camera restored`);
     gta.restoreCamera(true);
 };
 
 // ===========================================================================
 
 function clearLocalPlayerOwnedPeds() {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Clearing all self-owned peds ...`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Clearing all self-owned peds ...`);
     clearSelfOwnedPeds();
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] All self-owned peds cleared`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] All self-owned peds cleared`);
 };
 
 // ===========================================================================
 
 function setLocalCameraLookAt(cameraPosition, cameraLookAt) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Set camera to look at [${cameraLookAt.x}, ${cameraLookAt.y}, ${cameraLookAt.z}] from [${cameraPosition.x}, ${cameraPosition.y}, ${cameraPosition.z}]`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Set camera to look at [${cameraLookAt.x}, ${cameraLookAt.y}, ${cameraLookAt.z}] from [${cameraPosition.x}, ${cameraPosition.y}, ${cameraPosition.z}]`);
     gta.setCameraLookAt(cameraPosition, cameraLookAt, true);
 }
 
 // ===========================================================================
 
 function setCityAmbienceState(state) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
     gta.setTrafficEnabled(state);
     gta.setGenerateCarsAroundCamera(state);
     if(gta.game != GAME_GTA_SA) {
@@ -263,7 +263,7 @@ function enterVehicleAsPassenger() {
 // ===========================================================================
 
 function giveLocalPlayerWeapon(weaponId, ammo, active) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Giving weapon ${weaponId} with ${ammo} ammo`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Giving weapon ${weaponId} with ${ammo} ammo`);
     localPlayer.giveWeapon(weaponId, ammo, active);
     forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(weaponId));
     forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(weaponId));
@@ -273,7 +273,7 @@ function giveLocalPlayerWeapon(weaponId, ammo, active) {
 // ===========================================================================
 
 function giveLocalPlayerWeapon(weaponId, ammo, active) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Giving weapon ${weaponId} with ${ammo} ammo`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Giving weapon ${weaponId} with ${ammo} ammo`);
     localPlayer.giveWeapon(weaponId, ammo, active);
     forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(weaponId));
     forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(weaponId));
@@ -283,7 +283,7 @@ function giveLocalPlayerWeapon(weaponId, ammo, active) {
 // ===========================================================================
 
 function clearLocalPlayerWeapons() {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Clearing weapons`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Clearing weapons`);
     localPlayer.clearWeapons();
     forceWeapon = 0;
     forceWeaponAmmo = 0;
@@ -299,7 +299,7 @@ function getClosestVehicle(pos) {
 // ===========================================================================
 
 function setLocalPlayerPosition(position) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting position to ${position.x}, ${position.y}, ${position.z}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting position to ${position.x}, ${position.y}, ${position.z}`);
     localPlayer.velocity = toVector3(0.0, 0.0, 0.0);
     localPlayer.position = position;
 }
@@ -307,14 +307,14 @@ function setLocalPlayerPosition(position) {
 // ===========================================================================
 
 function setLocalPlayerHeading(heading) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting heading to ${heading}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting heading to ${heading}`);
     localPlayer.heading = heading;
 }
 
 // ===========================================================================
 
 function setLocalPlayerInterior(interior) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting interior to ${interior}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting interior to ${interior}`);
     localPlayer.interior = interior;
     gta.cameraInterior = interior;
 }
@@ -322,7 +322,7 @@ function setLocalPlayerInterior(interior) {
 // ===========================================================================
 
 function setSnowState(fallingSnow, groundSnow) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting falling snow to ${fallingSnow} and ground snow to ${groundSnow}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting falling snow to ${fallingSnow} and ground snow to ${groundSnow}`);
     if(!isNull(snowing)) {
         snowing = fallingSnow;
         forceSnowing(groundSnow);
@@ -344,14 +344,14 @@ function isSnowEnabled() {
 // ===========================================================================
 
 function playPedSpeech(pedName, speechId) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Making ${pedName}'s ped talk (${speechId})`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Making ${pedName}'s ped talk (${speechId})`);
     gta.SET_CHAR_SAY(int, int);
 }
 
 // ===========================================================================
 
 function clearLocalPedState() {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Clearing local ped state`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Clearing local ped state`);
     localPlayer.clearObjective();
 }
 
@@ -364,7 +364,7 @@ function getWeaponSlot(weaponId) {
 // ===========================================================================
 
 function setLocalPlayerDrunkEffect(amount, duration) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Drunk effect set to ${amount} for ${duration}ms`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Drunk effect set to ${amount} for ${duration}ms`);
     drunkEffectAmount = 0;
     drunkEffectDurationTimer = setInterval(function() {
         drunkEffectAmount = drunkEffectAmount;
@@ -401,7 +401,7 @@ function clearSelfOwnedPeds() {
 // ===========================================================================
 
 function setMouseCameraState(state) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] ${(state)?"Enabled":"Disabled"} mouse camera`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] ${(state)?"Enabled":"Disabled"} mouse camera`);
     mouseCameraEnabled = !mouseCameraEnabled;
     SetStandardControlsEnabled(!mouseCameraEnabled);
 }
@@ -409,42 +409,42 @@ function setMouseCameraState(state) {
 // ===========================================================================
 
 function setMouseCursorState(state) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] ${(state)?"Enabled":"Disabled"} mouse cursor`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] ${(state)?"Enabled":"Disabled"} mouse cursor`);
     gui.showCursor(state, !state);
 }
 
 // ===========================================================================
 
 function setPlayerWeaponDamageEvent(clientName, eventType) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Set ${clientName} damage event type to ${eventType}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Set ${clientName} damage event type to ${eventType}`);
     weaponDamageEvent[clientName] = eventType;
 }
 
 // ===========================================================================
 
 function setPlayerWeaponDamageEnabled(clientName, state) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] ${(state)?"Enabled":"Disabled"} damage from ${clientName}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] ${(state)?"Enabled":"Disabled"} damage from ${clientName}`);
     weaponDamageEnabled[clientName] = state;
 }
 
 // ===========================================================================
 
 function setLocalPlayerCash(amount) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Setting local player money`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting local player money`);
     localPlayer.money = amount;
 }
 
 // ===========================================================================
 
 function removeWorldObject(model, position, range) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
     gta.removeWorldObject(model, position, range);
 }
 
 // ===========================================================================
 
 function excludeModelFromGroundSnow(model) {
-    logToConsole(LOG_DEBUG, `[Asshat.Utilities] Disabling ground snow for object model ${model}`);
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Disabling ground snow for object model ${model}`);
     groundSnow.excludeModel(model);
 }
 

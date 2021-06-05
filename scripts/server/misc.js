@@ -10,8 +10,8 @@
 // ===========================================================================
 
 function initMiscScript() {
-	logToConsole(LOG_INFO, "[Asshat.Misc]: Initializing misc script ...");
-	logToConsole(LOG_INFO, "[Asshat.Misc]: Misc script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Misc]: Initializing misc script ...");
+	logToConsole(LOG_INFO, "[VRR.Misc]: Misc script initialized successfully!");
 	return true;
 }
 
@@ -127,7 +127,7 @@ function enterExitPropertyCommand(command, params, client) {
 				return false;
 			}
 			clearPlayerStateToEnterExitProperty(client);
-			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
+			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
 			fadeCamera(client, false, 1.0);
 			//disableCityAmbienceForPlayer(client);
@@ -141,7 +141,7 @@ function enterExitPropertyCommand(command, params, client) {
 					setTimeout(function() {
 						enableCityAmbienceForPlayer(client);
 						clearPlayerOwnedPeds(client);
-						getPlayerData(client).pedState = AG_PEDSTATE_READY;
+						getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 					}, 2000);
 				}, 1000);
 			}, 1100);
@@ -157,7 +157,7 @@ function enterExitPropertyCommand(command, params, client) {
 				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
 				return false;
 			}
-			getPlayerData(client).pedState = AG_PEDSTATE_EXITINGPROPERTY;
+			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
 			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
 			fadeCamera(client, false, 1.0);
@@ -172,12 +172,12 @@ function enterExitPropertyCommand(command, params, client) {
 					setTimeout(function() {
 						enableCityAmbienceForPlayer(client);
 						clearPlayerOwnedPeds(client);
-						getPlayerData(client).pedState = AG_PEDSTATE_READY;
+						getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 					}, 2000);
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "ag.inBusiness");
-			logToConsole(LOG_DEBUG, `[Asshat.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
+			logToConsole(LOG_DEBUG, `[VRR.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
 			return true;
 		}
 	}
@@ -199,7 +199,7 @@ function enterExitPropertyCommand(command, params, client) {
 
 			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
-			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
+			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
 			//disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
@@ -209,7 +209,7 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerInterior(client, closestBusiness.exitInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
-					getPlayerData(client).pedState = AG_PEDSTATE_READY;
+					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 				}, 1000);
 			}, 1100);
 			setEntityData(client, "ag.inBusiness", closestBusinessId, true);
@@ -235,7 +235,7 @@ function enterExitPropertyCommand(command, params, client) {
 
 			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
-			getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGPROPERTY;
+			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
 			fadeCamera(client, false, 1.0);
 			//disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
@@ -245,7 +245,7 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerInterior(client, closestHouse.exitInterior);
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
-					getPlayerData(client).pedState = AG_PEDSTATE_READY;
+					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 				}, 1000);
 			}, 1100);
 			setEntityData(client, "ag.inHouse", closestHouseId, true)
@@ -324,7 +324,7 @@ function checkPlayerSpawning() {
 // ===========================================================================
 
 function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
-	if(promptType == AG_PROMPT_NONE) {
+	if(promptType == VRR_PROMPT_NONE) {
 		return false;
 	}
 

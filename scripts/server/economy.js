@@ -8,8 +8,8 @@
 // ===========================================================================
 
 function initEconomyScript() {
-	logToConsole(LOG_INFO, "[Asshat.Economy]: Initializing economy script ...");
-	logToConsole(LOG_INFO, "[Asshat.Economy]: Economy script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Economy]: Initializing economy script ...");
+	logToConsole(LOG_INFO, "[VRR.Economy]: Economy script initialized successfully!");
 }
 
 // ===========================================================================

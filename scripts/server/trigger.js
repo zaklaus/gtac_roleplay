@@ -51,8 +51,8 @@ const triggerTypes = [
 // ===========================================================================
 
 function initTriggerScript() {
-	logToConsole(LOG_INFO, "[Asshat.Trigger]: Initializing trigger script ...");
-	logToConsole(LOG_INFO, "[Asshat.Trigger]: Trigger script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Trigger]: Initializing trigger script ...");
+	logToConsole(LOG_INFO, "[VRR.Trigger]: Trigger script initialized successfully!");
 	return true;
 }
 

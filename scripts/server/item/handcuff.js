@@ -10,27 +10,27 @@
 // ===========================================================================
 
 function isPlayerHandCuffed(client) {
-    return (getPlayerData(client).pedState == AG_PEDSTATE_BINDED);
+    return (getPlayerData(client).pedState == VRR_PEDSTATE_BINDED);
 }
 
 // ===========================================================================
 
 function handCuffPlayer(client) {
-    getPlayerData(client).pedState = AG_PEDSTATE_BINDED;
+    getPlayerData(client).pedState = VRR_PEDSTATE_BINDED;
     setPlayerControlState(client, false);
 }
 
 // ===========================================================================
 
 function unHandCuffPlayer(client) {
-    getPlayerData(client).pedState = AG_PEDSTATE_READY;
+    getPlayerData(client).pedState = VRR_PEDSTATE_READY;
     setPlayerControlState(client, true);
 }
 
 // ===========================================================================
 
 function isPlayerSurrendered(client) {
-    return (getPlayerData(client).pedState == AG_PEDSTATE_TAZED || getPlayerData(client).pedState == AG_PEDSTATE_HANDSUP);
+    return (getPlayerData(client).pedState == VRR_PEDSTATE_TAZED || getPlayerData(client).pedState == VRR_PEDSTATE_HANDSUP);
 }
 
 // ===========================================================================

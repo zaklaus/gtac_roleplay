@@ -15,9 +15,9 @@ let smallGameMessageTimer = null;
 // ===========================================================================
 
 function initMessagingScript() {
-	logToConsole(LOG_DEBUG, "[Asshat.Messaging]: Initializing messaging script ...");
+	logToConsole(LOG_DEBUG, "[VRR.Messaging]: Initializing messaging script ...");
     smallGameMessageFont = loadSmallGameMessageFont();
-	logToConsole(LOG_DEBUG, "[Asshat.Messaging]: Messaging script initialized!");
+	logToConsole(LOG_DEBUG, "[VRR.Messaging]: Messaging script initialized!");
 }
 
 // ===========================================================================
@@ -61,7 +61,7 @@ function processSmallGameMessageRendering() {
 // ===========================================================================
 
 function showSmallGameMessage(text, colour, duration) {
-    logToConsole(LOG_DEBUG, `[Asshat.Messaging] Showing small game message '${text}' for ${duration}ms`);
+    logToConsole(LOG_DEBUG, `[VRR.Messaging] Showing small game message '${text}' for ${duration}ms`);
     if(smallGameMessageText != "") {
         clearTimeout(smallGameMessageTimer);
     }

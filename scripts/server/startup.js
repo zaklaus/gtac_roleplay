@@ -79,27 +79,27 @@ function checkForSMTPModule() {
 // ===========================================================================
 
 function checkForAllRequiredModules() {
-	logToConsole(LOG_DEBUG, "[Asshat.Startup]: Checking for required modules ...");
+	logToConsole(LOG_DEBUG, "[VRR.Startup]: Checking for required modules ...");
 
 	if(!checkForHashingModule()) {
-		console.warn("[Asshat.Startup]: Hashing module is not loaded!");
-		console.warn("[Asshat.Startup]: This resource will now shutdown.");
+		console.warn("[VRR.Startup]: Hashing module is not loaded!");
+		console.warn("[VRR.Startup]: This resource will now shutdown.");
 		thisResource.stop();
 	}
 
 	if(!checkForMySQLModule()) {
-		console.warn("[Asshat.Startup]: MySQL module is not loaded!");
-		console.warn("[Asshat.Startup]: This resource will now shutdown.");
+		console.warn("[VRR.Startup]: MySQL module is not loaded!");
+		console.warn("[VRR.Startup]: This resource will now shutdown.");
 		thisResource.stop();
 	}
 
 	if(!checkForSMTPModule()) {
-		console.warn("[Asshat.Startup]: SMTP Email module is not loaded!");
-		console.warn("[Asshat.Startup]: This resource will now shutdown.");
+		console.warn("[VRR.Startup]: SMTP Email module is not loaded!");
+		console.warn("[VRR.Startup]: This resource will now shutdown.");
 		thisResource.stop();
 	}
 
-	logToConsole(LOG_DEBUG, "[Asshat.Startup]: All required modules loaded!");
+	logToConsole(LOG_DEBUG, "[VRR.Startup]: All required modules loaded!");
 	return true;
 }
 

@@ -8,9 +8,9 @@
 // ===========================================================================
 
 function initEventScript() {
-    logToConsole(LOG_INFO, "[Asshat.Event]: Initializing event script ...");
+    logToConsole(LOG_INFO, "[VRR.Event]: Initializing event script ...");
     addAllEventHandlers();
-    logToConsole(LOG_INFO, "[Asshat.Event]: Event script initialized!");
+    logToConsole(LOG_INFO, "[VRR.Event]: Event script initialized!");
 }
 
 // ===========================================================================
@@ -35,7 +35,7 @@ function addAllEventHandlers() {
 // ===========================================================================
 
 function onPlayerConnect(event, ipAddress, port) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Client connecting (IP: ${ipAddress})`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Client connecting (IP: ${ipAddress})`);
     if(isIpAddressBanned(ipAddress)) {
         messagePlayerError(client, "You are banned from this server!");
         return false;
@@ -57,7 +57,7 @@ function onPlayerJoined(event, client) {
 // ===========================================================================
 
 function onPlayerQuit(event, client, quitReasonId) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
     updateConnectionLogOnQuit(client, quitReasonId);
     if(isPlayerLoggedIn(client)) {
         messagePlayerNormal(null, `👋 ${client.name} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
@@ -108,7 +108,7 @@ function onProcess(event, deltaTime) {
 function onPedEnteringVehicle(event, ped, vehicle, seat) {
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
-        getPlayerData(client).pedState = AG_PEDSTATE_ENTERINGVEHICLE;
+        getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGVEHICLE;
 
         if(!getVehicleData(vehicle)) {
             return false;
@@ -141,7 +141,7 @@ function onPedExitingVehicle(event, ped, vehicle) {
 
     if(ped.isType(ELEMENT_PLAYER)) {
         let client = getClientFromPlayerElement(ped);
-        getPlayerData(client).pedState = AG_PEDSTATE_EXITINGVEHICLE;
+        getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGVEHICLE;
     }
 
     if(!getVehicleData(vehicle).spawnLocked) {
@@ -153,7 +153,7 @@ function onPedExitingVehicle(event, ped, vehicle) {
 // ===========================================================================
 
 function onResourceStart(event, resource) {
-    logToConsole(LOG_WARN, `[Asshat.Event] ${resource.name} started!`);
+    logToConsole(LOG_WARN, `[VRR.Event] ${resource.name} started!`);
 
     if(resource != thisResource) {
         messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]started!`);
@@ -163,7 +163,7 @@ function onResourceStart(event, resource) {
 // ===========================================================================
 
 function onResourceStop(event, resource) {
-    logToConsole(LOG_WARN, `[Asshat.Event] ${resource.name} stopped!`);
+    logToConsole(LOG_WARN, `[VRR.Event] ${resource.name} stopped!`);
 
     if(resource != thisResource) {
         messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]stopped!`);
@@ -206,7 +206,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
         let vehicle = client.player.vehicle;
 
         if(vehicle.syncer != client.index) {
-            if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
+            if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
                 vehicle.setSyncer(client, true);
             }
         }
@@ -219,11 +219,11 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             return false;
         }
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
         getPlayerData(client).lastVehicle = vehicle;
 
-        if(getPlayerVehicleSeat(client) == AG_VEHSEAT_DRIVER) {
+        if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
             vehicle.engine = getVehicleData(vehicle).engine;
 
             if(getVehicleData(vehicle).buyPrice > 0) {
@@ -253,7 +253,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             let currentSubAccount = getPlayerCurrentSubAccount(client);
 
             if(isPlayerWorking(client)) {
-                if(getVehicleData(vehicle).ownerType == AG_VEHOWNER_JOB) {
+                if(getVehicleData(vehicle).ownerType == VRR_VEHOWNER_JOB) {
                     if(getVehicleData(vehicle).ownerId == getPlayerCurrentSubAccount(client).job) {
                         getPlayerCurrentSubAccount(client).lastJobVehicle = vehicle;
                     }
@@ -281,7 +281,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
 // ===========================================================================
 
 function onPlayerExitedVehicle(client, vehicle) {
-    getPlayerData(client).pedState = AG_PEDSTATE_READY;
+    getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 
     //let vehicle = getPlayerData(client).lastVehicle;
 
@@ -289,7 +289,7 @@ function onPlayerExitedVehicle(client, vehicle) {
         return false;
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
     if(isPlayerWorking(client)) {
         if(isPlayerOnJobRoute(client)) {
@@ -306,7 +306,7 @@ function onPlayerExitedVehicle(client, vehicle) {
 
 function onPlayerDeath(client, position) {
     logToConsole(LOG_INFO, `${getPlayerDisplayForConsole(client)} died.`);
-    getPlayerData(client).pedState = AG_PEDSTATE_DEAD;
+    getPlayerData(client).pedState = VRR_PEDSTATE_DEAD;
 	updatePlayerSpawnedState(client, false);
     setPlayerControlState(client, false);
 	setTimeout(function() {
@@ -353,108 +353,108 @@ function onPedSpawn(ped) {
 // ===========================================================================
 
 function onPlayerSpawn(client) {
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Checking for ${getPlayerDisplayForConsole(client)}'s player ped`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Checking for ${getPlayerDisplayForConsole(client)}'s player ped`);
     if(client.player == null) {
-        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player element not set yet. Rechecking ...`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player element not set yet. Rechecking ...`);
         setTimeout(onPlayerSpawn, 500, client);
         return false;
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player ped is valid. Continuing spawn processing ...`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player ped is valid. Continuing spawn processing ...`);
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Checking ${getPlayerDisplayForConsole(client)}'s player data`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Checking ${getPlayerDisplayForConsole(client)}'s player data`);
     if(!getPlayerData(client)) {
-        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player data is invalid. Kicking them from server.`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player data is invalid. Kicking them from server.`);
         client.disconnect();
         return false;
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s player data is valid. Continuing spawn processing ...`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player data is valid. Continuing spawn processing ...`);
 
     if(getServerGame() == GAME_GTA_IV) {
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped body parts and props`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped body parts and props`);
         setEntityData(client.player, "ag.bodyParts", getPlayerCurrentSubAccount(client).bodyParts, true);
         setEntityData(client.player, "ag.bodyProps", getPlayerCurrentSubAccount(client).bodyProps, true);
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped scale (${getPlayerCurrentSubAccount(client).pedScale})`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped scale (${getPlayerCurrentSubAccount(client).pedScale})`);
     setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
 
     if(isPlayerSwitchingCharacter(client) || isPlayerCreatingCharacter(client)) {
-        logToConsole(LOG_DEBUG, `[Asshat.Event] ${getPlayerDisplayForConsole(client)}'s ped is being used for character selection/creation. No further spawn processing needed'`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s ped is being used for character selection/creation. No further spawn processing needed'`);
         return false;
     }
 
-    //logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player skin for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).skin}`);
+    //logToConsole(LOG_DEBUG, `[VRR.Event] Setting player skin for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).skin}`);
     //setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
 
-    //if(getPlayerData(client).pedState != AG_PEDSTATE_READY) {
+    //if(getPlayerData(client).pedState != VRR_PEDSTATE_READY) {
         restorePlayerCamera(client);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
         getPlayerData(client).ped = client.player;
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
         messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
         messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
         messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
         updatePlayerSpawnedState(client, true);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
         setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
         setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player health for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).health}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player health for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).health}`);
         setPlayerHealth(client, getPlayerCurrentSubAccount(client).health);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player armour for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).armour}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player armour for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).armour}`);
         setPlayerArmour(client, getPlayerCurrentSubAccount(client).armour);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Updating all player name tags`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
         updateAllPlayerNameTags();
 
 
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
         sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Enabling all rendering states for ${getPlayerDisplayForConsole(client)}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Enabling all rendering states for ${getPlayerDisplayForConsole(client)}`);
         setPlayer2DRendering(client, true, true, true, true, true, true);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
         updatePlayerSnowState(client);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending ground snow excluded models to ${getPlayerDisplayForConsole(client)}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending ground snow excluded models to ${getPlayerDisplayForConsole(client)}`);
         sendExcludedModelsForGroundSnowToPlayer(client);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
         sendRemovedWorldObjectsToPlayer(client);
 
         if(getServerGame() == GAME_GTA_SA) {
-            logToConsole(LOG_DEBUG, `[Asshat.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
+            logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
             setEntityData(client.player, "ag.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
             setEntityData(client.player, "ag.fightStyle", getPlayerCurrentSubAccount(client).fightStyle, true);
         }
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
         if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
             updatePlayerShowLogoState(client, true);
         }
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Caching ${getPlayerDisplayForConsole(client)}'s hotbar items`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Caching ${getPlayerDisplayForConsole(client)}'s hotbar items`);
         cachePlayerHotBarItems(client);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
         updatePlayerHotBar(client);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Sending custom keybinds to ${getPlayerDisplayForConsole(client)}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom keybinds to ${getPlayerDisplayForConsole(client)}`);
         sendAccountKeyBindsToClient(client);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
 
         setEntityData(client.player, "ag.inBusiness", (getPlayerCurrentSubAccount(client).inBusiness != 0) ? getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness) : -1, true);
@@ -462,18 +462,18 @@ function onPlayerSpawn(client) {
 
         if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
             let keyId = getPlayerKeyBindForCommand(client, "enter");
-            logToConsole(LOG_DEBUG, `[Asshat.Event] Sending custom enter property key ID (${keyId}, ${sdl.getKeyName(keyId)}) to ${getPlayerDisplayForConsole(client)}`);
+            logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId}, ${sdl.getKeyName(keyId)}) to ${getPlayerDisplayForConsole(client)}`);
             sendPlayerEnterPropertyKey(client, keyId);
         }
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
-        getPlayerData(client).pedState = AG_PEDSTATE_READY;
+        logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
+        getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 
         setTimeout(function() {
             syncPlayerProperties(client);
         }, 1000);
 
-        logToConsole(LOG_DEBUG, `[Asshat.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
         updatePlayerCash(client);
 
         getPlayerData(client).payDayTickStart = sdl.ticks;

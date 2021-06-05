@@ -1,5 +1,5 @@
 <meta>
-	<info author="Vortrex, Asshat Gaming" version="1.0" description="Asshat-Gaming Roleplay" />
+	<info author="Vortrex" version="1.0" description="Vortrex's Roleplay Resource" />
 
 	<!-- Shared -->
 	<script src="scripts/shared/native.js" type="server" language="javascript" />

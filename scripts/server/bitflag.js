@@ -224,7 +224,7 @@ let serverBitFlagKeys = {
 // ===========================================================================
 
 function initBitFlagScript() {
-	logToConsole(LOG_INFO, "[Asshat.BitFlag]: Initializing bit flag script ...");
+	logToConsole(LOG_INFO, "[VRR.BitFlag]: Initializing bit flag script ...");
 	serverBitFlags.staffFlags = createBitFlagTable(serverBitFlagKeys.staffFlagKeys);
 	serverBitFlags.moderationFlags = createBitFlagTable(serverBitFlagKeys.moderationFlagKeys);
 	serverBitFlags.accountSettingsFlags = createBitFlagTable(serverBitFlagKeys.accountSettingsFlagKeys);
@@ -235,7 +235,7 @@ function initBitFlagScript() {
 	serverBitFlags.npcTriggerTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerTypeKeys);
 	serverBitFlags.npcTriggerConditionTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerConditionTypeKeys);
 	serverBitFlags.npcTriggerResponseTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerResponseTypeKeys);
-	logToConsole(LOG_INFO, "[Asshat.BitFlag]: Bit flag script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.BitFlag]: Bit flag script initialized successfully!");
 	return true;
 }
 

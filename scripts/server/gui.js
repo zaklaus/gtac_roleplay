@@ -8,27 +8,27 @@
 // ===========================================================================
 
 function initGUIScript() {
-	logToConsole(LOG_INFO, "[Asshat.GUI]: Initializing GUI script ...");
-	logToConsole(LOG_INFO, "[Asshat.GUI]: GUI script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.GUI]: Initializing GUI script ...");
+	logToConsole(LOG_INFO, "[VRR.GUI]: GUI script initialized successfully!");
 }
 
 // ===========================================================================
 
 function playerPromptAnswerNo(client) {
-    if(getPlayerData(client).promptType == AG_PROMPT_NONE) {
+    if(getPlayerData(client).promptType == VRR_PROMPT_NONE) {
         return false;
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} answered NO to their prompt (${getPlayerData(client).promptType})`);
+    logToConsole(LOG_DEBUG, `[VRR.GUI] ${getPlayerDisplayForConsole(client)} answered NO to their prompt (${getPlayerData(client).promptType})`);
 
     switch(getPlayerData(client).promptType) {
-        case AG_PROMPT_CREATEFIRSTCHAR:
+        case VRR_PROMPT_CREATEFIRSTCHAR:
             logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} chose not to create a first character. Kicking them from the server ...`);
             showPlayerErrorGUI(client, "You don't have a character to play. Goodbye!", "No Characters");
             setTimeout(function() { client.disconnect(); }, 5000);
             break;
 
-            case AG_PROMPT_BIZORDER:
+            case VRR_PROMPT_BIZORDER:
                 if(getPlayerData(client).businessOrderAmount > 0) {
                     if(canPlayerUseGUI(client)) {
                         showPlayerErrorGUI(client, "You canceled the order.", "Business Order Canceled");
@@ -45,20 +45,20 @@ function playerPromptAnswerNo(client) {
             break;
     }
 
-    getPlayerData(client).promptType = AG_PROMPT_NONE;
+    getPlayerData(client).promptType = VRR_PROMPT_NONE;
 }
 
 // ===========================================================================
 
 function playerPromptAnswerYes(client) {
-    if(getPlayerData(client).promptType == AG_PROMPT_NONE) {
+    if(getPlayerData(client).promptType == VRR_PROMPT_NONE) {
         return false;
     }
 
-    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} answered YES to their prompt (${getPlayerData(client).promptType})`);
+    logToConsole(LOG_DEBUG, `[VRR.GUI] ${getPlayerDisplayForConsole(client)} answered YES to their prompt (${getPlayerData(client).promptType})`);
 
     switch(getPlayerData(client).promptType) {
-        case AG_PROMPT_CREATEFIRSTCHAR:
+        case VRR_PROMPT_CREATEFIRSTCHAR:
             //getPlayerData(client).creatingCharacter = true;
             //spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, allowedSkins[getServerGame()][0][0], getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
             //showCharacterSelectCameraToPlayer(client);
@@ -68,19 +68,19 @@ function playerPromptAnswerYes(client) {
             showPlayerNewCharacterGUI(client);
             break;
 
-        case AG_PROMPT_BIZORDER:
+        case VRR_PROMPT_BIZORDER:
             if(getPlayerData(client).businessOrderAmount > 0) {
                 if(getBusinessData(getPlayerData(client).businessOrderBusiness).till < getPlayerData(client).businessOrderCost) {
-                    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} failed to order ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness).name} (Reason: Not enough money in business till)`);
+                    logToConsole(LOG_DEBUG, `[VRR.GUI] ${getPlayerDisplayForConsole(client)} failed to order ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness).name} (Reason: Not enough money in business till)`);
                     showPlayerErrorGUI(client, "This business doesn't have enough money! Deposit some using /bizdeposit", "Business Order Canceled");
                     getPlayerData(client).businessOrderAmount = 0;
                     getPlayerData(client).businessOrderBusiness = false;
                     getPlayerData(client).businessOrderItem = -1;
                     getPlayerData(client).businessOrderValue = -1;
                 } else {
-                    logToConsole(LOG_DEBUG, `[Asshat.GUI] ${getPlayerDisplayForConsole(client)} successfully ordered ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness).name}`);
+                    logToConsole(LOG_DEBUG, `[VRR.GUI] ${getPlayerDisplayForConsole(client)} successfully ordered ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} at ${getPlayerData(client).businessOrderCost/getPlayerData(client).businessOrderAmount} each for business ${getBusinessData(getPlayerData(client).businessOrderBusiness).name}`);
                     showPlayerInfoGUI(client, `You ordered ${getPlayerData(client).businessOrderAmount} ${getItemTypeData(getPlayerData(client).businessOrderItem).name} (${getItemValueDisplay(getPlayerData(client).businessOrderItem, getPlayerData(client).businessOrderValue)}) for ${getPlayerData(client).businessOrderCost}!`, "Business Order Successful");
-                    createItem(getPlayerData(client).businessOrderItem, getPlayerData(client).businessOrderValue, AG_ITEM_OWNER_BIZFLOOR, getBusinessData(getPlayerData(client).businessOrderBusiness).databaseId, getPlayerData(client).businessOrderAmount);
+                    createItem(getPlayerData(client).businessOrderItem, getPlayerData(client).businessOrderValue, VRR_ITEM_OWNER_BIZFLOOR, getBusinessData(getPlayerData(client).businessOrderBusiness).databaseId, getPlayerData(client).businessOrderAmount);
                     cacheBusinessItems(getPlayerData(client).businessOrderBusiness);
                     getBusinessData(getPlayerData(client).businessOrderBusiness).till -= getPlayerData(client).businessOrderCost;
                     getPlayerData(client).businessOrderAmount = 0;
@@ -97,7 +97,7 @@ function playerPromptAnswerYes(client) {
             break;
     }
 
-    getPlayerData(client).promptType = AG_PROMPT_NONE;
+    getPlayerData(client).promptType = VRR_PROMPT_NONE;
 }
 
 // ===========================================================================

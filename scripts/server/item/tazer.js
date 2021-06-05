@@ -10,13 +10,13 @@
 // ===========================================================================
 
 function isPlayerTazed(client) {
-    return (getPlayerData(client).pedState == AG_PEDSTATE_TAZED);
+    return (getPlayerData(client).pedState == VRR_PEDSTATE_TAZED);
 }
 
 // ===========================================================================
 
 function tazePlayer(client) {
-    getPlayerData(client).pedState = AG_PEDSTATE_TAZED;
+    getPlayerData(client).pedState = VRR_PEDSTATE_TAZED;
     setPlayerControlState(client, false);
 
     setTimeout(function() {
@@ -28,7 +28,7 @@ function tazePlayer(client) {
 // ===========================================================================
 
 function unTazePlayer(client) {
-    getPlayerData(client).pedState = AG_PEDSTATE_READY;
+    getPlayerData(client).pedState = VRR_PEDSTATE_READY;
     setPlayerControlState(client, true);
 }
 

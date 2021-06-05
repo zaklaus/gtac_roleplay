@@ -8,8 +8,8 @@
 // ===========================================================================
 
 function initMessagingScript() {
-	logToConsole(LOG_INFO, "[Asshat.Messaging]: Initializing messaging script ...");
-	logToConsole(LOG_INFO, "[Asshat.Messaging]: Messaging script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Messaging]: Initializing messaging script ...");
+	logToConsole(LOG_INFO, "[VRR.Messaging]: Messaging script initialized successfully!");
 }
 
 // ===========================================================================
@@ -19,14 +19,14 @@ function messageAdminAction(messageText) {
     if(getServerConfig().discordEnabled) {
         messageDiscord(`:warning: ${messageText}`);
     }
-    //logToConsole(LOG_INFO, `[Asshat.Messaging] ADMIN: ${messageText}`);
+    //logToConsole(LOG_INFO, `[VRR.Messaging] ADMIN: ${messageText}`);
 }
 
 // ===========================================================================
 
 function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[Asshat.Messaging] ${messageText}`);
+        logToConsole(LOG_INFO, `[VRR.Messaging] ${messageText}`);
         return true;
     }
 
@@ -45,7 +45,7 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
     let clients = getClients();
     for(let i in clients) {
         if(isConsole(clients[i])) {
-            logToConsole(LOG_INFO, `[Asshat.Messaging] ADMINS: ${messageText}`);
+            logToConsole(LOG_INFO, `[VRR.Messaging] ADMINS: ${messageText}`);
         } else {
             if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
                 sendChatBoxMessageToPlayer(clients[i], `🛡️ ${messageText}`, getColourByName("softRed"));
@@ -59,7 +59,7 @@ function messageAdmins(messageText, colour = COLOUR_WHITE) {
 
 function messagePlayerError(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[Asshat.Messaging] ERROR:  ${messageText}`);
+        logToConsole(LOG_INFO, `[VRR.Messaging] ERROR:  ${messageText}`);
         return true;
     }
 
@@ -74,7 +74,7 @@ function messagePlayerError(client, messageText) {
 
 function messagePlayerSyntax(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[Asshat.Messaging] USAGE:  ${messageText}`);
+        logToConsole(LOG_INFO, `[VRR.Messaging] USAGE:  ${messageText}`);
         return true;
     }
 
@@ -89,7 +89,7 @@ function messagePlayerSyntax(client, messageText) {
 
 function messagePlayerAlert(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[Asshat.Messaging] ALERT: ${messageText}`);
+        logToConsole(LOG_INFO, `[VRR.Messaging] ALERT: ${messageText}`);
         return true;
     }
 
@@ -104,7 +104,7 @@ function messagePlayerAlert(client, messageText) {
 
 function messagePlayerSuccess(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[Asshat.Messaging] SUCCESS: ${messageText}`);
+        logToConsole(LOG_INFO, `[VRR.Messaging] SUCCESS: ${messageText}`);
         return true;
     }
 
@@ -119,7 +119,7 @@ function messagePlayerSuccess(client, messageText) {
 
 function messagePlayerInfo(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[Asshat.Messaging] INFO: ${messageText}`);
+        logToConsole(LOG_INFO, `[VRR.Messaging] INFO: ${messageText}`);
         return true;
     }
 
@@ -134,7 +134,7 @@ function messagePlayerInfo(client, messageText) {
 
 function messagePlayerTip(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[Asshat.Messaging] TIP: ${messageText}`);
+        logToConsole(LOG_INFO, `[VRR.Messaging] TIP: ${messageText}`);
         return true;
     }
 

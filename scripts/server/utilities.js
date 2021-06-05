@@ -100,13 +100,13 @@ function getWeaponModelId(weaponId) {
 function getIsland(position) {
     if(getServerGame() == GAME_GTA_III) {
 		if(position.x > 616) {
-			return AG_ISLAND_PORTLAND;
+			return VRR_ISLAND_PORTLAND;
 		} else if(position.x < -283) {
-			return AG_ISLAND_SHORESIDEVALE;
+			return VRR_ISLAND_SHORESIDEVALE;
 		}
-		return AG_ISLAND_STAUNTON;
+		return VRR_ISLAND_STAUNTON;
 	} else {
-		return AG_ISLAND_NONE;
+		return VRR_ISLAND_NONE;
 	}
 
 	//return gta.getIslandFromPosition(position);
@@ -1003,7 +1003,7 @@ async function waitUntil(condition) {
 // ===========================================================================
 
 function resetClientStuff(client) {
-	logToConsole(LOG_DEBUG, `[Asshat.Utilities] Resetting client data for ${getPlayerDisplayForConsole(client)}`);
+	logToConsole(LOG_DEBUG, `[VRR.Utilities] Resetting client data for ${getPlayerDisplayForConsole(client)}`);
 
 	if(!getPlayerData(client)) {
 		return false;
@@ -1096,8 +1096,8 @@ function checkPlayerPedStates() {
 		if(getPlayerData(clients[i])) {
 			if(getPlayerData(clients[i]).pedState) {
 				if(isPlayerInAnyVehicle(clients[i])) {
-					if(getPlayerData(clients[i]).pedState == AG_PEDSTATE_EXITINGVEHICLE) {
-						getPlayerData(clients[i]).pedState == AG_PEDSTATE_READY;
+					if(getPlayerData(clients[i]).pedState == VRR_PEDSTATE_EXITINGVEHICLE) {
+						getPlayerData(clients[i]).pedState == VRR_PEDSTATE_READY;
 					}
 				}
 			}

@@ -10,7 +10,7 @@
 // ===========================================================================
 
 function getPlayerActiveWalkieTalkieFrequency(client) {
-	let walkieTalkieSlot = getPlayerFirstItemSlotByUseType(client, AG_ITEM_USETYPE_WALKIETALKIE);
+	let walkieTalkieSlot = getPlayerFirstItemSlotByUseType(client, VRR_ITEM_USETYPE_WALKIETALKIE);
 
 	if(walkieTalkieSlot != -1) {
 		if(getItemData(getPlayerData(client).hotBarItems[walkieTalkieSlot])) {
@@ -33,7 +33,7 @@ function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
 		if(isPlayerSpawned(clients[i])) {
 			if(!isSamePlayer(transmittingPlayer, clients[i])) {
 				if(getPlayerActiveWalkieTalkieFrequency(clients[i]) == radioFrequency) {
-					if(getItemData(getPlayerData(clients[i]).hotBarItems[getPlayerFirstItemSlotByUseType(clients[i], AG_ITEM_USETYPE_WALKIETALKIE)]).enabled) {
+					if(getItemData(getPlayerData(clients[i]).hotBarItems[getPlayerFirstItemSlotByUseType(clients[i], VRR_ITEM_USETYPE_WALKIETALKIE)]).enabled) {
 						walkieTalkieIncomingToNearbyPlayers(clients[i], messageText);
 					}
 				}
@@ -111,7 +111,7 @@ function walkieTalkieChatCommand(command, params, client) {
 		return false;
 	}
 
-	let walkieTalkieSlot = getPlayerFirstItemSlotByUseType(client, AG_ITEM_USETYPE_WALKIETALKIE);
+	let walkieTalkieSlot = getPlayerFirstItemSlotByUseType(client, VRR_ITEM_USETYPE_WALKIETALKIE);
 	if(!getItemData(getPlayerData(client).hotBarItems[walkieTalkieSlot]).enabled) {
 		messagePlayerError(client, "Please turn on a walkie talkie first!");
 		return false;

@@ -8,8 +8,8 @@
 // ===========================================================================
 
 function initModerationScript() {
-	logToConsole(LOG_INFO, "[Asshat.Moderation]: Initializing moderation script ...");
-	logToConsole(LOG_INFO, "[Asshat.Moderation]: Moderation script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Moderation]: Initializing moderation script ...");
+	logToConsole(LOG_INFO, "[VRR.Moderation]: Moderation script initialized successfully!");
 }
 
 // ===========================================================================

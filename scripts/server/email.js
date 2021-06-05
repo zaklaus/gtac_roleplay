@@ -8,9 +8,9 @@
 // ===========================================================================
 
 function initEmailScript() {
-	logToConsole(LOG_INFO, "[Asshat.Email]: Initializing email script ...");
+	logToConsole(LOG_INFO, "[VRR.Email]: Initializing email script ...");
     emailConfig = loadEmailConfiguration();
-	logToConsole(LOG_INFO, "[Asshat.Email]: Email script initialized successfully!");
+	logToConsole(LOG_INFO, "[VRR.Email]: Email script initialized successfully!");
 }
 
 // ===========================================================================

@@ -82,7 +82,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
     let targetClient = getPlayerFromParams(splitParams[0]);
     let reason = splitParams.slice(1).join(" ");
 
-    messageAdminAction(`${targetClient.name} has been IP banned.`);
+    messageAdminAction(`${targetgetPlayerName(client)} has been IP banned.`);
     banIPAddress(targetClient.ip, getPlayerData(client).accountData.databaseId, reason);
     server.banIP(targetClient.ip);
     targetClient.disconnect();
@@ -107,7 +107,7 @@ function subNetBanCommand(command, params, client, fromDiscord) {
     let octetAmount = Number(splitParams[1]);
     let reason = splitParams.slice(2).join(" ");
 
-	messageAdminAction(`${targetClient.name} has been banned from the server (subnet ban).`);
+	messageAdminAction(`${targetgetPlayerName(client)} has been banned from the server (subnet ban).`);
 	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getPlayerData(client).accountData.databaseId, reason);
 }
 

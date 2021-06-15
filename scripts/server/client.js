@@ -75,7 +75,7 @@ function addAllNetworkHandlers() {
 
 function updatePlayerNameTag(client) {
     //logToConsole(LOG_DEBUG, `[VRR.Client] Sending ${getPlayerDisplayForConsole(client)}'s updated nametag to all players`);
-	triggerNetworkEvent("ag.nametag", null, client.name, getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
+	triggerNetworkEvent("ag.nametag", null, getPlayerName(client), getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
 }
 
 // ===========================================================================
@@ -92,7 +92,7 @@ function updateAllPlayerNameTags() {
 
 function updatePlayerPing(client) {
     //logToConsole(LOG_DEBUG, `[VRR.Client] Sending ${getPlayerDisplayForConsole(client)}'s ping to all players`);
-	triggerNetworkEvent("ag.ping", null, client.name, client.ping);
+	triggerNetworkEvent("ag.ping", null, getPlayerName(client), client.ping);
 }
 
 // ===========================================================================
@@ -213,7 +213,7 @@ function updatePlayerSnowState(client) {
 function sendExcludedModelsForGroundSnowToPlayer(client) {
     if(getGameConfig().excludedGroundSnowModels[getServerGame()].length > 0) {
         for(let i in getGameConfig().excludedGroundSnowModels[getServerGame()]) {
-            logToConsole(LOG_DEBUG, `[VRR.Misc] Sending excluded model ${i} for ground snow to ${client.name}`);
+            logToConsole(LOG_DEBUG, `[VRR.Misc] Sending excluded model ${i} for ground snow to ${getPlayerName(client)}`);
             triggerNetworkEvent("ag.excludeGroundSnow", client, getGameConfig().excludedGroundSnowModels[getServerGame()][i]);
         }
     }
@@ -224,7 +224,7 @@ function sendExcludedModelsForGroundSnowToPlayer(client) {
 function sendRemovedWorldObjectsToPlayer(client) {
     if(getGameConfig().removedWorldObjects[getServerGame()].length > 0) {
         for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
-            logToConsole(LOG_DEBUG, `[VRR.Client] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${client.name}`);
+            logToConsole(LOG_DEBUG, `[VRR.Client] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${getPlayerName(client)}`);
             triggerNetworkEvent("ag.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
         }
     }
@@ -258,14 +258,14 @@ function updatePlayerHotBar(client) {
 
 function setPlayerWeaponDamageEnabled(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending weapon damage state for ${getPlayerDisplayForConsole(client)} to all players`);
-    triggerNetworkEvent("ag.weaponDamageEnabled", null, client.name, state);
+    triggerNetworkEvent("ag.weaponDamageEnabled", null, getPlayerName(client), state);
 }
 
 // ===========================================================================
 
 function setPlayerWeaponDamageEvent(client, eventType) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending weapon damage event (${eventType}) for ${getPlayerDisplayForConsole(client)} to all players`);
-    triggerNetworkEvent("ag.weaponDamageEvent", null, client.name, eventType);
+    triggerNetworkEvent("ag.weaponDamageEvent", null, getPlayerName(client), eventType);
     getPlayerData(client).weaponDamageEvent = eventType;
 }
 

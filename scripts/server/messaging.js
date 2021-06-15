@@ -79,7 +79,7 @@ function messagePlayerSyntax(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `⌨️ USAGE: [#FFFFFF] ${messageText}`, getColourByType("syntaxMessage"));
+        messagePlayerNormal(client, `⌨️ USAGE: ${getInlineChatColourByName("white")} ${messageText}`, getColourByType("syntaxMessage"));
     } else {
         messageDiscordUser(client, `:keyboard: ${messageText}`);
     }
@@ -94,7 +94,7 @@ function messagePlayerAlert(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `⚠️ [#FFFFFF] ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `⚠️ ${getInlineChatColourByName("white")} ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:warning: ${messageText}`);
     }
@@ -109,7 +109,7 @@ function messagePlayerSuccess(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `👍 [#FFFFFF] ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `👍 ${getInlineChatColourByName("white")} ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:thumbsup: ${messageText}`);
     }
@@ -124,7 +124,7 @@ function messagePlayerInfo(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `ℹ️ ${getInlineChatColourByName("white")} ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:information_source: ${messageText}`);
     }
@@ -139,7 +139,7 @@ function messagePlayerTip(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `ℹ️ [#FFFFFF] ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `ℹ️ ${getInlineChatColourByName("white")} ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:information_source: ${messageText}`);
     }
@@ -186,7 +186,7 @@ function messagePlayerClanChat(client, clanChattingClient, messageText) {
 // ===========================================================================
 
 function messagePlayerAdminChat(client, adminChattingClient, messageText) {
-    messagePlayerNormal(client, `🛡️ [ADMIN CHAT] [#AAAAAA]${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: [#FFFFFF]${messageText}`, getColourByType("orange"));
+    messagePlayerNormal(client, `🛡️ [ADMIN CHAT] ${getInlineChatColourByName("lightGrey")}${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: ${getInlineChatColourByName("white")}${messageText}`, getColourByType("orange"));
 }
 
 // ===========================================================================

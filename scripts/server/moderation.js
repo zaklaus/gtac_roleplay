@@ -34,7 +34,7 @@ function kickClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${targetClient.name} has been kicked from the server.`);
+	messageAdminAction(`${targetgetPlayerName(client)} has been kicked from the server.`);
 	targetClient.disconnect();
 }
 
@@ -64,8 +64,8 @@ function setClientStaffTitleCommand(command, params, client) {
 	}
 
 	getPlayerData(targetClient).accountData.staffTitle = staffTitle;
-	messagePlayerSuccess(client, `You set ${targetClient.name}'s staff title to ${staffTitle}`);
-	messagePlayerAlert(client, `${client.name} set your staff title to ${staffTitle}`);
+	messagePlayerSuccess(client, `You set ${targetgetPlayerName(client)}'s staff title to ${staffTitle}`);
+	messagePlayerAlert(client, `${getPlayerName(client)} set your staff title to ${staffTitle}`);
 	targetClient.disconnect();
 }
 
@@ -91,7 +91,7 @@ function muteClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${targetClient.name} has been muted by an admin!`);
+	messageAdminAction(`${targetgetPlayerName(client)} has been muted by an admin!`);
 	getPlayerData(targetClient).muted = true;
 }
 
@@ -118,7 +118,7 @@ function unMuteClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${targetClient.name} has been unmuted by an admin!`);
+	messageAdminAction(`${targetgetPlayerName(client)} has been unmuted by an admin!`);
 	getPlayerData(targetClient).muted = false;
 }
 
@@ -144,7 +144,7 @@ function freezeClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${toString(targetClient.name)} has been frozen by an admin!`);
+	messageAdminAction(`${toString(targetgetPlayerName(client))} has been frozen by an admin!`);
 	//setPlayerFrozenState(client, state);
 	setPlayerControlState(client, false);
 }
@@ -171,7 +171,7 @@ function unFreezeClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${toString(targetClient.name)} has been un-frozen by an admin!`);
+	messageAdminAction(`${toString(targetgetPlayerName(client))} has been un-frozen by an admin!`);
 	//sendPlayerFrozenState(client, false);
 	setPlayerControlState(client, true);
 }
@@ -198,7 +198,7 @@ function gotoPlayerCommand(command, params, client) {
 		setPlayerDimension(client, getPlayerInterior(targetClient));
 	}, 1000);
 
-	messagePlayerSuccess(client, `You teleported to [#AAAAAA]${targetClient.name}`);
+	messagePlayerSuccess(client, `You teleported to ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}`);
 }
 
 // ===========================================================================
@@ -222,7 +222,7 @@ function gotoVehicleCommand(command, params, client) {
 		setPlayerDimension(client, getElementDimension(vehicle));
 	}, 500);
 
-	messagePlayerSuccess(client, `You teleported to a [#CC22CC]${getVehicleName(vehicle)} [#AAAAAA](ID ${vehicle.id})`);
+	messagePlayerSuccess(client, `You teleported to a ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("lightGrey")}(ID ${vehicle.id})`);
 }
 
 // ===========================================================================
@@ -247,7 +247,7 @@ function gotoBusinessCommand(command, params, client) {
 		setPlayerDimension(client, getBusinessData(businessId).entranceDimension);
 	}, 500);
 
-	messagePlayerSuccess(client, `You teleported to business [#0099FF]${getBusinessData(businessId).name} [#AAAAAA](ID ${businessId})`);
+	messagePlayerSuccess(client, `You teleported to business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("lightGrey")}(ID ${businessId})`);
 }
 
 // ===========================================================================
@@ -272,7 +272,7 @@ function gotoGameLocationCommand(command, params, client) {
 		setPlayerDimension(client, 0);
 	}, 500);
 
-	messagePlayerSuccess(client, `You teleported to game location [#AAAAAA]${getGameData().locations[gameLocationId][0]}`);
+	messagePlayerSuccess(client, `You teleported to game location ${getInlineChatColourByName("lightGrey")}${getGameData().locations[gameLocationId][0]}`);
 }
 
 // ===========================================================================
@@ -297,7 +297,7 @@ function gotoHouseCommand(command, params, client) {
 		setPlayerDimension(client, getHouseData(houseId).entranceDimension);
 	}, 500);
 
-	messagePlayerSuccess(client, `You teleported to business [#0099FF]${getHouseData(houseId).description} [#AAAAAA](ID ${houseId})`);
+	messagePlayerSuccess(client, `You teleported to business ${getInlineChatColourByType("businessBlue")}${getHouseData(houseId).description} ${getInlineChatColourByName("lightGrey")}(ID ${houseId})`);
 }
 
 // ===========================================================================
@@ -329,7 +329,7 @@ function gotoJobLocationCommand(command, params, client) {
 	setPlayerInterior(client, getJobData(jobId).locations[jobLocationId].interior);
 	setPlayerDimension(client, getJobData(jobId).locations[jobLocationId].dimension);
 
-	messagePlayerSuccess(client, `You teleported to location [#AAAAAA]${jobLocationId} [#FFFFFF]for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
+	messagePlayerSuccess(client, `You teleported to location ${getInlineChatColourByName("lightGrey")}${jobLocationId} ${getInlineChatColourByName("white")}for the ${getInlineChatColourByName("lightGrey")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -356,7 +356,7 @@ function gotoPositionCommand(command, params, client) {
 	setPlayerInterior(client, Number(int));
 	setPlayerDimension(client, Number(vw));
 
-	messagePlayerSuccess(client, `You teleported to coordinates [#AAAAAA]${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
+	messagePlayerSuccess(client, `You teleported to coordinates ${getInlineChatColourByName("lightGrey")}${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
 }
 
 // ===========================================================================
@@ -382,7 +382,7 @@ function teleportBackwardCommand(command, params, client) {
 
 	setPlayerPosition(client, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), params));
 
-	messagePlayerSuccess(client, `You teleported backward [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported backward ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -395,7 +395,7 @@ function teleportLeftCommand(command, params, client) {
 
 	setPlayerPosition(client, getPosToLeftOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 
-	messagePlayerSuccess(client, `You teleported left [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported left ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -408,7 +408,7 @@ function teleportUpCommand(command, params, client) {
 
 	setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), params));
 
-	messagePlayerSuccess(client, `You teleported up [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported up ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -421,7 +421,7 @@ function teleportDownCommand(command, params, client) {
 
 	setPlayerPosition(client, getPosBelowPos(getPlayerPosition(client), params));
 
-	messagePlayerSuccess(client, `You teleported down [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported down ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -434,7 +434,7 @@ function teleportRightCommand(command, params, client) {
 
 	setPlayerPosition(client, getPosToRightOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
 
-	messagePlayerSuccess(client, `You teleported right [#AAAAAA]${params} [#FFFFFF]meters`);
+	messagePlayerSuccess(client, `You teleported right ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -453,13 +453,13 @@ function playerInteriorCommand(command, params, client) {
 	}
 
 	if(getParamsCount(params, " ") == 1) {
-		messagePlayerInfo(client, `${targetClient.name}'s interior is [#AAAAAA]${getPlayerInterior(targetClient)}`);
+		messagePlayerInfo(client, `${targetgetPlayerName(client)}'s interior is ${getInlineChatColourByName("lightGrey")}${getPlayerInterior(targetClient)}`);
 		return false;
 	}
 
 	let interiorId = splitParams[1];
 	setPlayerInterior(targetClient, Number(interiorId));
-	messagePlayerSuccess(client, `You set ${targetClient.name}'s interior to [#AAAAAA]${interiorId}`);
+	messagePlayerSuccess(client, `You set ${targetgetPlayerName(client)}'s interior to ${getInlineChatColourByName("lightGrey")}${interiorId}`);
 }
 
 // ===========================================================================
@@ -478,13 +478,13 @@ function playerVirtualWorldCommand(command, params, client) {
 	}
 
 	if(getParamsCount(params, " ") == 1) {
-		messagePlayerInfo(client, `[#AAAAAA]${targetClient.name}'s [#FFFFFF]virtual world is [#AAAAAA]${getPlayerDimension(targetClient)}`);
+		messagePlayerInfo(client, `${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}'s ${getInlineChatColourByName("white")}virtual world is ${getInlineChatColourByName("lightGrey")}${getPlayerDimension(targetClient)}`);
 		return false;
 	}
 
 	let dimensionId = splitParams[1];
 	setPlayerDimension(targetClient, Number(dimensionId));
-	messagePlayerSuccess(client, `You set [#AAAAAA]${targetClient.name}'s [#FFFFFF]virtual world to [#AAAAAA]${dimensionId}`);
+	messagePlayerSuccess(client, `You set ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}'s ${getInlineChatColourByName("white")}virtual world to ${getInlineChatColourByName("lightGrey")}${dimensionId}`);
 }
 
 // ===========================================================================
@@ -515,7 +515,7 @@ function getPlayerCommand(command, params, client) {
 		setEntityData(client, "ag.inHouse", getPlayerBusiness(client));
 	}
 
-	messagePlayerSuccess(client, `You teleported [#AAAAAA]${targetClient.name} [#FFFFFF]to you.`);
+	messagePlayerSuccess(client, `You teleported ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)} ${getInlineChatColourByName("white")}to you.`);
 	messagePlayerAlert(targetClient, `An admin has teleported you to their location`);
 }
 
@@ -550,7 +550,7 @@ function addStaffFlagCommand(command, params, client) {
 	}
 
 	givePlayerStaffFlag(targetClient, flagName);
-	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(true)}given [#AAAAAA]${targetClient.name} [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag`);
+	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(true)}given ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)} ${getInlineChatColourByName("white")}the ${getInlineChatColourByName("lightGrey")}${flagName} ${getInlineChatColourByName("white")}staff flag`);
 }
 
 // ===========================================================================
@@ -584,7 +584,7 @@ function takeStaffFlagCommand(command, params, client) {
 	}
 
 	takePlayerStaffFlag(targetClient, flagName);
-	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(false)}taken [#FFFFFF]the [#AAAAAA]${flagName} [#FFFFFF]staff flag from [#AAAAAA]${targetClient.name}`);
+	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(false)}taken ${getInlineChatColourByName("white")}the ${getInlineChatColourByName("lightGrey")}${flagName} ${getInlineChatColourByName("white")}staff flag from ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}`);
 }
 
 // ===========================================================================
@@ -618,7 +618,7 @@ function clearStaffFlagsCommand(command, params, client) {
 	}
 
 	clearPlayerStaffFlags(targetClient);
-	messagePlayerSuccess(client, `You have removed all staff flags from [#AAAAAA]${targetClient.name}`);
+	messagePlayerSuccess(client, `You have removed all staff flags from ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}`);
 }
 
 // ===========================================================================
@@ -659,7 +659,7 @@ function getStaffFlagsCommand(command, params, client) {
 		}
 	}
 
-	messagePlayerInfo(client, `[#FFFFFF]${targetClient.name}'s staff flags: [#AAAAAA]${tempStaffFlags.join("[#FFFFFF], [#AAAAAA]")}`);
+	messagePlayerInfo(client, `${getInlineChatColourByName("white")}${targetgetPlayerName(client)}'s staff flags: ${getInlineChatColourByName("lightGrey")}${tempStaffFlags.join("${getInlineChatColourByName("white")}, ${getInlineChatColourByName("lightGrey")}")}`);
 }
 
 // ===========================================================================
@@ -679,7 +679,7 @@ function allStaffFlagsCommand(command, params, client) {
         return false;
 	}
 
-	messagePlayerInfo(client, `[#FFFFFF]Staff flags: [#AAAAAA]${getServerBitFlagKeys().join("[#FFFFFF], [#AAAAAA]")}`);
+	messagePlayerInfo(client, `${getInlineChatColourByName("white")}Staff flags: ${getInlineChatColourByName("lightGrey")}${getServerBitFlagKeys().join("${getInlineChatColourByName("white")}, ${getInlineChatColourByName("lightGrey")}")}`);
 }
 
 // ===========================================================================
@@ -701,8 +701,8 @@ function givePlayerMoneyCommand(command, params, client) {
 
 	givePlayerMoney(client, toInteger(amount));
 	updatePlayerCash(targetClient);
-	messagePlayerSuccess(client, `You gave [#AAAAAA]$${amount} [#FFFFFF]to [#AAAAAA]${getCharacterFullName(targetClient)}`);
-	messagePlayerAlert(client, `An admin gave you [#AAAAAA]$${amount}`);
+	messagePlayerSuccess(client, `You gave ${getInlineChatColourByName("lightGrey")}$${amount} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}`);
+	messagePlayerAlert(client, `An admin gave you ${getInlineChatColourByName("lightGrey")}$${amount}`);
 }
 
 // ===========================================================================
@@ -729,11 +729,11 @@ function forcePlayerAccentCommand(command, params, client) {
 	setPlayerAccentText(client, newAccent);
 
 	if(newAccent == "") {
-		messagePlayerSuccess(client, `You removed [#AAAAAA]${getCharacterFullName(targetClient)}'s [#FFFFFF]accent.`);
+		messagePlayerSuccess(client, `You removed ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}'s ${getInlineChatColourByName("white")}accent.`);
 		messagePlayerAlert(client, `An admin removed your accent.`);
 	} else {
-		messagePlayerSuccess(client, `You set [#AAAAAA]${getCharacterFullName(targetClient)}'s [#FFFFFF]accent to [#AAAAAA]${newAccent}`);
-		messagePlayerAlert(client, `An admin set your accent to [#AAAAAA]${newAccent}`);
+		messagePlayerSuccess(client, `You set ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}'s ${getInlineChatColourByName("white")}accent to ${getInlineChatColourByName("lightGrey")}${newAccent}`);
+		messagePlayerAlert(client, `An admin set your accent to ${getInlineChatColourByName("lightGrey")}${newAccent}`);
 	}
 }
 
@@ -753,7 +753,7 @@ function forceCharacterNameChangeCommand(command, params, client) {
         return false;
 	}
 
-	messagePlayerSuccess(client, `You forced [#AAAAAA]${targetClient.name} (${getCharacterFullName(targetClient)}) [#FFFFFF]to change their character's name.`);
+	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)} (${getCharacterFullName(targetClient)}) ${getInlineChatColourByName("white")}to change their character's name.`);
 	showPlayerNewCharacterFailedGUI(client, "Non-RP name! Choose a new one:");
 }
 
@@ -788,7 +788,7 @@ function forceCharacterNameCommand(command, params, client) {
 	getPlayerCurrentSubAccount(client).firstName = firstName;
 	getPlayerCurrentSubAccount(client).lastName = lastName;
 
-	messagePlayerSuccess(client, `You forced [#AAAAAA]${targetClient.name}'s [#FFFFFF]current character name from [#AAAAAA]${oldName} [#FFFFFF]to [#AAAAAA]${newName}`);
+	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}'s ${getInlineChatColourByName("white")}current character name from ${getInlineChatColourByName("lightGrey")}${oldName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newName}`);
 }
 
 // ===========================================================================

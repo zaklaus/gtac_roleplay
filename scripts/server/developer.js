@@ -150,7 +150,7 @@ function addServerLogLevelCommand(command, params, client) {
 			return;
 	}
 
-	messageAdminAction(`[#AAAAAA]${client.name} [#FFFFFF]enabled log level [#AAAAAA]${toLowerCase(params)}`);
+	messageAdminAction(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}enabled log level ${getInlineChatColourByName("lightGrey")}${toLowerCase(params)}`);
 
 	return true;
 }
@@ -188,7 +188,7 @@ function removeServerLogLevelCommand(command, params, client) {
 			return;
 	}
 
-	messageAdminAction(`[#AAAAAA]${client.name} [#FFFFFF]disabled log level [#AAAAAA]${toLowerCase(params)}`);
+	messageAdminAction(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}disabled log level ${getInlineChatColourByName("lightGrey")}${toLowerCase(params)}`);
 
 	return true;
 }
@@ -225,12 +225,12 @@ function simulateCommandForPlayerCommand(command, params, client) {
 	}
 
 	if(!getCommand(tempCommand)) {
-		messagePlayerError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+		messagePlayerError(client, `The command ${getInlineChatColourByName("lightGrey")}/${command} ${getInlineChatColourByName("white")}does not exist! Use /help for commands and information.`);
 		return false;
 	}
 
 	getCommand(toLowerCase(tempCommand)).handlerFunction(tempCommand, tempParams, targetClient);
-	messagePlayerSuccess(client, `The command string [#AAAAAA]/${tempCommand} ${tempParams}[#FFFFFF] has been simulated for [#AAAAAA]${targetClient.name}`);
+	messagePlayerSuccess(client, `The command string ${getInlineChatColourByName("lightGrey")}/${tempCommand} ${tempParams}${getInlineChatColourByName("white")} has been simulated for ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}`);
 	return true;
 }
 
@@ -260,7 +260,7 @@ function simulateCommandForAllPlayersCommand(command, params, client) {
 	let tempParams = splitParams.slice(1).join(" ");
 
 	if(!getCommand(tempCommand)) {
-		messagePlayerError(client, `The command [#AAAAAA]/${command} [#FFFFFF]does not exist! Use /help for commands and information.`);
+		messagePlayerError(client, `The command ${getInlineChatColourByName("lightGrey")}/${command} ${getInlineChatColourByName("white")}does not exist! Use /help for commands and information.`);
 		return false;
 	}
 
@@ -270,7 +270,7 @@ function simulateCommandForAllPlayersCommand(command, params, client) {
 			getCommand(toLowerCase(tempCommand)).handlerFunction(tempCommand, tempParams, clients[i]);
 		}
 	}
-	messagePlayerSuccess(client, `The command string [#AAAAAA]/${tempCommand} ${tempParams}[#FFFFFF] has been simulated for all players!`);
+	messagePlayerSuccess(client, `The command string ${getInlineChatColourByName("lightGrey")}/${tempCommand} ${tempParams}${getInlineChatColourByName("white")} has been simulated for all players!`);
 	return true;
 }
 
@@ -320,7 +320,7 @@ function executeClientCodeCommand(command, params, client) {
 
 	sendRunCodeToClient(client, targetClient, targetCode, client.index);
 
-	messagePlayerSuccess(client, "Executing client code for " + toString(targetClient.name) + "!");
+	messagePlayerSuccess(client, "Executing client code for " + toString(targetgetPlayerName(client)) + "!");
 	messagePlayerNormal(client, "Code: " + targetCode);
 	return true;
 }
@@ -328,9 +328,9 @@ function executeClientCodeCommand(command, params, client) {
 // ===========================================================================
 
 function saveAllServerDataCommand(command, params, client) {
-	messageAdmins(`[#FF9900]Vortrex has forced a manual save of all data. Initiating ...`);
+	messageAdmins(`${getInlineChatColourByType("clanOrange")}Vortrex has forced a manual save of all data. Initiating ...`);
 	saveAllServerDataToDatabase();
-	messageAdmins(`[#FF9900]All server data saved to database successfully!`);
+	messageAdmins(`${getInlineChatColourByType("clanOrange")}All server data saved to database successfully!`);
 	return true;
 }
 
@@ -344,7 +344,7 @@ function testEmailCommand(command, params, client) {
 // ===========================================================================
 
 function restartGameModeCommand(command, params, client) {
-	messagePlayerNormal(null, `[#FF9900]The server game mode is restarting!`, getColourByName("orange"));
+	messagePlayerNormal(null, `${getInlineChatColourByType("clanOrange")}The server game mode is restarting!`, getColourByName("orange"));
 	consoleCommand("refresh");
 	thisResource.restart();
 	return true;
@@ -358,7 +358,7 @@ function clientRunCodeFail(client, returnTo, code) {
 		return false;
 	}
 
-	messagePlayerError(returnClient, `Client code failed to execute for ${client.name}!`);
+	messagePlayerError(returnClient, `Client code failed to execute for ${getPlayerName(client)}!`);
 	messagePlayerNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
 }
 
@@ -370,7 +370,7 @@ function clientRunCodeSuccess(client, returnTo, returnVal, code) {
 		return false;
 	}
 
-	messagePlayerSuccess(returnClient, `Client code executed for ${client.name}!`);
+	messagePlayerSuccess(returnClient, `Client code executed for ${getPlayerName(client)}!`);
 	messagePlayerNormal(returnClient, `Code: ${code}`, getColourByName("yellow"));
 	messagePlayerNormal(returnClient, `Returns: ${returnVal}`, getColourByName("yellow"));
 }

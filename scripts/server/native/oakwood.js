@@ -2,8 +2,8 @@
 // Vortrex's Roleplay Resource
 // https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
-// FILE: native.js
-// DESC: Provides util function to wrap mod-specific stuff
+// FILE: oakwood.js
+// DESC: Provides natives for Project Oakwood (Mafia 1)
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
@@ -301,6 +301,18 @@ function givePlayerArmour(client, amount) {
 
 function getServerGame() {
     return getGame();
+}
+
+// ===========================================================================
+
+function consolePrint(text) {
+    console.log(text);
+}
+
+// ===========================================================================
+
+function getPlayerName(client) {
+    return client.name;
 }
 
 // ===========================================================================

@@ -382,7 +382,7 @@ function createItemTypeCommand(command, params, client) {
 	}
 
 	let itemTypeIndex = createItemType(params);
-	messageAdmins(`[#AAAAAA]${client.name} created new item [#AAAAAA]${params}. [#FFFFFF]ID: ${itemTypeIndex}/${getItemTypeData(itemTypeIndex).databaseId}!`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} created new item ${getInlineChatColourByName("lightGrey")}${params}. ${getInlineChatColourByName("white")}ID: ${itemTypeIndex}/${getItemTypeData(itemTypeIndex).databaseId}!`);
 }
 
 // ===========================================================================
@@ -403,7 +403,7 @@ function setItemTypeDropModelCommand(command, params, client) {
 	}
 
 	getItemTypeData(itemTypeIndex).dropModel = modelId;
-	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} dropped object model to ${modelId}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} set item type ${getInlineChatColourByName("lightGrey")}${getItemTypeData(itemTypeIndex).name} dropped object model to ${modelId}`);
 }
 
 // ===========================================================================
@@ -424,7 +424,7 @@ function setItemTypeOrderPriceCommand(command, params, client) {
 	}
 
 	getItemTypeData(itemTypeIndex).orderPrice = orderPrice;
-	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} [#FFFFFF]base price to [#AAAAAA]$${orderPrice}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} set item type ${getInlineChatColourByName("lightGrey")}${getItemTypeData(itemTypeIndex).name} ${getInlineChatColourByName("white")}base price to ${getInlineChatColourByName("lightGrey")}$${orderPrice}`);
 }
 
 // ===========================================================================
@@ -445,7 +445,7 @@ function setItemTypeRiskMultiplierCommand(command, params, client) {
 	}
 
 	getItemTypeData(itemTypeIndex).riskMultiplier = riskMultiplier;
-	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} [#FFFFFF]risk multilier to [#AAAAAA]$${riskMultiplier}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} set item type ${getInlineChatColourByName("lightGrey")}${getItemTypeData(itemTypeIndex).name} ${getInlineChatColourByName("white")}risk multilier to ${getInlineChatColourByName("lightGrey")}$${riskMultiplier}`);
 }
 
 // ===========================================================================
@@ -466,7 +466,7 @@ function setItemTypeUseTypeCommand(command, params, client) {
 	}
 
 	getItemTypeData(itemTypeIndex).useType = useType;
-	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} [#FFFFFF]use type to [#AAAAAA]$${useType}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} set item type ${getInlineChatColourByName("lightGrey")}${getItemTypeData(itemTypeIndex).name} ${getInlineChatColourByName("white")}use type to ${getInlineChatColourByName("lightGrey")}$${useType}`);
 }
 
 // ===========================================================================
@@ -487,7 +487,7 @@ function setItemTypeUseValueCommand(command, params, client) {
 	}
 
 	getItemTypeData(itemTypeIndex).useValue = useValue;
-	messageAdmins(`[#AAAAAA]${client.name} set item type [#AAAAAA]${getItemTypeData(itemTypeIndex).name} [#FFFFFF]use value to [#AAAAAA]$${useValue}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} set item type ${getInlineChatColourByName("lightGrey")}${getItemTypeData(itemTypeIndex).name} ${getInlineChatColourByName("white")}use value to ${getInlineChatColourByName("lightGrey")}$${useValue}`);
 }
 
 // ===========================================================================
@@ -519,7 +519,7 @@ function playerUseItem(client, hotBarSlot) {
 				messagePlayerAlert(client, `Your ${getItemName(itemIndex)} has been set up with number ${phoneNumber}`);
 			} else {
 				getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
-				messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your phone in slot ${getPlayerData(client).activeHotBarSlot+1} [#AAAAAA](${getItemValueDisplayForItem(itemIndex)})`);
+				messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} ${getInlineChatColourByName("white")}your phone in slot ${getPlayerData(client).activeHotBarSlot+1} ${getInlineChatColourByName("lightGrey")}(${getItemValueDisplayForItem(itemIndex)})`);
 			}
 			//showPlayerPhoneGUI(client);
 			break;
@@ -621,7 +621,7 @@ function playerUseItem(client, hotBarSlot) {
 
 		case VRR_ITEM_USETYPE_WALKIETALKIE:
 			getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
-			messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your walkie talkie in slot ${getPlayerData(client).activeHotBarSlot+1} [#AAAAAA](${getItemValueDisplayForItem(itemIndex)})`);
+			messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} ${getInlineChatColourByName("white")}your walkie talkie in slot ${getPlayerData(client).activeHotBarSlot+1} ${getInlineChatColourByName("lightGrey")}(${getItemValueDisplayForItem(itemIndex)})`);
 			break;
 
 		case VRR_ITEM_USETYPE_PHONE:
@@ -1321,7 +1321,7 @@ function toggleItemEnabledCommand(command, params, client) {
 	}
 
 	getItemData(getPlayerActiveItem(client)).enabled = !getItemData(getPlayerActiveItem(client)).enabled;
-	messagePlayerNormal(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} [#FFFFFF]your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)} [#AAAAAA](${getItemValueDisplayForItem(getPlayerActiveItem(client))}`)
+	messagePlayerNormal(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} ${getInlineChatColourByName("white")}your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)} ${getInlineChatColourByName("lightGrey")}(${getItemValueDisplayForItem(getPlayerActiveItem(client))}`)
 }
 
 // ===========================================================================
@@ -1394,20 +1394,20 @@ function clearPlayerItemActionStateAfterDelay(client, delay) {
 
 function showBusinessFloorInventoryToPlayer(client, businessId) {
 	let itemDisplay = [];
-	messagePlayerNormal(client, `💲 [#0099FF]== Business Items =========================`);
+	messagePlayerNormal(client, `💲 ${getInlineChatColourByType("businessBlue")}== Business Items =========================`);
 	for(let i in getBusinessData(businessId).floorItemCache) {
 		if(getBusinessData(businessId).floorItemCache == -1) {
-			//itemDisplay.push(`[#FFFF00]${toInteger(i)+1}[#AAAAAA](Empty)`);
-			messagePlayerNormal(client, `[#FFFF00]${toInteger(i)+1}[#AAAAAA](Empty)`, COLOUR_WHITE);
+			//itemDisplay.push(`${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`);
+			messagePlayerNormal(client, `${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`, COLOUR_WHITE);
 		} else {
-			//itemDisplay.push(`[#FFFF00]${toInteger(i)+1}: [#FFFFFF]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[#AAAAAA][${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`);
-			messagePlayerNormal(client, `[#FFFF00]${toInteger(i)+1}: [#FFFFFF]${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}[#AAAAAA][${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`, COLOUR_WHITE);
+			//itemDisplay.push(`${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}: ${getInlineChatColourByName("white")}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}${getInlineChatColourByName("lightGrey")}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`);
+			messagePlayerNormal(client, `${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}: ${getInlineChatColourByName("white")}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}${getInlineChatColourByName("lightGrey")}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`, COLOUR_WHITE);
 		}
 
-		//messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+		//messagePlayerNormal(client, splitItemDisplay[i].join("${getInlineChatColourByName("white")}, "), COLOUR_WHITE);
 	}
 
-	//messagePlayerNormal(client, `💲 [#0099FF]== Business Items =========================`);
+	//messagePlayerNormal(client, `💲 ${getInlineChatColourByType("businessBlue")}== Business Items =========================`);
 	//let perChunk=5;
 	//let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
 	//	const ch = Math.floor(i/perChunk);
@@ -1415,7 +1415,7 @@ function showBusinessFloorInventoryToPlayer(client, businessId) {
 	//	return all
 	//}, []);
 	//for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-	//	messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+	//	messagePlayerNormal(client, splitItemDisplay[i].join(`${getInlineChatColourByName("white")}, `), COLOUR_WHITE);
 	//}
 }
 
@@ -1425,13 +1425,13 @@ function showBusinessStorageInventoryToPlayer(client, businessId) {
 	let itemDisplay = [];
 	for(let i in getBusinessData(businessId).storageItemCache) {
 		if(getBusinessData(businessId).storageItemCache == -1) {
-			itemDisplay.push(`[#FFFF00]${toInteger(i)+1}[#AAAAAA](Empty)`);
+			itemDisplay.push(`${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`);
 		} else {
-			itemDisplay.push(`[#FFFF00]${toInteger(i)+1}: [#FFFFFF]${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}[#AAAAAA][${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]  - [#CCCCCC]${getItemData(getBusinessData(businessId).storageItemCache[i]).amount} available`);
+			itemDisplay.push(`${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}: ${getInlineChatColourByName("white")}${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}${getInlineChatColourByName("lightGrey")}[${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]  - [#CCCCCC]${getItemData(getBusinessData(businessId).storageItemCache[i]).amount} available`);
 		}
 	}
 
-	messagePlayerNormal(client, `🏢 [#0099FF]== Business Storage =======================`);
+	messagePlayerNormal(client, `🏢 ${getInlineChatColourByType("businessBlue")}== Business Storage =======================`);
 	let perChunk=5;
 	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
 		const ch = Math.floor(i/perChunk);
@@ -1440,7 +1440,7 @@ function showBusinessStorageInventoryToPlayer(client, businessId) {
 	}, []);
 
 	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+		messagePlayerNormal(client, splitItemDisplay[i].join(`${getInlineChatColourByName("white")}, `), COLOUR_WHITE);
 	}
 }
 
@@ -1450,13 +1450,13 @@ function showItemInventoryToPlayer(client, itemId) {
 	let itemDisplay = [];
 	for(let i in getItemData(itemId).itemCache) {
 		if(getItemData(itemId).itemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getItemData(itemId).itemCache[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${getInlineChatColourByName("lightGrey")}${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getItemData(itemId).itemCache[i])}]`);
 		}
 	}
 
-	messagePlayerNormal(client, `📦 [#AAAAAA]== Items Inside ===========================`);
+	messagePlayerNormal(client, `📦 ${getInlineChatColourByName("lightGrey")}== Items Inside ===========================`);
 	let perChunk=5;
 	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
 		const ch = Math.floor(i/perChunk);
@@ -1465,7 +1465,7 @@ function showItemInventoryToPlayer(client, itemId) {
 	 }, []);
 
 	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+		messagePlayerNormal(client, splitItemDisplay[i].join(`${getInlineChatColourByName("white")}, `), COLOUR_WHITE);
 	}
 }
 
@@ -1476,16 +1476,16 @@ function showPlayerInventoryToPlayer(client, targetClient) {
 	let itemDisplay = [];
 	for(let i in getPlayerData(targetClient).hotBarItems) {
 		if(getPlayerData(targetClient).hotBarItems[i] == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA](Empty)`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${getInlineChatColourByName("lightGrey")}(Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getPlayerData(targetClient).hotBarItems[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${getInlineChatColourByName("lightGrey")}${getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getPlayerData(targetClient).hotBarItems[i])}]`);
 		}
 	}
 
 	if(client == targetClient) {
-		messagePlayerNormal(client, `🎒 [#AAAAAA]== Your Inventory =========================`);
+		messagePlayerNormal(client, `🎒 ${getInlineChatColourByName("lightGrey")}== Your Inventory =========================`);
 	} else {
-		messagePlayerNormal(client, `🎒 [#AAAAAA]== ${getCharacterFullName(targetClient)}'s Inventory =========================`);
+		messagePlayerNormal(client, `🎒 ${getInlineChatColourByName("lightGrey")}== ${getCharacterFullName(targetClient)}'s Inventory =========================`);
 	}
 
 	let perChunk=5;
@@ -1496,7 +1496,7 @@ function showPlayerInventoryToPlayer(client, targetClient) {
 	}, []);
 
 	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+		messagePlayerNormal(client, splitItemDisplay[i].join(`${getInlineChatColourByName("white")}, `), COLOUR_WHITE);
 	}
 }
 
@@ -1506,13 +1506,13 @@ function showHouseInventoryToPlayer(client, houseId) {
 	let itemDisplay = [];
 	for(let i in getHouseData(houseId).itemCache) {
 		if(getHouseData(houseId).itemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}[#AAAAAA](Empty)`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: [#AAAAAA]${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(houseId).itemCache[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${getInlineChatColourByName("lightGrey")}${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getBusinessData(houseId).itemCache[i])}]`);
 		}
 	}
 
-	messagePlayerNormal(client, `🏠 [#11CC11]== House Items ============================`);
+	messagePlayerNormal(client, `🏠 ${getInlineChatColourByType("houseGreen")}== House Items ============================`);
 	let perChunk=5;
 	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
 		const ch = Math.floor(i/perChunk);
@@ -1521,7 +1521,7 @@ function showHouseInventoryToPlayer(client, houseId) {
 	 }, []);
 
 	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join("[#FFFFFF], "), COLOUR_WHITE);
+		messagePlayerNormal(client, splitItemDisplay[i].join(`${getInlineChatColourByName("white")}, `), COLOUR_WHITE);
 	}
 }
 

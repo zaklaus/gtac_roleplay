@@ -133,7 +133,7 @@ function createVehicleCommand(command, params, client) {
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
 	let vehicle = createPermanentVehicle(modelId, frontPos, getPlayerHeading(client));
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a [#CC22CC]${getVehicleName(vehicle)}!`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created a ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}!`);
 }
 
 // ===========================================================================
@@ -154,7 +154,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
 	let vehicle = createTemporaryVehicle(modelId, frontPos, getPlayerHeading(client));
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a temporary [#CC22CC]${getVehicleName(vehicle)}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created a temporary ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}`);
 }
 
 // ===========================================================================
@@ -586,7 +586,7 @@ function setVehicleJobCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_JOB;
 	getVehicleData(vehicle).ownerId = jobId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#FFFF00]${getJobData(jobId).name} [#FFFFFF]job! (Job ID ${jobId})`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("jobYellow")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job! (Job ID ${jobId})`);
 }
 
 // ===========================================================================
@@ -613,10 +613,10 @@ function setVehicleRankCommand(command, params, client) {
 			return false;
 		}
 		getVehicleData(vehicle).rank = getClanRankData(getVehicleData(vehicle).ownerId, rankId).databaseId;
-		messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]rank to [#AAAAAA]${getClanRankData(getVehicleData(vehicle).ownerId, rankId).name} [#FFFFFF]of the [#FF9900]${getClanData(getVehicleData(vehicle).ownerId).name} [#FFFFFFclan!`);
+		messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rank to ${getInlineChatColourByName("lightGrey")}${getClanRankData(getVehicleData(vehicle).ownerId, rankId).name} ${getInlineChatColourByName("white")}of the ${getInlineChatColourByType("clanOrange")}${getClanData(getVehicleData(vehicle).ownerId).name} [#FFFFFFclan!`);
 	} else if(getVehicleData(vehicle).ownerType == VRR_VEHOWNER_JOB) {
 		getVehicleData(vehicle).rank = rankId;
-		messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]rank to [#AAAAAA]${rankId} [#FFFFFF]of the [#FFFF00]${getJobData(getVehicleData(vehicle).ownerId).name} [#FFFFFF]job!`);
+		messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rank to ${getInlineChatColourByName("lightGrey")}${rankId} ${getInlineChatColourByName("white")}of the ${getInlineChatColourByType("jobYellow")}${getJobData(getVehicleData(vehicle).ownerId).name} ${getInlineChatColourByName("white")}job!`);
 	}
 }
 
@@ -639,7 +639,7 @@ function setVehicleClanCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_CLAN;
 	getVehicleData(vehicle).ownerId = getClanData(clanId).databaseId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#FF9900]${getClanData(clanId).name} [#FFFFFF]clan`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan`);
 }
 
 // ===========================================================================
@@ -656,7 +656,7 @@ function setVehicleToBusinessCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_BIZ;
 	getVehicleData(vehicle).ownerId = getBusinessData(businessId).databaseId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to the [#0099FF]${getBusinessData(businessId).name} [#FFFFFF]business`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}business`);
 }
 
 // ===========================================================================
@@ -678,7 +678,7 @@ function setVehicleOwnerCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_PLAYER;
 	getVehicleData(vehicle).ownerId = getPlayerCurrentSubAccount(targetClient).databaseId;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to [#AAAAAA]${getClientSubAccountName(targetClient)}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to ${getInlineChatColourByName("lightGrey")}${getClientSubAccountName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -701,7 +701,7 @@ function setVehicleRentPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).rentPrice = amount;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]rent price to [#AAAAAA]$${amount}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rent price to ${getInlineChatColourByName("lightGrey")}$${amount}`);
 }
 
 // ===========================================================================
@@ -724,7 +724,7 @@ function setVehicleBuyPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).buyPrice = amount;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)}'s [#FFFFFF]buy price to [#AAAAAA]$${amount}!`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}'s ${getInlineChatColourByName("white")}buy price to ${getInlineChatColourByName("lightGrey")}$${amount}!`);
 }
 
 // ===========================================================================
@@ -746,7 +746,7 @@ function removeVehicleOwnerCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_NONE;
 	getVehicleData(vehicle).ownerId = 0;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]owner to nobody!`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to nobody!`);
 	messagePlayerInfo(client, `Nobody will be able to use this vehicle until it receives a new owner (either bought or set by admin).`);
 }
 
@@ -796,7 +796,7 @@ function getVehicleInfoCommand(command, params, client) {
 			break;
 	}
 
-	messagePlayerNormal(client, `🚗 [#CC22CC][Vehicle Info] [#FFFFFF]ID: [#AAAAAA]${vehicle.id}, [#FFFFFF]DatabaseID: [#AAAAAA]${vehicleData.databaseId}, [#FFFFFF]Owner: [#AAAAAA]${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), [#FFFFFF]Type: [#AAAAAA]${getVehicleName(vehicle)}[${vehicle.modelIndex}], [#FFFFFF]BuyPrice: [#AAAAAA]${vehicleData.buyPrice}, [#FFFFFF]RentPrice: [#AAAAAA]${vehicleData.rentPrice}`);
+	messagePlayerNormal(client, `🚗 ${getInlineChatColourByType("vehiclePurple")}[Vehicle Info] ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${vehicle.id}, ${getInlineChatColourByName("white")}DatabaseID: ${getInlineChatColourByName("lightGrey")}${vehicleData.databaseId}, ${getInlineChatColourByName("white")}Owner: ${getInlineChatColourByName("lightGrey")}${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), ${getInlineChatColourByName("white")}Type: ${getInlineChatColourByName("lightGrey")}${getVehicleName(vehicle)}[${vehicle.modelIndex}], ${getInlineChatColourByName("white")}BuyPrice: ${getInlineChatColourByName("lightGrey")}${vehicleData.buyPrice}, ${getInlineChatColourByName("white")}RentPrice: ${getInlineChatColourByName("lightGrey")}${vehicleData.rentPrice}`);
 }
 
 // ===========================================================================
@@ -817,7 +817,7 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 		getVehicleData(vehicle).spawnLocked = spawnLocked;
 	}
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set their [#CC22CC]${getVehicleName(vehicle)} [#FFFFFF]to spawn [#AAAAAA]${(spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}to spawn ${getInlineChatColourByName("lightGrey")}${(spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
 }
 
 // ===========================================================================

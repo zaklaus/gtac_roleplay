@@ -342,7 +342,7 @@ function takeJobCommand(command, params, client) {
 	}
 
 	if(getPlayerCurrentSubAccount(client).job > VRR_JOB_NONE) {
-		messagePlayerError(client, `[#FFFFFF]You already have a job! Use [#AAAAAA]/quitjob [#FFFFFF]to quit your current job.`);
+		messagePlayerError(client, `${getInlineChatColourByName("white")}You already have a job! Use ${getInlineChatColourByName("lightGrey")}/quitjob ${getInlineChatColourByName("white")}to quit your current job.`);
 		return false;
 	}
 
@@ -352,7 +352,7 @@ function takeJobCommand(command, params, client) {
 	}
 
 	takeJob(client, closestJobLocation.jobIndex);
-	messagePlayerSuccess(client, `[#FFFFFF]You now have the [#FFFF00]${jobData.name} [#FFFFFF]job`);
+	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You now have the ${getInlineChatColourByType("jobYellow")}${jobData.name} ${getInlineChatColourByName("white")}job`);
 	return true;
 }
 
@@ -472,7 +472,7 @@ function startWorking(client) {
 function getJobInfoCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 
-	messagePlayerInfo(client, `[#FFFF00][Job Info] [#FFFFFF]Name: [#AAAAAA]${getJobData(closestJobLocation.job).name}, [#FFFFFF]Enabled: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).enabled))}, [#FFFFFF]Whitelisted: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).whiteListEnabled))}, [#FFFFFF]Blacklisted: [#AAAAAA]${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).blackListEnabled))}, [#FFFFFF]ID: [#AAAAAA]${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}`);
+	messagePlayerInfo(client, `${getInlineChatColourByType("jobYellow")}[Job Info] ${getInlineChatColourByName("white")}Name: ${getInlineChatColourByName("lightGrey")}${getJobData(closestJobLocation.job).name}, ${getInlineChatColourByName("white")}Enabled: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).enabled))}, ${getInlineChatColourByName("white")}Whitelisted: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).whiteListEnabled))}, ${getInlineChatColourByName("white")}Blacklisted: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).blackListEnabled))}, ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}`);
 }
 
 // ===========================================================================
@@ -480,7 +480,7 @@ function getJobInfoCommand(command, params, client) {
 function getJobLocationInfoCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 
-	messagePlayerInfo(client, `[#FFFF00][Job Location Info] [#FFFFFF]Job: [#AAAAAA]${getJobData(closestJobLocation.job).name} (${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}), [#FFFFFF]Enabled: [#AAAAAA]${getYesNoFromBool(closestJobLocation.enabled)}, [#FFFFFF]Database ID: [#AAAAAA]${closestJobLocation.databaseId}`);
+	messagePlayerInfo(client, `${getInlineChatColourByType("jobYellow")}[Job Location Info] ${getInlineChatColourByName("white")}Job: ${getInlineChatColourByName("lightGrey")}${getJobData(closestJobLocation.job).name} (${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}), ${getInlineChatColourByName("white")}Enabled: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(closestJobLocation.enabled)}, ${getInlineChatColourByName("white")}Database ID: ${getInlineChatColourByName("lightGrey")}${closestJobLocation.databaseId}`);
 }
 
 // ===========================================================================
@@ -617,7 +617,7 @@ function jobUniformCommand(command, params, client) {
 
 	setPlayerSkin(client, getJobData(jobId).uniforms[uniformId-1].skin);
 
-	//messagePlayerSuccess(client, `You have been given a [#AAAAAA]${uniforms[uniformId-1].name} [#FFFFFF]uniform and you can put it on from your inventory.`);
+	//messagePlayerSuccess(client, `You have been given a ${getInlineChatColourByName("lightGrey")}${uniforms[uniformId-1].name} ${getInlineChatColourByName("white")}uniform and you can put it on from your inventory.`);
 	meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(getJobData(jobId).uniforms[uniformId-1].name)} ${getJobData(jobId).uniforms[uniformId-1].name} uniform`);
 	//let itemId = createItem(getItemTypeFromParams("Outfit"), getJobData(jobId).uniforms[uniformId-1].skin, VRR_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
 	//let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
@@ -774,7 +774,7 @@ function createJobLocationCommand(command, params, client) {
 	}
 
 	createJobLocation(jobId, getPlayerPosition(client), getPlayerInterior(client), getPlayerDimension(client));
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created a location for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created a location for the ${getInlineChatColourByName("lightGrey")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job`);
 	return true;
 }
 
@@ -783,7 +783,7 @@ function createJobLocationCommand(command, params, client) {
 function deleteJobLocationCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${getJobData(closestJobLocation.jobIndex).name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}deleted location ${getInlineChatColourByName("lightGrey")}${closestJobLocation.databaseId} ${getInlineChatColourByName("white")}for the ${getInlineChatColourByName("lightGrey")}${getJobData(closestJobLocation.jobIndex).name} ${getInlineChatColourByName("white")}job`);
 
 	quickDatabaseQuery(`DELETE FROM job_loc WHERE job_loc_id = ${closestJobLocation.databaseId}`);
 
@@ -804,7 +804,7 @@ function toggleJobLocationEnabledCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 
 	closestJobLocation.enabled = !closestJobLocation.enabled;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(closestJobLocation.enabled)} location [#AAAAAA]${closestJobLocation.databaseId} [#FFFFFF]for the [#AAAAAA]${getJobData(closestJobLocation.jobIndex).name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}${getEnabledDisabledFromBool(closestJobLocation.enabled)} location ${getInlineChatColourByName("lightGrey")}${closestJobLocation.databaseId} ${getInlineChatColourByName("white")}for the ${getInlineChatColourByName("lightGrey")}${getJobData(closestJobLocation.jobIndex).name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -818,7 +818,7 @@ function toggleJobEnabledCommand(command, params, client) {
 	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	getJobData(jobId).enabled = !getJobData(jobId).enabled;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).enabled)} [#FFFFFF]the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}${getEnabledDisabledFromBool(getJobData(jobId).enabled)} ${getInlineChatColourByName("white")}the ${getInlineChatColourByName("lightGrey")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -832,7 +832,7 @@ function toggleJobWhiteListCommand(command, params, client) {
 	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	getJobData(jobId).whiteListEnabled = !getJobData(jobId).whiteListEnabled;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).whiteListEnabled)} [#FFFFFF]the whitelist for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}${getEnabledDisabledFromBool(getJobData(jobId).whiteListEnabled)} ${getInlineChatColourByName("white")}the whitelist for the ${getInlineChatColourByName("lightGrey")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -846,7 +846,7 @@ function toggleJobBlackListCommand(command, params, client) {
 	let jobId = getJobFromParams(params) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	getJobData(jobId).blackListEnabled = !getJobData(jobId).blackListEnabled;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]${getEnabledDisabledFromBool(getJobData(jobId).blackListEnabled)} [#FFFFFF]the blacklist for the [#AAAAAA]${getJobData(jobId).name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}${getEnabledDisabledFromBool(getJobData(jobId).blackListEnabled)} ${getInlineChatColourByName("white")}the blacklist for the ${getInlineChatColourByName("lightGrey")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -876,7 +876,7 @@ function addPlayerToJobBlackListCommand(command, params, client) {
 	}
 
 	addPlayerToJobBlackList(targetClient, jobId);
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]added ${getCharacterFullName(targetClient)} [#FFFFFF]to the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}added ${getCharacterFullName(targetClient)} ${getInlineChatColourByName("white")}to the blacklist for the ${getInlineChatColourByName("lightGrey")}${jobData.name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -906,7 +906,7 @@ function removePlayerFromJobBlackListCommand(command, params, client) {
 	}
 
 	removePlayerFromJobBlackList(targetClient, jobId);
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]removed ${getCharacterFullName(targetClient)} [#FFFFFF]from the blacklist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed ${getCharacterFullName(targetClient)} ${getInlineChatColourByName("white")}from the blacklist for the ${getInlineChatColourByName("lightGrey")}${jobData.name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -936,7 +936,7 @@ function addPlayerToJobWhiteListCommand(command, params, client) {
 	}
 
 	addPlayerToJobWhiteList(targetClient, jobId);
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]added ${getCharacterFullName(targetClient)} [#FFFFFF]to the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}added ${getCharacterFullName(targetClient)} ${getInlineChatColourByName("white")}to the whitelist for the ${getInlineChatColourByName("lightGrey")}${jobData.name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -966,7 +966,7 @@ function removePlayerFromJobWhiteListCommand(command, params, client) {
 	}
 
 	removePlayerFromJobWhiteList(targetClient, jobId);
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]removed ${getCharacterFullName(targetClient)} [#FFFFFF]from the whitelist for the [#AAAAAA]${jobData.name} [#FFFFFF]job`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed ${getCharacterFullName(targetClient)} ${getInlineChatColourByName("white")}from the whitelist for the ${getInlineChatColourByName("lightGrey")}${jobData.name} ${getInlineChatColourByName("white")}job`);
 }
 
 // ===========================================================================
@@ -1068,7 +1068,7 @@ function startJobRoute(client) {
 		getPlayerVehicle(client).colour1 = getBusRouteData(getPlayerIsland(client), busRoute).busColour;
 		getPlayerVehicle(client).colour2 = 1;
 		showCurrentBusStop(client);
-		messagePlayerNormal(client, `🚌 You are now driving the [#AAAAAA]${getBusRouteData(getPlayerIsland(client), busRoute).name} [#FFFFFF]bus route! Drive to the green checkpoint.`);
+		messagePlayerNormal(client, `🚌 You are now driving the ${getInlineChatColourByName("lightGrey")}${getBusRouteData(getPlayerIsland(client), busRoute).name} ${getInlineChatColourByName("white")}bus route! Drive to the green checkpoint.`);
 	} else if(doesPlayerHaveJobType(client, VRR_JOB_GARBAGE)) {
 		let garbageRoute = getRandomBusRoute(getPlayerIsland(client));
 		getPlayerData(client).jobRoute = garbageRoute;
@@ -1078,7 +1078,7 @@ function startJobRoute(client) {
 		getPlayerVehicle(client).colour1 = getGarbageRouteData(getPlayerIsland(client), garbageRoute).garbageTruckColour;
 		getPlayerVehicle(client).colour2 = 1;
 		showCurrentGarbageStop(client);
-		messagePlayerNormal(client, `🚌 You are now driving the [#AAAAAA]${getGarbageRouteData(getPlayerIsland(client), garbageRoute).name} [#FFFFFF]garbage route! Drive to the grey checkpoint.`);
+		messagePlayerNormal(client, `🚌 You are now driving the ${getInlineChatColourByName("lightGrey")}${getGarbageRouteData(getPlayerIsland(client), garbageRoute).name} ${getInlineChatColourByName("white")}garbage route! Drive to the grey checkpoint.`);
 	}
 }
 

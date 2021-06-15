@@ -245,7 +245,7 @@ function playerArrivedAtPizzaDeliveryDestination(client) {
     let payout = applyServerInflationMultiplier(getPizzaDeliveryPay(getPlayerData(client).jobDeliveryStart, getPlayerData(client).jobDeliveryStop));
     getPlayerData(client).payDayAmount += payout;
     messagePlayerNormal(client, `You delivered the pizza! Return to the pizza restaurant if you want to deliver another pizza.`, getColourByName("yellow"));
-    messagePlayerNormal(client, `You earned $${payout}. Your total paycheck of [#AAAAAA]${getPlayerData(client).payDayAmount} will be received in [#AAAAAA]${getTimeDisplayUntilPlayerPayDay(client)}`);
+    messagePlayerNormal(client, `You earned $${payout}. Your total paycheck of ${getInlineChatColourByName("lightGrey")}${getPlayerData(client).payDayAmount} will be received in ${getInlineChatColourByName("lightGrey")}${getTimeDisplayUntilPlayerPayDay(client)}`);
     getPlayerData(client).jobDeliveryVehicle = false;
     getPlayerData(client).jobDeliveryStart = 0;
     getPlayerData(client).jobDeliveryStop = 0;

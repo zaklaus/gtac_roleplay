@@ -60,7 +60,7 @@ function onPlayerQuit(event, client, quitReasonId) {
     logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
     updateConnectionLogOnQuit(client, quitReasonId);
     if(isPlayerLoggedIn(client)) {
-        messagePlayerNormal(null, `👋 ${client.name} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
+        messagePlayerNormal(null, `👋 ${getPlayerName(client)} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
         savePlayerToDatabase(client);
         resetClientStuff(client);
         getServerData().clients[client.index] = null;
@@ -91,7 +91,7 @@ function onPlayerChat(event, client, messageText) {
 
     messageText = messageText.substring(0, 128);
 
-    messagePlayerNormal(null, `${getCharacterFullName(client)}: [#FFFFFF]${messageText}`, getPlayerColour(client));
+    messagePlayerNormal(null, `${getCharacterFullName(client)}: ${getInlineChatColourByName("white")}${messageText}`, getPlayerColour(client));
 }
 
 // ===========================================================================
@@ -121,7 +121,7 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
         if(getVehicleData(vehicle).locked) {
             if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                 if(doesPlayerHaveKeyBindForCommand(client, "lock")) {
-                    messagePlayerTip(client, `🔒 This ${getVehicleName(vehicle)} is locked. Press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "lock").key)} [#FFFFFF]to unlock it.`);
+                    messagePlayerTip(client, `🔒 This ${getVehicleName(vehicle)} is locked. Press ${getInlineChatColourByName("lightGrey")}${sdl.getKeyName(getPlayerKeyBindForCommand(client, "lock").key)} ${getInlineChatColourByName("white")}to unlock it.`);
                 } else {
                     messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
                 }
@@ -156,7 +156,7 @@ function onResourceStart(event, resource) {
     logToConsole(LOG_WARN, `[VRR.Event] ${resource.name} started!`);
 
     if(resource != thisResource) {
-        messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]started!`);
+        messageAdmins(`${getInlineChatColourByName("white")}Resource ${getInlineChatColourByName("lightGrey")}${resource.name} ${getInlineChatColourByName("white")}started!`);
     }
 }
 
@@ -166,7 +166,7 @@ function onResourceStop(event, resource) {
     logToConsole(LOG_WARN, `[VRR.Event] ${resource.name} stopped!`);
 
     if(resource != thisResource) {
-        messageAdmins(`[#FFFFFF]Resource [#AAAAAA]${resource.name} [#FFFFFF]stopped!`);
+        messageAdmins(`${getInlineChatColourByName("white")}Resource ${getInlineChatColourByName("lightGrey")}${resource.name} ${getInlineChatColourByName("white")}stopped!`);
     }
 
     if(resource == thisResource) {
@@ -227,18 +227,18 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             vehicle.engine = getVehicleData(vehicle).engine;
 
             if(getVehicleData(vehicle).buyPrice > 0) {
-                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: [#AAAAAA]$${getVehicleData(vehicle).buyPrice}`);
+                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: ${getInlineChatColourByName("lightGrey")}$${getVehicleData(vehicle).buyPrice}`);
                 messagePlayerTip(client, `Use /vehbuy if you want to buy it.`);
                 resetVehiclePosition(vehicle);
             } else if(getVehicleData(vehicle).rentPrice > 0) {
-                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: [#AAAAAA]$${getVehicleData(vehicle).rentPrice} per minute`);
+                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: ${getInlineChatColourByName("lightGrey")}$${getVehicleData(vehicle).rentPrice} per minute`);
                 messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
                 resetVehiclePosition(vehicle);
             } else {
                 if(!getVehicleData(vehicle).engine) {
                     if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                         if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press [#AAAAAA]${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} [#FFFFFF]to start it.`);
+                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press ${getInlineChatColourByName("lightGrey")}${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} ${getInlineChatColourByName("white")}to start it.`);
                         } else {
                             messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
                         }
@@ -395,7 +395,7 @@ function onPlayerSpawn(client) {
         getPlayerData(client).ped = client.player;
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
-        messagePlayerAlert(client, `You are now playing as: [#0099FF]${getCharacterFullName(client)}`, getColourByName("white"));
+        messagePlayerAlert(client, `You are now playing as: ${getInlineChatColourByType("businessBlue")}${getCharacterFullName(client)}`, getColourByName("white"));
         messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
         messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 

@@ -106,7 +106,7 @@ function adminChatCommand(command, params, client) {
 		return false;
 	}
 
-	messageAdmins(`[#FFFF00][Admin Chat] [#AAAAAA]${client.name} [#CCCCCC](${getPlayerStaffTitle(client)})[#FFFFFF]: ${params}`);
+	messageAdmins(`${getInlineChatColourByType("jobYellow")}[Admin Chat] ${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} [#CCCCCC](${getPlayerStaffTitle(client)})${getInlineChatColourByName("white")}: ${params}`);
 }
 
 // ===========================================================================
@@ -141,7 +141,7 @@ function talkToNearbyPlayers(client, messageText) {
 function phoneOutgoingToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
-		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](to phone): [#FFFFFF]${messageText}`);
+		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(to phone): ${getInlineChatColourByName("white")}${messageText}`);
 	}
 }
 
@@ -150,7 +150,7 @@ function phoneOutgoingToNearbyPlayers(client, messageText) {
 function phoneIncomingToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().radioSpeakerDistance);
 	for(let i in clients) {
-		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](from phone): [#FFFFFF]${messageText}`);
+		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(from phone): ${getInlineChatColourByName("white")}${messageText}`);
 	}
 }
 

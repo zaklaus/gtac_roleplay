@@ -144,7 +144,7 @@ function createClanCommand(command, params, client) {
 
 	// Create clan without owner. Can set owner with /clanowner afterward
 	createClan(params);
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created clan[#FF9900]${params}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created clan ${getInlineChatColourByType("clanOrange")}${params}`);
 }
 
 // ===========================================================================
@@ -162,7 +162,7 @@ function deleteClanCommand(command, params, client) {
 		return false;
 	}
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted clan[#FF9900]${getClanData(clanId).name}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}deleted clan ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name}`);
 	deleteClan(clanId);
 }
 
@@ -196,7 +196,7 @@ function setClanOwnerCommand(command, params, client) {
 	getClanData(clanId).owner = getPlayerCurrentSubAccount(targetClient).databaseId;
 	getPlayerCurrentSubAccount(targetClient).clanFlags = getClanFlagValue("all");
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set clan[#FF9900]${getClanData(clanId).name} [#FFFFFF]owner to [#AAAAAA]${getCharacterFullName(targetClient)}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set clan ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}owner to ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -221,7 +221,7 @@ function setClanTagCommand(command, params, client) {
 
 	getClanData(clanId).params = params;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set clan[#FF9900]${getClanData(clanId).index} [#FFFFFF]tag to [#AAAAAA]${params}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set clan ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).index} ${getInlineChatColourByName("white")}tag to ${getInlineChatColourByName("lightGrey")}${params}`);
 }
 
 // ===========================================================================
@@ -246,7 +246,7 @@ function setClanNameCommand(command, params, client) {
 
 	getClanData(clanId).name = params;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set clan[#FF9900]${getClanData(clanId).index} [#FFFFFF]name to [#AAAAAA]${params}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set clan ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).index} ${getInlineChatColourByName("white")}name to ${getInlineChatColourByName("lightGrey")}${params}`);
 }
 
 // ===========================================================================
@@ -278,8 +278,8 @@ function setClanMemberTagCommand(command, params, client) {
 
 	getPlayerCurrentSubAccount(targetClient).clanTag = tag;
 
-	messagePlayerSuccess(client, `You set [#AAAAAA]${getCharacterFullName(targetClient)}'s [#FFFFFF]clan tag to [#AAAAAA]${tag}`);
-	messagePlayerAlert(client, `[#AAAAAA]${getCharacterFullName(targetClient)} [#FFFFFF]set your clan tag to [#AAAAAA]${tag}`);
+	messagePlayerSuccess(client, `You set ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}'s ${getInlineChatColourByName("white")}clan tag to ${getInlineChatColourByName("lightGrey")}${tag}`);
+	messagePlayerAlert(client, `${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)} ${getInlineChatColourByName("white")}set your clan tag to ${getInlineChatColourByName("lightGrey")}${tag}`);
 }
 
 // ===========================================================================
@@ -346,7 +346,7 @@ function addClanMemberFlagCommand(command, params, client) {
 
 	let flagValue = getClanFlagValue(splitParams[1]);
 	getPlayerCurrentSubAccount(client).clanFlags = getPlayerCurrentSubAccount(client).clanFlags | flagValue;
-	messagePlayerSuccess(client, `You added the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag to [#AAAAAA]${getCharacterFullName(client)}`);
+	messagePlayerSuccess(client, `You added the ${getInlineChatColourByName("lightGrey")}${splitParams[1]} ${getInlineChatColourByName("white")}clan flag to ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)}`);
 }
 
 // ===========================================================================
@@ -383,7 +383,7 @@ function removeClanMemberFlagCommand(command, params, client) {
 
 	let flagValue = getClanFlagValue(splitParams[1]);
 	getPlayerCurrentSubAccount(client).clanFlags = getPlayerCurrentSubAccount(client).clanFlags & ~flagValue;
-	messagePlayerSuccess(client, `You removed the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag from [#AAAAAA]${getCharacterFullName(client)}`);
+	messagePlayerSuccess(client, `You removed the ${getInlineChatColourByName("lightGrey")}${splitParams[1]} ${getInlineChatColourByName("white")}clan flag from ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)}`);
 }
 
 // ===========================================================================
@@ -421,7 +421,7 @@ function addClanRankFlagCommand(command, params, client) {
 	let flagValue = getClanFlagValue(splitParams[1]);
 
 	getClanRankData(clanId, rankId).flags = getClanRankData(clanId, rankId).flags | flagValue;
-	messagePlayerSuccess(client, `You added the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag to rank [#AAAAAA]${getClanRankData(clanId, rankId).name}`);
+	messagePlayerSuccess(client, `You added the ${getInlineChatColourByName("lightGrey")}${splitParams[1]} ${getInlineChatColourByName("white")}clan flag to rank ${getInlineChatColourByName("lightGrey")}${getClanRankData(clanId, rankId).name}`);
 }
 
 // ===========================================================================
@@ -459,7 +459,7 @@ function removeClanRankFlagCommand(command, params, client) {
 	let flagValue = getClanFlagValue(splitParams[1]);
 
 	getClanRankData(clanId, rankId).flags = getClanRankData(clanId, rankId).flags & ~flagValue;
-	messagePlayerSuccess(client, `You removed the [#AAAAAA]${splitParams[1]} [#FFFFFF]clan flag from rank [#AAAAAA]${getClanRankData(clanId, rankId).name}`);
+	messagePlayerSuccess(client, `You removed the ${getInlineChatColourByName("lightGrey")}${splitParams[1]} ${getInlineChatColourByName("white")}clan flag from rank ${getInlineChatColourByName("lightGrey")}${getClanRankData(clanId, rankId).name}`);
 }
 
 // ===========================================================================
@@ -491,7 +491,7 @@ function setClanMemberTitleCommand(command, params, client) {
 
 	let oldMemberTitle = getPlayerCurrentSubAccount(client).clanTitle;
 	getPlayerCurrentSubAccount(client).clanTitle = params;
-	messagePlayerSuccess(client, `You changed the name of [#AAAAAA]${getCharacterFullName(client)} [#FFFFFF]from [#AAAAAA]${oldMemberTitle} [#FFFFFF]to [#AAAAAA]${params}`);
+	messagePlayerSuccess(client, `You changed the name of ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)} ${getInlineChatColourByName("white")}from ${getInlineChatColourByName("lightGrey")}${oldMemberTitle} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${params}`);
 }
 
 // ===========================================================================
@@ -523,7 +523,7 @@ function setClanRankTitleCommand(command, params, client) {
 
 	let oldRankName = getClanRankData(clanId, rankId).name;
 	getClanRankData(clanId, rankId).name = params;
-	messagePlayerSuccess(client, `You changed the name of rank ${rankId} from [#AAAAAA]${oldRankName} [#FFFFFF]to [#AAAAAA]${params}`);
+	messagePlayerSuccess(client, `You changed the name of rank ${rankId} from ${getInlineChatColourByName("lightGrey")}${oldRankName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${params}`);
 }
 
 // ===========================================================================

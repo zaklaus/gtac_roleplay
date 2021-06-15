@@ -288,7 +288,7 @@ function getPlayerInfoCommand(command, params, client) {
 		return false;
 	}
 
-	messagePlayerInfo(client, `[#AAAAAA][Player Info] [#FFFFFF]Account: [#AAAAAA]${getPlayerData(targetClient).accountData.name}[${getPlayerData(targetClient).accountData.databaseId}], [#FFFFFF]Character: [#AAAAAA]${getCharacterFullName(client)}[${getPlayerCurrentSubAccount(client).databaseId}], [#FFFFFF]Connected: [#AAAAAA]${getTimeDifferenceDisplay(Math.ceil(sdl.tick/1000), getPlayerData(targetClient).connectTime)} ago, [#FFFFFF]Game Version: [#AAAAAA]${targetClient.gameVersion}, [#FFFFFFF]Client Version: [#AAAAAA]${getPlayerData(targetClient).clientVersion}`);
+	messagePlayerInfo(client, `${getInlineChatColourByName("lightGrey")}[Player Info] ${getInlineChatColourByName("white")}Account: ${getInlineChatColourByName("lightGrey")}${getPlayerData(targetClient).accountData.name}[${getPlayerData(targetClient).accountData.databaseId}], ${getInlineChatColourByName("white")}Character: ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)}[${getPlayerCurrentSubAccount(client).databaseId}], ${getInlineChatColourByName("white")}Connected: ${getInlineChatColourByName("lightGrey")}${getTimeDifferenceDisplay(Math.ceil(sdl.tick/1000), getPlayerData(targetClient).connectTime)} ago, ${getInlineChatColourByName("white")}Game Version: ${getInlineChatColourByName("lightGrey")}${targetClient.gameVersion}, [#FFFFFFF]Client Version: ${getInlineChatColourByName("lightGrey")}${getPlayerData(targetClient).clientVersion}`);
 }
 
 // ===========================================================================
@@ -334,7 +334,7 @@ function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
 		showPlayerPromptGUI(client, promptMessage, promptTitle);
 	} else {
 		messagePlayerNormal(client, `❓ ${promptMessage}`);
-		messagePlayerInfo(client, `[#FFFFFF]Use [#AAAAAA]/yes or [#AAAAAA]/no`);
+		messagePlayerInfo(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/yes or ${getInlineChatColourByName("lightGrey")}/no`);
 	}
 }
 

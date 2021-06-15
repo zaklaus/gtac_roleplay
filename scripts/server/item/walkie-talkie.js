@@ -47,7 +47,7 @@ function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
 function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
-		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](to radio): [#FFFFFF]${messageText}`);
+		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(to radio): ${getInlineChatColourByName("white")}${messageText}`);
 	}
 }
 
@@ -56,7 +56,7 @@ function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 function walkieTalkieIncomingToNearbyPlayers(client, messageText) {
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().walkieTalkieSpeakerDistance);
 	for(let i in clients) {
-		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} [#AAAAAA](from radio): [#FFFFFF]${messageText}`);
+		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(from radio): ${getInlineChatColourByName("white")}${messageText}`);
 	}
 }
 
@@ -94,7 +94,7 @@ function setWalkieTalkieFrequencyCommand(command, params, client) {
 		if(doesPlayerHaveKeyBindForCommand(client, "use")) {
 			messagePlayerError(client, `Your walkie talkie is turned off. Press ${sdl.getKeyName(getPlayerKeyBindForCommand(client, "use").key)} to turn it on`);
 		} else {
-			messagePlayerError(client, `Your walkie talkie is turned off. Type [#AAAAAA]/use [#FFFFFF]to turn it on`);
+			messagePlayerError(client, `Your walkie talkie is turned off. Type ${getInlineChatColourByName("lightGrey")}/use ${getInlineChatColourByName("white")}to turn it on`);
 		}
 		return false;
 	}

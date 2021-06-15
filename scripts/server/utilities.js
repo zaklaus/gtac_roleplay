@@ -937,7 +937,7 @@ function getPlayerDisplayForConsole(client) {
 	if(isNull(client)) {
 		return "(Unknown client)";
 	}
-	return `${client.name}[${client.index}]`;
+	return `${getPlayerName(client)}[${client.index}]`;
 }
 
 // ===========================================================================
@@ -946,7 +946,7 @@ function getPlayerNameForNameTag(client) {
 	if(isPlayerSpawned(client)) {
 		return `${getPlayerCurrentSubAccount(client).firstName} ${getPlayerCurrentSubAccount(client).lastName}`;
 	}
-	return client.name;
+	return getPlayerName(client);
 }
 
 // ===========================================================================

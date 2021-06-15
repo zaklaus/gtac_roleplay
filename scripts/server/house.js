@@ -91,7 +91,7 @@ function createHouseCommand(command, params, client) {
 	createHouseEntranceBlip(getServerData().houses.length-1);
 	createHouseExitBlip(getServerData().houses.length-1);
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]created house [#11CC11]${tempHouseData.description}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created house ${getInlineChatColourByType("houseGreen")}${tempHouseData.description}`);
 }
 
 // ===========================================================================
@@ -123,7 +123,7 @@ function setHouseDescriptionCommand(command, params, client) {
 	let oldDescription = getHouseData(houseId).description;
 	getHouseData(houseId).description = newHouseDescription;
 	setEntityData(getHouseData(houseId).entrancePickup, "ag.label.name", getHouseData(houseId).description, true);
-	messageAdmins(`${client.name} renamed house [#11CC11]${oldDescription} [#FFFFFF]to [#11CC11]${getHouseData(houseId).description}`);
+	messageAdmins(`${getPlayerName(client)} renamed house ${getInlineChatColourByType("houseGreen")}${oldDescription} ${getInlineChatColourByName("white")}to ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}`);
 }
 
 // ===========================================================================
@@ -144,7 +144,7 @@ function setHouseOwnerCommand(command, params, client) {
 
 	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_PLAYER;
 	getHouseData(houseId).ownerId = getServerData().clients[newHouseOwner.index].accountData.databaseId;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]owner to [#AAAAAA]${newHouseOwner.name}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}owner to ${getInlineChatColourByName("lightGrey")}${newHouseOwner.name}`);
 }
 
 // ===========================================================================
@@ -166,7 +166,7 @@ function setHouseClanCommand(command, params, client) {
 
 	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_CLAN;
 	getHouseData(houseId).ownerId = getClanData(clanId).databaseId;
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]owner to the [#FF9900]${getClanData(clanId).name} [#FFFFFF]clan!`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan!`);
 }
 
 // ===========================================================================
@@ -185,7 +185,7 @@ function setHousePickupCommand(command, params, client) {
 	if(isNaN(typeParam)) {
 		if(isNull(getGameConfig().pickupModels[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid house type! Use a house type name or a pickup model ID");
-			messagePlayerInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`);
+			messagePlayerInfo(client, `Pickup Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`);
 			return false;
 		}
 
@@ -202,7 +202,7 @@ function setHousePickupCommand(command, params, client) {
 		}
 	}
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]pickup display to [#AAAAAA]${entrancePickupModel}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}pickup display to ${getInlineChatColourByName("lightGrey")}${entrancePickupModel}`);
 }
 
 // ===========================================================================
@@ -222,13 +222,13 @@ function setHouseInteriorTypeCommand(command, params, client) {
 			getHouseData(houseId).exitPosition = toVector3(0.0, 0.0, 0.0);
 			getHouseData(houseId).exitInterior = -1;
 			getHouseData(houseId).hasInterior = false;
-			messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]remove house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]interior`);
+			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}remove house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}interior`);
 			return false;
 		}
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid interior type! Use an interior type name or an existing house database ID");
-			messagePlayerInfo(client, `Interior Types: [#AAAAAA]${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
+			messagePlayerInfo(client, `Interior Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
@@ -252,7 +252,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 	createHouseEntrancePickup(houseId);
 	createHouseExitPickup(houseId);
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]interior type to [#AAAAAA]${toLowerCase(typeParam)}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}interior type to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -271,7 +271,7 @@ function setHouseBlipCommand(command, params, client) {
 	if(isNaN(typeParam)) {
 		if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid house type! Use a house type name or a blip image ID");
-			messagePlayerInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
+			messagePlayerInfo(client, `Pickup Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
@@ -286,7 +286,7 @@ function setHouseBlipCommand(command, params, client) {
 		}
 	}
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]blip display to [#AAAAAA]${entranceBlipModel}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}blip display to ${getInlineChatColourByName("lightGrey")}${entranceBlipModel}`);
 }
 
 // ===========================================================================
@@ -309,7 +309,7 @@ function moveHouseEntranceCommand(command, params, client) {
 	createHouseEntranceBlip(houseId);
 	createHouseEntrancePickup(houseId);
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]entrance to their position`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}entrance to their position`);
 }
 
 // ===========================================================================
@@ -332,7 +332,7 @@ function moveHouseExitCommand(command, params, client) {
 	createHouseExitBlip(houseId);
 	createHouseExitPickup(houseId);
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]moved house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]exit to their position`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}exit to their position`);
 }
 
 // ===========================================================================
@@ -346,7 +346,7 @@ function deleteHouseCommand(command, params, client) {
 	}
 	tempHouseData = getHouseData(houseId);
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]deleted house [#11CC11]${getHouseData(houseId).description}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}deleted house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}`);
 	deleteHouse(houseId, getPlayerData(client).accountData.databaseId);
 }
 
@@ -701,7 +701,7 @@ function getHouseInfoCommand(command, params, client) {
 			break;
 	}
 
-	messagePlayerNormal(client, `🏠 [#11CC11][House Info] [#FFFFFF]Description: [#AAAAAA]${getHouseData(houseId).description}, [#FFFFFF]Owner: [#AAAAAA]${ownerName} (${getHouseOwnerTypeText(getHouseData(houseId).ownerType)}), [#FFFFFF]Locked: [#AAAAAA]${getYesNoFromBool(intToBool(getHouseData(houseId).locked))}, [#FFFFFF]ID: [#AAAAAA]${houseId}/${getHouseData(houseId).databaseId}`);
+	messagePlayerNormal(client, `🏠 ${getInlineChatColourByType("houseGreen")}[House Info] ${getInlineChatColourByName("white")}Description: ${getInlineChatColourByName("lightGrey")}${getHouseData(houseId).description}, ${getInlineChatColourByName("white")}Owner: ${getInlineChatColourByName("lightGrey")}${ownerName} (${getHouseOwnerTypeText(getHouseData(houseId).ownerType)}), ${getInlineChatColourByName("white")}Locked: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(intToBool(getHouseData(houseId).locked))}, ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${houseId}/${getHouseData(houseId).databaseId}`);
 }
 
 // ===========================================================================

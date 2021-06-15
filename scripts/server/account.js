@@ -80,7 +80,7 @@ function toggleAccountGUICommand(command, params, client) {
 				showPlayerLoginGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI`);
 			} else {
-				messagePlayerNormal(client, `👋 Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, getColourByName("softGreen"));
+				messagePlayerNormal(client, `👋 Welcome back to Asshat Gaming RP, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
 			}
 		} else {
@@ -88,7 +88,7 @@ function toggleAccountGUICommand(command, params, client) {
 				showPlayerRegistrationGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 			} else {
-				messagePlayerNormal(client, `👋 Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, getColourByName("softGreen"));
+				messagePlayerNormal(client, `👋 Welcome to Asshat Gaming RP, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
 			}
 		}
@@ -103,14 +103,14 @@ function toggleAccountServerLogoCommand(command, params, client) {
 
 	if(!doesPlayerHaveLogoEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now [#FFFFFF]be shown the server logo (if enabled on current server)`);
+		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now ${getInlineChatColourByName("white")}be shown the server logo (if enabled on current server)`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo ON for their account`);
 		if(getServerConfig().showLogo) {
 			updatePlayerShowLogoState(client, true);
 		}
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not [#FFFFFF]be shown the server logo.`);
+		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not ${getInlineChatColourByName("white")}be shown the server logo.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo OFF for their account`);
 		updatePlayerShowLogoState(client, false);
 	}
@@ -127,27 +127,27 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 
 	if(getEmailConfig().enabled) {
 		if(getPlayerData(client).accountData.emailAddress != "") {
-			messagePlayerError(client, "You need to add your email to your account to use two-factor authentication.");
-			messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/setemail [#FFFFFF]to add your email.");
+			messagePlayerError(client, `You need to add your email to your account to use two-factor authentication.`);
+			messagePlayerTip(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/setemail ${getInlineChatColourByName("white")}to add your email.`);
 			return false;
 		}
 
 		if(isAccountEmailVerified(getPlayerData(client).accountData)) {
-			messagePlayerError(client, "You need to verify your email to your account to use two-factor authentication.");
-			messagePlayerTip(client, "[#FFFFFF]Use [#AAAAAA]/verifyemail [#FFFFFF]to verify your email.");
+			messagePlayerError(client, `You need to verify your email to your account to use two-factor authentication.`);
+			messagePlayerTip(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/verifyemail ${getInlineChatColourByName("white")}to verify your email.`);
 			return false;
 		}
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `[#FFFFFF]You have turned ${getBoolRedGreenInlineColour(false)}ON [#FFFFFF] two factor authentication![#AAAAAA]${addtoAuthenticatorCode}`);
-		messagePlayerAlert(client, "You will be required to enter a code sent to your email every time you log on.");
+		messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You have turned ${getBoolRedGreenInlineColour(false)}ON ${getInlineChatColourByName("white")} two factor authentication!${getInlineChatColourByName("lightGrey")}${addtoAuthenticatorCode}`);
+		messagePlayerAlert(client, `You will be required to enter a code sent to your email every time you log on.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF [#FFFFFF]two-factor authentication for login.`);
-		messagePlayerAlert(client, "You won't be required to enter a code sent to your email every time you log on anymore.");
+		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF ${getInlineChatColourByName("white")}two-factor authentication for login.`);
+		messagePlayerAlert(client, `You won't be required to enter a code sent to your email every time you log on anymore.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
 	return true;
@@ -157,7 +157,7 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 
 function registerCommand(command, params, client) {
 	if(isPlayerRegistered(client)) {
-		messagePlayerError(client, "Your name is already registered!");
+		messagePlayerError(client, `Your name is already registered!`);
 		return false;
 	}
 
@@ -168,8 +168,8 @@ function registerCommand(command, params, client) {
 
 	checkRegistration(client, params);
 	//getPlayerData(client).accountData = accountData;
-	//messagePlayerSuccess(client, "Your account has been created!");
-	//messagePlayerAlert(client, "To play on the server, you will need to make a character.");
+	//messagePlayerSuccess(client, `Your account has been created!`);
+	//messagePlayerAlert(client, `To play on the server, you will need to make a character.`);
 }
 
 // ===========================================================================
@@ -184,19 +184,19 @@ function changePasswordCommand(command, params, client) {
 	let oldPassword = splitParams[0];
 	let newPassword = splitParams[1];
 
-	if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(client.name, oldPassword))) {
-		messagePlayerError(client, "The old password is invalid!");
+	if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), oldPassword))) {
+		messagePlayerError(client, `The old password is invalid!`);
 		return false;
 	}
 
 	if(!doesPasswordMeetRequirements(newPassword)) {
-		messagePlayerError(client, "The new password must meet the requirements!");
-		messagePlayerInfo(client, "Passwords must have at least one capital letter, one lowercase letter, and one number!");
+		messagePlayerError(client, `The new password must meet the requirements!`);
+		messagePlayerInfo(client, `Passwords must have at least one capital letter, one lowercase letter, and one number!`);
 		return false;
 	}
 
 	getPlayerData(client).accountData.password = hashAccountPassword(getPlayerData(client).accountData.name, params);
-	messagePlayerSuccess(client, "Your password has been changed!");
+	messagePlayerSuccess(client, `Your password has been changed!`);
 }
 
 // ===========================================================================
@@ -208,12 +208,12 @@ function setAccountChatScrollLinesCommand(command, params, client) {
 	}
 
 	if(isNaN(params)) {
-		messagePlayerError(client, "The line amount must be a number!");
+		messagePlayerError(client, `The line amount must be a number!`);
 		return false;
 	}
 
 	if(toInteger(params) < 1 || toInteger(params) > 6) {
-		messagePlayerError(client, "The line amount must be between 1 and 6!");
+		messagePlayerError(client, `The line amount must be between 1 and 6!`);
 		return false;
 	}
 
@@ -498,7 +498,7 @@ function loginSuccess(client) {
 
 	if(getPlayerData(client).subAccounts.length == 0) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No characters");
+			showPlayerPromptGUI(client, `You have no characters. Would you like to make one?`, "No characters");
 			getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters prompt GUI`);
 		} else {
@@ -514,7 +514,7 @@ function loginSuccess(client) {
 	sendRemovedWorldObjectsToPlayer(client);
 	sendPlayerChatScrollLines(client, getPlayerData(client).accountData.chatScrollLines);
 
-	messagePlayerNormal(null, `👋 ${client.name} has joined the server`, getColourByName("softYellow"));
+	messagePlayerNormal(null, `👋 ${getPlayerName(client)} has joined the server`, getColourByName("softYellow"));
 }
 
 // ===========================================================================
@@ -705,7 +705,7 @@ function checkLogin(client, password) {
 		return false;
 	}
 
-	if(!isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(client.name, password))) {
+	if(!isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), password))) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (wrong password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginFailedGUI(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
@@ -727,7 +727,7 @@ function checkLogin(client, password) {
 // ===========================================================================
 
 function checkRegistration(client, password, confirmPassword = "", emailAddress = "") {
-	logToConsole(LOG_DEBUG, "[VRR.Account]: Checking registration for " + toString(client.name));
+	logToConsole(LOG_DEBUG, "[VRR.Account]: Checking registration for " + toString(getPlayerName(client)));
 
 	if(isPlayerRegistered(client)) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -794,7 +794,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		}
 	}
 
-	let accountData = createAccount(client.name, password, emailAddress);
+	let accountData = createAccount(getPlayerName(client), password, emailAddress);
 	if(!accountData) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerRegistrationFailedGUI(client, "Your account could not be created!");
@@ -855,7 +855,7 @@ function savePlayerToDatabase(client) {
 		return false;
 	}
 
-	logToConsole(LOG_DEBUG, `[VRR.Account]: Saving client ${client.name} to database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Saving client ${getPlayerName(client)} to database ...`);
 	saveAccountToDatabase(getPlayerData(client).accountData);
 
 	if(getPlayerData(client).currentSubAccount != -1) {
@@ -899,7 +899,7 @@ function initClient(client) {
 		if(client != null) {
 
 			clearChatBox(client);
-			let tempAccountData = loadAccountFromName(client.name, true);
+			let tempAccountData = loadAccountFromName(getPlayerName(client), true);
 			let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
 
 			getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
@@ -918,7 +918,7 @@ function initClient(client) {
 						showPlayerLoginGUI(client);
 					} else {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
-						messagePlayerNormal(client, `Welcome back to Asshat Gaming RP, ${client.name}! Please /login to continue.`, getColourByName("softGreen"));
+						messagePlayerNormal(client, `Welcome back to Asshat Gaming RP, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
 					}
 				}
 			} else {
@@ -927,7 +927,7 @@ function initClient(client) {
 					showPlayerRegistrationGUI(client);
 				} else {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
-					messagePlayerNormal(client, `Welcome to Asshat Gaming RP, ${client.name}! Please /register to continue.`, getColourByName("softGreen"));
+					messagePlayerNormal(client, `Welcome to Asshat Gaming RP, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
 				}
 			}
 		}
@@ -939,7 +939,7 @@ function initClient(client) {
 function saveConnectionToDatabase(client) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let safeName = escapeDatabaseString(dbConnection, client.name);
+		let safeName = escapeDatabaseString(dbConnection, getPlayerName(client));
 		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', INET_ATON('${client.ip}'))`;
 		let query = queryDatabase(dbConnection, dbQueryString);
 		setEntityData(client, "ag.connection", getDatabaseInsertId(dbConnection));

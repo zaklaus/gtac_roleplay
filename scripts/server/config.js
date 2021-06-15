@@ -1053,7 +1053,7 @@ function setTimeCommand(command, params, client) {
     gta.time.hour = hour;
     gta.time.minute = minute;
 
-	messageAdminAction(`${client.name} set the time to ${makeReadableTime(hour, minute)}`);
+	messageAdminAction(`${getPlayerName(client)} set the time to ${makeReadableTime(hour, minute)}`);
 	return true;
 }
 
@@ -1070,7 +1070,7 @@ function setMinuteDurationCommand(command, params, client) {
 	getServerConfig().minuteDuration = minuteDuration;
 	setTimeMinuteDuration(null, minuteDuration);
 
-	messageAdminAction(`${client.name} set the minute duration to ${minuteDuration}ms`);
+	messageAdminAction(`${getPlayerName(client)} set the minute duration to ${minuteDuration}ms`);
 	return true;
 }
 
@@ -1093,7 +1093,7 @@ function setWeatherCommand(command, params, client) {
     gta.forceWeather(toInteger(weatherId));
 	getServerConfig().weather = weatherId;
 
-    messageAdminAction(`${client.name} set the weather to [#AAAAAA]${getGameData().weatherNames[getServerGame()][toInteger(weatherId)]}`);
+    messageAdminAction(`${getPlayerName(client)} set the weather to ${getInlineChatColourByName("lightGrey")}${getGameData().weatherNames[getServerGame()][toInteger(weatherId)]}`);
     updateServerRules();
 	return true;
 }
@@ -1115,7 +1115,7 @@ function setSnowingCommand(command, params, client) {
 
 	updatePlayerSnowState(null);
 
-    messageAdminAction(`${client.name} turned falling snow ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} [#FFFFFF]and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
+    messageAdminAction(`${getPlayerName(client)} turned falling snow ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} ${getInlineChatColourByName("white")}and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
     updateServerRules();
 	return true;
 }
@@ -1127,7 +1127,7 @@ function toggleServerLogoCommand(command, params, client) {
 
 	updatePlayerShowLogoState(null, getServerConfig().useLogo);
 
-    messageAdminAction(`${client.name} turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);
+    messageAdminAction(`${getPlayerName(client)} turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);
     updateServerRules();
 	return true;
 }
@@ -1139,7 +1139,7 @@ function toggleAntiCheatScriptWhitelist(command, params, client) {
 
 	updatePlayerShowLogoState(null, getServerConfig().antiCheat.gameScriptWhiteListEnabled);
 
-    messageAdminAction(`${client.name} turned anticheat game script whitelist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptWhiteListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptWhiteListEnabled))}`);
+    messageAdminAction(`${getPlayerName(client)} turned anticheat game script whitelist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptWhiteListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptWhiteListEnabled))}`);
     updateServerRules();
 	return true;
 }
@@ -1151,7 +1151,7 @@ function toggleAntiCheatScriptBlacklist(command, params, client) {
 
 	updatePlayerShowLogoState(null, getServerConfig().antiCheat.gameScriptBlackListEnabled);
 
-    messageAdminAction(`${client.name} turned anticheat game script blacklist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptBlackListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptBlackListEnabled))}`);
+    messageAdminAction(`${getPlayerName(client)} turned anticheat game script blacklist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptBlackListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptBlackListEnabled))}`);
     updateServerRules();
 	return true;
 }
@@ -1161,7 +1161,7 @@ function toggleAntiCheatScriptBlacklist(command, params, client) {
 function toggleServerGUICommand(command, params, client) {
     getServerConfig().useGUI = !getServerConfig().useGUI;
 
-    messageAdminAction(`${client.name} turned GUI ${toLowerCase(getOnOffFromBool(getServerConfig().useGUI))} for this server`);
+    messageAdminAction(`${getPlayerName(client)} turned GUI ${toLowerCase(getOnOffFromBool(getServerConfig().useGUI))} for this server`);
     updateServerRules();
 	return true;
 }
@@ -1173,7 +1173,7 @@ function reloadServerConfigurationCommand(command, params, client) {
 	applyConfigToServer(serverConfig);
 	updateServerRules();
 
-    messageAdminAction(`${client.name} reloaded the server configuration`);
+    messageAdminAction(`${getPlayerName(client)} reloaded the server configuration`);
 
 	return true;
 }
@@ -1184,7 +1184,7 @@ function reloadEmailConfigurationCommand(command, params, client) {
 	emailConfig = loadEmailConfigFromGameAndPort(server.game, server.port);
 	applyConfigToServer(serverConfig);
 	updateServerRules();
-    messageAdminAction(`${client.name} reloaded the email configuration`);
+    messageAdminAction(`${getPlayerName(client)} reloaded the email configuration`);
 	return true;
 }
 
@@ -1192,7 +1192,7 @@ function reloadEmailConfigurationCommand(command, params, client) {
 
 function reloadEmailConfigurationCommand(command, params, client) {
 	emailConfig = loadEmailConfig();
-    messageAdminAction(`${client.name} reloaded the email configuration`);
+    messageAdminAction(`${getPlayerName(client)} reloaded the email configuration`);
 	return true;
 }
 
@@ -1207,7 +1207,7 @@ function reloadDatabaseConfigurationCommand(command, params, client) {
 		}
 		databaseEnabled = false;
 		databaseConfig = loadEmailConfig();
-		messageAdminAction(`${client.name} reloaded the database configuration`);
+		messageAdminAction(`${getPlayerName(client)} reloaded the database configuration`);
 		databaseEnabled = true;
 		if(databaseConfig.usePersistentConnection) {
 			connectToDatabase();

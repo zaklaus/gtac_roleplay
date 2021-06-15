@@ -35,6 +35,9 @@ const VRR_GAME_GTA_VC = 2;
 const VRR_GAME_GTA_SA = 3;
 const VRR_GAME_GTA_IV = 4;
 const VRR_GAME_GTA_V = 50;
+const VRR_GAME_MAFIA_I = 100;
+const VRR_GAME_MAFIA_I_DE = 101;
+const VRR_GAME_MAFIA_II = 102;
 
 // Key States
 const VRR_KEYSTATE_NONE = 0;

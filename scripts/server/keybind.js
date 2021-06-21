@@ -145,7 +145,7 @@ function addKeyBindCommand(command, params, client) {
     if(!keyId) {
         messagePlayerError(client, "The key ID or name you input is invalid!");
         messagePlayerTip(client, "Use simple key names, letters, or numbers. Don't add spaces.");
-        messagePlayerInfo(client, "Examples: ${getInlineChatColourByName("lightGrey")}1, 2, a, b, numplus, num1, f1, f2, pageup, delete, insert, rightshift, leftctrl");
+        messagePlayerInfo(client, `Examples: ${getInlineChatColourByName("lightGrey")}1, 2, a, b, numplus, num1, f1, f2, pageup, delete, insert, rightshift, leftctrl`);
         return false;
     }
 
@@ -173,7 +173,7 @@ function removeKeyBindCommand(command, params, client) {
     if(!keyId) {
         messagePlayerError(client, "The key ID or name you input is invalid!");
         messagePlayerTip(client, "Use simple key names, letters, or numbers. Don't add spaces.");
-        messagePlayerInfo(client, "Examples: ${getInlineChatColourByName("lightGrey")}1, 2, a, b, numplus, num1, f1, f2, pageup, delete, insert, rightshift, leftctrl");
+        messagePlayerInfo(client, `Examples: ${getInlineChatColourByName("lightGrey")}1, 2, a, b, numplus, num1, f1, f2, pageup, delete, insert, rightshift, leftctrl`);
         return false;
     }
 

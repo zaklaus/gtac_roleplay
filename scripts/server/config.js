@@ -979,8 +979,8 @@ function loadServerConfigFromId(tempServerId) {
 // ===========================================================================
 
 function applyConfigToServer(tempServerConfig) {
-	server.name = tempServerConfig.name;
-	server.password = tempServerConfig.password;
+	//server.name = tempServerConfig.name;
+	//server.password = tempServerConfig.password;
 	gta.time.hour = tempServerConfig.hour;
 	gta.time.minute = tempServerConfig.minute;
 	gta.forceWeather(tempServerConfig.weather);

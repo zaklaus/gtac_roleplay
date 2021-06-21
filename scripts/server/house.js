@@ -54,7 +54,11 @@ function loadHousesFromDatabase() {
 // ===========================================================================
 
 function loadHouseLocationsFromDatabase(houseId) {
-	console.log(`[VRR.House]: Loading locations for business '${getBusinessData(businessId).name}' from database ...`);
+	if(!getHouseData(houseId)) {
+		return false;
+	}
+
+	console.log(`[VRR.House]: Loading locations for house '${getHouseData(houseId).description}' from database ...`);
 
 	let tempHouseLocations = [];
 	let dbConnection = connectToDatabase();
@@ -84,12 +88,12 @@ function loadHouseLocationsFromDatabase(houseId) {
 
 function createHouseCommand(command, params, client) {
 	let tempHouseData = createHouse(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].house, getGameConfig().blipSprites[getServerGame()].house, getPlayerInterior(client), getPlayerDimension(client));
-	getServerData().houses.push(tempHouseData);
+	let houseId = getServerData().houses.push(tempHouseData);
 
-	createHouseEntrancePickup(getServerData().houses.length-1);
-	createHouseExitPickup(getServerData().houses.length-1);
-	createHouseEntranceBlip(getServerData().houses.length-1);
-	createHouseExitBlip(getServerData().houses.length-1);
+	createHouseEntrancePickup(houseId);
+	createHouseExitPickup(houseId);
+	createHouseEntranceBlip(houseId);
+	createHouseExitBlip(houseId);
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created house ${getInlineChatColourByType("houseGreen")}${tempHouseData.description}`);
 }
@@ -104,7 +108,13 @@ function lockUnlockHouseCommand(command, params, client) {
 	}
 
 	getHouseData(houseId).locked = !getHouseData(houseId).locked;
-	setEntityData(getHouseData(houseId).entrancePickup, "ag.label.locked", getHouseData(houseId).locked, true);
+
+	for(let i in getHouseData(houseId).locations) {
+		if(getHouseData(houseId).locations[i].type == VRR_HOUSE_LOC_DOOR) {
+			setEntityData(getHouseData(houseId).locations[i].entrancePickup, "ag.label.locked", getHouseData(houseId).locked, true);
+		}
+	}
+
 	messagePlayerSuccess(client, `House '${getHouseData(houseId).description}' ${getLockedUnlockedTextFromBool((getHouseData(houseId).locked))}!`);
 }
 
@@ -122,7 +132,13 @@ function setHouseDescriptionCommand(command, params, client) {
 
 	let oldDescription = getHouseData(houseId).description;
 	getHouseData(houseId).description = newHouseDescription;
-	setEntityData(getHouseData(houseId).entrancePickup, "ag.label.name", getHouseData(houseId).description, true);
+
+	for(let i in getHouseData(houseId).locations) {
+		if(getHouseData(houseId).locations[i].type == VRR_HOUSE_LOC_DOOR) {
+			setEntityData(getHouseData(houseId).entrancePickup, "ag.label.name", getHouseData(houseId).description, true);
+		}
+	}
+
 	messageAdmins(`${getPlayerName(client)} renamed house ${getInlineChatColourByType("houseGreen")}${oldDescription} ${getInlineChatColourByName("white")}to ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}`);
 }
 
@@ -218,75 +234,38 @@ function setHouseInteriorTypeCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
+		let tempHouseLocation = new serverClasses.houseLocationData(false);
+
 		if(toLowerCase(typeParam) == "none") {
-			getHouseData(houseId).exitPosition = toVector3(0.0, 0.0, 0.0);
-			getHouseData(houseId).exitInterior = -1;
+			tempHouseLocation.exitPosition = toVector3(0.0, 0.0, 0.0);
+			tempHouseLocation.exitInterior = -1;
 			getHouseData(houseId).hasInterior = false;
 			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}remove house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}interior`);
 			return false;
 		}
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
-			messagePlayerError(client, "Invalid interior type! Use an interior type name or an existing house database ID");
+			messagePlayerError(client, "Invalid interior type! Use an interior type name");
 			messagePlayerInfo(client, `Interior Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
-		getHouseData(houseId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitPosition;
-		getHouseData(houseId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitInterior;
-		getHouseData(houseId).exitDimension = getHouseData(houseId).databaseId+getGlobalConfig().houseDimensionStart;
-		getHouseData(houseId).hasInterior = true;
-	} else {
-		if(!getHouseData(houseId)) {
-			messagePlayerError(client, "Business ID not found!");
-			return false;
-		}
-		getHouseData(houseId).exitPosition = getHouseData(houseId).exitPosition;
-		getHouseData(houseId).exitInterior = getHouseData(houseId).exitInterior;
-		getHouseData(houseId).exitDimension = getHouseData(houseId).databaseId+getGlobalConfig().houseDimensionStart;
-		getHouseData(houseId).hasInterior = true;
-	}
+		deleteHouseEntrancePickup(houseId);
+		deleteHouseExitPickup(houseId);
 
-	deleteHouseEntrancePickup(houseId);
-	deleteHouseExitPickup(houseId);
-	createHouseEntrancePickup(houseId);
-	createHouseExitPickup(houseId);
+		getHouseData(houseId).locations = [];
+
+		tempHouseLocation.exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitPosition;
+		tempHouseLocation.exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitInterior;
+		tempHouseLocation.exitDimension = getHouseData(houseId).databaseId+getGlobalConfig().houseDimensionStart;
+		getHouseData(houseId).hasInterior = true;
+
+		getHouseData(houseId).locations.push(tempHouseLocation);
+		createHouseEntrancePickups(houseId);
+		createHouseExitPickups(houseId);
+	}
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}interior type to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
-}
-
-// ===========================================================================
-
-function setHouseBlipCommand(command, params, client) {
-	let typeParam = params || "house";
-	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)).house;
-
-	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
-		return false;
-	}
-
-	let entranceBlipModel = getGameConfig().blipSprites[getServerGame()].house;
-
-	if(isNaN(typeParam)) {
-		if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
-			messagePlayerError(client, "Invalid house type! Use a house type name or a blip image ID");
-			messagePlayerInfo(client, `Pickup Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
-			return false;
-		}
-
-		entranceBlipModel = getGameConfig().blipSprites[getServerGame()][typeParam];
-	} else {
-		entranceBlipModel = toInteger(typeParam);
-	}
-
-	if(getHouseData(houseId).entranceBlipModel != -1) {
-		if(getHouseData(houseId).entranceBlip != null) {
-			deleteGameElement(getHouseData(houseId).entranceBlip);
-		}
-	}
-
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}blip display to ${getInlineChatColourByName("lightGrey")}${entranceBlipModel}`);
 }
 
 // ===========================================================================
@@ -299,15 +278,14 @@ function moveHouseEntranceCommand(command, params, client) {
 		return false;
 	}
 
-	getHouseData(houseId).entrancePosition = getPlayerPosition(client);
-	getHouseData(houseId).entranceDimension = getPlayerDimension(client);
-	getHouseData(houseId).entranceInterior = getPlayerInterior(client);
+	getHouseData(houseId).locations[0].entrancePosition = getPlayerPosition(client);
+	getHouseData(houseId).locations[0].entranceDimension = getPlayerDimension(client);
+	getHouseData(houseId).locations[0].entranceInterior = getPlayerInterior(client);
 
-	deleteHouseEntranceBlip(houseId);
-	deleteHouseEntrancePickup(houseId);
-
-	createHouseEntranceBlip(houseId);
-	createHouseEntrancePickup(houseId);
+	deleteAllHouseBlips(houseId);
+	deleteAllHousePickups(houseId);
+	createAllHouseBlips(houseId);
+	createAllHousePickups(houseId);
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}entrance to their position`);
 }
@@ -322,15 +300,16 @@ function moveHouseExitCommand(command, params, client) {
 		return false;
 	}
 
-	getHouseData(houseId).exitPosition = getPlayerPosition(client);
-	getHouseData(houseId).exitDimension = getPlayerDimension(client);
-	getHouseData(houseId).exitInterior = getPlayerInterior(client);
+	getHouseData(houseId).locations = [];
 
-	deleteHouseExitBlip(houseId);
-	deleteHouseExitPickup(houseId);
+	getHouseData(houseId).locations[0].entrancePosition = getPlayerPosition(client);
+	getHouseData(houseId).locations[0].entranceDimension = getPlayerDimension(client);
+	getHouseData(houseId).locations[0].exitInterior = getPlayerInterior(client);
 
-	createHouseExitBlip(houseId);
-	createHouseExitPickup(houseId);
+	deleteAllHouseBlips(houseId);
+	deleteAllHousePickups(houseId);
+	createAllHouseBlips(houseId);
+	createAllHousePickups(houseId);
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}exit to their position`);
 }
@@ -366,11 +345,8 @@ function deleteHouse(houseId, whoDeleted = 0) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	deleteHouseEntrancePickup(houseId);
-	deleteHouseExitPickup(houseId);
-
-	deleteHouseEntranceBlip(houseId);
-	deleteHouseExitBlip(houseId);
+	deleteAllHouseBlips(houseId);
+	deleteAllHousePickups(houseId);
 
 	removePlayersFromHouse(houseId);
 
@@ -391,19 +367,22 @@ function createHouse(description, entrancePosition, exitPosition, entrancePickup
 	let tempHouseData = new serverClasses.houseData(false);
 	tempHouseData.description = description;
 
-	tempHouseData.entrancePosition = entrancePosition;
-	tempHouseData.entranceRotation = 0.0;
-	tempHouseData.entrancePickupModel = entrancePickupModel;
-	tempHouseData.entranceBlipModel = entranceBlipModel;
-	tempHouseData.entranceInterior = entranceInteriorId;
-	tempHouseData.entranceDimension = entranceVirtualWorld;
+	let tempHouseLocation = new serverClasses.houseLocationData(false);
+	tempHouseLocation.entrancePosition = entrancePosition;
+	tempHouseLocation.entranceRotation = 0.0;
+	tempHouseLocation.entrancePickupModel = entrancePickupModel;
+	tempHouseLocation.entranceBlipModel = entranceBlipModel;
+	tempHouseLocation.entranceInterior = entranceInteriorId;
+	tempHouseLocation.entranceDimension = entranceVirtualWorld;
 
-	tempHouseData.exitPosition = exitPosition;
-	tempHouseData.exitRotation = 0.0;
-	tempHouseData.exitPickupModel = exitPickupModel;
-	tempHouseData.exitBlipModel = exitBlipModel;
-	tempHouseData.exitInterior = exitInteriorId;
-	tempHouseData.exitDimension = exitVirtualWorld;
+	tempHouseLocation.exitPosition = exitPosition;
+	tempHouseLocation.exitRotation = 0.0;
+	tempHouseLocation.exitPickupModel = exitPickupModel;
+	tempHouseLocation.exitBlipModel = exitBlipModel;
+	tempHouseLocation.exitInterior = exitInteriorId;
+	tempHouseLocation.exitDimension = exitVirtualWorld;
+
+	tempHouseData.locations.push(tempHouseLocation);
 
 	return tempHouseData;
 }
@@ -422,7 +401,7 @@ function getHouseDataFromDatabaseId(databaseId) {
 
 function getClosestHouseEntrance(position) {
 	let closest = getServerData().houses[0].locations[0];
-	for(let i in houses) {
+	for(let i in getServerData().houses) {
 		for(let j in getServerData().houses[i].locations) {
 			if(getDistance(position, houses[i].locations[j].entrancePosition) <= getDistance(position, closest.entrancePosition)) {
 				closest = getServerData().houses[i].locations[j];

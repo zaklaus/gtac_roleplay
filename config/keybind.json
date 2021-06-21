@@ -109,11 +109,6 @@
             "keyName": "9",
             "commandString": "i 9",
             "keyState": 1
-        },
-        {
-            "keyName": "e",
-            "commandString": "action primary",
-            "keyState": 3
         }
     ]
 }

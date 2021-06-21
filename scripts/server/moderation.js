@@ -659,7 +659,7 @@ function getStaffFlagsCommand(command, params, client) {
 		}
 	}
 
-	messagePlayerInfo(client, `${getInlineChatColourByName("white")}${targetgetPlayerName(client)}'s staff flags: ${getInlineChatColourByName("lightGrey")}${tempStaffFlags.join("${getInlineChatColourByName("white")}, ${getInlineChatColourByName("lightGrey")}")}`);
+	messagePlayerInfo(client, `${getInlineChatColourByName("white")}${targetgetPlayerName(client)}'s staff flags: ${getInlineChatColourByName("lightGrey")}${tempStaffFlags.join(getInlineChatColourByName("white"))}, ${getInlineChatColourByName("lightGrey")}")}`);
 }
 
 // ===========================================================================
@@ -679,7 +679,7 @@ function allStaffFlagsCommand(command, params, client) {
         return false;
 	}
 
-	messagePlayerInfo(client, `${getInlineChatColourByName("white")}Staff flags: ${getInlineChatColourByName("lightGrey")}${getServerBitFlagKeys().join("${getInlineChatColourByName("white")}, ${getInlineChatColourByName("lightGrey")}")}`);
+	messagePlayerInfo(client, `${getInlineChatColourByName("white")}Staff flags: ${getInlineChatColourByName("lightGrey")}${getServerBitFlagKeys().join(getInlineChatColourByName("white"))}, ${getInlineChatColourByName("lightGrey")}")}`);
 }
 
 // ===========================================================================

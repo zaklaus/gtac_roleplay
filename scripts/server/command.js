@@ -36,7 +36,7 @@ function initCommandScript() {
 // ===========================================================================
 
 function loadCommands() {
-    return {
+    let tempCommands = {
         account: [
             commandData("login", loginCommand, "<password>", getStaffFlagValue("none"), false, false, "Login to an account"),
             commandData("register", registerCommand, "<password>", getStaffFlagValue("none"), false, false, "Creates an account"),
@@ -375,6 +375,8 @@ function loadCommands() {
             commandData("passenger", enterVehicleAsPassengerCommand, "", getStaffFlagValue("none"), true, true),
         ],
     };
+
+    return tempCommands;
 }
 
 // ===========================================================================

@@ -80,6 +80,14 @@ function getHexColourByName(colourName) {
 
 // ===========================================================================
 
+function getHexColourByType(colourName) {
+	let rgbaColour = getServerColours().byType[colourName];
+	let rgbaArray = rgbaArrayFromToColour(rgbaColour);
+	return rgbToHex(rgbaArray[0], rgbaArray[1], rgbaArray[2]);
+}
+
+// ===========================================================================
+
 function getPlayerColour(client) {
 	if(getPlayerData(client) != false) {
 		if(!isPlayerLoggedIn(client)) {
@@ -137,6 +145,36 @@ function getRandomRGB() {
 		getRandom(0, 255),
 		255
 	]);
+}
+
+// ===========================================================================
+
+function getInlineChatColourByName(colourName) {
+	return `[${getHexColourByName(colourName)}]`;
+}
+
+// ===========================================================================
+
+function getInlineChatColourByType(colourName) {
+	return `[${getHexColourByType(colourName)}]`;
+}
+
+// ===========================================================================
+
+function rgbaArrayFromToColour(colour) {
+    return [
+        (colour >> 16) & 0xFF, // red
+        (colour >> 8) & 0xFF,
+        colour & 0xFF,
+        (colour >> 24) & 0xFF// alpha
+    ];
+}
+
+// ===========================================================================
+
+function hexFromToColour(colour) {
+	let rgba = rgbaArrayFromToColour(colour);
+    return rgbToHex(rgba[0], rgba[1], rgba[2]);
 }
 
 // ===========================================================================

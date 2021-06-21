@@ -837,7 +837,7 @@ function getBusinessDataFromDatabaseId(databaseId) {
 
 function getClosestBusinessEntrance(position) {
 	let closest = getServerData().businesses[0].locations[0];
-	for(let i in businesses) {
+	for(let i in getServerData().businesses) {
 		for(let j in getServerData().businesses[i].locations) {
 			if(getDistance(position, businesses[i].locations[j].entrancePosition) <= getDistance(position, closest.entrancePosition)) {
 				closest = getServerData().businesses[i].locations[j];

@@ -91,7 +91,7 @@ function onPlayerChat(event, client, messageText) {
 
     messageText = messageText.substring(0, 128);
 
-    messagePlayerNormal(null, `${getCharacterFullName(client)}: ${getInlineChatColourByName("white")}${messageText}`, getPlayerColour(client));
+    messagePlayerNormal(null, `${getInlineChatColourByName("white")}💬 [${hexFromToColour(getPlayerColour(client))}]${getCharacterFullName(client)}: ${getInlineChatColourByName("white")}${messageText}`, getPlayerColour(client));
 }
 
 // ===========================================================================

@@ -158,7 +158,7 @@ function toString(val) {
 // ===========================================================================
 
 function toVector3(x, y, z) {
-	return new Vec3(x, y, z);
+	return new Vec3(toFloat(x), toFloat(y), toFloat(z));
 }
 
 // ===========================================================================

@@ -727,7 +727,7 @@ function checkLogin(client, password) {
 // ===========================================================================
 
 function checkRegistration(client, password, confirmPassword = "", emailAddress = "") {
-	logToConsole(LOG_DEBUG, "[VRR.Account]: Checking registration for " + toString(getPlayerName(client)));
+	logToConsole(LOG_DEBUG, `[VRR.Account]: Checking registration for ${getPlayerName(client)}`);
 
 	if(isPlayerRegistered(client)) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -810,7 +810,10 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	getPlayerData(client).loggedIn = true;
 
 	messagePlayerSuccess(client, "Your account has been created!");
-	messagePlayerAlert(client, "Don't forget to verify your email! A verification code has been sent to you");
+	if(checkForSMTPModule() && getEmailConfig().enabled) {
+		messagePlayerAlert(client, "Don't forget to verify your email! A verification code has been sent to you");
+        return false;
+    }
 	messagePlayerAlert(client, "To play on the server, you will need to make a character.");
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -818,7 +821,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
 		getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
 
-		if(getEmailConfig().enabled) {
+		if(checkForSMTPModule() && getEmailConfig().enabled) {
 			let emailVerificationCode = generateEmailVerificationCode();
 			setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
 			sendEmailVerificationEmail(client, emailVerificationCode);

@@ -95,8 +95,7 @@ function checkForAllRequiredModules() {
 
 	if(!checkForSMTPModule()) {
 		console.warn("[VRR.Startup]: SMTP Email module is not loaded!");
-		console.warn("[VRR.Startup]: This resource will now shutdown.");
-		thisResource.stop();
+		console.warn("[VRR.Startup]: Email features will NOT be available!");
 	}
 
 	logToConsole(LOG_DEBUG, "[VRR.Startup]: All required modules loaded!");

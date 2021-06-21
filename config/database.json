@@ -1,8 +1,8 @@
 {
-    "host": "",
-    "user": "",
+    "host": "localhost",
+    "user": "root",
     "pass": "",
-    "name": "",
+    "name": "gtac_roleplay",
     "port": 3306,
     "usePersistentConnection": true
 }

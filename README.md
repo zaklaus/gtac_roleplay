@@ -3,6 +3,23 @@
 ### Description
 This is Vortrex's Roleplay Resource
 
+## Setup
+* Download the server from the [downloads page](https://gtaconnected.com/downloads) of the GTA Connected website.
+* Download this resource via git clone or directly from GitHub with the green zip download button.
+* Add this resource as-is into a resource folder of your choice inside the resources directory of your server. I named my resource folder "gtac_roleplay"
+* Add the resource to the server config. You should also disable a lot of the cvars in the config too. I only have traffic, civilians, planes, and bigmap enabled.
+* Download the required modules and add them to your server config. See list of modules below.
+* Import the database to your MySQL server, and edit database.json in the resource's config folder with the info to connect to the database.
+* (Optional) Edit the email SMTP connection info. Without this, the email features will be disabled.
+* Start the server and connect. Register your account, make a character, and disconnect.
+* Edit your account in the database (get your account ID from the acct_main table and then edit the four entries in acct_svr for your account, changing acct_svr_staff_flags to negative 1 (-1) ... **you must not be connected to the server when doing this**
+* You now have full admin. Enjoy the resource!
+
+## Modules
+* [MySQL](https://github.com/VortrexFTW/mod_mysql)
+* [Hashing](https://github.com/VortrexFTW/mod_hashing)
+* [SMTP](https://github.com/VortrexFTW/mod_smtp) (Optional)
+
 ### Git Branches
 * master/main - The current release. *Never commit to this branch directly*
 * nightly - The next upcoming release. All feature/fix/change branches are merged into this one
@@ -30,4 +47,4 @@ This is Vortrex's Roleplay Resource
 ### Notes
 * The resource is designed to load the script files first, then initialize after that's done.
 * The IDEAS.md file is not a to-do list. It's just a random file to throw ideas into when they come to mind.
-* Delete the row containing the bug or idea from the database once you've scripted and tested it and it works.
+* Bitwise values are used for several different aspects related to permissions. The value of -1 is **always** used as "*all flags*" for that set.

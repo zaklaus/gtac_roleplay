@@ -131,6 +131,7 @@ function createBusinessLocationCommand(command, params, client) {
 	}
 
 	let locationType = toString(splitParams[0]);
+	let businessId = (isPlayerInAnyBusiness(splitParams[1])) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -173,6 +174,7 @@ function createBusiness(name, entrancePosition, exitPosition, entrancePickupMode
 // ===========================================================================
 
 function deleteBusinessCommand(command, params, client) {
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -200,6 +202,7 @@ function deleteBusinessLocationCommand(command, params, client) {
 function setBusinessNameCommand(command, params, client) {
 	let newBusinessName = toString(params);
 
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -216,6 +219,7 @@ function setBusinessNameCommand(command, params, client) {
 
 function setBusinessOwnerCommand(command, params, client) {
 	let newBusinessOwner = getPlayerFromParams(params);
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!newBusinessOwner) {
 		messagePlayerError(client, "Player not found!");
@@ -236,6 +240,7 @@ function setBusinessOwnerCommand(command, params, client) {
 
 function setBusinessClanCommand(command, params, client) {
 	let clanId = getClanFromParams(params);
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
@@ -255,6 +260,7 @@ function setBusinessClanCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessJobCommand(command, params, client) {
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -285,6 +291,7 @@ function setBusinessJobCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessPublicCommand(command, params, client) {
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -303,6 +310,7 @@ function setBusinessPublicCommand(command, params, client) {
 // ===========================================================================
 
 function lockBusinessCommand(command, params, client) {
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -481,6 +489,10 @@ function setBusinessBlipCommand(command, params, client) {
 		getBusinessData(businessId).entranceBlipModel = toInteger(typeParam);
 	}
 
+	deleteBusinessEntranceBlip(businessId);
+	deleteBusinessExitBlip(businessId);
+	createBusinessEntranceBlip(businessId);
+	createBusinessExitBlip(businessId);
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}blip display to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
 }
@@ -714,6 +726,7 @@ function orderItemForBusiness(businessId, itemType, amount) {
 // ===========================================================================
 
 function viewBusinessTillAmountCommand(command, params, client) {
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -759,6 +772,7 @@ function buyBusinessCommand(command, params, client) {
 // ===========================================================================
 
 function moveBusinessEntranceCommand(command, params, client) {
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -785,6 +799,7 @@ function moveBusinessEntranceCommand(command, params, client) {
 // ===========================================================================
 
 function moveBusinessExitCommand(command, params, client) {
+	let businessId = toInteger((isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client)));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -824,6 +839,7 @@ function getClosestBusinessEntrance(position) {
 	let closest = 0;
 	for(let i in getServerData().businesses) {
 		if(getDistance(position, getServerData().businesses[i].entrancePosition) <= getDistance(position, getServerData().businesses[closest].entrancePosition)) {
+			closest = i;
 		}
 	}
 	return closest;
@@ -989,14 +1005,10 @@ function createBusinessEntrancePickup(businessId) {
 	if(getBusinessData(businessId).entrancePickupModel != -1) {
 		let pickupModelId = getGameConfig().pickupModels[getServerGame()].business;
 
-		if(getServerData().businesses[businessId].locations[locationId].entrancePickupModel != 0) {
-			pickupModelId = getBusinessData(businessId).locations[locationId].entrancePickupModel;
 		if(getServerData().businesses[businessId].entrancePickupModel != 0) {
 			pickupModelId = getBusinessData(businessId).entrancePickupModel;
 		}
 
-		getBusinessData(businessId).locations[locationId].entrancePickup = gta.createPickup(pickupModelId, getBusinessData(businessId).locations[locationId].entrancePosition);
-		getBusinessData(businessId).locations[locationId].entrancePickup.onAllDimensions = false;
 		getBusinessData(businessId).entrancePickup = gta.createPickup(pickupModelId, getBusinessData(businessId).entrancePosition);
 		getBusinessData(businessId).entrancePickup.onAllDimensions = false;
 		getBusinessData(businessId).entrancePickup.dimension = getBusinessData(businessId).entranceDimension;

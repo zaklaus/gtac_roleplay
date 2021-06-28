@@ -267,7 +267,7 @@ function checkNewCharacter(client, firstName, lastName) {
 		} else {
 			messagePlayerAlert(client, "Your character could not be created!");
 		}
-		messagePlayerAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
+		messagePlayerAlert(client, `${getServerName()} staff have been notified of the problem and will fix it shortly.`);
 		return false;
 	}
 

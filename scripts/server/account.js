@@ -80,7 +80,7 @@ function toggleAccountGUICommand(command, params, client) {
 				showPlayerLoginGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI`);
 			} else {
-				messagePlayerNormal(client, `👋 Welcome back to Asshat Gaming RP, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
+				messagePlayerNormal(client, `👋 Welcome back to ${getServerName()}, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
 			}
 		} else {
@@ -88,7 +88,7 @@ function toggleAccountGUICommand(command, params, client) {
 				showPlayerRegistrationGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 			} else {
-				messagePlayerNormal(client, `👋 Welcome to Asshat Gaming RP, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
+				messagePlayerNormal(client, `👋 Welcome to ${getServerName()}, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
 			}
 		}
@@ -802,7 +802,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 			messagePlayerAlert(client, "Your account could not be created!");
 		}
 
-		messagePlayerAlert(client, "Asshat Gaming staff have been notified of the problem and will fix it shortly.");
+		messagePlayerAlert(client, `${getServerName()} staff have been notified of the problem and will fix it shortly.`);
 		return false;
 	}
 

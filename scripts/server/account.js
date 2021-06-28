@@ -921,7 +921,7 @@ function initClient(client) {
 						showPlayerLoginGUI(client);
 					} else {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
-						messagePlayerNormal(client, `Welcome back to Asshat Gaming RP, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
+						messagePlayerNormal(client, `Welcome back to ${getServerName()}, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
 					}
 				}
 			} else {
@@ -930,7 +930,7 @@ function initClient(client) {
 					showPlayerRegistrationGUI(client);
 				} else {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
-					messagePlayerNormal(client, `Welcome to Asshat Gaming RP, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
+					messagePlayerNormal(client, `Welcome to ${getServerName()}, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
 				}
 			}
 		}
@@ -1180,8 +1180,9 @@ function generateEmailVerificationCode() {
 function sendEmailVerificationEmail(client, emailVerificationCode) {
 	let emailBodyText = getEmailConfig().bodyContent.confirmEmail;
 	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", emailVerificationCode);
+	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
 
-	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);
+	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on ${getServerName()}`, emailBodyText);
 }
 
 // ===========================================================================
@@ -1191,8 +1192,9 @@ function verifyAccountEmail(accountData, verificationCode) {
 
 	let emailBodyText = getEmailConfig().bodyContent.confirmEmail;
 	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", emailVerificationCode);
+	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
 
-	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on Asshat Gaming RP`, emailBodyText);
+	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on ${getServerName()}`, emailBodyText);
 
 	getPlayerData(client).accountData.emailAddress = emailAddress;
 	getPlayerData(client).accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);

@@ -63,6 +63,8 @@ function onResourceStart(event, resource) {
         gta.setDefaultInteriors(false);
     }
 
+    gta.onMission = true;
+
     garbageCollectorInterval = setInterval(collectAllGarbage, 1000*60);
 }
 

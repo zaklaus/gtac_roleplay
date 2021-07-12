@@ -87,8 +87,7 @@ function playStreamingRadioCommand(command, params, client) {
 	let clients = getClients();
 	for(let i in clients) {
 		if(getPlayerVehicle(client) == getPlayerVehicle(clients[i])) {
-			playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url);
-			setPlayerStreamingRadioVolume(client, getPlayerData(client).streamingRadioVolume);
+			playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url, true, getPlayerData(client).streamingRadioVolume);
 		}
 	}
 }
@@ -108,9 +107,20 @@ function setStreamingRadioVolumeCommand(command, params, client) {
 		return false;
 	}
 
-	setPlayerStreamingRadioVolume(client, toInteger(volumeLevel)/100);
-	getPlayerData(client).streamingRadioVolume = toInteger(volumeLevel)/100;
-	messagePlayerSuccess(client, `You set your streaming radio volume to ${volumeLevel}`);
+	setPlayerStreamingRadioVolume(client, toInteger(volumeLevel));
+	getPlayerData(client).streamingRadioVolume = toInteger(volumeLevel);
+	let volumeEmoji = '';
+	if(volumeLevel >= 60) {
+		volumeEmoji = '🔊 ';
+	} else if(volumeLevel >= 30 && volumeLevel < 60) {
+		volumeEmoji = '🔉 ';
+	} else if(volumeLevel > 0 && volumeLevel < 30) {
+		volumeEmoji = '🔈 ';
+	} else if(volumeLevel <= 0) {
+		volumeEmoji = '🔇 ';
+	}
+
+	messagePlayerSuccess(client, `${volumeEmoji}You set your streaming radio volume to ${volumeLevel}%`);
 }
 
 // ===========================================================================

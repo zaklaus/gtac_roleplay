@@ -38,7 +38,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.position", setLocalPlayerPosition);
     addNetworkHandler("ag.heading", setLocalPlayerHeading);
     addNetworkHandler("ag.interior", setLocalPlayerInterior);
-
+    addNetworkHandler("ag.minuteDuration", setMinuteDuration);
     addNetworkHandler("ag.showJobRouteStop", showJobRouteStop);
     addNetworkHandler("ag.snow", setSnowState);
     addNetworkHandler("ag.health", setLocalPlayerHealth);
@@ -81,6 +81,8 @@ function addAllNetworkHandlers() {
     addNetworkHandler("ag.obj.sync", syncObjectProperties);
 
     addNetworkHandler("ag.veh.repair", repairVehicle);
+
+    addNetworkHandler("ag.pedAnim", makePedPlayAnimation);
 }
 
 // ===========================================================================
@@ -216,7 +218,7 @@ function sendServerNewAFKStatus(state) {
 
 // ===========================================================================
 
-function playStreamingRadio(url, loop) {
+function playStreamingRadio(url, loop, volume) {
     //gta.forceRadioChannel(-1);
     if(url == "") {
         if(streamingRadio != null) {
@@ -230,7 +232,7 @@ function playStreamingRadio(url, loop) {
     }
 
     streamingRadio = audio.createSoundFromURL(url, loop);
-    streamingRadio.volume = 0.5;
+    streamingRadio.volume = volume/100;
     streamingRadio.play();
 }
 
@@ -238,7 +240,7 @@ function playStreamingRadio(url, loop) {
 
 function setStreamingRadioVolume(volume) {
     if(streamingRadio != null) {
-        streamingRadio.volume = volume;
+        streamingRadio.volume = volume/100;
     }
 }
 
@@ -252,6 +254,16 @@ function anchorBoat(vehicleId) {
 
 function setEnterPropertyKey(key) {
     enterPropertyKey = key;
+}
+
+// ===========================================================================
+
+function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed) {
+    if(animType == VRR_ANIMTYPE_ADD) {
+        getElementFromId(pedId).addAnimation(animGroup, animId);
+    } else if(animType == VRR_ANIMTYPE_BLEND) {
+        getElementFromId(pedId).blendAnimation(animGroup, animId, animSpeed);
+    }
 }
 
 // ===========================================================================

@@ -433,14 +433,14 @@ function sendPlayerMouseCursorToggle(client) {
 // ===========================================================================
 
 function sendAddAccountKeyBindToClient(client, key, keyState) {
-    logToConsole(LOG_DEBUG, `[VRR.Client] Sending added keybind to ${getPlayerDisplayForConsole(client)} (Key: ${sdl.getKeyName(key)}, State: ${(keyState) ? "down" : "up"})`);
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending added keybind to ${getPlayerDisplayForConsole(client)} (Key: ${toUpperCase(getKeyNameFromId(key))}, State: ${(keyState) ? "down" : "up"})`);
     triggerNetworkEvent("ag.addKeyBind", client, toInteger(key), (keyState) ? KEYSTATE_DOWN : KEYSTATE_UP);
 }
 
 // ===========================================================================
 
 function sendRemoveAccountKeyBindToClient(client, key) {
-    logToConsole(LOG_DEBUG, `[VRR.Client] Sending deleted keybind to ${getPlayerDisplayForConsole(client)} (Key: ${sdl.getKeyName(key)})`);
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending deleted keybind to ${getPlayerDisplayForConsole(client)} (Key: ${toUpperCase(getKeyNameFromId(key))})`);
     triggerNetworkEvent("ag.delKeyBind", client, toInteger(key));
 }
 
@@ -659,7 +659,7 @@ function setPlayerCameraLookAt(client, cameraPosition, lookAtPosition) {
 
 // ===========================================================================
 
-function setTimeMinuteDuration(client, minuteDuration) {
+function sendTimeMinuteDurationToPlayer(client, minuteDuration) {
 	triggerNetworkEvent("ag.minuteDuration", client, minuteDuration);
 }
 
@@ -878,8 +878,8 @@ function sendPlayerChatScrollLines(client, amount) {
 
 // ===========================================================================
 
-function playRadioStreamForPlayer(client, streamURL) {
-    triggerNetworkEvent("ag.radioStream", client, streamURL, getPlayerData(client).streamingRadioVolume);
+function playRadioStreamForPlayer(client, streamURL, loop = false, volume = 0) {
+    triggerNetworkEvent("ag.radioStream", client, streamURL, loop, volume);
 }
 
 // ===========================================================================
@@ -899,6 +899,14 @@ function setVehicleLightsState(vehicle, state) {
 
 function sendPlayerEnterPropertyKey(client, key) {
     triggerNetworkEvent("ag.enterPropertyKey", client, key);
+}
+
+// ===========================================================================
+
+function makePedPlayAnimation(ped, animationSlot) {
+    let animationData = getAnimationData(animationSlot);
+
+    triggerNetworkEvent("ag.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4]);
 }
 
 // ===========================================================================

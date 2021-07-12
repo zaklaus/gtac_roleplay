@@ -45,38 +45,6 @@ function repairVehicle(syncId) {
 // ===========================================================================
 
 function syncVehicleProperties(vehicle) {
-    if(vehicle != null) {
-        syncVehicleProperties(vehicle);
-    }
-}
-
-// ===========================================================================
-
-function syncCivilianProperties(civilian) {
-    if(civilian != null) {
-        syncCivilianProperties(civilian);
-    }
-}
-
-// ===========================================================================
-
-function syncPlayerProperties(player) {
-    if(player != null) {
-        syncPlayerProperties(player);
-    }
-}
-
-// ===========================================================================
-
-function syncObjectProperties(object) {
-    if(object != null) {
-        syncObjectProperties(object);
-    }
-}
-
-// ===========================================================================
-
-function syncVehicleProperties(vehicle) {
     if(doesEntityDataExist(vehicle, "ag.lights")) {
         let lightStatus = getEntityData(vehicle, "ag.lights");
         vehicle.lights = lightStatus;
@@ -216,6 +184,11 @@ function syncCivilianProperties(civilian) {
             civilian.changeBodyProp(1, bodyPropRightFoot[0], bodyPropRightFoot[1]);
         }
     }
+
+    if(doesEntityDataExist(civilian, "ag.anim")) {
+        let animData = getEntityData(vehicle, "ag.anim");
+        civilian.addAnimation(animData[0], animData[1]);
+    }
 }
 
 // ===========================================================================
@@ -351,7 +324,7 @@ function syncElementProperties(element) {
             syncVehicleProperties(element);
             break;
 
-        case ELEMENT_CIVILIAN:
+        case ELEMENT_PED:
             syncCivilianProperties(element);
             break;
 

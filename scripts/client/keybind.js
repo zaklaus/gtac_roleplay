@@ -22,18 +22,18 @@ function initKeyBindScript() {
 // ===========================================================================
 
 function bindAccountKey(key, keyState) {
-    logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Binded key ${sdl.getKeyName(key)} (${key})`);
+    logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Binded key ${toUpperCase(getKeyNameFromId(key))} (${key})`);
     bindKey(toInteger(key), keyState, function(event) {
         if(hasKeyBindDelayElapsed()) {
             if(canLocalPlayerUseKeyBinds()) {
-                logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Using keybind for key ${sdl.getKeyName(key)} (${key})`);
+                logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Using keybind for key ${toUpperCase(getKeyNameFromId(key))} (${key})`);
                 lastKeyBindUse = sdl.ticks;
                 tellServerPlayerUsedKeyBind(key);
             } else {
-                logToConsole(LOG_ERROR, `[VRR.KeyBind]: Failed to use keybind for key ${sdl.getKeyName(key)} (${key}) - Not allowed to use keybinds!`);
+                logToConsole(LOG_ERROR, `[VRR.KeyBind]: Failed to use keybind for key ${toUpperCase(getKeyNameFromId(key))} (${key}) - Not allowed to use keybinds!`);
             }
         } else {
-            logToConsole(LOG_ERROR, `[VRR.KeyBind]: Failed to use keybind for key ${sdl.getKeyName(key)} (${key}) - Not enough time has passed since last keybind use!`);
+            logToConsole(LOG_ERROR, `[VRR.KeyBind]: Failed to use keybind for key ${toUpperCase(getKeyNameFromId(key))} (${key}) - Not enough time has passed since last keybind use!`);
         }
     });
 }
@@ -41,7 +41,7 @@ function bindAccountKey(key, keyState) {
 // ===========================================================================
 
 function unBindAccountKey(key) {
-    logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Unbinded key ${sdl.getKeyName(key)} (${key})`);
+    logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Unbinded key ${toUpperCase(getKeyNameFromId(key))} (${key})`);
     unbindKey(key);
     return true;
 }

@@ -109,7 +109,7 @@ function processSkinSelectRendering() {
 
 function toggleSkinSelect(state) {
     if(state) {
-        skinSelectorIndex = getAllowedSkinIndexBySkinId(localPlayer.skin);
+        skinSelectorIndex = allowedSkins[gta.game][0];
         if(localPlayer.skin != allowedSkins[gta.game][skinSelectorIndex][0]) {
             localPlayer.skin = allowedSkins[gta.game][skinSelectorIndex][0];
         }

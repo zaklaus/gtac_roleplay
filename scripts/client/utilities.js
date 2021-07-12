@@ -391,7 +391,7 @@ function getLocalPlayerVehicleSeat() {
 
 function clearSelfOwnedPeds() {
     logToConsole(LOG_DEBUG, `Clearing self-owned peds`);
-    getElementsByType(ELEMENT_CIVILIAN).forEach(function(ped) {
+    getElementsByType(ELEMENT_PED).forEach(function(ped) {
         if(ped.isOwner) {
             destroyElement(ped);
         }
@@ -623,6 +623,13 @@ function getAllowedSkinIndexBySkinId(skinId) {
 
 function processWantedLevelReset() {
     localPlayer.wantedLevel = 0;
+}
+
+// ===========================================================================
+
+function setMinuteDuration(minuteDuration) {
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting minute duration to ${minuteDuration}ms`);
+    gta.time.minuteDuration = minuteDuration;
 }
 
 // ===========================================================================

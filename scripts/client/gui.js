@@ -1094,11 +1094,6 @@ let showNewCharacter = function() {
 	mexui.setInput(true);
 	setHUDEnabled(false);
 	newCharacter.window.shown = true;
-
-	//gui.showCursor(true, false);
-	//localPlayer.invincible = true;
-	//localPlayer.setProofs(true, true, true, true, true);
-	//localPlayer.collisionsEnabled = false;
 }
 
 // ===========================================================================

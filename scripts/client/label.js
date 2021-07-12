@@ -104,7 +104,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
             switch(bizLabelInfoType) {
                 case VRR_BIZLABEL_INFO_ENTER:
                     if(enterPropertyKey != null) {
-                        bizInfoText = `Press ${sdl.getKeyName(enterPropertyKey)} to enter`;
+                        bizInfoText = `Press ${toUpperCase(getKeyNameFromId(enterPropertyKey))} to enter`;
                     } else {
                         bizInfoText = `Use /enter to enter here`;
                     }

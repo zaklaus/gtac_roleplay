@@ -353,6 +353,8 @@ function selectCharacter(client, characterId = -1) {
 		onPlayerSpawn(client);
 	}, 1000);
 
+	playRadioStreamForPlayer(client, "");
+
 	getPlayerCurrentSubAccount(client).lastLogin = getCurrentUnixTimestamp();
 }
 
@@ -380,6 +382,8 @@ function switchCharacterCommand(command, params, client) {
 
 	logToConsole(client, `Saving ${getPlayerDisplayForConsole(client)}'s subaccount (${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}] to database`)
 	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
+
+	disableCityAmbienceForPlayer(client);
 
 	resetClientStuff(client);
 
@@ -470,6 +474,10 @@ function getPlayerCurrentSubAccount(client) {
 
 	let subAccountId = getPlayerData(client).currentSubAccount;
 	if(subAccountId == -1) {
+		return false;
+	}
+
+	if(typeof getPlayerData(client).subAccounts[subAccountId] == "undefined") {
 		return false;
 	}
 

@@ -34,11 +34,12 @@ function saveAllServerDataToDatabase() {
 function initTimers() {
 	//if(!isDevelopmentServer()) {
 		serverTimers.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
-		serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
+		//serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
 		serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
 		serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
 		serverTimers.garbageCollectorTimer = setInterval(collectAllGarbage, 60000);
 		serverTimers.payDayTimer = setInterval(checkPayDays, 30000);
+		serverTimers.gameTime = setInterval(checkServerGameTime, 60000);
 	//}
 }
 
@@ -48,13 +49,15 @@ function vehicleRentCheck() {
 	for(let i in getServerData().vehicles) {
 		if(getServerData().vehicles[i] != null) {
 			if(getServerData().vehicles[i].rentPrice > 0) {
-				if(getServerData().vehicles[i].rentedBy) {
+				if(getServerData().vehicles[i].rentedBy != false) {
 					let rentedBy = getServerData().vehicles[i].rentedBy;
-					if(getPlayerCurrentSubAccount(rentedBy).cash < getServerData().vehicles[i].rentPrice) {
-						messagePlayerAlert(rentedBy, `You do not have enough money to continue renting this vehicle!`);
-						stopRentingVehicle(rentedBy);
-					} else {
-						takePlayerCash(rentedBy, getServerData().vehicles[i].rentPrice);
+					if(getPlayerData(rentedBy) != false) {
+						if(getPlayerCurrentSubAccount(rentedBy).cash < getServerData().vehicles[i].rentPrice) {
+							messagePlayerAlert(rentedBy, `You do not have enough money to continue renting this vehicle!`);
+							stopRentingVehicle(rentedBy);
+						} else {
+							takePlayerCash(rentedBy, getServerData().vehicles[i].rentPrice);
+						}
 					}
 				}
 			}
@@ -71,6 +74,23 @@ function updatePings() {
 			updatePlayerPing(clients[i]);
 		}
 	}
+}
+
+// ===========================================================================
+
+function checkServerGameTime() {
+	if(getServerConfig().minute >= 59) {
+		getServerConfig().minute = 0;
+		if(getServerConfig().hour >= 23) {
+			getServerConfig().hour = 0;
+		} else {
+			getServerConfig().hour = getServerConfig().hour + 1;
+		}
+	} else {
+		getServerConfig().minute = getServerConfig().minute + 1;
+	}
+
+	updateTimeRule();
 }
 
 // ===========================================================================

@@ -59,12 +59,6 @@ function playerPromptAnswerYes(client) {
 
     switch(getPlayerData(client).promptType) {
         case VRR_PROMPT_CREATEFIRSTCHAR:
-            //getPlayerData(client).creatingCharacter = true;
-            //spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, allowedSkins[getServerGame()][0][0], getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
-            //showCharacterSelectCameraToPlayer(client);
-            //setTimeout(function() {
-            //    forcePlayerIntoSkinSelect(client);
-            //}, 750);
             showPlayerNewCharacterGUI(client);
             break;
 

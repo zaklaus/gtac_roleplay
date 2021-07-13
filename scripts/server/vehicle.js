@@ -80,7 +80,7 @@ function saveVehicleToDatabase(vehicleData) {
 
 		// If vehicle hasn't been added to database, ID will be 0
 		if(vehicleData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server, veh_spawn_lock, veh_buy_price, veh_rent_price) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${getServerId()}, ${boolToInt(vehicleData.spawnLocked)}, ${vehicleData.buyPrice}, ${vehicleData.rentPrice})`;
+			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server, veh_spawn_lock, veh_buy_price, veh_rent_price, veh_livery, veh_) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${getServerId()}, ${boolToInt(vehicleData.spawnLocked)}, ${vehicleData.buyPrice}, ${vehicleData.rentPrice})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getVehicleData(vehicleData.vehicle).databaseId = getDatabaseInsertId(dbConnection);
 		} else {
@@ -235,6 +235,8 @@ function deleteVehicleCommand(command, params, client) {
 
 	let dataIndex = getEntityData(vehicle, "ag.dataSlot");
 	let vehicleName = getVehicleName(vehicle);
+
+	quickDatabaseQuery(`DELETE FROM veh_main WHERE veh_id = ${getVehicleData(vehicle).databaseId}`);
 
 	getServerData().vehicles[dataIndex] = null;
 	destroyElement(vehicle);
@@ -473,11 +475,14 @@ function enterVehicleAsPassengerCommand(command, params, client) {
 // ===========================================================================
 
 function stopRentingVehicleCommand(command, params, client) {
-	//getPlayerCurrentSubAccount(client).cash -= getVehicleData(vehicle).rentPrice;
-	let vehicle = getPlayerCurrentSubAccount(client).rentingVehicle;
-	stopRentingVehicle(client);
+	if(!getPlayerData(client).rentingVehicle) {
+		messagePlayerError(client, "You aren't renting a vehicle!");
+		return false;
+	}
 
+	let vehicle = getPlayerData(client).rentingVehicle;
 	messagePlayerAlert(client, `You are no longer renting the ${getVehicleName(vehicle)}`);
+	stopRentingVehicle(client);
 }
 
 // ===========================================================================
@@ -840,7 +845,7 @@ function reloadAllVehiclesCommand(command, params, client) {
 
 function respawnAllVehiclesCommand(command, params, client) {
 	for(let i in getServerData().vehicles) {
-		if(getServerData().vehicles[i].vehicle) {
+		if(getServerData().vehicles[i].vehicle != null) {
 			deleteGameElement(getServerData().vehicles[i].vehicle);
 			getServerData().vehicles[i].vehicle = null;
 		}
@@ -899,6 +904,8 @@ function spawnVehicle(vehicleData) {
 	vehicle.locked = intToBool(vehicleData.locked);
 
 	vehicleData.vehicle = vehicle;
+
+	setEntityData(vehicle, "ag.livery", vehicleData.livery);
 
 	return vehicle;
 }
@@ -1098,6 +1105,15 @@ function cacheAllVehicleItems() {
 				getServerData().vehicles[i].dashItemCache.push(j);
 			}
 		}
+	}
+}
+
+// ===========================================================================
+
+function resetVehiclePosition(vehicle) {
+	if(!getVehicleData(vehicle).spawnLocked) {
+		getVehicleData(vehicle).spawnPosition = getVehiclePosition(vehicle);
+		getVehicleData(vehicle).spawnHeading = getVehiclePosition(vehicle);
 	}
 }
 

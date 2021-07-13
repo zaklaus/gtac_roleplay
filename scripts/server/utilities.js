@@ -408,7 +408,7 @@ function getCiviliansInRange(position, range) {
 	let peds = getPeds();
 	let inRangeCivilians = [];
 	for(let i in peds) {
-		if(peds[i].isType(ELEMENT_CIVILIANS)) {
+		if(peds[i].isType(ELEMENT_PED)) {
 			if(getDistance(position, peds[i].position) <= range) {
 				inRangeCivilians.push(peds[i]);
 			}
@@ -727,6 +727,23 @@ function getWeatherFromParams(params) {
 
 // ===========================================================================
 
+function getAnimationFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getGameData().animations[getServerGame()]) {
+			if(toLowerCase(getGameData().animations[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getGameData().animations[getServerGame()][params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+	return 0;
+}
+
+// ===========================================================================
+
 function getClanFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getServerData().clans) {
@@ -797,12 +814,12 @@ function getBusinessFromParams(params) {
 function getGameLocationFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getGameData().locations) {
-			if(toLowerCase(getGameData().locations[i][0]).indexOf(toLowerCase(params)) != -1) {
+			if(toLowerCase(getGameData().locations[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
 	} else {
-		if(typeof getGameData().locations[params] != "undefined") {
+		if(typeof getGameData().locations[getServerGame()][params] != "undefined") {
 			return toInteger(params);
 		}
 	}
@@ -1239,7 +1256,7 @@ function getClientsInRange(position, distance) {
 // ===========================================================================
 
 function getCiviliansInRange(position, distance) {
-	return getElementsByType(ELEMENT_CIVILIAN).filter(x => x.position.distance(position) <= distance);
+	return getElementsByType(ELEMENT_PED).filter(x => x.position.distance(position) <= distance);
 }
 
 // ===========================================================================
@@ -1251,7 +1268,7 @@ function getElementsByTypeInRange(elementType, position, distance) {
 // ===========================================================================
 
 function getClosestCivilian(position) {
-	return getElementsByType(ELEMENT_CIVILIAN).reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
+	return getElementsByType(ELEMENT_PED).reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
 }
 
 // ===========================================================================

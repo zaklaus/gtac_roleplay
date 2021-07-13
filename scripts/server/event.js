@@ -98,6 +98,7 @@ function onPlayerChat(event, client, messageText) {
 
 function onProcess(event, deltaTime) {
     checkVehicleBuying();
+    updateServerGameTime();
     //checkPlayerSpawning();
     //checkPlayerPedState();
     //checkVehicleBurning();
@@ -121,7 +122,7 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
         if(getVehicleData(vehicle).locked) {
             if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                 if(doesPlayerHaveKeyBindForCommand(client, "lock")) {
-                    messagePlayerTip(client, `🔒 This ${getVehicleName(vehicle)} is locked. Press ${getInlineChatColourByName("lightGrey")}${sdl.getKeyName(getPlayerKeyBindForCommand(client, "lock").key)} ${getInlineChatColourByName("white")}to unlock it.`);
+                    messagePlayerTip(client, `🔒 This ${getVehicleName(vehicle)} is locked. Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "lock").key))} ${getInlineChatColourByName("white")}to unlock it.`);
                 } else {
                     messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
                 }
@@ -238,7 +239,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
                 if(!getVehicleData(vehicle).engine) {
                     if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                         if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press ${getInlineChatColourByName("lightGrey")}${sdl.getKeyName(getPlayerKeyBindForCommand(client, "engine").key)} ${getInlineChatColourByName("white")}to start it.`);
+                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} ${getInlineChatColourByName("white")}to start it.`);
                         } else {
                             messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
                         }
@@ -271,8 +272,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
 
         if(getVehicleData(vehicle).streamingRadioStation != -1) {
             if(getPlayerData(client).streamingRadioStation != getVehicleData(vehicle).streamingRadioStation) {
-                playRadioStreamForPlayer(client, radioStations[getVehicleData(vehicle).streamingRadioStation].url);
-                setPlayerStreamingRadioVolume(client, getPlayerData(client).streamingRadioVolume);
+                playRadioStreamForPlayer(client, radioStations[getVehicleData(vehicle).streamingRadioStation].url, getPlayerData(client).streamingRadioVolume);
             }
         }
     //}, client.ping+500);
@@ -345,9 +345,9 @@ function onPlayerDeath(client, position) {
 // ===========================================================================
 
 function onPedSpawn(ped) {
-    //if(ped.type == ELEMENT_PLAYER) {
-    //    setTimeout(onPlayerSpawn, 500, ped);
-    //}
+    if(ped.type == ELEMENT_PLAYER) {
+        setTimeout(onPlayerSpawn, 250, ped);
+    }
 }
 
 // ===========================================================================
@@ -365,7 +365,21 @@ function onPlayerSpawn(client) {
     logToConsole(LOG_DEBUG, `[VRR.Event] Checking ${getPlayerDisplayForConsole(client)}'s player data`);
     if(!getPlayerData(client)) {
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player data is invalid. Kicking them from server.`);
-        client.disconnect();
+        client.despawnPlayer();
+        return false;
+    }
+
+    logToConsole(LOG_DEBUG, `[VRR.Event] Checking ${getPlayerDisplayForConsole(client)}'s login status`);
+    if(!getPlayerData(client).loggedIn) {
+        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} is NOT logged in. Despawning their player.`);
+        client.despawnPlayer();
+        return false;
+    }
+
+    logToConsole(LOG_DEBUG, `[VRR.Event] Checking ${getPlayerDisplayForConsole(client)}'s selected character status`);
+    if(getPlayerData(client).currentSubAccount == -1) {
+        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} has NOT selected a character. Despawning their player.`);
+        client.despawnPlayer();
         return false;
     }
 
@@ -462,7 +476,7 @@ function onPlayerSpawn(client) {
 
         if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
             let keyId = getPlayerKeyBindForCommand(client, "enter");
-            logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId}, ${sdl.getKeyName(keyId)}) to ${getPlayerDisplayForConsole(client)}`);
+            logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId}, ${toUpperCase(getKeyNameFromId(keyId))}) to ${getPlayerDisplayForConsole(client)}`);
             sendPlayerEnterPropertyKey(client, keyId);
         }
 

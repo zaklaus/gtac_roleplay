@@ -198,6 +198,9 @@ const VRR_ITEM_USETYPE_TRAINTICKET = 41;         //
 const VRR_ITEM_USETYPE_VEHUPGRADE_PART = 42;     //
 const VRR_ITEM_USETYPE_VEHTIRE = 43;             //
 const VRR_ITEM_USETYPE_FUELCAN = 44;             //
+const VRR_ITEM_USETYPE_VEHCOLOUR = 45;           //
+const VRR_ITEM_USETYPE_VEHLIVERY = 46;           //
+const VRR_ITEM_USETYPE_VEHREPAIR = 46;           //
 
 // Item Drop Types
 const VRR_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped

@@ -753,8 +753,8 @@ function forceCharacterNameChangeCommand(command, params, client) {
         return false;
 	}
 
-	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)} (${getCharacterFullName(targetClient)}) ${getInlineChatColourByName("white")}to change their character's name.`);
-	showPlayerNewCharacterFailedGUI(client, "Non-RP name! Choose a new one:");
+	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(targetClient)} (${getCharacterFullName(targetClient)}) ${getInlineChatColourByName("white")}to change their character's name.`);
+	showPlayerNewCharacterFailedGUI(targetClient, "Non-RP name! Choose a new one:");
 }
 
 // ===========================================================================
@@ -765,10 +765,10 @@ function forceCharacterNameCommand(command, params, client) {
 		return false;
 	}
 
-	if(areThereEnoughParams(params, 3, " ")) {
-		messagePlayerSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
+	//if(areThereEnoughParams(params, 3, " ")) {
+	//	messagePlayerSyntax(client, getCommandSyntaxText(command));
+	//	return false;
+	//}
 
 	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(splitParams[0]);
@@ -785,10 +785,10 @@ function forceCharacterNameCommand(command, params, client) {
 	let newName = `${firstName} ${lastName}`;
 	let oldName = getCharacterFullName(targetClient);
 
-	getPlayerCurrentSubAccount(client).firstName = firstName;
-	getPlayerCurrentSubAccount(client).lastName = lastName;
+	getPlayerCurrentSubAccount(targetClient).firstName = firstName;
+	getPlayerCurrentSubAccount(targetClient).lastName = lastName;
 
-	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}'s ${getInlineChatColourByName("white")}current character name from ${getInlineChatColourByName("lightGrey")}${oldName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newName}`);
+	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}current character name from ${getInlineChatColourByName("lightGrey")}${oldName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newName}`);
 }
 
 // ===========================================================================

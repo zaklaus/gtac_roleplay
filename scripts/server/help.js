@@ -114,7 +114,7 @@ function helpCommand(command, params, client) {
 
         case "command":
         case "cmd":
-            if(areThereEnoughParams(params, 2, " ")) {
+            if(areThereEnoughParams(params, 3, " ")) {
                 showCommandHelpMessage(client, splitParams[2]);
             } else {
                 showCommandHelpMessage(client, false);
@@ -219,21 +219,23 @@ function showRulesHelpMessage(client) {
 
 function showWebsiteHelpMessage(client) {
     messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Website ${getInlineChatColourByType("clanOrange")}=============================`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}The website is ${getInlineChatColourByName("lightGrey")}https://asshatgaming.com`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Website coming soon!`);
 }
 
 // ===========================================================================
 
 function showDiscordHelpMessage(client) {
     messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Discord ${getInlineChatColourByType("clanOrange")}=============================`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Join our discord! ${getInlineChatColourByName("lightGrey")}https://discord.gg/4TQ3TGB529`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Discord coming soon!`);
 }
 
 // ===========================================================================
 
 function showAnimationHelpMessage(client) {
     messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Animations ${getInlineChatColourByType("clanOrange")}===============================`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Animations are not yet available.`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Animations allow you to enhance roleplay with visual actions`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/an ${getInlineChatColourByName("white")}or ${getInlineChatColourByName("lightGrey")}/anim ${getInlineChatColourByName("white")}with a name to use an animation.`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}To see a list of animations, use ${getInlineChatColourByName("lightGrey")}/animlist`);
 }
 
 // ===========================================================================
@@ -251,7 +253,8 @@ function showAmmunationHelpMessage(client) {
 function showClothesHelpMessage(client) {
     messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Clothes ${getInlineChatColourByType("clanOrange")}==================================`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}To change your skin, use ${getInlineChatColourByName("lightGrey")}/gps ${getInlineChatColourByName("white")}to find a clothing store`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}At a clothing store, use ${getInlineChatColourByName("lightGrey")}/buyclothes ${getInlineChatColourByName("white")}to choose a skin`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}At a clothing store, use ${getInlineChatColourByName("lightGrey")}/buy ${getInlineChatColourByName("white")} to purchase clothes`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}When you have a clothing item, equip and use it like any other item to show the skin selection. Check ${getInlineChatColourByName("lightGrey")}(/help items) ${getInlineChatColourByName("white")}to learn how to use items)`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Some skins are restricted to jobs, clans, or for other reasons.`);
 }
 
@@ -280,7 +283,7 @@ function showBusinessHelpMessage(client) {
 
 function showCommandHelpMessage(client, commandName) {
     if(!commandName) {
-        messagePlayerSyntax(client, `${getCommandSyntaxText("help")} <command name>`);
+        messagePlayerSyntax(client, `${getCommandSyntaxText("help")} command <command name>`);
         return false;
     }
 

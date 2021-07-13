@@ -480,7 +480,7 @@ function hashAccountPassword(name, password) {
 // ===========================================================================
 
 function saltAccountInfo(name, password) {
-	return "ag.gaming." + toString(accountSaltHash) + "." + toString(name) + "." + toString(password);
+	return `ag.gaming.${accountSaltHash}.${name}.${password}`;
 }
 
 // ===========================================================================
@@ -812,7 +812,6 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	messagePlayerSuccess(client, "Your account has been created!");
 	if(checkForSMTPModule() && getEmailConfig().enabled) {
 		messagePlayerAlert(client, "Don't forget to verify your email! A verification code has been sent to you");
-        return false;
     }
 	messagePlayerAlert(client, "To play on the server, you will need to make a character.");
 
@@ -895,7 +894,6 @@ function initClient(client) {
 	sendPlayerGUIInit(client);
 
 	showConnectCameraToPlayer(client);
-	//playRadioStreamForPlayer(client, getServerConfig().introMusicURL, true);
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
 
 	setTimeout(function() {
@@ -934,6 +932,8 @@ function initClient(client) {
 				}
 			}
 		}
+
+		playRadioStreamForPlayer(client, getServerConfig().introMusicURL, true, getPlayerData(client).streamingRadioVolume);
 	}, 2500);
 }
 
@@ -956,10 +956,10 @@ function createDefaultKeybindsForAccount(accountDatabaseId) {
 	for(let j = 1 ; j <= 4 ; j++) {
 		logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybinds for account ${accountDatabaseId} on server ${j} ...`);
 		for(let i in getGlobalConfig().keyBind.defaultKeyBinds) {
-			logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())} ...`);
-			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_server, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${j}, ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeyBinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeyBinds[i].keyState})`;
+			logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${getKeyIdFromParams(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())} ...`);
+			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_server, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${j}, ${getKeyIdFromParams(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeyBinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeyBinds[i].keyState})`;
 			quickDatabaseQuery(dbQueryString);
-			logToConsole(LOG_DEBUG, `[VRR.Account]: Created default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${sdl.getKeyFromName(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}!`);
+			logToConsole(LOG_DEBUG, `[VRR.Account]: Created default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${getKeyIdFromParams(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}!`);
 		}
 		logToConsole(LOG_DEBUG, `[VRR.Account]: Create default keybinds for account ${accountDatabaseId} on server ${j}!`);
 	}
@@ -992,7 +992,7 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempAccountKeyBindData = new serverClasses.keyBindData(dbAssoc);
 					tempAccountKeybinds.push(tempAccountKeyBindData);
-					logToConsole(LOG_DEBUG, `[VRR.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${sdl.getKeyName(tempAccountKeyBindData.key)}') loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[VRR.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${toUpperCase(getKeyNameFromId(tempAccountKeyBindData.key))}') loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);

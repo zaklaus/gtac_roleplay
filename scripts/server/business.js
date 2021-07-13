@@ -1031,7 +1031,7 @@ function createBusinessEntranceBlip(businessId) {
 		getBusinessData(businessId).entranceBlip.onAllDimensions = false;
 		getBusinessData(businessId).entranceBlip.dimension = getBusinessData(businessId).entranceDimension;
 		//getBusinessData(businessId).entranceBlip.interior = getBusinessData(businessId).entranceInterior;
-		setEntityData(getBusinessData(businessId).entranceBlip, "ag.owner.type", AG_BLIP_BUSINESS_ENTRANCE, false);
+		setEntityData(getBusinessData(businessId).entranceBlip, "ag.owner.type", VRR_BLIP_BUSINESS_ENTRANCE, false);
 		setEntityData(getBusinessData(businessId).entranceBlip, "ag.owner.id", businessId, false);
 		addToWorld(getBusinessData(businessId).entranceBlip);
 	}
@@ -1072,7 +1072,7 @@ function createBusinessExitBlip(businessId) {
 			getBusinessData(businessId).exitBlip.onAllDimensions = false;
 			getBusinessData(businessId).exitBlip.dimension = getBusinessData(businessId).entranceDimension;
 			//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
-			setEntityData(getBusinessData(businessId).exitBlip, "ag.owner.type", AG_BLIP_BUSINESS_EXIT, false);
+			setEntityData(getBusinessData(businessId).exitBlip, "ag.owner.type", VRR_BLIP_BUSINESS_EXIT, false);
 			setEntityData(getBusinessData(businessId).exitBlip, "ag.owner.id", businessId, false);
 			addToWorld(getBusinessData(businessId).exitBlip);
 		}
@@ -1295,7 +1295,7 @@ function buyFromBusinessCommand(command, params, client) {
 	if(getBusinessData(businessId).hasInterior) {
 		if(!getPlayerBusiness(client)) {
 			if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
-				messagePlayerTip(client, `You need to enter the business first! Press ${getInlineChatColourByName("lightGrey")}${sdl.getKeyName(getPlayerKeyBindForCommand(client, "enter").key)} ${getInlineChatColourByName("white")}to enter and exit a business`);
+				messagePlayerTip(client, `You need to enter the business first! Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "enter")).key)} ${getInlineChatColourByName("white")}to enter and exit a business`);
 			} else {
 				messagePlayerNormal(client, `You need to enter the business first! Use /enter to enter and exit a business`);
 			}
@@ -1552,6 +1552,17 @@ function updateBusinessPickupLabelData(businessId) {
 	setEntityData(getBusinessData(businessId).exitPickup, "ag.owner.type", VRR_PICKUP_BUSINESS_EXIT, false);
 	setEntityData(getBusinessData(businessId).exitPickup, "ag.owner.id", businessId, false);
 	setEntityData(getBusinessData(businessId).exitPickup, "ag.label.type", VRR_LABEL_EXIT, true);
+}
+
+// ===========================================================================
+
+function getBusinessIdFromDatabaseId(databaseId) {
+	let businesses = getServerData().businesses;
+	for(let i in businesses) {
+		if(businesses[i].databaseId == databaseId) {
+			return i;
+		}
+	}
 }
 
 // ===========================================================================

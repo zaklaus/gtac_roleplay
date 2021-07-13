@@ -509,9 +509,9 @@ function createHouseEntrancePickup(houseId) {
 		getHouseData(houseId).entrancePickup = gta.createPickup(pickupModelId, getHouseData(houseId).entrancePosition);
 		getHouseData(houseId).entrancePickup.onAllDimensions = false;
 		getHouseData(houseId).entrancePickup.dimension = getHouseData(houseId).entranceDimension;
-		setEntityData(getHouseData(houseId).entrancePickup, "ag.owner.type", AG_PICKUP_HOUSE_ENTRANCE, false);
+		setEntityData(getHouseData(houseId).entrancePickup, "ag.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
 		setEntityData(getHouseData(houseId).entrancePickup, "ag.owner.id", houseId, false);
-		setEntityData(getHouseData(houseId).entrancePickup, "ag.label.type", AG_LABEL_HOUSE, true);
+		setEntityData(getHouseData(houseId).entrancePickup, "ag.label.type", VRR_LABEL_HOUSE, true);
 		setEntityData(getHouseData(houseId).entrancePickup, "ag.label.name", getHouseData(houseId).description, true);
 		setEntityData(getHouseData(houseId).entrancePickup, "ag.label.locked", getHouseData(houseId).locked, true);
 		if(getHouseData(houseId).buyPrice > 0) {
@@ -534,7 +534,7 @@ function createHouseEntranceBlip(houseId) {
 		getHouseData(houseId).entranceBlip = gta.createBlip(getHouseData(houseId).entrancePosition, blipModelId, 1, getColourByName("houseGreen"));
 		getHouseData(houseId).entranceBlip.onAllDimensions = false;
 		getHouseData(houseId).entranceBlip.dimension = getHouseData(houseId).entranceDimension;
-		setEntityData(getHouseData(houseId).entranceBlip, "ag.owner.type", AG_BLIP_HOUSE_ENTRANCE, false);
+		setEntityData(getHouseData(houseId).entranceBlip, "ag.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
 		setEntityData(getHouseData(houseId).entranceBlip, "ag.owner.id", houseId, false);
 		addToWorld(getHouseData(houseId).entranceBlip);
 	}
@@ -554,9 +554,9 @@ function createHouseExitPickup(houseId) {
 			getHouseData(houseId).exitPickup = gta.createPickup(pickupModelId, getHouseData(houseId).exitPosition);
 			getHouseData(houseId).exitPickup.onAllDimensions = false;
 			getHouseData(houseId).exitPickup.dimension = getHouseData(houseId).exitDimension;
-			setEntityData(getHouseData(houseId).exitPickup, "ag.owner.type", AG_PICKUP_HOUSE_EXIT, false);
+			setEntityData(getHouseData(houseId).exitPickup, "ag.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
 			setEntityData(getHouseData(houseId).exitPickup, "ag.owner.id", houseId, false);
-			setEntityData(getHouseData(houseId).exitPickup, "ag.label.type", AG_LABEL_EXIT, true);
+			setEntityData(getHouseData(houseId).exitPickup, "ag.label.type", VRR_LABEL_EXIT, true);
 			addToWorld(getHouseData(houseId).exitPickup);
 		}
 	}
@@ -576,7 +576,7 @@ function createHouseExitBlip(houseId) {
 			getHouseData(houseId).exitBlip = gta.createBlip(blipModelId, getHouseData(houseId).exitPosition, 1, getColourByName("houseGreen"));
 			getHouseData(houseId).exitBlip.onAllDimensions = false;
 			getHouseData(houseId).exitBlip.dimension = getHouseData(houseId).entranceDimension;
-			setEntityData(getHouseData(houseId).exitBlip, "ag.owner.type", AG_BLIP_HOUSE_EXIT, false);
+			setEntityData(getHouseData(houseId).exitBlip, "ag.owner.type", VRR_BLIP_HOUSE_EXIT, false);
 			setEntityData(getHouseData(houseId).exitBlip, "ag.owner.id", houseId, false);
 			addToWorld(getHouseData(houseId).exitBlip);
 		}
@@ -769,6 +769,17 @@ function cacheHouseItems(houseId) {
 	for(let i in getServerData().items) {
 		if(getItemData(i).ownerType == VRR_ITEM_OWNER_HOUSE && getItemData(i).ownerId == getHouseData(houseId).databaseId) {
 			getHouseData(houseId).itemCache.push(i);
+		}
+	}
+}
+
+// ===========================================================================
+
+function getHouseIdFromDatabaseId(databaseId) {
+	let houses = getServerData().houses;
+	for(let i in houses) {
+		if(houses[i].databaseId == databaseId) {
+			return i;
 		}
 	}
 }

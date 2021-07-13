@@ -619,6 +619,45 @@ function playerUseItem(client, hotBarSlot) {
 			messagePlayerError(client, `The ${getItemName(itemIndex)} doesn't do anything when you try to use it.`);
 			break;
 
+		case VRR_ITEM_USETYPE_VEHREPAIR:
+			let vehicle = getClosestVehicle(getPlayerPosition(client));
+			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
+				meActionToNearbyPlayers(client, `takes their repair kit and fixes the vehicle`);
+				repairVehicle(vehicle);
+			}
+			break;
+
+		case VRR_ITEM_USETYPE_VEHUPGRADE_PART:
+			vehicle = getClosestVehicle(getPlayerPosition(client));
+			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
+				meActionToNearbyPlayers(client, `takes their upgrade kit and adds a ${getItemName(itemIndex)} to the vehicle.`);
+				addVehicleUpgrade(vehicle, getItemData(itemIndex).useId);
+			}
+			break;
+
+		case VRR_ITEM_USETYPE_VEHLIVERY:
+			vehicle = getClosestVehicle(getPlayerPosition(client));
+			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
+				meActionToNearbyPlayers(client, `takes their decal kit and adds some decals to the vehicle.`);
+				setVehicleLivery(vehicle, getItemData(itemIndex).useValue);
+			}
+			break;
+
+		case VRR_ITEM_USETYPE_VEHCOLOUR:
+			vehicle = getClosestVehicle(getPlayerPosition(client));
+			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
+				if(getItemData(itemIndex).useId == 1) {
+					meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the primary colour of the vehicle.`);
+					vehicle.colour1 = getItemData(itemIndex).useValue;
+				} else {
+					if(getItemData(itemIndex).useId == 1) {
+						meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the secondary colour of the vehicle.`);
+						vehicle.colour2 = getItemData(itemIndex).useValue;
+					}
+				}
+			}
+			break;
+
 		case VRR_ITEM_USETYPE_WALKIETALKIE:
 			getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
 			messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} ${getInlineChatColourByName("white")}your walkie talkie in slot ${getPlayerData(client).activeHotBarSlot+1} ${getInlineChatColourByName("lightGrey")}(${getItemValueDisplayForItem(itemIndex)})`);
@@ -1285,6 +1324,8 @@ function getItemValueDisplay(itemType, value) {
 		return toString(value)+" rounds";
 	} else if(getItemTypeData(itemType).useType == VRR_ITEM_USETYPE_WALKIETALKIE) {
 		return toString(toString(value).slice(0,-2)+"."+toString(value).slice(-1)+"MHz");
+	} else if(getItemTypeData(itemType).useType == VRR_ITEM_USETYPE_VEHCOLOUR) {
+		return `[${getGameData().vehicleColourHex[value]}]SAMPLE[#FFFFFF]`;
 	} else {
 		return value;
 	}
@@ -1398,10 +1439,10 @@ function showBusinessFloorInventoryToPlayer(client, businessId) {
 	for(let i in getBusinessData(businessId).floorItemCache) {
 		if(getBusinessData(businessId).floorItemCache == -1) {
 			//itemDisplay.push(`${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`);
-			messagePlayerNormal(client, `${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`, COLOUR_WHITE);
+			messagePlayerNormal(client, `${getInlineChatColourByName("yellow")}${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`, COLOUR_WHITE);
 		} else {
 			//itemDisplay.push(`${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}: ${getInlineChatColourByName("white")}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}${getInlineChatColourByName("lightGrey")}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`);
-			messagePlayerNormal(client, `${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}: ${getInlineChatColourByName("white")}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}${getInlineChatColourByName("lightGrey")}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`, COLOUR_WHITE);
+			messagePlayerNormal(client, `${getInlineChatColourByName("yellow")}${toInteger(i)+1}: ${getInlineChatColourByName("white")}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}${getInlineChatColourByName("lightGrey")}[${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])}] - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`, COLOUR_WHITE);
 		}
 
 		//messagePlayerNormal(client, splitItemDisplay[i].join("${getInlineChatColourByName("white")}, "), COLOUR_WHITE);
@@ -1425,9 +1466,9 @@ function showBusinessStorageInventoryToPlayer(client, businessId) {
 	let itemDisplay = [];
 	for(let i in getBusinessData(businessId).storageItemCache) {
 		if(getBusinessData(businessId).storageItemCache == -1) {
-			itemDisplay.push(`${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`);
+			itemDisplay.push(`${getInlineChatColourByName("yellow")}${toInteger(i)+1}${getInlineChatColourByName("lightGrey")}(Empty)`);
 		} else {
-			itemDisplay.push(`${getInlineChatColourByType("jobYellow")}${toInteger(i)+1}: ${getInlineChatColourByName("white")}${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}${getInlineChatColourByName("lightGrey")}[${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]  - [#CCCCCC]${getItemData(getBusinessData(businessId).storageItemCache[i]).amount} available`);
+			itemDisplay.push(`${getInlineChatColourByName("yellow")}${toInteger(i)+1}: ${getInlineChatColourByName("white")}${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}${getInlineChatColourByName("lightGrey")}[${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}]  - [#CCCCCC]${getItemData(getBusinessData(businessId).storageItemCache[i]).amount} available`);
 		}
 	}
 

@@ -50,6 +50,10 @@ function loadCommands() {
             commandData("setdiscord", setAccountDiscordCommand, "<Name#0000 - discord name and id>", getStaffFlagValue("none"), true, false, "Set up the integration for discord. Allows you to see info and use in-game commands on discord."),
         ],
         ammunation: [],
+        animation: [
+            commandData("anim", playPlayerAnimationCommand, "<animation name>", getStaffFlagValue("none"), true, true, "Makes your player ped use an animation"),
+            commandData("an", playPlayerAnimationCommand, "<animation name>", getStaffFlagValue("none"), true, true, "Makes your player ped use an animation"),
+        ],
         antiCheat: [
             //commandData("addacscriptwl", addAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("developer"), true, true),
             //commandData("delacscriptwl", removeAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("developer"), true, true),
@@ -142,7 +146,8 @@ function loadCommands() {
             commandData("cmddisable", disableCommand, "<command>", getStaffFlagValue("developer"), true, true, "Disables a specific command"),
         ],
         config: [
-            commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("manageServer"), true, true, "Set the time. Hours are required, minute is optional and will default to 0"),
+            commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("manageServer"), true, true, "Sets the time. Hours are required, minute is optional and will default to 0"),
+            commandData("setminuteduration", setMinuteDurationCommand, "<time in ms>", getStaffFlagValue("manageServer"), true, true, "Sets how long a minute lasts in milliseconds. 60000 is real time."),
             commandData("setweather", setWeatherCommand, "<weather id/name>", getStaffFlagValue("manageServer"), true, true, "Change the weather to specified type."),
             commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("manageServer"), true, true, "Toggles winter/snow"),
             commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true, "Toggles the corner server logo display on/off"),

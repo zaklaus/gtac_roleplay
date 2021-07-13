@@ -979,10 +979,9 @@ function loadServerConfigFromId(tempServerId) {
 // ===========================================================================
 
 function applyConfigToServer(tempServerConfig) {
-	//server.name = tempServerConfig.name;
-	//server.password = tempServerConfig.password;
 	gta.time.hour = tempServerConfig.hour;
 	gta.time.minute = tempServerConfig.minute;
+	gta.time.minuteDuration = tempServerConfig.minuteDuration;
 	gta.forceWeather(tempServerConfig.weather);
 
 	updateServerRules();
@@ -997,7 +996,7 @@ function saveServerConfigToDatabase(serverConfigData) {
 		let safeServerName = escapeDatabaseString(dbConnection, serverConfigData.name);
 		let safePassword = escapeDatabaseString(dbConnection, serverConfigData.password);
 
-		let dbQueryString = `UPDATE svr_main SET svr_logo=${boolToInt(serverConfigData.showLogo)}, svr_gui=${boolToInt(getServerConfig().useGUI)}, svr_password='${safePassword}', svr_name='${safeServerName}', svr_start_time_hour=${serverConfigData.hour}, svr_start_time_min=${serverConfigData.minute}, svr_start_weather=${serverConfigData.weather}, svr_start_snow_falling=${boolToInt(serverConfigData.fallingSnow)}, svr_start_snow_ground=${boolToInt(serverConfigData.groundSnow)}, svr_newchar_pos_x=${serverConfigData.newCharacter.spawnPosition.x}, svr_newchar_pos_y=${serverConfigData.newCharacter.spawnPosition.y}, svr_newchar_pos_z=${serverConfigData.newCharacter.spawnPosition.z}, svr_newchar_rot_z=${serverConfigData.newCharacter.spawnHeading}, svr_newchar_money=${serverConfigData.newCharacter.money}, svr_newchar_skin=${serverConfigData.newCharacter.skin}, svr_gui_col1_r=${serverConfigData.guiColour[0]}, svr_gui_col1_g=${serverConfigData.guiColour[1]}, svr_gui_col1_b=${serverConfigData.guiColour[2]} WHERE svr_id = ${serverConfigData.databaseId}`;
+		let dbQueryString = `UPDATE svr_main SET svr_logo=${boolToInt(serverConfigData.showLogo)}, svr_gui=${boolToInt(getServerConfig().useGUI)}, svr_start_time_hour=${serverConfigData.hour}, svr_start_time_min=${serverConfigData.minute}, svr_start_weather=${serverConfigData.weather}, svr_start_snow_falling=${boolToInt(serverConfigData.fallingSnow)}, svr_start_snow_ground=${boolToInt(serverConfigData.groundSnow)}, svr_newchar_pos_x=${serverConfigData.newCharacter.spawnPosition.x}, svr_newchar_pos_y=${serverConfigData.newCharacter.spawnPosition.y}, svr_newchar_pos_z=${serverConfigData.newCharacter.spawnPosition.z}, svr_newchar_rot_z=${serverConfigData.newCharacter.spawnHeading}, svr_newchar_money=${serverConfigData.newCharacter.money}, svr_newchar_skin=${serverConfigData.newCharacter.skin}, svr_gui_col1_r=${serverConfigData.guiColour[0]}, svr_gui_col1_g=${serverConfigData.guiColour[1]}, svr_gui_col1_b=${serverConfigData.guiColour[2]} WHERE svr_id = ${serverConfigData.databaseId}`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		disconnectFromDatabase(dbConnection);
 	}
@@ -1050,8 +1049,13 @@ function setTimeCommand(command, params, client) {
 		return false;
     }
 
-    gta.time.hour = hour;
-    gta.time.minute = minute;
+	getServerConfig().hour = minute;
+	getServerConfig().minute = minute;
+
+    gta.time.hour = getServerConfig().hour;
+    gta.time.minute = getServerConfig().minute;
+
+	//checkServerGameTime();
 
 	messageAdminAction(`${getPlayerName(client)} set the time to ${makeReadableTime(hour, minute)}`);
 	return true;

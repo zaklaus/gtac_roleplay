@@ -8,6 +8,58 @@
 // ===========================================================================
 
 let serverColours = {
+	hex: {
+		byType: {
+			talkMessage: "C8C8C8",
+			shoutMessage: "FFFFC8",
+			whisperMessage: "828282",
+			doActionMessage: "B19CD9",
+			meActionMessage: "B19CD9",
+			errorMessage: "ED4337",
+			syntaxMessage: "C8C8C8",
+			normalMessage: "FFFFFF",
+			alertMessage: "FFFF00",
+			successMessage: "00B400",
+			clanChatMessage: "00BE00",
+			businessBlue: "0099FF",
+			houseGreen: "11CC11",
+			clanOrange: "FF9900",
+			vehiclePurple: "960096",
+			jobYellow: "FFFF00",
+		},
+		byName: {
+			white: "FFFFFF",
+			black: "000000",
+			red: "FF0000",
+			yellow: "FFFF00",
+			royalBlue: "0000FF",
+			teal: "00FFFF",
+			orange: "FF8000",
+			softRed: "ED4337",
+			softGreen: "32CD32",
+			lightPurple: "960096",
+			lightGrey: "C8C8C8",
+			mediumGrey: "969696",
+			darkGrey: "404040",
+			policeBlue: "3250C8",
+			medicPink: "DB7093",
+			firefighterRed: "CD3C3C",
+			busDriverGreen: "32A032",
+			taxiDriverYellow: "F0E664",
+			deliveryPurple: "B19CD9",
+			civilianWhite: "C8C8C8",
+			burntYellow: "D2D200",
+			burntOrange: "D27800",
+			bankGreen: "00B400",
+			softYellow: "EAC67E",
+			businessBlue: "0099FF",
+			houseGreen: "11CC11",
+			clanOrange: "FF9900",
+			vehiclePurple: "960096",
+			jobYellow: "FFFF00",
+		},
+	},
+
 	byType: {
 		talkMessage: toColour(200, 200, 200),
 		shoutMessage: toColour(255, 255, 200),
@@ -73,17 +125,21 @@ function getColourByName(colourName) {
 // ===========================================================================
 
 function getHexColourByName(colourName) {
-	let rgbaColour = getServerColours().byName[colourName];
-	let rgbaArray = rgbaArrayFromToColour(rgbaColour);
-	return rgbToHex(rgbaArray[0], rgbaArray[1], rgbaArray[2]);
+	//let rgbaColour = getServerColours().byName[colourName];
+	//let rgbaArray = rgbaArrayFromToColour(rgbaColour);
+	//return rgbToHex(rgbaArray[0], rgbaArray[1], rgbaArray[2]);
+
+	return `#${getServerColours().hex.byName[colourName]}`;
 }
 
 // ===========================================================================
 
 function getHexColourByType(colourName) {
-	let rgbaColour = getServerColours().byType[colourName];
-	let rgbaArray = rgbaArrayFromToColour(rgbaColour);
-	return rgbToHex(rgbaArray[0], rgbaArray[1], rgbaArray[2]);
+	//let rgbaColour = getServerColours().byType[colourName];
+	//let rgbaArray = rgbaArrayFromToColour(rgbaColour);
+	//return rgbToHex(rgbaArray[0], rgbaArray[1], rgbaArray[2]);
+
+	return `#${getServerColours().hex.byType[colourName]}`;
 }
 
 // ===========================================================================
@@ -163,10 +219,10 @@ function getInlineChatColourByType(colourName) {
 
 function rgbaArrayFromToColour(colour) {
     return [
-        (colour >> 16) & 0xFF, // red
+        (colour >> 24) & 0xFF, // red
+        (colour >> 16) & 0xFF,
         (colour >> 8) & 0xFF,
-        colour & 0xFF,
-        (colour >> 24) & 0xFF// alpha
+        colour & 0xFF // alpha
     ];
 }
 

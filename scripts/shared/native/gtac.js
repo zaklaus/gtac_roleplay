@@ -9,6 +9,124 @@
 
 "use strict";
 
+let bindableKeys = {
+    8: "backspace",
+    9: "tab",
+    13: "return",
+    27: "escape",
+    32: "space",
+    33: "exclamation",
+    34: "doublequote",
+    35: "hashtag",
+    36: "dollar",
+    37: "percent",
+    38: "ampersand",
+    39: "quote",
+    40: "leftparenthesis",
+    41: "rightparenthesis",
+    42: "asterisk",
+    43: "plus",
+    44: "comma",
+    45: "minus",
+    46: "period",
+    47: "slash",
+    48: "0",
+    49: "1",
+    50: "2",
+    51: "3",
+    52: "4",
+    53: "5",
+    54: "6",
+    55: "7",
+    56: "8",
+    57: "9",
+    58: "colon",
+    59: "semicolon",
+    60: "less",
+    61: "equals",
+    62: "greater",
+    63: "questionmark",
+    64: "at",
+    91: "leftbracket",
+    92: "backslash",
+    93: "rightbracket",
+    95: "underscore",
+    97: "a",
+    98: "b",
+    99: "c",
+    100: "d",
+    101: "e",
+    102: "f",
+    103: "g",
+    104: "h",
+    105: "i",
+    106: "j",
+    107: "k",
+    108: "l",
+    109: "m",
+    110: "n",
+    111: "o",
+    112: "p",
+    113: "q",
+    114: "r",
+    115: "s",
+    116: "t",
+    117: "u",
+    118: "v",
+    119: "w",
+    120: "x",
+    121: "y",
+    122: "z",
+    127: "delete",
+    1073741881: "capslock",
+    1073741882: "f12",
+    1073741883: "f2",
+    1073741884: "f3",
+    1073741885: "f4",
+    1073741886: "f5",
+    1073741887: "f6",
+    1073741888: "f7",
+    1073741889: "f8",
+    1073741890: "f9",
+    1073741891: "f10",
+    1073741892: "f11",
+    1073741893: "f12",
+    1073741894: "printscreen",
+    1073741895: "scrolllock",
+    1073741896: "pause",
+    1073741897: "insert",
+    1073741898: "home",
+    1073741899: "pageup",
+    1073741901: "end",
+    1073741902: "pagedown",
+    1073741903: "right",
+    1073741904: "left",
+    1073741905: "down",
+    1073741906: "up",
+    1073741908: "numdivide",
+    1073741909: "nummultiply",
+    1073741910: "numminus",
+    1073741911: "numplus",
+    1073741912: "numenter",
+    1073741913: "num1",
+    1073741914: "num2",
+    1073741915: "num3",
+    1073741916: "num4",
+    1073741917: "num5",
+    1073741918: "num6",
+    1073741919: "num7",
+    1073741920: "num8",
+    1073741921: "num9",
+    1073741922: "num0",
+    1073741923: "numperiod",
+    1073742048: "leftctrl",
+    1073742049: "leftshift",
+    1073742050: "leftalt",
+    1073742052: "rightctrl",
+    1073742053: "rightshift",
+    1073742054: "rightalt",
+};
+
 // ===========================================================================
 
 function and(var1, var2) {
@@ -1281,6 +1399,29 @@ let allowedSkins = [
 
 function makeLargeNumberReadable(num) {
 	return new Number(num).toLocaleString("en-US");
+}
+
+// ===========================================================================
+
+function getKeyIdFromParams(params) {
+    let tempParams = toLowerCase(toString(params));
+
+    //let sdlName = sdl.getKeyFromName(tempParams);
+    //if(sdlName != null) {
+    //    return sdlName;
+    //}
+
+    for(let i in bindableKeys) {
+        if(bindableKeys[i].indexOf(tempParams.toLowerCase()) != -1) {
+            return i;
+        }
+    }
+}
+
+// ===========================================================================
+
+function getKeyNameFromId(params) {
+    return bindableKeys[toInteger(params)];
 }
 
 // ===========================================================================

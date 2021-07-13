@@ -92,7 +92,7 @@ function setWalkieTalkieFrequencyCommand(command, params, client) {
 
 	if(getItemData(getPlayerActiveItem(client)).enabled) {
 		if(doesPlayerHaveKeyBindForCommand(client, "use")) {
-			messagePlayerError(client, `Your walkie talkie is turned off. Press ${sdl.getKeyName(getPlayerKeyBindForCommand(client, "use").key)} to turn it on`);
+			messagePlayerError(client, `Your walkie talkie is turned off. Press ${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "use")).key)} to turn it on`);
 		} else {
 			messagePlayerError(client, `Your walkie talkie is turned off. Type ${getInlineChatColourByName("lightGrey")}/use ${getInlineChatColourByName("white")}to turn it on`);
 		}

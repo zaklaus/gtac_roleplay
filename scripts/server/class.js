@@ -49,6 +49,7 @@ function initClassTable() {
 
 				this.hour = 0;
 				this.minute = 0
+				this.minuteDuration = 1000;
 				this.weather = 0
 				this.fallingSnow = false;
 				this.groundSnow = false;
@@ -743,6 +744,7 @@ function initClassTable() {
 				this.colour2 = (vehicle) ? vehicle.colour2 : 1;
 				this.colour3 = (vehicle) ? vehicle.colour3 : 1;
 				this.colour4 = (vehicle) ? vehicle.colour4 : 1;
+				this.livery = 3;
 
 				this.extras = [
 					0,
@@ -802,6 +804,7 @@ function initClassTable() {
 					this.colour2 = toInteger(dbAssoc["veh_col2"]);
 					this.colour3 = toInteger(dbAssoc["veh_col3"]);
 					this.colour4 = toInteger(dbAssoc["veh_col4"]);
+					this.livery = toInteger(dbAssoc["veh_livery"]);
 
 					// Extras (components on SA, extras on IV+)
 					this.extras = [

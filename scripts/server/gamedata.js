@@ -2912,13 +2912,27 @@ let gameData = {
 	hospitals: [
 		[],
 		[ // GTA III
-
+			[1144.25, -596.875, 14.97], 	// Portland
+			[183.5, -17.75, 16.21],			// Staunton Island
+			[-1259.5, -44.5, 58.89],		// Shoreside Vale
 		],
 
 		[ // GTA Vice City
 			[-822.57, 1152.82, 12.41],		// Downtown (Shuman Health Care Center)
 			[-885.08, -470.44, 13.11],		// Little Havana (West Haven Community Health Care Center)
 			[-133.19, -980.76, 10.46], 		// Ocean Beach (Ocean View Hospital)
+		],
+
+		[ // GTA San Andreas
+			[1182.67, -1323.81, 13.579],	// Los Santos West (All Saints General Hospital)
+			[2034.7567,-1403.1083,17.293],	// Los Santos East (County General)
+		],
+
+		[ // GTA IV
+			[1199.59, 196.78, 33.554],		// Shottler Medical Center
+			[980.71, 1831.61, 23.898],		// Northern Gardens Medical Center
+			[-1317.27, 1277.20, 22.370],	// Leftwood Hospital
+			[-1538.43, 344.58, 20.943],		// Acter Medical Center
 		],
 	],
 	payAndSprays: [

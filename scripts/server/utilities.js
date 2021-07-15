@@ -926,26 +926,26 @@ function getSkinIdFromName(params, gameId = getServerGame()) {
 
 function getClosestHospital(position) {
 	let closest = 0;
-	for(let i in getServerData().hospitals[getServerGame()]) {
-		if(getDistance(getServerData().hospitals[getServerGame()][i].position, position) < getDistance(getServerData().hospitals[getServerGame()][closest].position, position)) {
+	for(let i in getGameData().hospitals[getServerGame()]) {
+		if(getDistance(getGameData().hospitals[getServerGame()][i], position) < getDistance(getGameData().hospitals[getServerGame()][closest], position)) {
 			closest = i;
 		}
 	}
 
-	return getServerData().hospitals[getServerGame()][closest];
+	return getGameData().hospitals[getServerGame()][closest];
 }
 
 // ===========================================================================
 
 function getClosestPoliceStation(position) {
 	let closest = 0;
-	for(let i in getServerData().policeStations[getServerGame()]) {
-		if(getServerData().policeStations[getServerGame()][i].position.distance(position) < getServerData().policeStations[getServerGame()][closest].position) {
+	for(let i in getGameData().policeStations[getServerGame()]) {
+		if(getGameData().policeStations[getServerGame()][i].distance(position) < getGameData().policeStations[getServerGame()][closest]) {
 			closest = i;
 		}
 	}
 
-	return getServerData().policeStations[getServerGame()][closest];
+	return getGameData().policeStations[getServerGame()][closest];
 }
 
 // ===========================================================================

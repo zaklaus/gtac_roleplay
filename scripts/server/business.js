@@ -1002,6 +1002,10 @@ function createAllBusinessBlips() {
 // ===========================================================================
 
 function createBusinessEntrancePickup(businessId) {
+	if(!getServerConfig().createBusinessPickups) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).entrancePickupModel != -1) {
 		let pickupModelId = getGameConfig().pickupModels[getServerGame()].business;
 
@@ -1020,6 +1024,10 @@ function createBusinessEntrancePickup(businessId) {
 // ===========================================================================
 
 function createBusinessEntranceBlip(businessId) {
+	if(!getServerConfig().createBusinessBlips) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).entranceBlipModel != -1) {
 		let blipModelId = getGameConfig().blipSprites[getServerGame()].business;
 
@@ -1040,6 +1048,10 @@ function createBusinessEntranceBlip(businessId) {
 // ===========================================================================
 
 function createBusinessExitPickup(businessId) {
+	if(!getServerConfig().createBusinessPickups) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).hasInterior) {
 		if(getBusinessData(businessId).exitPickupModel != -1) {
 			let pickupModelId = getGameConfig().pickupModels[getServerGame()].exit;
@@ -1060,6 +1072,10 @@ function createBusinessExitPickup(businessId) {
 // ===========================================================================
 
 function createBusinessExitBlip(businessId) {
+	if(!getServerConfig().createBusinessBlips) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).hasInterior) {
 		if(getBusinessData(businessId).exitBlipModel != -1) {
 			let blipModelId = getGameConfig().blipSprites[getServerGame()].business;

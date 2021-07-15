@@ -499,6 +499,10 @@ function createAllHouseBlips() {
 // ===========================================================================
 
 function createHouseEntrancePickup(houseId) {
+	if(!getServerConfig().createHousePickups) {
+		return false;
+	}
+
 	if(getHouseData(houseId).entrancePickupModel != -1) {
 		let pickupModelId = getGameConfig().pickupModels[getServerGame()].house;
 
@@ -524,6 +528,10 @@ function createHouseEntrancePickup(houseId) {
 // ===========================================================================
 
 function createHouseEntranceBlip(houseId) {
+	if(!getServerConfig().createHouseBlips) {
+		return false;
+	}
+
 	if(getHouseData(houseId).entranceBlipModel != -1) {
 		let blipModelId = getGameConfig().blipSprites[getServerGame()].house;
 
@@ -543,6 +551,10 @@ function createHouseEntranceBlip(houseId) {
 // ===========================================================================
 
 function createHouseExitPickup(houseId) {
+	if(!getServerConfig().createHousePickups) {
+		return false;
+	}
+
 	if(getHouseData(houseId).hasInterior) {
 		if(getHouseData(houseId).exitPickupModel != -1) {
 			let pickupModelId = getGameConfig().pickupModels[getServerGame()].exit;
@@ -565,6 +577,10 @@ function createHouseExitPickup(houseId) {
 // ===========================================================================
 
 function createHouseExitBlip(houseId) {
+	if(!getServerConfig().createHouseBlips) {
+		return false;
+	}
+
 	if(getHouseData(houseId).hasInterior) {
 		if(getHouseData(houseId).exitBlipModel != -1) {
 			let blipModelId = getGameConfig().blipSprites[getServerGame()].house;

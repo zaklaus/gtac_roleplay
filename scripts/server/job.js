@@ -1489,6 +1489,10 @@ function deleteJobLocationPickup(jobId, locationId) {
 // ===========================================================================
 
 function createJobLocationPickup(jobId, locationId) {
+	if(!getServerConfig().createJobPickups) {
+		return false;
+	}
+
 	if(getJobData(jobId).pickupModel != -1) {
 		let pickupModelId = getGameConfig().pickupModels[getServerGame()].job;
 
@@ -1510,6 +1514,10 @@ function createJobLocationPickup(jobId, locationId) {
 // ===========================================================================
 
 function createJobLocationBlip(jobId, locationId) {
+	if(!getServerConfig().createJobBlips) {
+		return false;
+	}
+
 	if(getJobData(jobId).blipModel != -1) {
 		let blipModelId = getGameConfig().blipSprites[getServerGame()].job;
 

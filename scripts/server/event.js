@@ -327,12 +327,12 @@ function onPlayerDeath(client, position) {
                 updatePlayerSpawnedState(client, true);
 			} else {
                 let closestHospital = getClosestHospital(position);
-                getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
-                getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
+                getPlayerCurrentSubAccount(client).interior = 0;
+                getPlayerCurrentSubAccount(client).dimension = 0;
                 if(getServerGame() == GAME_GTA_IV) {
-                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
+                    spawnPlayer(client, closestHospital, 0.0, getPlayerCurrentSubAccount(client).skin);
                 } else {
-                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
+                    spawnPlayer(client, closestHospital, 0.0, getPlayerCurrentSubAccount(client).skin);
                 }
 
                 fadeCamera(client, true, 1.0);
@@ -476,16 +476,16 @@ function onPlayerSpawn(client) {
 
         if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
             let keyId = getPlayerKeyBindForCommand(client, "enter");
-            logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId}, ${toUpperCase(getKeyNameFromId(keyId))}) to ${getPlayerDisplayForConsole(client)}`);
-            sendPlayerEnterPropertyKey(client, keyId);
+            logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId.key}, ${toUpperCase(getKeyNameFromId(keyId).key)}) to ${getPlayerDisplayForConsole(client)}`);
+            sendPlayerEnterPropertyKey(client, keyId.key);
         }
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 
-        setTimeout(function() {
-            syncPlayerProperties(client);
-        }, 1000);
+        //setTimeout(function() {
+        //    syncPlayerProperties(client);
+        //}, 1000);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
         updatePlayerCash(client);

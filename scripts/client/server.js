@@ -150,7 +150,7 @@ function onServerSpawnedPlayer(state) {
             gta.REQUEST_ANIMATION("flame");
             gta.REQUEST_ANIMATION("medic");
             gta.REQUEST_ANIMATION("sunbathe");
-            gta.REQUEST_ANIMATION("playidles");
+            //gta.REQUEST_ANIMATION("playidles");
             gta.REQUEST_ANIMATION("riot");
             gta.REQUEST_ANIMATION("strip");
             gta.REQUEST_ANIMATION("lance");

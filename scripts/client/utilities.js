@@ -228,14 +228,18 @@ function setLocalCameraLookAt(cameraPosition, cameraLookAt) {
 
 // ===========================================================================
 
-function setCityAmbienceState(state) {
+function setCityAmbienceState(state, clearElements = false) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
     gta.setTrafficEnabled(state);
     gta.setGenerateCarsAroundCamera(state);
     if(gta.game != GAME_GTA_SA) {
         gta.setCiviliansEnabled(state);
     }
-    clearSelfOwnedPeds();
+
+    if(clearElements) {
+        clearSelfOwnedPeds();
+        clearSelfOwnedVehicles();
+    }
 }
 
 // ===========================================================================
@@ -245,10 +249,10 @@ function runClientCode(code, returnTo) {
 	try {
 		returnValue = eval("(" + code + ")");
 	} catch(error) {
-		triggerNetworkEvent("ag.runCodeFail", returnTo, code);
+		triggerNetworkEvent("vrr.runCodeFail", returnTo, code);
 		return false;
     }
-    triggerNetworkEvent("ag.runCodeSuccess", returnTo, code, returnValue);
+    triggerNetworkEvent("vrr.runCodeSuccess", returnTo, code, returnValue);
 }
 
 // ===========================================================================
@@ -394,9 +398,20 @@ function getLocalPlayerVehicleSeat() {
 function clearSelfOwnedPeds() {
     logToConsole(LOG_DEBUG, `Clearing self-owned peds`);
     getElementsByType(ELEMENT_PED).forEach(function(ped) {
-        if(ped.isOwner) {
+        //if(ped.isOwner) {
             destroyElement(ped);
-        }
+        //}
+    });
+}
+
+// ===========================================================================
+
+function clearSelfOwnedVehicles() {
+    logToConsole(LOG_DEBUG, `Clearing self-owned vehicles`);
+    getElementsByType(ELEMENT_VEHICLE).forEach(function(vehicle) {
+        //if(vehicle.isOwner) {
+            destroyElement(vehicle);
+        //}
     });
 }
 
@@ -433,7 +448,7 @@ function setPlayerWeaponDamageEnabled(clientName, state) {
 
 function setLocalPlayerCash(amount) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting local player money`);
-    localPlayer.money = amount;
+    localPlayer.money = toInteger(amount);
 }
 
 // ===========================================================================
@@ -635,3 +650,16 @@ function setMinuteDuration(minuteDuration) {
 }
 
 // ===========================================================================
+
+function getStreamingRadioVolumeForPosition(position) {
+    return streamingRadioVolume;
+}
+
+// ===========================================================================
+
+function getLocalPlayerLookAtPosition() {
+    if(localPlayer != null) {
+		let centerCameraPos = getWorldFromScreenPosition(toVector3(gta.width/2, gta.height/2, 0));
+		return getWorldFromScreenPosition(toVector3(gta.width/2, gta.height/2, getDistance(centerCameraPos, localPlayer.position)+20));
+	}
+}

@@ -53,6 +53,8 @@ function loadCommands() {
         animation: [
             commandData("anim", playPlayerAnimationCommand, "<animation name>", getStaffFlagValue("none"), true, true, "Makes your player ped use an animation"),
             commandData("an", playPlayerAnimationCommand, "<animation name>", getStaffFlagValue("none"), true, true, "Makes your player ped use an animation"),
+            commandData("anims", showAnimationListCommand, "", getStaffFlagValue("none"), true, true, "Shows a list of animations"),
+            commandData("animlist", showAnimationListCommand, "", getStaffFlagValue("none"), true, true, "Shows a list of animations"),
         ],
         antiCheat: [
             //commandData("addacscriptwl", addAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("developer"), true, true),

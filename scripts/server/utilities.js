@@ -168,8 +168,10 @@ function getClosestVehicle(position) {
 	let vehicles = getServerData().vehicles;
 	let closest = 0;
 	for(let i in vehicles) {
-		if(getDistance(getVehiclePosition(vehicles[i].vehicle), position) < getDistance(getVehiclePosition(vehicles[closest].vehicle), position)) {
-			closest = i;
+		if(vehicles[i] != null) {
+			if(vehicles[closest] == null || getDistance(getVehiclePosition(vehicles[i].vehicle), position) < getDistance(getVehiclePosition(vehicles[closest].vehicle), position)) {
+				closest = i;
+			}
 		}
 	}
 	return vehicles[closest].vehicle;
@@ -595,13 +597,13 @@ function createAllFuelStationBlips() {
 // ===========================================================================
 
 function getPickupOwnerType(pickup) {
-	return pickup.getData("ag.ownerType");
+	return pickup.getData("vrr.ownerType");
 }
 
 // ===========================================================================
 
 function getPickupOwnerId(pickup) {
-	return pickup.getData("ag.ownerId");
+	return pickup.getData("vrr.ownerId");
 }
 
 // ===========================================================================
@@ -698,6 +700,12 @@ function getEnabledDisabledFromBool(boolVal) {
 
 function getLockedUnlockedFromBool(boolVal) {
 	return (boolVal) ? "Locked" : "Unlocked";
+}
+
+// ===========================================================================
+
+function getOpenedClosedFromBool(boolVal) {
+	return (boolVal) ? "Opened" : "Closed";
 }
 
 // ===========================================================================
@@ -813,7 +821,7 @@ function getBusinessFromParams(params) {
 
 function getGameLocationFromParams(params) {
 	if(isNaN(params)) {
-		for(let i in getGameData().locations) {
+		for(let i in getGameData().locations[getServerGame()]) {
 			if(toLowerCase(getGameData().locations[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
@@ -969,6 +977,9 @@ function getPlayerNameForNameTag(client) {
 // ===========================================================================
 
 function isPlayerSpawned(client) {
+	if(!getPlayerData(client)) {
+		return false;
+	}
 	return getPlayerData(client).spawned;
 }
 
@@ -1555,13 +1566,13 @@ function isConsole(client) {
 // ===========================================================================
 
 function updateConnectionLogOnQuit(client, quitReasonId) {
-	quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=UNIX_TIMESTAMP(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${toInteger(getEntityData(client, "ag.connection"))}`);
+	quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=UNIX_TIMESTAMP(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${toInteger(getEntityData(client, "vrr.connection"))}`);
 }
 
 // ===========================================================================
 
 function updateConnectionLogOnAuth(client, authId) {
-	quickDatabaseQuery(`UPDATE conn_main SET conn_auth=${authId} WHERE conn_id = ${toInteger(getEntityData(client, "ag.connection"))}`);
+	quickDatabaseQuery(`UPDATE conn_main SET conn_auth=${authId} WHERE conn_id = ${toInteger(getEntityData(client, "vrr.connection"))}`);
 }
 
 // ===========================================================================
@@ -1572,7 +1583,7 @@ function updateConnectionLogOnClientInfoReceive(client, clientVersion, screenWid
 		let safeClientVersion = escapeDatabaseString(dbConnection, clientVersion);
 		let safeScreenWidth = escapeDatabaseString(dbConnection, toString(screenWidth));
 		let safeScreenHeight = escapeDatabaseString(dbConnection, toString(screenHeight));
-    	quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${toInteger(getEntityData(client, "ag.connection"))}`);
+    	quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${toInteger(getEntityData(client, "vrr.connection"))}`);
 	}
 }
 
@@ -1600,6 +1611,16 @@ function doesNameContainInvalidCharacters(name) {
 
 function fixCharacterName(name) {
 	return String(name.charAt(0).toUpperCase()) + String(name.slice(1).toLowerCase());
+}
+
+// ===========================================================================
+
+function splitArrayIntoChunks(originalArray, perChunk) {
+	let tempArray = [];
+	for (let i = 0; i < originalArray.length; i += perChunk) {
+		tempArray.push(originalArray.slice(i, i + perChunk));
+	}
+	return tempArray;
 }
 
 // ===========================================================================

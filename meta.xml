@@ -9,6 +9,7 @@
 
 	<!-- Server -->
 	<script src="scripts/server/class.js" type="server" language="javascript" />
+	<script src="scripts/server/accent.js" type="server" language="javascript" />
 	<script src="scripts/server/account.js" type="server" language="javascript" />
 	<script src="scripts/server/animation.js" type="server" language="javascript" />
 	<!--<script src="scripts/server/ammunation.js" type="server" language="javascript" />-->

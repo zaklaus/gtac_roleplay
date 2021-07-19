@@ -15,7 +15,7 @@ function initHouseScript() {
 		createAllHousePickups();
 	}
 
-	if(getServerConfig().createHousePickups) {
+	if(getServerConfig().createHouseBlips) {
 		createAllHouseBlips();
 	}
 
@@ -78,7 +78,7 @@ function lockUnlockHouseCommand(command, params, client) {
 
 	for(let i in getHouseData(houseId).locations) {
 		if(getHouseData(houseId).locations[i].type == VRR_HOUSE_LOC_DOOR) {
-			setEntityData(getHouseData(houseId).locations[i].entrancePickup, "ag.label.locked", getHouseData(houseId).locked, true);
+			setEntityData(getHouseData(houseId).locations[i].entrancePickup, "vrr.label.locked", getHouseData(houseId).locked, true);
 		}
 	}
 
@@ -102,7 +102,7 @@ function setHouseDescriptionCommand(command, params, client) {
 
 	for(let i in getHouseData(houseId).locations) {
 		if(getHouseData(houseId).locations[i].type == VRR_HOUSE_LOC_DOOR) {
-			setEntityData(getHouseData(houseId).entrancePickup, "ag.label.name", getHouseData(houseId).description, true);
+			setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.name", getHouseData(houseId).description, true);
 		}
 	}
 
@@ -407,8 +407,8 @@ function getClosestHouseEntrance(position) {
 // ===========================================================================
 
 function getPlayerHouse(client) {
-	if(doesEntityDataExist(client, "ag.inHouse")) {
-		return getEntityData(client, "ag.inHouse");
+	if(doesEntityDataExist(client, "vrr.inHouse")) {
+		return getEntityData(client, "vrr.inHouse");
 	}
 
 	return false;
@@ -510,16 +510,16 @@ function createHouseEntrancePickup(houseId) {
 			pickupModelId = getHouseData(houseId).entrancePickupModel;
 		}
 
-		getHouseData(houseId).entrancePickup = gta.createPickup(pickupModelId, getHouseData(houseId).entrancePosition);
-		getHouseData(houseId).entrancePickup.onAllDimensions = false;
-		getHouseData(houseId).entrancePickup.dimension = getHouseData(houseId).entranceDimension;
-		setEntityData(getHouseData(houseId).entrancePickup, "ag.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
-		setEntityData(getHouseData(houseId).entrancePickup, "ag.owner.id", houseId, false);
-		setEntityData(getHouseData(houseId).entrancePickup, "ag.label.type", VRR_LABEL_HOUSE, true);
-		setEntityData(getHouseData(houseId).entrancePickup, "ag.label.name", getHouseData(houseId).description, true);
-		setEntityData(getHouseData(houseId).entrancePickup, "ag.label.locked", getHouseData(houseId).locked, true);
+		getHouseData(houseId).entrancePickup = createGamePickup(pickupModelId, getHouseData(houseId).entrancePosition);
+		setElementOnAllDimensions(getHouseData(houseId).entrancePickup, false);
+		setElementDimension(getHouseData(houseId).entrancePickup, getHouseData(houseId).entranceDimension);
+		setEntityData(getHouseData(houseId).entrancePickup, "vrr.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
+		setEntityData(getHouseData(houseId).entrancePickup, "vrr.owner.id", houseId, false);
+		setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.type", VRR_LABEL_HOUSE, true);
+		setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.name", getHouseData(houseId).description, true);
+		setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.locked", getHouseData(houseId).locked, true);
 		if(getHouseData(houseId).buyPrice > 0) {
-			setEntityData(getHouseData(houseId).entrancePickup, "ag.label.price", getHouseData(houseId).buyPrice, true);
+			setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", getHouseData(houseId).buyPrice, true);
 		}
 		addToWorld(getHouseData(houseId).entrancePickup);
 	}
@@ -540,10 +540,10 @@ function createHouseEntranceBlip(houseId) {
 		}
 
 		getHouseData(houseId).entranceBlip = gta.createBlip(getHouseData(houseId).entrancePosition, blipModelId, 1, getColourByName("houseGreen"));
-		getHouseData(houseId).entranceBlip.onAllDimensions = false;
 		getHouseData(houseId).entranceBlip.dimension = getHouseData(houseId).entranceDimension;
-		setEntityData(getHouseData(houseId).entranceBlip, "ag.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
-		setEntityData(getHouseData(houseId).entranceBlip, "ag.owner.id", houseId, false);
+		getHouseData(houseId).entranceBlip.onAllDimensions = false;
+		setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
+		setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.id", houseId, false);
 		addToWorld(getHouseData(houseId).entranceBlip);
 	}
 }
@@ -564,11 +564,11 @@ function createHouseExitPickup(houseId) {
 			}
 
 			getHouseData(houseId).exitPickup = gta.createPickup(pickupModelId, getHouseData(houseId).exitPosition);
-			getHouseData(houseId).exitPickup.onAllDimensions = false;
 			getHouseData(houseId).exitPickup.dimension = getHouseData(houseId).exitDimension;
-			setEntityData(getHouseData(houseId).exitPickup, "ag.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
-			setEntityData(getHouseData(houseId).exitPickup, "ag.owner.id", houseId, false);
-			setEntityData(getHouseData(houseId).exitPickup, "ag.label.type", VRR_LABEL_EXIT, true);
+			getHouseData(houseId).exitPickup.onAllDimensions = false;
+			setEntityData(getHouseData(houseId).exitPickup, "vrr.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
+			setEntityData(getHouseData(houseId).exitPickup, "vrr.owner.id", houseId, false);
+			setEntityData(getHouseData(houseId).exitPickup, "vrr.label.type", VRR_LABEL_EXIT, true);
 			addToWorld(getHouseData(houseId).exitPickup);
 		}
 	}
@@ -590,10 +590,10 @@ function createHouseExitBlip(houseId) {
 			}
 
 			getHouseData(houseId).exitBlip = gta.createBlip(blipModelId, getHouseData(houseId).exitPosition, 1, getColourByName("houseGreen"));
-			getHouseData(houseId).exitBlip.onAllDimensions = false;
 			getHouseData(houseId).exitBlip.dimension = getHouseData(houseId).entranceDimension;
-			setEntityData(getHouseData(houseId).exitBlip, "ag.owner.type", VRR_BLIP_HOUSE_EXIT, false);
-			setEntityData(getHouseData(houseId).exitBlip, "ag.owner.id", houseId, false);
+			getHouseData(houseId).exitBlip.onAllDimensions = false;
+			setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.type", VRR_BLIP_HOUSE_EXIT, false);
+			setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.id", houseId, false);
 			addToWorld(getHouseData(houseId).exitBlip);
 		}
 	}
@@ -667,7 +667,7 @@ function getHouseInfoCommand(command, params, client) {
 // ===========================================================================
 
 function isPlayerInAnyHouse(client) {
-	return doesEntityDataExist(client, "ag.inHouse");
+	return doesEntityDataExist(client, "vrr.inHouse");
 }
 
 // ===========================================================================
@@ -758,7 +758,7 @@ function exitHouse(client) {
 		setPlayerDimension(client, getServerData().house[houseId].entranceDimension);
 		setPlayerPosition(client, getServerData().house[houseId].entrancePosition);
 	}
-	removeEntityData(client, "ag.inHouse");
+	removeEntityData(client, "vrr.inHouse");
 }
 
 // ===========================================================================

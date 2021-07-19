@@ -101,14 +101,14 @@ function spawnAllVehicles() {
 	for(let i in getServerData().vehicles) {
 		let vehicle = spawnVehicle(getServerData().vehicles[i]);
 		getServerData().vehicles[i].vehicle = vehicle;
-		setEntityData(vehicle, "ag.dataSlot", i, false);
+		setEntityData(vehicle, "vrr.dataSlot", i, false);
 	}
 }
 
 // ===========================================================================
 
 function getVehicleData(vehicle) {
-	let dataIndex = getEntityData(vehicle, "ag.dataSlot");
+	let dataIndex = getEntityData(vehicle, "vrr.dataSlot");
 	if(typeof getServerData().vehicles[dataIndex] != "undefined") {
 		return getServerData().vehicles[dataIndex];
 	}
@@ -193,6 +193,32 @@ function vehicleLockCommand(command, params, client) {
 
 // ===========================================================================
 
+function vehicleTrunkCommand(command, params, client) {
+	let vehicle = getClosestVehicle(getPlayerPosition(client));
+
+	let behindPosition = getPosBehindPos(getVehiclePosition(vehicle), getVehicleHeading(vehicle), getGlobalConfig().vehicleTrunkDistance);
+	if(!getPlayerVehicle(client) && getDistance(behindPosition, getPlayerPosition(client)) > getGlobalConfig().vehicleTrunkDistance) {
+		messagePlayerError(client, "You need to be in or near a vehicle!");
+		return false;
+	}
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
+
+	if(!doesPlayerHaveVehicleKeys(client, vehicle)) {
+		messagePlayerError(client, "You don't have keys to this vehicle!");
+		return false;
+	}
+
+	getVehicleData(vehicle).trunk = !getVehicleData(vehicle).trunk;
+
+	meActionToNearbyPlayers(client, `${toLowerCase(getOpenedClosedFromBool(getVehicleData(vehicle).trunk))} the ${getVehicleName(vehicle)}'s trunk.`);
+}
+
+// ===========================================================================
+
 function vehicleLightsCommand(command, params, client) {
 	if(!getPlayerVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
@@ -212,7 +238,7 @@ function vehicleLightsCommand(command, params, client) {
 	}
 
 	getVehicleData(vehicle).lights = !getVehicleData(vehicle).lights;
-	setEntityData(vehicle, "ag.lights", getVehicleData(vehicle).lights);
+	setEntityData(vehicle, "vrr.lights", getVehicleData(vehicle).lights);
 	setVehicleLightsState(vehicle, getVehicleData(vehicle).lights);
 
 	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s lights ${toLowerCase(getOnOffFromBool(getVehicleData(vehicle).lights))}`);
@@ -233,7 +259,7 @@ function deleteVehicleCommand(command, params, client) {
 		return false;
 	}
 
-	let dataIndex = getEntityData(vehicle, "ag.dataSlot");
+	let dataIndex = getEntityData(vehicle, "vrr.dataSlot");
 	let vehicleName = getVehicleName(vehicle);
 
 	quickDatabaseQuery(`DELETE FROM veh_main WHERE veh_id = ${getVehicleData(vehicle).databaseId}`);
@@ -469,7 +495,7 @@ function rentVehicleCommand(command, params, client) {
 // ===========================================================================
 
 function enterVehicleAsPassengerCommand(command, params, client) {
-	triggerNetworkEvent("ag.passenger", client);
+	triggerNetworkEvent("vrr.passenger", client);
 }
 
 // ===========================================================================
@@ -729,7 +755,7 @@ function setVehicleBuyPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).buyPrice = amount;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}'s ${getInlineChatColourByName("white")}buy price to ${getInlineChatColourByName("lightGrey")}$${amount}!`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}'s ${getInlineChatColourByName("white")}buy price to ${getInlineChatColourByName("lightGrey")}$${amount}`);
 }
 
 // ===========================================================================
@@ -874,7 +900,7 @@ function respawnVehicle(vehicle) {
 			destroyElement(vehicle);
 			let newVehicle = spawnVehicle(vehicles[i]);
 			vehicles[i].vehicle = newVehicle;
-			setEntityData(newVehicle, "ag.dataSlot", i, false);
+			setEntityData(newVehicle, "vrr.dataSlot", i, false);
 		}
 	}
 }
@@ -905,7 +931,7 @@ function spawnVehicle(vehicleData) {
 
 	vehicleData.vehicle = vehicle;
 
-	setEntityData(vehicle, "ag.livery", vehicleData.livery);
+	setEntityData(vehicle, "vrr.livery", vehicleData.livery);
 
 	return vehicle;
 }
@@ -1014,7 +1040,7 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 	tempVehicleData.ownerType = VRR_VEHOWNER_BIZ;
 	tempVehicleData.ownerId = dealershipId;
 
-	setEntityData(vehicle, "ag.dataSlot", vehicleDataSlot, true);
+	setEntityData(vehicle, "vrr.dataSlot", vehicleDataSlot, true);
 
 	getServerData().vehicles.push(tempVehicleData);
 }
@@ -1029,7 +1055,7 @@ function createTemporaryVehicle(modelId, position, heading) {
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
 	tempVehicleData.databaseId = -1;
 	let slot = getServerData().vehicles.push(tempVehicleData);
-	setEntityData(vehicle, "ag.dataSlot", slot-1, false);
+	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
 
 	return vehicle;
 }
@@ -1043,7 +1069,7 @@ function createPermanentVehicle(modelId, position, heading) {
 
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
 	let slot = getServerData().vehicles.push(tempVehicleData);
-	setEntityData(vehicle, "ag.dataSlot", slot-1, false);
+	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
 
 	return vehicle;
 }

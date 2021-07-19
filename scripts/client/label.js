@@ -103,7 +103,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
             let bizInfoText = "";
             switch(bizLabelInfoType) {
                 case VRR_BIZLABEL_INFO_ENTER:
-                    if(enterPropertyKey != null) {
+                    if(enterPropertyKey) {
                         bizInfoText = `Press ${toUpperCase(getKeyNameFromId(enterPropertyKey))} to enter`;
                     } else {
                         bizInfoText = `Use /enter to enter here`;
@@ -224,29 +224,29 @@ function processLabelRendering() {
         if(localPlayer != null) {
             let pickups = getElementsByType(ELEMENT_PICKUP);
             for(let i in pickups) {
-                if(pickups[i].getData("ag.label.type") != null) {
+                if(pickups[i].getData("vrr.label.type") != null) {
                     if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
                         let price = 0;
                         let bizLabelInfoType = VRR_BIZLABEL_INFO_NONE;
-                        if(pickups[i].getData("ag.label.price") != null) {
-                            price = makeLargeNumberReadable(pickups[i].getData("ag.label.price"));
+                        if(pickups[i].getData("vrr.label.price") != null) {
+                            price = makeLargeNumberReadable(pickups[i].getData("vrr.label.price"));
                         }
 
-                        if(pickups[i].getData("ag.label.help") != null) {
-                            bizLabelInfoType = pickups[i].getData("ag.label.help");
+                        if(pickups[i].getData("vrr.label.help") != null) {
+                            bizLabelInfoType = pickups[i].getData("vrr.label.help");
                         }
 
-                        switch(pickups[i].getData("ag.label.type")) {
+                        switch(pickups[i].getData("vrr.label.type")) {
                             case VRR_LABEL_BUSINESS:
-                                renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), true, price, bizLabelInfoType);
+                                renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), true, price, bizLabelInfoType);
                                 break;
 
                             case VRR_LABEL_HOUSE:
-                                renderPropertyEntranceLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.locked"), false, price, bizLabelInfoType);
+                                renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), false, price, bizLabelInfoType);
                                 break;
 
                             case VRR_LABEL_JOB:
-                                renderJobLabel(pickups[i].getData("ag.label.name"), pickups[i].position, pickups[i].getData("ag.label.jobType"));
+                                renderJobLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.jobType"));
                                 break;
 
                             case VRR_LABEL_EXIT:

@@ -7,19 +7,34 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-// ===========================================================================
-
 function processSync(event, deltaTime) {
     if(localPlayer != null) {
         if(gta.game == GAME_GTA_IV) {
-            triggerNetworkEvent("ag.player.position", localPlayer.position);
-            triggerNetworkEvent("ag.player.heading", localPlayer.heading);
+            triggerNetworkEvent("vrr.player.position", localPlayer.position);
+            triggerNetworkEvent("vrr.player.heading", localPlayer.heading);
+        }
+
+        if(gta.game == GAME_GTA_SA) {
+            let lookAtPos = getLocalPlayerLookAtPosition();
+            triggerNetworkEvent("vrr.player.lookat", lookAtPos);
+            setEntityData(localPlayer, "vrr.headLook", lookAtPos);
+            let peds = getPeds();
+            for(let i in peds) {
+                if(doesEntityDataExist(peds[i], "vrr.headLook")) {
+                    peds[i].lookAt(getEntityData(peds[i], "vrr.headLook"), 99999);
+                }
+            }
         }
 
         if(localPlayer.health <= 0) {
             logToConsole(LOG_DEBUG, `Local player died`);
             localPlayer.clearWeapons();
-            triggerNetworkEvent("ag.playerDeath", localPlayer.position);
+            triggerNetworkEvent("vrr.playerDeath", localPlayer.position);
+        }
+
+        if(streamingRadioElement) {
+            streamingRadio.position = getElementPosition(streamingRadioElement);
+            //streamingRadio.volume = getStreamingRadioVolumeForPosition(streamingRadio.position);
         }
     }
 }
@@ -45,40 +60,40 @@ function repairVehicle(syncId) {
 // ===========================================================================
 
 function syncVehicleProperties(vehicle) {
-    if(doesEntityDataExist(vehicle, "ag.lights")) {
-        let lightStatus = getEntityData(vehicle, "ag.lights");
+    if(doesEntityDataExist(vehicle, "vrr.lights")) {
+        let lightStatus = getEntityData(vehicle, "vrr.lights");
         vehicle.lights = lightStatus;
     }
 
-    if(doesEntityDataExist(vehicle, "ag.panelStatus")) {
-        let panelsStatus = getEntityData(vehicle, "ag.panelStatus");
+    if(doesEntityDataExist(vehicle, "vrr.panelStatus")) {
+        let panelsStatus = getEntityData(vehicle, "vrr.panelStatus");
         for(let i in panelsStatus) {
             vehicle.setPanelStatus(i, panelsStatus[i]);
         }
     }
 
-    if(doesEntityDataExist(vehicle, "ag.wheelStatus")) {
-        let wheelsStatus = getEntityData(vehicle, "ag.wheelStatus");
+    if(doesEntityDataExist(vehicle, "vrr.wheelStatus")) {
+        let wheelsStatus = getEntityData(vehicle, "vrr.wheelStatus");
         for(let i in wheelsStatus) {
             vehicle.setWheelStatus(i, wheelsStatus[i]);
         }
     }
 
-    if(doesEntityDataExist(vehicle, "ag.lightStatus")) {
-        let lightStatus = getEntityData(vehicle, "ag.lightStatus");
+    if(doesEntityDataExist(vehicle, "vrr.lightStatus")) {
+        let lightStatus = getEntityData(vehicle, "vrr.lightStatus");
         for(let i in lightStatus) {
             vehicle.setLightStatus(i, lightStatus[i]);
         }
     }
 
-    //if(doesEntityDataExist(vehicle, "ag.suspensionHeight")) {
-    //    let suspensionHeight = getEntityData(vehicle, "ag.suspensionHeight");
+    //if(doesEntityDataExist(vehicle, "vrr.suspensionHeight")) {
+    //    let suspensionHeight = getEntityData(vehicle, "vrr.suspensionHeight");
     //    vehicle.setSuspensionHeight(suspensionHeight);
     //}
 
     if(getGame() == GAME_GTA_SA) {
-        if(doesEntityDataExist(vehicle, "ag.upgrades")) {
-            let upgrades = getEntityData(vehicle, "ag.upgrades");
+        if(doesEntityDataExist(vehicle, "vrr.upgrades")) {
+            let upgrades = getEntityData(vehicle, "vrr.upgrades");
             for(let i in upgrades) {
                 vehicle.addUpgrade(upgrades[i]);
             }
@@ -86,8 +101,8 @@ function syncVehicleProperties(vehicle) {
     }
 
     if(getGame() == GAME_GTA_SA || getGame() == GAME_GTA_IV) {
-        if(doesEntityDataExist(vehicle, "ag.livery")) {
-            let livery = getEntityData(vehicle, "ag.livery");
+        if(doesEntityDataExist(vehicle, "vrr.livery")) {
+            let livery = getEntityData(vehicle, "vrr.livery");
             if(getGame() == GAME_GTA_SA) {
                 vehicle.setPaintJob(livery);
             } else if(getGame() == GAME_GTA_IV) {
@@ -103,8 +118,8 @@ function syncVehicleProperties(vehicle) {
 
 function syncCivilianProperties(civilian) {
     if(getGame() == GAME_GTA_III) {
-        if(doesEntityDataExist(civilian, "ag.scale")) {
-            let scaleFactor = getEntityData(civilian, "ag.scale");
+        if(doesEntityDataExist(civilian, "vrr.scale")) {
+            let scaleFactor = getEntityData(civilian, "vrr.scale");
             let tempMatrix = civilian.matrix;
             tempMatrix.setScale(toVector3(scaleFactor.x, scaleFactor.y, scaleFactor.z));
             let tempPosition = civilian.position;
@@ -115,78 +130,78 @@ function syncCivilianProperties(civilian) {
     }
 
     if(getGame() == GAME_GTA_SA) {
-        if(doesEntityDataExist(civilian, "ag.fightStyle")) {
-            let fightStyle = getEntityData(civilian, "ag.fightStyle");
+        if(doesEntityDataExist(civilian, "vrr.fightStyle")) {
+            let fightStyle = getEntityData(civilian, "vrr.fightStyle");
             civilian.setFightStyle(fightStyle[0], fightStyle[1]);
         }
     }
 
     if(getGame() == GAME_GTA_III) {
-        if(doesEntityDataExist(civilian, "ag.walkStyle")) {
-            let walkStyle = getEntityData(civilian, "ag.walkStyle");
+        if(doesEntityDataExist(civilian, "vrr.walkStyle")) {
+            let walkStyle = getEntityData(civilian, "vrr.walkStyle");
             civilian.walkStyle = walkStyle;
         }
     }
 
     if(getGame() == GAME_GTA_IV) {
-        if(doesEntityDataExist(civilian, "ag.bodyPropHair")) {
-            let bodyPropHair = getEntityData(civilian, "ag.bodyPropHair");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropHair")) {
+            let bodyPropHair = getEntityData(civilian, "vrr.bodyPropHair");
             civilian.changeBodyProp(0, bodyPropHair[0], bodyPropHair[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropHead")) {
-            let bodyPropHead = getEntityData(civilian, "ag.bodyPropHead");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropHead")) {
+            let bodyPropHead = getEntityData(civilian, "vrr.bodyPropHead");
             civilian.changeBodyProp(1, bodyPropHead[0], bodyPropHead[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropEyes")) {
-            let bodyPropEyes = getEntityData(civilian, "ag.bodyPropEyes");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropEyes")) {
+            let bodyPropEyes = getEntityData(civilian, "vrr.bodyPropEyes");
             civilian.changeBodyProp(1, bodyPropEyes[0], bodyPropEyes[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropLeftHand")) {
-            let bodyPropLeftHand = getEntityData(civilian, "ag.bodyPropLeftHand");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropLeftHand")) {
+            let bodyPropLeftHand = getEntityData(civilian, "vrr.bodyPropLeftHand");
             civilian.changeBodyProp(1, bodyPropLeftHand[0], bodyPropLeftHand[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropRightHand")) {
-            let bodyPropRightHand = getEntityData(civilian, "ag.bodyPropRightHand");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropRightHand")) {
+            let bodyPropRightHand = getEntityData(civilian, "vrr.bodyPropRightHand");
             civilian.changeBodyProp(1, bodyPropRightHand[0], bodyPropRightHand[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropLeftWrist")) {
-            let bodyPropLeftWrist = getEntityData(civilian, "ag.bodyPropLeftWrist");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropLeftWrist")) {
+            let bodyPropLeftWrist = getEntityData(civilian, "vrr.bodyPropLeftWrist");
             civilian.changeBodyProp(1, bodyPropLeftWrist[0], bodyPropLeftWrist[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropRightWrist")) {
-            let bodyPropRightWrist = getEntityData(civilian, "ag.bodyPropRightWrist");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropRightWrist")) {
+            let bodyPropRightWrist = getEntityData(civilian, "vrr.bodyPropRightWrist");
             civilian.changeBodyProp(1, bodyPropRightWrist[0], bodyPropRightWrist[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropRightWrist")) {
-            let bodyPropRightWrist = getEntityData(civilian, "ag.bodyPropRightWrist");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropRightWrist")) {
+            let bodyPropRightWrist = getEntityData(civilian, "vrr.bodyPropRightWrist");
             civilian.changeBodyProp(1, bodyPropRightWrist[0], bodyPropRightWrist[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropHip")) {
-            let bodyPropHip = getEntityData(civilian, "ag.bodyPropHip");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropHip")) {
+            let bodyPropHip = getEntityData(civilian, "vrr.bodyPropHip");
             civilian.changeBodyProp(1, bodyPropHip[0], bodyPropHip[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropLeftFoot")) {
-            let bodyPropLeftFoot = getEntityData(civilian, "ag.bodyPropLeftFoot");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropLeftFoot")) {
+            let bodyPropLeftFoot = getEntityData(civilian, "vrr.bodyPropLeftFoot");
             civilian.changeBodyProp(1, bodyPropLeftFoot[0], bodyPropLeftFoot[1]);
         }
 
-        if(doesEntityDataExist(civilian, "ag.bodyPropRightFoot")) {
-            let bodyPropRightFoot = getEntityData(civilian, "ag.bodyPropRightFoot");
+        if(doesEntityDataExist(civilian, "vrr.bodyPropRightFoot")) {
+            let bodyPropRightFoot = getEntityData(civilian, "vrr.bodyPropRightFoot");
             civilian.changeBodyProp(1, bodyPropRightFoot[0], bodyPropRightFoot[1]);
         }
     }
 
-    if(doesEntityDataExist(civilian, "ag.anim")) {
-        let animData = getEntityData(vehicle, "ag.anim");
+    if(doesEntityDataExist(civilian, "vrr.anim")) {
+        let animData = getEntityData(vehicle, "vrr.anim");
         civilian.addAnimation(animData[0], animData[1]);
     }
 }
@@ -195,8 +210,8 @@ function syncCivilianProperties(civilian) {
 
 function syncPlayerProperties(player) {
     if(getGame() == GAME_GTA_III) {
-        if(doesEntityDataExist(player, "ag.scale")) {
-            let scaleFactor = getEntityData(player, "ag.scale");
+        if(doesEntityDataExist(player, "vrr.scale")) {
+            let scaleFactor = getEntityData(player, "vrr.scale");
             let tempMatrix = player.matrix;
             tempMatrix.setScale(toVector3(scaleFactor.x, scaleFactor.y, scaleFactor.z));
             let tempPosition = player.position;
@@ -207,94 +222,94 @@ function syncPlayerProperties(player) {
     }
 
     if(getGame() == GAME_GTA_SA) {
-        if(doesEntityDataExist(player, "ag.fightStyle")) {
-            let fightStyle = getEntityData(player, "ag.fightStyle");
+        if(doesEntityDataExist(player, "vrr.fightStyle")) {
+            let fightStyle = getEntityData(player, "vrr.fightStyle");
             player.fightStyle = fightStyle;
         }
     }
 
     //if(getGame() == GAME_GTA_SA) {
-    //    if(doesEntityDataExist(player, "ag.walkStyle")) {
-    //        let walkStyle = getEntityData(player, "ag.walkStyle");
+    //    if(doesEntityDataExist(player, "vrr.walkStyle")) {
+    //        let walkStyle = getEntityData(player, "vrr.walkStyle");
     //        player.walkStyle = walkStyle;
     //    }
     //}
 
     if(getGame() == GAME_GTA_IV) {
-        if(doesEntityDataExist(player, "ag.bodyPartHair")) {
-            let bodyPartHead = getEntityData(player, "ag.bodyPartHair");
+        if(doesEntityDataExist(player, "vrr.bodyPartHair")) {
+            let bodyPartHead = getEntityData(player, "vrr.bodyPartHair");
             player.changeBodyPart(0, bodyPartHead[0], bodyPartHair[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPartHead")) {
-            let bodyPartHead = getEntityData(player, "ag.bodyPartHead");
+        if(doesEntityDataExist(player, "vrr.bodyPartHead")) {
+            let bodyPartHead = getEntityData(player, "vrr.bodyPartHead");
             player.changeBodyPart(1, bodyPartHead[0], bodyPartHead[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPartUpper")) {
-            let bodyPartUpper = getEntityData(player, "ag.bodyPartUpper");
+        if(doesEntityDataExist(player, "vrr.bodyPartUpper")) {
+            let bodyPartUpper = getEntityData(player, "vrr.bodyPartUpper");
             player.changeBodyPart(1, bodyPartUpper[0], bodyPartUpper[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPartLower")) {
-            let bodyPartLower = getEntityData(player, "ag.bodyPartLower");
+        if(doesEntityDataExist(player, "vrr.bodyPartLower")) {
+            let bodyPartLower = getEntityData(player, "vrr.bodyPartLower");
             player.changeBodyPart(1, bodyPartLower[0], bodyPartLower[1]);
         }
     }
 
     if(getGame() == GAME_GTA_IV) {
-        if(doesEntityDataExist(player, "ag.bodyPropHair")) {
-            let bodyPropHair = getEntityData(player, "ag.bodyPropHair");
+        if(doesEntityDataExist(player, "vrr.bodyPropHair")) {
+            let bodyPropHair = getEntityData(player, "vrr.bodyPropHair");
             player.changeBodyProp(0, bodyPropHair[0], bodyPropHair[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropHead")) {
-            let bodyPropHead = getEntityData(player, "ag.bodyPropHead");
+        if(doesEntityDataExist(player, "vrr.bodyPropHead")) {
+            let bodyPropHead = getEntityData(player, "vrr.bodyPropHead");
             player.changeBodyProp(1, bodyPropHead[0], bodyPropHead[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropEyes")) {
-            let bodyPropEyes = getEntityData(player, "ag.bodyPropEyes");
+        if(doesEntityDataExist(player, "vrr.bodyPropEyes")) {
+            let bodyPropEyes = getEntityData(player, "vrr.bodyPropEyes");
             player.changeBodyProp(1, bodyPropEyes[0], bodyPropEyes[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropLeftHand")) {
-            let bodyPropLeftHand = getEntityData(player, "ag.bodyPropLeftHand");
+        if(doesEntityDataExist(player, "vrr.bodyPropLeftHand")) {
+            let bodyPropLeftHand = getEntityData(player, "vrr.bodyPropLeftHand");
             player.changeBodyProp(1, bodyPropLeftHand[0], bodyPropLeftHand[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropRightHand")) {
-            let bodyPropRightHand = getEntityData(player, "ag.bodyPropRightHand");
+        if(doesEntityDataExist(player, "vrr.bodyPropRightHand")) {
+            let bodyPropRightHand = getEntityData(player, "vrr.bodyPropRightHand");
             player.changeBodyProp(1, bodyPropRightHand[0], bodyPropRightHand[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropLeftWrist")) {
-            let bodyPropLeftWrist = getEntityData(player, "ag.bodyPropLeftWrist");
+        if(doesEntityDataExist(player, "vrr.bodyPropLeftWrist")) {
+            let bodyPropLeftWrist = getEntityData(player, "vrr.bodyPropLeftWrist");
             player.changeBodyProp(1, bodyPropLeftWrist[0], bodyPropLeftWrist[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropRightWrist")) {
-            let bodyPropRightWrist = getEntityData(player, "ag.bodyPropRightWrist");
+        if(doesEntityDataExist(player, "vrr.bodyPropRightWrist")) {
+            let bodyPropRightWrist = getEntityData(player, "vrr.bodyPropRightWrist");
             player.changeBodyProp(1, bodyPropRightWrist[0], bodyPropRightWrist[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropRightWrist")) {
-            let bodyPropRightWrist = getEntityData(player, "ag.bodyPropRightWrist");
+        if(doesEntityDataExist(player, "vrr.bodyPropRightWrist")) {
+            let bodyPropRightWrist = getEntityData(player, "vrr.bodyPropRightWrist");
             player.changeBodyProp(1, bodyPropRightWrist[0], bodyPropRightWrist[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropHip")) {
-            let bodyPropHip = getEntityData(player, "ag.bodyPropHip");
+        if(doesEntityDataExist(player, "vrr.bodyPropHip")) {
+            let bodyPropHip = getEntityData(player, "vrr.bodyPropHip");
             player.changeBodyProp(1, bodyPropHip[0], bodyPropHip[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropLeftFoot")) {
-            let bodyPropLeftFoot = getEntityData(player, "ag.bodyPropLeftFoot");
+        if(doesEntityDataExist(player, "vrr.bodyPropLeftFoot")) {
+            let bodyPropLeftFoot = getEntityData(player, "vrr.bodyPropLeftFoot");
             player.changeBodyProp(1, bodyPropLeftFoot[0], bodyPropLeftFoot[1]);
         }
 
-        if(doesEntityDataExist(player, "ag.bodyPropRightFoot")) {
-            let bodyPropRightFoot = getEntityData(player, "ag.bodyPropRightFoot");
+        if(doesEntityDataExist(player, "vrr.bodyPropRightFoot")) {
+            let bodyPropRightFoot = getEntityData(player, "vrr.bodyPropRightFoot");
             player.changeBodyProp(1, bodyPropRightFoot[0], bodyPropRightFoot[1]);
         }
     }
@@ -304,8 +319,8 @@ function syncPlayerProperties(player) {
 
 function syncObjectProperties(object) {
     if(getGame() == GAME_GTA_III) {
-        if(doesEntityDataExist(object, "ag.scale")) {
-            let scaleFactor = getEntityData(object, "ag.scale");
+        if(doesEntityDataExist(object, "vrr.scale")) {
+            let scaleFactor = getEntityData(object, "vrr.scale");
             let tempMatrix = object.matrix;
             tempMatrix.setScale(toVector3(scaleFactor.x, scaleFactor.y, scaleFactor.z));
             let tempPosition = object.position;

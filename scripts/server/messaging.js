@@ -148,19 +148,19 @@ function messagePlayerTip(client, messageText) {
 // ===========================================================================
 
 function messagePlayerTalk(client, talkingClient, messageText) {
-    messagePlayerNormal(client, `🗣️ ${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
+    messagePlayerNormal(client, `🗣️ ${getPlayerAccentInlineOutput(client)}${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
 }
 
 // ===========================================================================
 
 function messagePlayerWhisper(client, whisperingClient, messageText) {
-    messagePlayerNormal(client, `🤫 ${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
+    messagePlayerNormal(client, `🤫 ${getPlayerAccentInlineOutput(client)}${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
 }
 
 // ===========================================================================
 
 function messagePlayerShout(client, shoutingClient, messageText) {
-    messagePlayerNormal(client, `🗣️ ${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
+    messagePlayerNormal(client, `🗣️ ${getPlayerAccentInlineOutput(client)}${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
 
 // ===========================================================================

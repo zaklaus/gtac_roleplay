@@ -72,6 +72,9 @@ function updatePings() {
 	for(let i in clients) {
 		if(!clients[i].console) {
 			updatePlayerPing(clients[i]);
+			if(isPlayerSpawned(clients[i])) {
+				updatePlayerCash(clients[i]);
+			}
 		}
 	}
 }

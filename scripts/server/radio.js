@@ -57,37 +57,90 @@ function playStreamingRadioCommand(command, params, client) {
 		return false;
 	}
 
-	if(!isPlayerInAnyVehicle(client)) {
+	if(isPlayerInAnyVehicle(client)) {
+		if(!getVehicleData(getPlayerVehicle(client))) {
+			messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+			return false;
+		}
 
-	}
+		if(radioStationId == 0) {
+			getVehicleData(getPlayerVehicle(client)).streamingRadioStation = -1;
+			getPlayerData(client).streamingRadioStation = -1;
+			meActionToNearbyPlayers(client, `turns off their vehicle's radio`);
 
-	if(!getVehicleData(getPlayerVehicle(client))) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
-		return false;
-	}
+			let clients = getClients();
+			for(let i in clients) {
+				if(getPlayerVehicle(client) == getPlayerVehicle(clients[i])) {
+					playRadioStreamForPlayer(clients[i], "");
+				}
+			}
+			return false;
+		}
 
-	if(radioStationId == 0) {
-		getVehicleData(getPlayerVehicle(client)).streamingRadioStation = -1;
-		getPlayerData(client).streamingRadioStation = -1;
-		meActionToNearbyPlayers(client, `turns off their vehicle's radio`);
+		getVehicleData(getPlayerVehicle(client)).streamingRadioStation = radioStationId-1;
+		getPlayerData(client).streamingRadioStation = radioStationId-1;
+		meActionToNearbyPlayers(client, `changes their vehicle's radio station to ${radioStations[radioStationId-1].name} (${radioStations[radioStationId-1].genre})`);
 
 		let clients = getClients();
 		for(let i in clients) {
 			if(getPlayerVehicle(client) == getPlayerVehicle(clients[i])) {
-				playRadioStreamForPlayer(clients[i], "");
+				playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url, true, getPlayerStreamingRadioVolume(client));
 			}
 		}
-		return false;
-	}
+	} else {
+		if(doesEntityDataExist(client, "vrr.inHouse")) {
+			let houseId = getEntityData(client, "vrr.inHouse");
+			if(radioStationId == 0) {
+				getHouseData(houseId).streamingRadioStation = -1;
+				getPlayerData(client).streamingRadioStation = -1;
+				meActionToNearbyPlayers(client, `turns off the house radio`);
 
-	getVehicleData(getPlayerVehicle(client)).streamingRadioStation = radioStationId-1;
-	getPlayerData(client).streamingRadioStation = radioStationId-1;
-	meActionToNearbyPlayers(client, `changes their vehicle's radio station to ${radioStations[radioStationId-1].name} (${radioStations[radioStationId-1].genre})`);
+				let clients = getClients();
+				for(let i in clients) {
+					if(getEntityData(clients[i], "vrr.inHouse") == houseId) {
+						playRadioStreamForPlayer(clients[i], "");
+					}
+				}
+			} else {
+				getHouseData(houseId).streamingRadioStation = radioStationId-1;
+				getPlayerData(client).streamingRadioStation = radioStationId-1;
+				meActionToNearbyPlayers(client, `changes their house radio station to ${radioStations[radioStationId-1].name} (${radioStations[radioStationId-1].genre})`);
 
-	let clients = getClients();
-	for(let i in clients) {
-		if(getPlayerVehicle(client) == getPlayerVehicle(clients[i])) {
-			playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url, true, getPlayerData(client).streamingRadioVolume);
+				let clients = getClients();
+				for(let i in clients) {
+					if(getEntityData(clients[i], "vrr.inHouse") == houseId) {
+						playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url, true, getPlayerStreamingRadioVolume(clients[i]));
+					}
+				}
+			}
+		} else if(doesEntityDataExist(client, "vrr.inBusiness")) {
+			let businessId = getEntityData(client, "vrr.inBusiness");
+			if(radioStationId == 0) {
+				getBusinessData(businessId).streamingRadioStation = -1;
+				getPlayerData(client).streamingRadioStation = -1;
+				meActionToNearbyPlayers(client, `turns off the business radio`);
+
+				let clients = getClients();
+				for(let i in clients) {
+					if(getEntityData(clients[i], "vrr.inBusiness") == businessId) {
+						playRadioStreamForPlayer(clients[i], "");
+					}
+				}
+			} else {
+				getBusinessData(businessId).streamingRadioStation = radioStationId-1;
+				getPlayerData(client).streamingRadioStation = radioStationId-1;
+				meActionToNearbyPlayers(client, `changes the business radio station to ${radioStations[radioStationId-1].name} (${radioStations[radioStationId-1].genre})`);
+
+				let clients = getClients();
+				for(let i in clients) {
+					if(getEntityData(clients[i], "vrr.inBusiness") == businessId) {
+						playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url, true, getPlayerStreamingRadioVolume(clients[i]));
+					}
+				}
+			}
+		} else {
+			messagePlayerError(client, "You need to be in a vehicle, business, or house to set it's radio station!");
+			return false;
 		}
 	}
 }
@@ -108,7 +161,7 @@ function setStreamingRadioVolumeCommand(command, params, client) {
 	}
 
 	setPlayerStreamingRadioVolume(client, toInteger(volumeLevel));
-	getPlayerData(client).streamingRadioVolume = toInteger(volumeLevel);
+	getPlayerData(client).accountData.streamingRadioVolume = toInteger(volumeLevel);
 	let volumeEmoji = '';
 	if(volumeLevel >= 60) {
 		volumeEmoji = '🔊 ';
@@ -121,6 +174,15 @@ function setStreamingRadioVolumeCommand(command, params, client) {
 	}
 
 	messagePlayerSuccess(client, `${volumeEmoji}You set your streaming radio volume to ${volumeLevel}%`);
+}
+
+// ===========================================================================
+
+function getPlayerStreamingRadioVolume(client) {
+	if(!getPlayerData(client)) {
+		return 20;
+	}
+	return getPlayerData(client).accountData.streamingRadioVolume;
 }
 
 // ===========================================================================

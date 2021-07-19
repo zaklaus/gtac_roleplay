@@ -258,7 +258,7 @@ function gotoGameLocationCommand(command, params, client) {
 		return false;
 	}
 
-	let gameLocationId = getGameLocationFromParams(params)
+	let gameLocationId = getGameLocationFromParams(params);
 
 	if(!gameLocationId) {
 		messagePlayerError(client, "That game location doesn't exist!");
@@ -267,12 +267,12 @@ function gotoGameLocationCommand(command, params, client) {
 
 	setPlayerVelocity(client, toVector3(0.0, 0.0, 0.0));
 	setTimeout(function() {
-		setPlayerPosition(client, getGameData().locations[gameLocationId][1]);
+		setPlayerPosition(client, getGameData().locations[getServerGame()][gameLocationId][1]);
 		setPlayerInterior(client, 0);
 		setPlayerDimension(client, 0);
 	}, 500);
 
-	messagePlayerSuccess(client, `You teleported to game location ${getInlineChatColourByName("lightGrey")}${getGameData().locations[gameLocationId][0]}`);
+	messagePlayerSuccess(client, `You teleported to game location ${getInlineChatColourByName("lightGrey")}${getGameData().locations[getServerGame()][gameLocationId][0]}`);
 }
 
 // ===========================================================================
@@ -508,11 +508,11 @@ function getPlayerCommand(command, params, client) {
 	setPlayerDimension(targetClient, getPlayerDimension(client));
 
 	if(isPlayerInAnyBusiness(client)) {
-		setEntityData(client, "ag.inBusiness", getPlayerBusiness(client));
+		setEntityData(client, "vrr.inBusiness", getPlayerBusiness(client));
 	}
 
 	if(isPlayerInAnyBusiness(client)) {
-		setEntityData(client, "ag.inHouse", getPlayerBusiness(client));
+		setEntityData(client, "vrr.inHouse", getPlayerBusiness(client));
 	}
 
 	messagePlayerSuccess(client, `You teleported ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)} ${getInlineChatColourByName("white")}to you.`);
@@ -753,7 +753,9 @@ function forceCharacterNameChangeCommand(command, params, client) {
         return false;
 	}
 
-	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(targetClient)} (${getCharacterFullName(targetClient)}) ${getInlineChatColourByName("white")}to change their character's name.`);
+	getPlayerData(targetClient).changingCharacterName = true;
+
+	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)} (${getCharacterFullName(targetClient)}) ${getInlineChatColourByName("white")}to change their character's name.`);
 	showPlayerNewCharacterFailedGUI(targetClient, "Non-RP name! Choose a new one:");
 }
 
@@ -788,7 +790,9 @@ function forceCharacterNameCommand(command, params, client) {
 	getPlayerCurrentSubAccount(targetClient).firstName = firstName;
 	getPlayerCurrentSubAccount(targetClient).lastName = lastName;
 
-	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}current character name from ${getInlineChatColourByName("lightGrey")}${oldName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newName}`);
+	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}current character name from ${getInlineChatColourByName("lightGrey")}${oldName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newName}`);
+
+	updateAllPlayerNameTags();
 }
 
 // ===========================================================================

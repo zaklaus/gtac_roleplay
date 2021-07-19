@@ -275,6 +275,12 @@ function setElementDimension(element, dimension) {
 
 // ===========================================================================
 
+function setElementRotation(element, rotation) {
+    return element.setRotation(rotation);
+}
+
+// ===========================================================================
+
 function givePlayerHealth(client, amount) {
     if(getPlayerHealth(client)+amount > 100) {
         logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s health to 100`);
@@ -319,6 +325,36 @@ function getPlayerName(client) {
 
 function getServerName() {
     return server.name;
+}
+
+// ===========================================================================
+
+function createGamePickup(model, position) {
+    return gta.createPickup(model, position);
+}
+
+// ===========================================================================
+
+function createGameObject(model, position) {
+    return gta.createObject(model, position);
+}
+
+// ===========================================================================
+
+function setElementOnAllDimensions(element, state) {
+    element.onAllDimensions = state;
+}
+
+// ===========================================================================
+
+function destroyGameElement(element) {
+    destroyElement(element);
+}
+
+// ===========================================================================
+
+function isMeleeWeapon(weaponId, gameId = getServerGame()) {
+    return (getGameData().meleeWeapons[gameId].indexOf(weaponId) != -1);
 }
 
 // ===========================================================================

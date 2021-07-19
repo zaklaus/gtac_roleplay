@@ -218,11 +218,17 @@ function getInlineChatColourByType(colourName) {
 // ===========================================================================
 
 function rgbaArrayFromToColour(colour) {
+    //return [
+    //    (colour >> 24) & 0xFF, // red
+    //    (colour >> 16) & 0xFF,
+    //    (colour >> 8) & 0xFF,
+    //    colour & 0xFF // alpha
+    //];
     return [
-        (colour >> 24) & 0xFF, // red
-        (colour >> 16) & 0xFF,
+        (colour >> 16) & 0xFF, // red
         (colour >> 8) & 0xFF,
-        colour & 0xFF // alpha
+        colour & 0xFF,
+        (colour >> 24) & 0xFF// alpha
     ];
 }
 

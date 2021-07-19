@@ -79,9 +79,9 @@ function processSkinSelectKeyPress(keyCode) {
             localPlayer.skin = allowedSkins[gta.game][skinSelectorIndex][0];
             skinSelectMessageTextTop = allowedSkins[gta.game][skinSelectorIndex][1];
         } else if(keyCode == SDLK_RETURN) {
-            triggerNetworkEvent("ag.skinSelected", skinSelectorIndex);
+            triggerNetworkEvent("vrr.skinSelected", skinSelectorIndex);
         } else if(keyCode == SDLK_BACKSPACE) {
-            triggerNetworkEvent("ag.skinSelected", -1);
+            triggerNetworkEvent("vrr.skinSelected", -1);
         }
     }
 }
@@ -109,7 +109,7 @@ function processSkinSelectRendering() {
 
 function toggleSkinSelect(state) {
     if(state) {
-        skinSelectorIndex = allowedSkins[gta.game][0];
+        skinSelectorIndex = 0;
         if(localPlayer.skin != allowedSkins[gta.game][skinSelectorIndex][0]) {
             localPlayer.skin = allowedSkins[gta.game][skinSelectorIndex][0];
         }

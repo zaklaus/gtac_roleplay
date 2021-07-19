@@ -258,6 +258,14 @@ function checkNewCharacter(client, firstName, lastName) {
 		return false;
 	}
 
+	if(getPlayerData(client).changingCharacterName) {
+		getPlayerCurrentSubAccount(client).firstName = fixCharacterName(firstName);
+		getPlayerCurrentSubAccount(client).lastName = fixCharacterName(lastName);
+		updateAllPlayerNameTags(client);
+		hideAllPlayerGUI(client);
+		return true;
+	}
+
 	let skinId = allowedSkins[getServerGame()][getPlayerData(client).creatingCharacterSkin];
 
 	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName);

@@ -202,12 +202,14 @@ function initClassTable() {
 				this.creatingCharacterSkin = -1;
 
 				this.streamingRadioStation = -1;
-				this.streamingRadioVolume = 50;
+				this.streamingRadioElement = false;
 
 				this.returnToPosition = null;
 				this.returnToHeading = null;
 				this.returnToInterior = null;
 				this.returnToDimension = null;
+
+				this.changingCharacterName = false;
 			}
 		},
 
@@ -241,6 +243,8 @@ function initClassTable() {
 
 				this.chatScrollLines = 1;
 
+				this.streamingRadioVolume = 20;
+
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["acct_id"];
 					this.name = dbAssoc["acct_name"];
@@ -267,7 +271,8 @@ function initClassTable() {
 
 					this.emailVerificationCode = dbAssoc["acct_code_verifyemail"];
 					this.twoFactorAuthVerificationCode = dbAssoc["acct_code_2fa"];
-					this.chatScrollLines = dbAssoc["acct_svr_chat_scroll_lines"];
+					this.chatScrollLines = toInteger(dbAssoc["acct_svr_chat_scroll_lines"]);
+					this.streamingRadioVolume = toInteger(dbAssoc["acct_streaming_radio_volume"]);
 				}
 			}
 		},
@@ -479,7 +484,9 @@ function initClassTable() {
 				this.exitBlip = null;
 
 				this.entranceFee = 0;
-				this.till = 0
+				this.till = 0;
+
+				this.streamingRadioStation = -1;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc["biz_id"]);
@@ -571,6 +578,8 @@ function initClassTable() {
 				this.exitBlipModel = -1;
 				this.exitPickup = null;
 				this.exitBlip = null;
+
+				this.streamingRadioStation = -1;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc["house_id"]);
@@ -774,6 +783,8 @@ function initClassTable() {
 				this.trunkItemCache = [];
 				this.dashItemCache = [];
 
+				this.streamingRadioStation = -1;
+
 				if(dbAssoc) {
 					// General Info
 					this.databaseId = toInteger(dbAssoc["veh_id"]);
@@ -840,8 +851,6 @@ function initClassTable() {
 					this.whoAdded = toInteger(dbAssoc["veh_who_added"]);
 					this.whenAdded = toInteger(dbAssoc["veh_when_added"]);
 				}
-
-				this.streamingRadioStation = -1;
 			}
 		},
 		/** @class commandData Representing a command's data. Loaded and saved in the database */

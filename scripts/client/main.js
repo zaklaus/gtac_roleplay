@@ -41,6 +41,8 @@ let drunkEffectDurationTimer = null;
 let controlsEnabled = true;
 
 let streamingRadio = null;
+let streamingRadioVolume = 50;
+let streamingRadioElement = false;
 
 let enterPropertyKey = null;
 

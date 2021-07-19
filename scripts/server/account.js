@@ -536,7 +536,8 @@ function saveAccountToDatabase(accountData) {
 				acct_pass='${safePassword}',
 				acct_discord=${accountData.discordAccount},
 				acct_ip=INET_ATON('${accountData.ipAddress}'),
-				acct_code_verifyemail='${accountData.emailVerificationCode}'
+				acct_code_verifyemail='${accountData.emailVerificationCode}',
+				acct_streaming_radio_volume=${accountData.streamingRadioVolume},
 			 WHERE acct_id=${accountData.databaseId}`;
 
 			 /*
@@ -933,7 +934,7 @@ function initClient(client) {
 			}
 		}
 
-		playRadioStreamForPlayer(client, getServerConfig().introMusicURL, true, getPlayerData(client).streamingRadioVolume);
+		playRadioStreamForPlayer(client, getServerConfig().introMusicURL, true, getPlayerStreamingRadioVolume(client));
 	}, 2500);
 }
 
@@ -945,7 +946,7 @@ function saveConnectionToDatabase(client) {
 		let safeName = escapeDatabaseString(dbConnection, getPlayerName(client));
 		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', INET_ATON('${client.ip}'))`;
 		let query = queryDatabase(dbConnection, dbQueryString);
-		setEntityData(client, "ag.connection", getDatabaseInsertId(dbConnection));
+		setEntityData(client, "vrr.connection", getDatabaseInsertId(dbConnection));
 	}
 }
 

@@ -222,11 +222,11 @@ function createAllJobPickups() {
 				pickupCount++;
 				getServerData().jobs[i].locations[j].pickup = gta.createPickup(getServerData().jobs[i].pickupModel, getServerData().jobs[i].locations[j].position);
 				getServerData().jobs[i].locations[j].pickup.onAllDimensions = false;
-				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.owner.type", VRR_PICKUP_JOB, false);
-				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.owner.id", j, false);
-				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.label.type", VRR_LABEL_JOB, true);
-				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.label.name", getServerData().jobs[i].name, true);
-				setEntityData(getServerData().jobs[i].locations[j].pickup, "ag.label.jobType", getServerData().jobs[i].databaseId, true);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.owner.type", VRR_PICKUP_JOB, false);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.owner.id", j, false);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.label.type", VRR_LABEL_JOB, true);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.label.name", getServerData().jobs[i].name, true);
+				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.label.jobType", getServerData().jobs[i].databaseId, true);
 				getServerData().jobs[i].locations[j].pickup.dimension = getServerData().jobs[i].locations[j].dimension;
 				addToWorld(getServerData().jobs[i].locations[j].pickup);
 
@@ -544,7 +544,7 @@ function stopWorking(client) {
 	deleteJobItems(client);
 	restorePlayerJobLockerItems(client);
 
-	let jobId = getPlayerCurrentSubAccount(client).job;
+	let jobId = getPlayerJob(client);
 	switch(getJobType(jobId)) {
 		case VRR_JOB_POLICE:
 			messagePlayerInfo(client, "Your uniform, equipment, and police car have been returned to the police station");
@@ -728,7 +728,7 @@ function getJobData(jobId) {
 function quitJob(client) {
 	stopWorking(client);
 	getPlayerCurrentSubAccount(client).job = 0;
-	sendPlayerJobType(client, -1);
+	sendPlayerJobType(client, 0);
 }
 
 // ===========================================================================
@@ -1502,11 +1502,11 @@ function createJobLocationPickup(jobId, locationId) {
 
 		getJobData(jobId).locations[locationId].pickup = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
 		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.owner.type", VRR_PICKUP_JOB, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.owner.id", locationId, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.type", VRR_LABEL_JOB, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.name", getJobData(jobId).name, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "ag.label.jobType", getJobData(jobId).databaseId, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.owner.type", VRR_PICKUP_JOB, false);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.owner.id", locationId, false);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.label.type", VRR_LABEL_JOB, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.label.name", getJobData(jobId).name, true);
+		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.label.jobType", getJobData(jobId).databaseId, true);
 		addToWorld(getJobData(jobId).locations[locationId].pickup);
 	}
 }

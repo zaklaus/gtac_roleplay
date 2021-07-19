@@ -392,10 +392,10 @@ let serverData = {
 
 function initServerData() {
 	// Pre-allocate translation cache language slots
-	global.getServerData().translation.cache = new Array(global.getServerData().translation.languages.length);
-	let translationCacheFrom = new Array(global.getServerData().translation.languages.length);
-	translationCacheFrom.fill([]);
-	global.getServerData().translation.cache.fill(translationCacheFrom);
+	//getServerData().translation.cache = new Array(getServerData().translation.languages.length);
+	//let translationCacheFrom = new Array(getServerData().translation.languages.length);
+	//translationCacheFrom.fill([]);
+	//getServerData().translation.cache.fill(translationCacheFrom);
 }
 
 // ===========================================================================

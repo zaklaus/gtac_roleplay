@@ -130,7 +130,7 @@ function enterExitPropertyCommand(command, params, client) {
 			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
 			fadeCamera(client, false, 1.0);
-			disableCityAmbienceForPlayer(client);
+			disableCityAmbienceForPlayer(client, true);
 			setTimeout(function() {
 				setPlayerPosition(client, inHouse.entrancePosition);
 				setPlayerHeading(client, inHouse.entranceRotation);
@@ -145,7 +145,10 @@ function enterExitPropertyCommand(command, params, client) {
 					}, 2000);
 				}, 1000);
 			}, 1100);
-			removeEntityData(client, "ag.inHouse");
+			removeEntityData(client, "vrr.inHouse");
+			playRadioStreamForPlayer(client, "");
+			getPlayerData(client).streamingRadioStation = -1;
+			logToConsole(LOG_DEBUG, `[VRR.Misc] ${getPlayerDisplayForConsole(client)} exited house ${inHouse.description}[${inHouse.index}/${inHouse.databaseId}]`);
 			return true;
 		}
 	}
@@ -161,7 +164,7 @@ function enterExitPropertyCommand(command, params, client) {
 			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
 			fadeCamera(client, false, 1.0);
-			disableCityAmbienceForPlayer(client);
+			disableCityAmbienceForPlayer(client, true);
 			setTimeout(function() {
 				setPlayerPosition(client, inBusiness.entrancePosition);
 				setPlayerHeading(client, inBusiness.entranceRotation);
@@ -176,8 +179,10 @@ function enterExitPropertyCommand(command, params, client) {
 					}, 2000);
 				}, 1000);
 			}, 1100);
-			removeEntityData(client, "ag.inBusiness");
-			logToConsole(LOG_DEBUG, `[VRR.Misc] ${getPlayerDisplayForConsole(client)} entered business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
+			removeEntityData(client, "vrr.inBusiness");
+			playRadioStreamForPlayer(client, "");
+			getPlayerData(client).streamingRadioStation = -1;
+			logToConsole(LOG_DEBUG, `[VRR.Misc] ${getPlayerDisplayForConsole(client)} exited business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
 			return true;
 		}
 	}
@@ -210,9 +215,16 @@ function enterExitPropertyCommand(command, params, client) {
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
 					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
+					setTimeout(function() {
+						if(closestBusiness.streamingRadioStation != -1) {
+							if(getPlayerData(client).streamingRadioStation != closestBusiness.streamingRadioStation) {
+								playRadioStreamForPlayer(client, radioStations[closestBusiness.streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
+							}
+						}
+					}, 1250);
 				}, 1000);
 			}, 1100);
-			setEntityData(client, "ag.inBusiness", closestBusinessId, true);
+			setEntityData(client, "vrr.inBusiness", closestBusinessId, true);
 			return true;
 		}
 	}
@@ -246,9 +258,16 @@ function enterExitPropertyCommand(command, params, client) {
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
 					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
+					setTimeout(function() {
+						if(closestHouse.streamingRadioStation != -1) {
+							if(getPlayerData(client).streamingRadioStation != closestHouse.streamingRadioStation) {
+								playRadioStreamForPlayer(client, radioStations[closestHouse.streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
+							}
+						}
+					}, 1250);
 				}, 1000);
 			}, 1100);
-			setEntityData(client, "ag.inHouse", closestHouseId, true)
+			setEntityData(client, "vrr.inHouse", closestHouseId, true)
 			return true;
 		}
 	}
@@ -293,9 +312,9 @@ function getPlayerInfoCommand(command, params, client) {
 
 function playerChangeAFKState(client, afkState) {
     if(afkState) {
-        setEntityData(client, "ag.afk", true, true);
+        setEntityData(client, "vrr.afk", true, true);
     } else {
-        client.removeData("ag.afk");
+        client.removeData("vrr.afk");
     }
 }
 

@@ -17,7 +17,7 @@ function initBusinessScript() {
 		createAllBusinessPickups();
 	}
 
-	if(getServerConfig().createBusinessPickups) {
+	if(getServerConfig().createBusinessBlips) {
 		createAllBusinessBlips();
 	}
 
@@ -211,7 +211,7 @@ function setBusinessNameCommand(command, params, client) {
 
 	let oldBusinessName = getBusinessData(businessId).name;
 	getBusinessData(businessId).name = newBusinessName;
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.name", getBusinessData(businessId).name, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.name", getBusinessData(businessId).name, true);
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}renamed business ${getInlineChatColourByType("businessBlue")}${oldBusinessName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByType("businessBlue")}${newBusinessName}`);
 }
 
@@ -322,7 +322,7 @@ function lockBusinessCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).locked = !getBusinessData(businessId).locked;
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.locked", getBusinessData(businessId).locked, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
 	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
 }
 
@@ -630,7 +630,7 @@ function setBusinessBuyPriceCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).buyPrice = amount;
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.price", getBusinessData(businessId).buyPrice, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.price", getBusinessData(businessId).buyPrice, true);
 	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}'s ${getInlineChatColourByName("white")}for-sale price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
 }
 
@@ -848,7 +848,7 @@ function getClosestBusinessEntrance(position) {
 // ===========================================================================
 
 function isPlayerInAnyBusiness(client) {
-	if(doesEntityDataExist(client, "ag.inBusiness")) {
+	if(doesEntityDataExist(client, "vrr.inBusiness")) {
 		return true;
 	}
 
@@ -858,8 +858,8 @@ function isPlayerInAnyBusiness(client) {
 // ===========================================================================
 
 function getPlayerBusiness(client) {
-	if(doesEntityDataExist(client, "ag.inBusiness")) {
-		return getEntityData(client, "ag.inBusiness");
+	if(doesEntityDataExist(client, "vrr.inBusiness")) {
+		return getEntityData(client, "vrr.inBusiness");
 	}
 
 	return -1;
@@ -1014,8 +1014,8 @@ function createBusinessEntrancePickup(businessId) {
 		}
 
 		getBusinessData(businessId).entrancePickup = gta.createPickup(pickupModelId, getBusinessData(businessId).entrancePosition);
-		getBusinessData(businessId).entrancePickup.onAllDimensions = false;
 		getBusinessData(businessId).entrancePickup.dimension = getBusinessData(businessId).entranceDimension;
+		getBusinessData(businessId).entrancePickup.onAllDimensions = false;
 		updateBusinessPickupLabelData(businessId);
 		addToWorld(getBusinessData(businessId).entrancePickup);
 	}
@@ -1039,8 +1039,8 @@ function createBusinessEntranceBlip(businessId) {
 		getBusinessData(businessId).entranceBlip.onAllDimensions = false;
 		getBusinessData(businessId).entranceBlip.dimension = getBusinessData(businessId).entranceDimension;
 		//getBusinessData(businessId).entranceBlip.interior = getBusinessData(businessId).entranceInterior;
-		setEntityData(getBusinessData(businessId).entranceBlip, "ag.owner.type", VRR_BLIP_BUSINESS_ENTRANCE, false);
-		setEntityData(getBusinessData(businessId).entranceBlip, "ag.owner.id", businessId, false);
+		setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_ENTRANCE, false);
+		setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.id", businessId, false);
 		addToWorld(getBusinessData(businessId).entranceBlip);
 	}
 }
@@ -1061,8 +1061,8 @@ function createBusinessExitPickup(businessId) {
 			}
 
 			getBusinessData(businessId).exitPickup = gta.createPickup(pickupModelId, getBusinessData(businessId).exitPosition);
-			getBusinessData(businessId).exitPickup.onAllDimensions = false;
 			getBusinessData(businessId).exitPickup.dimension = getBusinessData(businessId).exitDimension;
+			getBusinessData(businessId).exitPickup.onAllDimensions = false;
 			//getBusinessData(businessId).exitPickup.interior = getBusinessData(businessId).exitInterior;
 			addToWorld(getBusinessData(businessId).exitPickup);
 		}
@@ -1088,8 +1088,8 @@ function createBusinessExitBlip(businessId) {
 			getBusinessData(businessId).exitBlip.onAllDimensions = false;
 			getBusinessData(businessId).exitBlip.dimension = getBusinessData(businessId).entranceDimension;
 			//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
-			setEntityData(getBusinessData(businessId).exitBlip, "ag.owner.type", VRR_BLIP_BUSINESS_EXIT, false);
-			setEntityData(getBusinessData(businessId).exitBlip, "ag.owner.id", businessId, false);
+			setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_EXIT, false);
+			setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.id", businessId, false);
 			addToWorld(getBusinessData(businessId).exitBlip);
 		}
 	}
@@ -1147,13 +1147,13 @@ function removePlayerFromBusinesses(client) {
 // ===========================================================================
 
 function exitBusiness(client) {
-	let businessId = getEntityData(client, "ag.inBusiness");
+	let businessId = getEntityData(client, "vrr.inBusiness");
 	if(isPlayerSpawned(client)) {
 		setPlayerInterior(client, getServerData().businesses[businessId].entranceInterior);
 		setPlayerDimension(client, client, getServerData().businesses[businessId].entranceDimension);
 		setPlayerPosition(client, client, getServerData().businesses[businessId].entrancePosition);
 	}
-	removeEntityData(client, "ag.inBusiness");
+	removeEntityData(client, "vrr.inBusiness");
 }
 
 // ===========================================================================
@@ -1547,27 +1547,27 @@ function getHouseIdFromDatabaseId(databaseId) {
 // ===========================================================================
 
 function updateBusinessPickupLabelData(businessId) {
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.owner.type", VRR_PICKUP_BUSINESS_ENTRANCE, false);
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.owner.id", businessId, false);
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.type", VRR_LABEL_BUSINESS, true);
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.name", getBusinessData(businessId).name, true);
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.locked", getBusinessData(businessId).locked, true);
-	setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.help", VRR_BIZLABEL_INFO_NONE, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.owner.type", VRR_PICKUP_BUSINESS_ENTRANCE, false);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.owner.id", businessId, false);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.type", VRR_LABEL_BUSINESS, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.name", getBusinessData(businessId).name, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
+	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_NONE, true);
 	if(getBusinessData(businessId).hasInterior) {
-		setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.help", VRR_BIZLABEL_INFO_ENTER, true);
+		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_ENTER, true);
 	} else {
 		if(getBusinessData(businessId).floorItemCache.length > 0) {
-			setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.help", VRR_BIZLABEL_INFO_BUY, true);
+			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_BUY, true);
 		}
 	}
 
 	if(getBusinessData(businessId).buyPrice > 0) {
-		setEntityData(getBusinessData(businessId).entrancePickup, "ag.label.price", getBusinessData(businessId).buyPrice, true);
+		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.price", getBusinessData(businessId).buyPrice, true);
 	}
 
-	setEntityData(getBusinessData(businessId).exitPickup, "ag.owner.type", VRR_PICKUP_BUSINESS_EXIT, false);
-	setEntityData(getBusinessData(businessId).exitPickup, "ag.owner.id", businessId, false);
-	setEntityData(getBusinessData(businessId).exitPickup, "ag.label.type", VRR_LABEL_EXIT, true);
+	setEntityData(getBusinessData(businessId).exitPickup, "vrr.owner.type", VRR_PICKUP_BUSINESS_EXIT, false);
+	setEntityData(getBusinessData(businessId).exitPickup, "vrr.owner.id", businessId, false);
+	setEntityData(getBusinessData(businessId).exitPickup, "vrr.label.type", VRR_LABEL_EXIT, true);
 }
 
 // ===========================================================================

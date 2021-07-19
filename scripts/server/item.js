@@ -103,10 +103,11 @@ function createGroundItemObject(itemId) {
 		deleteGroundItemObject(itemId);
 	}
 
-	getItemData(itemId).object = gta.createObject(getItemTypeData(getItemData(itemId).itemTypeIndex).dropModel, applyOffsetToPos(getItemData(itemId).position, getItemTypeData(getItemData(itemId).itemTypeIndex).dropPosition));
-	getItemData(itemId).object.setRotation(getItemTypeData(getItemData(itemId).itemTypeIndex).dropRotation);
-	getItemData(itemId).object.dimension = getItemData(itemId).dimension;
-	setEntityData(getItemData(itemId).object, "ag.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
+	getItemData(itemId).object = createGameObject(getItemTypeData(getItemData(itemId).itemTypeIndex).dropModel, applyOffsetToPos(getItemData(itemId).position, getItemTypeData(getItemData(itemId).itemTypeIndex).dropPosition));
+	setElementRotation(getItemData(itemId).object, getItemTypeData(getItemData(itemId).itemTypeIndex).dropRotation);
+	setElementOnAllDimensions(getItemData(itemId).object, false);
+	setElementDimension(getItemData(itemId).object, getItemData(itemId).dimension);
+	setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
 	addToWorld(getItemData(itemId).object);
 
 	getServerData().groundItemCache.push(itemId);
@@ -120,7 +121,7 @@ function deleteGroundItemObject(itemId) {
 	}
 
 	if(getItemData(itemId).object != null) {
-		destroyElement(getItemData(itemId).object);
+		destroyGameElement(getItemData(itemId).object);
 		getItemData(itemId).object = null;
 	}
 }
@@ -820,15 +821,13 @@ function playerSwitchItem(client, newHotBarSlot) {
 		}
 	}
 
-
-
 	if(newHotBarItem != -1) {
 		if(getItemData(newHotBarItem)) {
 			if(getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useType == VRR_ITEM_USETYPE_WEAPON) {
-				if(getItemData(newHotBarItem).value > 0) {
+				if(getItemData(newHotBarItem).value > 0 || isMeleeWeapon(toInteger(getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useId))) {
 					givePlayerWeapon(client, toInteger(getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useId), toInteger(getItemData(newHotBarItem).value), true, true);
 					setPlayerWeaponDamageEnabled(client, true);
-					setPlayerWeaponDamageEvent(client, VRR_WEAPON_DAMAGE_EVENT_NONE);
+					setPlayerWeaponDamageEvent(client, VRR_WEAPON_DAMAGE_EVENT_NORMAL);
 				} else {
 					messagePlayerError(client, `The ${getItemName(newHotBarItem)} in slot ${newHotBarSlot} has no ammo, and can't be equipped!`);
 					return false;
@@ -986,6 +985,7 @@ function deleteItem(itemId) {
 
 		case VRR_ITEM_OWNER_PLAYER:
 			if(getPlayerFromCharacterId(getItemData(itemId).ownerId)) {
+				switchPlayerActiveHotBarSlot(getPlayerFromCharacterId(getItemData(itemId).ownerId), -1);
 				getPlayerData(getPlayerFromCharacterId(getItemData(itemId).ownerId)).hotBarItems[getPlayerData(getPlayerFromCharacterId(getItemData(itemId).ownerId)).hotBarItems.indexOf(itemId)] = -1;
 				updatePlayerHotBar(getPlayerFromCharacterId(getItemData(itemId).ownerId));
 			}

@@ -857,7 +857,7 @@ function initGUI() {
 
 let checkLogin = function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking login with server ...`);
-	triggerNetworkEvent("ag.checkLogin", login.passwordInput.lines[0]);
+	triggerNetworkEvent("vrr.checkLogin", login.passwordInput.lines[0]);
 }
 
 // ===========================================================================
@@ -880,7 +880,7 @@ let loginSuccess = function() {
 
 let checkRegistration = function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking registration with server ...`);
-	triggerNetworkEvent("ag.checkRegistration", register.passwordInput.lines[0], register.confirmPasswordInput.lines[0], register.emailInput.lines[0]);
+	triggerNetworkEvent("vrr.checkRegistration", register.passwordInput.lines[0], register.confirmPasswordInput.lines[0], register.emailInput.lines[0]);
 }
 
 // ===========================================================================
@@ -897,7 +897,7 @@ let checkNewCharacter = function() {
 		return false;
 	}
 
-	triggerNetworkEvent("ag.checkNewCharacter",
+	triggerNetworkEvent("vrr.checkNewCharacter",
 		newCharacter.firstNameInput.lines[0],
 		newCharacter.lastNameInput.lines[0],
 	);
@@ -922,6 +922,14 @@ let newCharacterFailed = function(errorMessage) {
 	newCharacter.messageLabel.styles.main.textColour = toColour(180, 32, 32, 255);
 	newCharacter.firstNameInput.text = "";
 	newCharacter.lastNameInput.text = "";
+
+	if(!newCharacter.window.shown) {
+		closeAllWindows();
+		setChatWindowEnabled(false);
+		mexui.setInput(true);
+		setHUDEnabled(false);
+		newCharacter.window.shown = true;
+	}
 }
 
 // ===========================================================================
@@ -951,7 +959,7 @@ let twoFactorAuthSuccess = function() {
 
 let checkTwoFactorAuth = function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking two-factor authentication with server ...`);
-	triggerNetworkEvent("ag.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
+	triggerNetworkEvent("vrr.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
 }
 
 // ===========================================================================
@@ -997,7 +1005,7 @@ let closeAllWindows = function() {
 
 let yesNoDialogAnswerNo = function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Responding with answer NO to server prompt`);
-	triggerNetworkEvent("ag.promptAnswerNo");
+	triggerNetworkEvent("vrr.promptAnswerNo");
 	closeAllWindows();
 }
 
@@ -1005,7 +1013,7 @@ let yesNoDialogAnswerNo = function() {
 
 let yesNoDialogAnswerYes = function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Responding with answer YES to server prompt`);
-	triggerNetworkEvent("ag.promptAnswerYes");
+	triggerNetworkEvent("vrr.promptAnswerYes");
 	closeAllWindows();
 }
 
@@ -1100,21 +1108,21 @@ let showNewCharacter = function() {
 
 let selectNextCharacter = function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Requesting next character info from server for character select window`);
-	triggerNetworkEvent("ag.nextCharacter");
+	triggerNetworkEvent("vrr.nextCharacter");
 }
 
 // ===========================================================================
 
 let selectPreviousCharacter = function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Requesting previous character info from server for character select window`);
-	triggerNetworkEvent("ag.previousCharacter");
+	triggerNetworkEvent("vrr.previousCharacter");
 }
 
 // ===========================================================================
 
 let selectThisCharacter = function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Tell server the current shown character was selected in character select window`);
-	triggerNetworkEvent("ag.selectCharacter");
+	triggerNetworkEvent("vrr.selectCharacter");
 }
 
 // ===========================================================================
@@ -1133,70 +1141,70 @@ let switchCharacterSelect = function(firstName, lastName, cash, clan, lastPlayed
 
 // ===========================================================================
 
-addNetworkHandler("ag.showLogin", function() {
+addNetworkHandler("vrr.showLogin", function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received request from server to show login window`);
 	showLogin();
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.showRegistration", function() {
+addNetworkHandler("vrr.showRegistration", function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received request from server to show registration window`);
 	showRegistration();
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.showNewCharacter", function() {
+addNetworkHandler("vrr.showNewCharacter", function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received request from server to show new character window`);
 	showNewCharacter();
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.showCharacterSelect", function(firstName, lastName, cash, clan, lastPlayed, skinId) {
+addNetworkHandler("vrr.showCharacterSelect", function(firstName, lastName, cash, clan, lastPlayed, skinId) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received request from server to show character selection window`);
 	showCharacterSelect(firstName, lastName, cash, clan, lastPlayed, skinId);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.switchCharacterSelect", function(firstName, lastName, cash, clan, lastPlayed, skinId) {
+addNetworkHandler("vrr.switchCharacterSelect", function(firstName, lastName, cash, clan, lastPlayed, skinId) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received request from server to update character selection window with new info`);
 	switchCharacterSelect(firstName, lastName, cash, clan, lastPlayed, skinId);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.showError", function(errorMessage, errorTitle) {
+addNetworkHandler("vrr.showError", function(errorMessage, errorTitle) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received request from server to show error window`);
 	showError(errorMessage, errorTitle);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.showPrompt", function(promptMessage, promptTitle) {
+addNetworkHandler("vrr.showPrompt", function(promptMessage, promptTitle) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received request from server to show prompt window`);
 	showYesNo(promptMessage, promptTitle);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.showInfo", function(infoMessage) {
+addNetworkHandler("vrr.showInfo", function(infoMessage) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received request from server to show info dialog`);
 	showInfo(infoMessage);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.loginSuccess", function() {
+addNetworkHandler("vrr.loginSuccess", function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received signal of successful login from server`);
 	loginSuccess();
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.characterSelectSuccess", function() {
+addNetworkHandler("vrr.characterSelectSuccess", function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received signal of successful character selection from server`);
 	characterSelectSuccess();
 	setChatWindowEnabled(true);
@@ -1204,35 +1212,35 @@ addNetworkHandler("ag.characterSelectSuccess", function() {
 
 // ===========================================================================
 
-addNetworkHandler("ag.loginFailed", function(remainingAttempts) {
+addNetworkHandler("vrr.loginFailed", function(remainingAttempts) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received signal of failed login from server`);
 	loginFailed(remainingAttempts);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.registrationSuccess", function() {
+addNetworkHandler("vrr.registrationSuccess", function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received signal of successful registration from server`);
 	registrationSuccess();
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.registrationFailed", function(errorMessage) {
+addNetworkHandler("vrr.registrationFailed", function(errorMessage) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received signal of failed registration from server`);
 	registrationFailed(errorMessage);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.newCharacterFailed", function(errorMessage) {
+addNetworkHandler("vrr.newCharacterFailed", function(errorMessage) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received signal of failed registration from server`);
 	newCharacterFailed(errorMessage);
 });
 
 // ===========================================================================
 
-addNetworkHandler("ag.guiColour", function(red, green, blue) {
+addNetworkHandler("vrr.guiColour", function(red, green, blue) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received new GUI colours from server`);
 	primaryColour = [red, green, blue];
 	focusedColour = [red+focusedColourOffset, green+focusedColourOffset, blue+focusedColourOffset];
@@ -1240,10 +1248,10 @@ addNetworkHandler("ag.guiColour", function(red, green, blue) {
 
 // ===========================================================================
 
-addNetworkHandler("ag.guiInit", function() {
+addNetworkHandler("vrr.guiInit", function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Initializing MexUI app`);
 	initGUI();
-	triggerNetworkEvent("ag.guiReady", true);
+	triggerNetworkEvent("vrr.guiReady", true);
 });
 
 // ===========================================================================

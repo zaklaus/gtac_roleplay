@@ -326,7 +326,7 @@ function getEntityData(entity, dataName) {
 
 function setEntityData(entity, dataName, dataValue, syncToClients = true) {
 	if(entity != null) {
-		if(!isNull(server)) {
+		if(typeof server != "undefined") {
 			return entity.setData(dataName, dataValue, syncToClients);
 		} else {
 			return entity.setData(dataName, dataValue);

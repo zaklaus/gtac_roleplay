@@ -29,8 +29,22 @@ function playPlayerAnimationCommand(command, params, client) {
 
     getPlayerData(client).currentAnimation = animationSlot;
     getPlayerData(client).animationStart = getCurrentUnixTimestamp();
-	//setEntityData(getPlayerData(client).ped, "ag.animation", animationSlot, true);
+	//setEntityData(getPlayerData(client).ped, "vrr.animation", animationSlot, true);
     makePedPlayAnimation(getPlayerData(client).ped, animationSlot);
+}
+
+// ===========================================================================
+
+function showAnimationListCommand(command, params, client) {
+	let animList = getGameData().animations[getServerGame()].map(function(x) { return x[0]; });
+
+	let chunkedList = splitArrayIntoChunks(animList, 10);
+
+	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Animation List ${getInlineChatColourByType("clanOrange")}===========================`);
+
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join(", "));
+	}
 }
 
 // ===========================================================================

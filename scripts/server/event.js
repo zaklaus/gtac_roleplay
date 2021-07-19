@@ -26,6 +26,7 @@ function addAllEventHandlers() {
     addEventHandler("onPlayerJoined", onPlayerJoined);
     addEventHandler("onPlayerChat", onPlayerChat);
     addEventHandler("onPlayerQuit", onPlayerQuit);
+    addEventHandler("onElementStreamIn", onElementStreamIn);
 
     addEventHandler("onPedSpawn", onPedSpawn);
     addEventHandler("onPedEnterVehicle", onPedEnteringVehicle);
@@ -36,10 +37,10 @@ function addAllEventHandlers() {
 
 function onPlayerConnect(event, ipAddress, port) {
     logToConsole(LOG_DEBUG, `[VRR.Event] Client connecting (IP: ${ipAddress})`);
-    if(isIpAddressBanned(ipAddress)) {
-        messagePlayerError(client, "You are banned from this server!");
-        return false;
-    }
+    //if(isIpAddressBanned(ipAddress)) {
+    //    messagePlayerError(client, "You are banned from this server!");
+    //    return false;
+    //}
 }
 
 // ===========================================================================
@@ -52,6 +53,14 @@ function onPlayerJoin(event, client) {
 
 function onPlayerJoined(event, client) {
 
+}
+
+// ===========================================================================
+
+function onElementStreamIn(event, element, client) {
+    if(getPlayerDimension(client) != getElementDimension(element)) {
+        event.preventDefault();
+    }
 }
 
 // ===========================================================================
@@ -220,7 +229,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             return false;
         }
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
         getPlayerData(client).lastVehicle = vehicle;
 
@@ -272,7 +281,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
 
         if(getVehicleData(vehicle).streamingRadioStation != -1) {
             if(getPlayerData(client).streamingRadioStation != getVehicleData(vehicle).streamingRadioStation) {
-                playRadioStreamForPlayer(client, radioStations[getVehicleData(vehicle).streamingRadioStation].url, getPlayerData(client).streamingRadioVolume);
+                playRadioStreamForPlayer(client, radioStations[getVehicleData(vehicle).streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
             }
         }
     //}, client.ping+500);
@@ -289,7 +298,7 @@ function onPlayerExitedVehicle(client, vehicle) {
         return false;
     }
 
-    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("ag.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
     if(isPlayerWorking(client)) {
         if(isPlayerOnJobRoute(client)) {
@@ -387,12 +396,12 @@ function onPlayerSpawn(client) {
 
     if(getServerGame() == GAME_GTA_IV) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped body parts and props`);
-        setEntityData(client.player, "ag.bodyParts", getPlayerCurrentSubAccount(client).bodyParts, true);
-        setEntityData(client.player, "ag.bodyProps", getPlayerCurrentSubAccount(client).bodyProps, true);
+        setEntityData(client.player, "vrr.bodyParts", getPlayerCurrentSubAccount(client).bodyParts, true);
+        setEntityData(client.player, "vrr.bodyProps", getPlayerCurrentSubAccount(client).bodyProps, true);
     }
 
     logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped scale (${getPlayerCurrentSubAccount(client).pedScale})`);
-    setEntityData(client.player, "ag.scale", getPlayerCurrentSubAccount(client).pedScale, true);
+    setEntityData(client.player, "vrr.scale", getPlayerCurrentSubAccount(client).pedScale, true);
 
     if(isPlayerSwitchingCharacter(client) || isPlayerCreatingCharacter(client)) {
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s ped is being used for character selection/creation. No further spawn processing needed'`);
@@ -450,8 +459,8 @@ function onPlayerSpawn(client) {
 
         if(getServerGame() == GAME_GTA_SA) {
             logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
-            setEntityData(client.player, "ag.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
-            setEntityData(client.player, "ag.fightStyle", getPlayerCurrentSubAccount(client).fightStyle, true);
+            setEntityData(client.player, "vrr.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
+            setEntityData(client.player, "vrr.fightStyle", getPlayerCurrentSubAccount(client).fightStyle, true);
         }
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
@@ -471,26 +480,26 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
 
-        setEntityData(client.player, "ag.inBusiness", (getPlayerCurrentSubAccount(client).inBusiness != 0) ? getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness) : -1, true);
-        setEntityData(client.player, "ag.inHouse", (getPlayerCurrentSubAccount(client).inHouse != 0) ? getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse) : -1, true);
-
         if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
             let keyId = getPlayerKeyBindForCommand(client, "enter");
-            logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId.key}, ${toUpperCase(getKeyNameFromId(keyId).key)}) to ${getPlayerDisplayForConsole(client)}`);
+            logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId.key}, ${toUpperCase(getKeyNameFromId(keyId.key))}) to ${getPlayerDisplayForConsole(client)}`);
             sendPlayerEnterPropertyKey(client, keyId.key);
         }
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 
-        //setTimeout(function() {
-        //    syncPlayerProperties(client);
-        //}, 1000);
+        setTimeout(function() {
+            syncPlayerProperties(client);
+        }, 1000);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
         updatePlayerCash(client);
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
+
+        setEntityData(client.player, "vrr.inBusiness", (getPlayerCurrentSubAccount(client).inBusiness != 0) ? getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness) : -1, true);
+        setEntityData(client.player, "vrr.inHouse", (getPlayerCurrentSubAccount(client).inHouse != 0) ? getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse) : -1, true);
     //}
 }
 

@@ -446,3 +446,20 @@ function migrateSubAccountsToPerServerData() {
 }
 
 // ===========================================================================
+
+function resetAllAccountsHotkeysToDefault() {
+	let dbConnection = connectToDatabase();
+	let dbQuery = false;
+	let dbAssoc = false;
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, `SELECT acct_id FROM acct_main`);
+		if(dbQuery) {
+			while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+				createDefaultKeybindsForAccount(dbAssoc["acct_id"]);
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+	}
+}
+
+// ===========================================================================

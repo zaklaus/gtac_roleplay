@@ -27,7 +27,7 @@ function sendEmail(toEmail, toName, subject, body) {
     module.smtp.send(
         getEmailConfig().smtp.host,
         getEmailConfig().smtp.port,
-        getEmailConfig().smtp.useTLS,
+        intToBool(getEmailConfig().smtp.useTLS),
         getEmailConfig().smtp.username,
         getEmailConfig().smtp.password,
         toEmail,

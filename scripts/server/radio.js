@@ -179,7 +179,7 @@ function setStreamingRadioVolumeCommand(command, params, client) {
 // ===========================================================================
 
 function getPlayerStreamingRadioVolume(client) {
-	if(!getPlayerData(client)) {
+	if(!getPlayerData(client) || !isPlayerLoggedIn(client) || !isPlayerSpawned(client)) {
 		return 20;
 	}
 	return getPlayerData(client).accountData.streamingRadioVolume;

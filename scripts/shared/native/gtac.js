@@ -1412,7 +1412,7 @@ function getKeyIdFromParams(params) {
     //}
 
     for(let i in bindableKeys) {
-        if(bindableKeys[i].indexOf(tempParams.toLowerCase()) != -1) {
+        if(toLowerCase(bindableKeys[i]) == toLowerCase(tempParams)) {
             return i;
         }
     }

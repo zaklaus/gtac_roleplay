@@ -34,7 +34,7 @@ function kickClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${targetgetPlayerName(client)} has been kicked from the server.`);
+	messageAdminAction(`${getPlayerName(targetClient)} has been kicked from the server.`);
 	targetClient.disconnect();
 }
 
@@ -64,7 +64,7 @@ function setClientStaffTitleCommand(command, params, client) {
 	}
 
 	getPlayerData(targetClient).accountData.staffTitle = staffTitle;
-	messagePlayerSuccess(client, `You set ${targetgetPlayerName(client)}'s staff title to ${staffTitle}`);
+	messagePlayerSuccess(client, `You set ${getPlayerName(targetClient)}'s staff title to ${staffTitle}`);
 	messagePlayerAlert(client, `${getPlayerName(client)} set your staff title to ${staffTitle}`);
 	targetClient.disconnect();
 }
@@ -91,7 +91,7 @@ function muteClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${targetgetPlayerName(client)} has been muted by an admin!`);
+	messageAdminAction(`${getPlayerName(targetClient)} has been muted by an admin!`);
 	getPlayerData(targetClient).muted = true;
 }
 
@@ -118,7 +118,7 @@ function unMuteClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${targetgetPlayerName(client)} has been unmuted by an admin!`);
+	messageAdminAction(`${getPlayerName(targetClient)} has been unmuted by an admin!`);
 	getPlayerData(targetClient).muted = false;
 }
 
@@ -144,7 +144,7 @@ function freezeClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${toString(targetgetPlayerName(client))} has been frozen by an admin!`);
+	messageAdminAction(`${toString(getPlayerName(targetClient))} has been frozen by an admin!`);
 	//setPlayerFrozenState(client, state);
 	setPlayerControlState(client, false);
 }
@@ -171,7 +171,7 @@ function unFreezeClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${toString(targetgetPlayerName(client))} has been un-frozen by an admin!`);
+	messageAdminAction(`${toString(getPlayerName(targetClient))} has been un-frozen by an admin!`);
 	//sendPlayerFrozenState(client, false);
 	setPlayerControlState(client, true);
 }
@@ -198,7 +198,7 @@ function gotoPlayerCommand(command, params, client) {
 		setPlayerDimension(client, getPlayerInterior(targetClient));
 	}, 1000);
 
-	messagePlayerSuccess(client, `You teleported to ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}`);
+	messagePlayerSuccess(client, `You teleported to ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -453,13 +453,13 @@ function playerInteriorCommand(command, params, client) {
 	}
 
 	if(getParamsCount(params, " ") == 1) {
-		messagePlayerInfo(client, `${targetgetPlayerName(client)}'s interior is ${getInlineChatColourByName("lightGrey")}${getPlayerInterior(targetClient)}`);
+		messagePlayerInfo(client, `${getPlayerName(targetClient)}'s interior is ${getInlineChatColourByName("lightGrey")}${getPlayerInterior(targetClient)}`);
 		return false;
 	}
 
 	let interiorId = splitParams[1];
 	setPlayerInterior(targetClient, Number(interiorId));
-	messagePlayerSuccess(client, `You set ${targetgetPlayerName(client)}'s interior to ${getInlineChatColourByName("lightGrey")}${interiorId}`);
+	messagePlayerSuccess(client, `You set ${getPlayerName(targetClient)}'s interior to ${getInlineChatColourByName("lightGrey")}${interiorId}`);
 }
 
 // ===========================================================================
@@ -478,13 +478,13 @@ function playerVirtualWorldCommand(command, params, client) {
 	}
 
 	if(getParamsCount(params, " ") == 1) {
-		messagePlayerInfo(client, `${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}'s ${getInlineChatColourByName("white")}virtual world is ${getInlineChatColourByName("lightGrey")}${getPlayerDimension(targetClient)}`);
+		messagePlayerInfo(client, `${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}virtual world is ${getInlineChatColourByName("lightGrey")}${getPlayerDimension(targetClient)}`);
 		return false;
 	}
 
 	let dimensionId = splitParams[1];
 	setPlayerDimension(targetClient, Number(dimensionId));
-	messagePlayerSuccess(client, `You set ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}'s ${getInlineChatColourByName("white")}virtual world to ${getInlineChatColourByName("lightGrey")}${dimensionId}`);
+	messagePlayerSuccess(client, `You set ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}virtual world to ${getInlineChatColourByName("lightGrey")}${dimensionId}`);
 }
 
 // ===========================================================================
@@ -502,21 +502,80 @@ function getPlayerCommand(command, params, client) {
 	}
 
 	removePlayerFromVehicle(targetClient);
+
+	getPlayerData(targetClient).returnToPosition = getPlayerPosition(targetClient);
+	getPlayerData(targetClient).returnToHeading = getPlayerPosition(targetClient);
+	getPlayerData(targetClient).returnToDimension = getPlayerDimension(targetClient);
+	getPlayerData(targetClient).returnToInterior = getPlayerInterior(targetClient);
+
+	if(isPlayerInAnyHouse(targetClient)) {
+		getPlayerData(targetClient).returnToHouse = getEntityData(client, "vrr.inHouse");
+	}
+
+	if(isPlayerInAnyBusiness(targetClient)) {
+		getPlayerData(targetClient).returnToBusiness = getEntityData(client, "vrr.inBusiness");
+	}
+
 	setPlayerPosition(targetClient, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), 2));
 	setPlayerHeading(targetClient, getPlayerHeading(client));
 	setPlayerInterior(targetClient, getPlayerInterior(client));
 	setPlayerDimension(targetClient, getPlayerDimension(client));
 
 	if(isPlayerInAnyBusiness(client)) {
-		setEntityData(client, "vrr.inBusiness", getPlayerBusiness(client));
+		setEntityData(client, "vrr.inBusiness", getPlayerBusiness(client), true);
 	}
 
 	if(isPlayerInAnyBusiness(client)) {
-		setEntityData(client, "vrr.inHouse", getPlayerBusiness(client));
+		setEntityData(client, "vrr.inHouse", getPlayerBusiness(client), true);
 	}
 
-	messagePlayerSuccess(client, `You teleported ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)} ${getInlineChatColourByName("white")}to you.`);
+	messagePlayerSuccess(client, `You teleported ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)} ${getInlineChatColourByName("white")}to you.`);
 	messagePlayerAlert(targetClient, `An admin has teleported you to their location`);
+}
+
+// ===========================================================================
+
+function returnPlayerCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let targetClient = getPlayerFromParams(params);
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!");
+        return false;
+	}
+
+	removePlayerFromVehicle(targetClient);
+
+	if(getPlayerData(targetClient).returnToPosition == null) {
+        messagePlayerError(client, "There is nowhere to return that player to!");
+        return false;
+	}
+
+	setPlayerPosition(targetClient, getPlayerData(targetClient).returnToPosition);
+	setPlayerHeading(targetClient, getPlayerData(targetClient).returnToHeading);
+	setPlayerInterior(targetClient, getPlayerData(targetClient).returnToInterior);
+	setPlayerDimension(targetClient, getPlayerData(targetClient).returnToDimension);
+
+	if(getPlayerData(targetClient).returnToHouse != null) {
+		setEntityData(client, "vrr.inHouse", getPlayerData(targetClient).returnToHouse, true);
+	}
+
+	if(getPlayerData(targetClient).returnToBusiness != null) {
+		setEntityData(client, "vrr.inBusiness", getPlayerData(targetClient).returnToBusiness, true);
+	}
+
+	getPlayerData(targetClient).returnToPosition = null;
+	getPlayerData(targetClient).returnToHeading = null;
+	getPlayerData(targetClient).returnToDimension = null;
+	getPlayerData(targetClient).returnToInterior = null;
+	getPlayerData(targetClient).returnToHouse = null;
+	getPlayerData(targetClient).returnToBusiness = null;
+
+	messagePlayerSuccess(client, `You returned ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)} ${getInlineChatColourByName("white")}to their previous position.`);
+	messagePlayerAlert(targetClient, `An admin has returned you to your previous location`);
 }
 
 // ===========================================================================
@@ -550,7 +609,7 @@ function addStaffFlagCommand(command, params, client) {
 	}
 
 	givePlayerStaffFlag(targetClient, flagName);
-	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(true)}given ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)} ${getInlineChatColourByName("white")}the ${getInlineChatColourByName("lightGrey")}${flagName} ${getInlineChatColourByName("white")}staff flag`);
+	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(true)}given ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)} ${getInlineChatColourByName("white")}the ${getInlineChatColourByName("lightGrey")}${flagName} ${getInlineChatColourByName("white")}staff flag`);
 }
 
 // ===========================================================================
@@ -584,7 +643,7 @@ function takeStaffFlagCommand(command, params, client) {
 	}
 
 	takePlayerStaffFlag(targetClient, flagName);
-	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(false)}taken ${getInlineChatColourByName("white")}the ${getInlineChatColourByName("lightGrey")}${flagName} ${getInlineChatColourByName("white")}staff flag from ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}`);
+	messagePlayerSuccess(client, `You have ${getBoolRedGreenInlineColour(false)}taken ${getInlineChatColourByName("white")}the ${getInlineChatColourByName("lightGrey")}${flagName} ${getInlineChatColourByName("white")}staff flag from ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -618,7 +677,7 @@ function clearStaffFlagsCommand(command, params, client) {
 	}
 
 	clearPlayerStaffFlags(targetClient);
-	messagePlayerSuccess(client, `You have removed all staff flags from ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}`);
+	messagePlayerSuccess(client, `You have removed all staff flags from ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -659,7 +718,7 @@ function getStaffFlagsCommand(command, params, client) {
 		}
 	}
 
-	messagePlayerInfo(client, `${getInlineChatColourByName("white")}${targetgetPlayerName(client)}'s staff flags: ${getInlineChatColourByName("lightGrey")}${tempStaffFlags.join(getInlineChatColourByName("white"))}, ${getInlineChatColourByName("lightGrey")}")}`);
+	messagePlayerInfo(client, `${getInlineChatColourByName("white")}${getPlayerName(targetClient)}'s staff flags: ${getInlineChatColourByName("lightGrey")}${tempStaffFlags.join(getInlineChatColourByName("white"))}, ${getInlineChatColourByName("lightGrey")}")}`);
 }
 
 // ===========================================================================
@@ -793,6 +852,39 @@ function forceCharacterNameCommand(command, params, client) {
 	messagePlayerSuccess(client, `You forced ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}current character name from ${getInlineChatColourByName("lightGrey")}${oldName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newName}`);
 
 	updateAllPlayerNameTags();
+}
+
+// ===========================================================================
+
+function forcePlayerSkinCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	//if(areThereEnoughParams(params, 3, " ")) {
+	//	messagePlayerSyntax(client, getCommandSyntaxText(command));
+	//	return false;
+	//}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let skinId = getSkinIdFromParams(splitParams[1]);
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!");
+        return false;
+	}
+
+	if(!skinId) {
+        messagePlayerError(client, "That skin is invalid!");
+        return false;
+	}
+
+	getPlayerCurrentSubAccount(targetClient).skin = skinId;
+	setPlayerSkin(client, skinId);
+
+	messagePlayerSuccess(client, `You set ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}skin to ${getInlineChatColourByName("lightGrey")}${getSkinNameFromId(skinId)}`);
 }
 
 // ===========================================================================

@@ -215,6 +215,9 @@ function enterExitPropertyCommand(command, params, client) {
 				setTimeout(function() {
 					fadeCamera(client, true, 1.0);
 					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
+					if(doesBusinessHaveAnyItemsToBuy(closestBusinessId)) {
+						messagePlayerInfo(client, "Use /buy to purchase items from this business");
+					}
 					setTimeout(function() {
 						if(closestBusiness.streamingRadioStation != -1) {
 							if(getPlayerData(client).streamingRadioStation != closestBusiness.streamingRadioStation) {

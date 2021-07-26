@@ -208,6 +208,8 @@ function initClassTable() {
 				this.returnToHeading = null;
 				this.returnToInterior = null;
 				this.returnToDimension = null;
+				this.returnToHouse = null;
+				this.returnToBusiness = null;
 
 				this.changingCharacterName = false;
 			}
@@ -647,10 +649,12 @@ function initClassTable() {
 				this.enabled = false;
 				this.index = -1;
 				this.colour = COLOUR_WHITE;
+				this.colours = [];
 				this.initialRank = 0;
 				this.members = [];
 				this.ranks = [];
 				this.needsSaved = false;
+				this.motd = false;
 
 				if(dbAssoc) {
 					this.databaseId = toInteger(dbAssoc["clan_id"]);
@@ -658,7 +662,9 @@ function initClassTable() {
 					this.owner = toInteger(dbAssoc["clan_owner"]);
 					this.tag = dbAssoc["clan_tag"];
 					this.enabled = intToBool(toInteger(dbAssoc["clan_enabled"]));
-					this.colour = toColour(toInteger(dbAssoc["clan_colour_r"]), toInteger(dbAssoc["clan_colour_g"]), toInteger(dbAssoc["clan_colour_b"]));
+					this.colour = toColour(toInteger(dbAssoc["clan_col_r"]), toInteger(dbAssoc["clan_col_g"]), toInteger(dbAssoc["clan_col_b"]));
+					this.colours = [toInteger(dbAssoc["clan_col_r"]), toInteger(dbAssoc["clan_col_g"]), toInteger(dbAssoc["clan_col_b"])];
+					this.motd = dbAssoc["clan_motd"];
 				}
 			}
 		},

@@ -210,6 +210,10 @@ function getPlayerArmour(client) {
 // ===========================================================================
 
 function setPlayerCash(client, amount) {
+    if(typeof amount != "number") {
+        return false;
+    }
+
 	getPlayerCurrentSubAccount(client).cash = toInteger(amount);
 	updatePlayerCash(client);
 }
@@ -217,6 +221,10 @@ function setPlayerCash(client, amount) {
 // ===========================================================================
 
 function givePlayerCash(client, amount) {
+    if(typeof amount != "number") {
+        return false;
+    }
+
 	getPlayerCurrentSubAccount(client).cash = getPlayerCurrentSubAccount(client).cash + toInteger(amount);
 	updatePlayerCash(client);
 }
@@ -224,6 +232,10 @@ function givePlayerCash(client, amount) {
 // ===========================================================================
 
 function takePlayerCash(client, amount) {
+    if(typeof amount != "number") {
+        return false;
+    }
+
 	getPlayerCurrentSubAccount(client).cash = getPlayerCurrentSubAccount(client).cash - toInteger(amount);
 	updatePlayerCash(client);
 }
@@ -329,8 +341,14 @@ function getServerName() {
 
 // ===========================================================================
 
-function createGamePickup(model, position) {
-    return gta.createPickup(model, position);
+function createGamePickup(model, position, type = 2) {
+    return gta.createPickup(model, position, type = 2);
+}
+
+// ===========================================================================
+
+function createGameBlip(model, position, type = 1, colour = toColour(255, 255, 255, 255)) {
+    return gta.createBlip(model, position, type, colour);
 }
 
 // ===========================================================================
@@ -342,19 +360,29 @@ function createGameObject(model, position) {
 // ===========================================================================
 
 function setElementOnAllDimensions(element, state) {
-    element.onAllDimensions = state;
+    if(!isNull(element) && element != false) {
+        element.onAllDimensions = state;
+    }
 }
 
 // ===========================================================================
 
 function destroyGameElement(element) {
-    destroyElement(element);
+    if(!isNull(element) && element != false) {
+        destroyElement(element);
+    }
 }
 
 // ===========================================================================
 
 function isMeleeWeapon(weaponId, gameId = getServerGame()) {
     return (getGameData().meleeWeapons[gameId].indexOf(weaponId) != -1);
+}
+
+// ===========================================================================
+
+function getPlayerLastVehicle(client) {
+    return getPlayerData(client).lastVehicle;
 }
 
 // ===========================================================================

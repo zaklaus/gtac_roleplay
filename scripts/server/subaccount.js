@@ -102,8 +102,8 @@ function saveSubAccountToDatabase(subAccountData) {
 				sacct_angle=${subAccountData.spawnHeading},
 				sacct_int=${subAccountData.interior},
 				sacct_vw=${subAccountData.dimension},
-				sacct_inhouse=${(subAccountData.inHouse > 0) ? getHouseData(subAccountData.inHouse).databaseId : 0},
-				sacct_inbusiness=${(subAccountData.inBusiness > 0) ? getBusinessData(subAccountData.inBusiness).databaseId : 0},
+				sacct_inhouse=${(subAccountData.inHouse != 0) ? getHouseData(subAccountData.inHouse).databaseId : 0},
+				sacct_inbusiness=${(subAccountData.inBusiness != 0) ? getBusinessData(subAccountData.inBusiness).databaseId : 0},
 				sacct_health=${subAccountData.health},
 				sacct_armour=${subAccountData.armour}
 			 WHERE sacct_id=${subAccountData.databaseId}`;
@@ -387,6 +387,9 @@ function switchCharacterCommand(command, params, client) {
 	getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
 	getPlayerCurrentSubAccount(client).health = getPlayerHealth(client);
 	getPlayerCurrentSubAccount(client).armour = getPlayerArmour(client);
+
+	getPlayerCurrentSubAccount(client).inHouse = (isPlayerInAnyHouse(client) ? getPlayerHouse(client) : 0);
+	getPlayerCurrentSubAccount(client).inBusiness = (isPlayerInAnyBusiness(client) ? getPlayerBusiness(client) : 0);
 
 	logToConsole(client, `Saving ${getPlayerDisplayForConsole(client)}'s subaccount (${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}] to database`)
 	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));

@@ -145,6 +145,7 @@ function createGroundItemCommand(command, params, client) {
 
 	let itemId = createGroundItem(itemType, toInteger(value), getPlayerPosition(client), getPlayerDimension(client));
 	messagePlayerSuccess(client, `You created a ${getItemTypeData(itemType).name} on the ground at your position`);
+	meActionToNearbyPlayers(client, `drops ${getProperDeterminerForName(getItemTypeData(itemType).name)} ${getItemTypeData(itemType).name} on the ground`);
 }
 
 // ===========================================================================
@@ -165,7 +166,7 @@ function createItemCommand(command, params, client) {
 	//}
 
 	let itemId = createGroundItem(itemType, toInteger(value), getPlayerPosition(client), getPlayerDimension(client));
-	messagePlayerSuccess(client, `You created a ${getItemTypeData(itemType).name} on the ground at your position`);
+	messagePlayerSuccess(client, `You created a ${getItemTypeData(itemType).name} in your inventory`);
 }
 
 // ===========================================================================
@@ -530,31 +531,17 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_FOOD:
-			meActionToNearbyPlayers(client, `takes a bite of their ${getItemName(itemIndex)}`);
+			meActionToNearbyPlayers(client, `eats their ${getItemName(itemIndex)}`);
+			givePlayerHealth(client, 25);
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
-			//tempUseValue = (getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > getItemData(itemIndex).value) ? getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue : getItemData(itemIndex).value;
-			//givePlayerHealth(client, tempUseValue);
-			//if(getItemData(itemIndex).value-tempUseValue <= 0) {
-			//
-			//} else {
-			//	getItemData(itemIndex).value = getItemData(itemIndex).value-tempUseValue;
-			//}
 			break;
 
 		case VRR_ITEM_USETYPE_DRINK:
-			meActionToNearbyPlayers(client, `takes a drink of their ${getItemName(itemIndex)}`);
+			meActionToNearbyPlayers(client, `drinks their ${getItemName(itemIndex)}`);
+			givePlayerHealth(client, 25);
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
-			//tempUseValue = (getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > getItemData(itemIndex).value) ? getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue : getItemData(itemIndex).value;
-			//givePlayerHealth(client, tempUseValue);
-			//getItemData(itemIndex).value = getItemData(itemIndex).value - tempUseValue;
-			//if(getItemData(itemIndex).value-tempUseValue <= 0) {
-			//	getPlayerData(client).hotBarItems[getPlayerData(client).hotBarItems.indexOf(itemIndex)] = -1;
-			//
-			//} else {
-			//	getItemData(itemIndex).value = getItemData(itemIndex).value-tempUseValue;
-			//}
 			break;
 
 		case VRR_ITEM_USETYPE_ROPE:
@@ -671,7 +658,20 @@ function playerUseItem(client, hotBarSlot) {
 			} else {
 				messagePlayerAlert(client, `You turned OFF your phone in slot ${getPlayerData(client).activeHotBarSlot+1}`);
 			}
+			break;
 
+		case VRR_ITEM_USETYPE_SMOKEDRUG:
+			meActionToNearbyPlayers(client, `smokes some ${getItemName(itemIndex)}`);
+			givePlayerHealth(client, 25);
+			deleteItem(itemIndex);
+			switchPlayerActiveHotBarSlot(client, -1);
+			break;
+
+		case VRR_ITEM_USETYPE_SNORTDRUG:
+			meActionToNearbyPlayers(client, `snorts some ${getItemName(itemIndex)}`);
+			givePlayerHealth(client, 50);
+			deleteItem(itemIndex);
+			switchPlayerActiveHotBarSlot(client, -1);
 			break;
 
 		default:
@@ -1208,6 +1208,7 @@ function saveAllItemsToDatabase() {
 function saveItemToDatabase(itemId) {
 	let tempItemData = getServerData().items[itemId];
 	logToConsole(LOG_VERBOSE, `[VRR.Item]: Saving item '${itemId}' to database ...`);
+
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		if(tempItemData.databaseId == 0) {
@@ -1272,31 +1273,33 @@ function getItemTypeIndexFromDatabaseId(databaseId) {
 // ===========================================================================
 
 function playerItemActionDelayComplete(client) {
-    switch(getPlayerData(client).itemActionState) {
-        case VRR_ITEM_ACTION_USE:
-            playerUseItem(client, getPlayerData(client).itemActionItem);
-            break;
+	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
+		switch(getPlayerData(client).itemActionState) {
+			case VRR_ITEM_ACTION_USE:
+				playerUseItem(client, getPlayerData(client).itemActionItem);
+				break;
 
-        case VRR_ITEM_ACTION_DROP:
-            playerDropItem(client, getPlayerData(client).itemActionItem);
-            break;
+			case VRR_ITEM_ACTION_DROP:
+				playerDropItem(client, getPlayerData(client).itemActionItem);
+				break;
 
-        case VRR_ITEM_ACTION_TAKE:
-            playerTakeItem(client, getPlayerData(client).itemActionItem);
-            break;
+			case VRR_ITEM_ACTION_TAKE:
+				playerTakeItem(client, getPlayerData(client).itemActionItem);
+				break;
 
-        case VRR_ITEM_ACTION_PUT:
-            playerPutItem(client, getPlayerData(client).itemActionItem);
-            break;
+			case VRR_ITEM_ACTION_PUT:
+				playerPutItem(client, getPlayerData(client).itemActionItem);
+				break;
 
-        case VRR_ITEM_ACTION_PICKUP:
-            playerPickupItem(client, getPlayerData(client).itemActionItem);
-            break;
+			case VRR_ITEM_ACTION_PICKUP:
+				playerPickupItem(client, getPlayerData(client).itemActionItem);
+				break;
 
-        case VRR_ITEM_ACTION_SWITCH:
-            playerSwitchItem(client, getPlayerData(client).itemActionItem);
-            break;
-    }
+			case VRR_ITEM_ACTION_SWITCH:
+				playerSwitchItem(client, getPlayerData(client).itemActionItem);
+				break;
+		}
+	}
 
     getPlayerData(client).itemActionState = VRR_ITEM_ACTION_NONE;
     getPlayerData(client).itemActionItem = -1;

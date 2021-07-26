@@ -53,6 +53,7 @@ function loadCommands() {
         animation: [
             commandData("anim", playPlayerAnimationCommand, "<animation name>", getStaffFlagValue("none"), true, true, "Makes your player ped use an animation"),
             commandData("an", playPlayerAnimationCommand, "<animation name>", getStaffFlagValue("none"), true, true, "Makes your player ped use an animation"),
+            commandData("e", playPlayerAnimationCommand, "<animation name>", getStaffFlagValue("none"), true, true, "Makes your player ped use an animation"),
             commandData("anims", showAnimationListCommand, "", getStaffFlagValue("none"), true, true, "Shows a list of animations"),
             commandData("animlist", showAnimationListCommand, "", getStaffFlagValue("none"), true, true, "Shows a list of animations"),
         ],
@@ -327,6 +328,8 @@ function loadCommands() {
 
             commandData("nonrpname", forceCharacterNameChangeCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Forces a player to change their current character's name."),
             commandData("forcename", forceCharacterNameCommand, "<player name/id> <first name> <last name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's name directly."),
+
+            commandData("forceskin", forcePlayerSkinCommand, "<player name/id> <skin id/name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's name directly."),
         ],
         security: [],
         startup: [],
@@ -353,6 +356,11 @@ function loadCommands() {
             commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, false),
             commandData("tempveh", createTemporaryVehicleCommand, "<model id/name>", getStaffFlagValue("manageVehicles"), true, false),
             commandData("delveh", deleteVehicleCommand, "", getStaffFlagValue("manageVehicles"), true, false),
+
+            commandData("oldveh", getLastVehicleInfoCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("lastveh", getLastVehicleInfoCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("oldcar", getLastVehicleInfoCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("lastcar", getLastVehicleInfoCommand, "", getStaffFlagValue("none"), true, false),
 
             commandData("lock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),
             commandData("unlock", vehicleLockCommand, "", getStaffFlagValue("none"), true, false),

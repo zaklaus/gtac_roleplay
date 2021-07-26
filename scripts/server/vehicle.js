@@ -80,11 +80,11 @@ function saveVehicleToDatabase(vehicleData) {
 
 		// If vehicle hasn't been added to database, ID will be 0
 		if(vehicleData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server, veh_spawn_lock, veh_buy_price, veh_rent_price, veh_livery, veh_) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${getServerId()}, ${boolToInt(vehicleData.spawnLocked)}, ${vehicleData.buyPrice}, ${vehicleData.rentPrice})`;
+			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server, veh_spawn_lock, veh_buy_price, veh_rent_price, veh_livery) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${getServerId()}, ${boolToInt(vehicleData.spawnLocked)}, ${vehicleData.buyPrice}, ${vehicleData.rentPrice}, ${vehicleData.livery})`;
 			queryDatabase(dbConnection, dbQueryString);
 			getVehicleData(vehicleData.vehicle).databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId}, veh_col1=${vehicleData.colour1}, veh_col2=${vehicleData.colour2}, veh_col3=${vehicleData.colour3}, veh_col4=${vehicleData.colour4}, veh_buy_price=${vehicleData.buyPrice}, veh_rent_price=${vehicleData.rentPrice} WHERE veh_id=${vehicleData.databaseId}`;
+			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId}, veh_col1=${vehicleData.colour1}, veh_col2=${vehicleData.colour2}, veh_col3=${vehicleData.colour3}, veh_col4=${vehicleData.colour4}, veh_buy_price=${vehicleData.buyPrice}, veh_rent_price=${vehicleData.rentPrice}, veh_livery=${vehicleData.livery} WHERE veh_id=${vehicleData.databaseId}`;
 			queryDatabase(dbConnection, dbQueryString);
 		}
 		disconnectFromDatabase(dbConnection);
@@ -373,7 +373,7 @@ function setVehicleColourCommand(command, params, client) {
 	vehicle.colour1 = colour1;
 	vehicle.colour2 = colour2;
 	getVehicleData(vehicle).colour1 = colour1;
-	getVehicleData(vehicle).colour2 = colour1;
+	getVehicleData(vehicle).colour2 = colour2;
 
 	meActionToNearbyPlayers(client, `resprays the ${getVehicleName(vehicle)}'s colours`);
 }
@@ -832,6 +832,55 @@ function getVehicleInfoCommand(command, params, client) {
 
 // ===========================================================================
 
+function getLastVehicleInfoCommand(command, params, client) {
+	//if(!isPlayerInAnyVehicle(client)) {
+	//	messagePlayerError(client, "You need to be in a vehicle!");
+	//	return false;
+	//}
+
+	let vehicle = getPlayerLastVehicle(client);
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and doesn't have any info");
+		return false;
+	}
+
+	let vehicleData = getVehicleData(vehicle);
+
+	let ownerName = "Nobody";
+	let ownerType = "None";
+	ownerType = toLowerCase(getVehicleOwnerTypeText(vehicleData.ownerType));
+	switch(vehicleData.ownerType) {
+		case VRR_VEHOWNER_CLAN:
+			ownerName = getClanData(vehicleData.ownerId).name;
+			ownerType = "clan";
+			break;
+
+		case VRR_VEHOWNER_JOB:
+			ownerName = getJobData(vehicleData.ownerId).name;
+			ownerType = "job";
+			break;
+
+		case VRR_VEHOWNER_PLAYER:
+			let subAccountData = loadSubAccountFromId(vehicleData.ownerId);
+			ownerName = `${subAccountData.firstName} ${subAccountData.lastName} [${subAccountData.databaseId}]`;
+			ownerType = "player";
+			break;
+
+		case VRR_VEHOWNER_BIZ:
+			ownerName = getBusinessData(vehicleData.ownerId).name;
+			ownerType = "business";
+			break;
+
+		default:
+			break;
+	}
+
+	messagePlayerNormal(client, `🚗 ${getInlineChatColourByType("vehiclePurple")}[Vehicle Info] ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${vehicle.id}, ${getInlineChatColourByName("white")}DatabaseID: ${getInlineChatColourByName("lightGrey")}${vehicleData.databaseId}, ${getInlineChatColourByName("white")}Owner: ${getInlineChatColourByName("lightGrey")}${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), ${getInlineChatColourByName("white")}Type: ${getInlineChatColourByName("lightGrey")}${getVehicleName(vehicle)}[${vehicle.modelIndex}], ${getInlineChatColourByName("white")}BuyPrice: ${getInlineChatColourByName("lightGrey")}${vehicleData.buyPrice}, ${getInlineChatColourByName("white")}RentPrice: ${getInlineChatColourByName("lightGrey")}${vehicleData.rentPrice}`);
+}
+
+// ===========================================================================
+
 function toggleVehicleSpawnLockCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
@@ -840,15 +889,13 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 
 	let vehicle = getPlayerVehicle(client);
 
-	let spawnLocked = getVehicleData(vehicle).spawnLocked;
-	getVehicleData(vehicle).spawnLocked = !spawnLocked;
-	if(spawnLocked) {
+	getVehicleData(vehicle).spawnLocked = !getVehicleData(vehicle).spawnLocked;
+	if(getVehicleData(vehicle).spawnLocked) {
 		getVehicleData(vehicle).spawnPosition = getVehiclePosition(vehicle);
 		getVehicleData(vehicle).spawnRotation = getVehicleHeading(vehicle);
-		getVehicleData(vehicle).spawnLocked = spawnLocked;
 	}
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}to spawn ${getInlineChatColourByName("lightGrey")}${(spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}to spawn ${getInlineChatColourByName("lightGrey")}${(getVehicleData(vehicle).spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
 }
 
 // ===========================================================================

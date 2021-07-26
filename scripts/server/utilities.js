@@ -764,6 +764,8 @@ function getClanFromParams(params) {
 			return toInteger(params);
 		}
 	}
+
+	return false;
 }
 
 // ===========================================================================
@@ -780,6 +782,8 @@ function getClanRankFromParams(clanId, params) {
 			return toInteger(params);
 		}
 	}
+
+	return false;
 }
 
 // ===========================================================================

@@ -73,6 +73,14 @@ function addPlayerKeyBind(client, keyId, tempCommand, tempParams) {
     let keyBindData = new serverClasses.keyBindData(false, keyId, `${tempCommand} ${tempParams}`);
     getPlayerData(client).accountData.keyBinds.push(keyBindData);
     sendAddAccountKeyBindToClient(client, keyId, KEYSTATE_UP);
+
+    if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
+        let keyId = getPlayerKeyBindForCommand(client, "enter");
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId.key}, ${toUpperCase(getKeyNameFromId(keyId.key))}) to ${getPlayerDisplayForConsole(client)}`);
+        sendPlayerEnterPropertyKey(client, keyId.key);
+    } else {
+        sendPlayerEnterPropertyKey(client, false);
+    }
 }
 
 // ===========================================================================
@@ -85,6 +93,14 @@ function removePlayerKeyBind(client, keyId) {
         }
     }
     sendRemoveAccountKeyBindToClient(client, keyId);
+
+    if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
+        let keyId = getPlayerKeyBindForCommand(client, "enter");
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId.key}, ${toUpperCase(getKeyNameFromId(keyId.key))}) to ${getPlayerDisplayForConsole(client)}`);
+        sendPlayerEnterPropertyKey(client, keyId.key);
+    } else {
+        sendPlayerEnterPropertyKey(client, false);
+    }
 }
 
 // ===========================================================================
@@ -122,6 +138,12 @@ function doesPlayerHaveKeyBindForKey(client, key) {
 
 // ===========================================================================
 
+function doesPlayerHaveKeyBindsDisabled(client) {
+    return hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("disableKeyBinds"));
+}
+
+// ===========================================================================
+
 function getPlayerKeyBindForKey(client, key) {
     for(let i in getPlayerData(client).accountData.keyBinds) {
         if(getPlayerData(client).accountData.keyBinds[i].key == key) {
@@ -143,7 +165,7 @@ function playerUsedKeyBind(client, key) {
     }
 
     logToConsole(LOG_DEBUG, `[VRR.KeyBind] ${getPlayerDisplayForConsole(client)} used keybind ${toUpperCase(getKeyNameFromId(key))} (${key})`);
-    if(doesPlayerHaveKeyBindForKey(client, key)) {
+    if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForKey(client, key)) {
         let keyBindData = getPlayerKeyBindForKey(client, key);
         if(keyBindData.enabled) {
             let splitCommandString = keyBindData.commandString.split(" ");
@@ -161,6 +183,7 @@ function playerUsedKeyBind(client, key) {
 // ===========================================================================
 
 function sendAccountKeyBindsToClient(client) {
+    sendClearKeyBindsToClient(client);
     for(let i in getPlayerData(client).accountData.keyBinds) {
         sendAddAccountKeyBindToClient(client, getPlayerData(client).accountData.keyBinds[i].key, getPlayerData(client).accountData.keyBinds[i].keyState);
     }

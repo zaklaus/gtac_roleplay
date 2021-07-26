@@ -130,7 +130,7 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
 
         if(getVehicleData(vehicle).locked) {
             if(doesPlayerHaveVehicleKeys(client, vehicle)) {
-                if(doesPlayerHaveKeyBindForCommand(client, "lock")) {
+                if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "lock")) {
                     messagePlayerTip(client, `🔒 This ${getVehicleName(vehicle)} is locked. Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "lock").key))} ${getInlineChatColourByName("white")}to unlock it.`);
                 } else {
                     messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked. Use /lock to unlock it`);
@@ -215,11 +215,11 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
 
         let vehicle = client.player.vehicle;
 
-        if(vehicle.syncer != client.index) {
-            if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
-                vehicle.setSyncer(client, true);
-            }
-        }
+        //if(vehicle.syncer != client.index) {
+        //    if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
+        //        vehicle.setSyncer(client, true);
+        //    }
+        //}
 
         if(vehicle.owner != -1) {
             return false;
@@ -247,7 +247,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             } else {
                 if(!getVehicleData(vehicle).engine) {
                     if(doesPlayerHaveVehicleKeys(client, vehicle)) {
-                        if(doesPlayerHaveKeyBindForCommand(client, "engine")) {
+                        if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
                             messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} ${getInlineChatColourByName("white")}to start it.`);
                         } else {
                             messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
@@ -440,8 +440,6 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
         updateAllPlayerNameTags();
 
-
-
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
         sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
 
@@ -451,11 +449,11 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
         updatePlayerSnowState(client);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Sending ground snow excluded models to ${getPlayerDisplayForConsole(client)}`);
-        sendExcludedModelsForGroundSnowToPlayer(client);
+        //logToConsole(LOG_DEBUG, `[VRR.Event] Sending ground snow excluded models to ${getPlayerDisplayForConsole(client)}`);
+        //sendExcludedModelsForGroundSnowToPlayer(client);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
-        sendRemovedWorldObjectsToPlayer(client);
+        //logToConsole(LOG_DEBUG, `[VRR.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
+        //sendRemovedWorldObjectsToPlayer(client);
 
         if(getServerGame() == GAME_GTA_SA) {
             logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
@@ -475,12 +473,14 @@ function onPlayerSpawn(client) {
         updatePlayerHotBar(client);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom keybinds to ${getPlayerDisplayForConsole(client)}`);
-        sendAccountKeyBindsToClient(client);
+        setTimeout(function() {
+            sendAccountKeyBindsToClient(client);
+        }, 5000);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
 
-        if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
+        if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
             let keyId = getPlayerKeyBindForCommand(client, "enter");
             logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId.key}, ${toUpperCase(getKeyNameFromId(keyId.key))}) to ${getPlayerDisplayForConsole(client)}`);
             sendPlayerEnterPropertyKey(client, keyId.key);
@@ -498,8 +498,13 @@ function onPlayerSpawn(client) {
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
 
-        setEntityData(client.player, "vrr.inBusiness", (getPlayerCurrentSubAccount(client).inBusiness != 0) ? getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness) : -1, true);
-        setEntityData(client.player, "vrr.inHouse", (getPlayerCurrentSubAccount(client).inHouse != 0) ? getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse) : -1, true);
+        if(getPlayerCurrentSubAccount(client).inBusiness > 0) {
+            setEntityData(client.player, "vrr.inBusiness", getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness), true);
+        }
+
+        if(getPlayerCurrentSubAccount(client).inHouse > 0) {
+            setEntityData(client.player, "vrr.inHouse", getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse), true);
+        }
     //}
 }
 

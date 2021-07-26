@@ -34,11 +34,12 @@ function saveAllServerDataToDatabase() {
 function initTimers() {
 	//if(!isDevelopmentServer()) {
 		serverTimers.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
-		//serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 1000);
+		//serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 60000);
 		serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
 		serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
 		serverTimers.garbageCollectorTimer = setInterval(collectAllGarbage, 60000);
-		serverTimers.payDayTimer = setInterval(checkPayDays, 30000);
+		serverTimers.payDayTimer = setInterval(checkPayDays, 1800000);
+		serverTimers.randomTipTimer = setInterval(showRandomTipToAllPlayers, 600000);
 		serverTimers.gameTime = setInterval(checkServerGameTime, 60000);
 	//}
 }
@@ -102,10 +103,23 @@ function checkPayDays() {
 	let clients = getClients();
 	for(let i in clients) {
 		if(isPlayerLoggedIn(clients[i]) && isPlayerSpawned(clients[i])) {
-			if(sdl.ticks-getPlayerData(clients[i]).payDayTickStart >= getGlobalConfig().payDayTickCount) {
+			//if(sdl.ticks-getPlayerData(clients[i]).payDayTickStart >= getGlobalConfig().payDayTickCount) {
 				getPlayerData(clients[i]).payDayStart = sdl.ticks;
 				playerPayDay(clients[i]);
-			}
+			//}
+		}
+	}
+}
+
+// ===========================================================================
+
+function showRandomTipToAllPlayers() {
+	let tipId = getRandom(0, randomTips.length-1);
+
+	let clients = getClients();
+	for(let i in clients) {
+		if(isPlayerLoggedIn(clients[i]) && isPlayerSpawned(clients[i])) {
+			messagePlayerTimedRandomTip(clients[i], randomTips[tipId]);
 		}
 	}
 }

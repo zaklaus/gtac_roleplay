@@ -26,8 +26,8 @@ let randomTips = [
     `${getInlineChatColourByName("white")}Want to buy a business? Use /bizbuy at one for sale`,
     `${getInlineChatColourByName("white")}Want to buy a house? Use /housebuy at one for sale`,
     `${getInlineChatColourByName("white")}Want to buy a vehicle? Visit a dealership and enter one for info on how to buy it!`,
-    `${getInlineChatColourByName("white")}Visit the forum at ${getInlineChatColourByName("lightGrey")}asshatgaming.com`,
-    `${getInlineChatColourByName("white")}Chat with us on discord: ${getInlineChatColourByName("lightGrey")}discord.asshatgaming.com`,
+    //`${getInlineChatColourByName("white")}Visit the forum at ${getInlineChatColourByName("lightGrey")}asshatgaming.com`,
+    //`${getInlineChatColourByName("white")}Chat with us on discord: ${getInlineChatColourByName("lightGrey")}discord.asshatgaming.com`,
     //`${getInlineChatColourByName("white")}Tax is based on your total wealth. This includes money, vehicles, businesses and more.`,
     //`${getInlineChatColourByName("white")}Don't go broke because of a hospital bill! Get insured today by visiting an insurance agency!`,
     //`${getInlineChatColourByName("white")}Don't go broke because your car was destroyed. Visit an insurance agency today!`,
@@ -37,8 +37,8 @@ let randomTips = [
     //`${getInlineChatColourByName("white")}Hold [#0066FF]E ${getInlineChatColourByName("white")}to hail a nearby taxi if you need a ride.`,
     //`${getInlineChatColourByName("white")}Press [#0066FF]G ${getInlineChatColourByName("white")}to enter a vehicle as passenger.`,
     //`${getInlineChatColourByName("white")}Banks can provide loans. Use ${getInlineChatColourByName("lightGrey")}/help loans ${getInlineChatColourByName("white")} for more details.`,
-    //`${getInlineChatColourByName("white")}Want to make a clan? Use ${getInlineChatColourByName("lightGrey")}/help clans ${getInlineChatColourByName("white")} for details.`,
-    //`${getInlineChatColourByName("white")}Weapons can be legally purchased at ammunation, if you have a weapon license.`,
+    `${getInlineChatColourByName("white")}Want to make a clan? Use ${getInlineChatColourByName("lightGrey")}/help clans ${getInlineChatColourByName("white")} for details.`,
+    `${getInlineChatColourByName("white")}Legal weapons can be purchased at any ammunation.`,
 ];
 
 // ===========================================================================
@@ -114,7 +114,7 @@ function helpCommand(command, params, client) {
 
         case "command":
         case "cmd":
-            if(areThereEnoughParams(params, 3, " ")) {
+            if(areThereEnoughParams(params, 2, " ")) {
                 showCommandHelpMessage(client, splitParams[2]);
             } else {
                 showCommandHelpMessage(client, false);

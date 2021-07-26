@@ -190,3 +190,19 @@ function messagePlayerAdminChat(client, adminChattingClient, messageText) {
 }
 
 // ===========================================================================
+
+function messagePlayerNewbieTip(client, message) {
+    if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noActionTips"))) {
+        messagePlayerNormal(client, `💡 TIP: ${message}`);
+    }
+}
+
+// ===========================================================================
+
+function messagePlayerTimedRandomTip(client, message) {
+    if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noTimedRandomTips"))) {
+        messagePlayerNormal(client, `💡 TIP: ${message}`);
+    }
+}
+
+// ===========================================================================

@@ -200,7 +200,9 @@ const VRR_ITEM_USETYPE_VEHTIRE = 43;             //
 const VRR_ITEM_USETYPE_FUELCAN = 44;             //
 const VRR_ITEM_USETYPE_VEHCOLOUR = 45;           //
 const VRR_ITEM_USETYPE_VEHLIVERY = 46;           //
-const VRR_ITEM_USETYPE_VEHREPAIR = 46;           //
+const VRR_ITEM_USETYPE_VEHREPAIR = 47;           //
+const VRR_ITEM_USETYPE_SMOKEDRUG = 48;           //
+const VRR_ITEM_USETYPE_SNORTDRUG = 49;           //
 
 // Item Drop Types
 const VRR_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped

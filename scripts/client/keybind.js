@@ -7,6 +7,7 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
+let keyBinds = [];
 let lastKeyBindUse = 0;
 let keyBindDelayTime = 500;
 let keyBindShortHoldDuration = 500;
@@ -23,6 +24,7 @@ function initKeyBindScript() {
 
 function bindAccountKey(key, keyState) {
     logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Binded key ${toUpperCase(getKeyNameFromId(key))} (${key})`);
+    keyBinds.push(toInteger(key));
     bindKey(toInteger(key), keyState, function(event) {
         if(hasKeyBindDelayElapsed()) {
             if(canLocalPlayerUseKeyBinds()) {
@@ -43,6 +45,7 @@ function bindAccountKey(key, keyState) {
 function unBindAccountKey(key) {
     logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Unbinded key ${toUpperCase(getKeyNameFromId(key))} (${key})`);
     unbindKey(key);
+    keyBinds.splice(keyBinds.indexOf(key), 1);
     return true;
 }
 
@@ -60,6 +63,15 @@ function hasKeyBindDelayElapsed() {
 
 function canLocalPlayerUseKeyBinds() {
     return true; //(!usingSkinSelector && isSpawned && !itemActionDelayEnabled);
+}
+
+// ===========================================================================
+
+function clearKeyBinds() {
+    for(let i in keyBinds) {
+        unbindKey(keyBinds[i]);
+    }
+    keyBinds = [];
 }
 
 // ===========================================================================

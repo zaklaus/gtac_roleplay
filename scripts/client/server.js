@@ -62,6 +62,7 @@ function addAllNetworkHandlers() {
 
     addNetworkHandler("vrr.delKeyBind", unBindAccountKey);
     addNetworkHandler("vrr.addKeyBind", bindAccountKey);
+    addNetworkHandler("vrr.clearKeyBinds", clearKeyBinds);
 
     addNetworkHandler("vrr.nametag", updatePlayerNameTag);
     addNetworkHandler("vrr.ping", updatePlayerPing);

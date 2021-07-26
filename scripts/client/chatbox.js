@@ -16,10 +16,15 @@ let maxChatBoxHistory = 500;
 let scrollAmount = 1;
 let maxChatBoxLines = 6;
 
+let scrollUpKey = false;
+let scrollDownKey = false;
+
 // ===========================================================================
 
 function initChatBoxScript() {
     logToConsole(LOG_DEBUG, "[VRR.ChatBox]: Initializing chatbox script ...");
+    scrollUpKey = getKeyIdFromParams("pageup");
+    scrollDownKey = getKeyIdFromParams("pagedown");
     bindChatBoxKeys();
     logToConsole(LOG_DEBUG, "[VRR.ChatBox]: Chatbox script initialized!");
 }
@@ -27,15 +32,15 @@ function initChatBoxScript() {
 // ===========================================================================
 
 function bindChatBoxKeys() {
-    bindKey(SDLK_PAGEUP, KEYSTATE_DOWN, chatBoxScrollUp);
-    bindKey(SDLK_PAGEDOWN, KEYSTATE_DOWN, chatBoxScrollDown);
+    bindKey(toInteger(scrollUpKey), KEYSTATE_DOWN, chatBoxScrollUp);
+    bindKey(toInteger(scrollDownKey), KEYSTATE_DOWN, chatBoxScrollDown);
 }
 
 // ===========================================================================
 
 function unBindChatBoxKeys() {
-    unbindKey(SDLK_PAGEUP);
-    unbindKey(SDLK_PAGEDOWN);
+    unbindKey(toInteger(scrollUpKey));
+    unbindKey(toInteger(scrollDownKey));
 }
 
 // ===========================================================================

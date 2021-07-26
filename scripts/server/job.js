@@ -364,28 +364,45 @@ function startWorkingCommand(command, params, client) {
 	}
 
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
-	let jobData = getJobData(closestJobLocation.jobIndex);
+	let jobData = false;
 
 	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
-		messagePlayerError(client, "There are no job points close enough!");
-		return false;
-	}
+		let closestVehicle = getClosestVehicle(getPlayerPosition(client));
+		if(getDistance(getVehiclePosition(closestVehicle), getPlayerPosition(client)) < getGlobalConfig().startWorkingDistance) {
+			messagePlayerError(client, "You need to be near your job site or vehicle that belongs to your job!");
+			return false;
+		}
 
-	if(getPlayerCurrentSubAccount(client).job == VRR_JOB_NONE) {
-		messagePlayerError(client, "You don't have a job!");
-		messagePlayerInfo(client, "You can get a job by going the yellow points on the map.");
-		return false;
-	}
+		if(getVehicleData(closestVehicle).ownerType == VRR_VEHOWNER_JOB) {
+			messagePlayerError(client, "This is not a job vehicle!");
+			return false;
+		}
 
-	if(getPlayerCurrentSubAccount(client).job != closestJobLocation.job) {
-		messagePlayerError(client, "This is not your job!");
-		messagePlayerInfo(client, `If you want this job, use /quitjob to quit your current job.`);
-		return false;
+		if(getPlayerCurrentSubAccount(client).job != getVehicleData(closestVehicle).ownerId) {
+			messagePlayerError(client, "This is not your job vehicle!");
+			return false;
+		}
+
+		jobData = getJobData(getJobIdFromDatabaseId(getVehicleData(closestVehicle).ownerId));
+	} else {
+		if(getPlayerCurrentSubAccount(client).job == VRR_JOB_NONE) {
+			messagePlayerError(client, "You don't have a job!");
+			messagePlayerInfo(client, "You can get a job by going the yellow points on the map.");
+			return false;
+		}
+
+		if(getPlayerCurrentSubAccount(client).job != closestJobLocation.job) {
+			messagePlayerError(client, "This is not your job!");
+			messagePlayerInfo(client, `If you want this job, use /quitjob to quit your current job.`);
+			return false;
+		}
+
+		jobData = getJobData(closestJobLocation.jobIndex);
 	}
 
 	messagePlayerSuccess(client, `You are now working as a ${jobData.name}`);
 	startWorking(client);
-	//showStartedWorkingTip(client);
+	//messagePlayerNewbieTip(client, `Enter a job vehicle to get started!`);
 	return true;
 }
 
@@ -593,12 +610,48 @@ function jobUniformCommand(command, params, client) {
 	}
 
 	if(!isPlayerWorking(client)) {
-		messagePlayerError(client, "You are not working! Use /startwork at your job location.");
+		messagePlayerError(client, "You are not working! Use /startwork at your job location or a job vehicle.");
 		return false;
 	}
 
-	let jobId = getPlayerJob(client);
-	let uniforms = getJobData(jobId).uniforms;
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+	let jobData = false;
+
+	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
+		let closestVehicle = getClosestVehicle(getPlayerPosition(client));
+		if(getDistance(getVehiclePosition(closestVehicle), getPlayerPosition(client)) < getGlobalConfig().startWorkingDistance) {
+			messagePlayerError(client, "You need to be near your job site or vehicle that belongs to your job!");
+			return false;
+		}
+
+		if(getVehicleData(closestVehicle).ownerType == VRR_VEHOWNER_JOB) {
+			messagePlayerError(client, "This is not a job vehicle!");
+			return false;
+		}
+
+		if(getPlayerCurrentSubAccount(client).job != getVehicleData(closestVehicle).ownerId) {
+			messagePlayerError(client, "This is not your job vehicle!");
+			return false;
+		}
+
+		jobData = getJobData(getJobIdFromDatabaseId(getVehicleData(closestVehicle).ownerId));
+	} else {
+		if(getPlayerCurrentSubAccount(client).job == VRR_JOB_NONE) {
+			messagePlayerError(client, "You don't have a job!");
+			messagePlayerInfo(client, "You can get a job by going the yellow points on the map.");
+			return false;
+		}
+
+		if(getPlayerCurrentSubAccount(client).job != closestJobLocation.job) {
+			messagePlayerError(client, "This is not your job!");
+			messagePlayerInfo(client, `If you want this job, use /quitjob to quit your current job.`);
+			return false;
+		}
+
+		jobData = getJobData(closestJobLocation.jobIndex);
+	}
+
+	let uniforms = jobData.uniforms;
 
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -615,10 +668,10 @@ function jobUniformCommand(command, params, client) {
 		return false;
 	}
 
-	setPlayerSkin(client, getJobData(jobId).uniforms[uniformId-1].skin);
+	setPlayerSkin(client, jobData.uniforms[uniformId-1].skin);
 
 	//messagePlayerSuccess(client, `You have been given a ${getInlineChatColourByName("lightGrey")}${uniforms[uniformId-1].name} ${getInlineChatColourByName("white")}uniform and you can put it on from your inventory.`);
-	meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(getJobData(jobId).uniforms[uniformId-1].name)} ${getJobData(jobId).uniforms[uniformId-1].name} uniform`);
+	meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(jobData.uniforms[uniformId-1].name)} ${jobData.uniforms[uniformId-1].name} uniform`);
 	//let itemId = createItem(getItemTypeFromParams("Outfit"), getJobData(jobId).uniforms[uniformId-1].skin, VRR_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
 	//let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
 	//getPlayerData(client).hotBarItems[freeSlot] = itemId;
@@ -639,8 +692,44 @@ function jobEquipmentCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getPlayerJob(client);
-	let equipments = getJobData(jobId).equipment;
+	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
+	let jobData = false;
+
+	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
+		let closestVehicle = getClosestVehicle(getPlayerPosition(client));
+		if(getDistance(getVehiclePosition(closestVehicle), getPlayerPosition(client)) < getGlobalConfig().startWorkingDistance) {
+			messagePlayerError(client, "You need to be near your job site or vehicle that belongs to your job!");
+			return false;
+		}
+
+		if(getVehicleData(closestVehicle).ownerType == VRR_VEHOWNER_JOB) {
+			messagePlayerError(client, "This is not a job vehicle!");
+			return false;
+		}
+
+		if(getPlayerCurrentSubAccount(client).job != getVehicleData(closestVehicle).ownerId) {
+			messagePlayerError(client, "This is not your job vehicle!");
+			return false;
+		}
+
+		jobData = getJobData(getJobIdFromDatabaseId(getVehicleData(closestVehicle).ownerId));
+	} else {
+		if(getPlayerCurrentSubAccount(client).job == VRR_JOB_NONE) {
+			messagePlayerError(client, "You don't have a job!");
+			messagePlayerInfo(client, "You can get a job by going the yellow points on the map.");
+			return false;
+		}
+
+		if(getPlayerCurrentSubAccount(client).job != closestJobLocation.job) {
+			messagePlayerError(client, "This is not your job!");
+			messagePlayerInfo(client, `If you want this job, use /quitjob to quit your current job.`);
+			return false;
+		}
+
+		jobData = getJobData(closestJobLocation.jobIndex);
+	}
+
+	let equipments = jobData.equipment;
 
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));

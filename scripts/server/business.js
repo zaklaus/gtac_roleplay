@@ -112,6 +112,8 @@ function createBusinessCommand(command, params, client) {
 	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].business, getGameConfig().blipSprites[getServerGame()].business, getPlayerInterior(client), getPlayerDimension(client));
 	getServerData().businesses.push(tempBusinessData);
 
+	saveAllBusinessesToDatabase();
+
 	createBusinessEntrancePickup(getServerData().businesses.length-1);
 	createBusinessExitPickup(getServerData().businesses.length-1);
 	createBusinessEntranceBlip(getServerData().businesses.length-1);
@@ -433,7 +435,20 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			getBusinessData(businessId).exitInterior = 0;
 			getBusinessData(businessId).hasInterior = false;
 			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}remove business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
+
+			resetBusinessPickups();
+			resetBusinessBlips();
 			return false;
+		} else if(toLowerCase(typeParam) == "teleport") {
+			getBusinessData(businessId).exitPosition = getPlayerPosition(client);
+			getBusinessData(businessId).exitInterior = getPlayerInterior(client);
+			getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
+			getBusinessData(businessId).hasInterior = true;
+			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}remove business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
+
+			resetBusinessPickups();
+			resetBusinessBlips();
+			return true;
 		}
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
@@ -447,6 +462,9 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 		getBusinessData(businessId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitInterior;
 		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
 		getBusinessData(businessId).hasInterior = true;
+
+		resetBusinessPickups();
+		resetBusinessBlips();
 	} else {
 		if(!getBusinessData(businessId)) {
 			messagePlayerError(client, "Business ID not found!");
@@ -456,12 +474,10 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 		getBusinessData(businessId).exitInterior = getBusinessData(businessId).exitInterior;
 		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
 		getBusinessData(businessId).hasInterior = true;
-	}
 
-	deleteBusinessEntrancePickup(businessId);
-	deleteBusinessExitPickup(businessId);
-	createBusinessEntrancePickup(businessId);
-	createBusinessExitPickup(businessId);
+		resetBusinessPickups();
+		resetBusinessBlips();
+	}
 }
 
 // ===========================================================================
@@ -489,10 +505,7 @@ function setBusinessBlipCommand(command, params, client) {
 		getBusinessData(businessId).entranceBlipModel = toInteger(typeParam);
 	}
 
-	deleteBusinessEntranceBlip(businessId);
-	deleteBusinessExitBlip(businessId);
-	createBusinessEntranceBlip(businessId);
-	createBusinessExitBlip(businessId);
+	resetBusinessBlips();
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}blip display to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
 }
@@ -1013,9 +1026,9 @@ function createBusinessEntrancePickup(businessId) {
 			pickupModelId = getBusinessData(businessId).entrancePickupModel;
 		}
 
-		getBusinessData(businessId).entrancePickup = gta.createPickup(pickupModelId, getBusinessData(businessId).entrancePosition);
-		getBusinessData(businessId).entrancePickup.dimension = getBusinessData(businessId).entranceDimension;
-		getBusinessData(businessId).entrancePickup.onAllDimensions = false;
+		getBusinessData(businessId).entrancePickup = createGamePickup(pickupModelId, getBusinessData(businessId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].business);
+		setElementOnAllDimensions(getBusinessData(businessId).entrancePickup, false);
+		setElementDimension(getBusinessData(businessId).entrancePickup, getBusinessData(businessId).entranceDimension);
 		updateBusinessPickupLabelData(businessId);
 		addToWorld(getBusinessData(businessId).entrancePickup);
 	}
@@ -1035,9 +1048,11 @@ function createBusinessEntranceBlip(businessId) {
 			blipModelId = getBusinessData(businessId).entranceBlipModel;
 		}
 
-		getBusinessData(businessId).entranceBlip = gta.createBlip(blipModelId, getBusinessData(businessId).entrancePosition, 1, getColourByName("businessBlue"));
-		getBusinessData(businessId).entranceBlip.onAllDimensions = false;
-		getBusinessData(businessId).entranceBlip.dimension = getBusinessData(businessId).entranceDimension;
+		getBusinessData(businessId).entranceBlip = createGameBlip(blipModelId, getBusinessData(businessId).entrancePosition, 1, getColourByName("businessBlue"));
+		setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
+		setElementDimension(getBusinessData(businessId).entranceBlip, getBusinessData(businessId).entranceDimension);
+		//getBusinessData(businessId).entranceBlip.streamInDistance = 300;
+		//getBusinessData(businessId).entranceBlip.streamOutDistance = 350;
 		//getBusinessData(businessId).entranceBlip.interior = getBusinessData(businessId).entranceInterior;
 		setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_ENTRANCE, false);
 		setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.id", businessId, false);
@@ -1060,9 +1075,9 @@ function createBusinessExitPickup(businessId) {
 				pickupModelId = getBusinessData(businessId).exitPickupModel;
 			}
 
-			getBusinessData(businessId).exitPickup = gta.createPickup(pickupModelId, getBusinessData(businessId).exitPosition);
-			getBusinessData(businessId).exitPickup.dimension = getBusinessData(businessId).exitDimension;
-			getBusinessData(businessId).exitPickup.onAllDimensions = false;
+			getBusinessData(businessId).exitPickup = createGamePickup(pickupModelId, getBusinessData(businessId).exitPosition, getGameConfig().pickupTypes[getServerGame()].business);
+			setElementDimension(getBusinessData(businessId).exitPickup, getBusinessData(businessId).exitDimension);
+			setElementOnAllDimensions(getBusinessData(businessId).exitPickup, false);
 			//getBusinessData(businessId).exitPickup.interior = getBusinessData(businessId).exitInterior;
 			addToWorld(getBusinessData(businessId).exitPickup);
 		}
@@ -1084,9 +1099,9 @@ function createBusinessExitBlip(businessId) {
 				blipModelId = getBusinessData(businessId).exitBlipModel;
 			}
 
-			getBusinessData(businessId).exitBlip = gta.createBlip(blipModelId, getBusinessData(businessId).exitPosition, 1, getColourByName("businessBlue"));
-			getBusinessData(businessId).exitBlip.onAllDimensions = false;
-			getBusinessData(businessId).exitBlip.dimension = getBusinessData(businessId).entranceDimension;
+			getBusinessData(businessId).exitBlip = createGameBlip(blipModelId, getBusinessData(businessId).exitPosition, 1, getColourByName("businessBlue"));
+			setElementDimension(getBusinessData(businessId).exitBlip, getBusinessData(businessId).entranceDimension);
+			setElementOnAllDimensions(getBusinessData(businessId).exitBlip, false);
 			//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
 			setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_EXIT, false);
 			setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.id", businessId, false);
@@ -1310,7 +1325,7 @@ function buyFromBusinessCommand(command, params, client) {
 
 	if(getBusinessData(businessId).hasInterior) {
 		if(!getPlayerBusiness(client)) {
-			if(doesPlayerHaveKeyBindForCommand(client, "enter")) {
+			if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
 				messagePlayerTip(client, `You need to enter the business first! Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "enter")).key)} ${getInlineChatColourByName("white")}to enter and exit a business`);
 			} else {
 				messagePlayerNormal(client, `You need to enter the business first! Use /enter to enter and exit a business`);
@@ -1371,7 +1386,15 @@ function buyFromBusinessCommand(command, params, client) {
 		destroyItem(getBusinessData(businessId).floorItemCache[itemSlot-1]);
 	}
 
-	messagePlayerSuccess(client, `You bought ${amount} ${getInlineChatColourByName("lightGrey")}${itemName} ${getInlineChatColourByName("white")}for ${totalCost} ${priceEach}`);
+	//messagePlayerSuccess(client, `You bought ${amount} ${getInlineChatColourByName("lightGrey")}${itemName} ${getInlineChatColourByName("white")}for ${totalCost} ${priceEach}`);
+	meActionToNearbyPlayers(client, `buys a ${itemName}`);
+
+	if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand("inv")) {
+		let keyData = getPlayerKeyBindForCommand("inv");
+		messagePlayerNewbieTip(client, `Press ${getKeyNameFromId(keyData.key)} to see your items.`);
+	} else {
+		messagePlayerNewbieTip(client, `Use /inv to see your items.`);
+	}
 }
 
 // ===========================================================================
@@ -1556,7 +1579,7 @@ function updateBusinessPickupLabelData(businessId) {
 	if(getBusinessData(businessId).hasInterior) {
 		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_ENTER, true);
 	} else {
-		if(getBusinessData(businessId).floorItemCache.length > 0) {
+		if(doesBusinessHaveAnyItemsToBuy(businessId)) {
 			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_BUY, true);
 		}
 	}
@@ -1579,6 +1602,30 @@ function getBusinessIdFromDatabaseId(databaseId) {
 			return i;
 		}
 	}
+}
+
+// ===========================================================================
+
+function resetBusinessPickups(businessId) {
+	deleteBusinessEntrancePickup(businessId);
+	deleteBusinessExitPickup(businessId);
+	createBusinessEntrancePickup(businessId);
+	createBusinessExitPickup(businessId);
+}
+
+// ===========================================================================
+
+function resetBusinessBlips(businessId) {
+	deleteBusinessEntranceBlip(businessId);
+	deleteBusinessExitBlip(businessId);
+	createBusinessEntranceBlip(businessId);
+	createBusinessExitBlip(businessId);
+}
+
+// ===========================================================================
+
+function doesBusinessHaveAnyItemsToBuy(businessId) {
+	return (getBusinessData(businessId).floorItemCache.length > 0);
 }
 
 // ===========================================================================

@@ -55,6 +55,7 @@ function loadGlobalConfig() {
 		itemActionStateReset: 5000,
 		subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
 		emailValidationRegex: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
+		itemActionDelayExtraTimeout: 1000,
 	};
 }
 
@@ -209,21 +210,21 @@ function loadGameConfig() {
 			{},
 
 			{ // GTA 3
-				business: 0,
-				house: 0,
-				bank: 0,
-				clothes: 0,
-				info: 0,
-				job: 0,
+				business: 2,
+				house: 2,
+				bank: 2,
+				clothes: 2,
+				info: 2,
+				job: 2,
 			},
 
 			{ // GTA Vice City
-				business: 0,
-				house: 0,
-				bank: 0,
-				clothes: 0,
-				info: 0,
-				job: 0,
+				business: 2,
+				house: 2,
+				bank: 2,
+				clothes: 2,
+				info: 2,
+				job: 2,
 			},
 
 			{ // GTA San Andreas
@@ -1185,17 +1186,7 @@ function reloadServerConfigurationCommand(command, params, client) {
 // ===========================================================================
 
 function reloadEmailConfigurationCommand(command, params, client) {
-	emailConfig = loadEmailConfigFromGameAndPort(server.game, server.port);
-	applyConfigToServer(serverConfig);
-	updateServerRules();
-    messageAdminAction(`${getPlayerName(client)} reloaded the email configuration`);
-	return true;
-}
-
-// ===========================================================================
-
-function reloadEmailConfigurationCommand(command, params, client) {
-	emailConfig = loadEmailConfig();
+	emailConfig = loadEmailConfiguration();
     messageAdminAction(`${getPlayerName(client)} reloaded the email configuration`);
 	return true;
 }

@@ -116,8 +116,8 @@ let serverBitFlagKeys = {
 		"useGUIForItems",
 		"useRadialWheelItems", // If this is disabled, use MMORPG-style hotbar IF useGUIForItems is enabled
 		"disableKeyBinds",
-		"showTimedRandomTips",
-		"showActionTips",
+		"noTimedRandomTips",
+		"noActionTips",
 	],
 	npcTriggerTypeKeys: [
 		"none",

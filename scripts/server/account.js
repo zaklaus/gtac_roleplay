@@ -537,7 +537,7 @@ function saveAccountToDatabase(accountData) {
 				acct_discord=${accountData.discordAccount},
 				acct_ip=INET_ATON('${accountData.ipAddress}'),
 				acct_code_verifyemail='${accountData.emailVerificationCode}',
-				acct_streaming_radio_volume=${accountData.streamingRadioVolume},
+				acct_streaming_radio_volume=${accountData.streamingRadioVolume}
 			 WHERE acct_id=${accountData.databaseId}`;
 
 			 /*
@@ -876,6 +876,9 @@ function savePlayerToDatabase(client) {
 				getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
 				getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
 			}
+
+			getPlayerCurrentSubAccount(client).inHouse = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : 0;
+			getPlayerCurrentSubAccount(client).inBusiness = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : 0;
 		}
 
 		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
@@ -945,8 +948,9 @@ function saveConnectionToDatabase(client) {
 	if(dbConnection) {
 		let safeName = escapeDatabaseString(dbConnection, getPlayerName(client));
 		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', INET_ATON('${client.ip}'))`;
-		let query = queryDatabase(dbConnection, dbQueryString);
-		setEntityData(client, "vrr.connection", getDatabaseInsertId(dbConnection));
+		queryDatabase(dbConnection, dbQueryString);
+		let connectionId = getDatabaseInsertId(dbConnection);
+		setEntityData(client, "vrr.connection", connectionId, true);
 	}
 }
 

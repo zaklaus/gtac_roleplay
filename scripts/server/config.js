@@ -210,12 +210,12 @@ function loadGameConfig() {
 			{},
 
 			{ // GTA 3
-				business: 2,
-				house: 2,
-				bank: 2,
-				clothes: 2,
-				info: 2,
-				job: 2,
+				business: 0,
+				house: 0,
+				bank: 0,
+				clothes: 0,
+				info: 0,
+				job: 0,
 			},
 
 			{ // GTA Vice City
@@ -932,17 +932,17 @@ function initConfigScript() {
 	logToConsole(LOG_INFO, "[VRR.Config]: Initializing config script ...");
 	globalConfig = loadGlobalConfig();
 	gameConfig = loadGameConfig();
-	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
+	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port, getMultiplayerMod());
 	applyConfigToServer(serverConfig);
 	logToConsole(LOG_INFO, "[VRR.Config]: Config script initialized!");
 }
 
 // ===========================================================================
 
-function loadServerConfigFromGameAndPort(gameId, port) {
+function loadServerConfigFromGameAndPort(gameId, port, mpMod) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = `SELECT * FROM svr_main WHERE svr_game = ${gameId} AND svr_port = ${port} LIMIT 1;`;
+		let dbQueryString = `SELECT * FROM svr_main WHERE svr_game = ${gameId} AND svr_port = ${port} AND svr_mpmod = ${mpMod} LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
@@ -980,10 +980,13 @@ function loadServerConfigFromId(tempServerId) {
 // ===========================================================================
 
 function applyConfigToServer(tempServerConfig) {
-	gta.time.hour = tempServerConfig.hour;
-	gta.time.minute = tempServerConfig.minute;
-	gta.time.minuteDuration = tempServerConfig.minuteDuration;
-	gta.forceWeather(tempServerConfig.weather);
+	if(isTimeSupported()) {
+		setGameTime(tempServerConfig.hour, tempServerConfig.minute, tempServerConfig.minuteDuration)
+	}
+
+	if(isWeatherSupported()) {
+		gta.forceWeather(tempServerConfig.weather);
+	}
 
 	updateServerRules();
 }

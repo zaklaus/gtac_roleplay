@@ -189,3 +189,42 @@ function loadDatabaseConfiguration() {
 	let databaseConfigFile = loadTextFile("config/database.json");
 	return JSON.parse(databaseConfigFile);
 }
+
+// ===========================================================================
+
+function createDatabaseInsertQuery(tableName, data) {
+	let fields = [];
+	let values = [];
+
+	for(let i in data) {
+		fields.push(data[i][0]);
+
+		if(typeof values[i][1] == "string") {
+			values.push(`'${data[i][1]}'`);
+		} else {
+			values.push(data[i][1]);
+		}
+	}
+
+	let queryString = `INSERT INTO ${tableName} (${fields.join(", ")}) VALUES (${fields.join(", ")})`;
+	return queryString;
+}
+
+// ===========================================================================
+
+function createDatabaseUpdateQuery(tableName, data, whereClause) {
+	let values = [];
+
+	for(let i in data) {
+		if(typeof values[i][1] == "string") {
+			values.push(`${data[i][0]}='${data[i][1]}'`);
+		} else {
+			values.push(`${data[i][0]}=${data[i][1]}`);
+		}
+	}
+
+	let queryString = `INSERT INTO ${tableName} SET ${values.join(", ")} WHERE ${whereClause}`;
+	return queryString;
+}
+
+// ===========================================================================

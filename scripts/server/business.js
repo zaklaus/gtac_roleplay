@@ -894,98 +894,45 @@ function saveBusinessToDatabase(businessId) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeBusinessName = escapeDatabaseString(dbConnection, tempBusinessData.name);
-		if(tempBusinessData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO biz_main (
-					biz_server,
-					biz_name,
-					biz_owner_type,
-					biz_owner_id,
-					biz_locked,
-					biz_entrance_fee,
-					biz_till,
-					biz_entrance_pos_x,
-					biz_entrance_pos_y,
-					biz_entrance_pos_z,
-					biz_entrance_rot_z,
-					biz_entrance_int,
-					biz_entrance_vw,
-					biz_entrance_pickup,
-					biz_entrance_blip,
-					biz_exit_pos_x,
-					biz_exit_pos_y,
-					biz_exit_pos_z,
-					biz_exit_rot_z,
-					biz_exit_int,
-					biz_exit_vw,
-					biz_exit_pickup,
-					biz_exit_blip,
-					biz_has_interior
-				) VALUES (
-					${getServerId()},
-					'${safeBusinessName}',
-					${tempBusinessData.ownerType},
-					${tempBusinessData.ownerId},
-					${boolToInt(tempBusinessData.locked)},
-					${tempBusinessData.entranceFee},
-					${tempBusinessData.till},
-					${tempBusinessData.entrancePosition.x},
-					${tempBusinessData.entrancePosition.y},
-					${tempBusinessData.entrancePosition.z},
-					${tempBusinessData.entranceRotation},
-					${tempBusinessData.entranceInterior},
-					${tempBusinessData.entranceDimension},
-					${tempBusinessData.entrancePickupModel},
-					${tempBusinessData.entranceBlipModel},
-					${tempBusinessData.exitPosition.x},
-					${tempBusinessData.exitPosition.y},
-					${tempBusinessData.exitPosition.z},
-					${tempBusinessData.exitRotation},
-					${tempBusinessData.exitInterior},
-					${tempBusinessData.databaseId+getGlobalConfig().businessDimensionStart},
-					${tempBusinessData.exitPickupModel},
-					${tempBusinessData.exitBlipModel},
-					${boolToInt(tempBusinessData.hasInterior)}
-				)`;
 
-			dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-			queryDatabase(dbConnection, dbQueryString);
+		let data = [
+			["biz_server", getServerId()],
+			["biz_name", safeBusinessName],
+			["biz_owner_type", tempBusinessData.ownerType],
+			["biz_owner_id", tempBusinessData.ownerId],
+			["biz_locked", boolToInt(tempBusinessData.locked)],
+			["biz_entrance_fee", tempBusinessData.entranceFee],
+			["biz_till", tempBusinessData.till],
+			["biz_entrance_pos_x", tempBusinessData.entrancePosition.x],
+			["biz_entrance_pos_y", tempBusinessData.entrancePosition.x],
+			["biz_entrance_pos_z", tempBusinessData.entrancePosition.z],
+			["biz_entrance_rot_z", tempBusinessData.entranceRotation],
+			["biz_entrance_int", tempBusinessData.entranceInterior],
+			["biz_entrance_vw", tempBusinessData.entranceDimension],
+			["biz_entrance_pickup", tempBusinessData.entrancePickupModel],
+			["biz_entrance_blip", tempBusinessData.entranceBlipModel],
+			["biz_exit_pos_x", tempBusinessData.exitPosition.x],
+			["biz_exit_pos_y", tempBusinessData.exitPosition.y],
+			["biz_exit_pos_z", tempBusinessData.exitPosition.z],
+			["biz_exit_rot_z", tempBusinessData.exitRotation],
+			["biz_exit_int", tempBusinessData.exitInterior],
+			["biz_exit_vw", tempBusinessData.databaseId+getGlobalConfig().businessDimensionStart],
+			["biz_exit_pickup", tempBusinessData.exitPickupModel],
+			["biz_exit_blip", tempBusinessData.exitBlipModel],
+			["biz_has_interior", boolToInt(tempBusinessData.hasInterior)],
+		];
+
+		let dbQuery = null;
+		if(tempBusinessData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("biz_main", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			getServerData().businesses[businessId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-
-			let dbQueryString =
-				`UPDATE biz_main SET
-					 biz_name='${safeBusinessName}',
-					biz_owner_type=${tempBusinessData.ownerType},
-					biz_owner_id=${tempBusinessData.ownerId},
-					biz_locked=${boolToInt(tempBusinessData.locked)},
-					biz_entrance_fee=${tempBusinessData.entranceFee},
-					biz_till=${tempBusinessData.till},
-					biz_entrance_pos_x=${tempBusinessData.entrancePosition.x},
-					biz_entrance_pos_y=${tempBusinessData.entrancePosition.y},
-					biz_entrance_pos_z=${tempBusinessData.entrancePosition.z},
-					biz_entrance_rot_z=${tempBusinessData.entranceRotation},
-					biz_entrance_int=${tempBusinessData.entranceInterior},
-					biz_entrance_vw=${tempBusinessData.entranceDimension},
-					biz_entrance_pickup=${tempBusinessData.entrancePickupModel},
-					biz_entrance_blip=${tempBusinessData.entranceBlipModel},
-					biz_exit_pos_x=${tempBusinessData.exitPosition.x},
-					biz_exit_pos_y=${tempBusinessData.exitPosition.y},
-					biz_exit_pos_z=${tempBusinessData.exitPosition.z},
-					biz_exit_rot_z=${tempBusinessData.exitRotation},
-					biz_exit_int=${tempBusinessData.exitInterior},
-					biz_exit_vw=${tempBusinessData.exitDimension},
-					biz_exit_pickup=${tempBusinessData.exitPickupModel},
-					biz_exit_blip=${tempBusinessData.exitBlipModel},
-					biz_has_interior=${boolToInt(tempBusinessData.hasInterior)},
-					biz_buy_price=${tempBusinessData.buyPrice}
-				 WHERE biz_id=${tempBusinessData.databaseId}`;
-
-			dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-
-			let dbQuery = queryDatabase(dbConnection, dbQueryString);
-			freeDatabaseQuery(dbQuery);
-			disconnectFromDatabase(dbConnection);
+			let queryString = createDatabaseUpdateQuery("biz_main", data, `WHERE biz_id=${tempBusinessData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}

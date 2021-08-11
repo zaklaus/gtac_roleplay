@@ -45,7 +45,9 @@ function saveAllVehiclesToDatabase() {
 	logToConsole(LOG_INFO, "[VRR.Vehicle]: Saving all vehicles to database ...");
 	let vehicles = getServerData().vehicles;
 	for(let i in vehicles) {
-		saveVehicleToDatabase(vehicles[i]);
+		if(vehicles[i].needsSaved) {
+			saveVehicleToDatabase(vehicles[i]);
+		}
 	}
 	logToConsole(LOG_INFO, "[VRR.Vehicle]: Saved all vehicles to database!");
 
@@ -54,43 +56,118 @@ function saveAllVehiclesToDatabase() {
 
 // ===========================================================================
 
-function saveVehicleToDatabase(vehicleData) {
-	if(vehicleData == null) {
+function saveVehicleToDatabase(vehicleDataId) {
+	if(getVehicleData(vehicleDataId) == null) {
 		// Invalid vehicle data
 		return false;
 	}
 
-	if(vehicleData.databaseId == -1) {
+	let tempVehicleData = getServerData().vehicles[vehicleDataId];
+
+	if(tempVehicleData.databaseId == -1) {
 		// Temp vehicle, no need to save
 		return false;
 	}
 
-	logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Saving vehicle ${vehicleData.databaseId} to database ...`);
+	if(!tempVehicleData.needsSaved) {
+		// Vehicle hasn't changed. No need to save.
+		return false;
+	}
+
+	logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Saving vehicle ${tempVehicleData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		if(!vehicleData.spawnLocked) {
-			if(!isGTAIV()) {
-				vehicleData.spawnPosition = vehicleData.vehicle.position;
-				vehicleData.spawnRotation = vehicleData.vehicle.heading;
+		if(!tempVehicleData.spawnLocked) {
+			if(doesGameHaveServerElements()) {
+				tempVehicleData.spawnPosition = tempVehicleData.vehicle.position;
+				tempVehicleData.spawnRotation = tempVehicleData.vehicle.heading;
 			} else {
-				vehicleData.spawnPosition = vehicleData.syncPosition;
-				vehicleData.spawnRotation = vehicleData.syncHeading;
+				tempVehicleData.spawnPosition = tempVehicleData.syncPosition;
+				tempVehicleData.spawnRotation = tempVehicleData.syncHeading;
 			}
 		}
 
-		// If vehicle hasn't been added to database, ID will be 0
-		if(vehicleData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO veh_main (veh_model, veh_pos_x, veh_pos_y, veh_pos_z, veh_rot_z, veh_owner_type, veh_owner_id, veh_col1, veh_col2, veh_col3, veh_col4, veh_server, veh_spawn_lock, veh_buy_price, veh_rent_price, veh_livery) VALUES (${vehicleData.model}, ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z}, ${vehicleData.spawnRotation}, ${vehicleData.ownerType}, ${vehicleData.ownerId}, ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}, ${getServerId()}, ${boolToInt(vehicleData.spawnLocked)}, ${vehicleData.buyPrice}, ${vehicleData.rentPrice}, ${vehicleData.livery})`;
-			queryDatabase(dbConnection, dbQueryString);
-			getVehicleData(vehicleData.vehicle).databaseId = getDatabaseInsertId(dbConnection);
+		let colour1RGBA = rgbaArrayFromToColour(vehicleData.colour1RGBA);
+		let colour2RGBA = rgbaArrayFromToColour(vehicleData.colour2RGBA);
+		let colour3RGBA = rgbaArrayFromToColour(vehicleData.colour3RGBA);
+		let colour4RGBA = rgbaArrayFromToColour(vehicleData.colour4RGBA);
+
+		let data = [
+			["veh_server", getServerId()],
+			["veh_model", tempVehicleData.model],
+			["veh_owner_type", tempVehicleData.ownerType],
+			["veh_owner_id", tempVehicleData.ownerId],
+			["veh_locked", boolToInt(tempVehicleData.locked)],
+			["veh_spawn_lock", boolToInt(tempVehicleData.spawnLocked)],
+			["veh_buy_price", boolToInt(tempVehicleData.buyPrice)],
+			["veh_rent_price", boolToInt(tempVehicleData.rentPrice)],
+			["veh_pos_x", tempVehicleData.spawnPosition.x],
+			["veh_pos_y", tempVehicleData.spawnPosition.x],
+			["veh_pos_z", tempVehicleData.spawnPosition.z],
+			["veh_rot_z", tempVehicleData.spawnRotation],
+			["veh_col1", tempVehicleData.spawnRotation],
+			["veh_col2", tempVehicleData.spawnRotation],
+			["veh_col3", tempVehicleData.spawnRotation],
+			["veh_col4", tempVehicleData.spawnRotation],
+			["veh_col1_isrgba", tempVehicleData.colour1IsRGBA],
+			["veh_col2_isrgba", tempVehicleData.colour1IsRGBA],
+			["veh_col3_isrgba", tempVehicleData.colour1IsRGBA],
+			["veh_col4_isrgba", tempVehicleData.colour1IsRGBA],
+			["veh_col1_r", colour1RGBA[0]],
+			["veh_col1_g", colour1RGBA[1]],
+			["veh_col1_b", colour1RGBA[2]],
+			["veh_col1_a", colour1RGBA[3]],
+			["veh_col2_r", colour2RGBA[0]],
+			["veh_col2_g", colour2RGBA[1]],
+			["veh_col2_b", colour2RGBA[2]],
+			["veh_col2_a", colour2RGBA[3]],
+			["veh_col3_r", colour3RGBA[0]],
+			["veh_col3_g", colour3RGBA[1]],
+			["veh_col3_b", colour3RGBA[2]],
+			["veh_col3_a", colour3RGBA[3]],
+			["veh_col4_r", colour4RGBA[0]],
+			["veh_col4_g", colour4RGBA[1]],
+			["veh_col4_b", colour4RGBA[2]],
+			["veh_col4_a", colour4RGBA[3]],
+			["veh_extra1", tempVehicleData.extras[0]],
+			["veh_extra2", tempVehicleData.extras[1]],
+			["veh_extra3", tempVehicleData.extras[2]],
+			["veh_extra4", tempVehicleData.extras[3]],
+			["veh_extra5", tempVehicleData.extras[4]],
+			["veh_extra6", tempVehicleData.extras[5]],
+			["veh_extra7", tempVehicleData.extras[6]],
+			["veh_extra8", tempVehicleData.extras[7]],
+			["veh_extra9", tempVehicleData.extras[8]],
+			["veh_extra10", tempVehicleData.extras[9]],
+			["veh_extra11", tempVehicleData.extras[10]],
+			["veh_extra12", tempVehicleData.extras[11]],
+			["veh_extra13", tempVehicleData.extras[12]],
+			["veh_locked", intToBool(tempVehicleData.locked)],
+			["veh_engine", intToBool(tempVehicleData.engine)],
+			["veh_lights", intToBool(tempVehicleData.lights)],
+			["veh_health", toInteger(tempVehicleData.health)],
+			["veh_damage_engine", toInteger(tempVehicleData.engineDamage)],
+			["veh_damage_visual", toInteger(tempVehicleData.visualDamage)],
+			["veh_dirt_level", toInteger(tempVehicleData.dirtLevel)],
+		];
+
+		let dbQuery = null;
+		if(tempVehicleData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("veh_main", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
+			getServerData().vehicles[vehicleDataId].databaseId = getDatabaseInsertId(dbConnection);
+			getServerData().vehicles[vehicleDataId].needsSaved = false;
 		} else {
-			let dbQueryString = `UPDATE veh_main SET veh_model=${vehicleData.model}, veh_pos_x=${vehicleData.spawnPosition.x}, veh_pos_y=${vehicleData.spawnPosition.y}, veh_pos_z=${vehicleData.spawnPosition.z}, veh_rot_z=${vehicleData.spawnRotation}, veh_owner_type=${vehicleData.ownerType}, veh_owner_id=${vehicleData.ownerId}, veh_col1=${vehicleData.colour1}, veh_col2=${vehicleData.colour2}, veh_col3=${vehicleData.colour3}, veh_col4=${vehicleData.colour4}, veh_buy_price=${vehicleData.buyPrice}, veh_rent_price=${vehicleData.rentPrice}, veh_livery=${vehicleData.livery} WHERE veh_id=${vehicleData.databaseId}`;
-			queryDatabase(dbConnection, dbQueryString);
+			let queryString = createDatabaseUpdateQuery("veh_main", data, `WHERE veh_id=${tempVehicleData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
+			getServerData().vehicles[vehicleDataId].needsSaved = false;
 		}
+
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Saved vehicle ${vehicleData.vehicle.id} to database!`);
+	logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Saved vehicle ${vehicleDataId} to database!`);
 
 	return false;
 }
@@ -108,10 +185,15 @@ function spawnAllVehicles() {
 // ===========================================================================
 
 function getVehicleData(vehicle) {
-	let dataIndex = getEntityData(vehicle, "vrr.dataSlot");
-	if(typeof getServerData().vehicles[dataIndex] != "undefined") {
-		return getServerData().vehicles[dataIndex];
+	if(isVehicleObject(vehicle)) {
+		let dataIndex = getEntityData(vehicle, "vrr.dataSlot");
+		if(typeof getServerData().vehicles[dataIndex] != "undefined") {
+			return getServerData().vehicles[dataIndex];
+		}
+	} else {
+
 	}
+
 	return false;
 }
 
@@ -188,6 +270,8 @@ function vehicleLockCommand(command, params, client) {
 	getVehicleData(vehicle).locked = !getVehicleData(vehicle).locked;
 	vehicle.locked = getVehicleData(vehicle).locked;
 
+	getVehicleData(vehicle).needsSaved = true;
+
 	meActionToNearbyPlayers(client, `${toLowerCase(getLockedUnlockedFromBool(getVehicleData(vehicle).locked))} the ${getVehicleName(vehicle)}`);
 }
 
@@ -213,6 +297,8 @@ function vehicleTrunkCommand(command, params, client) {
 	}
 
 	getVehicleData(vehicle).trunk = !getVehicleData(vehicle).trunk;
+
+	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `${toLowerCase(getOpenedClosedFromBool(getVehicleData(vehicle).trunk))} the ${getVehicleName(vehicle)}'s trunk.`);
 }
@@ -241,6 +327,8 @@ function vehicleLightsCommand(command, params, client) {
 	setEntityData(vehicle, "vrr.lights", getVehicleData(vehicle).lights);
 	setVehicleLightsState(vehicle, getVehicleData(vehicle).lights);
 
+	getVehicleData(vehicle).needsSaved = true;
+
 	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s lights ${toLowerCase(getOnOffFromBool(getVehicleData(vehicle).lights))}`);
 }
 
@@ -266,6 +354,8 @@ function deleteVehicleCommand(command, params, client) {
 
 	getServerData().vehicles[dataIndex] = null;
 	destroyElement(vehicle);
+
+	getVehicleData(vehicle).needsSaved = true;
 
 	messagePlayerSuccess(client, `The ${vehicleName} has been deleted!`);
 }
@@ -298,6 +388,8 @@ function vehicleEngineCommand(command, params, client) {
 	getVehicleData(vehicle).engine = !getVehicleData(vehicle).engine;
 	vehicle.engine = getVehicleData(vehicle).engine;
 
+	getVehicleData(vehicle).needsSaved = true;
+
 	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s engine ${toLowerCase(getOnOffFromBool(getVehicleData(vehicle).engine))}`);
 }
 
@@ -328,6 +420,8 @@ function vehicleSirenCommand(command, params, client) {
 
 	getVehicleData(vehicle).siren = !getVehicleData(vehicle).siren;
 	vehicle.siren = getVehicleData(vehicle).siren;
+
+	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `turns the ${getVehicleName(vehicle)}'s siren ${toLowerCase(getOnOffFromBool(getVehicleData(vehicle).siren))}`);
 }
@@ -375,6 +469,8 @@ function setVehicleColourCommand(command, params, client) {
 	getVehicleData(vehicle).colour1 = colour1;
 	getVehicleData(vehicle).colour2 = colour2;
 
+	getVehicleData(vehicle).needsSaved = true;
+
 	meActionToNearbyPlayers(client, `resprays the ${getVehicleName(vehicle)}'s colours`);
 }
 
@@ -407,6 +503,8 @@ function vehicleRepairCommand(command, params, client) {
 
 	takePlayerCash(client, getGlobalConfig().repairVehicleCost);
 	repairVehicle(vehicle);
+
+	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `repairs the ${getVehicleName(vehicle)}!`);
 }
@@ -443,6 +541,8 @@ function buyVehicleCommand(command, params, client) {
 	//getVehicleData(vehicle).rentPrice = 0;
 	getVehicleData(vehicle).engine = true;
 	vehicle.engine = true;
+
+	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `receives a set of keys to test drive the ${getVehicleName(vehicle)} and starts the engine`);
 	messagePlayerInfo(client, `Drive the vehicle away from the dealership to buy it, or get out to cancel.`);
@@ -488,6 +588,8 @@ function rentVehicleCommand(command, params, client) {
 	getPlayerData(client).rentingVehicle = vehicle;
 	getVehicleData(vehicle).rentStart = getCurrentUnixTimestamp();
 
+	getVehicleData(vehicle).needsSaved = true;
+
 	meActionToNearbyPlayers(client, `rents the ${getVehicleName(vehicle)} and receives a set of vehicle keys!`);
 	messagePlayerAlert(client, `You will be charged ${getVehicleData(vehicle).rentPrice} per minute to use this vehicle. To stop renting this vehicle, use /vehrent again.`);
 }
@@ -509,6 +611,8 @@ function stopRentingVehicleCommand(command, params, client) {
 	let vehicle = getPlayerData(client).rentingVehicle;
 	messagePlayerAlert(client, `You are no longer renting the ${getVehicleName(vehicle)}`);
 	stopRentingVehicle(client);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -617,6 +721,8 @@ function setVehicleJobCommand(command, params, client) {
 	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_JOB;
 	getVehicleData(vehicle).ownerId = jobId;
 
+	getVehicleData(vehicle).needsSaved = true;
+
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("jobYellow")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job! (Job ID ${jobId})`);
 }
 
@@ -649,6 +755,8 @@ function setVehicleRankCommand(command, params, client) {
 		getVehicleData(vehicle).rank = rankId;
 		messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rank to ${getInlineChatColourByName("lightGrey")}${rankId} ${getInlineChatColourByName("white")}of the ${getInlineChatColourByType("jobYellow")}${getJobData(getVehicleData(vehicle).ownerId).name} ${getInlineChatColourByName("white")}job!`);
 	}
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -671,6 +779,8 @@ function setVehicleClanCommand(command, params, client) {
 	getVehicleData(vehicle).ownerId = getClanData(clanId).databaseId;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan`);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -688,6 +798,8 @@ function setVehicleToBusinessCommand(command, params, client) {
 	getVehicleData(vehicle).ownerId = getBusinessData(businessId).databaseId;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}business`);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -710,6 +822,8 @@ function setVehicleOwnerCommand(command, params, client) {
 	getVehicleData(vehicle).ownerId = getPlayerCurrentSubAccount(targetClient).databaseId;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}owner to ${getInlineChatColourByName("lightGrey")}${getClientSubAccountName(targetClient)}`);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -733,6 +847,8 @@ function setVehicleRentPriceCommand(command, params, client) {
 	getVehicleData(vehicle).rentPrice = amount;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rent price to ${getInlineChatColourByName("lightGrey")}$${amount}`);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -756,6 +872,8 @@ function setVehicleBuyPriceCommand(command, params, client) {
 	getVehicleData(vehicle).buyPrice = amount;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}'s ${getInlineChatColourByName("white")}buy price to ${getInlineChatColourByName("lightGrey")}$${amount}`);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -896,6 +1014,8 @@ function toggleVehicleSpawnLockCommand(command, params, client) {
 	}
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}to spawn ${getInlineChatColourByName("lightGrey")}${(getVehicleData(vehicle).spawnLocked) ? "at it's current location" : "wherever a player leaves it."}`);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -912,6 +1032,8 @@ function reloadAllVehiclesCommand(command, params, client) {
 	spawnAllVehicles();
 
 	messageAdminAction(`All server vehicles have been reloaded by an admin!`);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -936,6 +1058,8 @@ function stopRentingVehicle(client) {
 	getPlayerData(client).rentingVehicle = false;
 	getVehicleData(vehicle).rentedBy = false;
 	respawnVehicle(vehicle);
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -950,6 +1074,8 @@ function respawnVehicle(vehicle) {
 			setEntityData(newVehicle, "vrr.dataSlot", i, false);
 		}
 	}
+
+	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -996,37 +1122,6 @@ function isVehicleAtPayAndSpray(vehicle) {
 
 // ===========================================================================
 
-function repairVehicle(vehicle) {
-	vehicle.fix();
-}
-
-// ===========================================================================
-
-function setVehicleColours(vehicle, colour1, colour2) {
-	vehicle.colour1 = colour1;
-	vehicle.colour2 = colour2;
-}
-
-// ===========================================================================
-
-function setVehicleLights(vehicle, lights) {
-	vehicle.lights = lights;
-}
-
-// ===========================================================================
-
-function setVehicleEngine(vehicle, engine) {
-	vehicle.engine = engine;
-}
-
-// ===========================================================================
-
-function setVehicleLocked(vehicle, locked) {
-	vehicle.locked = locked;
-}
-
-// ===========================================================================
-
 function getVehicleOwnerTypeText(ownerType) {
 	switch(ownerType) {
 		case VRR_VEHOWNER_CLAN:
@@ -1059,8 +1154,8 @@ function isVehicleOwnedByJob(vehicle, jobId) {
 
 async function getPlayerNewVehicle(client) {
 	while(true) {
-		if(client.player.vehicle != null) {
-			return client.player.vehicle;
+		if(isPlayerInAnyVehicle(client)) {
+			return getPlayerVehicle(client);
 		}
 		await null;
 	}
@@ -1069,13 +1164,11 @@ async function getPlayerNewVehicle(client) {
 // ===========================================================================
 
 function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, dealershipId) {
-	let vehicleDataSlot = getServerData().vehicles.length;
-
-	let vehicle = gta.createVehicle(model, spawnPosition, spawnRotation);
+	let vehicle = createGameVehicle(model, spawnPosition, spawnRotation);
 	if(!vehicle) {
 		return false;
 	}
-	vehicle.heading = spawnRotation;
+	setVehicleHeading(spawnRotation);
 	addToWorld(vehicle);
 
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
@@ -1086,17 +1179,18 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 	tempVehicleData.spawnRotation = spawnRotation;
 	tempVehicleData.ownerType = VRR_VEHOWNER_BIZ;
 	tempVehicleData.ownerId = dealershipId;
+	tempVehicleData.needsSaved = true;
 
-	setEntityData(vehicle, "vrr.dataSlot", vehicleDataSlot, true);
+	let slot = getServerData().vehicles.push(tempVehicleData);
 
-	getServerData().vehicles.push(tempVehicleData);
+	setEntityData(vehicle, "vrr.dataSlot", slot, true);
 }
 
 // ===========================================================================
 
 function createTemporaryVehicle(modelId, position, heading) {
-	let vehicle = gta.createVehicle(modelId, position, heading);
-	vehicle.heading = heading;
+	let vehicle = createGameVehicle(modelId, position, heading);
+	setVehicleHeading(heading);
 	addToWorld(vehicle);
 
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
@@ -1110,8 +1204,8 @@ function createTemporaryVehicle(modelId, position, heading) {
 // ===========================================================================
 
 function createPermanentVehicle(modelId, position, heading) {
-	let vehicle = gta.createVehicle(modelId, position, heading);
-	vehicle.heading = heading;
+	let vehicle = createGameVehicle(modelId, position, heading);
+	setVehicleHeading(vehicle, heading);
 	addToWorld(vehicle);
 
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);

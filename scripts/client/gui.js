@@ -11,7 +11,7 @@ var app = {};
 
 let robotoFont = "Roboto";
 
-let mainLogoPath = "files/images/main-logo.png";
+let mainLogoPath = (typeof gta == "undefined") ? "files/images/mafiac-logo.png" : "files/images/gtac-logo.png";
 
 let primaryColour = [200, 200, 200];
 let focusedColour = [200, 200, 200];
@@ -330,7 +330,7 @@ function initGUI() {
 	newCharacter.window.titleBarIconSize = toVector2(0,0);
 	newCharacter.window.titleBarHeight = 0;
 
-	newCharacter.window.image(115, 10, 65, 65, "files/images/main-logo.png", {
+	newCharacter.window.image(115, 10, 65, 65, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},
@@ -422,7 +422,7 @@ function initGUI() {
 	register.window.titleBarIconSize = toVector2(0,0);
 	register.window.titleBarHeight = 0;
 
-	register.window.image(115, 10, 65, 65, "files/images/main-logo.png", {
+	register.window.image(115, 10, 65, 65, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},

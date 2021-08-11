@@ -906,6 +906,13 @@ function playRadioStreamForPlayer(client, streamURL, loop = true, volume = 0, el
 
 // ===========================================================================
 
+function stopRadioStreamForPlayer(client) {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Forcing ${getPlayerDisplayForConsole(client)} to stop their radio stream`);
+    triggerNetworkEvent("vrr.stopRadioStream", client);
+}
+
+// ===========================================================================
+
 function setPlayerStreamingRadioVolume(client, volumeLevel, elementId = false) {
     getPlayerData(client).accountData.streamingRadioVolume = volumeLevel;
     getPlayerData(client).streamingRadioElement = elementId;
@@ -930,6 +937,14 @@ function makePedPlayAnimation(ped, animationSlot) {
     let animationData = getAnimationData(animationSlot);
 
     triggerNetworkEvent("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4]);
+}
+
+// ===========================================================================
+
+function forcePedAnimation(ped, animationSlot) {
+    let animationData = getAnimationData(animationSlot);
+
+    triggerNetworkEvent("vrr.forcePedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4]);
 }
 
 // ===========================================================================

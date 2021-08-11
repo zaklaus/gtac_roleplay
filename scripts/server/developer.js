@@ -463,3 +463,9 @@ function resetAllAccountsHotkeysToDefault() {
 }
 
 // ===========================================================================
+
+function togglePauseSavingToDatabase() {
+	getServerConfig().pauseSavingToDatabase = !getServerConfig().pauseSavingToDatabase;
+}
+
+// ===========================================================================

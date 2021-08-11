@@ -87,33 +87,6 @@ function getMonthName(monthId) {
 
 // ===========================================================================
 
-function getWeaponModelId(weaponId) {
-	let weaponModels = [
-		[ 0 , 172 , 173 , 178 , 176 , 171 , 180 , 177 , 175 , 181 , 174 , 170 ],
-		[],
-	];
-	return weaponModels[getServerGame()][weaponId];
-}
-
-// ===========================================================================
-
-function getIsland(position) {
-    if(getServerGame() == GAME_GTA_III) {
-		if(position.x > 616) {
-			return VRR_ISLAND_PORTLAND;
-		} else if(position.x < -283) {
-			return VRR_ISLAND_SHORESIDEVALE;
-		}
-		return VRR_ISLAND_STAUNTON;
-	} else {
-		return VRR_ISLAND_NONE;
-	}
-
-	//return gta.getIslandFromPosition(position);
-}
-
-// ===========================================================================
-
 function openAllGarages() {
 
 }
@@ -594,8 +567,6 @@ function createAllFuelStationBlips() {
 
 // ===========================================================================
 
-// ===========================================================================
-
 function getPickupOwnerType(pickup) {
 	return pickup.getData("vrr.ownerType");
 }
@@ -711,9 +682,17 @@ function getOpenedClosedFromBool(boolVal) {
 // ===========================================================================
 
 function updateServerRules() {
-	server.setRule("Time", makeReadableTime(getServerConfig().hour, getServerConfig().minute));
-	server.setRule("Weather", getGameData().weatherNames[getServerGame()][getServerConfig().weather]);
-	server.setRule("Snowing", getYesNoFromBool(getServerConfig().fallingSnow));
+	if(isTimeSupported()) {
+		server.setRule("Time", makeReadableTime(getServerConfig().hour, getServerConfig().minute));
+	}
+
+	if(isWeatherSupported()) {
+		server.setRule("Weather", getGameData().weatherNames[getServerGame()][getServerConfig().weather]);
+	}
+
+	if(isSnowSupported()) {
+		server.setRule("Snowing", getYesNoFromBool(getServerConfig().fallingSnow));
+	}
 }
 
 // ===========================================================================
@@ -1164,100 +1143,6 @@ function generateRandomString(length) {
 
 // ===========================================================================
 
-// ===========================================================================
-
-function getVehicleModelIdFromParams(params) {
-	if(isNaN(params)) {
-		let modelId = getVehicleModelIdFromName(params);
-
-		if(!modelId) {
-			return false;
-		}
-
-		if(isValidVehicleModel(toInteger(modelId))) {
-			return toInteger(modelId);
-		}
-
-		return false;
-	} else {
-		if(isValidVehicleModel(toInteger(params))) {
-			return toInteger(params);
-		}
-
-		return false;
-	}
-
-	return false;
-}
-
-// ===========================================================================
-
-function getVehicleModelIdFromName(params) {
-	if(isGTAIV()) {
-		for(let i in getGameData().gtaivVehicleModels) {
-			if(toLowerCase(getGameData().gtaivVehicleModels[i][0]).indexOf(toLowerCase(params)) != -1) {
-				return getGameData().gtaivVehicleModels[i][1];
-			}
-		}
-	} else {
-		let vehicleNames = getGameData().vehicleNames[getServerGame()];
-		for(let i in vehicleNames) {
-			if(toLowerCase(vehicleNames[i]).indexOf(toLowerCase(params)) != -1) {
-				return toInteger(i)+toInteger(getGameData().vehicleModelIdStart[getServerGame()]);
-			}
-		}
-	}
-
-	return false;
-}
-
-// ===========================================================================
-
-function getVehicleNameFromModelId(modelId) {
-	if(isGTAIV()) {
-		for(let i in getGameData().gtaivVehicleModels) {
-			if(getGameData().gtaivVehicleModels[i][1] == modelId) {
-				return getGameData().gtaivVehicleModels[i][0];
-			}
-		}
-	} else {
-		let modelIndex = modelId-getGameData().vehicleModelIdStart[getServerGame()];
-		return getGameData().vehicleNames[getServerGame()][modelIndex];
-	}
-}
-
-// ===========================================================================
-
-function isValidVehicleModel(modelId) {
-	if(getGame() == GAME_GTA_III) {
-		if(modelId < 90 || modelId > 150) {
-			return false;
-		}
-
-		return true;
-	}
-
-	if(getGame() == GAME_GTA_VC) {
-		if(modelId < 130 || modelId > 236) {
-			return false;
-		}
-
-		return true;
-	}
-
-	if(getGame() == GAME_GTA_SA) {
-		return true;
-	}
-
-	if(getGame() == GAME_GTA_IV) {
-		return true;
-	}
-
-	return false;
-}
-
-// ===========================================================================
-
 function getVehiclesInRange(position, distance) {
 	return getElementsByType(ELEMENT_VEHICLE).filter(x => x.player && x.position.distance(position) <= distance);
 }
@@ -1625,6 +1510,24 @@ function splitArrayIntoChunks(originalArray, perChunk) {
 		tempArray.push(originalArray.slice(i, i + perChunk));
 	}
 	return tempArray;
+}
+
+// ===========================================================================
+
+function getAllVehiclesOwnedByPlayer(client) {
+	return getServerData().vehicles.filter(v => v.ownerType == VRR_VEHOWNER_PLAYER && v.ownerId == getPlayerCurrentSubAccount(client));
+}
+
+// ===========================================================================
+
+function getAllBusinessesOwnedByPlayer(client) {
+	return getServerData().businesses.filter(v => v.ownerType == VRR_BIZOWNER_PLAYER && v.ownerId == getPlayerCurrentSubAccount(client));
+}
+
+// ===========================================================================
+
+function getAllHousesOwnedByPlayer(client) {
+	return getServerData().houses.filter(v => v.ownerType == VRR_HOUSEOWNER_PLAYER && v.ownerId == getPlayerCurrentSubAccount(client));
 }
 
 // ===========================================================================

@@ -46,4 +46,6 @@ let streamingRadioElement = false;
 
 let enterPropertyKey = null;
 
+let forcedAnimation = null;
+
 // ===========================================================================

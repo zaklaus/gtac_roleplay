@@ -179,6 +179,8 @@ function loadCommands() {
             commandData("docmdall", simulateCommandForAllPlayersCommand, "<command> [params]", getStaffFlagValue("developer"), true, true),
             commandData("addloglvl", addServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
             commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
+
+            commandData("nosave", togglePauseSavingToDatabase, "", getStaffFlagValue("developer"), true, true),
             //commandData("loglvl", getServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],
@@ -329,7 +331,11 @@ function loadCommands() {
             commandData("nonrpname", forceCharacterNameChangeCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Forces a player to change their current character's name."),
             commandData("forcename", forceCharacterNameCommand, "<player name/id> <first name> <last name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's name directly."),
 
-            commandData("forceskin", forcePlayerSkinCommand, "<player name/id> <skin id/name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's name directly."),
+            commandData("forceskin", forcePlayerSkinCommand, "<player name/id> <skin id/name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's skin directly."),
+
+            commandData("getplrhouse", getAllHousesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all houses owned by the player"),
+            commandData("getplrbiz", getAllBusinessesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all businesses owned by the player"),
+            commandData("getplrveh", getAllVehiclesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all vehicles owned by the player"),
         ],
         security: [],
         startup: [],

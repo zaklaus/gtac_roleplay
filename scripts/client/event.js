@@ -57,13 +57,7 @@ function addAllEventHandlers() {
 
 function onResourceStart(event, resource) {
     sendResourceStartedSignalToServer();
-    //closeAllGarages();
-
-    if(getGame() == GAME_GTA_SA) {
-        gta.setDefaultInteriors(false);
-    }
-
-    gta.onMission = true;
+    setUpInitialGame();
 
     garbageCollectorInterval = setInterval(collectAllGarbage, 1000*60);
 }
@@ -78,16 +72,11 @@ function onResourceStop(event, resource) {
 
 function onResourceReady(event, resource) {
     sendResourceReadySignalToServer();
-    //closeAllGarages();
 }
 
 // ===========================================================================
 
 function onProcess(event, deltaTime) {
-    if(gta.game != GAME_GTA_IV) {
-        gta.clearMessages();
-    }
-
     if(localPlayer == null) {
         return false;
     }
@@ -97,15 +86,15 @@ function onProcess(event, deltaTime) {
     }
 
     processSync();
-    destroyAutoCreatedPickups();
     processLocalPlayerControlState();
-    clearLocalPlayerWantedLevel();
     processLocalPlayerVehicleControlState();
     processLocalPlayerSphereEntryExitHandling();
     processLocalPlayerVehicleEntryExitHandling();
     processJobRouteSphere();
     forceLocalPlayerEquippedWeaponItem();
     processWantedLevelReset();
+
+    processGameSpecifics();
 }
 
 // ===========================================================================

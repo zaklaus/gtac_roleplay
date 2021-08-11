@@ -184,11 +184,11 @@ function setLocalPlayerFrozenState(state) {
 function setLocalPlayerControlState(controlState, cursorState = false) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting control state to ${controlState} (Cursor: ${cursorState})`);
     controlsEnabled = controlState;
-    localPlayer.invincible = true;
-    if(getGame() != GAME_GTA_IV) {
-        localPlayer.collisionsEnabled = controlState;
-        localPlayer.invincible = false;
-    }
+    //localPlayer.invincible = true;
+    //if(getGame() != GAME_GTA_IV) {
+    //    localPlayer.collisionsEnabled = controlState;
+    //    localPlayer.invincible = false;
+    //}
 }
 
 // ===========================================================================
@@ -454,8 +454,10 @@ function setLocalPlayerCash(amount) {
 // ===========================================================================
 
 function removeWorldObject(model, position, range) {
-    logToConsole(LOG_DEBUG, `[VRR.Utilities] Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
-    gta.removeWorldObject(model, position, range);
+    if(isRemovingWorldObjectsSupported()) {
+        logToConsole(LOG_DEBUG, `[VRR.Utilities] Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
+        gta.removeWorldObject(model, position, range);
+    }
 }
 
 // ===========================================================================
@@ -468,11 +470,13 @@ function excludeModelFromGroundSnow(model) {
 // ===========================================================================
 
 function destroyAutoCreatedPickups() {
-    getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
-        if(pickup.isOwner) {
-            destroyElement(pickup);
-        }
-    });
+    if(arePickupsSupported()) {
+        getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
+            if(pickup.isOwner) {
+                destroyElement(pickup);
+            }
+        });
+    }
 }
 
 // ===========================================================================
@@ -493,7 +497,7 @@ function processLocalPlayerControlState() {
 
 // ===========================================================================
 
-function clearLocalPlayerWantedLevel() {
+function processWantedLevelReset() {
     if(localPlayer == null) {
         return false;
     }
@@ -634,12 +638,6 @@ function getAllowedSkinIndexBySkinId(skinId) {
         }
     }
     return -1;
-}
-
-// ===========================================================================
-
-function processWantedLevelReset() {
-    localPlayer.wantedLevel = 0;
 }
 
 // ===========================================================================

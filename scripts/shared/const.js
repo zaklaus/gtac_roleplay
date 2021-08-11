@@ -35,9 +35,10 @@ const VRR_GAME_GTA_VC = 2;
 const VRR_GAME_GTA_SA = 3;
 const VRR_GAME_GTA_IV = 4;
 const VRR_GAME_GTA_V = 50;
-const VRR_GAME_MAFIA_I = 100;
-const VRR_GAME_MAFIA_I_DE = 101;
-const VRR_GAME_MAFIA_II = 102;
+const VRR_GAME_MAFIA_ONE = 100;
+const VRR_GAME_MAFIA_TWO = 102;
+const VRR_GAME_MAFIA_THREE = 102;
+const VRR_GAME_MAFIA_ONE_DE = 103;
 
 // Key States
 const VRR_KEYSTATE_NONE = 0;
@@ -58,3 +59,7 @@ const VRR_ANIMTYPE_ADD = 1;
 const VRR_ANIMTYPE_BLEND = 2;
 const VRR_ANIMTYPE_SHARED = 3;                  // Forces this animation to play in sync with another ped's mirrored anim (handshake, kiss, gang signs, etc)
 const VRR_ANIMTYPE_SPECIALACTION = 4;           // This animtype uses a special action (only in SA)
+
+const VRR_MPMOD_NONE = 0;
+const VRR_MPMOD_GTAC = 1;
+const VRR_MPMOD_MAFIAC = 2;

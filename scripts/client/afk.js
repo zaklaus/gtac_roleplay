@@ -16,24 +16,12 @@ function initAFKScript() {
 
 function processLostFocusAFK(event) {
 	sendServerNewAFKStatus(true);
-	//if(localPlayer != null) {
-	//	localPlayer.collisionsEnabled = false;
-	//	gta.setCiviliansEnabled(false);
-	//	gta.setTrafficEnabled(false);
-	//}
 }
 
 // ===========================================================================
 
 function processFocusAFK(event) {
     sendServerNewAFKStatus(false);
-	//if(localPlayer != null) {
-	//	localPlayer.collisionsEnabled = true;
-	//	if(gta.game != GAME_GTA_SA) {
-	//		gta.setCiviliansEnabled(true);
-	//	}
-    //    gta.setTrafficEnabled(true);
-	//}
 }
 
 // ===========================================================================

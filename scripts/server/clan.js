@@ -606,36 +606,94 @@ function reloadAllClans() {
 
 // ===========================================================================
 
-function saveClansToDatabase() {
-	let clans = getServerData().clans;
-	for(let i in clans) {
-		saveClanToDatabase(clans[i]);
+function saveAllClanRanksToDatabase(clanId) {
+	let ranks = getServerData().clans[clanId].ranks;
+	for(let i in ranks) {
+		saveClanRankToDatabase(ranks[i]);
 	}
 }
 
 // ===========================================================================
 
-function saveClanToDatabase(clanData) {
+function saveClanToDatabase(clanId) {
+	let tempClanData = getClanData(clanId);
+
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let safeName = escapeDatabaseString(dbConnection, clanData.name);
-		let safeTag = escapeDatabaseString(dbConnection, clanData.tag);
-		let safeMOTD = escapeDatabaseString(dbConnection, clanData.motd);
+		if(tempClanData.needsSaved) {
+			let safeName = escapeDatabaseString(dbConnection, tempClanData.name);
+			let safeTag = escapeDatabaseString(dbConnection, tempClanData.tag);
+			let safeMOTD = escapeDatabaseString(dbConnection, tempClanData.motd);
 
-		let dbQueryString = `
-			UPDATE clan_main SET
-				 clan_name='${safeName}',
-				clan_owner=${clanData.ownerId},
-				clan_tag='${safeTag}',
-				clan_motd='${safeMOTD}',
-			 WHERE clan_id=${clanData.databaseId}`;
+			let queryData = [
+				["clan_main", safeName],
+				["clan_owner", tempClanData.ownerId],
+				["clan_tag", safeTag],
+				["clan_motd", safeMOTD],
+			];
 
-		//dbQueryString = dbQueryString.trim();
-		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-		let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		freeDatabaseQuery(dbQuery);
-		dbQuery = null;
+			let dbQuery = null;
+			if(tempClanData.databaseId == 0) {
+				let queryString = createDatabaseInsertQuery("clan_main", data);
+				dbQuery = queryDatabase(dbConnection, queryString);
+				getClanData(clanId).databaseId = getDatabaseInsertId(dbConnection);
+				getClanData(clanId).needsSaved = false;
+			} else {
+				let queryString = createDatabaseUpdateQuery("clan_main", data, `WHERE clan_id=${tempClanData.databaseId} LIMIT 1`);
+				dbQuery = queryDatabase(dbConnection, queryString);
+				getClanData(clanId).needsSaved = false;
+			}
+
+			freeDatabaseQuery(dbQuery);
+			disconnectFromDatabase(dbConnection);
+		}
+
+		saveAllClanRanksToDatabase(clanId);
 		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function saveClanRankToDatabase(clanData, rankId) {
+	let tempClanRankData = getClanRankData(clanId, rankId);
+
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		if(tempClanRankData.needsSaved) {
+			let safeName = escapeDatabaseString(dbConnection, tempClanRankData.name);
+			let safeTag = escapeDatabaseString(dbConnection, tempClanRankData.customTag);
+			let safeTitle = escapeDatabaseString(dbConnection, tempClanRankData.customTitle);
+
+			let queryData = [
+				["clan_rank_name", safeName],
+				["clan_rank_clan", tempClanRankData.clanId],
+				["clan_rank_tag", safeTag],
+				["clan_rank_title", safeTitle],
+				["clan_rank_flags", tempClanRankData.flags],
+				["clan_rank_level", tempClanRankData.level],
+				["clan_rank_enabled", boolToInt(tempClanRankData.enabled)],
+			];
+
+			let dbQuery = null;
+			if(tempClanRankData.databaseId == 0) {
+				let queryString = createDatabaseInsertQuery("clan_main", data);
+				dbQuery = queryDatabase(dbConnection, queryString);
+				getClanRankData(clanId, rankId).databaseId = getDatabaseInsertId(dbConnection);
+				getClanRankData(clanId, rankId).needsSaved = false;
+			} else {
+				let queryString = createDatabaseUpdateQuery("clan_rank_main", data, `WHERE clan_rank_id=${tempClanRankData.databaseId} LIMIT 1`);
+				dbQuery = queryDatabase(dbConnection, queryString);
+				getClanRankData(clanId, rankId).needsSaved = false;
+			}
+
+			freeDatabaseQuery(dbQuery);
+			disconnectFromDatabase(dbConnection);
+			return true;
+		}
+
 	}
 
 	return false;
@@ -645,48 +703,35 @@ function saveClanToDatabase(clanData) {
 
 function setClanTag(clanId, tag) {
 	getClanData(clanId).tag = tag;
+	getClanData(clanId).needsSaved = true;
 }
 
 // ===========================================================================
 
 function setClanOwner(clanId, ownerId) {
 	getClanData(clanId).ownerId = ownerId;
-}
-
-// ===========================================================================
-
-function setClanMemberTag(clanId, memberId, tag) {
-	getClanData(clanId).members[memberId].customTag = tag;
-}
-
-// ===========================================================================
-
-function setClanMemberFlags(clan, memberId, flags) {
-	getClanData(clanId).members[memberId].flags = flags;
-}
-
-// ===========================================================================
-
-function setClanMemberTitle(clan, memberId, title) {
-	getClanData(clanId).members[memberId].customTitle = customTitle;
+	getClanData(clanId).needsSaved = true;
 }
 
 // ===========================================================================
 
 function setClanRankTag(clanId, rankId, tag) {
 	getClanRankData(clanId, rankId).tag = tag;
+	getClanRankData(clanId, rankId).needsSaved = true;
 }
 
 // ===========================================================================
 
 function setClanRankFlags(clanId, rankId, flags) {
 	getClanRankData(clanId, rankId).flags = flags;
+	getClanRankData(clanId, rankId).needsSaved = true;
 }
 
 // ===========================================================================
 
 function setClanRankTitle(clanId, rankId, title) {
 	getClanRankData(clanId, rankId).title = title;
+	getClanRankData(clanId, rankId).needsSaved = true;
 }
 
 // ===========================================================================
@@ -707,11 +752,6 @@ function setAllClanDataIndexes() {
 			getServerData().clans[i].ranks[j].index = j;
 			getServerData().clans[i].ranks[j].clanIndex = i;
 		}
-
-		for(let k in getServerData().clans[i].members) {
-			getServerData().clans[i].members[k].index = k;
-			getServerData().clans[i].members[k].clanIndex = i;
-		}
 	}
 }
 
@@ -728,5 +768,7 @@ function arePlayersInSameClan(client1, client2) {
 // ===========================================================================
 
 function getPlayerClanRank(client) {
-	return
+	return getPlayerCurrentSubAccount(client).clanRank;
 }
+
+// ===========================================================================

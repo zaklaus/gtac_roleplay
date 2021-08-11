@@ -77,6 +77,8 @@ function initClassTable() {
 				this.createBusinessBlips = false;
 				this.createHouseBlips = false;
 
+				this.pauseSavingToDatabase = false;
+
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["svr_id"];
 					console.log("1");
@@ -674,7 +676,7 @@ function initClassTable() {
 				this.databaseId = 0;
 				this.clan = 0;
 				this.name = "";
-				this.aboveRank = 0;
+				this.level = 0;
 				this.flags = 0;
 				this.tag = "";
 				this.enabled = false;
@@ -686,7 +688,7 @@ function initClassTable() {
 					this.databaseId = toInteger(dbAssoc["clan_rank_id"]);
 					this.clan = toInteger(dbAssoc["clan_rank_clan"]);
 					this.name = dbAssoc["clan_rank_name"];
-					this.aboveRank = toInteger(dbAssoc["clan_rank_above"]);
+					this.level = toInteger(dbAssoc["clan_rank_level"]);
 					this.flags = toInteger(dbAssoc["clan_rank_flags"]);
 					this.tag = dbAssoc["clan_rank_tag"];
 					this.enabled = intToBool(toInteger(dbAssoc["clan_enabled"]));
@@ -790,6 +792,14 @@ function initClassTable() {
 				this.dashItemCache = [];
 
 				this.streamingRadioStation = -1;
+
+				// Other/Misc
+				this.insuranceAccount = 0;
+				this.fuel = 0;
+				this.flags = 0;
+				this.needsSaved = false;
+				this.whoAdded = 0;
+				this.whenAdded = 0;
 
 				if(dbAssoc) {
 					// General Info

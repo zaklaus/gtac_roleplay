@@ -2,7 +2,15 @@
 // Vortrex's Roleplay Resource
 // https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
-// FILE: oakwood.js
-// DESC: Provides natives for Project Oakwood (Mafia 1)
+// FILE: mafiac.js
+// DESC: Provides natives for Mafia Connected
 // TYPE: Client (JavaScript)
+// ===========================================================================
+
+function setUpInitialGame() {
+    if(mafia.game == GAME_MAFIA_ONE) {
+        mafia.mapEnabled = false;
+    }
+}
+
 // ===========================================================================

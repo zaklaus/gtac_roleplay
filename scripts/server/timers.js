@@ -18,6 +18,10 @@ function updateTimeRule() {
 // ===========================================================================
 
 function saveAllServerDataToDatabase() {
+	if(getServerConfig().pauseSavingToDatabase) {
+		return false;
+	}
+
 	logToConsole(LOG_DEBUG, "[VRR.Utilities]: Saving all server data to database ...");
 	saveAllClientsToDatabase();
 	saveAllClansToDatabase();

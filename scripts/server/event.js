@@ -157,6 +157,7 @@ function onPedExitingVehicle(event, ped, vehicle) {
     if(!getVehicleData(vehicle).spawnLocked) {
         getVehicleData(vehicle).spawnPosition = getVehiclePosition(vehicle);
         getVehicleData(vehicle).spawnRotation = getVehicleHeading(vehicle);
+        getVehicleData(vehicle).needsSaved = true;
     }
 }
 

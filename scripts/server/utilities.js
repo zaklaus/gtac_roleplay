@@ -918,7 +918,7 @@ function getSkinIdFromName(params, gameId = getServerGame()) {
 function getClosestHospital(position) {
 	let closest = 0;
 	for(let i in getGameData().hospitals[getServerGame()]) {
-		if(getDistance(getGameData().hospitals[getServerGame()][i], position) < getDistance(getGameData().hospitals[getServerGame()][closest], position)) {
+		if(getDistance(getGameData().hospitals[getServerGame()][i].position, position) < getDistance(getGameData().hospitals[getServerGame()][closest].position, position)) {
 			closest = i;
 		}
 	}
@@ -931,7 +931,7 @@ function getClosestHospital(position) {
 function getClosestPoliceStation(position) {
 	let closest = 0;
 	for(let i in getGameData().policeStations[getServerGame()]) {
-		if(getGameData().policeStations[getServerGame()][i].distance(position) < getGameData().policeStations[getServerGame()][closest]) {
+		if(getDistance(getGameData().policeStations[getServerGame()][i].position, position) < getDistance(getGameData().policeStations[getServerGame()][closest].position, position)) {
 			closest = i;
 		}
 	}
@@ -1119,8 +1119,13 @@ function checkPlayerPedStates() {
 // ===========================================================================
 
 function showConnectCameraToPlayer(client) {
-	fadeCamera(client, true, 1);
-	setPlayerCameraLookAt(client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
+	if(isFadeCameraSupported()) {
+		fadeCamera(client, true, 1);
+	}
+
+	if(isCustomCameraSupported()) {
+		setPlayerCameraLookAt(client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
+	}
 }
 
 // ===========================================================================
@@ -1515,19 +1520,19 @@ function splitArrayIntoChunks(originalArray, perChunk) {
 // ===========================================================================
 
 function getAllVehiclesOwnedByPlayer(client) {
-	return getServerData().vehicles.filter(v => v.ownerType == VRR_VEHOWNER_PLAYER && v.ownerId == getPlayerCurrentSubAccount(client));
+	return getServerData().vehicles.filter((v) => v.ownerType == VRR_VEHOWNER_PLAYER && v.ownerId == getPlayerCurrentSubAccount(client).databaseId);
 }
 
 // ===========================================================================
 
 function getAllBusinessesOwnedByPlayer(client) {
-	return getServerData().businesses.filter(v => v.ownerType == VRR_BIZOWNER_PLAYER && v.ownerId == getPlayerCurrentSubAccount(client));
+	return getServerData().businesses.filter((b) => b.ownerType == VRR_BIZOWNER_PLAYER && b.ownerId == getPlayerCurrentSubAccount(client).databaseId);
 }
 
 // ===========================================================================
 
 function getAllHousesOwnedByPlayer(client) {
-	return getServerData().houses.filter(v => v.ownerType == VRR_HOUSEOWNER_PLAYER && v.ownerId == getPlayerCurrentSubAccount(client));
+	return getServerData().houses.filter((h) => h.ownerType == VRR_HOUSEOWNER_PLAYER && h.ownerId == getPlayerCurrentSubAccount(client).databaseId);
 }
 
 // ===========================================================================

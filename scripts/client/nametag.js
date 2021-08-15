@@ -80,10 +80,14 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
     // -------------------------------------------
     // Health Bar
 
-	if(gta.game == GAME_GTA_III) {
-		// Mickey Hamfists is ridiculously tall. Raise the nametag for him a bit
-		if(skin == 109) {
-			y -= 20;
+	if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
+		if(gta.game == GAME_GTA_III) {
+			// Mickey Hamfists is ridiculously tall. Raise the nametag for him a bit
+			if(skin == 109) {
+				y -= 20;
+			} else {
+				y -= 5;
+			}
 		} else {
 			y -= 5;
 		}
@@ -199,9 +203,9 @@ function getClientFromPlayer(player) {
 // ===========================================================================
 
 function processNameTagRendering(event) {
-	if(gta.game >= GAME_GTA_IV) {
-		return false;
-	}
+	//if(gta.game >= GAME_GTA_IV) {
+	//	return false;
+	//}
 
 	getElementsByType(ELEMENT_PLAYER).forEach(function(player) {
 		if(player != localPlayer) {

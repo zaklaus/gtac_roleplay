@@ -522,12 +522,9 @@ function showPlayerItemTakeDelay(client, itemId) {
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
             triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
-            setTimeout(function() {
-                playerItemActionDelayComplete(client);
-            }, delay+getGlobalConfig().itemActionDelayExtraTimeout);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-            playerTakeItem(client, itemId);
+            playerItemActionDelayComplete(client);
         }
     }
 }
@@ -540,12 +537,9 @@ function showPlayerItemUseDelay(client, itemSlot) {
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
             triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
-            setTimeout(function() {
-                playerItemActionDelayComplete(client);
-            }, delay+getGlobalConfig().itemActionDelayExtraTimeout);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-            playerUseItem(client, itemSlot);
+            playerItemActionDelayComplete(client);
         }
     }
 }
@@ -558,12 +552,9 @@ function showPlayerItemDropDelay(client, itemSlot) {
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
             triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
-            setTimeout(function() {
-                playerItemActionDelayComplete(client);
-            }, delay+getGlobalConfig().itemActionDelayExtraTimeout);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-            playerDropItem(client, itemSlot);
+            playerItemActionDelayComplete(client);
         }
     }
 }
@@ -576,12 +567,9 @@ function showPlayerItemPickupDelay(client, itemId) {
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
             triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
-            setTimeout(function() {
-                playerItemActionDelayComplete(client);
-            }, delay+getGlobalConfig().itemActionDelayExtraTimeout);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-            playerPickupItem(client, itemId);
+            playerItemActionDelayComplete(client);
         }
     }
 }
@@ -594,12 +582,9 @@ function showPlayerItemPutDelay(client, itemSlot) {
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
             triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
-            setTimeout(function() {
-                playerItemActionDelayComplete(client);
-            }, delay+getGlobalConfig().itemActionDelayExtraTimeout);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-            playerPutItem(client, itemSlot);
+            playerItemActionDelayComplete(client);
         }
     }
 }
@@ -610,14 +595,16 @@ function showPlayerItemSwitchDelay(client, itemSlot) {
     if(itemSlot != -1) {
         if(getPlayerData(client).hotBarItems[itemSlot] != -1) {
             let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).switchDelay;
-            logToConsole(LOG_DEBUG, `[VRR.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-            triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
-            setTimeout(function() {
+            if(delay > 0) {
+                logToConsole(LOG_DEBUG, `[VRR.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
+                triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
+            } else{
+                logToConsole(LOG_DEBUG, `[VRR.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (instant)`);
                 playerItemActionDelayComplete(client);
-            }, delay+getGlobalConfig().itemActionDelayExtraTimeout);
+            }
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (instant)`);
-            playerSwitchItem(client, itemSlot);
+            playerItemActionDelayComplete(client);
         }
     } else {
         logToConsole(LOG_DEBUG, `[VRR.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (instant)`);

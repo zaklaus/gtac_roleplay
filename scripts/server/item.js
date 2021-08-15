@@ -107,8 +107,9 @@ function createGroundItemObject(itemId) {
 	setElementRotation(getItemData(itemId).object, getItemTypeData(getItemData(itemId).itemTypeIndex).dropRotation);
 	setElementOnAllDimensions(getItemData(itemId).object, false);
 	setElementDimension(getItemData(itemId).object, getItemData(itemId).dimension);
-	setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
+	//setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
 	addToWorld(getItemData(itemId).object);
+	//setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
 
 	getServerData().groundItemCache.push(itemId);
 }
@@ -172,6 +173,8 @@ function createItemCommand(command, params, client) {
 // ===========================================================================
 
 function useItemCommand(command, params, client) {
+	clearPlayerItemActionState(client);
+
 	let hotBarSlot = getPlayerData(client).activeHotBarSlot;
 	if(!areParamsEmpty(params)) {
 		hotBarSlot = toInteger(params);
@@ -196,11 +199,12 @@ function useItemCommand(command, params, client) {
 
 	if(!getItemTypeData(getItemData(itemId).itemTypeIndex)) {
 		messagePlayerError(client, `The item you're trying to use is bugged. A bug report has been sent to the server developers.`);
-		submitBugReport(client, `(AUTOMATED REPORT) Drop Item: Getting item type ${getItemData(itemId).itemType} data for item ${itemId}/${getItemData(itemId).databaseId} in player hotbar slot ${hotBarSlot} (cache ${getPlayerData(client).hotBarItems[hotBarSlot]}) returned false.`);
+		submitBugReport(client, `(AUTOMATED REPORT) Use Item: Getting item type ${getItemData(itemId).itemType} data for item ${itemId}/${getItemData(itemId).databaseId} in player hotbar slot ${hotBarSlot} (cache ${getPlayerData(client).hotBarItems[hotBarSlot]}) returned false.`);
 		return false;
 	}
 
-	if(getItemTypeData(getItemData(itemId).itemTypeIndex).useType == VRR_ITEM_USETYPE_NONE || getItemTypeData(getItemData(itemId).itemTypeIndex).useType == VRR_ITEM_USETYPE_WEAPON) {
+	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
+		messagePlayerError(client, `Your hands are busy.`);
 		return false;
 	}
 
@@ -208,7 +212,7 @@ function useItemCommand(command, params, client) {
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	showPlayerItemUseDelay(client, hotBarSlot);
 
-	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+	//clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ===========================================================================
@@ -236,6 +240,8 @@ function deleteGroundItemCommand(command, params, client) {
 // ===========================================================================
 
 function pickupItemCommand(command, params, client) {
+	clearPlayerItemActionState(client);
+
 	let itemId = getClosestItemOnGround(getPlayerPosition(client));
 
 	if(!getItemData(itemId)) {
@@ -262,6 +268,7 @@ function pickupItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
+		messagePlayerError(client, `Your hands are busy.`);
 		return false;
 	}
 
@@ -269,16 +276,18 @@ function pickupItemCommand(command, params, client) {
 	getPlayerData(client).itemActionItem = itemId;
 	showPlayerItemPickupDelay(client, itemId);
 
-	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+	//clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ===========================================================================
 
 function dropItemCommand(command, params, client) {
-	let hotBarSlot = getPlayerData(client).activeHotBarSlot;
+	clearPlayerItemActionState(client);
 
+	let hotBarSlot = getPlayerData(client).activeHotBarSlot;
 	if(!areParamsEmpty(params)) {
 		hotBarSlot = toInteger(params);
+		hotBarSlot = hotBarSlot-1;
 	}
 
 	if(hotBarSlot == -1) {
@@ -286,7 +295,6 @@ function dropItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).hotBarItems[hotBarSlot] == -1) {
-		messagePlayerError(client, `Please equip an item or provide a slot ID to drop an item`);
 		return false;
 	}
 
@@ -305,19 +313,22 @@ function dropItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
+		messagePlayerError(client, `Your hands are busy.`);
 		return false;
 	}
 
-	getPlayerData(client).itemActionItem = hotBarSlot;
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_DROP;
-	showPlayerItemDropDelay(client, itemId);
+	getPlayerData(client).itemActionItem = hotBarSlot;
+	showPlayerItemDropDelay(client, hotBarSlot);
 
-	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+	//clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ===========================================================================
 
 function putItemCommand(command, params, client) {
+	clearPlayerItemActionState(client);
+
 	let hotBarSlot = toInteger(params);
 
 	let itemId = getPlayerData(client).hotBarItems[hotBarSlot];
@@ -335,6 +346,7 @@ function putItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
+		messagePlayerError(client, `Your hands are busy.`);
 		return false;
 	}
 
@@ -342,12 +354,14 @@ function putItemCommand(command, params, client) {
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_PUT;
 	showPlayerItemPutDelay(client, hotBarSlot);
 
-	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+	//clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ===========================================================================
 
 function takeItemCommand(command, params, client) {
+	clearPlayerItemActionState(client);
+
 	let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
 	if(firstSlot == -1) {
 		messagePlayerError(client, `You don't have any space to hold another item (full inventory)!`);
@@ -365,6 +379,7 @@ function takeItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
+		messagePlayerError(client, `Your hands are busy.`);
 		return false;
 	}
 
@@ -372,7 +387,7 @@ function takeItemCommand(command, params, client) {
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_TAKE;
 	showPlayerItemTakeDelay(client, itemId);
 
-	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+	//clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ===========================================================================
@@ -692,6 +707,7 @@ function playerDropItem(client, hotBarSlot) {
 		meActionToNearbyPlayers(client, `drops ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} on the ground`);
 
 		resyncWeaponItemAmmo(client);
+		clearPlayerWeapons(client);
 
 		getPlayerData(client).hotBarItems[hotBarSlot] = -1;
 		updatePlayerHotBar(client);
@@ -731,6 +747,7 @@ function playerPutItem(client, hotBarSlot) {
 	}
 
 	resyncWeaponItemAmmo(client);
+	clearPlayerWeapons(client);
 
 	getItemData(itemId).ownerType = ownerType;
 	getItemData(itemId).ownerId = ownerId;
@@ -812,14 +829,15 @@ function playerSwitchItem(client, newHotBarSlot) {
 	}
 
 	resyncWeaponItemAmmo(client);
+	clearPlayerWeapons(client);
 
-	if(currentHotBarItem != -1) {
-		if(getItemData(currentHotBarItem)) {
-			if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(currentHotBarItem).itemTypeIndex).useType) != -1) {
-				clearPlayerWeapons(client);
-			}
-		}
-	}
+	//if(currentHotBarItem != -1) {
+	//	if(getItemData(currentHotBarItem)) {
+	//		if(getGlobalConfig().weaponEquippableTypes.indexOf(getItemTypeData(getItemData(currentHotBarItem).itemTypeIndex).useType) != -1) {
+	//			clearPlayerWeapons(client);
+	//		}
+	//	}
+	//}
 
 	if(newHotBarItem != -1) {
 		if(getItemData(newHotBarItem)) {
@@ -865,6 +883,8 @@ function playerSwitchItem(client, newHotBarSlot) {
 // ===========================================================================
 
 function playerSwitchHotBarSlotCommand(command, params, client) {
+	clearPlayerItemActionState(client);
+
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -888,6 +908,7 @@ function playerSwitchHotBarSlotCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
+		messagePlayerError(client, `Your hands are busy.`);
 		return false;
 	}
 
@@ -1273,36 +1294,37 @@ function getItemTypeIndexFromDatabaseId(databaseId) {
 // ===========================================================================
 
 function playerItemActionDelayComplete(client) {
-	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
-		switch(getPlayerData(client).itemActionState) {
-			case VRR_ITEM_ACTION_USE:
-				playerUseItem(client, getPlayerData(client).itemActionItem);
-				break;
+	logToConsole(LOG_VERBOSE, `[VRR.Item]: Player ${getPlayerDisplayForConsole(client)} item action delay complete (State: ${getPlayerData(client).itemActionState})`);
+	switch(getPlayerData(client).itemActionState) {
+		case VRR_ITEM_ACTION_USE:
+			playerUseItem(client, getPlayerData(client).itemActionItem);
+			break;
 
-			case VRR_ITEM_ACTION_DROP:
-				playerDropItem(client, getPlayerData(client).itemActionItem);
-				break;
+		case VRR_ITEM_ACTION_DROP:
+			playerDropItem(client, getPlayerData(client).itemActionItem);
+			break;
 
-			case VRR_ITEM_ACTION_TAKE:
-				playerTakeItem(client, getPlayerData(client).itemActionItem);
-				break;
+		case VRR_ITEM_ACTION_TAKE:
+			playerTakeItem(client, getPlayerData(client).itemActionItem);
+			break;
 
-			case VRR_ITEM_ACTION_PUT:
-				playerPutItem(client, getPlayerData(client).itemActionItem);
-				break;
+		case VRR_ITEM_ACTION_PUT:
+			playerPutItem(client, getPlayerData(client).itemActionItem);
+			break;
 
-			case VRR_ITEM_ACTION_PICKUP:
-				playerPickupItem(client, getPlayerData(client).itemActionItem);
-				break;
+		case VRR_ITEM_ACTION_PICKUP:
+			playerPickupItem(client, getPlayerData(client).itemActionItem);
+			break;
 
-			case VRR_ITEM_ACTION_SWITCH:
-				playerSwitchItem(client, getPlayerData(client).itemActionItem);
-				break;
-		}
+		case VRR_ITEM_ACTION_SWITCH:
+			playerSwitchItem(client, getPlayerData(client).itemActionItem);
+			break;
+
+		default:
+			break;
 	}
 
-    getPlayerData(client).itemActionState = VRR_ITEM_ACTION_NONE;
-    getPlayerData(client).itemActionItem = -1;
+    clearPlayerItemActionState(client);
 }
 
 // ===========================================================================
@@ -1424,6 +1446,7 @@ function getOrderPriceForItemType(itemType) {
 
 function clearPlayerItemActionState(client) {
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_NONE;
+	getPlayerData(client).itemActionItem = -1;
 }
 
 // ===========================================================================
@@ -1519,10 +1542,14 @@ function showPlayerInventoryToPlayer(client, targetClient) {
 	resyncWeaponItemAmmo(targetClient);
 	let itemDisplay = [];
 	for(let i in getPlayerData(targetClient).hotBarItems) {
+		let colour = getInlineChatColourByName("lightGrey");
+		if(getPlayerData(targetClient).activeHotBarSlot == i) {
+			colour = getInlineChatColourByName("yellow");
+		}
 		if(getPlayerData(targetClient).hotBarItems[i] == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${getInlineChatColourByName("lightGrey")}(Empty)`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${colour}(Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${getInlineChatColourByName("lightGrey")}${getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getPlayerData(targetClient).hotBarItems[i])}]`);
+			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${colour}${getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[i]).itemTypeIndex).name}[${getItemValueDisplayForItem(getPlayerData(targetClient).hotBarItems[i])}]`);
 		}
 	}
 
@@ -1577,7 +1604,7 @@ function switchPlayerActiveHotBarSlot(client, slotId) {
 	if(slotId != -1) {
 		showPlayerItemSwitchDelay(client, slotId);
 	}
-	clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+	//clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
 }
 
 // ===========================================================================

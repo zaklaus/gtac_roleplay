@@ -63,6 +63,8 @@ function createHouseCommand(command, params, client) {
 	createHouseEntranceBlip(houseId);
 	createHouseExitBlip(houseId);
 
+	getHouseData(houseId).needsSaved = true;
+
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created house ${getInlineChatColourByType("houseGreen")}${tempHouseData.description}`);
 }
 
@@ -83,6 +85,8 @@ function lockUnlockHouseCommand(command, params, client) {
 			setEntityData(getHouseData(houseId).locations[i].entrancePickup, "vrr.label.locked", getHouseData(houseId).locked, true);
 		}
 	}
+
+	getHouseData(houseId).needsSaved = true;
 
 	messagePlayerSuccess(client, `House '${getHouseData(houseId).description}' ${getLockedUnlockedTextFromBool((getHouseData(houseId).locked))}!`);
 }
@@ -108,6 +112,8 @@ function setHouseDescriptionCommand(command, params, client) {
 		}
 	}
 
+	getHouseData(houseId).needsSaved = true;
+
 	messageAdmins(`${getPlayerName(client)} renamed house ${getInlineChatColourByType("houseGreen")}${oldDescription} ${getInlineChatColourByName("white")}to ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}`);
 }
 
@@ -126,6 +132,8 @@ function setHouseOwnerCommand(command, params, client) {
 		messagePlayerError("House not found!");
 		return false;
 	}
+
+	getHouseData(houseId).needsSaved = true;
 
 	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_PLAYER;
 	getHouseData(houseId).ownerId = getServerData().clients[newHouseOwner.index].accountData.databaseId;
@@ -148,6 +156,8 @@ function setHouseClanCommand(command, params, client) {
 		messagePlayerError("House not found!");
 		return false;
 	}
+
+	getHouseData(houseId).needsSaved = true;
 
 	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_CLAN;
 	getHouseData(houseId).ownerId = getClanData(clanId).databaseId;
@@ -184,6 +194,8 @@ function setHousePickupCommand(command, params, client) {
 
 		createHouseEntrancePickup(houseId);
 	}
+
+	getHouseData(houseId).needsSaved = true;
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]pickup display to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
@@ -227,6 +239,8 @@ function setHouseInteriorTypeCommand(command, params, client) {
 	createHouseEntrancePickup(houseId);
 	createHouseExitPickup(houseId);
 
+	getHouseData(houseId).needsSaved = true;
+
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]interior type to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
 
@@ -261,6 +275,8 @@ function setHouseBlipCommand(command, params, client) {
 		createHouseEntranceBlip(houseId);
 	}
 
+	getHouseData(houseId).needsSaved = true;
+
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
 }
 
@@ -282,6 +298,8 @@ function moveHouseEntranceCommand(command, params, client) {
 	deleteAllHousePickups(houseId);
 	createAllHouseBlips(houseId);
 	createAllHousePickups(houseId);
+
+	getHouseData(houseId).needsSaved = true;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}entrance to their position`);
 }
@@ -306,6 +324,8 @@ function moveHouseExitCommand(command, params, client) {
 	deleteAllHousePickups(houseId);
 	createAllHouseBlips(houseId);
 	createAllHousePickups(houseId);
+
+	getHouseData(houseId).needsSaved = true;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}exit to their position`);
 }
@@ -421,7 +441,9 @@ function getPlayerHouse(client) {
 function saveAllHousesToDatabase() {
 	logToConsole(LOG_INFO, `[VRR.House]: Saving all server houses to database ...`);
 	for(let i in getServerData().houses) {
-		saveHouseToDatabase(i);
+		if(getServerData().houses[i].needsSaved) {
+			saveHouseToDatabase(i);
+		}
 	}
 	logToConsole(LOG_INFO, `[VRR.House]: Saving all server houses to database ...`);
 }
@@ -442,9 +464,9 @@ function saveHouseToDatabase(houseId) {
 			["house_owner_type", tempHouseData.ownerType],
 			["house_owner_id", tempHouseData.ownerId],
 			["house_locked", boolToInt(tempHouseData.locked)],
-			["house_entrance_fee", tempHouseData.entranceFee],
+			//["house_entrance_fee", tempHouseData.entranceFee],
 			["house_entrance_pos_x", tempHouseData.entrancePosition.x],
-			["house_entrance_pos_y", tempHouseData.entrancePosition.x],
+			["house_entrance_pos_y", tempHouseData.entrancePosition.y],
 			["house_entrance_pos_z", tempHouseData.entrancePosition.z],
 			["house_entrance_rot_z", tempHouseData.entranceRotation],
 			["house_entrance_int", tempHouseData.entranceInterior],
@@ -470,10 +492,11 @@ function saveHouseToDatabase(houseId) {
 			dbQuery = queryDatabase(dbConnection, queryString);
 			getServerData().houses[houseId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let queryString = createDatabaseUpdateQuery("house_main", data, `WHERE house_id=${tempHouseData.databaseId}`);
+			let queryString = createDatabaseUpdateQuery("house_main", data, `house_id=${tempHouseData.databaseId}`);
 			dbQuery = queryDatabase(dbConnection, queryString);
 		}
 
+		getHouseData(houseId).needsSaved = false;
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
@@ -673,6 +696,91 @@ function getHouseInfoCommand(command, params, client) {
 
 // ===========================================================================
 
+function setHouseBuyPriceCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+
+	let amount = toInteger(splitParams[0]) || 0;
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+
+	if(!getHouseData(houseId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(amount < 0) {
+		messagePlayerError(client, `The amount can't be less than 0!`);
+		return false;
+	}
+
+	getHouseData(houseId).buyPrice = amount;
+	setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", getHouseData(houseId).buyPrice, true);
+	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}'s ${getInlineChatColourByName("white")}for-sale price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
+}
+
+// ===========================================================================
+
+function setHouseRentPriceCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+
+	let amount = toInteger(splitParams[0]) || 0;
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+
+	if(!getHouseData(houseId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(amount < 0) {
+		messagePlayerError(client, `The amount can't be less than 0!`);
+		return false;
+	}
+
+	getHouseData(houseId).rentPrice = amount;
+	setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", `Rent: ${getHouseData(houseId).rentPrice}`, true);
+	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}'s ${getInlineChatColourByName("white")}rent price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
+}
+
+// ===========================================================================
+
+function buyHouseCommand(command, params, client) {
+	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+
+	if(!getHouseData(houseId)) {
+		messagePlayerError(client, "House not found!");
+		return false;
+	}
+
+	if(getHouseData(houseId).buyPrice <= 0) {
+		messagePlayerError(client, `${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}is not for sale!`);
+		return false;
+	}
+
+	if(getPlayerCurrentSubAccount(client).cash < getHouseData(houseId).buyPrice) {
+		messagePlayerError(client, `You don't have enough money to buy business ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).name}!`);
+		return false;
+	}
+
+	getHouseData(houseId).ownerType = VRR_BIZOWNER_PLAYER;
+	getHouseData(houseId).ownerId = getPlayerCurrentSubAccount(client).databaseId;
+	getHouseData(houseId).buyPrice = 0;
+
+	updateHousePickupLabelData(houseId);
+
+	messagePlayerSuccess(client, `You are now the owner of ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}`);
+}
+
+// ===========================================================================
+
 function isPlayerInAnyHouse(client) {
 	return doesEntityDataExist(client, "vrr.inHouse");
 }
@@ -808,3 +916,4 @@ function getHouseIdFromDatabaseId(databaseId) {
 }
 
 // ===========================================================================
+

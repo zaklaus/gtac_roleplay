@@ -129,7 +129,8 @@ function onServerSpawnedPlayer(state) {
     logToConsole(LOG_DEBUG, `[VRR.Main] Setting spawned state to ${state}`);
     isSpawned = state;
     if(state) {
-        setUpInitialGame
+        setUpInitialGame();
+        calledDeathEvent = false;
     }
 }
 
@@ -154,7 +155,7 @@ function tellServerItemActionDelayComplete() {
 // ===========================================================================
 
 function sendServerClientInfo() {
-    triggerNetworkEvent("vrr.clientInfo", `${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_PATCH}.${CLIENT_VERSION_BUILD}`, gta.width, gta.height);
+    triggerNetworkEvent("vrr.clientInfo", `${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_PATCH}.${CLIENT_VERSION_BUILD}`, game.width, game.height);
 }
 
 // ===========================================================================

@@ -46,7 +46,9 @@ function onPlayerConnect(event, ipAddress, port) {
 // ===========================================================================
 
 function onPlayerJoin(event, client) {
-    fadeCamera(client, true, 1.0);
+    if(isFadeCameraSupported()) {
+        fadeCamera(client, true, 1.0);
+    }
 }
 
 // ===========================================================================
@@ -81,21 +83,24 @@ function onPlayerQuit(event, client, quitReasonId) {
 function onPlayerChat(event, client, messageText) {
     event.preventDefault();
 
-    if(!isNull(getPlayerData(client))) {
-        if(!isPlayerLoggedIn(client)) {
-            messagePlayerError(client, "You need to login before you can chat!");
-            return false;
-        }
+    if(!getPlayerData(client)) {
+        messagePlayerError(client, "You need to login before you can chat!");
+        return false;
+    }
 
-        if(!isPlayerSpawned(client)) {
-            messagePlayerError(client, "You need to login before you can chat!");
-            return false;
-        }
+    if(!isPlayerLoggedIn(client)) {
+        messagePlayerError(client, "You need to login before you can chat!");
+        return false;
+    }
 
-        if(isPlayerMuted(client)) {
-            messagePlayerError(client, "You are muted and can't chat!");
-            return false;
-        }
+    if(!isPlayerSpawned(client)) {
+        messagePlayerError(client, "You need to spawn before you can chat!");
+        return false;
+    }
+
+    if(isPlayerMuted(client)) {
+        messagePlayerError(client, "You are muted and can't chat!");
+        return false;
     }
 
     messageText = messageText.substring(0, 128);
@@ -320,11 +325,13 @@ function onPlayerDeath(client, position) {
 	updatePlayerSpawnedState(client, false);
     setPlayerControlState(client, false);
 	setTimeout(function() {
-		fadeCamera(client, false, 1.0);
+        if(isFadeCameraSupported()) {
+		    fadeCamera(client, false, 1.0);
+        }
 		setTimeout(function() {
-			client.despawnPlayer();
 			if(getPlayerCurrentSubAccount(client).inJail) {
-                let closestJail = getClosestJail(position);
+                let closestJail = getClosestJail(getPlayerPosition(client));
+                client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestJail.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
                 if(getServerGame() == GAME_GTA_IV) {
@@ -333,19 +340,24 @@ function onPlayerDeath(client, position) {
                     spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
                 }
 
-                fadeCamera(client, true, 1.0);
+                if(isFadeCameraSupported()) {
+                    fadeCamera(client, true, 1.0);
+                }
                 updatePlayerSpawnedState(client, true);
 			} else {
-                let closestHospital = getClosestHospital(position);
-                getPlayerCurrentSubAccount(client).interior = 0;
-                getPlayerCurrentSubAccount(client).dimension = 0;
+                let closestHospital = getClosestHospital(getPlayerPosition(client));
+                client.despawnPlayer();
+                getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
+                getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
                 if(getServerGame() == GAME_GTA_IV) {
-                    spawnPlayer(client, closestHospital, 0.0, getPlayerCurrentSubAccount(client).skin);
+                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
                 } else {
-                    spawnPlayer(client, closestHospital, 0.0, getPlayerCurrentSubAccount(client).skin);
+                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
                 }
 
-                fadeCamera(client, true, 1.0);
+                if(isFadeCameraSupported()) {
+                    fadeCamera(client, true, 1.0);
+                }
                 updatePlayerSpawnedState(client, true);
 			}
 		}, 2000);

@@ -522,54 +522,48 @@ function loginSuccess(client) {
 function saveAccountToDatabase(accountData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		//logToConsole(LOG_VERBOSE, `Escaping account data for ${getPlayerDisplayForConsole(client)}`);
+		logToConsole(LOG_VERBOSE, `Escaping account data for ${accountData.name}`);
+		let safeAccountName = escapeDatabaseString(dbConnection, accountData.name);
+		logToConsole(LOG_VERBOSE, `${accountData.name}'s name escaped successfully`);
 		let safePassword = escapeDatabaseString(dbConnection, accountData.password);
-		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(accountData.name)}'s password escaped successfully`);
+		logToConsole(LOG_VERBOSE, `${accountData.name}'s password escaped successfully`);
 		let safeStaffTitle = escapeDatabaseString(dbConnection, accountData.staffTitle);
-		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff title escaped successfully`);
+		logToConsole(LOG_VERBOSE, `${accountData.name}'s staff title escaped successfully`);
 		let safeEmailAddress = escapeDatabaseString(dbConnection, accountData.emailAddress);
-		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s email address escaped successfully`);
+		logToConsole(LOG_VERBOSE, `${accountData.name}'s email address escaped successfully`);
 
-		let dbQueryString =
-			`UPDATE acct_main SET
-				 acct_email='${safeEmailAddress}',
-				acct_pass='${safePassword}',
-				acct_discord=${accountData.discordAccount},
-				acct_ip=INET_ATON('${accountData.ipAddress}'),
-				acct_code_verifyemail='${accountData.emailVerificationCode}',
-				acct_streaming_radio_volume=${accountData.streamingRadioVolume}
-			 WHERE acct_id=${accountData.databaseId}`;
+		let data = [
+			["acct_name", safeAccountName],
+			["acct_pass", safePassword],
+			//["acct_staff_title", safeStaffTitle],
+			["acct_email", safeEmailAddress],
+			//["acct_irc", safeIRC],
+			["acct_discord", accountData.discordAccount],
+			["acct_code_verifyemail", accountData.emailVerificationCode],
+			["acct_streaming_radio_volume", accountData.streamingRadioVolume],
+			["acct_ip", accountData.ipAddress],
+		];
 
-			 /*
-			 	acct_settings=${accountData.settings},
-				acct_staff_title='${safeStaffTitle}',
-				acct_staff_flags=${accountData.flags.admin},
-				acct_mod_flags=${accountData.flags.moderation},
-			*/
-
-		//dbQueryString = dbQueryString.trim();
-		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-
-		let dbQuery = queryDatabase(dbConnection, dbQueryString);
+		let dbQuery = null;
+		let queryString = createDatabaseUpdateQuery("acct_main", data, `acct_id=${accountData.databaseId}`);
+		dbQuery = queryDatabase(dbConnection, queryString);
 		freeDatabaseQuery(dbQuery);
+
+		let data2 = [
+			["acct_svr_settings", accountData.flags.settings],
+			["acct_svr_staff_title", safeStaffTitle],
+			["acct_svr_staff_flags", accountData.flags.admin],
+			["acct_svr_mod_flags", accountData.flags.moderation],
+			["acct_svr_chat_scroll_lines", accountData.chatScrollLines],
+		];
+
 		dbQuery = null;
-
-		dbQueryString =
-			`UPDATE acct_svr SET
-				 acct_svr_acct='${accountData.databaseId}',
-			 	acct_svr_settings=${accountData.flags.settings},
-				acct_svr_staff_title='${safeStaffTitle}',
-				acct_svr_staff_flags=${accountData.flags.admin},
-				acct_svr_mod_flags=${accountData.flags.moderation},
-				acct_svr_chat_scroll_lines=${accountData.chatScrollLines}
-			 WHERE acct_svr_acct=${accountData.databaseId} AND acct_svr_svr = ${getServerId()}`;
-
-		//dbQueryString = dbQueryString.trim();
-		dbQueryString = dbQueryString.replace(/(?:\r\n|\r|\n|\t)/g, "");
-
-		dbQuery = queryDatabase(dbConnection, dbQueryString);
+		queryString = "";
+		queryString = createDatabaseUpdateQuery("acct_svr", data2, `acct_svr_acct=${accountData.databaseId} AND acct_svr_svr = ${getServerId()}`);
+		dbQuery = queryDatabase(dbConnection, queryString);
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
+		return true;
 	}
 }
 
@@ -974,7 +968,7 @@ function createDefaultKeybindsForAccount(accountDatabaseId) {
 // ===========================================================================
 
 function createDefaultAccountServerData(accountDatabaseId) {
-	for(let i = 1 ; i <= 4 ; i++) {
+	for(let i = 1 ; i <= 5 ; i++) {
 		let dbQueryString = `INSERT INTO acct_svr (acct_svr_acct, acct_svr_svr) VALUES (${accountDatabaseId}, ${i})`;
 		quickDatabaseQuery(dbQueryString);
 	}

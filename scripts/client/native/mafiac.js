@@ -10,7 +10,14 @@
 function setUpInitialGame() {
     if(mafia.game == GAME_MAFIA_ONE) {
         mafia.mapEnabled = false;
+        mafia.setTrafficEnabled(false);
     }
 }
+
+// ===========================================================================
+
+addEventHandler("OnMapLoaded", function(event) {
+    initClientScripts();
+});
 
 // ===========================================================================

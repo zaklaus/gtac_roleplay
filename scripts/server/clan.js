@@ -618,6 +618,10 @@ function saveAllClanRanksToDatabase(clanId) {
 function saveClanToDatabase(clanId) {
 	let tempClanData = getClanData(clanId);
 
+	if(!tempClanData) {
+		return false;
+	}
+
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		if(tempClanData.needsSaved) {
@@ -625,7 +629,7 @@ function saveClanToDatabase(clanId) {
 			let safeTag = escapeDatabaseString(dbConnection, tempClanData.tag);
 			let safeMOTD = escapeDatabaseString(dbConnection, tempClanData.motd);
 
-			let queryData = [
+			let data = [
 				["clan_main", safeName],
 				["clan_owner", tempClanData.ownerId],
 				["clan_tag", safeTag],
@@ -639,7 +643,7 @@ function saveClanToDatabase(clanId) {
 				getClanData(clanId).databaseId = getDatabaseInsertId(dbConnection);
 				getClanData(clanId).needsSaved = false;
 			} else {
-				let queryString = createDatabaseUpdateQuery("clan_main", data, `WHERE clan_id=${tempClanData.databaseId} LIMIT 1`);
+				let queryString = createDatabaseUpdateQuery("clan_main", data, `clan_id=${tempClanData.databaseId} LIMIT 1`);
 				dbQuery = queryDatabase(dbConnection, queryString);
 				getClanData(clanId).needsSaved = false;
 			}
@@ -667,7 +671,7 @@ function saveClanRankToDatabase(clanData, rankId) {
 			let safeTag = escapeDatabaseString(dbConnection, tempClanRankData.customTag);
 			let safeTitle = escapeDatabaseString(dbConnection, tempClanRankData.customTitle);
 
-			let queryData = [
+			let data = [
 				["clan_rank_name", safeName],
 				["clan_rank_clan", tempClanRankData.clanId],
 				["clan_rank_tag", safeTag],
@@ -684,7 +688,7 @@ function saveClanRankToDatabase(clanData, rankId) {
 				getClanRankData(clanId, rankId).databaseId = getDatabaseInsertId(dbConnection);
 				getClanRankData(clanId, rankId).needsSaved = false;
 			} else {
-				let queryString = createDatabaseUpdateQuery("clan_rank_main", data, `WHERE clan_rank_id=${tempClanRankData.databaseId} LIMIT 1`);
+				let queryString = createDatabaseUpdateQuery("clan_rank_main", data, `clan_rank_id=${tempClanRankData.databaseId} LIMIT 1`);
 				dbQuery = queryDatabase(dbConnection, queryString);
 				getClanRankData(clanId, rankId).needsSaved = false;
 			}
@@ -738,7 +742,7 @@ function setClanRankTitle(clanId, rankId, title) {
 
 function saveAllClansToDatabase() {
 	for(let i in getServerData().clans) {
-		saveClanToDatabase(getServerData().clans[i]);
+		saveClanToDatabase(i);
 	}
 }
 

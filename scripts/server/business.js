@@ -773,13 +773,13 @@ function buyBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	getBusinessData(client).ownerType = VRR_BIZOWNER_PLAYER;
-	getBusinessData(client).ownerId = getPlayerCurrentSubAccount(client).databaseId;
-	getBusinessData(client).buyPrice = 0;
+	getBusinessData(businessId).ownerType = VRR_BIZOWNER_PLAYER;
+	getBusinessData(businessId).ownerId = getPlayerCurrentSubAccount(client).databaseId;
+	getBusinessData(businessId).buyPrice = 0;
 
 	updateBusinessPickupLabelData(businessId);
 
-	messagePlayerSuccess(client, `Business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}till has ${getInlineChatColourByName("lightGrey")}$${getBusinessData(businessId).till}`);
+	messagePlayerSuccess(client, `You are now the owner of ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}`);
 }
 
 // ===========================================================================
@@ -882,7 +882,9 @@ function getPlayerBusiness(client) {
 
 function saveAllBusinessesToDatabase() {
 	for(let i in getServerData().businesses) {
-		saveBusinessToDatabase(i);
+		if(getServerData().businesses[i].needsSaved) {
+			saveBusinessToDatabase(i);
+		}
 	}
 }
 
@@ -904,7 +906,7 @@ function saveBusinessToDatabase(businessId) {
 			["biz_entrance_fee", tempBusinessData.entranceFee],
 			["biz_till", tempBusinessData.till],
 			["biz_entrance_pos_x", tempBusinessData.entrancePosition.x],
-			["biz_entrance_pos_y", tempBusinessData.entrancePosition.x],
+			["biz_entrance_pos_y", tempBusinessData.entrancePosition.y],
 			["biz_entrance_pos_z", tempBusinessData.entrancePosition.z],
 			["biz_entrance_rot_z", tempBusinessData.entranceRotation],
 			["biz_entrance_int", tempBusinessData.entranceInterior],
@@ -928,9 +930,11 @@ function saveBusinessToDatabase(businessId) {
 			dbQuery = queryDatabase(dbConnection, queryString);
 			getServerData().businesses[businessId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let queryString = createDatabaseUpdateQuery("biz_main", data, `WHERE biz_id=${tempBusinessData.databaseId}`);
+			let queryString = createDatabaseUpdateQuery("biz_main", data, `biz_id=${tempBusinessData.databaseId}`);
 			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+
+		getBusinessData(businessId).needsSaved = false;
 
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);

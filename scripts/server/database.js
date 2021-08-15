@@ -199,7 +199,7 @@ function createDatabaseInsertQuery(tableName, data) {
 	for(let i in data) {
 		fields.push(data[i][0]);
 
-		if(typeof values[i][1] == "string") {
+		if(typeof data[i][1] == "string") {
 			values.push(`'${data[i][1]}'`);
 		} else {
 			values.push(data[i][1]);
@@ -216,14 +216,14 @@ function createDatabaseUpdateQuery(tableName, data, whereClause) {
 	let values = [];
 
 	for(let i in data) {
-		if(typeof values[i][1] == "string") {
+		if(typeof data[i][1] == "string") {
 			values.push(`${data[i][0]}='${data[i][1]}'`);
 		} else {
 			values.push(`${data[i][0]}=${data[i][1]}`);
 		}
 	}
 
-	let queryString = `INSERT INTO ${tableName} SET ${values.join(", ")} WHERE ${whereClause}`;
+	let queryString = `UPDATE ${tableName} SET ${values.join(", ")} WHERE ${whereClause}`;
 	return queryString;
 }
 

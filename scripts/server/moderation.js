@@ -904,9 +904,9 @@ function getAllVehiclesOwnedByPlayerCommand(command, params, client) {
 
 	let vehicles = getAllVehiclesOwnedByPlayer(targetClient);
 
-	messageClientInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Player Houses ${getInlineChatColourByType("clanOrange")}==========================`);
+	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Player Vehicles ${getInlineChatColourByType("clanOrange")}==========================`);
 	for(let i in vehicles) {
-		messagePlayerNormal(client, `🚗 ${getInlineChatColourByType("vehiclePurple")}[Vehicle Info] ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${vehicles[i].vehicle.id}, ${getInlineChatColourByName("white")}DatabaseID: ${getInlineChatColourByName("lightGrey")}${vehicles[i].databaseId}, ${getInlineChatColourByName("white")}Type: ${getInlineChatColourByName("lightGrey")}${getVehicleName(vehicles[i].vehicle)}[${vehicles[i].model}], ${getInlineChatColourByName("white")}BuyPrice: ${getInlineChatColourByName("lightGrey")}${vehicles[i].buyPrice}, ${getInlineChatColourByName("white")}RentPrice: ${getInlineChatColourByName("lightGrey")}${vehicles[i].rentPrice}, ${getInlineChatColourByName("white")}Locked: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(vehicles[i].locked)}, ${getInlineChatColourByName("white")}Engine: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(vehicles[i].engine)}`);
+		messagePlayerNormal(client, `🚗 ${getInlineChatColourByType("vehiclePurple")}[Vehicle Info] ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${vehicles[i].index}, ${getInlineChatColourByName("white")}DatabaseID: ${getInlineChatColourByName("lightGrey")}${vehicles[i].databaseId}, ${getInlineChatColourByName("white")}Type: ${getInlineChatColourByName("lightGrey")}${getVehicleName(vehicles[i].vehicle)}[${vehicles[i].model}], ${getInlineChatColourByName("white")}BuyPrice: ${getInlineChatColourByName("lightGrey")}${vehicles[i].buyPrice}, ${getInlineChatColourByName("white")}RentPrice: ${getInlineChatColourByName("lightGrey")}${vehicles[i].rentPrice}, ${getInlineChatColourByName("white")}Locked: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(vehicles[i].locked)}, ${getInlineChatColourByName("white")}Engine: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(vehicles[i].engine)}`);
 	}
 }
 
@@ -927,7 +927,7 @@ function getAllBusinessesOwnedByPlayerCommand(command, params, client) {
 
 	let businesses = getAllBusinessesOwnedByPlayer(targetClient);
 
-	messageClientInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Player Businesses ${getInlineChatColourByType("clanOrange")}========================`);
+	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Player Businesses ${getInlineChatColourByType("clanOrange")}========================`);
 	for(let i in businesses) {
 		messagePlayerNormal(client, `🏢 ${getInlineChatColourByType("businessBlue")}[Business Info] ${getInlineChatColourByName("white")}Name: ${getInlineChatColourByName("lightGrey")}${businesses[i].name}, ${getInlineChatColourByName("white")}Locked: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(intToBool(businesses[i].locked))}, ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${businesses[i].index}/${businesses[i].databaseId}`);
 	}
@@ -950,7 +950,7 @@ function getAllHousesOwnedByPlayerCommand(command, params, client) {
 
 	let houses = getAllHousesOwnedByPlayer(targetClient);
 
-	messageClientInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Player Houses ${getInlineChatColourByType("clanOrange")}============================`);
+	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Player Houses ${getInlineChatColourByType("clanOrange")}============================`);
 	for(let i in houses) {
 		messagePlayerNormal(client, `🏠 ${getInlineChatColourByType("houseGreen")}[House Info] ${getInlineChatColourByName("white")}Description: ${getInlineChatColourByName("lightGrey")}${houses[i].description}, ${getInlineChatColourByName("white")}Locked: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(intToBool(houses[i].locked))}, ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${houses[i].index}/${houses[i].databaseId}`);
 	}

@@ -19,10 +19,10 @@ let invalidValueColour = [200, 200, 200];
 
 let focusedColourOffset = 50;
 
-let windowAlpha = 185;
-let windowTitleAlpha = 200;
-let buttonAlpha = 200;
-let textInputAlpha = 200;
+let windowColour = (typeof gta == "undefined") ? [24, 24, 24, 150] : [0, 0, 0, 150];
+let windowTitleAlpha = 180;
+let buttonAlpha = 180;
+let textInputAlpha = 180;
 
 // ===========================================================================
 
@@ -156,7 +156,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Creating login GUI ...`);
 	login.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 			transitionTime: 500,
 		},
 		title: {
@@ -235,7 +235,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Creating two factor auth GUI ...`);
 	twoFactorAuth.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 			transitionTime: 500,
 		},
 		title: {
@@ -313,7 +313,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Creating new character GUI ...`);
 	newCharacter.window = mexui.window(game.width/2-130, game.height/2-100, 300, 200, 'Character Name', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 			transitionTime: 500,
 		},
 		title: {
@@ -405,7 +405,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Creating register GUI ...`);
 	register.window = mexui.window(game.width/2-130, game.height/2-125, 300, 250, 'Register', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 			transitionTime: 500,
 		},
 		title: {
@@ -472,7 +472,7 @@ function initGUI() {
 		},
 		placeholder: {
 			backgroundColour: toColour(0, 0, 0, 120),
-			textColour: toColour(150, 150, 150, 200),
+			textColour: toColour(200, 200, 200, 200),
 			textSize: 10.0,
 			textFont: robotoFont,
 		}
@@ -518,7 +518,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Creating error GUI ...`);
 	errorDialog.window = mexui.window(game.width/2-200, game.height/2-70, 500, 140, 'ERROR', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 			transitionTime: 500,
 		},
 		title: {
@@ -564,7 +564,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Created prompt GUI ...`);
 	yesNoDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'Question', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 			transitionTime: 500,
 		},
 		title: {
@@ -623,7 +623,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Creating info dialog GUI ...`);
 	infoDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'Information', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 		},
 		title: {
 			textSize: 11.0,
@@ -668,7 +668,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Creating list dialog GUI ...`);
 	listDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 500, 'List', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 		},
 		title: {
 			textSize: 11.0,
@@ -699,7 +699,7 @@ function initGUI() {
 
 	listDialog.listGrid = listDialog.window.grid(5, 25, 390, 450, {
 		main: {
-			backgroundColour: 	toColour(0, 0, 0, windowAlpha),
+			backgroundColour: 	toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 		},
 		column: {
 			lineColour: 		toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
@@ -709,7 +709,7 @@ function initGUI() {
 			textColour:			toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},
 		cell: {
-			backgroundColour:	toColour(0, 0, 0, windowAlpha),
+			backgroundColour:	toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 			textColour:			toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},
 		row: {
@@ -726,7 +726,7 @@ function initGUI() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Creating character select GUI ...`);
 	characterSelect.window = mexui.window(game.width/2-215, game.height/2-83, 430, 190, 'Select Character', {
 		main: {
-			backgroundColour: toColour(0, 0, 0, windowAlpha),
+			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
 		},
 		title: {
 			textSize: 11.0,

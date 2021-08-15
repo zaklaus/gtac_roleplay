@@ -1589,8 +1589,8 @@ function createJobLocationPickup(jobId, locationId) {
 			pickupModelId = getJobData(jobId).pickupModel;
 		}
 
-		getJobData(jobId).locations[locationId].pickup = gta.createPickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
-		getJobData(jobId).locations[locationId].pickup.dimension = getJobData(jobId).locations[locationId].dimension;
+		getJobData(jobId).locations[locationId].pickup = createGamePickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
+		setElementDimension(getJobData(jobId).locations[locationId].pickup, getJobData(jobId).locations[locationId].dimension);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.owner.type", VRR_PICKUP_JOB, false);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.owner.id", locationId, false);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.label.type", VRR_LABEL_JOB, true);

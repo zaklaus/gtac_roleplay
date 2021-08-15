@@ -9,27 +9,30 @@
 
 function processSync(event, deltaTime) {
     if(localPlayer != null) {
-        if(gta.game == GAME_GTA_IV) {
+        if(!doesGameHaveServerElements()) {
             triggerNetworkEvent("vrr.player.position", localPlayer.position);
             triggerNetworkEvent("vrr.player.heading", localPlayer.heading);
         }
 
-        if(gta.game == GAME_GTA_SA) {
-            let lookAtPos = getLocalPlayerLookAtPosition();
-            triggerNetworkEvent("vrr.player.lookat", lookAtPos);
-            setEntityData(localPlayer, "vrr.headLook", lookAtPos);
-            let peds = getPeds();
-            for(let i in peds) {
-                if(doesEntityDataExist(peds[i], "vrr.headLook")) {
-                    peds[i].lookAt(getEntityData(peds[i], "vrr.headLook"), 99999);
-                }
-            }
-        }
+        //if(gta.game == GAME_GTA_SA) {
+        //    let lookAtPos = getLocalPlayerLookAtPosition();
+        //    triggerNetworkEvent("vrr.player.lookat", lookAtPos);
+        //    setEntityData(localPlayer, "vrr.headLook", lookAtPos);
+        //    let peds = getPeds();
+        //    for(let i in peds) {
+        //        if(doesEntityDataExist(peds[i], "vrr.headLook")) {
+        //            peds[i].lookAt(getEntityData(peds[i], "vrr.headLook"), 99999);
+        //        }
+        //    }
+        //}
 
         if(localPlayer.health <= 0) {
-            logToConsole(LOG_DEBUG, `Local player died`);
-            localPlayer.clearWeapons();
-            triggerNetworkEvent("vrr.playerDeath", localPlayer.position);
+            if(!calledDeathEvent) {
+                logToConsole(LOG_DEBUG, `Local player died`);
+                localPlayer.clearWeapons();
+                calledDeathEvent = true;
+                triggerNetworkEvent("vrr.playerDeath");
+            }
         }
 
         if(streamingRadioElement) {

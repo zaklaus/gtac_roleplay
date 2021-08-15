@@ -48,4 +48,6 @@ let enterPropertyKey = null;
 
 let forcedAnimation = null;
 
+let calledDeathEvent = false;
+
 // ===========================================================================

@@ -129,7 +129,11 @@ function enterExitPropertyCommand(command, params, client) {
 			clearPlayerStateToEnterExitProperty(client);
 			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
 			meActionToNearbyPlayers(client, "opens the door and exits the house");
-			fadeCamera(client, false, 1.0);
+
+			if(isFadeCameraSupported()) {
+				fadeCamera(client, false, 1.0);
+			}
+
 			disableCityAmbienceForPlayer(client, true);
 			setTimeout(function() {
 				setPlayerPosition(client, inHouse.entrancePosition);
@@ -137,7 +141,9 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerDimension(client, inHouse.entranceDimension);
 				setPlayerInterior(client, inHouse.entranceInterior);
 				setTimeout(function() {
-					fadeCamera(client, true, 1.0);
+					if(isFadeCameraSupported()) {
+						fadeCamera(client, true, 1.0);
+					}
 					setTimeout(function() {
 						enableCityAmbienceForPlayer(client);
 						clearPlayerOwnedPeds(client);
@@ -163,7 +169,11 @@ function enterExitPropertyCommand(command, params, client) {
 			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
 			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and exits the business");
-			fadeCamera(client, false, 1.0);
+
+			if(isFadeCameraSupported()) {
+				fadeCamera(client, false, 1.0);
+			}
+
 			disableCityAmbienceForPlayer(client, true);
 			setTimeout(function() {
 				setPlayerPosition(client, inBusiness.entrancePosition);
@@ -171,7 +181,9 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerDimension(client, inBusiness.entranceDimension);
 				setPlayerInterior(client, inBusiness.entranceInterior);
 				setTimeout(function() {
-					fadeCamera(client, true, 1.0);
+					if(isFadeCameraSupported()) {
+						fadeCamera(client, true, 1.0);
+					}
 					setTimeout(function() {
 						enableCityAmbienceForPlayer(client);
 						clearPlayerOwnedPeds(client);
@@ -205,7 +217,9 @@ function enterExitPropertyCommand(command, params, client) {
 			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and enters the business");
 			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
-			fadeCamera(client, false, 1.0);
+			if(isFadeCameraSupported()) {
+				fadeCamera(client, false, 1.0);
+			}
 			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, closestBusiness.exitPosition);
@@ -213,7 +227,9 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerDimension(client, closestBusiness.exitDimension);
 				setPlayerInterior(client, closestBusiness.exitInterior);
 				setTimeout(function() {
-					fadeCamera(client, true, 1.0);
+					if(isFadeCameraSupported()) {
+						fadeCamera(client, true, 1.0);
+					}
 					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 					if(doesBusinessHaveAnyItemsToBuy(closestBusinessId)) {
 						messagePlayerInfo(client, "Use /buy to purchase items from this business");
@@ -251,7 +267,9 @@ function enterExitPropertyCommand(command, params, client) {
 			clearPlayerStateToEnterExitProperty(client)
 			meActionToNearbyPlayers(client, "opens the door and enters the house");
 			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
-			fadeCamera(client, false, 1.0);
+			if(isFadeCameraSupported()) {
+				fadeCamera(client, false, 1.0);
+			}
 			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
 				setPlayerPosition(client, closestHouse.exitPosition);
@@ -259,7 +277,9 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerDimension(client, closestHouse.exitDimension);
 				setPlayerInterior(client, closestHouse.exitInterior);
 				setTimeout(function() {
-					fadeCamera(client, true, 1.0);
+					if(isFadeCameraSupported()) {
+						fadeCamera(client, true, 1.0);
+					}
 					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 					setTimeout(function() {
 						if(closestHouse.streamingRadioStation != -1) {
@@ -281,16 +301,16 @@ function enterExitPropertyCommand(command, params, client) {
 // ===========================================================================
 
 function loadGameFixesResource() {
-	switch(getServerGame()) {
-		case GAME_GTA_III:
-			if(findResourceByName("asshat-gta3") != null) {
-				findResourceByName("asshat-gta3").start();
-			}
-			break;
-
-		default:
-			break;
-	}
+	//switch(getServerGame()) {
+	//	case GAME_GTA_III:
+	//		if(findResourceByName("asshat-gta3") != null) {
+	//			findResourceByName("asshat-gta3").start();
+	//		}
+	//		break;
+	//
+	//	default:
+	//		break;
+	//}
 	return true;
 }
 
@@ -361,8 +381,10 @@ function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
 // ===========================================================================
 
 function updateServerGameTime() {
-	gta.time.hour = getServerConfig().hour;
-	gta.time.minute = getServerConfig().minute;
+	if(isTimeSupported()) {
+		gta.time.hour = getServerConfig().hour;
+		gta.time.minute = getServerConfig().minute;
+	}
 }
 
 // ===========================================================================

@@ -12,7 +12,9 @@ let serverTimers = {};
 // ===========================================================================
 
 function updateTimeRule() {
-	server.setRule("Time", makeReadableTime(gta.time.hour, gta.time.minute));
+	if(isTimeSupported()) {
+		server.setRule("Time", makeReadableTime(gta.time.hour, gta.time.minute));
+	}
 }
 
 // ===========================================================================

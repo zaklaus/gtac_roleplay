@@ -8,14 +8,14 @@
 // ===========================================================================
 
 let logoImage = null;
-let logoPos = toVector2(gta.width-132, gta.height-132);
+let logoPos = toVector2(game.width-132, game.height-132);
 let logoSize = toVector2(128, 128);
 
 // ===========================================================================
 
 function initLogoScript() {
 	logToConsole(LOG_DEBUG, "[VRR.Logo]: Initializing logo script ...");
-    logoImage = loadLogoImage();
+    //logoImage = loadLogoImage();
 	logToConsole(LOG_DEBUG, "[VRR.Logo]: Logo script initialized!");
 }
 
@@ -25,7 +25,7 @@ function loadLogoImage() {
     let logoStream = openFile(mainLogoPath);
     let tempLogoImage = null;
     if(logoStream != null) {
-        tempLogoImage = drawing.loadPNG(logoStream);
+        tempLogoImage = graphics.loadPNG(logoStream);
         logoStream.close();
     }
 

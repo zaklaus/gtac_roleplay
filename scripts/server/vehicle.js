@@ -11,6 +11,7 @@ function initVehicleScript() {
 	logToConsole(LOG_INFO, "[VRR.Vehicle]: Initializing vehicle script ...");
 	getServerData().vehicles = loadVehiclesFromDatabase();
 	spawnAllVehicles();
+	setAllVehicleIndexes();
 	logToConsole(LOG_INFO, "[VRR.Vehicle]: Vehicle script initialized successfully!");
 	return true;
 }
@@ -46,7 +47,7 @@ function saveAllVehiclesToDatabase() {
 	let vehicles = getServerData().vehicles;
 	for(let i in vehicles) {
 		if(vehicles[i].needsSaved) {
-			saveVehicleToDatabase(vehicles[i]);
+			saveVehicleToDatabase(i);
 		}
 	}
 	logToConsole(LOG_INFO, "[VRR.Vehicle]: Saved all vehicles to database!");
@@ -87,10 +88,10 @@ function saveVehicleToDatabase(vehicleDataId) {
 			}
 		}
 
-		let colour1RGBA = rgbaArrayFromToColour(vehicleData.colour1RGBA);
-		let colour2RGBA = rgbaArrayFromToColour(vehicleData.colour2RGBA);
-		let colour3RGBA = rgbaArrayFromToColour(vehicleData.colour3RGBA);
-		let colour4RGBA = rgbaArrayFromToColour(vehicleData.colour4RGBA);
+		let colour1RGBA = rgbaArrayFromToColour(tempVehicleData.colour1RGBA);
+		let colour2RGBA = rgbaArrayFromToColour(tempVehicleData.colour2RGBA);
+		let colour3RGBA = rgbaArrayFromToColour(tempVehicleData.colour3RGBA);
+		let colour4RGBA = rgbaArrayFromToColour(tempVehicleData.colour4RGBA);
 
 		let data = [
 			["veh_server", getServerId()],
@@ -102,17 +103,17 @@ function saveVehicleToDatabase(vehicleDataId) {
 			["veh_buy_price", boolToInt(tempVehicleData.buyPrice)],
 			["veh_rent_price", boolToInt(tempVehicleData.rentPrice)],
 			["veh_pos_x", tempVehicleData.spawnPosition.x],
-			["veh_pos_y", tempVehicleData.spawnPosition.x],
+			["veh_pos_y", tempVehicleData.spawnPosition.y],
 			["veh_pos_z", tempVehicleData.spawnPosition.z],
 			["veh_rot_z", tempVehicleData.spawnRotation],
 			["veh_col1", tempVehicleData.spawnRotation],
 			["veh_col2", tempVehicleData.spawnRotation],
 			["veh_col3", tempVehicleData.spawnRotation],
 			["veh_col4", tempVehicleData.spawnRotation],
-			["veh_col1_isrgba", tempVehicleData.colour1IsRGBA],
-			["veh_col2_isrgba", tempVehicleData.colour1IsRGBA],
-			["veh_col3_isrgba", tempVehicleData.colour1IsRGBA],
-			["veh_col4_isrgba", tempVehicleData.colour1IsRGBA],
+			["veh_col1_isrgb", tempVehicleData.colour1IsRGBA],
+			["veh_col2_isrgb", tempVehicleData.colour1IsRGBA],
+			["veh_col3_isrgb", tempVehicleData.colour1IsRGBA],
+			["veh_col4_isrgb", tempVehicleData.colour1IsRGBA],
 			["veh_col1_r", colour1RGBA[0]],
 			["veh_col1_g", colour1RGBA[1]],
 			["veh_col1_b", colour1RGBA[2]],
@@ -158,7 +159,7 @@ function saveVehicleToDatabase(vehicleDataId) {
 			getServerData().vehicles[vehicleDataId].databaseId = getDatabaseInsertId(dbConnection);
 			getServerData().vehicles[vehicleDataId].needsSaved = false;
 		} else {
-			let queryString = createDatabaseUpdateQuery("veh_main", data, `WHERE veh_id=${tempVehicleData.databaseId}`);
+			let queryString = createDatabaseUpdateQuery("veh_main", data, `veh_id=${tempVehicleData.databaseId}`);
 			dbQuery = queryDatabase(dbConnection, queryString);
 			getServerData().vehicles[vehicleDataId].needsSaved = false;
 		}
@@ -1281,6 +1282,14 @@ function resetVehiclePosition(vehicle) {
 	if(!getVehicleData(vehicle).spawnLocked) {
 		getVehicleData(vehicle).spawnPosition = getVehiclePosition(vehicle);
 		getVehicleData(vehicle).spawnHeading = getVehiclePosition(vehicle);
+	}
+}
+
+// ===========================================================================
+
+function setAllVehicleIndexes() {
+	for(let i in getServerData().vehicles) {
+		getServerData().vehicles[i].index = i;
 	}
 }
 

@@ -58,7 +58,6 @@ function addAllEventHandlers() {
 function onResourceStart(event, resource) {
     sendResourceStartedSignalToServer();
     setUpInitialGame();
-
     garbageCollectorInterval = setInterval(collectAllGarbage, 1000*60);
 }
 

@@ -83,7 +83,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
-    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+    if(screenPosition.x < 0 || screenPosition.x > game.width) {
         return false;
     }
 
@@ -160,7 +160,7 @@ function renderPropertyExitLabel(position) {
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
-    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+    if(screenPosition.x < 0 || screenPosition.x > game.width) {
         return false;
     }
 
@@ -188,7 +188,7 @@ function renderJobLabel(name, position, jobType) {
     tempPosition.z = tempPosition.z + propertyLabelHeight;
     let screenPosition = getScreenFromWorldPosition(tempPosition);
 
-    if(screenPosition.x < 0 || screenPosition.x > gta.width) {
+    if(screenPosition.x < 0 || screenPosition.x > game.width) {
         return false;
     }
 
@@ -220,7 +220,7 @@ function renderJobLabel(name, position, jobType) {
 // -------------------------------------------------------------------------
 
 function processLabelRendering() {
-    if(renderLabels && gta.game != GAME_GTA_IV) {
+    if(renderLabels && areWorldLabelsSupported()) {
         if(localPlayer != null) {
             let pickups = getElementsByType(ELEMENT_PICKUP);
             for(let i in pickups) {

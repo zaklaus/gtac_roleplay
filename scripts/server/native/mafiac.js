@@ -724,6 +724,9 @@ let gameData = {
 			"invisible"
 		],
 	],
+	objectModels: [
+
+	],
 	weaponModels: [
 		[],
 		[ // Mafia 1
@@ -775,7 +778,244 @@ let gameData = {
 	meleeWeapons: [
 		[],
 		[2, 3, 4],
-	]
+	],
+	excludedGroundSnowModels: [
+		false,
+		[],
+		[],
+		[],
+		[],
+	],
+	pickupModels: [
+		{},
+
+		{ // GTA 3
+			policeStation: 1361,
+			fireStation: 1361,
+			hospital: 1361,
+			ammunation: 1361,
+			payAndSpray: 1361,
+			vehicleDealership: 1361,
+			restaurant: 1361,
+			fastFood: 1361,
+			bank: 1323,
+			fuelStation: 1361,
+			business: 1361,
+			house: 1361,
+			clothes: 1361,
+			misc: 1361,
+			exit: 1361
+		},
+
+		{ // GTA Vice City
+			policeStation: 375,
+			fireStation: 406,
+			hospital: 366,
+			ammunation: 406,
+			payAndSpray: 406,
+			vehicleDealership: 406,
+			restaurant: 406,
+			fastFood: 406,
+			bank: 408,
+			fuelStation: 406,
+			business: 406,
+			house: 407,
+			clothes: 409,
+			misc: 406,
+			exit: 406,
+		},
+
+		{ // GTA San Andreas
+			policeStation: 1247,
+			fireStation: 1318,
+			hospital: 1240,
+			ammunation: 1239,
+			payAndSpray: 1239,
+			vehicleDealership: 1239,
+			restaurant: 1239,
+			fastFood: 1239,
+			bank: 1274,
+			fuelStation: 1239,
+			business: 1272,
+			house: 1273,
+			clothes: 1275,
+			misc: 1239,
+			exit: 1318,
+		}
+	],
+	pickupTypes: [
+		{},
+
+		{ // GTA 3
+			business: 255,
+			house: 255,
+			bank: 255,
+			clothes: 255,
+			info: 255,
+			job: 255,
+		},
+
+		{ // GTA Vice City
+			business: 2,
+			house: 2,
+			bank: 2,
+			clothes: 2,
+			info: 2,
+			job: 2,
+		},
+
+		{ // GTA San Andreas
+			business: 1,
+			house: 1,
+			bank: 1,
+			clothes: 1,
+			info: 1,
+			job: 1,
+		}
+	],
+
+	// THIS IS SCREEN HEIGHT, NOT ACTUAL DOOR POSITION IN THE WORLD
+	propertyLabelHeight: [
+		false,
+		85,
+		85,
+		85,
+		85,
+		85,
+		85,
+	],
+
+	removedWorldObjects: [
+		false,
+
+		[ // Mafia 1
+			//new serverClasses.removedWorldObjectData("fraightback04", toVector3(1229.88, -84.8012, 13.4004), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
+		],
+
+		[ // Mafia 2
+
+		],
+
+		[ // Mafia 3
+
+		],
+
+		[ // Mafia Definitive Edition
+
+		],
+	],
+	defaultBusinessItems:
+	[
+		{
+
+		},
+		{
+			clothingStore: [
+				["Outfit", 500, 2]
+			],
+			legalGunStore: [
+				["Colt 45", 500, 2],
+				["Shotgun", 500, 2],
+				["Baseball Bat", 500, 2]
+			],
+			illegalGunStore: [
+				["Uzi", 500, 2],
+				["AK-47", 500, 2],
+				["M16", 500, 2],
+				["Sniper Rifle", 500, 2]
+			],
+			gasStation: [
+				["Bottle of Soda", 500, 2],
+				["Can of Soda", 500, 2],
+				["Slice of Pizza", 500, 2],
+				["Bottle of Water", 500, 2],
+				["Can of Beer", 500, 2],
+			],
+			electronicsStore: [
+				["Phone", 500, 2],
+				["Walkie Talkie", 500, 2],
+				["Megaphone", 500, 2],
+				["Tazer", 500, 2],
+				["Camera", 500, 2],
+			],
+			bar: [
+				["Bottle of Vodka", 500, 2],
+				["Bottle of Whiskey", 500, 2],
+				["Bottle of Soda", 500, 2],
+				["Bottle of Wine", 500, 2],
+				["Bottle of Bourbon", 500, 2],
+				["Shot of Bourbon", 500, 2],
+				["Shot of Vodka", 500, 2],
+				["Shot of Whiskey", 500, 2],
+				["Glass of Wine", 500, 2],
+			],
+			club: [
+				["Bottle of Vodka", 500, 2],
+				["Bottle of Whiskey", 500, 2],
+				["Bottle of Soda", 500, 2],
+				["Bottle of Wine", 500, 2],
+				["Bottle of Bourbon", 500, 2],
+				["Shot of Bourbon", 500, 2],
+				["Shot of Vodka", 500, 2],
+				["Shot of Whiskey", 500, 2],
+				["Glass of Wine", 500, 2],
+			],
+			chicken: [
+				["Bucket of Chicken", 500, 2],
+				["Chicken Tenders Meal", 500, 2],
+				["Large Fries", 500, 2],
+				["Small Fries", 500, 2],
+				["Bottle of Soda", 500, 2],
+			],
+			burger: [
+				["Bacon Cheeseburger", 500, 2],
+				["Double Cheeseburger", 500, 2],
+				["Big Boy Burger", 500, 2],
+				["Large Fries", 500, 2],
+				["Small Fries", 500, 2],
+				["Bottle of Soda", 500, 2],
+			],
+			chinese: [
+				["Egg Roll", 500, 2],
+				["Lo Mein", 500, 2],
+				["Fried Rice", 500, 2],
+				["Crab Rangoon", 500, 2],
+				["Egg Drop Soup", 500, 2],
+				["Moo Shu Pork", 500, 2],
+				["Egg Foo Young", 500, 2],
+				["Sesame Chicken", 500, 2],
+			],
+			italian: [
+				["Bottle of Wine", 500, 2],
+				["Glass of Wine", 500, 2],
+				["Arancini", 500, 2],
+				["Lasagne", 500, 2],
+				["Chicken Alfredo", 500, 2],
+				["Fettucine Alfredo", 500, 2],
+				["Chicken Parmigiana", 500, 2],
+				["Chicken Carbonara", 500, 2],
+				["Sausage Rigatoni", 500, 2],
+				["Chicken Salad", 500, 2],
+				["Caesar Salad", 500, 2],
+			],
+			mexican: [
+				["Crunchy Taco", 500, 2],
+				["Beaf and Bean Burrito", 500, 2],
+				["Burrito Supreme", 500, 2],
+				["Cheesy Nachos", 500, 2],
+				["Nacho Supreme", 500, 2],
+				["Bottle of Soda", 500, 2],
+			],
+			pizza: [
+				["Large Pizza", 500, 2],
+				["Medium Pizza", 500, 2],
+				["Small Pizza", 500, 2],
+				["Buffalo Wings", 500, 2],
+				["Hot Wings", 500, 2],
+				["Bottle of Soda", 500, 2],
+			],
+		},
+	],
 };
 
 // ===========================================================================
@@ -1176,7 +1416,7 @@ function getPlayerLastVehicle(client) {
 // ===========================================================================
 
 function isVehicleObject(vehicle) {
-    return (vehicle instanceof Vehicle);
+    return (vehicle.type == ELEMENT_VEHICLE);
 }
 
 // ===========================================================================

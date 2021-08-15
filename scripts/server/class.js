@@ -414,8 +414,9 @@ function initClassTable() {
 					this.account = toInteger(dbAssoc["sacct_acct"]);
 					this.skin = toInteger(dbAssoc["sacct_svr_skin"]);
 					this.cash = toInteger(dbAssoc["sacct_cash"]);
+					console.log(dbAssoc["sacct_pos_x"]);
 					this.spawnPosition = toVector3(toFloat(dbAssoc["sacct_pos_x"]), toFloat(dbAssoc["sacct_pos_y"]), toFloat(dbAssoc["sacct_pos_z"]));
-					this.spawnHeading = toFloat(dbAssoc["sacct_angle"]);
+					this.spawnHeading = toFloat(dbAssoc["sacct_rot_z"]);
 					this.lastLogin = toInteger(dbAssoc["sacct_when_lastlogin"]);
 					this.clan = toInteger(dbAssoc["sacct_svr_clan"]);
 					this.clanFlags = toInteger(dbAssoc["sacct_svr_clan_flags"]);
@@ -1267,6 +1268,7 @@ function initClassTable() {
 				this.supplyMultiplier = 1;
 				this.riskMultiplier = 1;
 				this.needsSaved = false;
+				this.useDelay = 0;
 				this.switchDelay = 0;
 				this.pickupDelay = 0;
 				this.putDelay = 0;

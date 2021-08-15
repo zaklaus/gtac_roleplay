@@ -469,3 +469,17 @@ function togglePauseSavingToDatabase() {
 }
 
 // ===========================================================================
+
+function createAccountDataForNewServer(serverId) {
+	let dbConnection = connectToDatabase();
+	let dbQuery = false;
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_main`);
+		if(dbQuery) {
+			let dbQueryString = `INSERT INTO acct_svr (acct_svr_acct, acct_svr_svr) VALUES (${accountDatabaseId}, ${serverId})`;
+			quickDatabaseQuery(dbQueryString);
+		}
+	}
+}
+
+// ===========================================================================

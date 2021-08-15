@@ -194,8 +194,13 @@ function setLocalPlayerControlState(controlState, cursorState = false) {
 // ===========================================================================
 
 function fadeLocalCamera(state, time) {
-    logToConsole(LOG_DEBUG, `[VRR.Utilities] Fading camera ${(state)?"in":"out"} for ${time} seconds`);
-    gta.fadeCamera(state, time);
+    if(isFadeCameraSupported()) {
+        logToConsole(LOG_DEBUG, `[VRR.Utilities] Fading camera ${(state)?"in":"out"} for ${time} seconds`);
+
+        if(isFadeCameraSupported()) {
+            gta.fadeCamera(state, time);
+        }
+    }
 }
 
 // ===========================================================================
@@ -208,7 +213,9 @@ function removeLocalPlayerFromVehicle() {
 
 function restoreLocalCamera() {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Camera restored`);
-    gta.restoreCamera(true);
+    if(isCustomCameraSupported()) {
+        gta.restoreCamera(true);
+    }
 };
 
 // ===========================================================================
@@ -223,22 +230,27 @@ function clearLocalPlayerOwnedPeds() {
 
 function setLocalCameraLookAt(cameraPosition, cameraLookAt) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Set camera to look at [${cameraLookAt.x}, ${cameraLookAt.y}, ${cameraLookAt.z}] from [${cameraPosition.x}, ${cameraPosition.y}, ${cameraPosition.z}]`);
-    gta.setCameraLookAt(cameraPosition, cameraLookAt, true);
+    if(isCustomCameraSupported()) {
+        gta.setCameraLookAt(cameraPosition, cameraLookAt, true);
+    }
 }
 
 // ===========================================================================
 
 function setCityAmbienceState(state, clearElements = false) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Ambient civilians and traffic ${(state) ? "enabled" : "disabled"}`);
-    gta.setTrafficEnabled(state);
-    gta.setGenerateCarsAroundCamera(state);
-    if(gta.game != GAME_GTA_SA) {
-        gta.setCiviliansEnabled(state);
-    }
+    game.setTrafficEnabled(state);
 
-    if(clearElements) {
-        clearSelfOwnedPeds();
-        clearSelfOwnedVehicles();
+    if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
+        gta.setGenerateCarsAroundCamera(state);
+        if(gta.game != GAME_GTA_SA) {
+            gta.setCiviliansEnabled(state);
+        }
+
+        if(clearElements) {
+            clearSelfOwnedPeds();
+            clearSelfOwnedVehicles();
+        }
     }
 }
 
@@ -321,8 +333,10 @@ function setLocalPlayerHeading(heading) {
 
 function setLocalPlayerInterior(interior) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting interior to ${interior}`);
-    localPlayer.interior = interior;
-    gta.cameraInterior = interior;
+    if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
+        localPlayer.interior = interior;
+        gta.cameraInterior = interior;
+    }
 }
 
 // ===========================================================================
@@ -351,7 +365,9 @@ function isSnowEnabled() {
 
 function playPedSpeech(pedName, speechId) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Making ${pedName}'s ped talk (${speechId})`);
-    gta.SET_CHAR_SAY(int, int);
+    if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
+        gta.SET_CHAR_SAY(int, int);
+    }
 }
 
 // ===========================================================================
@@ -364,23 +380,25 @@ function clearLocalPedState() {
 // ===========================================================================
 
 function getWeaponSlot(weaponId) {
-	return weaponSlots[gta.game][weaponId];
+	return weaponSlots[game.game][weaponId];
 }
 
 // ===========================================================================
 
 function setLocalPlayerDrunkEffect(amount, duration) {
-    logToConsole(LOG_DEBUG, `[VRR.Utilities] Drunk effect set to ${amount} for ${duration}ms`);
-    drunkEffectAmount = 0;
-    drunkEffectDurationTimer = setInterval(function() {
-        drunkEffectAmount = drunkEffectAmount;
-        if(drunkEffectAmount > 0) {
-            gta.SET_MOTION_BLUR(drunkEffectAmount);
-        } else {
-            clearInterval(drunkEffectDurationTimer);
-            drunkEffectDurationTimer = null;
-        }
-    }, 1000);
+    if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
+        logToConsole(LOG_DEBUG, `[VRR.Utilities] Drunk effect set to ${amount} for ${duration}ms`);
+        drunkEffectAmount = 0;
+        drunkEffectDurationTimer = setInterval(function() {
+            drunkEffectAmount = drunkEffectAmount;
+            if(drunkEffectAmount > 0) {
+                gta.SET_MOTION_BLUR(drunkEffectAmount);
+            } else {
+                clearInterval(drunkEffectDurationTimer);
+                drunkEffectDurationTimer = null;
+            }
+        }, 1000);
+    }
 }
 
 // ===========================================================================
@@ -456,7 +474,10 @@ function setLocalPlayerCash(amount) {
 function removeWorldObject(model, position, range) {
     if(isRemovingWorldObjectsSupported()) {
         logToConsole(LOG_DEBUG, `[VRR.Utilities] Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
-        gta.removeWorldObject(model, position, range);
+
+        if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
+            game.removeWorldObject(model, position, range);
+        }
     }
 }
 
@@ -632,8 +653,8 @@ function getPosInFrontOfPos(pos, angle, distance) {
 // ===========================================================================
 
 function getAllowedSkinIndexBySkinId(skinId) {
-    for(let i in allowedSkins[gta.game]) {
-        if(skinId == allowedSkins[gta.game][i][0]) {
+    for(let i in allowedSkins[game.game]) {
+        if(skinId == allowedSkins[game.game][i][0]) {
             return i;
         }
     }
@@ -644,7 +665,10 @@ function getAllowedSkinIndexBySkinId(skinId) {
 
 function setMinuteDuration(minuteDuration) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting minute duration to ${minuteDuration}ms`);
-    gta.time.minuteDuration = minuteDuration;
+
+    if(isTimeSupported()) {
+        gta.time.minuteDuration = minuteDuration;
+    }
 }
 
 // ===========================================================================
@@ -657,7 +681,7 @@ function getStreamingRadioVolumeForPosition(position) {
 
 function getLocalPlayerLookAtPosition() {
     if(localPlayer != null) {
-		let centerCameraPos = getWorldFromScreenPosition(toVector3(gta.width/2, gta.height/2, 0));
-		return getWorldFromScreenPosition(toVector3(gta.width/2, gta.height/2, getDistance(centerCameraPos, localPlayer.position)+20));
+		let centerCameraPos = getWorldFromScreenPosition(toVector3(game.width/2, game.height/2, 0));
+		return getWorldFromScreenPosition(toVector3(game.width/2, game.height/2, getDistance(centerCameraPos, localPlayer.position)+20));
 	}
 }

@@ -98,7 +98,7 @@ function saveSubAccountToDatabase(subAccountData) {
 			["sacct_cash", subAccountData.cash],
 			["sacct_when_lastlogin", subAccountData.lastLogin],
 			["sacct_pos_x", subAccountData.spawnPosition.x],
-			["sacct_pos_y", subAccountData.spawnPosition.x],
+			["sacct_pos_y", subAccountData.spawnPosition.y],
 			["sacct_pos_z", subAccountData.spawnPosition.z],
 			["sacct_rot_z", subAccountData.spawnHeading],
 			["sacct_int", subAccountData.interior],

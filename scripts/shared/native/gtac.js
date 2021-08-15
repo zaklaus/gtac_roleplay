@@ -1072,7 +1072,7 @@ function isCustomCameraSupported() {
 // ===========================================================================
 
 function areWorldLabelsSupported() {
-    return false;
+    return true;
 }
 
 // ===========================================================================

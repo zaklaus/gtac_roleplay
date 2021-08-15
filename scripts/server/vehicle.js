@@ -106,14 +106,14 @@ function saveVehicleToDatabase(vehicleDataId) {
 			["veh_pos_y", tempVehicleData.spawnPosition.y],
 			["veh_pos_z", tempVehicleData.spawnPosition.z],
 			["veh_rot_z", tempVehicleData.spawnRotation],
-			["veh_col1", tempVehicleData.spawnRotation],
-			["veh_col2", tempVehicleData.spawnRotation],
-			["veh_col3", tempVehicleData.spawnRotation],
-			["veh_col4", tempVehicleData.spawnRotation],
+			["veh_col1", tempVehicleData.colour1],
+			["veh_col2", tempVehicleData.colour2],
+			["veh_col3", tempVehicleData.colour3],
+			["veh_col4", tempVehicleData.colour4],
 			["veh_col1_isrgb", tempVehicleData.colour1IsRGBA],
-			["veh_col2_isrgb", tempVehicleData.colour1IsRGBA],
-			["veh_col3_isrgb", tempVehicleData.colour1IsRGBA],
-			["veh_col4_isrgb", tempVehicleData.colour1IsRGBA],
+			["veh_col2_isrgb", tempVehicleData.colour2IsRGBA],
+			["veh_col3_isrgb", tempVehicleData.colour3IsRGBA],
+			["veh_col4_isrgb", tempVehicleData.colour4IsRGBA],
 			["veh_col1_r", colour1RGBA[0]],
 			["veh_col1_g", colour1RGBA[1]],
 			["veh_col1_b", colour1RGBA[2]],
@@ -1191,7 +1191,7 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 
 function createTemporaryVehicle(modelId, position, heading) {
 	let vehicle = createGameVehicle(modelId, position, heading);
-	setVehicleHeading(heading);
+	setVehicleHeading(vehicle, heading);
 	addToWorld(vehicle);
 
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);

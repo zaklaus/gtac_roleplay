@@ -77,6 +77,8 @@ function initClassTable() {
 				this.createBusinessBlips = false;
 				this.createHouseBlips = false;
 
+				this.introMusicURL = "";
+
 				this.pauseSavingToDatabase = false;
 
 				if(dbAssoc) {
@@ -530,6 +532,7 @@ function initClassTable() {
 				this.business = 0;
 				this.enabled = false;
 				this.index = -1;
+				this.businessIndex = -1;
 				this.needsSaved = false;
 
 				this.position = toVector3(0.0, 0.0, 0.0);
@@ -537,16 +540,34 @@ function initClassTable() {
 				this.dimension = 0;
 
 				if(dbAssoc) {
-					this.databaseId = toInteger(dbAssoc("biz_loc_id"));
-					this.name = toString(dbAssoc("biz_loc_name"));
-					this.type = toInteger(dbAssoc("biz_loc_type"));
-					this.business = toInteger(dbAssoc("biz_loc_biz"));
-					this.enabled = intToBool(toInteger(dbAssoc("biz_loc_enabled")));
-					this.index = -1;
+					this.databaseId = toInteger(dbAssoc["biz_loc_id"]);
+					this.name = toString(dbAssoc["biz_loc_name"]);
+					this.type = toInteger(dbAssoc["biz_loc_type"]);
+					this.business = toInteger(dbAssoc["biz_loc_biz"]);
+					this.enabled = intToBool(toInteger(dbAssoc["biz_loc_enabled"]));
 
 					this.position = toVector3(toFloat(dbAssoc["biz_loc_pos_x"]), toFloat(dbAssoc["biz_loc_pos_y"]), toFloat(dbAssoc["biz_loc_pos_z"]));
 					this.interior = toInteger(dbAssoc["biz_loc_int"]);
 					this.dimension = toInteger(dbAssoc["biz_loc_vw"]);
+				}
+			}
+		},
+		/** @class businessGameScriptData Representing a business's game scripts. Multiple can be used for a single business. Used for things like bar and club NPCs and other actions */
+		businessGameScriptData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.name = "";
+				this.business = 0;
+				this.enabled = false;
+				this.index = -1;
+				this.businessIndex = -1;
+				this.needsSaved = false;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc["biz_script_id"]);
+					this.name = toString(dbAssoc["biz_script_name"]);
+					this.state = toInteger(dbAssoc["biz_script_state"]);
+					this.business = toInteger(dbAssoc["biz_script_biz"]);
 				}
 			}
 		},
@@ -622,6 +643,7 @@ function initClassTable() {
 				this.house = 0;
 				this.enabled = false;
 				this.index = -1;
+				this.houseIndex = -1;
 				this.needsSaved = false;
 
 				this.position = toVector3(0.0, 0.0, 0.0);
@@ -629,16 +651,35 @@ function initClassTable() {
 				this.dimension = 0;
 
 				if(dbAssoc) {
-					this.databaseId = toInteger(dbAssoc("house_loc_id"));
-					this.name = toString(dbAssoc("house_loc_name"));
-					this.type = toInteger(dbAssoc("house_loc_type"));
-					this.house = toInteger(dbAssoc("house_loc_house"));
-					this.enabled = intToBool(toInteger(dbAssoc("house_loc_enabled")));
+					this.databaseId = toInteger(dbAssoc["house_loc_id"]);
+					this.name = toString(dbAssoc["house_loc_name"]);
+					this.type = toInteger(dbAssoc["house_loc_type"]);
+					this.house = toInteger(dbAssoc["house_loc_house"]);
+					this.enabled = intToBool(toInteger(dbAssoc["house_loc_enabled"]));
 					this.index = -1;
 
 					this.position = toVector3(toFloat(dbAssoc["house_loc_pos_x"]), toFloat(dbAssoc["house_loc_pos_y"]), toFloat(dbAssoc["house_loc_pos_z"]));
 					this.interior = toInteger(dbAssoc["house_loc_int"]);
 					this.dimension = toInteger(dbAssoc["house_loc_vw"]);
+				}
+			}
+		},
+		/** @class houseGameScriptData Representing a house's game scripts. Multiple can be used for a single house. */
+		houseGameScriptData: class {
+			constructor(dbAssoc) {
+				this.databaseId = 0;
+				this.name = "";
+				this.business = 0;
+				this.state = false;
+				this.index = -1;
+				this.houseIndex = -1;
+				this.needsSaved = false;
+
+				if(dbAssoc) {
+					this.databaseId = toInteger(dbAssoc["house_script_id"]);
+					this.name = toString(dbAssoc["house_script_name"]);
+					this.state = toInteger(dbAssoc["house_script_state"]);
+					this.business = toInteger(dbAssoc["house_script_biz"]);
 				}
 			}
 		},

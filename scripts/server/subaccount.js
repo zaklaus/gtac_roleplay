@@ -184,7 +184,7 @@ function createSubAccount(accountId, firstName, lastName) {
 		let safeFirstName = escapeDatabaseString(dbConnection, firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 
-		dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_angle, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
+		dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_rot_z, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
 		//if(dbQuery) {
 			if(getDatabaseInsertId(dbConnection) > 0) {
 				let dbInsertId = getDatabaseInsertId(dbConnection);

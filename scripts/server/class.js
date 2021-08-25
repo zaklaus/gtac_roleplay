@@ -1240,6 +1240,7 @@ function initClassTable() {
 				this.url = "";
 				this.genre = "";
 				this.codec = "";
+				this.index = -1;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["radio_id"];

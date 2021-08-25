@@ -197,3 +197,17 @@ function loadKeyBindConfiguration() {
 }
 
 // ===========================================================================
+
+function showKeyBindListCommand(command, params, client) {
+	let keybindList = getPlayerData(client).accountData.keyBinds.map(function(x) { return `${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(x.key))}: ${getInlineChatColourByName("white")}${x.commandString}`; });
+
+	let chunkedList = splitArrayIntoChunks(keybindList, 6);
+
+	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Your Key Binds ${getInlineChatColourByType("clanOrange")}===========================`);
+
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join(", "));
+	}
+}
+
+// ===========================================================================

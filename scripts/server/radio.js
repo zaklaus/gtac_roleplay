@@ -7,13 +7,10 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let radioStations = [];
-
-// ===========================================================================
-
 function initRadioScript() {
 	logToConsole(LOG_INFO, "[VRR.Radio]: Initializing radio script ...");
-    radioStations = loadRadioStationsFromDatabase();
+    getServerData().radioStations = loadRadioStationsFromDatabase();
+	setRadioStationIndexes();
 	logToConsole(LOG_INFO, "[VRR.Radio]: Radio script initialized successfully!");
 	return true;
 }
@@ -47,12 +44,13 @@ function loadRadioStationsFromDatabase() {
 function playStreamingRadioCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		messagePlayerInfo(client, "Use /radiostations for a list of available radio stations.");
 		return false;
 	}
 
 	let radioStationId = params;
 
-	if(radioStationId != 0 && typeof radioStations[radioStationId-1] == "undefined") {
+	if(radioStationId != 0 && typeof getServerData().radioStations[radioStationId-1] == "undefined") {
 		messagePlayerError(client, "That radio station ID does not exist!");
 		return false;
 	}
@@ -79,12 +77,12 @@ function playStreamingRadioCommand(command, params, client) {
 
 		getVehicleData(getPlayerVehicle(client)).streamingRadioStation = radioStationId-1;
 		getPlayerData(client).streamingRadioStation = radioStationId-1;
-		meActionToNearbyPlayers(client, `changes their vehicle's radio station to ${radioStations[radioStationId-1].name} (${radioStations[radioStationId-1].genre})`);
+		meActionToNearbyPlayers(client, `changes their vehicle's radio station to ${getRadioStationData(radioStationId-1).name} (${getRadioStationData(radioStationId-1).genre})`);
 
 		let clients = getClients();
 		for(let i in clients) {
 			if(getPlayerVehicle(client) == getPlayerVehicle(clients[i])) {
-				playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url, true, getPlayerStreamingRadioVolume(client));
+				playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(client));
 			}
 		}
 	} else {
@@ -104,12 +102,12 @@ function playStreamingRadioCommand(command, params, client) {
 			} else {
 				getHouseData(houseId).streamingRadioStation = radioStationId-1;
 				getPlayerData(client).streamingRadioStation = radioStationId-1;
-				meActionToNearbyPlayers(client, `changes their house radio station to ${radioStations[radioStationId-1].name} (${radioStations[radioStationId-1].genre})`);
+				meActionToNearbyPlayers(client, `changes their house radio station to ${getRadioStationData(radioStationId-1).name} (${getRadioStationData(radioStationId-1).genre})`);
 
 				let clients = getClients();
 				for(let i in clients) {
 					if(getEntityData(clients[i], "vrr.inHouse") == houseId) {
-						playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url, true, getPlayerStreamingRadioVolume(clients[i]));
+						playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(clients[i]));
 					}
 				}
 			}
@@ -129,12 +127,12 @@ function playStreamingRadioCommand(command, params, client) {
 			} else {
 				getBusinessData(businessId).streamingRadioStation = radioStationId-1;
 				getPlayerData(client).streamingRadioStation = radioStationId-1;
-				meActionToNearbyPlayers(client, `changes the business radio station to ${radioStations[radioStationId-1].name} (${radioStations[radioStationId-1].genre})`);
+				meActionToNearbyPlayers(client, `changes the business radio station to ${getRadioStationData(radioStationId-1).name} (${getRadioStationData(radioStationId-1).genre})`);
 
 				let clients = getClients();
 				for(let i in clients) {
 					if(getEntityData(clients[i], "vrr.inBusiness") == businessId) {
-						playRadioStreamForPlayer(clients[i], radioStations[radioStationId-1].url, true, getPlayerStreamingRadioVolume(clients[i]));
+						playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(clients[i]));
 					}
 				}
 			}
@@ -183,6 +181,34 @@ function getPlayerStreamingRadioVolume(client) {
 		return 20;
 	}
 	return getPlayerData(client).accountData.streamingRadioVolume;
+}
+
+// ===========================================================================
+
+function showRadioStationListCommand(command, params, client) {
+	let stationList = getServerData().radioStations.map(function(x) { return `${getInlineChatColourByName("lightGrey")}${x.index}: ${getInlineChatColourByName("white")}${x.name}`; });
+
+	let chunkedList = splitArrayIntoChunks(stationList, 4);
+
+	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Radio Stations ${getInlineChatColourByType("clanOrange")}===========================`);
+
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join(", "));
+	}
+}
+
+// ===========================================================================
+
+function setRadioStationIndexes() {
+	for(let i in getServerData().radioStations) {
+		getServerData().radioStations[i].index = i;
+	}
+}
+
+// ===========================================================================
+
+function getRadioStationData(radioStationId) {
+	return getServerData().radioStations[radioStationId];
 }
 
 // ===========================================================================

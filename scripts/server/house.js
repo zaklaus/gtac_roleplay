@@ -881,6 +881,16 @@ function exitHouse(client) {
 function setAllHouseIndexes() {
 	for(let i in getServerData().houses) {
 		getServerData().houses[i].index = i;
+
+		for(let j in getServerData().houses[i].locations) {
+			getServerData().houses[i].locations[j].index = j;
+			getServerData().houses[i].locations[j].houseIndex = i;
+		}
+
+		for(let j in getServerData().houses[i].gameScripts) {
+			getServerData().houses[i].gameScripts[j].index = j;
+			getServerData().houses[i].gameScripts[j].houseIndex = i;
+		}
 	}
 }
 
@@ -917,3 +927,18 @@ function getHouseIdFromDatabaseId(databaseId) {
 
 // ===========================================================================
 
+function sendPlayerHouseGameScripts(client, houseId) {
+	for(let i in getHouseData(houseId).gameScripts) {
+		sendPlayerGameScriptState(client, getHouseData(houseId).gameScripts[i].state);
+	}
+}
+
+// ===========================================================================
+
+function clearPlayerHouseGameScripts(client, houseId) {
+	for(let i in getHouseData(houseId).gameScripts) {
+		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
+	}
+}
+
+// ===========================================================================

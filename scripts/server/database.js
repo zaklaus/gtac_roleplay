@@ -22,20 +22,30 @@ function initDatabaseScript() {
 // ===========================================================================
 
 function connectToDatabase() {
-	if(persistentDatabaseConnection == null) {
-		logToConsole(LOG_DEBUG, "[VRR.Database] Initializing database connection ...");
-		persistentDatabaseConnection = module.mysql.connect(databaseConfig.host, databaseConfig.user, databaseConfig.pass, databaseConfig.name, databaseConfig.port);
-		if(persistentDatabaseConnection.error) {
-			console.warn("[VRR.Database] Database connection error: " + toString(persistentDatabaseConnection.error));
-			persistentDatabaseConnection = null;
-			return false;
-		}
+	if(databaseConfig.usePersistentConnection) {
+		if(persistentDatabaseConnection == null) {
+			logToConsole(LOG_DEBUG, "[VRR.Database] Initializing database connection ...");
+			persistentDatabaseConnection = module.mysql.connect(databaseConfig.host, databaseConfig.user, databaseConfig.pass, databaseConfig.name, databaseConfig.port);
+			if(persistentDatabaseConnection.error) {
+				console.warn("[VRR.Database] Database connection error: " + toString(persistentDatabaseConnection.error));
+				persistentDatabaseConnection = null;
+				return false;
+			}
 
-		logToConsole(LOG_DEBUG, "[VRR.Database] Database connection successful!");
-		return persistentDatabaseConnection;
+			logToConsole(LOG_DEBUG, "[VRR.Database] Database connection successful!");
+			return persistentDatabaseConnection;
+		} else {
+			logToConsole(LOG_DEBUG, "[VRR.Database] Using existing database connection.");
+			return persistentDatabaseConnection;
+		}
 	} else {
-		logToConsole(LOG_DEBUG, "[VRR.Database] Using existing database connection.");
-		return persistentDatabaseConnection;
+		let databaseConnection = module.mysql.connect(databaseConfig.host, databaseConfig.user, databaseConfig.pass, databaseConfig.name, databaseConfig.port);
+		if(databaseConnection.error) {
+			console.warn("[VRR.Database] Database connection error: " + toString(persistentDatabaseConnection.error));
+			return false;
+		} else {
+			return databaseConnection;
+		}
 	}
 }
 

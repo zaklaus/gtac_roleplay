@@ -45,6 +45,7 @@ function setNewCharacterSpawnPositionCommand(command, params, client) {
 	let position = client.player.position;
 	getServerConfig().newCharacter.spawnPosition = position;
 	getServerConfig().newCharacter.spawnHeading = client.player.heading;
+	getServerConfig().needsSaved = true;
 
     messagePlayerNormal(client, `The new character spawn position has been set to ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`)
 	return true;
@@ -62,6 +63,7 @@ function setNewCharacterMoneyCommand(command, params, client) {
 	let amount = toInteger(splitParams[0]) || 1000;
 
 	getServerConfig().newCharacter.cash = amount;
+	getServerConfig().needsSaved = true;
 
     messagePlayerNormal(client, `The new character money has been set to $${amount}`);
 	return true;
@@ -83,6 +85,7 @@ function setNewCharacterSkinCommand(command, params, client) {
 	}
 
 	getServerConfig().newCharacter.skin = skinId;
+	getServerConfig().needsSaved = true;
 
     messagePlayerNormal(client, `The new character skin has been set to ${getSkinNameFromId(skinId)} (ID ${skinId})`);
 	return true;
@@ -147,6 +150,7 @@ function enterExitPropertyCommand(command, params, client) {
 					setTimeout(function() {
 						enableCityAmbienceForPlayer(client);
 						clearPlayerOwnedPeds(client);
+						clearPlayerHouseGameScripts(client, inHouse.index);
 						getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 					}, 2000);
 				}, 1000);
@@ -187,6 +191,7 @@ function enterExitPropertyCommand(command, params, client) {
 					setTimeout(function() {
 						enableCityAmbienceForPlayer(client);
 						clearPlayerOwnedPeds(client);
+						clearPlayerBusinessGameScripts(client, inBusiness.index);
 						getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 					}, 2000);
 				}, 1000);
@@ -226,6 +231,7 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerHeading(client, closestBusiness.exitRotation);
 				setPlayerDimension(client, closestBusiness.exitDimension);
 				setPlayerInterior(client, closestBusiness.exitInterior);
+				sendPlayerBusinessGameScripts(client, closestBusiness.index);
 				setTimeout(function() {
 					if(isFadeCameraSupported()) {
 						fadeCamera(client, true, 1.0);
@@ -276,6 +282,7 @@ function enterExitPropertyCommand(command, params, client) {
 				setPlayerHeading(client, closestHouse.exitRotation);
 				setPlayerDimension(client, closestHouse.exitDimension);
 				setPlayerInterior(client, closestHouse.exitInterior);
+				sendPlayerHouseGameScripts(client, closestHouse.index);
 				setTimeout(function() {
 					if(isFadeCameraSupported()) {
 						fadeCamera(client, true, 1.0);

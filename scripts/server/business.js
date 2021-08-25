@@ -62,6 +62,7 @@ function loadBusinessesFromDatabase() {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempBusinessData = new serverClasses.businessData(dbAssoc);
 					tempBusinessData.locations = loadBusinessLocationsFromDatabase(tempBusinessData.databaseId);
+					tempBusinessData.gameScripts = loadBusinessGameScriptsFromDatabase(tempBusinessData.databaseId);
 					tempBusinesses.push(tempBusinessData);
 					logToConsole(LOG_INFO, `[VRR.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully!`);
 				}
@@ -104,6 +105,37 @@ function loadBusinessLocationsFromDatabase(businessId) {
 
 	logToConsole(LOG_VERBOSE, `[VRR.Business]: ${tempBusinessLocations.length} location for business ${businessId} loaded from database successfully!`);
 	return tempBusinessLocations;
+}
+
+// ===========================================================================
+
+function loadBusinessGameScriptsFromDatabase(businessId) {
+	logToConsole(LOG_VERBOSE, `[VRR.Business]: Loading business game scripts for business ${businessId} from database ...`);
+
+	let tempBusinessGameScripts = [];
+	let dbConnection = connectToDatabase();
+	let dbQuery = null;
+	let dbAssoc;
+	let dbQueryString = "";
+
+	if(dbConnection) {
+		dbQueryString = `SELECT * FROM biz_script WHERE biz_script_biz = ${businessId}`;
+		dbQuery = queryDatabase(dbConnection, dbQueryString);
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempBusinessGameScriptData = new serverClasses.businessGameScriptData(dbAssoc);
+					tempBusinessGameScripts.push(tempBusinessGameScriptData);
+					logToConsole(LOG_VERBOSE, `[VRR.Business]: Game script '${tempBusinessGameScriptData.name}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_VERBOSE, `[VRR.Business]: ${tempBusinessGameScripts.length} game scripts for business ${businessId} loaded from database successfully!`);
+	return tempBusinessGameScripts;
 }
 
 // ===========================================================================
@@ -1230,6 +1262,16 @@ function reloadAllBusinessesCommand(command, params, client) {
 function setAllBusinessIndexes() {
 	for(let i in getServerData().businesses) {
 		getServerData().businesses[i].index = i;
+
+		for(let j in getServerData().businesses[i].locations) {
+			getServerData().businesses[i].locations[j].index = j;
+			getServerData().businesses[i].locations[j].businessIndex = i;
+		}
+
+		for(let j in getServerData().businesses[i].gameScripts) {
+			getServerData().businesses[i].gameScripts[j].index = j;
+			getServerData().businesses[i].gameScripts[j].businessIndex = i;
+		}
 	}
 }
 
@@ -1577,6 +1619,22 @@ function resetBusinessBlips(businessId) {
 
 function doesBusinessHaveAnyItemsToBuy(businessId) {
 	return (getBusinessData(businessId).floorItemCache.length > 0);
+}
+
+// ===========================================================================
+
+function sendPlayerBusinessGameScripts(client, businessId) {
+	for(let i in getBusinessData(businessId).gameScripts) {
+		sendPlayerGameScriptState(client, getBusinessData(businessId).gameScripts[i].state);
+	}
+}
+
+// ===========================================================================
+
+function clearPlayerBusinessGameScripts(client, businessId) {
+	for(let i in getBusinessData(businessId).gameScripts) {
+		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
+	}
 }
 
 // ===========================================================================

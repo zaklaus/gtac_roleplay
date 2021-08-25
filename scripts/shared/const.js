@@ -47,6 +47,7 @@ const VRR_KEYSTATE_DOWN = 2;
 const VRR_KEYSTATE_HOLDSHORT = 3;
 const VRR_KEYSTATE_HOLDLONG = 4;
 
+// Business Label Info Types
 const VRR_BIZLABEL_INFO_NONE = 0;
 const VRR_BIZLABEL_INFO_BUY = 1;
 const VRR_BIZLABEL_INFO_ENTER = 2;
@@ -54,12 +55,20 @@ const VRR_BIZLABEL_INFO_ENTERVEHICLE = 3;
 const VRR_BIZLABEL_INFO_REFUEL = 4;
 const VRR_BIZLABEL_INFO_REPAIR = 5;
 
+// Animation Types
 const VRR_ANIMTYPE_NONE = 0;
 const VRR_ANIMTYPE_ADD = 1;
 const VRR_ANIMTYPE_BLEND = 2;
 const VRR_ANIMTYPE_SHARED = 3;                  // Forces this animation to play in sync with another ped's mirrored anim (handshake, kiss, gang signs, etc)
 const VRR_ANIMTYPE_SPECIALACTION = 4;           // This animtype uses a special action (only in SA)
 
+// Multiplayer Modifications
 const VRR_MPMOD_NONE = 0;
 const VRR_MPMOD_GTAC = 1;
 const VRR_MPMOD_MAFIAC = 2;
+
+// Business/House Game Script States
+const VRR_GAMESCRIPT_NONE = 0;
+const VRR_GAMESCRIPT_DENY = 1;
+const VRR_GAMESCRIPT_ALLOW = 2;
+const VRR_GAMESCRIPT_FORCE = 3;

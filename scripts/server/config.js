@@ -134,14 +134,67 @@ function applyConfigToServer(tempServerConfig) {
 
 function saveServerConfigToDatabase(serverConfigData) {
 	logToConsole(LOG_DEBUG, `[VRR.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
-	let dbConnection = connectToDatabase();
-	if(dbConnection) {
-		let safeServerName = escapeDatabaseString(dbConnection, serverConfigData.name);
-		let safePassword = escapeDatabaseString(dbConnection, serverConfigData.password);
+	if(getServerConfig().needsSaved) {
+		let dbConnection = connectToDatabase();
+		if(dbConnection) {
+			let data = [
+				["svr_logo", boolToInt(serverConfigData.showLogo)],
+				["svr_gui", boolToInt(serverConfigData.useGUI)],
+				["svr_start_time_hour", serverConfigData.hour],
+				["svr_start_time_min", serverConfigData.minute],
+				["svr_start_weather", serverConfigData.weather],
+				["svr_start_snow_falling", boolToInt(serverConfigData.fallingSnow)],
+				["svr_start_snow_ground", boolToInt(serverConfigData.groundSnow)],
+				["svr_newchar_pos_x", serverConfigData.newCharacter.spawnPosition.x],
+				["svr_newchar_pos_y", serverConfigData.newCharacter.spawnPosition.y],
+				["svr_newchar_pos_z", serverConfigData.newCharacter.spawnPosition.z],
+				["svr_newchar_rot_z", serverConfigData.newCharacter.spawnHeading],
+				["svr_newchar_skin", serverConfigData.newCharacter.skin],
+				["svr_newchar_money", serverConfigData.newCharacter.money],
+				["svr_newchar_gui_r", serverConfigData.guiColour[0]],
+				["svr_newchar_gui_g", serverConfigData.guiColour[1]],
+				["svr_newchar_gui_b", serverConfigData.guiColour[2]],
+				["svr_connectcam_pos_x", serverConfigData.connectCameraPosition.x],
+				["svr_connectcam_pos_y", serverConfigData.connectCameraPosition.y],
+				["svr_connectcam_pos_z", serverConfigData.connectCameraPosition.z],
+				["svr_connectcam_lookat_x", serverConfigData.connectCameraLookAt.x],
+				["svr_connectcam_lookat_y", serverConfigData.connectCameraLookAt.y],
+				["svr_connectcam_lookat_z", serverConfigData.connectCameraLookAt.z],
+				["svr_charselect_cam_pos_x", serverConfigData.characterSelectCameraPosition.x],
+				["svr_charselect_cam_pos_y", serverConfigData.characterSelectCameraPosition.y],
+				["svr_charselect_cam_pos_z", serverConfigData.characterSelectCameraPosition.z],
+				["svr_charselect_cam_lookat_x", serverConfigData.characterSelectCameraLookAt.x],
+				["svr_charselect_cam_lookat_y", serverConfigData.characterSelectCameraLookAt.y],
+				["svr_charselect_cam_lookat_z", serverConfigData.characterSelectCameraLookAt.z],
+				["svr_charselect_ped_pos_x", serverConfigData.characterSelectPedPosition.x],
+				["svr_charselect_ped_pos_y", serverConfigData.characterSelectPedPosition.y],
+				["svr_charselect_ped_pos_z", serverConfigData.characterSelectPedPosition.z],
+				["svr_charselect_ped_rot_z", serverConfigData.characterSelectPedHeading],
+				["svr_charselect_int", serverConfigData.characterSelectInterior],
+				["svr_charselect_vw", serverConfigData.characterSelectDimension],
+				["svr_inflation_multiplier", serverConfigData.inflationMultiplier],
+				["svr_ac_enabled", serverConfigData.antiCheat.enabled],
+				["svr_ac_check_scripts", serverConfigData.antiCheat.checkGameScripts],
+				["svr_ac_script_wl", serverConfigData.antiCheat.gameScriptWhiteListEnabled],
+				["svr_ac_script_bl", serverConfigData.antiCheat.gameScriptBlackListEnabled],
+				["svr_job_pickups", boolToInt(serverConfigData.createJobPickups)],
+				["svr_job_blips", boolToInt(serverConfigData.createJobBlips)],
+				["svr_biz_pickups", boolToInt(serverConfigData.createBusinessPickups)],
+				["svr_biz_blips", boolToInt(serverConfigData.createBusinessBlips)],
+				["svr_house_pickups", boolToInt(serverConfigData.createHousePickups)],
+				["svr_house_blips", boolToInt(serverConfigData.createHouseBlips)],
+				["svr_intro_music", serverConfigData.intromUsic],
+			];
 
-		let dbQueryString = `UPDATE svr_main SET svr_logo=${boolToInt(serverConfigData.showLogo)}, svr_gui=${boolToInt(getServerConfig().useGUI)}, svr_start_time_hour=${serverConfigData.hour}, svr_start_time_min=${serverConfigData.minute}, svr_start_weather=${serverConfigData.weather}, svr_start_snow_falling=${boolToInt(serverConfigData.fallingSnow)}, svr_start_snow_ground=${boolToInt(serverConfigData.groundSnow)}, svr_newchar_pos_x=${serverConfigData.newCharacter.spawnPosition.x}, svr_newchar_pos_y=${serverConfigData.newCharacter.spawnPosition.y}, svr_newchar_pos_z=${serverConfigData.newCharacter.spawnPosition.z}, svr_newchar_rot_z=${serverConfigData.newCharacter.spawnHeading}, svr_newchar_money=${serverConfigData.newCharacter.money}, svr_newchar_skin=${serverConfigData.newCharacter.skin}, svr_gui_col1_r=${serverConfigData.guiColour[0]}, svr_gui_col1_g=${serverConfigData.guiColour[1]}, svr_gui_col1_b=${serverConfigData.guiColour[2]} WHERE svr_id = ${serverConfigData.databaseId}`;
-		let dbQuery = queryDatabase(dbConnection, dbQueryString);
-		disconnectFromDatabase(dbConnection);
+			let dbQuery = null;
+			let queryString = createDatabaseUpdateQuery("svr_main", data, `svr_id=${serverConfigData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
+
+			getServerConfig().needsSaved = false;
+			freeDatabaseQuery(dbQuery);
+			disconnectFromDatabase(dbConnection);
+
+		}
 	}
 	logToConsole(LOG_DEBUG, `[VRR.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
 }
@@ -200,6 +253,8 @@ function setTimeCommand(command, params, client) {
 
 	//checkServerGameTime();
 
+	getServerConfig().needsSaved = true;
+
 	messageAdminAction(`${getPlayerName(client)} set the time to ${makeReadableTime(hour, minute)}`);
 	return true;
 }
@@ -216,6 +271,8 @@ function setMinuteDurationCommand(command, params, client) {
     let minuteDuration = toInteger(params) || 60000;
 	getServerConfig().minuteDuration = minuteDuration;
 	setTimeMinuteDuration(null, minuteDuration);
+
+	getServerConfig().needsSaved = true;
 
 	messageAdminAction(`${getPlayerName(client)} set the minute duration to ${minuteDuration}ms`);
 	return true;
@@ -240,6 +297,8 @@ function setWeatherCommand(command, params, client) {
     gta.forceWeather(toInteger(weatherId));
 	getServerConfig().weather = weatherId;
 
+	getServerConfig().needsSaved = true;
+
     messageAdminAction(`${getPlayerName(client)} set the weather to ${getInlineChatColourByName("lightGrey")}${getGameData().weatherNames[getServerGame()][toInteger(weatherId)]}`);
     updateServerRules();
 	return true;
@@ -262,6 +321,8 @@ function setSnowingCommand(command, params, client) {
 
 	updatePlayerSnowState(null);
 
+	getServerConfig().needsSaved = true;
+
     messageAdminAction(`${getPlayerName(client)} ${getInlineChatColourByName("orange")}turned falling snow ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} ${getInlineChatColourByName("orange")}and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
     updateServerRules();
 	return true;
@@ -283,8 +344,7 @@ function toggleServerLogoCommand(command, params, client) {
 
 function toggleAntiCheatScriptWhitelist(command, params, client) {
 	getServerConfig().antiCheat.gameScriptWhiteListEnabled = !getServerConfig().antiCheat.gameScriptWhiteListEnabled;
-
-	updatePlayerShowLogoState(null, getServerConfig().antiCheat.gameScriptWhiteListEnabled);
+	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} turned anticheat game script whitelist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptWhiteListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptWhiteListEnabled))}`);
     updateServerRules();
@@ -295,8 +355,7 @@ function toggleAntiCheatScriptWhitelist(command, params, client) {
 
 function toggleAntiCheatScriptBlacklist(command, params, client) {
 	getServerConfig().antiCheat.gameScriptBlackListEnabled = !getServerConfig().antiCheat.gameScriptBlackListEnabled;
-
-	updatePlayerShowLogoState(null, getServerConfig().antiCheat.gameScriptBlackListEnabled);
+	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} turned anticheat game script blacklist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptBlackListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptBlackListEnabled))}`);
     updateServerRules();
@@ -307,6 +366,7 @@ function toggleAntiCheatScriptBlacklist(command, params, client) {
 
 function toggleServerGUICommand(command, params, client) {
     getServerConfig().useGUI = !getServerConfig().useGUI;
+	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} turned GUI ${toLowerCase(getOnOffFromBool(getServerConfig().useGUI))} for this server`);
     updateServerRules();

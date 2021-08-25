@@ -949,3 +949,9 @@ function setPlayerHeadLookPosition(client, position) {
 }
 
 // ===========================================================================
+
+function sendPlayerGameScriptState(client, scriptName, state) {
+    triggerNetworkEvent("vrr.gameScript", client, scriptName, state);
+}
+
+// ===========================================================================

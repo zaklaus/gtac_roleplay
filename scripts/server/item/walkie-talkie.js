@@ -28,7 +28,7 @@ function getPlayerActiveWalkieTalkieFrequency(client) {
 function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
     walkieTalkieOutgoingToNearbyPlayers(transmittingPlayer, messageText);
 
-	let clients = getClients();
+	let clients = getServerData().items;
 	for(let i in clients) {
 		if(isPlayerSpawned(clients[i])) {
 			if(!isSamePlayer(transmittingPlayer, clients[i])) {
@@ -36,6 +36,17 @@ function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
 					if(getItemData(getPlayerData(clients[i]).hotBarItems[getPlayerFirstItemSlotByUseType(clients[i], VRR_ITEM_USETYPE_WALKIETALKIE)]).enabled) {
 						walkieTalkieIncomingToNearbyPlayers(clients[i], messageText);
 					}
+				}
+			}
+		}
+	}
+
+	let items = getServerData().items;
+	for(let i in items) {
+		if(items[i].enabled) {
+			if(getItemTypeData(items[i].itemTypeIndex).useType == VRR_ITEM_USETYPE_WALKIETALKIE) {
+				if(items[i].value == radioFrequency) {
+					walkieTalkieIncomingToNearbyPlayers(null, messageText, items[i].position);
 				}
 			}
 		}
@@ -53,10 +64,15 @@ function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 
 // ===========================================================================
 
-function walkieTalkieIncomingToNearbyPlayers(client, messageText) {
+function walkieTalkieIncomingToNearbyPlayers(client, messageText, position = null) {
+	let prefix = `${getInlineChatColourByName("lightGrey")}(Radio)`;
+	if(client != null) {
+		prefix = `${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(from radio)`;
+	}
+
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().walkieTalkieSpeakerDistance);
 	for(let i in clients) {
-		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(from radio): ${getInlineChatColourByName("white")}${messageText}`);
+		messagePlayerNormal(clients[i], `[#CCCCCC]${prefix}: ${getInlineChatColourByName("white")}${messageText}`);
 	}
 }
 

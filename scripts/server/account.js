@@ -535,9 +535,7 @@ function saveAccountToDatabase(accountData) {
 		let data = [
 			["acct_name", safeAccountName],
 			["acct_pass", safePassword],
-			//["acct_staff_title", safeStaffTitle],
 			["acct_email", safeEmailAddress],
-			//["acct_irc", safeIRC],
 			["acct_discord", accountData.discordAccount],
 			["acct_code_verifyemail", accountData.emailVerificationCode],
 			["acct_streaming_radio_volume", accountData.streamingRadioVolume],
@@ -569,23 +567,31 @@ function saveAccountToDatabase(accountData) {
 
 // ===========================================================================
 
-function saveAccountKeyBindsDatabase(keyBindData) {
+function saveAccountKeyBindToDatabase(keyBindData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		//logToConsole(LOG_VERBOSE, `Escaping account keybinds data for ${getPlayerDisplayForConsole(client)}`);
 		let safeCommandString = escapeDatabaseString(dbConnection, keyBindData.commandString);
-		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s keybind command string escaped successfully`);
+
+		let data = [
+			["acct_hotkey_acct", keyBindData.account],
+			["acct_hotkey_enabled", keyBindData.enabled],
+			["acct_hotkey_cmdstr", safeCommandString],
+			["acct_hotkey_key", keyBindData.key],
+			["acct_hotkey_down", boolToInt(keyBindData.keyState)],
+		];
+
+		let dbQuery = null;
 		if(keyBindData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_cmdstr, acct_hotkey_key, acct_hotkey_down, acct_hotkey_enabled) VALUES ('${safeCommandString}', ${keyBindData.key}, ${boolToInt(keyBindData.keyState)}, ${boolToInt(keyBindData.enabled)}, ${keyBindData.account}`;
+			let queryString = createDatabaseInsertQuery("acct_hotkey", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			keyBindData.databaseId = getDatabaseInsertId(dbConnection);
-			let dbQuery = queryDatabase(dbConnection, dbQueryString);
-			freeDatabaseQuery(dbQuery);
 		} else {
-			let dbQueryString = `UPDATE acct_hotkey SET acct_hotkey_cmdstr='${safeCommandString}', acct_hotkey_key=${keyBindData.key}, acct_hotkey_down=${boolToInt(keyBindData.keyState)}, acct_hotkey_enabled=${boolToInt(keyBindData.enabled)} WHERE acct_hotkey_id=${keyBindData.databaseId}`;
-			let dbQuery = queryDatabase(dbConnection, dbQueryString);
-			freeDatabaseQuery(dbQuery);
+			let queryString = createDatabaseUpdateQuery("acct_hotkey", data, `acct_hotkey_id=${keyBindData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
 
+		keyBindData.needsSaved = false;
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 	}
 }
@@ -596,13 +602,28 @@ function saveAccountStaffNotesDatabase(staffNoteData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeNoteContent = escapeDatabaseString(dbConnection, staffNoteData.note);
-		//logToConsole(LOG_VERBOSE, `${getPlayerDisplayForConsole(client)}'s staff note string escaped successfully`);
+
+		let data = [
+			["acct_note_message", safeNoteContent],
+			["acct_note_who_added", staffNoteData.whoAdded],
+			["acct_note_when_added", staffNoteData.whenAdded],
+			["acct_note_server", staffNoteData.server],
+			["acct_note_acct", staffNoteData.account],
+		];
+
+		let dbQuery = null;
 		if(staffNoteData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO acct_note (acct_note_message, acct_note_who_added, acct_note_when_added, acct_note_server, acct_note_acct) VALUES ('${safeNoteContent}', ${staffNoteData.whoAdded}, UNIX_TIMESTAMP(), ${getServerId()}, ${staffNoteData.account}`;
+			let queryString = createDatabaseInsertQuery("acct_note", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			staffNoteData.databaseId = getDatabaseInsertId(dbConnection);
-			let dbQuery = queryDatabase(dbConnection, dbQueryString);
-			freeDatabaseQuery(dbQuery);
+		} else {
+			let queryString = createDatabaseUpdateQuery("acct_note", data, `acct_note_id=${staffNoteData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+
+		staffNoteData.needsSaved = false;
+		freeDatabaseQuery(dbQuery);
+		disconnectFromDatabase(dbConnection);
 
 		disconnectFromDatabase(dbConnection);
 	}

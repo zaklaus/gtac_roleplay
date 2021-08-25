@@ -87,6 +87,8 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.pedAnim", makePedPlayAnimation);
 
     addNetworkHandler("vrr.hideAllGUI", hideAllGUI);
+
+    addNetworkHandler("vrr.gameScript", setGameScriptState);
 }
 
 // ===========================================================================
@@ -251,6 +253,18 @@ function forcePedAnimation(pedId, animGroup, animId, animType, animSpeed, loop, 
 function hideAllGUI() {
     closeAllWindows();
     setChatWindowEnabled(true);
+}
+
+// ===========================================================================
+
+function setGameScriptState(scriptName, state) {
+    if(state == VRR_GAMESCRIPT_FORCE) {
+        logToConsole(`[VRR.Server] Starting game script '${scriptName}'`);
+        gta.startNewScript(scriptName);
+    } else if(state == VRR_GAMESCRIPT_DENY) {
+        logToConsole(`[VRR.Server] Terminating game script '${scriptName}'`);
+        gta.terminateScript(scriptName);
+    }
 }
 
 // ===========================================================================

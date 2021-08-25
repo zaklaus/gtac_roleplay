@@ -1232,17 +1232,34 @@ function saveItemToDatabase(itemId) {
 
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
+		let data = [
+			["item_server", getServerId()],
+			["item_type", tempItemData.itemType],
+			["item_owner_type", tempItemData.ownerType],
+			["item_owner_id", tempItemData.ownerId],
+			["item_amount", tempItemData.amount],
+			["item_pos_x", tempItemData.position.x],
+			["item_pos_y", tempItemData.position.y],
+			["item_pos_z", tempItemData.position.z],
+			["item_int", tempItemData.interior],
+			["item_vw", tempItemData.dimension],
+			["item_buy_price", tempItemData.buyPrice],
+			["item_enabled", tempItemData.enabled],
+		];
+
+		let dbQuery = null;
 		if(tempItemData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO item_main (item_server, item_type, item_owner_type, item_owner_id, item_value, item_amount, item_pos_x, item_pos_y, item_pos_z, item_int, item_vw, item_buy_price) VALUE (${getServerId()}, ${tempItemData.itemType}, ${tempItemData.ownerType}, ${tempItemData.ownerId}, ${tempItemData.value}, ${tempItemData.amount}, ${tempItemData.position.x},${tempItemData.position.y}, ${tempItemData.position.z}, ${tempItemData.interior}, ${tempItemData.dimension}, ${tempItemData.buyPrice})`;
-			queryDatabase(dbConnection, dbQueryString);
+			let queryString = createDatabaseInsertQuery("item_main", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			getServerData().items[itemId].databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE item_main SET item_server=${getServerId()}, item_type=${tempItemData.itemType}, item_owner_type=${tempItemData.ownerType}, item_owner_id=${tempItemData.ownerId}, item_value=${tempItemData.value}, item_amount=${tempItemData.amount}, item_pos_x=${tempItemData.position.x}, item_pos_y=${tempItemData.position.y}, item_pos_z=${tempItemData.position.z}, item_int=${tempItemData.interior}, item_vw=${tempItemData.dimension}, item_buy_price=${tempItemData.buyPrice} WHERE item_id=${tempItemData.databaseId}`;
-
-			queryDatabase(dbConnection, dbQueryString);
+			let queryString = createDatabaseUpdateQuery("item_main", data, `item_id=${tempItemData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+
+		getItemData(itemId).needsSaved = false;
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
-		logToConsole(LOG_VERBOSE, `[VRR.Item]: Saved item '${tempItemData.name}' to database!`);
 		return true;
 	}
 

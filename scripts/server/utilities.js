@@ -1460,7 +1460,7 @@ function isConsole(client) {
 // ===========================================================================
 
 function updateConnectionLogOnQuit(client, quitReasonId) {
-	quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=UNIX_TIMESTAMP(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${toInteger(getEntityData(client, "vrr.connection"))}`);
+	quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=NOW(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${toInteger(getEntityData(client, "vrr.connection"))}`);
 }
 
 // ===========================================================================

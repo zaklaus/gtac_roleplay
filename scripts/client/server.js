@@ -76,19 +76,18 @@ function addAllNetworkHandlers() {
 
     addNetworkHandler("vrr.veh.lights", toggleVehicleLights);
     addNetworkHandler("vrr.veh.engine", toggleVehicleEngine);
+    addNetworkHandler("vrr.veh.repair", repairVehicle);
 
     addNetworkHandler("vrr.veh.sync", syncVehicleProperties);
     addNetworkHandler("vrr.civ.sync", syncCivilianProperties);
     addNetworkHandler("vrr.plr.sync", syncPlayerProperties);
     addNetworkHandler("vrr.obj.sync", syncObjectProperties);
 
-    addNetworkHandler("vrr.veh.repair", repairVehicle);
-
     addNetworkHandler("vrr.pedAnim", makePedPlayAnimation);
-
     addNetworkHandler("vrr.hideAllGUI", hideAllGUI);
-
     addNetworkHandler("vrr.gameScript", setGameScriptState);
+    addNetworkHandler("vrr.clientInfo", serverRequestedClientInfo);
+    addNetworkHandler("vrr.interiorLights", updateInteriorLightsState);
 }
 
 // ===========================================================================
@@ -265,6 +264,18 @@ function setGameScriptState(scriptName, state) {
         logToConsole(`[VRR.Server] Terminating game script '${scriptName}'`);
         gta.terminateScript(scriptName);
     }
+}
+
+// ===========================================================================
+
+function serverRequestedClientInfo() {
+    sendServerClientInfo();
+}
+
+// ===========================================================================
+
+function updateInteriorLightsState(state) {
+    interiorLightsEnabled = state;
 }
 
 // ===========================================================================

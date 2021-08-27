@@ -343,7 +343,7 @@ function setBusinessPublicCommand(command, params, client) {
 
 // ===========================================================================
 
-function lockBusinessCommand(command, params, client) {
+function lockUnlockBusinessCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!areParamsEmpty(params)) {
@@ -358,6 +358,33 @@ function lockBusinessCommand(command, params, client) {
 	getBusinessData(businessId).locked = !getBusinessData(businessId).locked;
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
 	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function toggleBusinessInteriorLightsCommand(command, params, client) {
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	getBusinessData(businessId).interiorLights = !getBusinessData(houseId).interiorLights;
+
+	getBusinessData(businessId).needsSaved = true;
+
+	updateBusinessInteriorLightsForOccupants(businessId);
+	messagePlayerMeAction(client, `turns ${getOnOffFromBool(getBusinessData(businessId).interiorLights)} the business lights`);
 }
 
 // ===========================================================================
@@ -466,7 +493,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			getBusinessData(businessId).exitPosition = toVector3(0.0, 0.0, 0.0);
 			getBusinessData(businessId).exitInterior = 0;
 			getBusinessData(businessId).hasInterior = false;
-			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}remove business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
+			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
 
 			resetBusinessPickups();
 			resetBusinessBlips();
@@ -476,7 +503,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			getBusinessData(businessId).exitInterior = getPlayerInterior(client);
 			getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
 			getBusinessData(businessId).hasInterior = true;
-			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}remove business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
+			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
 
 			resetBusinessPickups();
 			resetBusinessBlips();
@@ -950,10 +977,11 @@ function saveBusinessToDatabase(businessId) {
 			["biz_exit_pos_z", tempBusinessData.exitPosition.z],
 			["biz_exit_rot_z", tempBusinessData.exitRotation],
 			["biz_exit_int", tempBusinessData.exitInterior],
-			["biz_exit_vw", tempBusinessData.databaseId+getGlobalConfig().businessDimensionStart],
+			["biz_exit_vw", tempBusinessData.exitDimension],
 			["biz_exit_pickup", tempBusinessData.exitPickupModel],
 			["biz_exit_blip", tempBusinessData.exitBlipModel],
 			["biz_has_interior", boolToInt(tempBusinessData.hasInterior)],
+			["biz_interior_lights", boolToInt(tempBusinessData.interiorLights)],
 		];
 
 		let dbQuery = null;
@@ -1031,7 +1059,7 @@ function createBusinessEntranceBlip(businessId) {
 			blipModelId = getBusinessData(businessId).entranceBlipModel;
 		}
 
-		getBusinessData(businessId).entranceBlip = createGameBlip(blipModelId, getBusinessData(businessId).entrancePosition, 1, getColourByName("businessBlue"));
+		getBusinessData(businessId).entranceBlip = createGameBlip(getBusinessData(businessId).entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
 		setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
 		setElementDimension(getBusinessData(businessId).entranceBlip, getBusinessData(businessId).entranceDimension);
 		//getBusinessData(businessId).entranceBlip.streamInDistance = 300;
@@ -1082,7 +1110,7 @@ function createBusinessExitBlip(businessId) {
 				blipModelId = getBusinessData(businessId).exitBlipModel;
 			}
 
-			getBusinessData(businessId).exitBlip = createGameBlip(blipModelId, getBusinessData(businessId).exitPosition, 1, getColourByName("businessBlue"));
+			getBusinessData(businessId).exitBlip = createGameBlip(getBusinessData(businessId).exitPosition, blipModelId, 1, getColourByName("businessBlue"));
 			setElementDimension(getBusinessData(businessId).exitBlip, getBusinessData(businessId).entranceDimension);
 			setElementOnAllDimensions(getBusinessData(businessId).exitBlip, false);
 			//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
@@ -1634,6 +1662,17 @@ function sendPlayerBusinessGameScripts(client, businessId) {
 function clearPlayerBusinessGameScripts(client, businessId) {
 	for(let i in getBusinessData(businessId).gameScripts) {
 		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
+	}
+}
+
+// ===========================================================================
+
+function updateBusinessInteriorLightsForOccupants(businessId) {
+	let clients = getClients()
+	for(let i in clients) {
+		if(getPlayerBusiness(clients[i]) == businessId) {
+			updateInteriorLightsForPlayer(clients[i], getBusinessData(businessId).interiorLights);
+		}
 	}
 }
 

@@ -92,7 +92,6 @@ function onProcess(event, deltaTime) {
     processJobRouteSphere();
     forceLocalPlayerEquippedWeaponItem();
     processWantedLevelReset();
-
     processGameSpecifics();
 }
 
@@ -120,6 +119,7 @@ function onDrawnHUD(event) {
     processItemActionRendering();
     processSkinSelectRendering();
     processNameTagRendering();
+    processInteriorLightsRendering();
 }
 
 // ===========================================================================

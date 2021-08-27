@@ -25,6 +25,7 @@ let renderSmallGameMessage = true;
 let renderScoreBoard = true;
 let renderHotBar = true;
 let renderItemActionDelay = true;
+let renderInteriorLights = true;
 
 let logLevel = LOG_ALL;
 
@@ -49,5 +50,8 @@ let enterPropertyKey = null;
 let forcedAnimation = null;
 
 let calledDeathEvent = false;
+
+let interiorLightsEnabled = true;
+let interiorLightsColour = toColour(0, 0, 0, 150);
 
 // ===========================================================================

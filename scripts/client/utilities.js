@@ -685,3 +685,15 @@ function getLocalPlayerLookAtPosition() {
 		return getWorldFromScreenPosition(toVector3(game.width/2, game.height/2, getDistance(centerCameraPos, localPlayer.position)+20));
 	}
 }
+
+// ===========================================================================
+
+function processInteriorLightsRendering() {
+    if(renderInteriorLights) {
+        if(!interiorLightsEnabled) {
+            graphics.drawRectangle(null, toVector2(0.0, 0.0), toVector2(game.width, game.height), interiorLightsColour, interiorLightsColour, interiorLightsColour, interiorLightsColour);
+        }
+    }
+}
+
+// ===========================================================================

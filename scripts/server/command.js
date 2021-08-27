@@ -82,7 +82,8 @@ function loadCommands() {
             //commandData("delbizloc", deleteBusinessLocationCommand, "[id]", getStaffFlagValue("manageBusinesses"), true, false),
             commandData("bizreloadall", reloadAllBusinessesCommand, "", getStaffFlagValue("manageBusinesses"), true, false, "Reloads all businesses from the database"),
 
-            commandData("bizlock", lockBusinessCommand, "", getStaffFlagValue("none"), true, true, "Locks a business"),
+            commandData("bizlock", lockUnlockBusinessCommand, "", getStaffFlagValue("none"), true, true, "Locks a business"),
+            commandData("bizlights", toggleBusinessInteriorLightsCommand, "", getStaffFlagValue("none"), true, true, "Turns on/off a business's interior lights"),
             commandData("bizbuy", buyBusinessCommand, "", getStaffFlagValue("none"), true, true, "Purchases a business"),
             commandData("bizfee", setBusinessEntranceFeeCommand, "<amount>", getStaffFlagValue("none"), true, true, "Sets a fee to charge players when they enter the business."),
             commandData("biztill", viewBusinessTillAmountCommand, "", getStaffFlagValue("none"), true, true, "Shows the business's till (cash register) amount"),
@@ -199,6 +200,7 @@ function loadCommands() {
             commandData("housebuy", buyHouseCommand, "", getStaffFlagValue("none"), true, false),
             commandData("housedesc", setHouseDescriptionCommand, "", getStaffFlagValue("manageHouses"), true, false),
             commandData("houselock", lockUnlockHouseCommand, "", getStaffFlagValue("none"), true, false),
+            commandData("houselights", toggleHouseInteriorLightsCommand, "", getStaffFlagValue("none"), true, false),
             commandData("houseowner", setHouseOwnerCommand, "", getStaffFlagValue("manageHouses"), true, false),
             commandData("housebuyprice", setHouseBuyPriceCommand, "", getStaffFlagValue("none"), true, false),
             commandData("houserentprice", setHouseRentPriceCommand, "", getStaffFlagValue("none"), true, false),
@@ -295,9 +297,7 @@ function loadCommands() {
             commandData("mousecam", toggleMouseCameraCommand, "", getStaffFlagValue("none"), true, false, "Toggles vehicle mouse camera for games that don't have it"),
             commandData("yes", playerPromptAnswerYesCommand, "", getStaffFlagValue("none"), true, false, "Answers a prompt with YES"),
             commandData("no", playerPromptAnswerNoCommand, "", getStaffFlagValue("none"), true, false, "Answers a prompt with NO"),
-            commandData("radiostation", playStreamingRadioCommand, "<radio station id>", getStaffFlagValue("none"), true, false, "Plays a radio station in your vehicle, house, or business (depending on which one you're in)"),
-            commandData("radiostations", showRadioStationListCommand, "", getStaffFlagValue("none"), true, false, "Shows a list of all available radio stations"),
-            commandData("radiovolume", setStreamingRadioVolumeCommand, "<volume level>", getStaffFlagValue("none"), true, false, "Sets the radio streaming volume (for your game only)."),
+            commandData("admins", listOnlineAdminsCommand, "", getStaffFlagValue("none"), true, false, "Shows a list of online admins"),
         ],
         moderation: [
             commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true, "Kicks a player from the server"),
@@ -335,9 +335,15 @@ function loadCommands() {
 
             commandData("forceskin", forcePlayerSkinCommand, "<player name/id> <skin id/name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's skin directly."),
 
+            commandData("plrinfo", getPlayerInfoCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows basic info about the specified player"),
             commandData("getplrhouse", getAllHousesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all houses owned by the player"),
             commandData("getplrbiz", getAllBusinessesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all businesses owned by the player"),
             commandData("getplrveh", getAllVehiclesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all vehicles owned by the player"),
+        ],
+        radio: [
+            commandData("radiostation", playStreamingRadioCommand, "<radio station id>", getStaffFlagValue("none"), true, false, "Plays a radio station in your vehicle, house, or business (depending on which one you're in)"),
+            commandData("radiostations", showRadioStationListCommand, "", getStaffFlagValue("none"), true, false, "Shows a list of all available radio stations"),
+            commandData("radiovolume", setStreamingRadioVolumeCommand, "<volume level>", getStaffFlagValue("none"), true, false, "Sets the radio streaming volume (for your game only)."),
         ],
         security: [],
         startup: [],

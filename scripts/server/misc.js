@@ -153,6 +153,7 @@ function enterExitPropertyCommand(command, params, client) {
 						clearPlayerHouseGameScripts(client, inHouse.index);
 						getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 					}, 2000);
+					updateInteriorLightsForPlayer(client, true);
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "vrr.inHouse");
@@ -194,6 +195,7 @@ function enterExitPropertyCommand(command, params, client) {
 						clearPlayerBusinessGameScripts(client, inBusiness.index);
 						getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 					}, 2000);
+					updateInteriorLightsForPlayer(client, true);
 				}, 1000);
 			}, 1100);
 			removeEntityData(client, "vrr.inBusiness");
@@ -240,6 +242,7 @@ function enterExitPropertyCommand(command, params, client) {
 					if(doesBusinessHaveAnyItemsToBuy(closestBusinessId)) {
 						messagePlayerInfo(client, "Use /buy to purchase items from this business");
 					}
+					updateInteriorLightsForPlayer(client, closestBusiness.lights);
 					setTimeout(function() {
 						if(closestBusiness.streamingRadioStation != -1) {
 							if(getPlayerData(client).streamingRadioStation != closestBusiness.streamingRadioStation) {
@@ -288,6 +291,7 @@ function enterExitPropertyCommand(command, params, client) {
 						fadeCamera(client, true, 1.0);
 					}
 					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
+					updateInteriorLightsForPlayer(client, closestHouse.lights);
 					setTimeout(function() {
 						if(closestHouse.streamingRadioStation != -1) {
 							if(getPlayerData(client).streamingRadioStation != closestHouse.streamingRadioStation) {
@@ -391,6 +395,19 @@ function updateServerGameTime() {
 	if(isTimeSupported()) {
 		gta.time.hour = getServerConfig().hour;
 		gta.time.minute = getServerConfig().minute;
+	}
+}
+
+// ===========================================================================
+
+function listOnlineAdminsCommand(command, params, client) {
+	let clients = getClients();
+	for(let i in clients) {
+		if(getPlayerData(clients[i])) {
+			if(getPlayerData(clients[i]).accountData.flags.admin > 0) {
+				messagePlayerNormal(client, `• [${getPlayerData(clients[i]).accountData.staffTitle}] ${getCharacterFullName(clients[i])}`);
+			}
+		}
 	}
 }
 

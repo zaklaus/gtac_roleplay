@@ -3230,21 +3230,21 @@ let gameData = {
 		},
 
 		{ // GTA Vice City
-			business: 2,
-			house: 2,
-			bank: 2,
-			clothes: 2,
-			info: 2,
-			job: 2,
+			business: 255,
+			house: 255,
+			bank: 255,
+			clothes: 255,
+			info: 255,
+			job: 255,
 		},
 
 		{ // GTA San Andreas
-			business: 1,
-			house: 1,
-			bank: 1,
-			clothes: 1,
-			info: 1,
-			job: 1,
+			business: 255,
+			house: 255,
+			bank: 255,
+			clothes: 255,
+			info: 255,
+			job: 255,
 		}
 	],
 
@@ -4548,8 +4548,8 @@ function createGamePickup(model, position, type) {
 
 // ===========================================================================
 
-function createGameBlip(model, position, type = 1, colour = toColour(255, 255, 255, 255)) {
-    return gta.createBlip(model, position, type, colour);
+function createGameBlip(position, type = 0, colour = toColour(255, 255, 255, 255)) {
+    return gta.createBlip(type, position, 1, colour);
 }
 
 // ===========================================================================

@@ -225,8 +225,8 @@ function sendExcludedModelsForGroundSnowToPlayer(client) {
 function sendRemovedWorldObjectsToPlayer(client) {
     if(getGameConfig().removedWorldObjects[getServerGame()].length > 0) {
         for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
-            logToConsole(LOG_DEBUG, `[VRR.Client] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i].model}) to ${getPlayerName(client)}`);
-            triggerNetworkEvent("vrr.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i].model, getGameConfig().removedWorldObjects[getServerGame()][i].position, getGameConfig().removedWorldObjects[getServerGame()][i].range);
+            logToConsole(LOG_DEBUG, `[VRR.Client] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i][0]}) to ${getPlayerName(client)}`);
+            triggerNetworkEvent("vrr.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i][0], getGameConfig().removedWorldObjects[getServerGame()][i][1], getGameConfig().removedWorldObjects[getServerGame()][i][2]);
         }
     }
 	return true;
@@ -952,6 +952,18 @@ function setPlayerHeadLookPosition(client, position) {
 
 function sendPlayerGameScriptState(client, scriptName, state) {
     triggerNetworkEvent("vrr.gameScript", client, scriptName, state);
+}
+
+// ===========================================================================
+
+function requestClientInfo(client) {
+    triggerNetworkEvent("vrr.clientInfo", client);
+}
+
+// ===========================================================================
+
+function updateInteriorLightsForPlayer(client, state) {
+    triggerNetworkEvent("vrr.interiorLights", client, state);
 }
 
 // ===========================================================================

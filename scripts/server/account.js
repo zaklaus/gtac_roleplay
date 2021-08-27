@@ -371,7 +371,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		accountName = escapeDatabaseString(dbConnection, accountName);
-		let dbQueryString = `SELECT acct_main.*, acct_svr.*, INET_NTOA(acct_ip) AS ipstring FROM acct_main INNER JOIN acct_svr ON acct_svr.acct_svr_acct = acct_main.acct_id AND acct_svr.acct_svr_svr = ${getServerId()} WHERE acct_name = '${accountName}' LIMIT 1;`;
+		let dbQueryString = `SELECT acct_main.*, acct_svr.*, acct_main.acct_ip AS ipstring FROM acct_main INNER JOIN acct_svr ON acct_svr.acct_svr_acct = acct_main.acct_id AND acct_svr.acct_svr_svr = ${getServerId()} WHERE acct_name = '${accountName}' LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
@@ -398,7 +398,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 function loadAccountFromId(accountId, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		let dbQueryString = `SELECT *, INET_NTOA(acct_ip) AS ipstring FROM acct_main WHERE acct_id = ${accountId} LIMIT 1;`;
+		let dbQueryString = `SELECT *, acct_ip AS ipstring FROM acct_main WHERE acct_id = ${accountId} LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
@@ -623,8 +623,6 @@ function saveAccountStaffNotesDatabase(staffNoteData) {
 
 		staffNoteData.needsSaved = false;
 		freeDatabaseQuery(dbQuery);
-		disconnectFromDatabase(dbConnection);
-
 		disconnectFromDatabase(dbConnection);
 	}
 }
@@ -962,10 +960,12 @@ function saveConnectionToDatabase(client) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeName = escapeDatabaseString(dbConnection, getPlayerName(client));
-		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (UNIX_TIMESTAMP(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', INET_ATON('${client.ip}'))`;
+		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (NOW(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', '${client.ip}')`;
 		queryDatabase(dbConnection, dbQueryString);
 		let connectionId = getDatabaseInsertId(dbConnection);
-		setEntityData(client, "vrr.connection", connectionId, true);
+		setEntityData(client, "vrr.connection", connectionId, false);
+
+		requestClientInfo(client);
 	}
 }
 

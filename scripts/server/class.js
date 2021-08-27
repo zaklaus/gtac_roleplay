@@ -469,8 +469,12 @@ function initClassTable() {
 				this.hasInterior = false;
 				this.index = -1;
 				this.needsSaved = false;
+				this.interiorLights = true;
+
 				this.floorItemCache = [];
 				this.storageItemCache = [];
+				this.locations = [];
+				this.gameScripts = [];
 
 				this.entrancePosition = false;
 				this.entranceRotation = 0.0;
@@ -503,6 +507,7 @@ function initClassTable() {
 					this.buyPrice = toInteger(dbAssoc["biz_buy_price"]);
 					this.locked = intToBool(toInteger(dbAssoc["biz_locked"]));
 					this.hasInterior = intToBool(toInteger(dbAssoc["biz_has_interior"]));
+					this.interiorLights = intToBool(toInteger(dbAssoc["biz_interior_lights"]));
 
 					this.entrancePosition = toVector3(toFloat(dbAssoc["biz_entrance_pos_x"]), toFloat(dbAssoc["biz_entrance_pos_y"]), toFloat(dbAssoc["biz_entrance_pos_z"]));
 					this.entranceRotation = toInteger(dbAssoc["biz_entrance_rot_z"]);
@@ -585,7 +590,11 @@ function initClassTable() {
 				this.hasInterior = false;
 				this.index = -1;
 				this.needsSaved = false;
+				this.interiorLights = true;
+
 				this.itemCache = [];
+				this.locations = [];
+				this.gameScripts = [];
 
 				this.entrancePosition = false;
 				this.entranceRotation = 0.0;
@@ -617,6 +626,7 @@ function initClassTable() {
 					this.renter = toInteger(dbAssoc["house_renter"]);
 					this.locked = intToBool(toInteger(dbAssoc["house_locked"]));
 					this.hasInterior = intToBool(toInteger(dbAssoc["house_has_interior"]));
+					this.interiorLights = intToBool(toInteger(dbAssoc["house_interior_lights"]));
 
 					this.entrancePosition = toVector3(toFloat(dbAssoc["house_entrance_pos_x"]), toFloat(dbAssoc["house_entrance_pos_y"]), toFloat(dbAssoc["house_entrance_pos_z"]));
 					this.entranceRotation = toFloat(dbAssoc["house_entrance_rot_z"]);
@@ -662,7 +672,11 @@ function initClassTable() {
 					this.interior = toInteger(dbAssoc["house_loc_int"]);
 					this.dimension = toInteger(dbAssoc["house_loc_vw"]);
 				}
-			}
+			};
+
+			//saveToDatabase = () => {
+			//	saveHouseLocationToDatabase(this.houseIndex, this.index);
+			//}
 		},
 		/** @class houseGameScriptData Representing a house's game scripts. Multiple can be used for a single house. */
 		houseGameScriptData: class {

@@ -216,7 +216,7 @@ function createDatabaseInsertQuery(tableName, data) {
 		}
 	}
 
-	let queryString = `INSERT INTO ${tableName} (${fields.join(", ")}) VALUES (${fields.join(", ")})`;
+	let queryString = `INSERT INTO ${tableName} (${fields.join(", ")}) VALUES (${values.join(", ")})`;
 	return queryString;
 }
 

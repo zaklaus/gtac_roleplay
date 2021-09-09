@@ -58,11 +58,26 @@ const VRR_HOUSEOWNER_CLAN = 3;                   // Owned by a clan
 const VRR_HOUSEOWNER_FACTION = 4;                // Owned by a faction
 const VRR_HOUSEOWNER_PUBLIC = 5;                 // Is a public house. Technically not owned. This probably won't be used.
 
+// Gate Owner Types
+const VRR_GATEOWNER_NONE = 0;                   // Not owned
+const VRR_GATEOWNER_PLAYER = 1;                 // Owner is a player (character/subaccount)
+const VRR_GATEOWNER_JOB = 2;                    // Owned by a job
+const VRR_GATEOWNER_CLAN = 3;                   // Owned by a clan
+const VRR_GATEOWNER_FACTION = 4;                // Owned by a faction
+const VRR_GATEOWNER_PUBLIC = 5;                 // Is a public gate. Technically not owned. This probably won't be used.
+
 // Business Location Types
 const VRR_BIZLOC_NONE = 0;                       // None
-const VRR_BIZLOC_FUEL = 1;                       // Fuel pump
-const VRR_BIZLOC_DRIVETHRU = 2;                  // Drivethrough
-const VRR_BIZLOC_VENDMACHINE = 3;                // Vending machine
+const VRR_BIZLOC_MAINDOOR = 0;                   // Main entrance/exit
+const VRR_BIZLOC_DOOR = 1;                       // Any other entrance/exit
+const VRR_BIZLOC_FUEL = 2;                       // Fuel pump
+const VRR_BIZLOC_DRIVETHRU = 3;                  // Drivethrough
+const VRR_BIZLOC_VENDMACHINE = 4;                // Vending machine
+
+// House Location Types
+const VRR_HOUSELOC_NONE = 0;                     // None
+const VRR_HOUSELOC_MAINDOOR = 0;                 // Main entrance/exit
+const VRR_HOUSELOC_DOOR = 1;                     // Any other entrance/exit
 
 // Account Contact Types
 const VRR_CONTACT_NONE = 0;

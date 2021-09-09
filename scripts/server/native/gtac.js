@@ -4208,7 +4208,7 @@ function getAllowedSkinDataBySkinId(skinId) {
 // ===========================================================================
 
 function getPlayerPosition(client) {
-    if(doesGameHaveServerSideElements()) {
+    if(!doesGameHaveServerElements()) {
         return getPlayerData(client).syncPosition;
     } else {
         if(client.player != null) {

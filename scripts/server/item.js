@@ -819,11 +819,20 @@ function playerSwitchItem(client, newHotBarSlot) {
 	logToConsole(LOG_DEBUG, `[VRR.Item] ${getPlayerDisplayForConsole(client)} switched from hotbar slot ${currentHotBarSlot} to ${newHotBarSlot}`);
 
 	let currentHotBarItem = -1;
+	let newHotBarItem = -1;
+
+	// Check if new slot is the same as the current one
+	// If true, clear active item slot (puts current item away)
+	if(currentHotBarSlot != -1 && newHotBarSlot != -1) {
+		if(currentHotBarSlot == newHotBarSlot) {
+			newHotBarSlot = -1;
+		}
+	}
+
 	if(currentHotBarSlot != -1) {
 		currentHotBarItem = getPlayerData(client).hotBarItems[currentHotBarSlot];
 	}
 
-	let newHotBarItem = -1;
 	if(newHotBarSlot != -1) {
 		newHotBarItem = getPlayerData(client).hotBarItems[newHotBarSlot];
 	}
@@ -1363,6 +1372,9 @@ function getItemValueDisplay(itemType, value) {
 	} else if(getItemTypeData(itemType).useType == VRR_ITEM_USETYPE_PHONE) {
 		return toString(value);
 	} else if(getItemTypeData(itemType).useType == VRR_ITEM_USETYPE_WEAPON || getItemTypeData(itemType).useType == VRR_ITEM_USETYPE_TAZER) {
+		if(isMeleeWeapon(getItemTypeData(itemType).useId)) {
+			return false;
+		}
 		return toString(value)+" rounds";
 	} else if(getItemTypeData(itemType).useType == VRR_ITEM_USETYPE_WALKIETALKIE) {
 		return toString(toString(value).slice(0,-2)+"."+toString(value).slice(-1)+"MHz");
@@ -1371,7 +1383,7 @@ function getItemValueDisplay(itemType, value) {
 	} else {
 		return value;
 	}
-	return "unknown";
+	return false;
 }
 
 // ===========================================================================

@@ -471,7 +471,9 @@ function onPlayerSpawn(client) {
         if(getServerGame() == GAME_GTA_SA) {
             logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
             setEntityData(client.player, "vrr.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
-            setEntityData(client.player, "vrr.fightStyle", getPlayerCurrentSubAccount(client).fightStyle, true);
+
+            let fightStyleId = getPlayerCurrentSubAccount(client).fightStyle;
+            setEntityData(client.player, "vrr.fightStyle", [getGameData().fightStyles[getServerGame()][fightStyleId][1][0], getGameData().fightStyles[getServerGame()][fightStyleId][1][1]], true);
         }
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);

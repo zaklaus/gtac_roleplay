@@ -143,7 +143,6 @@ function saveVehicleToDatabase(vehicleDataId) {
 			["veh_extra11", tempVehicleData.extras[10]],
 			["veh_extra12", tempVehicleData.extras[11]],
 			["veh_extra13", tempVehicleData.extras[12]],
-			["veh_locked", intToBool(tempVehicleData.locked)],
 			["veh_engine", intToBool(tempVehicleData.engine)],
 			["veh_lights", intToBool(tempVehicleData.lights)],
 			["veh_health", toInteger(tempVehicleData.health)],
@@ -353,10 +352,8 @@ function deleteVehicleCommand(command, params, client) {
 
 	quickDatabaseQuery(`DELETE FROM veh_main WHERE veh_id = ${getVehicleData(vehicle).databaseId}`);
 
-	getServerData().vehicles[dataIndex] = null;
+	getServerData().vehicles.splice(dataIndex, 1);
 	destroyElement(vehicle);
-
-	getVehicleData(vehicle).needsSaved = true;
 
 	messagePlayerSuccess(client, `The ${vehicleName} has been deleted!`);
 }
@@ -507,7 +504,7 @@ function vehicleRepairCommand(command, params, client) {
 
 	getVehicleData(vehicle).needsSaved = true;
 
-	meActionToNearbyPlayers(client, `repairs the ${getVehicleName(vehicle)}!`);
+	meActionToNearbyPlayers(client, `repairs the ${getVehicleName(vehicle)}`);
 }
 
 // ===========================================================================
@@ -720,7 +717,7 @@ function setVehicleJobCommand(command, params, client) {
 	//}
 
 	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_JOB;
-	getVehicleData(vehicle).ownerId = jobId;
+	getVehicleData(vehicle).ownerId = getJobData(jobId).databaseId;
 
 	getVehicleData(vehicle).needsSaved = true;
 

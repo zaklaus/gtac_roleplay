@@ -3201,6 +3201,7 @@ let gameData = {
 
 		{ // GTA San Andreas
 			policeStation: 1247,
+
 			fireStation: 1318,
 			hospital: 1240,
 			ammunation: 1239,
@@ -3239,12 +3240,12 @@ let gameData = {
 		},
 
 		{ // GTA San Andreas
-			business: 255,
-			house: 255,
-			bank: 255,
-			clothes: 255,
-			info: 255,
-			job: 255,
+			business: 1,
+			house: 1,
+			bank: 1,
+			clothes: 1,
+			info: 1,
+			job: 1,
 		}
 	],
 
@@ -4207,7 +4208,7 @@ function getAllowedSkinDataBySkinId(skinId) {
 // ===========================================================================
 
 function getPlayerPosition(client) {
-    if(getServerGame() == GAME_GTA_IV) {
+    if(doesGameHaveServerSideElements()) {
         return getPlayerData(client).syncPosition;
     } else {
         if(client.player != null) {

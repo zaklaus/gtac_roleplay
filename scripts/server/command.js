@@ -126,8 +126,16 @@ function loadCommands() {
             commandData("achat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true, "Sends an OOC chat message to other admins"),
         ],
         clan: [
+            commandData("clans", listClansCommand, "[search text]", getStaffFlagValue("none"), true, true, "List clans (search by partial name, if provided)"),
+            commandData("clanranks", listClanRanksCommand, "[clan name]", getStaffFlagValue("none"), true, true, "Shows a list of a clan's ranks"),
+
             commandData("addclan", createClanCommand, "<name>", getStaffFlagValue("manageClans"), true, true, "Creates an new empty, unowned clan."),
             commandData("delclan", deleteClanCommand, "<clan id>", getStaffFlagValue("manageClans"), true, true, "Deletes a clan by ID or name"),
+
+            commandData("addclanrank", createClanRankCommand, "<rank id> <name>", getStaffFlagValue("none"), true, true, "Adds a clan rank"),
+            commandData("delclanrank", deleteClanRankCommand, "<rank name>", getStaffFlagValue("none"), true, true, "Removes a clan rank"),
+
+            commandData("setclanrank", setClanMemberRankCommand, "<player name/id> <rank name>", getStaffFlagValue("none"), true, true, "Sets the rank of a clan member"),
 
             commandData("clanowner", setClanOwnerCommand, "<clan id> <player name/id>", getStaffFlagValue("none"), true, true, "Gives ownership of the clan to a player"),
             commandData("clantag", setClanTagCommand, "<tag>", getStaffFlagValue("none"), true, true, "Sets a clan's main tag"),
@@ -156,7 +164,7 @@ function loadCommands() {
             commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("manageServer"), true, true, "Toggles winter/snow"),
             commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true, "Toggles the corner server logo display on/off"),
             commandData("setgui", toggleServerGUICommand, "<0/1 state>", getStaffFlagValue("manageServer"), true, true, "Toggles server GUI on/off"),
-            //commandData("setguicolours", setServerGUIColoursCommand, "<red> <green> <blue>", getStaffFlagValue("manageServer"), true, true),
+            commandData("setguicolours", setServerGUIColoursCommand, "<red> <green> <blue>", getStaffFlagValue("manageServer"), true, true),
             commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("manageServer"), true, true, "Sets the starting spawn position for new characters"),
             commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("manageServer"), true, true, "Sets the starting money for new characters"),
             commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("manageServer"), true, true, "Sets the default skin for new characters"),
@@ -307,12 +315,14 @@ function loadCommands() {
             commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true, "Unfreezes a player, allowing them to move again."),
             commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a player."),
             commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Teleports a player to you."),
+            commandData("returnplr", returnPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Returns a player to their previous position."),
             commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("basicModeration"), true, true, "Teleports you to specific coordinates with optional interior and dimension."),
             commandData("gotoveh", gotoVehicleCommand, "<vehicle id>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a vehicle by ID."),
             commandData("gotobiz", gotoBusinessCommand, "<business id/name>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a business by ID or name."),
             commandData("gotohouse", gotoHouseCommand, "<house id/name>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a house by ID or description."),
             commandData("gotojob", gotoJobLocationCommand, "<job id/name> <location id>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a job location by name and location ID."),
             commandData("gotoloc", gotoGameLocationCommand, "<location name>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a game location by name."),
+            commandData("gotospawn", gotoNewPlayerSpawnCommand, "", getStaffFlagValue("basicModeration"), true, true, "Teleports you to the new player spawn location"),
             commandData("fr", teleportForwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you forward a certain distance in meters."),
             commandData("ba", teleportBackwardCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you backward a certain distance in meters."),
             commandData("lt", teleportLeftCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to the left a certain distance in meters."),
@@ -321,24 +331,22 @@ function loadCommands() {
             commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("basicModeration"), true, true, "Teleports you downward a certain distance in meters."),
             commandData("int", playerInteriorCommand, "<interior id>", getStaffFlagValue("basicModeration"), true, true, "Gets or sets a player's game interior."),
             commandData("vw", playerVirtualWorldCommand, "<virtual world id>", getStaffFlagValue("basicModeration"), true, true, "Gets or sets a player's virtual world/dimension."),
-
             commandData("addstaffflag", addStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("manageAdmins"), true, true, "Gives a player a staff flaf (this server only)."),
             commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("manageAdmins"), true, true, "Takes a player's staff flag by name (this server only)."),
             commandData("getstaffflags", getStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true, "Shows a list of all staff flags a player has (this server only)."),
             commandData("clearstaffflags", clearStaffFlagsCommand, "<player name/id>", getStaffFlagValue("manageAdmins"), true, true, "Removes all staff flags for a player (this server only)."),
             commandData("staffflags", allStaffFlagsCommand, "", getStaffFlagValue("manageAdmins"), true, true, "Shows a list of all valid staff flag names."),
-
             commandData("givemoney", givePlayerMoneyCommand, "<player name/id> <amount>", getStaffFlagValue("serverManager"), true, true),
-
             commandData("nonrpname", forceCharacterNameChangeCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Forces a player to change their current character's name."),
             commandData("forcename", forceCharacterNameCommand, "<player name/id> <first name> <last name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's name directly."),
-
             commandData("forceskin", forcePlayerSkinCommand, "<player name/id> <skin id/name>", getStaffFlagValue("basicModeration"), true, true, "Changes a character's skin directly."),
-
             commandData("plrinfo", getPlayerInfoCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows basic info about the specified player"),
             commandData("getplrhouse", getAllHousesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all houses owned by the player"),
             commandData("getplrbiz", getAllBusinessesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all businesses owned by the player"),
             commandData("getplrveh", getAllVehiclesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all vehicles owned by the player"),
+            commandData("geoip", getGeoIPInformationCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Retrieves GeoIP information on a player (country & city)"),
+
+            commandData("forcepayday", forcePlayerPayDayCommand, "<player name/id>", getStaffFlagValue("manageServer"), true, true, "Gives a player an instant payday."),
         ],
         radio: [
             commandData("radiostation", playStreamingRadioCommand, "<radio station id>", getStaffFlagValue("none"), true, false, "Plays a radio station in your vehicle, house, or business (depending on which one you're in)"),

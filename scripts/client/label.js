@@ -7,8 +7,6 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-"use strict";
-
 let businessLabels = [];
 let houseLabels = [];
 let jobLabels = [];
@@ -165,7 +163,7 @@ function renderPropertyExitLabel(position) {
     }
 
     let text = "EXIT";
-    size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
+    let size = propertyLabelNameFont.measure(text, game.width, 0.0, 0.0, propertyLabelNameFont.size, true, true);
     propertyLabelNameFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelNameFont.size, COLOUR_WHITE, false, true, false, true);
 }
 

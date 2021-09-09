@@ -50,7 +50,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.drunkEffect", setLocalPlayerDrunkEffect);
     addNetworkHandler("vrr.showItemActionDelay", showItemActionDelay);
     addNetworkHandler("vrr.set2DRendering", setPlayer2DRendering);
-    addNetworkHandler("vrr.mouseCursor", setMouseCursorState);
+    addNetworkHandler("vrr.mouseCursor", toggleMouseCursor);
     addNetworkHandler("vrr.mouseCamera", setMouseCameraState);
     addNetworkHandler("vrr.weaponDamageEnabled", setPlayerWeaponDamageEnabled);
     addNetworkHandler("vrr.weaponDamageEvent", setPlayerWeaponDamageEvent);

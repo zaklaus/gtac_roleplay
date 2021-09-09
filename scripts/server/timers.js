@@ -89,15 +89,21 @@ function updatePings() {
 // ===========================================================================
 
 function checkServerGameTime() {
-	if(getServerConfig().minute >= 59) {
-		getServerConfig().minute = 0;
-		if(getServerConfig().hour >= 23) {
-			getServerConfig().hour = 0;
+	if(!getServerConfig().useRealTime) {
+		if(getServerConfig().minute >= 59) {
+			getServerConfig().minute = 0;
+			if(getServerConfig().hour >= 23) {
+				getServerConfig().hour = 0;
+			} else {
+				getServerConfig().hour = getServerConfig().hour + 1;
+			}
 		} else {
-			getServerConfig().hour = getServerConfig().hour + 1;
+			getServerConfig().minute = getServerConfig().minute + 1;
 		}
 	} else {
-		getServerConfig().minute = getServerConfig().minute + 1;
+		let dateTime = getCurrentTimeStampWithTimeZone(getServerConfig().realTimeZone);
+		getServerConfig().hour = dateTime.getHours();
+		getServerConfig().minute = dateTime.getMinutes();
 	}
 
 	updateTimeRule();

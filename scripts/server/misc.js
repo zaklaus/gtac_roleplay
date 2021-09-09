@@ -242,7 +242,7 @@ function enterExitPropertyCommand(command, params, client) {
 					if(doesBusinessHaveAnyItemsToBuy(closestBusinessId)) {
 						messagePlayerInfo(client, "Use /buy to purchase items from this business");
 					}
-					updateInteriorLightsForPlayer(client, closestBusiness.lights);
+					updateInteriorLightsForPlayer(client, closestBusiness.interiorLights);
 					setTimeout(function() {
 						if(closestBusiness.streamingRadioStation != -1) {
 							if(getPlayerData(client).streamingRadioStation != closestBusiness.streamingRadioStation) {
@@ -281,17 +281,17 @@ function enterExitPropertyCommand(command, params, client) {
 			}
 			disableCityAmbienceForPlayer(client);
 			setTimeout(function() {
-				setPlayerPosition(client, closestHouse.exitPosition);
-				setPlayerHeading(client, closestHouse.exitRotation);
 				setPlayerDimension(client, closestHouse.exitDimension);
 				setPlayerInterior(client, closestHouse.exitInterior);
+				setPlayerPosition(client, closestHouse.exitPosition);
+				setPlayerHeading(client, closestHouse.exitRotation);
 				sendPlayerHouseGameScripts(client, closestHouse.index);
 				setTimeout(function() {
 					if(isFadeCameraSupported()) {
 						fadeCamera(client, true, 1.0);
 					}
 					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
-					updateInteriorLightsForPlayer(client, closestHouse.lights);
+					updateInteriorLightsForPlayer(client, closestHouse.interiorLights);
 					setTimeout(function() {
 						if(closestHouse.streamingRadioStation != -1) {
 							if(getPlayerData(client).streamingRadioStation != closestHouse.streamingRadioStation) {

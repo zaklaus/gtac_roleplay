@@ -100,6 +100,7 @@ let serverBitFlagKeys = {
 		"manageHouses",
 		"manageBusinesses",
 		"manageNPCs",
+		"manageRanks",
 		"owner",
 	],
 	accountSettingsFlagKeys: [

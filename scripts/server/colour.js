@@ -160,12 +160,26 @@ function getPlayerColour(client) {
 
 // ===========================================================================
 
-function getBoolRedGreenInlineColour(boolVal) {
-	return (!boolVal) ? "[#CD3C3C]" : "[#32CD32]";
+/**
+ * Gets the red/green colour depending on bool (red = false, green = true) for inline use in chatbox messages
+ *
+ * @param {Boolean} boolValue The boolean value
+ * @return {String} Red or green inline HEX colour string
+ *
+ */
+function getBoolRedGreenInlineColour(boolValue) {
+	return (!boolValue) ? "[#CD3C3C]" : "[#32CD32]";
 }
 
 // ===========================================================================
 
+/**
+ * Gets an array of RGB colour values from a HEX colour string
+ *
+ * @param {String} hexColour Hex colour string
+ * @return {Array} 3-slot array where each slot is an RGB colour value
+ *
+ */
 function hexToRgb(h) {
 	return [
 		'0x'+h[1]+h[2]|0,
@@ -176,12 +190,28 @@ function hexToRgb(h) {
 
 // ===========================================================================
 
+/**
+ * Gets a HEX colour string from RGB values, without brackets (example: #FFFFFF)
+ *
+ * @param {Number} red Red RGB value
+ * @param {Number} green Green RGB value
+ * @param {Number} blue Blue RGB value
+ * @return {String} HEX colour string
+ *
+ */
 function rgbToHex(r, g, b) {
 	return "#"+((1<<24)+(r<<16)+(g<<8)+ b).toString(16).slice(1);
 }
 
 // ===========================================================================
 
+/**
+ * Gets the current colour for a player (affected by job and status)
+ *
+ * @param {Client} client Player client
+ * @return {Number} Colour integer
+ *
+ */
 function getClientChatColour(client) {
 	let tempJob = getPlayerCurrentSubAccount(client).job;
 	if(tempJob != -1) {
@@ -194,6 +224,12 @@ function getClientChatColour(client) {
 
 // ===========================================================================
 
+/**
+ * Gets a toColour-created colour integer with random RGB values (alpha is always 255)
+ *
+ * @return {Number} Colour integer
+ *
+ */
 function getRandomRGB() {
 	return toColour.apply(null, [
 		getRandom(0, 255),
@@ -205,18 +241,39 @@ function getRandomRGB() {
 
 // ===========================================================================
 
+/**
+ * Gets a hex formatting colour by name for use inline in chatbox messages (example: [#FFFFFF]).
+ *
+ * @param {String} colourName - Colour name
+ * @return {String} HEX-formatted colour string with brackets
+ *
+ */
 function getInlineChatColourByName(colourName) {
 	return `[${getHexColourByName(colourName)}]`;
 }
 
 // ===========================================================================
 
+/**
+ * Gets a hex formatting colour by type for use inline in chatbox messages (example: [#FFFFFF]).
+ *
+ * @param {String} colourName - Colour type
+ * @return {String} HEX-formatted colour string with brackets
+ *
+ */
 function getInlineChatColourByType(colourName) {
 	return `[${getHexColourByType(colourName)}]`;
 }
 
 // ===========================================================================
 
+/**
+ * Gets an array of RGBA colour values from a toColour integer.
+ *
+ * @param {Number} colour - Colour integer created by toColour
+ * @return {Array} 4-slot array where each slot is an RGBA colour value
+ *
+ */
 function rgbaArrayFromToColour(colour) {
     //return [
     //    (colour >> 24) & 0xFF, // red

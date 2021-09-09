@@ -11,7 +11,7 @@
 const VRR_LABEL_JOB = 1;
 const VRR_LABEL_BUSINESS = 2;
 const VRR_LABEL_HOUSE = 3;
-const VRR_LABEL_EXIT = 3;
+const VRR_LABEL_EXIT = 4;
 
 // Log Levels
 const LOG_ALL = -1;

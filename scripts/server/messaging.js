@@ -180,7 +180,7 @@ function messagePlayerMeAction(client, doingActionClient, messageText) {
 // ===========================================================================
 
 function messagePlayerClanChat(client, clanChattingClient, messageText) {
-    messagePlayerNormal(client, `👥 (${getClientSubAccountClanRank(clanChattingClient)}) ${getClientSubAccountName(clanChattingClient)} says (clan): ${messageText}`, getColourByType("clanChatMessage"));
+    messagePlayerNormal(client, `👥 ${getInlineChatColourByName("clanOrange")}${(getPlayerClanRankName(clanChattingClient) != false) ? getPlayerClanRankName(clanChattingClient) : "No Rank"} ${getCharacterFullName(clanChattingClient)} ${getInlineChatColourByName("white")}says (clan): ${getInlineChatColourByName("lightGrey")}${messageText}`, getColourByType("clanChatMessage"));
 }
 
 // ===========================================================================

@@ -203,8 +203,8 @@ function meActionToNearbyPlayers(client, messageText) {
 function clanChat(client, messageText) {
 	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerCurrentSubAccount(client).clan != getPlayerCurrentSubAccount(clients[i]).clan) {
-			messageClientClanChat(clients[i], client, messageText);
+		if(arePlayersInSameClan(client, clients[i])) {
+			messagePlayerClanChat(clients[i], client, messageText);
 		}
 	}
 }

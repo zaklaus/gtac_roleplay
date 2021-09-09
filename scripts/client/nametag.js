@@ -140,6 +140,10 @@ function drawNametag(x, y, health, armour, text, ping, alpha, distance, colour, 
 // ===========================================================================
 
 function updateNametags(element) {
+	if(!areWorldLabelsSupported()) {
+		return false;
+	}
+
 	if(localPlayer != null) {
 		let playerPos = localPlayer.position;
 		let elementPos = element.position;

@@ -443,9 +443,9 @@ function setMouseCameraState(state) {
 
 // ===========================================================================
 
-function setMouseCursorState(state) {
-    logToConsole(LOG_DEBUG, `[VRR.Utilities] ${(state)?"Enabled":"Disabled"} mouse cursor`);
-    gui.showCursor(state, !state);
+function toggleMouseCursor() {
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] ${(!gui.cursorEnabled)?"Enabled":"Disabled"} mouse cursor`);
+    gui.showCursor(!gui.cursorEnabled, gui.cursorEnabled);
 }
 
 // ===========================================================================

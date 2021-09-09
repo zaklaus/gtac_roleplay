@@ -32,6 +32,8 @@ function initClassTable() {
 				this.newCharacter = {
 					spawnPosition: false,
 					spawnHeading: 0.0,
+					spawnInterior: 0,
+					spawnDimension: 0,
 					money: 0,
 					bank: 0,
 					skin: 0,
@@ -80,6 +82,9 @@ function initClassTable() {
 				this.introMusicURL = "";
 
 				this.pauseSavingToDatabase = false;
+
+				this.useRealTime = false;
+				this.realTimeZone = 0;
 
 				if(dbAssoc) {
 					this.databaseId = dbAssoc["svr_id"];
@@ -133,6 +138,8 @@ function initClassTable() {
 					this.createHouseBlips = intToBool(dbAssoc["svr_house_blips"]);
 
 					this.introMusicURL = dbAssoc["svr_intro_music"];
+					this.useRealTime = intToBool(dbAssoc["svr_time_realtime_enabled"]);
+					this.realTimeZone = dbAssoc["svr_time_realtime_timezone"];
 				}
 			}
 		},
@@ -734,8 +741,8 @@ function initClassTable() {
 				this.name = "";
 				this.level = 0;
 				this.flags = 0;
-				this.tag = "";
-				this.enabled = false;
+				this.customTag = "";
+				this.enabled = true;
 				this.index = -1;
 				this.clanIndex = -1;
 				this.needsSaved = false;

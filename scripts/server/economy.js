@@ -39,7 +39,7 @@ function playerPayDay(client) {
 	let netIncome = grossIncome-taxAmount;
 
 	messagePlayerAlert(client, "== Payday! =============================");
-	messagePlayerInfo(client, `Your paycheck: ${getInlineChatColourByName("lightGrey")}$${grossIncome}`);
+	messagePlayerInfo(client, `Paycheck: ${getInlineChatColourByName("lightGrey")}$${grossIncome}`);
 	messagePlayerInfo(client, `Taxes: ${getInlineChatColourByName("lightGrey")}$${taxAmount}`);
 	messagePlayerInfo(client, `You receive: ${getInlineChatColourByName("lightGrey")}$${netIncome}`);
 
@@ -58,6 +58,24 @@ function calculateWealth(client) {
 function calculateTax(client) {
 	// To-do
 	return 0;
+}
+
+// ===========================================================================
+
+function forcePlayerPayDayCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, "That player is not connected!");
+		return false;
+	}
+
+	messageAdmins(`${client.name} gave ${targetClient.name} an instant payday`);
+	playerPayDay(targetClient);
 }
 
 // ===========================================================================

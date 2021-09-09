@@ -227,7 +227,7 @@ function syncPlayerProperties(player) {
     if(getGame() == GAME_GTA_SA) {
         if(doesEntityDataExist(player, "vrr.fightStyle")) {
             let fightStyle = getEntityData(player, "vrr.fightStyle");
-            player.fightStyle = fightStyle;
+            player.setFightStyle(fightStyle[0], fightStyle[1]);
         }
     }
 

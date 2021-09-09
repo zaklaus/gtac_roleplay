@@ -379,12 +379,12 @@ function lockUnlockBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	getBusinessData(businessId).interiorLights = !getBusinessData(houseId).interiorLights;
+	getBusinessData(businessId).interiorLights = !getBusinessData(businessId).interiorLights;
 
 	getBusinessData(businessId).needsSaved = true;
 
 	updateBusinessInteriorLightsForOccupants(businessId);
-	messagePlayerMeAction(client, `turns ${getOnOffFromBool(getBusinessData(businessId).interiorLights)} the business lights`);
+	meActionToNearbyPlayers(client, `turns ${toLowerCase(getOnOffFromBool(getBusinessData(businessId).interiorLights))} the business lights`);
 }
 
 // ===========================================================================
@@ -490,6 +490,8 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 
 	if(isNaN(typeParam)) {
 		if(toLowerCase(typeParam) == "none") {
+			removePlayersFromBusiness(businessId);
+
 			getBusinessData(businessId).exitPosition = toVector3(0.0, 0.0, 0.0);
 			getBusinessData(businessId).exitInterior = 0;
 			getBusinessData(businessId).hasInterior = false;
@@ -497,17 +499,8 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 
 			resetBusinessPickups();
 			resetBusinessBlips();
-			return false;
-		} else if(toLowerCase(typeParam) == "teleport") {
-			getBusinessData(businessId).exitPosition = getPlayerPosition(client);
-			getBusinessData(businessId).exitInterior = getPlayerInterior(client);
-			getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
-			getBusinessData(businessId).hasInterior = true;
-			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
 
-			resetBusinessPickups();
-			resetBusinessBlips();
-			return true;
+			return false;
 		}
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
@@ -516,6 +509,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			return false;
 		}
 
+		removePlayersFromBusiness(businessId);
 		messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior type to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
 		getBusinessData(businessId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitPosition;
 		getBusinessData(businessId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitInterior;
@@ -529,6 +523,8 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			messagePlayerError(client, "Business ID not found!");
 			return false;
 		}
+
+		removePlayersFromBusiness(businessId);
 		getBusinessData(businessId).exitPosition = getBusinessData(businessId).exitPosition;
 		getBusinessData(businessId).exitInterior = getBusinessData(businessId).exitInterior;
 		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;

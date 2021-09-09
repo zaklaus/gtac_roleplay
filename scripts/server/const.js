@@ -22,6 +22,7 @@ const VRR_JOB_TAXI = 5;
 const VRR_JOB_GARBAGE = 6;
 const VRR_JOB_WEAPON = 7;
 const VRR_JOB_DRUG = 8;
+const VRR_JOB_PIZZA = 9;
 
 // Pickup Types
 const VRR_PICKUP_NONE = 0;

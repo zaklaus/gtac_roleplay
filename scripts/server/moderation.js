@@ -196,9 +196,31 @@ function gotoPlayerCommand(command, params, client) {
 		setPlayerHeading(client, getPlayerHeading(targetClient));
 		setPlayerInterior(client, getPlayerInterior(targetClient));
 		setPlayerDimension(client, getPlayerInterior(targetClient));
+		updateInteriorLightsForPlayer(client, true);
 	}, 1000);
 
 	messagePlayerSuccess(client, `You teleported to ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)}`);
+}
+
+// ===========================================================================
+
+function getGeoIPInformationCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let targetClient = getPlayerFromParams(params);
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!");
+        return false;
+    }
+
+	let countryName = module.geoip.getCountryName(getGlobalConfig().geoIPCountryDatabaseFilePath, targetClient.ip);
+	let subDivisionName = module.geoip.getSubdivisionName(getGlobalConfig().geoIPCityDatabaseFilePath, targetClient.ip);
+	let cityName = module.geoip.getCityName(getGlobalConfig().geoIPCityDatabaseFilePath, targetClient.ip);
+
+	messagePlayerInfo(client, `${getInlineChatColourByName("lightGrey")}${targetClient.name} ${getInlineChatColourByName("white")}is from ${getInlineChatColourByName("lightGrey")}${cityName}, ${subDivisionName}, ${countryName}`);
 }
 
 // ===========================================================================
@@ -220,6 +242,7 @@ function gotoVehicleCommand(command, params, client) {
 		setPlayerPosition(client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
 		setPlayerInterior(client, 0);
 		setPlayerDimension(client, getElementDimension(vehicle));
+		updateInteriorLightsForPlayer(client, true);
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to a ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("lightGrey")}(ID ${vehicle.id})`);
@@ -245,6 +268,7 @@ function gotoBusinessCommand(command, params, client) {
 		setPlayerPosition(client, getBusinessData(businessId).entrancePosition);
 		setPlayerInterior(client, getBusinessData(businessId).entranceInterior);
 		setPlayerDimension(client, getBusinessData(businessId).entranceDimension);
+		updateInteriorLightsForPlayer(client, true);
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("lightGrey")}(ID ${businessId})`);
@@ -270,6 +294,7 @@ function gotoGameLocationCommand(command, params, client) {
 		setPlayerPosition(client, getGameData().locations[getServerGame()][gameLocationId][1]);
 		setPlayerInterior(client, 0);
 		setPlayerDimension(client, 0);
+		updateInteriorLightsForPlayer(client, true);
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to game location ${getInlineChatColourByName("lightGrey")}${getGameData().locations[getServerGame()][gameLocationId][0]}`);
@@ -295,6 +320,7 @@ function gotoHouseCommand(command, params, client) {
 		setPlayerPosition(client, getHouseData(houseId).entrancePosition);
 		setPlayerInterior(client, getHouseData(houseId).entranceInterior);
 		setPlayerDimension(client, getHouseData(houseId).entranceDimension);
+		updateInteriorLightsForPlayer(client, true);
 	}, 500);
 
 	messagePlayerSuccess(client, `You teleported to business ${getInlineChatColourByType("businessBlue")}${getHouseData(houseId).description} ${getInlineChatColourByName("lightGrey")}(ID ${houseId})`);
@@ -328,8 +354,21 @@ function gotoJobLocationCommand(command, params, client) {
 	setPlayerPosition(client, getJobData(jobId).locations[jobLocationId].position);
 	setPlayerInterior(client, getJobData(jobId).locations[jobLocationId].interior);
 	setPlayerDimension(client, getJobData(jobId).locations[jobLocationId].dimension);
+	updateInteriorLightsForPlayer(client, true);
 
 	messagePlayerSuccess(client, `You teleported to location ${getInlineChatColourByName("lightGrey")}${jobLocationId} ${getInlineChatColourByName("white")}for the ${getInlineChatColourByName("lightGrey")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job`);
+}
+
+// ===========================================================================
+
+function gotoNewPlayerSpawnCommand(command, params, client) {
+	client.player.velocity = toVector3(0.0, 0.0, 0.0);
+	setPlayerPosition(client, getServerConfig().newCharacter.spawnPosition);
+	setPlayerInterior(client, getServerConfig().newCharacter.spawnInterior);
+	setPlayerDimension(client, getServerConfig().newCharacter.spawnDimension);
+	updateInteriorLightsForPlayer(client, true);
+
+	messagePlayerSuccess(client, `You teleported to the new character spawn location!`);
 }
 
 // ===========================================================================
@@ -347,14 +386,15 @@ function gotoPositionCommand(command, params, client) {
 	let int = splitParams[3] || getPlayerInterior(client);
 	let vw = splitParams[4] || getPlayerDimension(client);
 
-	let newPosition = toVector3(Number(x), Number(y), Number(z));
+	let newPosition = toVector3(toInteger(x), toInteger(y), toInteger(z));
 
 	let jobId = getJobFromParams(splitParams[0]) || getClosestJobLocation(getPlayerPosition(client)).job;
 
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	setPlayerPosition(client, newPosition);
-	setPlayerInterior(client, Number(int));
-	setPlayerDimension(client, Number(vw));
+	setPlayerInterior(client, toInteger(int));
+	setPlayerDimension(client, toInteger(vw));
+	updateInteriorLightsForPlayer(client, true);
 
 	messagePlayerSuccess(client, `You teleported to coordinates ${getInlineChatColourByName("lightGrey")}${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
 }

@@ -752,13 +752,15 @@ function getClanFromParams(params) {
 function getClanRankFromParams(clanId, params) {
 	if(isNaN(params)) {
 		for(let i in getClanData(clanId).ranks) {
-			if(toLowerCase(getClanData(clanId).ranks[i].name).indexOf(toLowerCase(params)) != -1) {
+			if((toLowerCase(getClanData(clanId).ranks[i].name).indexOf(toLowerCase(params)) != -1)) {
 				return i;
 			}
 		}
 	} else {
-		if(typeof getClanData(clanId).ranks[params] != "undefined") {
-			return toInteger(params);
+		for(let i in getClanData(clanId).ranks) {
+			if(getClanData(clanId).ranks[i].level == toInteger(params)) {
+				return i;
+			}
 		}
 	}
 
@@ -1535,4 +1537,23 @@ function getAllHousesOwnedByPlayer(client) {
 	return getServerData().houses.filter((h) => h.ownerType == VRR_HOUSEOWNER_PLAYER && h.ownerId == getPlayerCurrentSubAccount(client).databaseId);
 }
 
+// ===========================================================================
+
+function addPositiveNegativeSymbol(value) {
+	return (value >= 0) ? `+${value}` : `${value}`;
+}
+
+// ===========================================================================
+
+function getCurrentTimeStampWithTimeZone(timeZone) {
+	let date = new Date();
+
+	let utcDate = new Date(date.toLocaleString('en-US', { timeZone: "UTC" }));
+	let tzDate = new Date(date.toLocaleString('en-US', { timeZone: timeZone }));
+	let offset = utcDate.getTime() - tzDate.getTime();
+
+	date.setTime( date.getTime() + offset );
+
+	return date;
+};
 // ===========================================================================

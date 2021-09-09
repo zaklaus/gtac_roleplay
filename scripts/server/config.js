@@ -56,6 +56,8 @@ function loadGlobalConfig() {
 		subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
 		emailValidationRegex: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
 		itemActionDelayExtraTimeout: 1000,
+		geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
+		geoIPCityDatabaseFilePath: "geoip-city.mmdb",
 	};
 }
 
@@ -151,9 +153,9 @@ function saveServerConfigToDatabase(serverConfigData) {
 				["svr_newchar_rot_z", serverConfigData.newCharacter.spawnHeading],
 				["svr_newchar_skin", serverConfigData.newCharacter.skin],
 				["svr_newchar_money", serverConfigData.newCharacter.money],
-				["svr_gui_r", serverConfigData.guiColour[0]],
-				["svr_gui_g", serverConfigData.guiColour[1]],
-				["svr_gui_b", serverConfigData.guiColour[2]],
+				["svr_gui_col1_r", serverConfigData.guiColour[0]],
+				["svr_gui_col1_g", serverConfigData.guiColour[1]],
+				["svr_gui_col1_b", serverConfigData.guiColour[2]],
 				["svr_connectcam_pos_x", serverConfigData.connectCameraPosition.x],
 				["svr_connectcam_pos_y", serverConfigData.connectCameraPosition.y],
 				["svr_connectcam_pos_z", serverConfigData.connectCameraPosition.z],
@@ -225,6 +227,15 @@ function getServerId() {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setTimeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -262,6 +273,15 @@ function setTimeCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setMinuteDurationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -280,6 +300,15 @@ function setMinuteDurationCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setWeatherCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -306,6 +335,15 @@ function setWeatherCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setSnowingCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -330,6 +368,51 @@ function setSnowingCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function setServerGUIColoursCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split();
+    let colourRed = toInteger(splitParams[0]) || 255;
+	let colourGreen = toInteger(splitParams[1]) || 255;
+	let colourBlue = toInteger(splitParams[2]) || 255;
+
+	getServerConfig().guiColour = [colourRed, colourGreen, colourBlue];
+
+	let clients = getClients();
+	for(let i in clients) {
+		sendPlayerGUIColours(clients[i]);
+	}
+
+	getServerConfig().needsSaved = true;
+
+    //messageAdminAction(`${getPlayerName(client)} ${getInlineChatColourByName("orange")}set the server ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} ${getInlineChatColourByName("orange")}and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
+    //updateServerRules();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function toggleServerLogoCommand(command, params, client) {
 	getServerConfig().useLogo = !getServerConfig().useLogo;
 
@@ -342,6 +425,15 @@ function toggleServerLogoCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function toggleAntiCheatScriptWhitelist(command, params, client) {
 	getServerConfig().antiCheat.gameScriptWhiteListEnabled = !getServerConfig().antiCheat.gameScriptWhiteListEnabled;
 	getServerConfig().needsSaved = true;
@@ -353,6 +445,15 @@ function toggleAntiCheatScriptWhitelist(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function toggleAntiCheatScriptBlacklist(command, params, client) {
 	getServerConfig().antiCheat.gameScriptBlackListEnabled = !getServerConfig().antiCheat.gameScriptBlackListEnabled;
 	getServerConfig().needsSaved = true;
@@ -364,6 +465,15 @@ function toggleAntiCheatScriptBlacklist(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function toggleServerGUICommand(command, params, client) {
     getServerConfig().useGUI = !getServerConfig().useGUI;
 	getServerConfig().needsSaved = true;
@@ -375,6 +485,62 @@ function toggleServerGUICommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function toggleServerUseRealWorldTimeCommand(command, params, client) {
+    getServerConfig().useRealTime = !getServerConfig().useRealTime;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} turned real-world time ${toLowerCase(getOnOffFromBool(getServerConfig().useRealTime))} for this server (GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)})`);
+	updateServerGameTime();
+    updateServerRules();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function setServerRealWorldTimeZoneCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    getServerConfig().realTimeZone = toInteger(params);
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} set the time zone for in-game's real-world time to GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)}`);
+	updateServerGameTime();
+    updateServerRules();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function reloadServerConfigurationCommand(command, params, client) {
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port);
 	applyConfigToServer(serverConfig);
@@ -387,6 +553,15 @@ function reloadServerConfigurationCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function reloadEmailConfigurationCommand(command, params, client) {
 	emailConfig = loadEmailConfiguration();
     messageAdminAction(`${getPlayerName(client)} reloaded the email configuration`);
@@ -395,6 +570,15 @@ function reloadEmailConfigurationCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function reloadDatabaseConfigurationCommand(command, params, client) {
 	//if(!databaseInUse) {
 		if(databaseConfig.usePersistentConnection && isDatabaseConnected(persistentDatabaseConnection)) {

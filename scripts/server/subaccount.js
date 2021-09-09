@@ -63,9 +63,26 @@ function loadSubAccountsFromAccount(accountId) {
 			if(dbQuery) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempSubAccount = new serverClasses.subAccountData(dbAssoc);
+
+					// Make sure skin is valid
 					if(tempSubAccount.skin == -1) {
 						tempSubAccount.skin = getServerConfig().newCharacter.skin;
 					}
+
+					// Check if clan and rank are still valid
+					if(tempSubAccount.clan != 0) {
+						if(!getClanData(getClanIdFromDatabaseId(tempSubAccount.clan))) {
+							tempSubAccount.clan = 0;
+							tempSubAccount.clanRank = 0;
+							tempSubAccount.clanTitle = "";
+							tempSubAccount.clanFlags = 0;
+						} else {
+							if(!getClanRankData(getClanIdFromDatabaseId(tempSubAccount.clan), tempSubAccount.clanRank)) {
+								tempSubAccount.clanRank = 0;
+							}
+						}
+					}
+
 					tempSubAccounts.push(tempSubAccount);
 				}
 				freeDatabaseQuery(dbQuery);
@@ -217,7 +234,7 @@ function showCharacterSelectToClient(client) {
 		getPlayerData(client).currentSubAccount = 0;
 		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
-		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
+		let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 
@@ -354,11 +371,16 @@ function selectCharacter(client, characterId = -1) {
 	logToConsole(LOG_DEBUG, `[VRR.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 	//setPlayerCameraLookAt(client, getPosBehindPos(spawnPosition, spawnHeading, 5), spawnPosition);
 	getPlayerData(client).pedState = VRR_PEDSTATE_SPAWNING;
-	if(getServerGame() == GAME_GTA_IV) {
-		spawnPlayer(client, spawnPosition, spawnHeading, skin);
-	} else {
+
+	if(!isGTAIV()) {
 		spawnPlayer(client, spawnPosition, spawnHeading, skin, spawnInterior, spawnDimension);
+	} else {
+		setPlayerPosition(client, spawnPosition);
+		setPlayerHeading(client, spawnHeading);
+		setPlayerSkin(client, skin);
+		restorePlayerCamera(client);
 	}
+
 	logToConsole(LOG_DEBUG, `[VRR.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
 
 	setTimeout(function() {

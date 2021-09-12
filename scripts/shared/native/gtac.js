@@ -1072,6 +1072,10 @@ function isCustomCameraSupported() {
 // ===========================================================================
 
 function areWorldLabelsSupported() {
+	if(isGTAIV()) {
+		return false;
+	}
+
     return true;
 }
 

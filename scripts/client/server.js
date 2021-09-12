@@ -78,16 +78,13 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.veh.engine", toggleVehicleEngine);
     addNetworkHandler("vrr.veh.repair", repairVehicle);
 
-    addNetworkHandler("vrr.veh.sync", syncVehicleProperties);
-    addNetworkHandler("vrr.civ.sync", syncCivilianProperties);
-    addNetworkHandler("vrr.plr.sync", syncPlayerProperties);
-    addNetworkHandler("vrr.obj.sync", syncObjectProperties);
-
     addNetworkHandler("vrr.pedAnim", makePedPlayAnimation);
     addNetworkHandler("vrr.hideAllGUI", hideAllGUI);
     addNetworkHandler("vrr.gameScript", setGameScriptState);
     addNetworkHandler("vrr.clientInfo", serverRequestedClientInfo);
     addNetworkHandler("vrr.interiorLights", updateInteriorLightsState);
+
+    addNetworkHandler("vrr.syncElement", forceSyncElementProperties);
 }
 
 // ===========================================================================
@@ -276,6 +273,12 @@ function serverRequestedClientInfo() {
 
 function updateInteriorLightsState(state) {
     interiorLightsEnabled = state;
+}
+
+// ===========================================================================
+
+function forceSyncElementProperties(elementId) {
+    syncElementProperties(getElementFromId(elementId));
 }
 
 // ===========================================================================

@@ -202,6 +202,8 @@ function initClassTable() {
 
 				this.syncPosition = null;
 				this.syncHeading = null;
+				this.syncVehicle = null;
+				this.syncVehicleSeat = null;
 
 				this.twoFactorAuthenticationState = VRR_2FA_STATE_NONE;
 				this.twoFactorAuthenticationCode = 0;
@@ -423,7 +425,6 @@ function initClassTable() {
 					this.account = toInteger(dbAssoc["sacct_acct"]);
 					this.skin = toInteger(dbAssoc["sacct_svr_skin"]);
 					this.cash = toInteger(dbAssoc["sacct_cash"]);
-					console.log(dbAssoc["sacct_pos_x"]);
 					this.spawnPosition = toVector3(toFloat(dbAssoc["sacct_pos_x"]), toFloat(dbAssoc["sacct_pos_y"]), toFloat(dbAssoc["sacct_pos_z"]));
 					this.spawnHeading = toFloat(dbAssoc["sacct_rot_z"]);
 					this.lastLogin = toInteger(dbAssoc["sacct_when_lastlogin"]);

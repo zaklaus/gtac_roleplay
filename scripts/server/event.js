@@ -251,6 +251,36 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
                 messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
                 resetVehiclePosition(vehicle);
             } else {
+                let ownerName = "Nobody";
+                let ownerType = "None";
+                ownerType = toLowerCase(getVehicleOwnerTypeText(getVehicleData(vehicle).ownerType));
+                switch(vehicleData.ownerType) {
+                    case VRR_VEHOWNER_CLAN:
+                        ownerName = getClanData(getVehicleData(vehicle).ownerId).name;
+                        ownerType = "clan";
+                        break;
+
+                    case VRR_VEHOWNER_JOB:
+                        ownerName = getJobData(getJobIdFromDatabaseId(getVehicleData(vehicle).ownerId)).name;
+                        ownerType = "job";
+                        break;
+
+                    case VRR_VEHOWNER_PLAYER:
+                        let subAccountData = loadSubAccountFromId(getVehicleData(vehicle).ownerId);
+                        ownerName = `${subAccountData.firstName} ${subAccountData.lastName} [${subAccountData.databaseId}]`;
+                        ownerType = "player";
+                        break;
+
+                    case VRR_VEHOWNER_BIZ:
+                        ownerName = getBusinessData(getVehicleData(vehicle).ownerId).name;
+                        ownerType = "business";
+                        break;
+
+                    default:
+                        break;
+                }
+                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} belongs to ${getInlineChatColourByName("lightGrey")}${ownerName} (${ownerType})`);
+
                 if(!getVehicleData(vehicle).engine) {
                     if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                         if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
@@ -472,8 +502,7 @@ function onPlayerSpawn(client) {
             logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
             setEntityData(client.player, "vrr.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
 
-            let fightStyleId = getPlayerCurrentSubAccount(client).fightStyle;
-            setEntityData(client.player, "vrr.fightStyle", [getGameData().fightStyles[getServerGame()][fightStyleId][1][0], getGameData().fightStyles[getServerGame()][fightStyleId][1][1]], true);
+            setPlayerFightStyle(client, getPlayerCurrentSubAccount(client).fightStyle);
         }
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
@@ -501,6 +530,24 @@ function onPlayerSpawn(client) {
             sendPlayerEnterPropertyKey(client, keyId.key);
         }
 
+        if(isGTAIV()) {
+            setEntityData(client.player, "vrr.bodyPartHair", getPlayerCurrentSubAccount(client).bodyParts.hair, true);
+            setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyParts.head, true);
+            setEntityData(client.player, "vrr.bodyPartUpper", getPlayerCurrentSubAccount(client).bodyParts.upper, true);
+            setEntityData(client.player, "vrr.bodyPartLower", getPlayerCurrentSubAccount(client).bodyParts.lower, true);
+
+            setEntityData(client.player, "vrr.bodyPropHair", getPlayerCurrentSubAccount(client).bodyProps.hair, true);
+            setEntityData(client.player, "vrr.bodyPropEyes", getPlayerCurrentSubAccount(client).bodyProps.eyes, true);
+            setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyProps.head, true);
+            setEntityData(client.player, "vrr.bodyPartLeftHand", getPlayerCurrentSubAccount(client).bodyProps.leftHand, true);
+            setEntityData(client.player, "vrr.bodyPartRightHand", getPlayerCurrentSubAccount(client).bodyProps.rightHand, true);
+            setEntityData(client.player, "vrr.bodyPartLeftWrist", getPlayerCurrentSubAccount(client).bodyProps.leftWrist, true);
+            setEntityData(client.player, "vrr.bodyPartRightWrist", getPlayerCurrentSubAccount(client).bodyProps.rightWrist, true);
+            setEntityData(client.player, "vrr.bodyPartHip", getPlayerCurrentSubAccount(client).bodyProps.hip, true);
+            setEntityData(client.player, "vrr.bodyPartLeftFoot", getPlayerCurrentSubAccount(client).bodyProps.leftFoot, true);
+            setEntityData(client.player, "vrr.bodyPartRightFoot", getPlayerCurrentSubAccount(client).bodyProps.rightFoot, true);
+        }
+
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 
@@ -520,6 +567,8 @@ function onPlayerSpawn(client) {
         if(getPlayerCurrentSubAccount(client).inHouse > 0) {
             setEntityData(client.player, "vrr.inHouse", getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse), true);
         }
+
+
     //}
 }
 

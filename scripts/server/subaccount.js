@@ -375,10 +375,11 @@ function selectCharacter(client, characterId = -1) {
 	if(!isGTAIV()) {
 		spawnPlayer(client, spawnPosition, spawnHeading, skin, spawnInterior, spawnDimension);
 	} else {
-		setPlayerPosition(client, spawnPosition);
-		setPlayerHeading(client, spawnHeading);
-		setPlayerSkin(client, skin);
-		restorePlayerCamera(client);
+		//setPlayerPosition(client, spawnPosition);
+		//setPlayerHeading(client, spawnHeading);
+		//setPlayerSkin(client, skin);
+		//restorePlayerCamera(client);
+		spawnPlayer(client, spawnPosition, spawnHeading, skin, spawnInterior, spawnDimension);
 	}
 
 	logToConsole(LOG_DEBUG, `[VRR.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
@@ -544,8 +545,62 @@ function setFightStyleCommand(command, params, client) {
 		return false;
 	}
 
+	if(!isPlayerAtGym(client)) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
+			messagePlayerError(client, `You need to be at a gym!`);
+			return false
+		}
+	}
+
 	setPlayerFightStyle(client, fightStyleId);
 	messagePlayerSuccess(client, `Your fight style has been set to ${getGameData().fightStyles[getServerGame()][fightStyleId][0]}`)
+
+	return true;
+}
+
+// ===========================================================================
+
+function forceFightStyleCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split();
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let fightStyleId = getFightStyleFromParams(splitParams[1]);
+
+	//if(!targetClient) {
+	//	messagePlayerError(client, `Player not found!`);
+	//	return false;
+	//}
+
+	//if(!getPlayerData(targetClient)) {
+	//	messagePlayerError(client, `Player not found!`);
+	//	return false;
+	//}
+
+	//if(!isPlayerSpawned(targetClient)) {
+	//	messagePlayerError(client, `That player isn't spawned`);
+	//	return false;
+	//}
+
+	if(!fightStyleId) {
+		messagePlayerError(client, `That fight style doesn't exist!`);
+		messagePlayerError(client, `Fight styles: ${getGameData().fightStyles[getServerGame()].map(fs => fs[0]).join(", ")}`);
+		return false;
+	}
+
+	if(!isPlayerAtGym(client)) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
+			messagePlayerError(client, `You need to be at a gym!`);
+			return false
+		}
+	}
+
+	getPlayerCurrentSubAccount(client).fightStyle = fightStyleId;
+	setPlayerFightStyle(client, fightStyleId);
+	messagePlayerSuccess(client, `You set ${getCharacterFullName(targetClient)}'s fight style to ${getGameData().fightStyles[getServerGame()][fightStyleId][0]}`)
 
 	return true;
 }

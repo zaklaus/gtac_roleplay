@@ -140,6 +140,10 @@ function showGameMessage(client, text, colour, duration) {
 // ===========================================================================
 
 function enableCityAmbienceForPlayer(client, clearElements = false) {
+    if(server.getCVar("civilians") == false) {
+        return false;
+    }
+
     logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
     triggerNetworkEvent("vrr.ambience", client, true);
 }
@@ -147,6 +151,10 @@ function enableCityAmbienceForPlayer(client, clearElements = false) {
 // ===========================================================================
 
 function disableCityAmbienceForPlayer(client, clearElements = false) {
+    if(server.getCVar("civilians") == true) {
+        return false;
+    }
+
     logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
     triggerNetworkEvent("vrr.ambience", client, false, clearElements);
 }
@@ -964,6 +972,12 @@ function requestClientInfo(client) {
 
 function updateInteriorLightsForPlayer(client, state) {
     triggerNetworkEvent("vrr.interiorLights", client, state);
+}
+
+// ===========================================================================
+
+function forcePlayerToSyncElementProperties(client, element) {
+    triggerNetworkEvent("vrr.syncElement", client, element.id);
 }
 
 // ===========================================================================

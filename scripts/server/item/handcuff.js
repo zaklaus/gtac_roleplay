@@ -30,7 +30,7 @@ function unHandCuffPlayer(client) {
 // ===========================================================================
 
 function isPlayerSurrendered(client) {
-    return (getPlayerData(client).pedState == VRR_PEDSTATE_TAZED || getPlayerData(client).pedState == VRR_PEDSTATE_HANDSUP);
+    return true; //(getPlayerData(client).pedState == VRR_PEDSTATE_TAZED || getPlayerData(client).pedState == VRR_PEDSTATE_HANDSUP);
 }
 
 // ===========================================================================

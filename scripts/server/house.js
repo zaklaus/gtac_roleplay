@@ -214,11 +214,18 @@ function setHouseOwnerCommand(command, params, client) {
 		return false;
 	}
 
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+		if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER && getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+			messagePlayerError(client, "You don't own this house!");
+			return false;
+		}
+	}
+
 	getHouseData(houseId).needsSaved = true;
 
 	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_PLAYER;
 	getHouseData(houseId).ownerId = getServerData().clients[newHouseOwner.index].accountData.databaseId;
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}owner to ${getInlineChatColourByName("lightGrey")}${newHouseOwner.name}`);
+	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newHouseOwner.name}`);
 }
 
 // ===========================================================================
@@ -235,23 +242,78 @@ function setHouseOwnerCommand(command, params, client) {
 function setHouseClanCommand(command, params, client) {
 	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
 
-	let clan = getClanFromParams(params);
-
-	if(!clan) {
-		messagePlayerError(client, "That clan is invalid or doesn't exist!");
-		return false;
-	}
-
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
 		return false;
+	}
+
+	let clanId = getPlayerClan(params);
+
+	if(!getClanData(clanId)) {
+		messagePlayerError(client, "Clan not found!");
+		return false;
+	}
+
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+		if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER && getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+			messagePlayerError(client, "You don't own this house!");
+			return false;
+		}
 	}
 
 	getHouseData(houseId).needsSaved = true;
 
 	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_CLAN;
 	getHouseData(houseId).ownerId = getClanData(clanId).databaseId;
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan!`);
+	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")} to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan!`);
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function setHouseRankCommand(command, params, client) {
+	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+
+	if(!getHouseData(houseId)) {
+		messagePlayerError("House not found!");
+		return false;
+	}
+
+	let clanId = getPlayerClan(params);
+
+	if(!getClanData(clanId)) {
+		messagePlayerError(client, "Clan not found!");
+		return false;
+	}
+
+	let clanRankId = getClanRankFromParams(clanId, params);
+
+	if(!getClanRankData(clanId, clanRankId)) {
+		messagePlayerError(client, "Clan rank not found!");
+		return false;
+	}
+
+	if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageHouses"))) {
+		messagePlayerError(client, "You can't set clan house ranks!");
+		return false;
+	}
+
+	if(getClanRankData(clanId, clanRankId).level > getPlayerCurrentSubAccount(client).clanRank) {
+		messagePlayerError(client, "That rank is above your level!");
+		return false;
+	}
+
+	getHouseData(houseId).clanRank = getClanRankData(clanId, clanRankId).level;
+	getHouseData(houseId).needsSaved = true;
+	messagePlayerSuccess(`${getInlineChatColourByName("white")}You set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}${getInlineChatColourByName("white")}'s clan rank to ${getInlineChatColourByType("clanOrange")}${getClanRankData(clanId, clanRankId).name} ${getInlineChatColourByName("white")}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
 }
 
 // ===========================================================================
@@ -597,6 +659,19 @@ function getClosestHouseEntrance(position) {
 	let closest = 0;
 	for(let i in houses) {
 		if(getDistance(houses[i].entrancePosition, position) <= getDistance(houses[closest].entrancePosition, position)) {
+			closest = i;
+		}
+	}
+	return closest;
+}
+
+// ===========================================================================
+
+function getClosestHouseExit(position) {
+	let houses = getServerData().houses;
+	let closest = 0;
+	for(let i in houses) {
+		if(getDistance(houses[i].exitPosition, position) <= getDistance(houses[closest].exitPosition, position)) {
 			closest = i;
 		}
 	}
@@ -1182,6 +1257,46 @@ function updateHouseInteriorLightsForOccupants(houseId) {
 			updateInteriorLightsForPlayer(clients[i], getHouseData(houseId).interiorLights);
 		}
 	}
+}
+
+// ===========================================================================
+
+function canPlayerSetHouseInteriorLights(client, houseId) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+		return true;
+	}
+
+	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER && getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+		return true;
+	}
+
+	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_CLAN && getHouseData(houseId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageHouses"))) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function canPlayerLockUnlockHouse(client, houseId) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+		return true;
+	}
+
+	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER && getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+		return true;
+	}
+
+	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_CLAN && getHouseData(houseId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageHouses"))) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 // ===========================================================================

@@ -426,7 +426,7 @@ function vehicleSirenCommand(command, params, client) {
 
 // ===========================================================================
 
-function setVehicleColourCommand(command, params, client) {
+function vehicleColourCommand(command, params, client) {
 	if(areParamsEmpty(params) && areThereEnoughParams(params, 2)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -505,6 +505,49 @@ function vehicleRepairCommand(command, params, client) {
 	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `repairs the ${getVehicleName(vehicle)}`);
+}
+
+// ===========================================================================
+
+function vehicleLiveryCommand(command, params, client) {
+	if(!isPlayerInAnyVehicle(client)) {
+		messagePlayerError(client, "You need to be in a vehicle!");
+		return false;
+	}
+
+	let vehicle = getPlayerVehicle(client);
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		return false;
+	}
+
+	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+			messagePlayerError(client, "You need to be at a pay-n-spray!");
+			return false;
+		}
+	}
+
+	if(getPlayerCurrentSubAccount(client).cash < getGlobalConfig().repairVehicleCost) {
+		messagePlayerError(client, `You don't have enough money to change the vehicle's livery (need $${getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash} more!)`);
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let livery = toInteger(params) || 3;
+
+	takePlayerCash(client, getGlobalConfig().resprayVehicleCost);
+	updatePlayerCash(client);
+	getVehicleData(vehicle).livery = livery;
+	getVehicleData(vehicle).needsSaved = true;
+
+	setEntityData(vehicle, "vrr.livery", livery, true);
+	setTimeout(function() {
+		forcePlayerToSyncElementProperties(null, vehicle);
+	}, 1000);
+
+	meActionToNearbyPlayers(client, `sets the ${getVehicleName(vehicle)}'s livery/paintjob'`);
 }
 
 // ===========================================================================
@@ -590,6 +633,14 @@ function rentVehicleCommand(command, params, client) {
 
 	meActionToNearbyPlayers(client, `rents the ${getVehicleName(vehicle)} and receives a set of vehicle keys!`);
 	messagePlayerAlert(client, `You will be charged ${getVehicleData(vehicle).rentPrice} per minute to use this vehicle. To stop renting this vehicle, use /vehrent again.`);
+
+	if(!getVehicleData(vehicle).engine) {
+		if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
+			messagePlayerTip(client, `The ${getVehicleName(vehicle)}'s engine is off. Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} ${getInlineChatColourByName("white")}to start it.`);
+		} else {
+			messagePlayerAlert(client, `The ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
+		}
+	}
 }
 
 // ===========================================================================
@@ -649,7 +700,7 @@ function doesPlayerHaveVehicleKeys(client, vehicle) {
 	}
 
 	if(vehicleData.ownerType == VRR_VEHOWNER_JOB) {
-		if(getJobType(vehicleData.ownerId) == getJobType(getPlayerCurrentSubAccount(client).job)) {
+		if(vehicleData.ownerId == getJobType(getPlayerCurrentSubAccount(client).job)) {
 			return true;
 		}
 	}
@@ -924,7 +975,7 @@ function getVehicleInfoCommand(command, params, client) {
 			break;
 
 		case VRR_VEHOWNER_JOB:
-			ownerName = getJobData(vehicleData.ownerId).name;
+			ownerName = getJobData(getJobIdFromDatabaseId(vehicleData.ownerId)).name;
 			ownerType = "job";
 			break;
 
@@ -943,7 +994,7 @@ function getVehicleInfoCommand(command, params, client) {
 			break;
 	}
 
-	messagePlayerNormal(client, `🚗 ${getInlineChatColourByType("vehiclePurple")}[Vehicle Info] ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${vehicle.id}, ${getInlineChatColourByName("white")}DatabaseID: ${getInlineChatColourByName("lightGrey")}${vehicleData.databaseId}, ${getInlineChatColourByName("white")}Owner: ${getInlineChatColourByName("lightGrey")}${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), ${getInlineChatColourByName("white")}Type: ${getInlineChatColourByName("lightGrey")}${getVehicleName(vehicle)}[${vehicle.modelIndex}], ${getInlineChatColourByName("white")}BuyPrice: ${getInlineChatColourByName("lightGrey")}${vehicleData.buyPrice}, ${getInlineChatColourByName("white")}RentPrice: ${getInlineChatColourByName("lightGrey")}${vehicleData.rentPrice}`);
+	messagePlayerNormal(client, `🚗 ${getInlineChatColourByType("vehiclePurple")}[Vehicle Info] ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${getElementId(vehicle)}, ${getInlineChatColourByName("white")}DatabaseID: ${getInlineChatColourByName("lightGrey")}${vehicleData.databaseId}, ${getInlineChatColourByName("white")}Owner: ${getInlineChatColourByName("lightGrey")}${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), ${getInlineChatColourByName("white")}Type: ${getInlineChatColourByName("lightGrey")}${getVehicleName(vehicle)}[${vehicle.modelIndex}], ${getInlineChatColourByName("white")}BuyPrice: ${getInlineChatColourByName("lightGrey")}${vehicleData.buyPrice}, ${getInlineChatColourByName("white")}RentPrice: ${getInlineChatColourByName("lightGrey")}${vehicleData.rentPrice}`);
 }
 
 // ===========================================================================
@@ -1082,27 +1133,30 @@ function spawnVehicle(vehicleData) {
 	let vehicle = gta.createVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
 	addToWorld(vehicle);
 
-	if(vehicleData.colour1IsRGBA && vehicleData.colour2IsRGBA) {
-		vehicle.setRGBColours(vehicleData.colour1RGBA, vehicleData.colour2RGBA);
-	} else {
-		vehicle.colour1 = vehicleData.colour1;
-		vehicle.colour2 = vehicleData.colour2;
-		vehicle.colour3 = vehicleData.colour3;
-		vehicle.colour4 = vehicleData.colour4;
+	if(doesGameHaveServerElements()) {
+		if(vehicleData.colour1IsRGBA && vehicleData.colour2IsRGBA) {
+			vehicle.setRGBColours(vehicleData.colour1RGBA, vehicleData.colour2RGBA);
+		} else {
+			vehicle.colour1 = vehicleData.colour1;
+			vehicle.colour2 = vehicleData.colour2;
+			vehicle.colour3 = vehicleData.colour3;
+			vehicle.colour4 = vehicleData.colour4;
+		}
+
+		vehicle.engine = intToBool(vehicleData.engine);
+		//vehicle.lights = intToBool(vehicleData.lights);
+		//vehicle.health = vehicleData.health;
+
+		//vehicle.position = vehicleData.spawnPosition;
+		vehicle.heading = vehicleData.spawnRotation;
+
+		vehicle.locked = intToBool(vehicleData.locked);
 	}
-
-	vehicle.engine = intToBool(vehicleData.engine);
-	//vehicle.lights = intToBool(vehicleData.lights);
-	//vehicle.health = vehicleData.health;
-
-	//vehicle.position = vehicleData.spawnPosition;
-	vehicle.heading = vehicleData.spawnRotation;
-
-	vehicle.locked = intToBool(vehicleData.locked);
 
 	vehicleData.vehicle = vehicle;
 
 	setEntityData(vehicle, "vrr.livery", vehicleData.livery);
+	setEntityData(vehicle, "vrr.upgrades", vehicleData.extras);
 
 	return vehicle;
 }

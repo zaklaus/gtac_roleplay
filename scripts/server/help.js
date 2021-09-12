@@ -26,6 +26,12 @@ let randomTips = [
     `${getInlineChatColourByName("white")}Want to buy a business? Use /bizbuy at one for sale`,
     `${getInlineChatColourByName("white")}Want to buy a house? Use /housebuy at one for sale`,
     `${getInlineChatColourByName("white")}Want to buy a vehicle? Visit a dealership and enter one for info on how to buy it!`,
+    `${getInlineChatColourByName("white")}Switch to any of your characters with ${getInlineChatColourByName("lightGrey")}/switchchar`,
+    `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/iplogin ${getInlineChatColourByName("white")}to automatically login when connecting with the same IP`,
+    `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/houselights or /bizlights ${getInlineChatColourByName("white")}to turn on/off the lights in your house or business`,
+    `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/radiostation ${getInlineChatColourByName("white")}to play an internet radio station in your car, house, or business`,
+    //`${getInlineChatColourByName("white")}Lower your car windows with /windows ${getInlineChatColourByName("lightGrey")} to play the vehicle's internet radio station ${getInlineChatColourByName("lightGrey")}(/radiostation) ${getInlineChatColourByName("white")}to nearby players`,
+    //`${getInlineChatColourByName("white")}Lower your car windows with /windows ${getInlineChatColourByName("lightGrey")} to play the vehicle's internet radio station ${getInlineChatColourByName("lightGrey")}(/radiostation) ${getInlineChatColourByName("white")}to nearby players`,
     //`${getInlineChatColourByName("white")}Tax is based on your total wealth. This includes money, vehicles, businesses and more.`,
     //`${getInlineChatColourByName("white")}Don't go broke because of a hospital bill! Get insured today by visiting an insurance agency!`,
     //`${getInlineChatColourByName("white")}Don't go broke because your car was destroyed. Visit an insurance agency today!`,
@@ -55,6 +61,11 @@ function helpCommand(command, params, client) {
             break;
 
         case "vehicle":
+        case "veh":
+        case "vehs":
+        case "vehicles":
+        case "car":
+        case "cars":
             showVehicleHelpMessage(client);
             break;
 
@@ -87,12 +98,16 @@ function helpCommand(command, params, client) {
             break;
 
         case "anim":
+        case "anims":
         case "animation":
+        case "animations":
             showAnimationHelpMessage(client);
             break;
 
         case "ammunation":
         case "ammu":
+        case "gun":
+        case "guns":
             showAmmunationHelpMessage(client);
             break;
 
@@ -119,6 +134,17 @@ function helpCommand(command, params, client) {
             }
             break;
 
+        case "clan":
+        case "clans":
+        case "group":
+        case "groups":
+        case "faction":
+        case "factions":
+        case "family":
+        case "families":
+            showClanHelpMessage(client);
+            break;
+
         default:
             showMainHelpMessage(client);
             break;
@@ -140,6 +166,7 @@ function helpCommand(command, params, client) {
 // == Bindable Keys ============================
 // == Clothes ==================================
 // == Business =================================
+// == Clan Help ================================
 // == Command Info =============================
 // == Player Vehicles ==========================
 // == Player Businesses ========================
@@ -278,6 +305,17 @@ function showBusinessHelpMessage(client) {
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Businesses are shown with blue names above the icon at their entrance.`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Business owner commands: ${getInlineChatColourByName("lightGrey")}/bizorder, /biz`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}A new car for sale will appear when you drive away from the dealer.`);
+}
+
+// ===========================================================================
+
+function showClanHelpMessage(client) {
+    messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Clan ${getInlineChatColourByType("clanOrange")}================================`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/addclan ${getInlineChatColourByName("white")}to create a clan (Similar to factions/groups/families)`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Clan commands: ${getInlineChatColourByName("lightGrey")}/clan, /clanmotd, /clanname, /clanowner, /clanhouse, /clanbiz, /claninvite, /clanuninvite, /clansetrank`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}${getInlineChatColourByName("lightGrey")}/clanflags, /clanaddrank, /clandelrank, /clanaddrankflag, /clandelrankflag, /clanaddmemberflag, /clandelmemberflag`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}${getInlineChatColourByName("lightGrey")}/clanranks, /clanaddrank, /clandelrank, /clanrankname, /clanaddrankflag, /clandelrankflag`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}${getInlineChatColourByName("lightGrey")}/clanaddmemberflag, /clandelmemberflag`);
 }
 
 // ===========================================================================

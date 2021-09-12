@@ -98,7 +98,9 @@ function syncVehicleProperties(vehicle) {
         if(doesEntityDataExist(vehicle, "vrr.upgrades")) {
             let upgrades = getEntityData(vehicle, "vrr.upgrades");
             for(let i in upgrades) {
-                vehicle.addUpgrade(upgrades[i]);
+                if(upgrades[i] != 0) {
+                    vehicle.addUpgrade(upgrades[i]);
+                }
             }
         }
     }

@@ -548,7 +548,7 @@ function saveAccountToDatabase(accountData) {
 		freeDatabaseQuery(dbQuery);
 
 		let data2 = [
-			["acct_svr_settings", accountData.flags.settings],
+			["acct_svr_settings", accountData.settings],
 			["acct_svr_staff_title", safeStaffTitle],
 			["acct_svr_staff_flags", accountData.flags.admin],
 			["acct_svr_mod_flags", accountData.flags.moderation],
@@ -687,7 +687,7 @@ function checkLogin(client, password) {
 	if(isPlayerLoggedIn(client)) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is already logged in`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			sendPlayerLoginSuccess(client);
+			showPlayerLoginSuccessGUI(client);
 		} else {
 			messagePlayerError(client, "You are already logged in!");
 		}

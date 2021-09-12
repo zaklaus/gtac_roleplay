@@ -24,6 +24,7 @@ function playPlayerAnimationCommand(command, params, client) {
 
 	if(!animationSlot) {
 		messagePlayerError(client, "That animation doesn't exist!");
+		messagePlayerInfo(client, "Use /animlist to see a list of valid animations");
 		return false;
 	}
 

@@ -9,7 +9,7 @@
 
 let scriptVersion = "1.0";
 let serverStartTime = 0;
-let logLevel = LOG_ALL;
+let logLevel = LOG_DEBUG;
 
 // ===========================================================================
 

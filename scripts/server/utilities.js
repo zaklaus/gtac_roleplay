@@ -712,6 +712,24 @@ function getWeatherFromParams(params) {
 	return 0;
 }
 
+
+// ===========================================================================
+
+function getFightStyleFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getGameData().fightStyles[getServerGame()]) {
+			if(toLowerCase(getGameData().fightStyles[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getGameData().fightStyles[getServerGame()][params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+	return 0;
+}
+
 // ===========================================================================
 
 function getAnimationFromParams(params) {

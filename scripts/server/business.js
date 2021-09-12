@@ -142,16 +142,16 @@ function loadBusinessGameScriptsFromDatabase(businessId) {
 
 function createBusinessCommand(command, params, client) {
 	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].business, getGameConfig().blipSprites[getServerGame()].business, getPlayerInterior(client), getPlayerDimension(client));
-	getServerData().businesses.push(tempBusinessData);
+	tempBusinessData.needsSaved = true;
+	let businessId = getServerData().businesses.push(tempBusinessData);
+	setAllBusinessIndexes();
 
 	saveAllBusinessesToDatabase();
 
-	createBusinessEntrancePickup(getServerData().businesses.length-1);
-	createBusinessExitPickup(getServerData().businesses.length-1);
-	createBusinessEntranceBlip(getServerData().businesses.length-1);
-	createBusinessExitBlip(getServerData().businesses.length-1);
-
-	saveBusinessToDatabase(getServerData().businesses.length-1);
+	createBusinessEntrancePickup(businessId-1);
+	createBusinessExitPickup(businessId-1);
+	createBusinessEntranceBlip(businessId-1);
+	createBusinessExitBlip(businessId-1);
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created business ${getInlineChatColourByType("businessBlue")}${tempBusinessData.name}`);
 }
@@ -243,6 +243,13 @@ function setBusinessNameCommand(command, params, client) {
 		return false;
 	}
 
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_PLAYER && getBusinessData(businessId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+			messagePlayerError(client, "You don't own this business!");
+			return false;
+		}
+	}
+
 	let oldBusinessName = getBusinessData(businessId).name;
 	getBusinessData(businessId).name = newBusinessName;
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.name", getBusinessData(businessId).name, true);
@@ -265,30 +272,95 @@ function setBusinessOwnerCommand(command, params, client) {
 		return false;
 	}
 
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_PLAYER && getBusinessData(businessId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+			messagePlayerError(client, "You don't own this business!");
+			return false;
+		}
+	}
+
 	getBusinessData(businessId).ownerType = VRR_BIZOWNER_PLAYER;
 	getBusinessData(businessId).ownerId = getServerData().clients[newBusinessOwner.index].accountData.databaseId;
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}owner to ${getInlineChatColourByName("lightGrey")}${newBusinessOwner.name}`);
+	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newBusinessOwner.name}`);
 }
 
 // ===========================================================================
 
 function setBusinessClanCommand(command, params, client) {
-	let clanId = getClanFromParams(params);
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, "Business not found!");
+		messagePlayerError("Business not found!");
 		return false;
 	}
+
+	let clanId = getPlayerClan(params);
 
 	if(!getClanData(clanId)) {
 		messagePlayerError(client, "Clan not found!");
 		return false;
 	}
 
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_PLAYER && getBusinessData(businessId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+			messagePlayerError(client, "You don't own this business!");
+			return false;
+		}
+	}
+
+	getBusinessData(businessId).needsSaved = true;
+
 	getBusinessData(businessId).ownerType = VRR_BIZOWNER_CLAN;
 	getBusinessData(businessId).ownerId = getClanData(clanId).databaseId;
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan`);
+	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan!`);
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function setBusinessRankCommand(command, params, client) {
+	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError("House not found!");
+		return false;
+	}
+
+	let clanId = getPlayerClan(params);
+
+	if(!getClanData(clanId)) {
+		messagePlayerError(client, "Clan not found!");
+		return false;
+	}
+
+	let clanRankId = getClanRankFromParams(clanId, params);
+
+	if(!getClanRankData(clanId, clanRankId)) {
+		messagePlayerError(client, "Clan rank not found!");
+		return false;
+	}
+
+	if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+		messagePlayerError(client, "You can't set clan house ranks!");
+		return false;
+	}
+
+	if(getClanRankData(clanId, clanRankId).level > getPlayerCurrentSubAccount(client).clanRank) {
+		messagePlayerError(client, "That rank is above your level!");
+		return false;
+	}
+
+	getBusinessData(businessId).clanRank = getClanRankData(clanId, clanRankId).level;
+	getBusinessData(businessId).needsSaved = true;
+	messagePlayerSuccess(`${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}${getInlineChatColourByName("white")}'s clan rank to ${getInlineChatColourByType("clanOrange")}${getClanRankData(clanId, clanRankId).name} ${getInlineChatColourByName("white")}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
 }
 
 // ===========================================================================
@@ -355,6 +427,13 @@ function lockUnlockBusinessCommand(command, params, client) {
 		return false;
 	}
 
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		if(canPlayerLockUnlockBusiness(client, businessId)) {
+			messagePlayerError(client, "You don't have keys to this business!");
+			return false;
+		}
+	}
+
 	getBusinessData(businessId).locked = !getBusinessData(businessId).locked;
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
 	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
@@ -379,6 +458,13 @@ function lockUnlockBusinessCommand(command, params, client) {
 		return false;
 	}
 
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		if(canPlayerSetBusinessInteriorLights(client, businessId)) {
+			messagePlayerError(client, "You don't have keys to this business!");
+			return false;
+		}
+	}
+
 	getBusinessData(businessId).interiorLights = !getBusinessData(businessId).interiorLights;
 
 	getBusinessData(businessId).needsSaved = true;
@@ -397,6 +483,13 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
 		return false;
+	}
+
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		if(canPlayerSetBusinessEntranceFee(client, businessId)) {
+			messagePlayerError(client, "You don't have keys to this business!");
+			return false;
+		}
 	}
 
 	getBusinessData(businessId).entranceFee = entranceFee;
@@ -489,50 +582,37 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
-		if(toLowerCase(typeParam) == "none") {
-			removePlayersFromBusiness(businessId);
+		let tempBusinessLocation = new serverClasses.businessLocationData(false);
 
-			getBusinessData(businessId).exitPosition = toVector3(0.0, 0.0, 0.0);
-			getBusinessData(businessId).exitInterior = 0;
+		if(toLowerCase(typeParam) == "none") {
+			tempBusinessLocation.exitPosition = toVector3(0.0, 0.0, 0.0);
+			tempBusinessLocation.exitDimension = 0;
+			tempBusinessLocation.exitInterior = -1;
 			getBusinessData(businessId).hasInterior = false;
 			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
-
-			resetBusinessPickups();
-			resetBusinessBlips();
-
 			return false;
 		}
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
-			messagePlayerError(client, "Invalid interior type! Use an interior type name or an existing business database ID");
+			messagePlayerError(client, "Invalid interior type! Use an interior type name");
 			messagePlayerInfo(client, `Interior Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
-		removePlayersFromBusiness(businessId);
-		messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior type to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
-		getBusinessData(businessId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitPosition;
-		getBusinessData(businessId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam].exitInterior;
+		getBusinessData(businessId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam][0];
+		getBusinessData(businessId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam][1];
 		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
 		getBusinessData(businessId).hasInterior = true;
-
-		resetBusinessPickups();
-		resetBusinessBlips();
-	} else {
-		if(!getBusinessData(businessId)) {
-			messagePlayerError(client, "Business ID not found!");
-			return false;
-		}
-
-		removePlayersFromBusiness(businessId);
-		getBusinessData(businessId).exitPosition = getBusinessData(businessId).exitPosition;
-		getBusinessData(businessId).exitInterior = getBusinessData(businessId).exitInterior;
-		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
-		getBusinessData(businessId).hasInterior = true;
-
-		resetBusinessPickups();
-		resetBusinessBlips();
 	}
+
+	deleteHouseEntrancePickup(businessId);
+	deleteHouseExitPickup(businessId);
+	createHouseEntrancePickup(businessId);
+	createHouseExitPickup(businessId);
+
+	getBusinessData(businessId).needsSaved = true;
+
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior type to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -661,6 +741,13 @@ function withdrawFromBusinessCommand(command, params, client) {
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
 		return false;
+	}
+
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		if(canPlayerWithdrawFromBusinessTill(client, businessId)) {
+			messagePlayerError(client, "You don't have keys to this business!");
+			return false;
+		}
 	}
 
 	if(getBusinessData(businessId).till < amount) {
@@ -907,6 +994,18 @@ function getClosestBusinessEntrance(position) {
 	let closest = 0;
 	for(let i in getServerData().businesses) {
 		if(getDistance(position, getServerData().businesses[i].entrancePosition) <= getDistance(position, getServerData().businesses[closest].entrancePosition)) {
+			closest = i;
+		}
+	}
+	return closest;
+}
+
+// ===========================================================================
+
+function getClosestBusinessExit(position) {
+	let closest = 0;
+	for(let i in getServerData().businesses) {
+		if(getDistance(position, getServerData().businesses[i].exitPosition) <= getDistance(position, getServerData().businesses[closest].exitPosition)) {
 			closest = i;
 		}
 	}
@@ -1670,6 +1769,66 @@ function updateBusinessInteriorLightsForOccupants(businessId) {
 			updateInteriorLightsForPlayer(clients[i], getBusinessData(businessId).interiorLights);
 		}
 	}
+}
+
+// ===========================================================================
+
+function canPlayerWithdrawFromBusinessTill(client, businessId) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		return true;
+	}
+
+	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_PLAYER && getBusinessData(businessId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+		return true;
+	}
+
+	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN && getBusinessData(businessId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function canPlayerSetBusinessInteriorLights(client, businessId) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		return true;
+	}
+
+	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_PLAYER && getBusinessData(businessId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+		return true;
+	}
+
+	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN && getBusinessData(businessId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function canPlayerLockUnlockBusiness(client, businessId) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		return true;
+	}
+
+	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_PLAYER && getBusinessData(businessId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+		return true;
+	}
+
+	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN && getBusinessData(businessId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 // ===========================================================================

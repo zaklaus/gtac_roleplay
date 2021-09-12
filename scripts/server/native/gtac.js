@@ -4286,7 +4286,7 @@ function setPlayerInterior(client, interior) {
 // ===========================================================================
 
 function isPlayerInAnyVehicle(client) {
-    if(getServerGame() == GAME_GTA_IV)  {
+    if(!doesGameHaveServerElements())  {
         return (getPlayerData().syncVehicle != null);
     } else {
         return (client.player.vehicle != null);
@@ -4300,11 +4300,15 @@ function getPlayerVehicleSeat(client) {
         return false;
     }
 
-    for(let i = 0 ; i <= 8 ; i++) {
-        if(getPlayerVehicle(client).getOccupant(i) == client.player) {
-            return i;
-        }
-    }
+	if(!doesGameHaveServerElements()) {
+		return getPlayerData().syncVehicleSeat;
+	} else {
+		for(let i = 0 ; i <= 8 ; i++) {
+			if(getPlayerVehicle(client).getOccupant(i) == client.player) {
+				return i;
+			}
+		}
+	}
 
     return false;
 }
@@ -4787,6 +4791,29 @@ function setGameTime(hour, minute, minuteDuration = 1000) {
 		gta.time.minute = minute;
 		gta.time.minuteDuration = minuteDuration;
 	}
+}
+
+// ===========================================================================
+
+function setPlayerFightStyle(client, fightStyleId) {
+	if(!isPlayerSpawned(client)) {
+		return false;
+	}
+
+    setEntityData(getPlayerElement(client), "vrr.fightStyle", [getGameData().fightStyles[getServerGame()][fightStyleId][1][0], getGameData().fightStyles[getServerGame()][fightStyleId][1][1]]);
+    forcePlayerToSyncElementProperties(null, getPlayerElement(client));
+}
+
+// ===========================================================================
+
+function isPlayerAtGym(client) {
+	return true;
+}
+
+// ===========================================================================
+
+function getPlayerElement(client) {
+	return client.player;
 }
 
 // ===========================================================================

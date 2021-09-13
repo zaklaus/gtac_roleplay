@@ -62,6 +62,13 @@ const VRR_ANIMTYPE_BLEND = 2;
 const VRR_ANIMTYPE_SHARED = 3;                  // Forces this animation to play in sync with another ped's mirrored anim (handshake, kiss, gang signs, etc)
 const VRR_ANIMTYPE_SPECIALACTION = 4;           // This animtype uses a special action (only in SA)
 
+// Animation Move Types
+const VRR_ANIMMOVE_NONE = 0;
+const VRR_ANIMMOVE_FORWARD = 1;
+const VRR_ANIMMOVE_BACK = 2;
+const VRR_ANIMMOVE_LEFT = 3;
+const VRR_ANIMMOVE_RIGHT = 4;
+
 // Multiplayer Modifications
 const VRR_MPMOD_NONE = 0;
 const VRR_MPMOD_GTAC = 1;

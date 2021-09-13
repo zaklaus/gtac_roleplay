@@ -364,8 +364,8 @@ function gotoJobLocationCommand(command, params, client) {
 function gotoNewPlayerSpawnCommand(command, params, client) {
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	setPlayerPosition(client, getServerConfig().newCharacter.spawnPosition);
-	setPlayerInterior(client, getServerConfig().newCharacter.spawnInterior);
-	setPlayerDimension(client, getServerConfig().newCharacter.spawnDimension);
+	setPlayerInterior(client, 0);
+	setPlayerDimension(client, 0);
 	updateInteriorLightsForPlayer(client, true);
 
 	messagePlayerSuccess(client, `You teleported to the new character spawn location!`);

@@ -20,7 +20,9 @@ function playPlayerAnimationCommand(command, params, client) {
 		return false;
 	}
 
-    let animationSlot = getAnimationFromParams(params);
+	let splitParams = params.split(" ");
+	let animationSlot = getAnimationFromParams(splitParams[0]);
+    let animationPositionOffset = getAnimationFromParams(splitParams[1]);
 
 	if(!animationSlot) {
 		messagePlayerError(client, "That animation doesn't exist!");
@@ -29,9 +31,18 @@ function playPlayerAnimationCommand(command, params, client) {
 	}
 
     getPlayerData(client).currentAnimation = animationSlot;
+	getPlayerData(client).currentAnimationPositionOffset = animationSlot;
+	getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
     getPlayerData(client).animationStart = getCurrentUnixTimestamp();
 	//setEntityData(getPlayerData(client).ped, "vrr.animation", animationSlot, true);
-    makePedPlayAnimation(getPlayerData(client).ped, animationSlot);
+    makePedPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
+}
+
+// ===========================================================================
+
+function stopPlayerAnimationCommand(command, params, client) {
+	setPlayerPosition(client, getPlayerData(client).currentAnimationPositionReturnTo);
+	makePedStopAnimation(getPlayerData(client).ped);
 }
 
 // ===========================================================================

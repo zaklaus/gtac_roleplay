@@ -991,16 +991,18 @@ function getPlayerFirstEmptyHotBarSlot(client) {
 // ===========================================================================
 
 function cachePlayerHotBarItems(client) {
-	for(let i = 0 ; i <= 9 ; i++) {
-		getPlayerData(client).hotBarItems[i] = -1;
-	}
+	if(!isPlayerWorking(client)) {
+		for(let i = 0 ; i <= 9 ; i++) {
+			getPlayerData(client).hotBarItems[i] = -1;
+		}
 
-	for(let i in getServerData().items) {
-		if(getItemData(i).ownerType == VRR_ITEM_OWNER_PLAYER) {
-			if(getItemData(i).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
-				let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
-				if(firstSlot != -1) {
-					getPlayerData(client).hotBarItems[firstSlot] = i;
+		for(let i in getServerData().items) {
+			if(getItemData(i).ownerType == VRR_ITEM_OWNER_PLAYER) {
+				if(getItemData(i).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+					let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
+					if(firstSlot != -1) {
+						getPlayerData(client).hotBarItems[firstSlot] = i;
+					}
 				}
 			}
 		}
@@ -1231,7 +1233,9 @@ function getItemTypeData(itemTypeId) {
 function saveAllItemsToDatabase() {
 	for(let i in getServerData().items) {
 		if(getServerData().items[i].needsSaved) {
-			saveItemToDatabase(i);
+			if(getServerData().items[i].databaseId != -1) {
+				saveItemToDatabase(i);
+			}
 		}
 	}
 }
@@ -1282,12 +1286,13 @@ function saveItemToDatabase(itemId) {
 
 function storePlayerItemsInJobLocker(client) {
 	for(let i in getPlayerData(client).hotBarItems) {
-		if(getPlayerData(client).hotBarItems[i] != -1) {
+		//if(getPlayerData(client).hotBarItems[i] != -1) {
 			getPlayerData(client).jobLockerCache[i] = getPlayerData(client).hotBarItems[i];
 			getPlayerData(client).hotBarItems[i] = -1;
-		}
+		//}
 	}
 
+	cachePlayerHotBarItems(client);
 	updatePlayerHotBar(client);
 }
 
@@ -1301,11 +1306,13 @@ function restorePlayerJobLockerItems(client) {
 	}
 
 	for(let i in getPlayerData(client).jobLockerCache) {
-		if(getPlayerData(client).jobLockerCache[i] != -1) {
+		//if(getPlayerData(client).jobLockerCache[i] != -1) {
 			getPlayerData(client).hotBarItems[i] = getPlayerData(client).jobLockerCache[i];
 			getPlayerData(client).jobLockerCache[i] = -1;
-		}
+		//}
 	}
+
+	cachePlayerHotBarItems(client);
 
 	updatePlayerHotBar(client);
 }

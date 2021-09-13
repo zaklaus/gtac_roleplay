@@ -247,14 +247,18 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
                 messagePlayerTip(client, `Use /vehbuy if you want to buy it.`);
                 resetVehiclePosition(vehicle);
             } else if(getVehicleData(vehicle).rentPrice > 0) {
-                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: ${getInlineChatColourByName("lightGrey")}$${getVehicleData(vehicle).rentPrice} per minute`);
-                messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
-                resetVehiclePosition(vehicle);
+                if(getVehicleData(vehicle).rentedBy != client) {
+                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: ${getInlineChatColourByName("lightGrey")}$${getVehicleData(vehicle).rentPrice} per minute`);
+                    messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
+                    resetVehiclePosition(vehicle);
+                } else {
+                    messagePlayerAlert(client, `You are renting this ${getVehicleName(vehicle)} for ${getInlineChatColourByName("lightGrey")}$${getVehicleData(vehicle).rentPrice} per minute. ${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/stoprent ${getInlineChatColourByName("white")}if you want to stop renting it.`);
+                }
             } else {
                 let ownerName = "Nobody";
                 let ownerType = "None";
                 ownerType = toLowerCase(getVehicleOwnerTypeText(getVehicleData(vehicle).ownerType));
-                switch(vehicleData.ownerType) {
+                switch(getVehicleData(vehicle).ownerType) {
                     case VRR_VEHOWNER_CLAN:
                         ownerName = getClanData(getVehicleData(vehicle).ownerId).name;
                         ownerType = "clan";
@@ -267,7 +271,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
 
                     case VRR_VEHOWNER_PLAYER:
                         let subAccountData = loadSubAccountFromId(getVehicleData(vehicle).ownerId);
-                        ownerName = `${subAccountData.firstName} ${subAccountData.lastName} [${subAccountData.databaseId}]`;
+                        ownerName = `${subAccountData.firstName} ${subAccountData.lastName}`;
                         ownerType = "player";
                         break;
 
@@ -280,20 +284,20 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
                         break;
                 }
                 messagePlayerAlert(client, `This ${getVehicleName(vehicle)} belongs to ${getInlineChatColourByName("lightGrey")}${ownerName} (${ownerType})`);
+            }
 
-                if(!getVehicleData(vehicle).engine) {
-                    if(doesPlayerHaveVehicleKeys(client, vehicle)) {
-                        if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} ${getInlineChatColourByName("white")}to start it.`);
-                        } else {
-                            messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
-                        }
+            if(!getVehicleData(vehicle).engine) {
+                if(doesPlayerHaveVehicleKeys(client, vehicle)) {
+                    if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
+                        messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} ${getInlineChatColourByName("white")}to start it.`);
                     } else {
-                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
-
+                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
                     }
-                    resetVehiclePosition(vehicle);
+                } else {
+                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
+
                 }
+                resetVehiclePosition(vehicle);
             }
 
             let currentSubAccount = getPlayerCurrentSubAccount(client);
@@ -344,7 +348,7 @@ function onPlayerExitedVehicle(client, vehicle) {
         }
     }
 
-    playRadioStreamForPlayer(client, "");
+    stopRadioStreamForPlayer(client);
 }
 
 // ===========================================================================

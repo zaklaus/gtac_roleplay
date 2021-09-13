@@ -1574,4 +1574,17 @@ function getCurrentTimeStampWithTimeZone(timeZone) {
 
 	return date;
 };
+
+// ===========================================================================
+
+function getElementId(element) {
+	return element.id;
+}
+
+// ===========================================================================
+
+function getClientFromSyncerId(syncerId) {
+	return getClients().filter(c => c.index == syncerId)[0];
+}
+
 // ===========================================================================

@@ -47,6 +47,7 @@ let streamingRadioElement = false;
 
 let enterPropertyKey = null;
 
+let inAnimation = false;
 let forcedAnimation = null;
 
 let calledDeathEvent = false;

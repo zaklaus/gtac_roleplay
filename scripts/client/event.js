@@ -99,6 +99,7 @@ function onProcess(event, deltaTime) {
 
 function onKeyUp(event, keyCode, scanCode, keyModifiers) {
     processSkinSelectKeyPress(keyCode);
+    //processKeyDuringAnimation();
 }
 
 // ===========================================================================

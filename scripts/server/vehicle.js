@@ -632,7 +632,7 @@ function rentVehicleCommand(command, params, client) {
 	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `rents the ${getVehicleName(vehicle)} and receives a set of vehicle keys!`);
-	messagePlayerAlert(client, `You will be charged ${getVehicleData(vehicle).rentPrice} per minute to use this vehicle. To stop renting this vehicle, use /vehrent again.`);
+	messagePlayerAlert(client, `You will be charged $${getVehicleData(vehicle).rentPrice} per minute to use this vehicle. To stop renting this vehicle, use /vehrent again.`);
 
 	if(!getVehicleData(vehicle).engine) {
 		if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
@@ -802,7 +802,7 @@ function setVehicleRankCommand(command, params, client) {
 		messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rank to ${getInlineChatColourByName("lightGrey")}${getClanRankData(getVehicleData(vehicle).ownerId, rankId).name} ${getInlineChatColourByName("white")}of the ${getInlineChatColourByType("clanOrange")}${getClanData(getVehicleData(vehicle).ownerId).name} [#FFFFFFclan!`);
 	} else if(getVehicleData(vehicle).ownerType == VRR_VEHOWNER_JOB) {
 		getVehicleData(vehicle).rank = rankId;
-		messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rank to ${getInlineChatColourByName("lightGrey")}${rankId} ${getInlineChatColourByName("white")}of the ${getInlineChatColourByType("jobYellow")}${getJobData(getVehicleData(vehicle).ownerId).name} ${getInlineChatColourByName("white")}job!`);
+		messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rank to ${getInlineChatColourByName("lightGrey")}${rankId} ${getInlineChatColourByName("white")}of the ${getInlineChatColourByType("jobYellow")}${getJobData(getJobIdFromDatabaseId(getVehicleData(vehicle).ownerId)).name} ${getInlineChatColourByName("white")}job!`);
 	}
 
 	getVehicleData(vehicle).needsSaved = true;
@@ -1089,13 +1089,10 @@ function reloadAllVehiclesCommand(command, params, client) {
 
 function respawnAllVehiclesCommand(command, params, client) {
 	for(let i in getServerData().vehicles) {
-		if(getServerData().vehicles[i].vehicle != null) {
-			deleteGameElement(getServerData().vehicles[i].vehicle);
-			getServerData().vehicles[i].vehicle = null;
-		}
+		respawnVehicle(vehicle);
 	}
 
-	spawnAllVehicles();
+	//spawnAllVehicles();
 
 	messageAdminAction(`All server vehicles have been respawned by an admin!`);
 }
@@ -1124,7 +1121,7 @@ function respawnVehicle(vehicle) {
 		}
 	}
 
-	getVehicleData(vehicle).needsSaved = true;
+	//getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -1220,11 +1217,10 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 	if(!vehicle) {
 		return false;
 	}
-	setVehicleHeading(spawnRotation);
+	setVehicleHeading(vehicle, spawnRotation);
 	addToWorld(vehicle);
 
 	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
-
 	tempVehicleData.buyPrice = price;
 	tempVehicleData.spawnLocked = true;
 	tempVehicleData.spawnPosition = spawnPosition;
@@ -1234,8 +1230,7 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 	tempVehicleData.needsSaved = true;
 
 	let slot = getServerData().vehicles.push(tempVehicleData);
-
-	setEntityData(vehicle, "vrr.dataSlot", slot, true);
+	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
 }
 
 // ===========================================================================
@@ -1284,7 +1279,7 @@ function checkVehicleBuying() {
 						}
 
 						createNewDealershipVehicle(getVehicleData(getPlayerData(clients[i]).buyingVehicle).model, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice, getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId);
-						takePlayerCash(client, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice);
+						takePlayerCash(clients[i], getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice);
 						updatePlayerCash(clients[i]);
 						getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId = getPlayerCurrentSubAccount(clients[i]).databaseId;
 						getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerType = VRR_VEHOWNER_PLAYER;

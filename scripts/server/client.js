@@ -140,23 +140,23 @@ function showGameMessage(client, text, colour, duration) {
 // ===========================================================================
 
 function enableCityAmbienceForPlayer(client, clearElements = false) {
-    if(server.getCVar("civilians") == false) {
-        return false;
-    }
+    //if(server.getCVar("civilians") == false) {
+    //    return false;
+    //}
 
-    logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
-    triggerNetworkEvent("vrr.ambience", client, true);
+    //logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
+    //triggerNetworkEvent("vrr.ambience", client, true);
 }
 
 // ===========================================================================
 
 function disableCityAmbienceForPlayer(client, clearElements = false) {
-    if(server.getCVar("civilians") == true) {
-        return false;
-    }
+    //if(server.getCVar("civilians") == true) {
+    //    return false;
+    //}
 
-    logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
-    triggerNetworkEvent("vrr.ambience", client, false, clearElements);
+    //logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
+    //triggerNetworkEvent("vrr.ambience", client, false, clearElements);
 }
 
 // ===========================================================================
@@ -928,10 +928,35 @@ function sendPlayerEnterPropertyKey(client, key) {
 
 // ===========================================================================
 
-function makePedPlayAnimation(ped, animationSlot) {
+function makePedPlayAnimation(ped, animationSlot, positionOffset) {
     let animationData = getAnimationData(animationSlot);
+    if(animationData[9] != VRR_ANIMMOVE_NONE) {
+        setElementCollisionsEnabled(ped, false);
+        switch(animationData[9]) {
+            case VRR_ANIMMOVE_FORWARD:
+                setElementPosition(ped, getPosInFrontOfPos(getElementPosition(ped), getElementHeading(ped), positionOffset));
+                break;
 
-    triggerNetworkEvent("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4]);
+            case VRR_ANIMMOVE_BACK:
+                setElementPosition(ped, getPosBehindPos(getElementPosition(ped), getElementHeading(ped), positionOffset));
+                break;
+
+            case VRR_ANIMMOVE_LEFT:
+                setElementPosition(ped, getPosToLeftOfPos(getElementPosition(ped), getElementHeading(ped), positionOffset));
+                break;
+
+            case VRR_ANIMMOVE_RIGHT:
+                setElementPosition(ped, getPosToRightOfPos(getElementPosition(ped), getElementHeading(ped), positionOffset));
+                break;
+        }
+    }
+    triggerNetworkEvent("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4], animationData[5], positionOffset);
+}
+
+// ===========================================================================
+
+function makePedStopAnimation(ped) {
+    triggerNetworkEvent("vrr.pedStopAnim", null, ped.id);
 }
 
 // ===========================================================================

@@ -437,6 +437,7 @@ function startWorking(client) {
 		return false;
 	}
 
+	switchPlayerActiveHotBarSlot(client, -1);
 	getPlayerCurrentSubAccount(client).skin = getPlayerSkin(client);
 	storePlayerItemsInJobLocker(client);
 	messagePlayerInfo(client, "Your personal items have been stored in your locker while you work");
@@ -516,11 +517,14 @@ function givePlayerJobEquipment(client, equipmentId) {
 		}
 		let itemId = createItem(getItemTypeIndexFromDatabaseId(getJobData(jobId).equipment[equipmentId].items[i].itemType), value, VRR_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
 		getItemData(itemId).needsSaved = false;
+		getItemData(itemId).databaseId = -1; // Make sure it doesnt save
 		let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
 		getPlayerData(client).hotBarItems[freeSlot] = itemId;
 		getPlayerData(client).jobEquipmentCache.push(itemId);
 		updatePlayerHotBar(client);
 	}
+
+	switchPlayerActiveHotBarSlot(client, -1);
 }
 
 // ===========================================================================

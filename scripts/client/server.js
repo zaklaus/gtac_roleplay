@@ -79,12 +79,15 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.veh.repair", repairVehicle);
 
     addNetworkHandler("vrr.pedAnim", makePedPlayAnimation);
+    addNetworkHandler("vrr.pedStopAnim", makePedStopAnimation);
     addNetworkHandler("vrr.hideAllGUI", hideAllGUI);
     addNetworkHandler("vrr.gameScript", setGameScriptState);
     addNetworkHandler("vrr.clientInfo", serverRequestedClientInfo);
     addNetworkHandler("vrr.interiorLights", updateInteriorLightsState);
 
     addNetworkHandler("vrr.syncElement", forceSyncElementProperties);
+    addNetworkHandler("vrr.elementPosition", setElementPosition);
+    addNetworkHandler("vrr.elementCollisions", setElementCollisionsEnabled);
 }
 
 // ===========================================================================
@@ -221,9 +224,22 @@ function setEnterPropertyKey(key) {
 function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loop, loopNoControl, freezeLastFrame, returnToOriginalPosition) {
     if(getGame() < VRR_GAME_GTA_IV) {
         if(animType == VRR_ANIMTYPE_ADD) {
-            getElementFromId(pedId).position = getElementFromId(pedId).position;
+            if(getGame() == GAME_GTA_VC || getGame() == GAME_GTA_SA) {
+                getElementFromId(pedId).clearAnimations();
+            } else {
+                getElementFromId(pedId).clearObjective();
+            }
             getElementFromId(pedId).addAnimation(animGroup, animId);
+
+            if(getElementFromId(pedId) == localPlayer) {
+                inAnimation = true;
+                setLocalPlayerControlState(false, false);
+                localPlayer.collisionsEnabled = false;
+            }
         } else if(animType == VRR_ANIMTYPE_BLEND) {
+            getElementFromId(pedId).position = getElementFromId(pedId).position;
+            getElementFromId(pedId).blendAnimation(animGroup, animId, animSpeed);
+        } else if(animType == VRR_ANIMTYPE_MOVEADD) {
             getElementFromId(pedId).position = getElementFromId(pedId).position;
             getElementFromId(pedId).blendAnimation(animGroup, animId, animSpeed);
         }
@@ -279,6 +295,33 @@ function updateInteriorLightsState(state) {
 
 function forceSyncElementProperties(elementId) {
     syncElementProperties(getElementFromId(elementId));
+}
+
+// ===========================================================================
+
+function setElementPosition(elementId, position) {
+    getElementFromId(elementId).position = position;
+}
+
+// ===========================================================================
+
+function setElementCollisionsEnabled(elementId, state) {
+    getElementFromId(elementId).collisionsEnabled = state;
+}
+
+// ===========================================================================
+
+function makePedStopAnimation(pedId) {
+    if(getGame() == GAME_GTA_VC || getGame() == GAME_GTA_SA) {
+        getElementFromId(pedId).clearAnimations();
+    } else {
+        getElementFromId(pedId).clearObjective();
+    }
+
+    if(getElementFromId(pedId) == localPlayer) {
+        localPlayer.collisionsEnabled = true;
+        setLocalPlayerControlState(true, false);
+    }
 }
 
 // ===========================================================================

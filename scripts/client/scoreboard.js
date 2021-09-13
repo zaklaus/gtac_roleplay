@@ -38,6 +38,10 @@ function initScoreBoardListFont() {
 // ===========================================================================
 
 function processScoreBoardRendering() {
+	if(isAnyGUIActive()) {
+		return false;
+	}
+
 	if(renderScoreBoard) {
         if(isKeyDown(SDLK_TAB)) {
 			if(scoreBoardListFont != null && scoreBoardTitleFont != null) {

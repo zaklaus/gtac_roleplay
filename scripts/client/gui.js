@@ -1139,6 +1139,46 @@ let switchCharacterSelect = function(firstName, lastName, cash, clan, lastPlayed
 	characterSelect.window.shown = true;
 }
 
+let isAnyGUIActive = function() {
+	if(infoDialog.window.shown) {
+		return true;
+	}
+
+	if(yesNoDialog.window.shown) {
+		return true;
+	}
+
+	if(errorDialog.window.shown) {
+		return true;
+	}
+
+	if(register.window.shown) {
+		return true;
+	}
+
+	if(login.window.shown) {
+		return true;
+	}
+
+	if(newCharacter.window.shown) {
+		return true;
+	}
+
+	if(characterSelect.window.shown) {
+		return true;
+	}
+
+	if(twoFactorAuth.window.shown) {
+		return true;
+	}
+
+	if(listDialog.window.shown) {
+		return true;
+	}
+
+	return false;
+}
+
 // ===========================================================================
 
 addNetworkHandler("vrr.showLogin", function() {

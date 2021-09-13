@@ -2101,7 +2101,7 @@ let gameData = {
 			["Marina Burger Shot", [816.55, -1617.00, 13.859], 1.396, null],
 
 			// Airports
-			["Los Santos International Airport", [1958.201049,-2182.789794,13.546875], 1.0, null],
+			["Los Santos International Airport Gate", [1958.201049,-2182.789794,13.546875], 1.0, null],
 			["Los Santos International Airport Runway", [2054.12, -2493.84, 13.547], 1.569, null],
 			["Los Santos Stadium", [2694.261474,-1703.194335,11.506717], 1.0, null],
 
@@ -2969,76 +2969,82 @@ let gameData = {
 	],
 	animations: [
 		[],
+		// [name, groupId, animId, animType, deltaTime, null, null, null, null, moveType],
+
 		[ // GTA III
-			["walk", 0, 0, VRR_ANIMTYPE_ADD, 0.0],
-			["jog", 0, 1, VRR_ANIMTYPE_ADD, 0.0],
-			["look1", 0, 7, VRR_ANIMTYPE_ADD, 0.0],
-			["tired", 0, 9, VRR_ANIMTYPE_ADD, 0.0],
-			["raisegun", 0, 10, VRR_ANIMTYPE_ADD, 0.0],
-			["wave", 0, 12, VRR_ANIMTYPE_ADD, 0.0],
-			["talk", 0, 11, VRR_ANIMTYPE_ADD, 0.0],
-			["stomachhit", 0, 18, VRR_ANIMTYPE_ADD, 0.0],
-			["headhit", 0, 18, VRR_ANIMTYPE_ADD, 0.0],
-			["throw1", 0, 53, VRR_ANIMTYPE_ADD, 0.0],
-			["throw2", 0, 54, VRR_ANIMTYPE_ADD, 0.0],
-			["punch1", 0, 54, VRR_ANIMTYPE_ADD, 0.0],
-			["headbutt", 0, 70, VRR_ANIMTYPE_ADD, 0.0],
-			["kick", 0, 71, VRR_ANIMTYPE_ADD, 0.0],
-			["kneekick", 0, 72, VRR_ANIMTYPE_ADD, 0.0],
-			["punch2", 0, 73, VRR_ANIMTYPE_ADD, 0.0],
-			["flipkick", 0, 74, VRR_ANIMTYPE_ADD, 0.0],
-			["bow", 0, 126, VRR_ANIMTYPE_ADD, 0.0],
-			["opendoor1", 0, 127, VRR_ANIMTYPE_ADD, 0.0],
-			["opendoor2", 0, 128, VRR_ANIMTYPE_ADD, 0.0],
-			["falling", 0, 151, VRR_ANIMTYPE_ADD, 0.0],
-			["dive", 0, 156, VRR_ANIMTYPE_ADD, 0.0],
-			["headscratch", 0, 157, VRR_ANIMTYPE_ADD, 0.0],
-			["look2", 0, 158, VRR_ANIMTYPE_ADD, 0.0],
-			["plant", 0, 162, VRR_ANIMTYPE_ADD, 0.0],
-			["cower", 0, 163, VRR_ANIMTYPE_ADD, 0.0],
-			["aimdown", 0, 160, VRR_ANIMTYPE_ADD, 0.0],
-			["aimcrouch", 0, 165, VRR_ANIMTYPE_ADD, 0.0],
-			["throw3", 0, 166, VRR_ANIMTYPE_ADD, 0.0],
-			["handsup", 0, 167, VRR_ANIMTYPE_ADD, 0.0],
+			["walk", 0, 0, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["jog", 0, 1, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["look1", 0, 7, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["tired", 0, 9, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["raisegun", 0, 10, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["wave", 0, 12, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["talk", 0, 11, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["stomachhit", 0, 18, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["headhit", 0, 18, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["throw1", 0, 53, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["throw2", 0, 54, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["punch1", 0, 54, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["headbutt", 0, 70, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["kick", 0, 71, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["kneekick", 0, 72, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["punch2", 0, 73, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["flipkick", 0, 74, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["bow", 0, 126, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["opendoor1", 0, 127, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["opendoor2", 0, 128, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["falling", 0, 151, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["dive", 0, 156, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["headscratch", 0, 157, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["look2", 0, 158, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["plant", 0, 162, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["cower", 0, 163, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["aimdown", 0, 160, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["aimcrouch", 0, 165, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["throw3", 0, 166, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["handsup", 0, 167, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 		],
 		[ // GTA VC
-			["walk", 0, 0, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["jog", 0, 1, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["handcuffs", 0, 7, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["tired", 0, 9, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["raisegun", 0, 10, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["wave", 0, 12, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["talk", 0, 11, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["stomachhit", 0, 18, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["headhit", 0, 18, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["headbutt", 0, 49, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["kick", 0, 50, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["kneekick", 0, 51, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["throw2", 0, 54, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["punch1", 0, 52, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["punch2", 0, 53, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["flipkick", 0, 54, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["headscratch", 0, 152, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["aimdown", 0, 155, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["look2", 0, 153, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["handsup", 0, 161, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["cower", 0, 162, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["fucku", 0, 163, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["phone", 0, 166, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["sit", 0, 169, VRR_ANIMTYPE_BLEND, 1.0, null, null, null, null],
-			["atm", 0, 171, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["cpr", 24, 214, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["idle1", 26, 215, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["idle2", 26, 216, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["idle3", 26, 217, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["idle4", 26, 218, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["dance1", 28, 226, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["dance2", 28, 227, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["dance3", 28, 228, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["dance4", 28, 229, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["dance5", 28, 230, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["dance6", 28, 231, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["dance7", 28, 232, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
+			["walk", 0, 0, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["jog", 0, 1, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["handcuffs", 0, 7, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["tired", 0, 9, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["raisegun", 0, 10, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["wave", 0, 12, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["talk", 0, 11, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["stomachhit", 0, 18, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["headhit", 0, 18, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["headbutt", 0, 49, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["kick", 0, 50, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["kneekick", 0, 51, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["throw2", 0, 54, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["punch1", 0, 52, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["punch2", 0, 53, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["flipkick", 0, 54, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["headscratch", 0, 152, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["aimdown", 0, 155, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["look2", 0, 153, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["handsup", 0, 161, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["cower", 0, 162, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["fucku", 0, 163, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["phone", 0, 166, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["sit", 0, 169, VRR_ANIMTYPE_BLEND, 1.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["atm", 0, 171, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["cpr", 24, 214, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["idle1", 26, 215, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["idle2", 26, 216, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["idle3", 26, 217, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["idle4", 26, 218, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["dance1", 28, 226, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["dance2", 28, 227, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["dance3", 28, 228, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["dance4", 28, 229, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["dance5", 28, 230, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["dance6", 28, 231, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["dance7", 28, 232, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["sitright", 0, 169, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_RIGHT],
+			["sitleft", 0, 169, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_LEFT],
+			["sitforward", 0, 169, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_FORWARD],
+			["sitback", 0, 169, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_BACK],
 		],
 		[ // GTA SA
 			["talk", "PED", "IDLE_CHAT", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
@@ -3178,7 +3184,7 @@ let gameData = {
 			house: 1361,
 			clothes: 1361,
 			misc: 1361,
-			exit: 1361
+			exit: 1361,
 		},
 
 		{ // GTA Vice City
@@ -3201,7 +3207,6 @@ let gameData = {
 
 		{ // GTA San Andreas
 			policeStation: 1247,
-
 			fireStation: 1318,
 			hospital: 1240,
 			ammunation: 1239,
@@ -4814,6 +4819,30 @@ function isPlayerAtGym(client) {
 
 function getPlayerElement(client) {
 	return client.player;
+}
+
+// ===========================================================================
+
+function setElementPosition(element, position) {
+	triggerNetworkEvent("vrr.elementPosition", getClientFromSyncerId(element.syncer), element.id, position);
+}
+
+// ===========================================================================
+
+function getElementPosition(element) {
+	return element.position;
+}
+
+// ===========================================================================
+
+function getElementHeading(element) {
+	return element.heading;
+}
+
+// ===========================================================================
+
+function setElementCollisionsEnabled(element, state) {
+	triggerNetworkEvent("vrr.elementCollisions", getClientFromSyncerId(element.syncer), element.id, state);
 }
 
 // ===========================================================================

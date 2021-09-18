@@ -3755,11 +3755,10 @@ let gameData = {
 			gunRange: [toVector3(-667.79, 1217.51, 11.10), 10],
 			bank: [toVector3(-894.52, -341.16, 13.45), 3],
 			stripClub: [toVector3(97.53, -1472.06, 10.43), 5],
-			rosenberg: [toVector3(120.82, -827.98, 10.62), 6],
+			rosenberg: [toVector3(137.29, -1370.20, 13.18), 6],
 			arena: [toVector3(-1080.49, 1331.16, 13.91), 15],
 			ghettoShack: [toVector3(-962.74, 146.96, 9.40), 12],
-			hotelRoom: [toVector3(226.47, -1274.98, 19.271), 2.933],
-
+			hotelRoom: [toVector3(226.47, -1274.98, 19.271), 2],
 		},
 
 		{ // GTA SA

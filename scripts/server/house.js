@@ -81,6 +81,7 @@ function createHouseCommand(command, params, client) {
 	let houseId = getServerData().houses.push(tempHouseData);
 
 	saveHouseToDatabase(houseId-1);
+	setAllHouseIndexes();
 
 	createHouseEntrancePickup(houseId-1);
 	createHouseExitPickup(houseId-1);
@@ -104,7 +105,7 @@ function createHouseCommand(command, params, client) {
  *
  */
 function lockUnlockHouseCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -137,7 +138,7 @@ function lockUnlockHouseCommand(command, params, client) {
  *
  */
  function toggleHouseInteriorLightsCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -166,7 +167,7 @@ function lockUnlockHouseCommand(command, params, client) {
 function setHouseDescriptionCommand(command, params, client) {
 	let newHouseDescription = toString(params);
 
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -202,7 +203,7 @@ function setHouseDescriptionCommand(command, params, client) {
  */
 function setHouseOwnerCommand(command, params, client) {
 	let newHouseOwner = getPlayerFromParams(params);
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!newHouseOwner) {
 		messagePlayerError("Player not found!");
@@ -240,7 +241,7 @@ function setHouseOwnerCommand(command, params, client) {
  *
  */
 function setHouseClanCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -280,7 +281,7 @@ function setHouseClanCommand(command, params, client) {
  *
  */
  function setHouseRankCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -329,7 +330,7 @@ function setHouseClanCommand(command, params, client) {
  */
 function setHousePickupCommand(command, params, client) {
 	let typeParam = params || "house";
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError(client, "House not found!");
@@ -374,7 +375,7 @@ function setHousePickupCommand(command, params, client) {
 function setHouseInteriorTypeCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let typeParam = splitParams[0] || "none";
-	let houseId = getHouseFromParams(splitParams[1]) || (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError(client, "House not found!");
@@ -427,7 +428,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
  */
 function setHouseBlipCommand(command, params, client) {
 	let typeParam = params || "house";
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError(client, "House not found!");
@@ -473,7 +474,7 @@ function setHouseBlipCommand(command, params, client) {
  *
  */
 function moveHouseEntranceCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayer(client, "You need to be near or inside a house!");
@@ -511,7 +512,7 @@ function moveHouseEntranceCommand(command, params, client) {
  *
  */
 function moveHouseExitCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayer(client, "You need to be near or inside a house!");
@@ -551,7 +552,7 @@ function moveHouseExitCommand(command, params, client) {
  *
  */
 function deleteHouseCommand(command, params, client) {
-	let houseId = toInteger((isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client)));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError("House not found!");
@@ -637,8 +638,6 @@ function createHouse(description, entranceLocation) {
 	tempHouseData.exitInterior = entranceLocation.exitInterior;
 	tempHouseData.entranceDimension = entranceLocation.entranceDimension;
 
-	tempHouseData.locations.push(entranceLocation);
-
 	return tempHouseData;
 }
 
@@ -654,12 +653,13 @@ function getHouseDataFromDatabaseId(databaseId) {
 
 // ===========================================================================
 
-function getClosestHouseEntrance(position) {
-	let houses = getServerData().houses;
+function getClosestHouseEntrance(position, dimension) {
 	let closest = 0;
-	for(let i in houses) {
-		if(getDistance(houses[i].entrancePosition, position) <= getDistance(houses[closest].entrancePosition, position)) {
-			closest = i;
+	for(let i in getServerData().houses) {
+		if(getServerData().houses[i].entranceDimension == dimension) {
+			if(getDistance(getServerData().houses[i].entrancePosition, position) <= getDistance(getServerData().houses[closest].entrancePosition, position)) {
+				closest = i;
+			}
 		}
 	}
 	return closest;
@@ -667,12 +667,13 @@ function getClosestHouseEntrance(position) {
 
 // ===========================================================================
 
-function getClosestHouseExit(position) {
-	let houses = getServerData().houses;
+function getClosestHouseExit(position, dimension) {
 	let closest = 0;
-	for(let i in houses) {
-		if(getDistance(houses[i].exitPosition, position) <= getDistance(houses[closest].exitPosition, position)) {
-			closest = i;
+	for(let i in getServerData().houses) {
+		if(getServerData().houses[i].entranceDimension == dimension) {
+			if(getDistance(getServerData().houses[i].exitPosition, position) <= getDistance(getServerData().houses[closest].exitPosition, position)) {
+				closest = i;
+			}
 		}
 	}
 	return closest;
@@ -681,8 +682,15 @@ function getClosestHouseExit(position) {
 // ===========================================================================
 
 function getPlayerHouse(client) {
-	if(doesEntityDataExist(client, "vrr.inHouse")) {
-		return getEntityData(client, "vrr.inHouse");
+	let closestEntrance = getClosestHouseEntrance(getPlayerPosition(client), getPlayerDimension(client));
+	if(getDistance(getPlayerPosition(client), getHouseData(closestEntrance).entrancePosition) <= getGlobalConfig().enterPropertyDistance) {
+		return getHouseData(closestEntrance).index
+	}
+
+	for(let i in getServerData().houses) {
+		if(getServerData().houses[i].exitDimension == getPlayerDimension(client)) {
+			return i;
+		}
 	}
 
 	return -1;
@@ -963,7 +971,7 @@ function getHouseOwnerTypeText(ownerType) {
 // ===========================================================================
 
 function getHouseInfoCommand(command, params, client) {
-	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+	let houseId = getPlayerHouse(client);
 
 	if(!areParamsEmpty(params)) {
 		houseId = toInteger(params);
@@ -1012,10 +1020,10 @@ function setHouseBuyPriceCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let amount = toInteger(splitParams[0]) || 0;
-	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "Business not found!");
+		messagePlayerError(client, "House not found!");
 		return false;
 	}
 
@@ -1026,7 +1034,7 @@ function setHouseBuyPriceCommand(command, params, client) {
 
 	getHouseData(houseId).buyPrice = amount;
 	setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", getHouseData(houseId).buyPrice, true);
-	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}'s ${getInlineChatColourByName("white")}for-sale price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
+	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}'s ${getInlineChatColourByName("white")}for-sale price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
 }
 
 // ===========================================================================
@@ -1040,10 +1048,10 @@ function setHouseRentPriceCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
 	let amount = toInteger(splitParams[0]) || 0;
-	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "Business not found!");
+		messagePlayerError(client, "House not found!");
 		return false;
 	}
 
@@ -1054,13 +1062,13 @@ function setHouseRentPriceCommand(command, params, client) {
 
 	getHouseData(houseId).rentPrice = amount;
 	setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", `Rent: ${getHouseData(houseId).rentPrice}`, true);
-	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}'s ${getInlineChatColourByName("white")}rent price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
+	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}'s ${getInlineChatColourByName("white")}rent price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
 }
 
 // ===========================================================================
 
 function buyHouseCommand(command, params, client) {
-	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
+	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
 		messagePlayerError(client, "House not found!");
@@ -1073,7 +1081,7 @@ function buyHouseCommand(command, params, client) {
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getHouseData(houseId).buyPrice) {
-		messagePlayerError(client, `You don't have enough money to buy business ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).name}!`);
+		messagePlayerError(client, `You don't have enough money to buy house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).name}!`);
 		return false;
 	}
 
@@ -1189,15 +1197,15 @@ function setAllHouseIndexes() {
 	for(let i in getServerData().houses) {
 		getServerData().houses[i].index = i;
 
-		for(let j in getServerData().houses[i].locations) {
-			getServerData().houses[i].locations[j].index = j;
-			getServerData().houses[i].locations[j].houseIndex = i;
-		}
+		//for(let j in getServerData().houses[i].locations) {
+		//	getServerData().houses[i].locations[j].index = j;
+		//	getServerData().houses[i].locations[j].houseIndex = i;
+		//}
 
-		for(let j in getServerData().houses[i].gameScripts) {
-			getServerData().houses[i].gameScripts[j].index = j;
-			getServerData().houses[i].gameScripts[j].houseIndex = i;
-		}
+		//for(let j in getServerData().houses[i].gameScripts) {
+		//	getServerData().houses[i].gameScripts[j].index = j;
+		//	getServerData().houses[i].gameScripts[j].houseIndex = i;
+		//}
 	}
 }
 

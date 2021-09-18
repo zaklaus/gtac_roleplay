@@ -122,16 +122,88 @@ function submitBugReportCommand(command, params, client) {
 // ===========================================================================
 
 function enterExitPropertyCommand(command, params, client) {
-	if(isPlayerInAnyHouse(client)) {
-		let inHouse = getServerData().houses[getPlayerHouse(client)];
-		if(getDistance(inHouse.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
-			if(inHouse.locked) {
-				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
+	let closestBusinessEntrance = getClosestBusinessEntrance(getPlayerPosition(client), getPlayerDimension(client));
+	let closestBusinessExit = getClosestBusinessExit(getPlayerPosition(client), getPlayerDimension(client));
+	let closestHouseEntrance = getClosestHouseEntrance(getPlayerPosition(client), getPlayerDimension(client));
+	let closestHouseExit = getClosestHouseExit(getPlayerPosition(client), getPlayerDimension(client));
+
+	let closestEntrance = null;
+	let closestExit = null;
+	let closestProperty = null;
+	let isEntrance = false;
+	let isBusiness = false;
+
+	if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessEntrance).entrancePosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseEntrance).entrancePosition)) {
+		closestEntrance = getBusinessData(closestBusinessEntrance);
+	} else {
+		closestEntrance = getHouseData(closestHouseEntrance);
+	}
+
+	if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessExit).exitPosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseExit).exitPosition)) {
+		closestExit = getBusinessData(closestBusinessExit);
+	} else {
+		closestExit = getHouseData(closestHouseExit);
+	}
+
+	if(getDistance(getPlayerPosition(client), closestEntrance.entrancePosition) <= getDistance(getPlayerPosition(client), closestExit.exitPosition)) {
+		closestProperty = closestEntrance;
+		isEntrance = true;
+	} else {
+		closestProperty = closestExit;
+		isEntrance = false;
+	}
+
+	if(closestProperty instanceof HouseData) {
+		isBusiness = false;
+	} else {
+		isBusiness = true;
+	}
+
+	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s closest door is ${(isBusiness) ? closestProperty.name : closestProperty.description} ${(isEntrance) ? "entrance" : "exit"}`);
+
+	if(isEntrance) {
+		if(getDistance(closestProperty.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
+			if(closestProperty.locked) {
+				meActionToNearbyPlayers(client, `tries to open the ${(isBusiness) ? "business" : "house"} door but fails because it's locked`);
 				return false;
 			}
 			clearPlayerStateToEnterExitProperty(client);
+			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
+			meActionToNearbyPlayers(client, `opens the door and enters the ${(isBusiness) ? "business" : "house"}`);
+
+			if(isFadeCameraSupported()) {
+				fadeCamera(client, false, 1.0);
+			}
+
+			setTimeout(function() {
+				setPlayerPosition(client, closestProperty.exitPosition);
+				setPlayerHeading(client, closestProperty.exitRotation);
+				setPlayerDimension(client, closestProperty.exitDimension);
+				setPlayerInterior(client, closestProperty.exitInterior);
+				setTimeout(function() {
+					if(isFadeCameraSupported()) {
+						fadeCamera(client, true, 1.0);
+					}
+					updateInteriorLightsForPlayer(client, closestProperty.interiorLights);
+				}, 1000);
+			}, 1100);
+			if(closestProperty.streamingRadioStation != -1) {
+				if(getRadioStationData(closestProperty.streamingRadioStation)) {
+					playRadioStreamForPlayer(client, getRadioStationData(closestProperty.streamingRadioStation).url);
+					getPlayerData(client).streamingRadioStation = closestProperty.streamingRadioStation;
+				}
+			}
+			return true;
+		}
+	} else {
+		if(getDistance(closestProperty.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
+			if(closestProperty.locked) {
+				meActionToNearbyPlayers(client, `tries to open the ${(isBusiness) ? "business" : "house"} door but fails because it's locked`);
+				return false;
+			}
 			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
-			meActionToNearbyPlayers(client, "opens the door and exits the house");
+			clearPlayerStateToEnterExitProperty(client)
+			meActionToNearbyPlayers(client, `opens the door and exits the ${(isBusiness) ? "business" : "house"}`);
 
 			if(isFadeCameraSupported()) {
 				fadeCamera(client, false, 1.0);
@@ -139,169 +211,20 @@ function enterExitPropertyCommand(command, params, client) {
 
 			disableCityAmbienceForPlayer(client, true);
 			setTimeout(function() {
-				setPlayerPosition(client, inHouse.entrancePosition);
-				setPlayerHeading(client, inHouse.entranceRotation);
-				setPlayerDimension(client, inHouse.entranceDimension);
-				setPlayerInterior(client, inHouse.entranceInterior);
+				setPlayerPosition(client, closestProperty.entrancePosition);
+				setPlayerHeading(client, closestProperty.entranceRotation);
+				setPlayerDimension(client, closestProperty.entranceDimension);
+				setPlayerInterior(client, closestProperty.entranceInterior);
 				setTimeout(function() {
 					if(isFadeCameraSupported()) {
 						fadeCamera(client, true, 1.0);
 					}
-					setTimeout(function() {
-						enableCityAmbienceForPlayer(client);
-						clearPlayerOwnedPeds(client);
-						clearPlayerHouseGameScripts(client, inHouse.index);
-						getPlayerData(client).pedState = VRR_PEDSTATE_READY;
-					}, 2000);
 					updateInteriorLightsForPlayer(client, true);
 				}, 1000);
 			}, 1100);
-			removeEntityData(client, "vrr.inHouse");
-			playRadioStreamForPlayer(client, "");
+			stopRadioStreamForPlayer(client);
 			getPlayerData(client).streamingRadioStation = -1;
-			logToConsole(LOG_DEBUG, `[VRR.Misc] ${getPlayerDisplayForConsole(client)} exited house ${inHouse.description}[${inHouse.index}/${inHouse.databaseId}]`);
-			return true;
-		}
-	}
-
-	if(isPlayerInAnyBusiness(client)) {
-		let inBusiness = getServerData().businesses[getPlayerBusiness(client)];
-		if(getDistance(inBusiness.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
-			if(inBusiness.locked) {
-				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
-				return false;
-			}
-			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
-			clearPlayerStateToEnterExitProperty(client)
-			meActionToNearbyPlayers(client, "opens the door and exits the business");
-
-			if(isFadeCameraSupported()) {
-				fadeCamera(client, false, 1.0);
-			}
-
-			disableCityAmbienceForPlayer(client, true);
-			setTimeout(function() {
-				setPlayerPosition(client, inBusiness.entrancePosition);
-				setPlayerHeading(client, inBusiness.entranceRotation);
-				setPlayerDimension(client, inBusiness.entranceDimension);
-				setPlayerInterior(client, inBusiness.entranceInterior);
-				setTimeout(function() {
-					if(isFadeCameraSupported()) {
-						fadeCamera(client, true, 1.0);
-					}
-					setTimeout(function() {
-						enableCityAmbienceForPlayer(client);
-						clearPlayerOwnedPeds(client);
-						clearPlayerBusinessGameScripts(client, inBusiness.index);
-						getPlayerData(client).pedState = VRR_PEDSTATE_READY;
-					}, 2000);
-					updateInteriorLightsForPlayer(client, true);
-				}, 1000);
-			}, 1100);
-			removeEntityData(client, "vrr.inBusiness");
-			playRadioStreamForPlayer(client, "");
-			getPlayerData(client).streamingRadioStation = -1;
-			logToConsole(LOG_DEBUG, `[VRR.Misc] ${getPlayerDisplayForConsole(client)} exited business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
-			return true;
-		}
-	}
-
-	if(getServerData().businesses.length > 0) {
-		let closestBusinessId = getClosestBusinessEntrance(getPlayerPosition(client));
-		let closestBusiness = getBusinessData(closestBusinessId);
-		if(getDistance(closestBusiness.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
-			if(!doesBusinessHaveInterior(closestBusinessId)) {
-				messagePlayerAlert(client, "This business does not have an interior.");
-				messagePlayerTip(client, "You can use business commands at the door.");
-				return false;
-			}
-
-			if(closestBusiness.locked) {
-				meActionToNearbyPlayers(client, "tries to open the business door but fails because it's locked");
-				return false;
-			}
-
-			clearPlayerStateToEnterExitProperty(client)
-			meActionToNearbyPlayers(client, "opens the door and enters the business");
-			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
-			if(isFadeCameraSupported()) {
-				fadeCamera(client, false, 1.0);
-			}
-			disableCityAmbienceForPlayer(client);
-			setTimeout(function() {
-				setPlayerPosition(client, closestBusiness.exitPosition);
-				setPlayerHeading(client, closestBusiness.exitRotation);
-				setPlayerDimension(client, closestBusiness.exitDimension);
-				setPlayerInterior(client, closestBusiness.exitInterior);
-				sendPlayerBusinessGameScripts(client, closestBusiness.index);
-				setTimeout(function() {
-					if(isFadeCameraSupported()) {
-						fadeCamera(client, true, 1.0);
-					}
-					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
-					if(doesBusinessHaveAnyItemsToBuy(closestBusinessId)) {
-						messagePlayerInfo(client, "Use /buy to purchase items from this business");
-					}
-					updateInteriorLightsForPlayer(client, closestBusiness.interiorLights);
-					setTimeout(function() {
-						if(closestBusiness.streamingRadioStation != -1) {
-							if(getPlayerData(client).streamingRadioStation != closestBusiness.streamingRadioStation) {
-								playRadioStreamForPlayer(client, radioStations[closestBusiness.streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
-							}
-						}
-					}, 1250);
-				}, 1000);
-			}, 1100);
-			setEntityData(client, "vrr.inBusiness", closestBusinessId, true);
-			return true;
-		}
-	}
-
-	if(getServerData().houses.length > 0) {
-		let closestHouseId = getClosestHouseEntrance(getPlayerPosition(client));
-		let closestHouse = getHouseData(closestHouseId);
-		//let distance = getDistance(closestHouse.entrancePosition, getPlayerPosition(client));
-		if(getDistance(closestHouse.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
-			if(!doesHouseHaveInterior(closestHouseId)) {
-				messagePlayerAlert(client, "This house does not have an interior.");
-				messagePlayerTip(client, "You can use house commands at the door.");
-				return false;
-			}
-
-			if(closestHouse.locked) {
-				meActionToNearbyPlayers(client, "tries to open the house door but fails because it's locked");
-				return false;
-			}
-
-			clearPlayerStateToEnterExitProperty(client)
-			meActionToNearbyPlayers(client, "opens the door and enters the house");
-			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
-			if(isFadeCameraSupported()) {
-				fadeCamera(client, false, 1.0);
-			}
-			disableCityAmbienceForPlayer(client);
-			setTimeout(function() {
-				setPlayerDimension(client, closestHouse.exitDimension);
-				setPlayerInterior(client, closestHouse.exitInterior);
-				setPlayerPosition(client, closestHouse.exitPosition);
-				setPlayerHeading(client, closestHouse.exitRotation);
-				sendPlayerHouseGameScripts(client, closestHouse.index);
-				setTimeout(function() {
-					if(isFadeCameraSupported()) {
-						fadeCamera(client, true, 1.0);
-					}
-					getPlayerData(client).pedState = VRR_PEDSTATE_READY;
-					updateInteriorLightsForPlayer(client, closestHouse.interiorLights);
-					setTimeout(function() {
-						if(closestHouse.streamingRadioStation != -1) {
-							if(getPlayerData(client).streamingRadioStation != closestHouse.streamingRadioStation) {
-								playRadioStreamForPlayer(client, radioStations[closestHouse.streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
-							}
-						}
-					}, 1250);
-				}, 1000);
-			}, 1100);
-			setEntityData(client, "vrr.inHouse", closestHouseId, true)
+			//logToConsole(LOG_DEBUG, `[VRR.Misc] ${getPlayerDisplayForConsole(client)} exited business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
 			return true;
 		}
 	}

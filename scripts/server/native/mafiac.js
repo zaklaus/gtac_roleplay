@@ -889,7 +889,7 @@ let gameData = {
 		false,
 
 		[ // Mafia 1
-			//new serverClasses.removedWorldObjectData("fraightback04", toVector3(1229.88, -84.8012, 13.4004), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
+			//new RemovedWorldObjectData("fraightback04", toVector3(1229.88, -84.8012, 13.4004), 50.0), // Truck trailer in Easy Credit Autos dealership parking lot
 		],
 
 		[ // Mafia 2

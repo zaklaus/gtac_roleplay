@@ -51,7 +51,8 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.showItemActionDelay", showItemActionDelay);
     addNetworkHandler("vrr.set2DRendering", setPlayer2DRendering);
     addNetworkHandler("vrr.mouseCursor", toggleMouseCursor);
-    addNetworkHandler("vrr.mouseCamera", setMouseCameraState);
+    addNetworkHandler("vrr.mouseCamera", toggleMouseCamera);
+    addNetworkHandler("vrr.mouseCameraForce", setMouseCameraState);
     addNetworkHandler("vrr.weaponDamageEnabled", setPlayerWeaponDamageEnabled);
     addNetworkHandler("vrr.weaponDamageEvent", setPlayerWeaponDamageEvent);
     addNetworkHandler("vrr.spawned", onServerSpawnedPlayer);
@@ -74,8 +75,8 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.stopRadioStream", stopStreamingRadio);
     addNetworkHandler("vrr.radioVolume", setStreamingRadioVolume);
 
-    addNetworkHandler("vrr.veh.lights", toggleVehicleLights);
-    addNetworkHandler("vrr.veh.engine", toggleVehicleEngine);
+    addNetworkHandler("vrr.veh.lights", setVehicleLights);
+    addNetworkHandler("vrr.veh.engine", setVehicleEngine);
     addNetworkHandler("vrr.veh.repair", repairVehicle);
 
     addNetworkHandler("vrr.pedAnim", makePedPlayAnimation);
@@ -321,6 +322,15 @@ function makePedStopAnimation(pedId) {
     if(getElementFromId(pedId) == localPlayer) {
         localPlayer.collisionsEnabled = true;
         setLocalPlayerControlState(true, false);
+    }
+}
+
+// ===========================================================================
+
+function setLocalPlayerPedPartsAndProps(parts, props) {
+    for(let i in parts) {
+        localPlayer.changeBodyPart(parts[0], parts[1], parts[2]);
+        localPlayer.changeBodyProp(props[0], props[1]);
     }
 }
 

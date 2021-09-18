@@ -308,3 +308,7 @@ const VRR_BIZ_TYPE_NONE = 0;                     // None (invalid)
 const VRR_BIZ_TYPE_NORMAL = 1;                   // Normal business (sells items)
 const VRR_BIZ_TYPE_BANK = 2;                     // Bank
 const VRR_BIZ_TYPE_PUBLIC = 3;                   // Public business (Government, public service, etc)
+
+const VRR_RETURNTO_TYPE_NONE = 0;                // "Return to" data is invalid
+const VRR_RETURNTO_TYPE_ADMINGET = 1;            // "Return to" data is from admin teleporting
+const VRR_RETURNTO_TYPE_SKINSELECT = 2;          // "Return to" data is from skin select

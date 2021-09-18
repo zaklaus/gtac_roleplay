@@ -70,7 +70,7 @@ function removeKeyBindCommand(command, params, client) {
 // ===========================================================================
 
 function addPlayerKeyBind(client, keyId, tempCommand, tempParams) {
-    let keyBindData = new serverClasses.keyBindData(false, keyId, `${tempCommand} ${tempParams}`);
+    let keyBindData = new KeyBindData(false, keyId, `${tempCommand} ${tempParams}`);
     getPlayerData(client).accountData.keyBinds.push(keyBindData);
     sendAddAccountKeyBindToClient(client, keyId, KEYSTATE_UP);
 

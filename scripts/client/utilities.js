@@ -334,8 +334,10 @@ function setLocalPlayerHeading(heading) {
 function setLocalPlayerInterior(interior) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting interior to ${interior}`);
     if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-        localPlayer.interior = interior;
-        gta.cameraInterior = interior;
+        if(!isGTAIV()) {
+            localPlayer.interior = interior;
+            gta.cameraInterior = interior;
+        }
     }
 }
 
@@ -437,7 +439,7 @@ function clearSelfOwnedVehicles() {
 
 function setMouseCameraState(state) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] ${(state)?"Enabled":"Disabled"} mouse camera`);
-    mouseCameraEnabled = !mouseCameraEnabled;
+    mouseCameraEnabled = state;
     SetStandardControlsEnabled(!mouseCameraEnabled);
 }
 
@@ -446,6 +448,13 @@ function setMouseCameraState(state) {
 function toggleMouseCursor() {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] ${(!gui.cursorEnabled)?"Enabled":"Disabled"} mouse cursor`);
     gui.showCursor(!gui.cursorEnabled, gui.cursorEnabled);
+}
+
+// ===========================================================================
+
+function toggleMouseCursor() {
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] ${(!gui.cursorEnabled)?"Enabled":"Disabled"} mouse cursor`);
+    setMouseCameraState(!mouseCameraEnabled);
 }
 
 // ===========================================================================
@@ -694,6 +703,27 @@ function processInteriorLightsRendering() {
             graphics.drawRectangle(null, toVector2(0.0, 0.0), toVector2(game.width, game.height), interiorLightsColour, interiorLightsColour, interiorLightsColour, interiorLightsColour);
         }
     }
+}
+
+// ===========================================================================
+
+function getPlayerFromParams(params) {
+	let clients = getClients();
+	if(isNaN(params)) {
+		for(let i in clients) {
+			if(!clients[i].console) {
+				if(toLowerCase(clients[i].name).indexOf(toLowerCase(params)) != -1) {
+					return clients[i];
+				}
+			}
+		}
+	} else {
+		if(typeof clients[toInteger(params)] != "undefined") {
+			return clients[toInteger(params)];
+		}
+	}
+
+	return false;
 }
 
 // ===========================================================================

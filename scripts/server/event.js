@@ -243,16 +243,16 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             vehicle.engine = getVehicleData(vehicle).engine;
 
             if(getVehicleData(vehicle).buyPrice > 0) {
-                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: ${getInlineChatColourByName("lightGrey")}$${getVehicleData(vehicle).buyPrice}`);
+                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice)}`);
                 messagePlayerTip(client, `Use /vehbuy if you want to buy it.`);
                 resetVehiclePosition(vehicle);
             } else if(getVehicleData(vehicle).rentPrice > 0) {
                 if(getVehicleData(vehicle).rentedBy != client) {
-                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: ${getInlineChatColourByName("lightGrey")}$${getVehicleData(vehicle).rentPrice} per minute`);
+                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute`);
                     messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
                     resetVehiclePosition(vehicle);
                 } else {
-                    messagePlayerAlert(client, `You are renting this ${getVehicleName(vehicle)} for ${getInlineChatColourByName("lightGrey")}$${getVehicleData(vehicle).rentPrice} per minute. ${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/stoprent ${getInlineChatColourByName("white")}if you want to stop renting it.`);
+                    messagePlayerAlert(client, `You are renting this ${getVehicleName(vehicle)} for ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute. ${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/stoprent ${getInlineChatColourByName("white")}if you want to stop renting it.`);
                 }
             } else {
                 let ownerName = "Nobody";
@@ -365,7 +365,7 @@ function onPlayerDeath(client, position) {
 		setTimeout(function() {
 			if(getPlayerCurrentSubAccount(client).inJail) {
                 let closestJail = getClosestJail(getPlayerPosition(client));
-                client.despawnPlayer();
+                //client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestJail.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
                 if(getServerGame() == GAME_GTA_IV) {
@@ -380,7 +380,7 @@ function onPlayerDeath(client, position) {
                 updatePlayerSpawnedState(client, true);
 			} else {
                 let closestHospital = getClosestHospital(getPlayerPosition(client));
-                client.despawnPlayer();
+                //client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
                 if(getServerGame() == GAME_GTA_IV) {
@@ -421,21 +421,21 @@ function onPlayerSpawn(client) {
     logToConsole(LOG_DEBUG, `[VRR.Event] Checking ${getPlayerDisplayForConsole(client)}'s player data`);
     if(!getPlayerData(client)) {
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player data is invalid. Kicking them from server.`);
-        client.despawnPlayer();
+        client.disconnect();
         return false;
     }
 
     logToConsole(LOG_DEBUG, `[VRR.Event] Checking ${getPlayerDisplayForConsole(client)}'s login status`);
     if(!getPlayerData(client).loggedIn) {
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} is NOT logged in. Despawning their player.`);
-        client.despawnPlayer();
+        client.disconnect();
         return false;
     }
 
     logToConsole(LOG_DEBUG, `[VRR.Event] Checking ${getPlayerDisplayForConsole(client)}'s selected character status`);
     if(getPlayerData(client).currentSubAccount == -1) {
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} has NOT selected a character. Despawning their player.`);
-        client.despawnPlayer();
+        client.disconnect();
         return false;
     }
 
@@ -534,22 +534,25 @@ function onPlayerSpawn(client) {
             sendPlayerEnterPropertyKey(client, keyId.key);
         }
 
-        if(isGTAIV()) {
-            setEntityData(client.player, "vrr.bodyPartHair", getPlayerCurrentSubAccount(client).bodyParts.hair, true);
-            setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyParts.head, true);
-            setEntityData(client.player, "vrr.bodyPartUpper", getPlayerCurrentSubAccount(client).bodyParts.upper, true);
-            setEntityData(client.player, "vrr.bodyPartLower", getPlayerCurrentSubAccount(client).bodyParts.lower, true);
+        //if(isGTAIV()) {
+        //    setEntityData(client.player, "vrr.bodyPartHair", getPlayerCurrentSubAccount(client).bodyParts.hair, true);
+        //    setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyParts.head, true);
+        //    setEntityData(client.player, "vrr.bodyPartUpper", getPlayerCurrentSubAccount(client).bodyParts.upper, true);
+        //    setEntityData(client.player, "vrr.bodyPartLower", getPlayerCurrentSubAccount(client).bodyParts.lower, true);
+        //    setEntityData(client.player, "vrr.bodyPropHair", getPlayerCurrentSubAccount(client).bodyProps.hair, true);
+        //    setEntityData(client.player, "vrr.bodyPropEyes", getPlayerCurrentSubAccount(client).bodyProps.eyes, true);
+        //    setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyProps.head, true);
+        //    setEntityData(client.player, "vrr.bodyPartLeftHand", getPlayerCurrentSubAccount(client).bodyProps.leftHand, true);
+        //    setEntityData(client.player, "vrr.bodyPartRightHand", getPlayerCurrentSubAccount(client).bodyProps.rightHand, true);
+        //    setEntityData(client.player, "vrr.bodyPartLeftWrist", getPlayerCurrentSubAccount(client).bodyProps.leftWrist, true);
+        //    setEntityData(client.player, "vrr.bodyPartRightWrist", getPlayerCurrentSubAccount(client).bodyProps.rightWrist, true);
+        //    setEntityData(client.player, "vrr.bodyPartHip", getPlayerCurrentSubAccount(client).bodyProps.hip, true);
+        //    setEntityData(client.player, "vrr.bodyPartLeftFoot", getPlayerCurrentSubAccount(client).bodyProps.leftFoot, true);
+        //    setEntityData(client.player, "vrr.bodyPartRightFoot", getPlayerCurrentSubAccount(client).bodyProps.rightFoot, true);
+        //}
 
-            setEntityData(client.player, "vrr.bodyPropHair", getPlayerCurrentSubAccount(client).bodyProps.hair, true);
-            setEntityData(client.player, "vrr.bodyPropEyes", getPlayerCurrentSubAccount(client).bodyProps.eyes, true);
-            setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyProps.head, true);
-            setEntityData(client.player, "vrr.bodyPartLeftHand", getPlayerCurrentSubAccount(client).bodyProps.leftHand, true);
-            setEntityData(client.player, "vrr.bodyPartRightHand", getPlayerCurrentSubAccount(client).bodyProps.rightHand, true);
-            setEntityData(client.player, "vrr.bodyPartLeftWrist", getPlayerCurrentSubAccount(client).bodyProps.leftWrist, true);
-            setEntityData(client.player, "vrr.bodyPartRightWrist", getPlayerCurrentSubAccount(client).bodyProps.rightWrist, true);
-            setEntityData(client.player, "vrr.bodyPartHip", getPlayerCurrentSubAccount(client).bodyProps.hip, true);
-            setEntityData(client.player, "vrr.bodyPartLeftFoot", getPlayerCurrentSubAccount(client).bodyProps.leftFoot, true);
-            setEntityData(client.player, "vrr.bodyPartRightFoot", getPlayerCurrentSubAccount(client).bodyProps.rightFoot, true);
+        if(isGTAIV()) {
+            sendPlayerPedPartsAndProps(client);
         }
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);

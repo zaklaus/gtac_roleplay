@@ -25,13 +25,55 @@ function saveAllServerDataToDatabase() {
 	}
 
 	logToConsole(LOG_DEBUG, "[VRR.Utilities]: Saving all server data to database ...");
-	saveAllClientsToDatabase();
-	saveAllClansToDatabase();
-	saveAllHousesToDatabase();
-	saveAllBusinessesToDatabase();
-	saveServerConfigToDatabase(getServerConfig());
-	saveAllVehiclesToDatabase();
-	saveAllItemsToDatabase();
+
+	try {
+		saveAllClientsToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save clients to database: ${error}`);
+	}
+
+	try {
+		saveAllClansToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save clans to database: ${error}`);
+	}
+
+	try {
+		saveAllHousesToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save houses to database: ${error}`);
+	}
+
+	try {
+		saveAllBusinessesToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save businesses to database: ${error}`);
+	}
+
+	try {
+		saveServerConfigToDatabase(getServerConfig());
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save server config to database: ${error}`);
+	}
+
+	try {
+		saveAllVehiclesToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save vehicles to database: ${error}`);
+	}
+
+	try {
+		saveAllItemsToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save items to database: ${error}`);
+	}
+
+	try {
+		saveServerConfigToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save server config to database: ${error}`);
+	}
+
 	logToConsole(LOG_DEBUG, "[VRR.Utilities]: Saved all server data to database!");
 }
 

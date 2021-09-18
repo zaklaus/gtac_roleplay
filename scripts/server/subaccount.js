@@ -24,7 +24,7 @@ function loadSubAccountFromName(firstName, lastName) {
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
 			freeDatabaseQuery(dbQuery);
-			return new serverClasses.subAccountData(dbAssoc);
+			return new SubAccountData(dbAssoc);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -42,7 +42,7 @@ function loadSubAccountFromId(subAccountId) {
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
 			freeDatabaseQuery(dbQuery);
-			return new serverClasses.subAccountData(dbAssoc);
+			return new SubAccountData(dbAssoc);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -62,7 +62,7 @@ function loadSubAccountsFromAccount(accountId) {
 			let dbQuery = queryDatabase(dbConnection, dbQueryString);
 			if(dbQuery) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempSubAccount = new serverClasses.subAccountData(dbAssoc);
+					let tempSubAccount = new SubAccountData(dbAssoc);
 
 					// Make sure skin is valid
 					if(tempSubAccount.skin == -1) {
@@ -425,7 +425,7 @@ function switchCharacterCommand(command, params, client) {
 
 	resetClientStuff(client);
 
-	client.despawnPlayer();
+	//client.despawnPlayer();
 	getPlayerData(client).switchingCharacter = true;
 	//spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
 	//showCharacterSelectCameraToPlayer(client);

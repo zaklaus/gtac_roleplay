@@ -31,7 +31,7 @@ function loadItemsFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempItemData = new serverClasses.itemData(dbFetchAssoc);
+					let tempItemData = new ItemData(dbFetchAssoc);
 					tempItems.push(tempItemData);
 				}
 			}
@@ -53,7 +53,7 @@ function loadItemTypesFromDatabase() {
 		if(dbQuery) {
 			if(getQueryNumRows(dbQuery) > 0) {
 				while(dbFetchAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempItemTypeData = new serverClasses.itemTypeData(dbFetchAssoc);
+					let tempItemTypeData = new ItemTypeData(dbFetchAssoc);
 					tempItemTypes.push(tempItemTypeData);
 				}
 			}
@@ -68,7 +68,7 @@ function loadItemTypesFromDatabase() {
 // ===========================================================================
 
 function createItem(itemTypeId, value, ownerType, ownerId, amount=1) {
-	let tempItemData = new serverClasses.itemData(false);
+	let tempItemData = new ItemData(false);
 	tempItemData.itemType = getItemTypeData(itemTypeId).databaseId;
 	tempItemData.ownerType = ownerType;
 	tempItemData.ownerId = ownerId;
@@ -991,18 +991,20 @@ function getPlayerFirstEmptyHotBarSlot(client) {
 // ===========================================================================
 
 function cachePlayerHotBarItems(client) {
-	if(!isPlayerWorking(client)) {
-		for(let i = 0 ; i <= 9 ; i++) {
-			getPlayerData(client).hotBarItems[i] = -1;
-		}
+	if(isPlayerWorking(client)) {
+		return false;
+	}
 
-		for(let i in getServerData().items) {
-			if(getItemData(i).ownerType == VRR_ITEM_OWNER_PLAYER) {
-				if(getItemData(i).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
-					let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
-					if(firstSlot != -1) {
-						getPlayerData(client).hotBarItems[firstSlot] = i;
-					}
+	for(let i = 0 ; i <= 9 ; i++) {
+		getPlayerData(client).hotBarItems[i] = -1;
+	}
+
+	for(let i in getServerData().items) {
+		if(getItemData(i).ownerType == VRR_ITEM_OWNER_PLAYER) {
+			if(getItemData(i).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+				let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
+				if(firstSlot != -1) {
+					getPlayerData(client).hotBarItems[firstSlot] = i;
 				}
 			}
 		}
@@ -1067,7 +1069,8 @@ function deleteItem(itemId) {
 	if(getItemData(itemId).databaseId > 0) {
 		quickDatabaseQuery(`DELETE FROM item_main WHERE item_id = ${getItemData(itemId).databaseId}`);
 	}
-	getServerData().items.splice(itemId, 1);
+	getServerData().items[itemId] = false;
+	setItemDataIndexes();
 }
 
 // ===========================================================================
@@ -1285,14 +1288,12 @@ function saveItemToDatabase(itemId) {
 // ===========================================================================
 
 function storePlayerItemsInJobLocker(client) {
-	for(let i in getPlayerData(client).hotBarItems) {
-		//if(getPlayerData(client).hotBarItems[i] != -1) {
-			getPlayerData(client).jobLockerCache[i] = getPlayerData(client).hotBarItems[i];
-			getPlayerData(client).hotBarItems[i] = -1;
-		//}
+	for(let i = 0 ; i <= 8 ; i++) {
+		getPlayerData(client).jobLockerCache[i] = getPlayerData(client).hotBarItems[i];
+		getPlayerData(client).hotBarItems[i] = -1;
 	}
 
-	cachePlayerHotBarItems(client);
+	//cachePlayerHotBarItems(client);
 	updatePlayerHotBar(client);
 }
 
@@ -1305,15 +1306,12 @@ function restorePlayerJobLockerItems(client) {
 		}
 	}
 
-	for(let i in getPlayerData(client).jobLockerCache) {
-		//if(getPlayerData(client).jobLockerCache[i] != -1) {
-			getPlayerData(client).hotBarItems[i] = getPlayerData(client).jobLockerCache[i];
-			getPlayerData(client).jobLockerCache[i] = -1;
-		//}
+	for(let i = 0 ; i <= 8 ; i++) {
+		getPlayerData(client).hotBarItems[i] = getPlayerData(client).jobLockerCache[i];
+		getPlayerData(client).jobLockerCache[i] = -1;
 	}
 
 	cachePlayerHotBarItems(client);
-
 	updatePlayerHotBar(client);
 }
 
@@ -1431,7 +1429,44 @@ function toggleItemEnabledCommand(command, params, client) {
 	}
 
 	getItemData(getPlayerActiveItem(client)).enabled = !getItemData(getPlayerActiveItem(client)).enabled;
-	messagePlayerNormal(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} ${getInlineChatColourByName("white")}your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)} ${getInlineChatColourByName("lightGrey")}${getItemValueDisplayForItem(getPlayerActiveItem(client))}`)
+	messagePlayerNormal(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} ${getInlineChatColourByName("white")}your ${getItemName(getPlayerActiveItem(client))} in slot ${getPlayerActiveItemSlot(client)} ${getInlineChatColourByName("lightGrey")}${getItemValueDisplayForItem(getPlayerActiveItem(client))}`);
+}
+
+// ===========================================================================
+
+function deleteItemInPlayerInventoryCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let hotBarSlot = splitParams[1];
+
+	if(isNaN(hotBarSlot)) {
+		messagePlayerError(client, `The item slot must be a number!`);
+		return false;
+	}
+
+	if(toInteger(hotBarSlot) <= 0 || toInteger(hotBarSlot) > 9) {
+		messagePlayerError(client, `The item slot must be between 1 and 9!`);
+		return false;
+	}
+
+	if(getPlayerData(client).hotBarItems[hotBarSlot-1] == -1) {
+		messagePlayerError(client, `${getCharacterFullName(client)} doesn't have anything in that slot!`);
+		return false;
+	}
+
+	if(getItemData(getPlayerData(client).hotBarItems[hotBarSlot-1])) {
+		messagePlayerError(client, `${getCharacterFullName(client)} doesn't have anything in that slot!`);
+		return false;
+	}
+
+	let tempName = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[hotBarSlot-1]).itemTypeIndex).name
+	deleteItem(getPlayerData(client).hotBarItems[hotBarSlot-1]);
+	messagePlayerSuccess(client, `You deleted the ${getInlineChatColourByName("lightGrey")}${tempName} ${getInlineChatColourByName("white")}item in ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)}'s ${getInlineChatColourByName("white")}inventory`);
 }
 
 // ===========================================================================

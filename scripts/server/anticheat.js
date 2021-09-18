@@ -26,7 +26,7 @@ function loadAntiCheatGameScriptWhiteListFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
-                let tempWhiteListedGameScriptData = new serverClasses.whiteListedGameScriptData(dbAssoc);
+                let tempWhiteListedGameScriptData = new WhiteListedGameScriptData(dbAssoc);
                 tempWhiteListedGameScripts.push(tempWhiteListedGameScriptData);
                 logToConsole(LOG_DEBUG, `[VRR.AntiCheat] Whitelisted game script '${tempWhiteListedGameScriptData.scriptName}' loaded successfully!`);
             }
@@ -50,7 +50,7 @@ function loadAntiCheatGameScriptBlackListFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
-                let tempBlackListedGameScriptData = new serverClasses.blackListedGameScriptData(dbAssoc);
+                let tempBlackListedGameScriptData = new BlackListedGameScriptData(dbAssoc);
                 tempBlackListedGameScripts.push(tempBlackListedGameScriptData);
                 logToConsole(LOG_DEBUG, `[VRR.AntiCheat] Blacklisted game script '${tempBlackListedGameScriptData.scriptName}' loaded successfully!`);
             }

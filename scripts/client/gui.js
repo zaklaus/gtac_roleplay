@@ -24,6 +24,8 @@ let windowTitleAlpha = 180;
 let buttonAlpha = 180;
 let textInputAlpha = 180;
 
+let guiReady = false;
+
 // ===========================================================================
 
 let login = {
@@ -851,6 +853,8 @@ function initGUI() {
 
 	logToConsole(LOG_DEBUG, `[VRR.GUI] All GUI created successfully!`);
 	closeAllWindows();
+
+	guiReady = true;
 };
 
 // ===========================================================================
@@ -1140,40 +1144,42 @@ let switchCharacterSelect = function(firstName, lastName, cash, clan, lastPlayed
 }
 
 let isAnyGUIActive = function() {
-	if(infoDialog.window.shown) {
-		return true;
-	}
+	if(!guiReady) {
+		if(infoDialog.window.shown) {
+			return true;
+		}
 
-	if(yesNoDialog.window.shown) {
-		return true;
-	}
+		if(yesNoDialog.window.shown) {
+			return true;
+		}
 
-	if(errorDialog.window.shown) {
-		return true;
-	}
+		if(errorDialog.window.shown) {
+			return true;
+		}
 
-	if(register.window.shown) {
-		return true;
-	}
+		if(register.window.shown) {
+			return true;
+		}
 
-	if(login.window.shown) {
-		return true;
-	}
+		if(login.window.shown) {
+			return true;
+		}
 
-	if(newCharacter.window.shown) {
-		return true;
-	}
+		if(newCharacter.window.shown) {
+			return true;
+		}
 
-	if(characterSelect.window.shown) {
-		return true;
-	}
+		if(characterSelect.window.shown) {
+			return true;
+		}
 
-	if(twoFactorAuth.window.shown) {
-		return true;
-	}
+		if(twoFactorAuth.window.shown) {
+			return true;
+		}
 
-	if(listDialog.window.shown) {
-		return true;
+		if(listDialog.window.shown) {
+			return true;
+		}
 	}
 
 	return false;

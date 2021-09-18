@@ -88,7 +88,7 @@ function loadServerConfigFromGameAndPort(gameId, port, mpMod) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
-				let tempServerConfigData = new serverClasses.serverConfigData(dbAssoc);
+				let tempServerConfigData = new ServerConfigData(dbAssoc);
 				freeDatabaseQuery(dbQuery);
 				return tempServerConfigData;
 			}
@@ -108,7 +108,7 @@ function loadServerConfigFromId(tempServerId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
-				let tempServerConfigData = serverClasses.serverConfigData(dbAssoc);
+				let tempServerConfigData = new ServerConfigData(dbAssoc);
 				freeDatabaseQuery(dbQuery);
 				return tempServerConfigData;
 			}
@@ -134,62 +134,62 @@ function applyConfigToServer(tempServerConfig) {
 
 // ===========================================================================
 
-function saveServerConfigToDatabase(serverConfigData) {
+function saveServerConfigToDatabase() {
 	logToConsole(LOG_DEBUG, `[VRR.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
 	if(getServerConfig().needsSaved) {
 		let dbConnection = connectToDatabase();
 		if(dbConnection) {
 			let data = [
-				["svr_logo", boolToInt(serverConfigData.showLogo)],
-				["svr_gui", boolToInt(serverConfigData.useGUI)],
-				["svr_start_time_hour", serverConfigData.hour],
-				["svr_start_time_min", serverConfigData.minute],
-				["svr_start_weather", serverConfigData.weather],
-				["svr_start_snow_falling", boolToInt(serverConfigData.fallingSnow)],
-				["svr_start_snow_ground", boolToInt(serverConfigData.groundSnow)],
-				["svr_newchar_pos_x", serverConfigData.newCharacter.spawnPosition.x],
-				["svr_newchar_pos_y", serverConfigData.newCharacter.spawnPosition.y],
-				["svr_newchar_pos_z", serverConfigData.newCharacter.spawnPosition.z],
-				["svr_newchar_rot_z", serverConfigData.newCharacter.spawnHeading],
-				["svr_newchar_skin", serverConfigData.newCharacter.skin],
-				["svr_newchar_money", serverConfigData.newCharacter.money],
-				["svr_gui_col1_r", serverConfigData.guiColour[0]],
-				["svr_gui_col1_g", serverConfigData.guiColour[1]],
-				["svr_gui_col1_b", serverConfigData.guiColour[2]],
-				["svr_connectcam_pos_x", serverConfigData.connectCameraPosition.x],
-				["svr_connectcam_pos_y", serverConfigData.connectCameraPosition.y],
-				["svr_connectcam_pos_z", serverConfigData.connectCameraPosition.z],
-				["svr_connectcam_lookat_x", serverConfigData.connectCameraLookAt.x],
-				["svr_connectcam_lookat_y", serverConfigData.connectCameraLookAt.y],
-				["svr_connectcam_lookat_z", serverConfigData.connectCameraLookAt.z],
-				["svr_charselect_cam_pos_x", serverConfigData.characterSelectCameraPosition.x],
-				["svr_charselect_cam_pos_y", serverConfigData.characterSelectCameraPosition.y],
-				["svr_charselect_cam_pos_z", serverConfigData.characterSelectCameraPosition.z],
-				["svr_charselect_cam_lookat_x", serverConfigData.characterSelectCameraLookAt.x],
-				["svr_charselect_cam_lookat_y", serverConfigData.characterSelectCameraLookAt.y],
-				["svr_charselect_cam_lookat_z", serverConfigData.characterSelectCameraLookAt.z],
-				["svr_charselect_ped_pos_x", serverConfigData.characterSelectPedPosition.x],
-				["svr_charselect_ped_pos_y", serverConfigData.characterSelectPedPosition.y],
-				["svr_charselect_ped_pos_z", serverConfigData.characterSelectPedPosition.z],
-				["svr_charselect_ped_rot_z", serverConfigData.characterSelectPedHeading],
-				["svr_charselect_int", serverConfigData.characterSelectInterior],
-				["svr_charselect_vw", serverConfigData.characterSelectDimension],
-				["svr_inflation_multiplier", serverConfigData.inflationMultiplier],
-				["svr_ac_enabled", serverConfigData.antiCheat.enabled],
-				["svr_ac_check_scripts", serverConfigData.antiCheat.checkGameScripts],
-				["svr_ac_script_wl", serverConfigData.antiCheat.gameScriptWhiteListEnabled],
-				["svr_ac_script_bl", serverConfigData.antiCheat.gameScriptBlackListEnabled],
-				["svr_job_pickups", boolToInt(serverConfigData.createJobPickups)],
-				["svr_job_blips", boolToInt(serverConfigData.createJobBlips)],
-				["svr_biz_pickups", boolToInt(serverConfigData.createBusinessPickups)],
-				["svr_biz_blips", boolToInt(serverConfigData.createBusinessBlips)],
-				["svr_house_pickups", boolToInt(serverConfigData.createHousePickups)],
-				["svr_house_blips", boolToInt(serverConfigData.createHouseBlips)],
-				["svr_intro_music", serverConfigData.intromUsic],
+				["svr_logo", boolToInt(getServerConfig().showLogo)],
+				["svr_gui", boolToInt(getServerConfig().useGUI)],
+				["svr_start_time_hour", getServerConfig().hour],
+				["svr_start_time_min", getServerConfig().minute],
+				["svr_start_weather", getServerConfig().weather],
+				["svr_start_snow_falling", boolToInt(getServerConfig().fallingSnow)],
+				["svr_start_snow_ground", boolToInt(getServerConfig().groundSnow)],
+				["svr_newchar_pos_x", getServerConfig().newCharacter.spawnPosition.x],
+				["svr_newchar_pos_y", getServerConfig().newCharacter.spawnPosition.y],
+				["svr_newchar_pos_z", getServerConfig().newCharacter.spawnPosition.z],
+				["svr_newchar_rot_z", getServerConfig().newCharacter.spawnHeading],
+				["svr_newchar_skin", getServerConfig().newCharacter.skin],
+				["svr_newchar_money", getServerConfig().newCharacter.money],
+				["svr_gui_col1_r", getServerConfig().guiColour[0]],
+				["svr_gui_col1_g", getServerConfig().guiColour[1]],
+				["svr_gui_col1_b", getServerConfig().guiColour[2]],
+				["svr_connectcam_pos_x", getServerConfig().connectCameraPosition.x],
+				["svr_connectcam_pos_y", getServerConfig().connectCameraPosition.y],
+				["svr_connectcam_pos_z", getServerConfig().connectCameraPosition.z],
+				["svr_connectcam_lookat_x", getServerConfig().connectCameraLookAt.x],
+				["svr_connectcam_lookat_y", getServerConfig().connectCameraLookAt.y],
+				["svr_connectcam_lookat_z", getServerConfig().connectCameraLookAt.z],
+				["svr_charselect_cam_pos_x", getServerConfig().characterSelectCameraPosition.x],
+				["svr_charselect_cam_pos_y", getServerConfig().characterSelectCameraPosition.y],
+				["svr_charselect_cam_pos_z", getServerConfig().characterSelectCameraPosition.z],
+				["svr_charselect_cam_lookat_x", getServerConfig().characterSelectCameraLookAt.x],
+				["svr_charselect_cam_lookat_y", getServerConfig().characterSelectCameraLookAt.y],
+				["svr_charselect_cam_lookat_z", getServerConfig().characterSelectCameraLookAt.z],
+				["svr_charselect_ped_pos_x", getServerConfig().characterSelectPedPosition.x],
+				["svr_charselect_ped_pos_y", getServerConfig().characterSelectPedPosition.y],
+				["svr_charselect_ped_pos_z", getServerConfig().characterSelectPedPosition.z],
+				["svr_charselect_ped_rot_z", getServerConfig().characterSelectPedHeading],
+				["svr_charselect_int", getServerConfig().characterSelectInterior],
+				["svr_charselect_vw", getServerConfig().characterSelectDimension],
+				["svr_inflation_multiplier", getServerConfig().inflationMultiplier],
+				["svr_ac_enabled", getServerConfig().antiCheat.enabled],
+				["svr_ac_check_scripts", getServerConfig().antiCheat.checkGameScripts],
+				["svr_ac_script_wl", getServerConfig().antiCheat.gameScriptWhiteListEnabled],
+				["svr_ac_script_bl", getServerConfig().antiCheat.gameScriptBlackListEnabled],
+				["svr_job_pickups", boolToInt(getServerConfig().createJobPickups)],
+				["svr_job_blips", boolToInt(getServerConfig().createJobBlips)],
+				["svr_biz_pickups", boolToInt(getServerConfig().createBusinessPickups)],
+				["svr_biz_blips", boolToInt(getServerConfig().createBusinessBlips)],
+				["svr_house_pickups", boolToInt(getServerConfig().createHousePickups)],
+				["svr_house_blips", boolToInt(getServerConfig().createHouseBlips)],
+				["svr_intro_music", getServerConfig().introMusic],
 			];
 
 			let dbQuery = null;
-			let queryString = createDatabaseUpdateQuery("svr_main", data, `svr_id=${serverConfigData.databaseId}`);
+			let queryString = createDatabaseUpdateQuery("svr_main", data, `svr_id=${serverConfig.databaseId}`);
 			dbQuery = queryDatabase(dbConnection, queryString);
 
 			getServerConfig().needsSaved = false;
@@ -203,6 +203,12 @@ function saveServerConfigToDatabase(serverConfigData) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @return {ServerConfigData} - Server configuration data
+ *
+ */
 function getServerConfig() {
 	return serverConfig;
 }
@@ -256,7 +262,7 @@ function setTimeCommand(command, params, client) {
 		return false;
     }
 
-	getServerConfig().hour = minute;
+	getServerConfig().hour = hour;
 	getServerConfig().minute = minute;
 
     gta.time.hour = getServerConfig().hour;

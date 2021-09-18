@@ -44,14 +44,18 @@ function processSync(event, deltaTime) {
 
 // ===========================================================================
 
-function toggleVehicleEngine(vehicle, state) {
-    vehicle.engine = state;
+function setVehicleEngine(vehicleId, state) {
+    getElementFromId(vehicleId).engine = state;
 }
 
 // ===========================================================================
 
-function toggleVehicleLights(vehicle, state) {
-    getElementFromId(vehicle).lights = state;
+function setVehicleLights(vehicleId, state) {
+    if(!state) {
+        getElementFromId(vehicleId).lightStatus = 2;
+    } else {
+        getElementFromId(vehicleId).lightStatus = 1;
+    }
 }
 
 // ===========================================================================
@@ -65,7 +69,11 @@ function repairVehicle(syncId) {
 function syncVehicleProperties(vehicle) {
     if(doesEntityDataExist(vehicle, "vrr.lights")) {
         let lightStatus = getEntityData(vehicle, "vrr.lights");
-        vehicle.lights = lightStatus;
+        if(!lightStatus) {
+            vehicle.lightStatus = 2;
+        } else {
+            vehicle.lightStatus = 1;
+        }
     }
 
     if(doesEntityDataExist(vehicle, "vrr.panelStatus")) {
@@ -339,6 +347,10 @@ function syncObjectProperties(object) {
 // ===========================================================================
 
 function syncElementProperties(element) {
+    if(doesEntityDataExist(element, "vrr.interior")) {
+        element.interior = getEntityData(element, "vrr.interior");
+    }
+
     switch(element.type) {
         case ELEMENT_VEHICLE:
             syncVehicleProperties(element);

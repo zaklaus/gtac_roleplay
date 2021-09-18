@@ -118,7 +118,7 @@ function makeReadableTime(hour, minute) {
 		meridianStr = "AM";
 	}
 
-	if(hour > 12) {
+	if(hour > 11) {
 		let actualHour = hour-12;
 		if(actualHour < 10) {
 			hourStr = "0" + toString(hour-12);

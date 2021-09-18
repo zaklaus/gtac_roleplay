@@ -247,10 +247,12 @@ function loadCommands() {
             commandData("r", walkieTalkieChatCommand, "", getStaffFlagValue("none"), true, false),
 
             commandData("additemtype", createItemTypeCommand, "<name>", getStaffFlagValue("manageItems"), true, false),
-            commandData("itemusetype", setItemTypeUseTypeCommand, "<item type> <use type>", getStaffFlagValue("manageItems"), true, false),
-            commandData("itemuseval", setItemTypeUseValueCommand, "<item type> <use value>", getStaffFlagValue("manageItems"), true, false),
-            commandData("itemorderprice", setItemTypeOrderPriceCommand, "<item type> <price>", getStaffFlagValue("manageItems"), true, false),
-            commandData("itemriskmult", setItemTypeRiskMultiplierCommand, "<item type> <risk multiplier>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemtypeusetype", setItemTypeUseTypeCommand, "<item type> <use type>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemtypeuseval", setItemTypeUseValueCommand, "<item type> <use value>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemtypeorderprice", setItemTypeOrderPriceCommand, "<item type> <price>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemtyperiskmult", setItemTypeRiskMultiplierCommand, "<item type> <risk multiplier>", getStaffFlagValue("manageItems"), true, false),
+
+            commandData("delplritem", deleteItemInPlayerInventoryCommand, "<player name/id> <item slot>", getStaffFlagValue("manageItems"), true, false),
         ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),
@@ -462,7 +464,7 @@ function getCommands() {
 // ===========================================================================
 
 function commandData(command, handlerFunction, syntaxString = "", requiredStaffFlags = getStaffFlagValue("none"), requireLogin = true, allowOnDiscord = true, usageHelpMessage) {
-    return new serverClasses.commandData(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord, usageHelpMessage);
+    return new CommandData(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord, usageHelpMessage);
 }
 
 // ===========================================================================

@@ -376,7 +376,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
-				let tempAccountData = new serverClasses.accountData(dbAssoc);
+				let tempAccountData = new AccountData(dbAssoc);
 				if(fullLoad) {
 					tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 					tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
@@ -402,7 +402,7 @@ function loadAccountFromId(accountId, fullLoad = false) {
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
-			let tempAccountData = new serverClasses.accountData(dbAssoc);
+			let tempAccountData = new AccountData(dbAssoc);
 			freeDatabaseQuery(dbQuery);
 			if(fullLoad) {
 				tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
@@ -542,11 +542,6 @@ function saveAccountToDatabase(accountData) {
 			["acct_ip", accountData.ipAddress],
 		];
 
-		let dbQuery = null;
-		let queryString = createDatabaseUpdateQuery("acct_main", data, `acct_id=${accountData.databaseId}`);
-		dbQuery = queryDatabase(dbConnection, queryString);
-		freeDatabaseQuery(dbQuery);
-
 		let data2 = [
 			["acct_svr_settings", accountData.settings],
 			["acct_svr_staff_title", safeStaffTitle],
@@ -555,11 +550,14 @@ function saveAccountToDatabase(accountData) {
 			["acct_svr_chat_scroll_lines", accountData.chatScrollLines],
 		];
 
-		dbQuery = null;
-		queryString = "";
-		queryString = createDatabaseUpdateQuery("acct_svr", data2, `acct_svr_acct=${accountData.databaseId} AND acct_svr_svr = ${getServerId()}`);
-		dbQuery = queryDatabase(dbConnection, queryString);
-		freeDatabaseQuery(dbQuery);
+		let queryString1 = createDatabaseUpdateQuery("acct_main", data, `acct_id=${accountData.databaseId}`);
+		let dbQuery1 = queryDatabase(dbConnection, queryString1);
+		freeDatabaseQuery(dbQuery1);
+
+		let queryString2 = createDatabaseUpdateQuery("acct_svr", data2, `acct_svr_acct=${accountData.databaseId} AND acct_svr_svr=${getServerId()}`);
+		let dbQuery2 = queryDatabase(dbConnection, queryString2);
+		freeDatabaseQuery(dbQuery2);
+
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
@@ -568,6 +566,11 @@ function saveAccountToDatabase(accountData) {
 // ===========================================================================
 
 function saveAccountKeyBindToDatabase(keyBindData) {
+	if(keyBindData.databaseId == -1) {
+		// Keybind is a default keybind, don't save
+		return false;
+	}
+
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeCommandString = escapeDatabaseString(dbConnection, keyBindData.commandString);
@@ -575,6 +578,7 @@ function saveAccountKeyBindToDatabase(keyBindData) {
 		let data = [
 			["acct_hotkey_acct", keyBindData.account],
 			["acct_hotkey_enabled", keyBindData.enabled],
+			["acct_hotkey_deleted", keyBindData.deleted],
 			["acct_hotkey_cmdstr", safeCommandString],
 			["acct_hotkey_key", keyBindData.key],
 			["acct_hotkey_down", boolToInt(keyBindData.keyState)],
@@ -630,7 +634,7 @@ function saveAccountStaffNotesDatabase(staffNoteData) {
 // ===========================================================================
 
 /*
-function saveAccountContactsDatabase(accountContactData) {
+function saveAccountContactsToDatabase(accountContactData) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeNoteContent = escapeDatabaseString(dbConnection, accountContactData.note);
@@ -663,7 +667,6 @@ function createAccount(name, password, email = "") {
 		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email, acct_when_registered) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}', UNIX_TIMESTAMP())`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			let tempAccountData = loadAccountFromId(getDatabaseInsertId(dbConnection), false);
-			createDefaultKeybindsForAccount(tempAccountData.databaseId);
 			createDefaultAccountServerData(tempAccountData.databaseId);
 			tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 			tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
@@ -880,7 +883,7 @@ function savePlayerToDatabase(client) {
 		if(client.player != null) {
 			if(getPlayerData(client).returnToPosition != null) {
 				getPlayerCurrentSubAccount(client).spawnPosition = getPlayerData(client).returnToPosition;
-				getPlayerCurrentSubAccount(client).spawnHeading = getPlayerData(client).returnToHeading;
+				getPlayerCurrentSubAccount(client).spawnHeading = getPlayerData(client).returnToHeading.z;
 				getPlayerCurrentSubAccount(client).interior = getPlayerData(client).returnToInterior;
 				getPlayerCurrentSubAccount(client).dimension = getPlayerData(client).returnToDimension;
 			} else {
@@ -920,7 +923,7 @@ function initClient(client) {
 			let tempAccountData = loadAccountFromName(getPlayerName(client), true);
 			let tempSubAccounts = loadSubAccountsFromAccount(tempAccountData.databaseId);
 
-			getServerData().clients[client.index] = new serverClasses.clientData(client, tempAccountData, tempSubAccounts);
+			getServerData().clients[client.index] = new ClientData(client, tempAccountData, tempSubAccounts);
 
 			let sessionId = saveConnectionToDatabase(client);
 			getServerData().clients[client.index].session = sessionId;
@@ -971,23 +974,6 @@ function saveConnectionToDatabase(client) {
 
 // ===========================================================================
 
-function createDefaultKeybindsForAccount(accountDatabaseId) {
-	logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybinds for account ${accountDatabaseId} ...`);
-	for(let j = 1 ; j <= 4 ; j++) {
-		logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybinds for account ${accountDatabaseId} on server ${j} ...`);
-		for(let i in getGlobalConfig().keyBind.defaultKeyBinds) {
-			logToConsole(LOG_DEBUG, `[VRR.Account]: Creating default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${getKeyIdFromParams(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())} ...`);
-			let dbQueryString = `INSERT INTO acct_hotkey (acct_hotkey_acct, acct_hotkey_server, acct_hotkey_key, acct_hotkey_cmdstr, acct_hotkey_when_added, acct_hotkey_down) VALUES (${accountDatabaseId}, ${j}, ${getKeyIdFromParams(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}, '${getGlobalConfig().keyBind.defaultKeyBinds[i].commandString}', UNIX_TIMESTAMP(), ${getGlobalConfig().keyBind.defaultKeyBinds[i].keyState})`;
-			quickDatabaseQuery(dbQueryString);
-			logToConsole(LOG_DEBUG, `[VRR.Account]: Created default keybind ${i} for account ${accountDatabaseId} on server ${j} with key ${getKeyIdFromParams(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName.toLowerCase())}!`);
-		}
-		logToConsole(LOG_DEBUG, `[VRR.Account]: Create default keybinds for account ${accountDatabaseId} on server ${j}!`);
-	}
-	logToConsole(LOG_DEBUG, `[VRR.Account]: Created default keybinds for account ${accountDatabaseId} successfully!`);
-}
-
-// ===========================================================================
-
 function createDefaultAccountServerData(accountDatabaseId) {
 	for(let i = 1 ; i <= 5 ; i++) {
 		let dbQueryString = `INSERT INTO acct_svr (acct_svr_acct, acct_svr_svr) VALUES (${accountDatabaseId}, ${i})`;
@@ -1005,12 +991,21 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 	let dbQuery = null;
 	let dbAssoc;
 
+	for(let i in getGlobalConfig().keyBind.defaultKeyBinds) {
+		let tempKeyBindData = new KeyBindData(false);
+		tempKeyBindData.databaseId = -1;
+		tempKeyBindData.key = getKeyIdFromParams(getGlobalConfig().keyBind.defaultKeyBinds[i].keyName);
+		tempKeyBindData.commandString = getGlobalConfig().keyBind.defaultKeyBinds[i].commandString;
+		tempKeyBindData.keyState = getGlobalConfig().keyBind.defaultKeyBinds[i].keyState;
+		tempAccountKeybinds.push(tempKeyBindData);
+	}
+
 	if(dbConnection) {
 		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID} AND acct_hotkey_server = ${getServerId()}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempAccountKeyBindData = new serverClasses.keyBindData(dbAssoc);
+					let tempAccountKeyBindData = new KeyBindData(dbAssoc);
 					tempAccountKeybinds.push(tempAccountKeyBindData);
 					logToConsole(LOG_DEBUG, `[VRR.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${toUpperCase(getKeyNameFromId(tempAccountKeyBindData.key))}') loaded from database successfully!`);
 				}
@@ -1039,7 +1034,7 @@ function loadAccountStaffNotesFromDatabase(accountDatabaseID) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempAccountStaffNoteData = new serverClasses.accountStaffNoteData(dbAssoc);
+					let tempAccountStaffNoteData = new AccountStaffNoteData(dbAssoc);
 					tempAccountStaffNotes.push(tempAccountStaffNoteData);
 					logToConsole(LOG_DEBUG, `[VRR.Account]: Account staff note '${tempAccountStaffNoteData.databaseId}' loaded from database successfully!`);
 				}
@@ -1068,7 +1063,7 @@ function loadAccountContactsFromDatabase(accountDatabaseID) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempAccountContactData = new serverClasses.accountContactData(dbAssoc);
+					let tempAccountContactData = new AccountContactData(dbAssoc);
 					tempAccountContacts.push(tempAccountContactData);
 					logToConsole(LOG_DEBUG, `[VRR.Account]: Account contact '${tempAccountContactData.databaseId}' loaded from database successfully!`);
 				}
@@ -1097,7 +1092,7 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempAccountMessageData = new serverClasses.accountContactData(dbAssoc);
+					let tempAccountMessageData = new AccountContactData(dbAssoc);
 					tempAccountMessages.push(tempAccountMessageData);
 					logToConsole(LOG_DEBUG, `[VRR.Account]: Account contact '${tempAccountMessageData.databaseId}' loaded from database successfully!`);
 				}

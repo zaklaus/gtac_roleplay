@@ -39,7 +39,7 @@ function loadJobsFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempJobData = new serverClasses.jobData(dbAssoc);
+					let tempJobData = new JobData(dbAssoc);
 					tempJobData.locations = loadJobLocationsFromDatabase(tempJobData.databaseId);
 					tempJobData.equipment = loadJobEquipmentsFromDatabase(tempJobData.databaseId);
 					tempJobData.uniforms = loadJobUniformsFromDatabase(tempJobData.databaseId);
@@ -95,7 +95,7 @@ function loadJobEquipmentsFromDatabase(jobDatabaseId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempJobEquipmentData = new serverClasses.jobEquipmentData(dbAssoc);
+					let tempJobEquipmentData = new JobEquipmentData(dbAssoc);
 					tempJobEquipmentData.items = loadJobEquipmentItemsFromDatabase(tempJobEquipmentData.databaseId);
 					tempJobEquipments.push(tempJobEquipmentData);
 					logToConsole(LOG_DEBUG, `[VRR.Job]: Job equipment '${tempJobEquipmentData.name}' loaded from database successfully!`);
@@ -125,7 +125,7 @@ function loadJobLocationsFromDatabase(jobDatabaseId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempJobLocationData = new serverClasses.jobLocationData(dbAssoc);
+					let tempJobLocationData = new JobLocationData(dbAssoc);
 					tempJobLocations.push(tempJobLocationData);
 					logToConsole(LOG_DEBUG, `[VRR.Job]: Job location '${tempJobLocationData.databaseId}' loaded from database successfully!`);
 				}
@@ -154,7 +154,7 @@ function loadJobUniformsFromDatabase(jobDatabaseId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempJobUniformData = new serverClasses.jobUniformData(dbAssoc);
+					let tempJobUniformData = new JobUniformData(dbAssoc);
 					tempJobUniforms.push(tempJobUniformData);
 					logToConsole(LOG_DEBUG, `[VRR.Job]: Job uniform '${tempJobUniformData.databaseId}' loaded from database successfully!`);
 				}
@@ -183,7 +183,7 @@ function loadJobEquipmentItemsFromDatabase(jobEquipmentDatabaseId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempJobEquipmentItemData = new serverClasses.jobEquipmentItemData(dbAssoc);
+					let tempJobEquipmentItemData = new JobEquipmentItemData(dbAssoc);
 					tempJobEquipmentItems.push(tempJobEquipmentItemData);
 					logToConsole(LOG_DEBUG, `[VRR.Job]: Job equipment item '${tempJobEquipmentItemData.databaseId}' loaded from database successfully!`);
 				}
@@ -1363,7 +1363,7 @@ function setAllJobDataIndexes() {
 // ===========================================================================
 
 function createJobLocation(jobId, position, interior, dimension) {
-	let jobLocationData = new serverClasses.jobLocationData(false);
+	let jobLocationData = new JobLocationData(false);
 	jobLocationData.position = position;
 	jobLocationData.job = getJobData(jobId).databaseId;
 	jobLocationData.interior = interior;

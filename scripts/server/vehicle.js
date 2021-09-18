@@ -28,7 +28,7 @@ function loadVehiclesFromDatabase() {
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-				let tempVehicleData = new serverClasses.vehicleData(dbAssoc);
+				let tempVehicleData = new VehicleData(dbAssoc);
 				tempVehicles.push(tempVehicleData);
 			}
 			freeDatabaseQuery(dbQuery);
@@ -213,7 +213,7 @@ function createVehicleCommand(command, params, client) {
 	}
 
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
-	let vehicle = createPermanentVehicle(modelId, frontPos, getPlayerHeading(client));
+	let vehicle = createPermanentVehicle(modelId, frontPos, getPlayerHeading(client), getPlayerInterior(client), getPlayerDimension(client));
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created a ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}!`);
 }
@@ -234,7 +234,7 @@ function createTemporaryVehicleCommand(command, params, client) {
 	}
 
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
-	let vehicle = createTemporaryVehicle(modelId, frontPos, getPlayerHeading(client));
+	let vehicle = createTemporaryVehicle(modelId, frontPos, getPlayerHeading(client), getPlayerInterior(client), getPlayerDimension(client));
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created a temporary ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}`);
 }
@@ -877,6 +877,24 @@ function setVehicleOwnerCommand(command, params, client) {
 
 // ===========================================================================
 
+function setVehiclePublicCommand(command, params, client) {
+	if(!isPlayerInAnyVehicle(client)) {
+		messagePlayerError(client, "You need to be in a vehicle!");
+		return false;
+	}
+
+	let vehicle = getPlayerVehicle(client);
+
+	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_PUBLIC;
+	getVehicleData(vehicle).ownerId = 0;
+
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}a public vehicle!`);
+
+	getVehicleData(vehicle).needsSaved = true;
+}
+
+// ===========================================================================
+
 function setVehicleRentPriceCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
@@ -1089,7 +1107,7 @@ function reloadAllVehiclesCommand(command, params, client) {
 
 function respawnAllVehiclesCommand(command, params, client) {
 	for(let i in getServerData().vehicles) {
-		respawnVehicle(vehicle);
+		respawnVehicle(getServerData().vehicles[i]);
 	}
 
 	//spawnAllVehicles();
@@ -1127,7 +1145,7 @@ function respawnVehicle(vehicle) {
 // ===========================================================================
 
 function spawnVehicle(vehicleData) {
-	let vehicle = gta.createVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
+	let vehicle = createGameVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
 	addToWorld(vehicle);
 
 	if(doesGameHaveServerElements()) {
@@ -1140,20 +1158,26 @@ function spawnVehicle(vehicleData) {
 			vehicle.colour4 = vehicleData.colour4;
 		}
 
-		vehicle.engine = intToBool(vehicleData.engine);
+		if(vehicleData.spawnLocked) {
+			vehicle.engine = false;
+		} else {
+			vehicle.engine = intToBool(vehicleData.engine);
+		}
+
+		vehicle.locked = intToBool(vehicleData.locked);
+
 		//vehicle.lights = intToBool(vehicleData.lights);
 		//vehicle.health = vehicleData.health;
 
 		//vehicle.position = vehicleData.spawnPosition;
 		vehicle.heading = vehicleData.spawnRotation;
-
-		vehicle.locked = intToBool(vehicleData.locked);
 	}
 
 	vehicleData.vehicle = vehicle;
 
 	setEntityData(vehicle, "vrr.livery", vehicleData.livery);
 	setEntityData(vehicle, "vrr.upgrades", vehicleData.extras);
+	setEntityData(vehicle, "vrr.interior", vehicleData.interior);
 
 	return vehicle;
 }
@@ -1212,15 +1236,17 @@ async function getPlayerNewVehicle(client) {
 
 // ===========================================================================
 
-function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, dealershipId) {
+function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, dealershipId, interior = 0, dimension = 0) {
 	let vehicle = createGameVehicle(model, spawnPosition, spawnRotation);
 	if(!vehicle) {
 		return false;
 	}
 	setVehicleHeading(vehicle, spawnRotation);
+	setElementInterior(vehicle, interior);
+	setElementDimension(vehicle, dimension);
 	addToWorld(vehicle);
 
-	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
+	let tempVehicleData = new VehicleData(false, vehicle);
 	tempVehicleData.buyPrice = price;
 	tempVehicleData.spawnLocked = true;
 	tempVehicleData.spawnPosition = spawnPosition;
@@ -1235,12 +1261,14 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 
 // ===========================================================================
 
-function createTemporaryVehicle(modelId, position, heading) {
+function createTemporaryVehicle(modelId, position, heading, interior = 0, dimension = 0) {
 	let vehicle = createGameVehicle(modelId, position, heading);
 	setVehicleHeading(vehicle, heading);
+	setElementInterior(vehicle, interior);
+	setElementDimension(vehicle, dimension);
 	addToWorld(vehicle);
 
-	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
+	let tempVehicleData = new VehicleData(false, vehicle);
 	tempVehicleData.databaseId = -1;
 	let slot = getServerData().vehicles.push(tempVehicleData);
 	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
@@ -1250,12 +1278,14 @@ function createTemporaryVehicle(modelId, position, heading) {
 
 // ===========================================================================
 
-function createPermanentVehicle(modelId, position, heading) {
+function createPermanentVehicle(modelId, position, heading, interior = 0, dimension = 0) {
 	let vehicle = createGameVehicle(modelId, position, heading);
 	setVehicleHeading(vehicle, heading);
+	setElementInterior(vehicle, interior);
+	setElementDimension(vehicle, dimension);
 	addToWorld(vehicle);
 
-	let tempVehicleData = new serverClasses.vehicleData(false, vehicle);
+	let tempVehicleData = new VehicleData(false, vehicle);
 	let slot = getServerData().vehicles.push(tempVehicleData);
 	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
 

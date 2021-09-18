@@ -22,11 +22,16 @@ function playPlayerAnimationCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 	let animationSlot = getAnimationFromParams(splitParams[0]);
-    let animationPositionOffset = getAnimationFromParams(splitParams[1]);
+    let animationPositionOffset = getAnimationFromParams(splitParams[1]) || 1;
 
 	if(!animationSlot) {
 		messagePlayerError(client, "That animation doesn't exist!");
 		messagePlayerInfo(client, "Use /animlist to see a list of valid animations");
+		return false;
+	}
+
+	if(toInteger(animationPositionOffset) < 0 || toInteger(animationPositionOffset) > 3) {
+		messagePlayerError(client, "The offset must be between 0 and 3!")
 		return false;
 	}
 
@@ -36,6 +41,7 @@ function playPlayerAnimationCommand(command, params, client) {
     getPlayerData(client).animationStart = getCurrentUnixTimestamp();
 	//setEntityData(getPlayerData(client).ped, "vrr.animation", animationSlot, true);
     makePedPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
+	setPlayerMouseCameraState(client, true);
 }
 
 // ===========================================================================
@@ -43,6 +49,7 @@ function playPlayerAnimationCommand(command, params, client) {
 function stopPlayerAnimationCommand(command, params, client) {
 	setPlayerPosition(client, getPlayerData(client).currentAnimationPositionReturnTo);
 	makePedStopAnimation(getPlayerData(client).ped);
+	setPlayerMouseCameraState(client, false);
 }
 
 // ===========================================================================

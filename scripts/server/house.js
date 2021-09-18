@@ -37,7 +37,7 @@ function loadHousesFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempHouseData = new serverClasses.houseData(dbAssoc);
+					let tempHouseData = new HouseData(dbAssoc);
 					tempHouses.push(tempHouseData);
 					logToConsole(LOG_VERBOSE, `[VRR.House]: House '${tempHouseData.description}' (ID ${tempHouseData.databaseId}) loaded!`);
 				}
@@ -62,7 +62,7 @@ function loadHousesFromDatabase() {
  *
  */
 function createHouseCommand(command, params, client) {
-	let entranceLocation = new serverClasses.houseLocationData(false);
+	let entranceLocation = new HouseLocationData(false);
 	entranceLocation.entrancePosition = getPlayerPosition(client);
 	entranceLocation.entranceRotation = 0.0;
 	entranceLocation.entrancePickupModel = getGameConfig().pickupModels[getServerGame()].house;
@@ -82,10 +82,10 @@ function createHouseCommand(command, params, client) {
 
 	saveHouseToDatabase(houseId-1);
 
-	createHouseEntrancePickup(houseId);
-	createHouseExitPickup(houseId);
-	createHouseEntranceBlip(houseId);
-	createHouseExitBlip(houseId);
+	createHouseEntrancePickup(houseId-1);
+	createHouseExitPickup(houseId-1);
+	createHouseEntranceBlip(houseId-1);
+	createHouseExitBlip(houseId-1);
 
 	//getHouseData(houseId).needsSaved = true;
 
@@ -382,7 +382,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
-		let tempHouseLocation = new serverClasses.houseLocationData(false);
+		let tempHouseLocation = new HouseLocationData(false);
 
 		if(toLowerCase(typeParam) == "none") {
 			tempHouseLocation.exitPosition = toVector3(0.0, 0.0, 0.0);
@@ -591,7 +591,7 @@ function deleteHouse(houseId, whoDeleted = 0) {
 
 	removePlayersFromHouse(houseId);
 
-	getServerData().houses.splice(houseId, 1);
+	getServerData().houses[houseId] = false;
 }
 
 // ===========================================================================
@@ -620,7 +620,7 @@ function removePlayerFromHouses(client) {
  *
  */
 function createHouse(description, entranceLocation) {
-	let tempHouseData = new serverClasses.houseData(false);
+	let tempHouseData = new HouseData(false);
 	tempHouseData.description = description;
 
 	tempHouseData.entrancePosition = entranceLocation.entrancePosition;

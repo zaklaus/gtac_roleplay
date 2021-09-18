@@ -434,6 +434,13 @@ function sendPlayerMouseCameraToggle(client) {
 
 // ===========================================================================
 
+function setPlayerMouseCameraState(client, state) {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to toggle mouse camera ${getPlayerDisplayForConsole(client)}`);
+    triggerNetworkEvent("vrr.mouseCameraForce", client, state);
+}
+
+// ===========================================================================
+
 function sendPlayerMouseCursorToggle(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to toggle mouse cursor ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("vrr.mouseCursor", client);
@@ -1003,6 +1010,12 @@ function updateInteriorLightsForPlayer(client, state) {
 
 function forcePlayerToSyncElementProperties(client, element) {
     triggerNetworkEvent("vrr.syncElement", client, element.id);
+}
+
+// ===========================================================================
+
+function sendPlayerPedPartsAndProps(client) {
+    triggerNetworkEvent("vrr.ped")
 }
 
 // ===========================================================================

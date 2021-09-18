@@ -3047,6 +3047,51 @@ let gameData = {
 			["sitback", 0, 169, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_BACK],
 		],
 		[ // GTA SA
+			["walk", 0, 0, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["jog", 0, 1, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["look1", 0, 4, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["holdrifle", 0, 11, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["talk1", 0, 12, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["wave1", 0, 13, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["swim1", 0, 14, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["die1", 0, 15, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["die2", 0, 16, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["diehead", 0, 19, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["diestomach", 0, 20, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["choke", 0, 21, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["remotepress", 0, 48, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["pickup1", 0, 99, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["pickup2", 0, 100, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["backhandright", 0, 103, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["backhandleft", 0, 104, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["knockback", 0, 105, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["idle1", 0, 135, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["knockback", 0, 105, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["cower", 0, 141, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["handsup", 0, 142, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["fucku", 0, 144, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["phoneout", 0, 145, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["phonein", 0, 146, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["phonetalk", 0, 146, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["sit1", 0, 150, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["atm", 0, 151, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["mindtrick", 0, 153, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["faceshocked", 0, 150, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["facesurprised", 0, 150, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["faceconfused", 0, 150, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["faceangry", 0, 159, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["facetalk1", 0, 160, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["look2", 0, 165, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["gestureno", 0, 166, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["gestureyes", 0, 167, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["wave2", 0, 168, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["snort", 0, 169, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["sitright", 0, 150, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_RIGHT],
+			["sitleft", 0, 150, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_LEFT],
+			["sitforward", 0, 150, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_FORWARD],
+			["sitback", 0, 150, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_BACK],
+
+			/*
 			["talk", "PED", "IDLE_CHAT", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
 			["fucku", "PED", "FUCKU", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
 			["taichi", "PARK", "Tai_Chi_Loop", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
@@ -3063,10 +3108,9 @@ let gameData = {
 			["sit2", "BEACH", "ParkSit_M_loop", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
 			["sit3", "BEACH", "ParkSit_W_loop", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
 			["sit4", "BEACH", "SitnWait_loop_W", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["sitleft", "FOOD", "FF_Sit_In_L", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
-			["sitright", "FOOD", "FF_Sit_In_R", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
 			["scratch", "MISC","Scratchballs_01", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
 			["standup", "ped", "SEAT_up", VRR_ANIMTYPE_ADD, 0.0, null, null, null, null],
+			*/
 		],
 		null,
 		[ // GTA IV
@@ -4837,6 +4881,13 @@ function getElementPosition(element) {
 
 function getElementHeading(element) {
 	return element.heading;
+}
+
+// ===========================================================================
+
+function setElementInterior(element, interior) {
+	setEntityData(element, "vrr.interior", interior, true);
+	forcePlayerToSyncElementProperties(null, element);
 }
 
 // ===========================================================================

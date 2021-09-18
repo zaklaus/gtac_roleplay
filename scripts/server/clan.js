@@ -29,7 +29,7 @@ function loadClansFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempClanData = new serverClasses.clanData(dbAssoc);
+					let tempClanData = new ClanData(dbAssoc);
 					//tempClanData.members = loadClanMembersFromDatabase(tempClanData.databaseId);
 					tempClanData.ranks = loadClanRanksFromDatabase(tempClanData.databaseId);
 					tempClans.push(tempClanData);
@@ -59,7 +59,7 @@ function loadClanMembersFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempClanData = new serverClasses.clanData(dbAssoc);
+					let tempClanData = new ClanData(dbAssoc);
 					tempClans.push(tempClanData);
 					logToConsole(LOG_VERBOSE, `[VRR.Clan]: Clan '${tempClanData.name}' loaded from database successfully!`);
 				}
@@ -87,7 +87,7 @@ function loadClanRanksFromDatabase(clanDatabaseId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempClanRankData = new serverClasses.clanRankData(dbAssoc);
+					let tempClanRankData = new ClanRankData(dbAssoc);
 					tempClanRanks.push(tempClanRankData);
 					logToConsole(LOG_VERBOSE, `[VRR.Clan]: Clan rank '${tempClanRankData.name}' loaded from database successfully!`);
 				}
@@ -104,7 +104,7 @@ function loadClanRanksFromDatabase(clanDatabaseId) {
 // ===========================================================================
 
 function createClanRank(clanId, rankId, rankName) {
-	let tempClanRankData = new serverClasses.clanRankData(false);
+	let tempClanRankData = new ClanRankData(false);
 	tempClanRankData.level = rankId;
 	tempClanRankData.name = rankName;
 	tempClanRankData.clan = getClanData(clanId).databaseId;
@@ -770,7 +770,7 @@ function createClan(name) {
 		escapedName = escapeDatabaseString(dbConnection, escapedName)
 		queryDatabase(dbConnection, `INSERT INTO clan_main (clan_server, clan_name) VALUES (${getServerId()}, '${escapedName}')`);
 
-		let tempClan = new serverClasses.clanData(false);
+		let tempClan = new ClanData(false);
 		tempClan.databaseId = getDatabaseInsertId(dbConnection);
 		tempClan.name = name;
 		getServerData().clans.push(tempClan);

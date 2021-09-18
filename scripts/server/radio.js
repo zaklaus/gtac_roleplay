@@ -27,7 +27,7 @@ function loadRadioStationsFromDatabase() {
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-				let tempRadioStationData = new serverClasses.radioStationData(dbAssoc);
+				let tempRadioStationData = new RadioStationData(dbAssoc);
 				tempRadioStations.push(tempRadioStationData);
 			}
 			freeDatabaseQuery(dbQuery);

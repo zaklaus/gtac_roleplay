@@ -543,10 +543,10 @@ function getPlayerCommand(command, params, client) {
 
 	removePlayerFromVehicle(targetClient);
 
-	getPlayerData(targetClient).returnToPosition = getPlayerPosition(targetClient);
-	getPlayerData(targetClient).returnToHeading = getPlayerPosition(targetClient);
-	getPlayerData(targetClient).returnToDimension = getPlayerDimension(targetClient);
-	getPlayerData(targetClient).returnToInterior = getPlayerInterior(targetClient);
+	//getPlayerData(targetClient).returnToPosition = getPlayerPosition(targetClient);
+	//getPlayerData(targetClient).returnToHeading = getPlayerPosition(targetClient);
+	//getPlayerData(targetClient).returnToDimension = getPlayerDimension(targetClient);
+	//getPlayerData(targetClient).returnToInterior = getPlayerInterior(targetClient);
 
 	if(isPlayerInAnyHouse(targetClient)) {
 		getPlayerData(targetClient).returnToHouse = getEntityData(client, "vrr.inHouse");

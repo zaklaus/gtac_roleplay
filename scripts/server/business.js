@@ -37,7 +37,7 @@ function loadBusinessFromId(businessId) {
 		if(dbQuery) {
 			let dbAssoc = fetchQueryAssoc(dbQuery);
 			freeDatabaseQuery(dbQuery);
-			return new serverClasses.businessData(dbAssoc);
+			return new BusinessData(dbAssoc);
 		}
 		disconnectFromDatabase(dbConnection);
 	}
@@ -60,7 +60,7 @@ function loadBusinessesFromDatabase() {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempBusinessData = new serverClasses.businessData(dbAssoc);
+					let tempBusinessData = new BusinessData(dbAssoc);
 					tempBusinessData.locations = loadBusinessLocationsFromDatabase(tempBusinessData.databaseId);
 					tempBusinessData.gameScripts = loadBusinessGameScriptsFromDatabase(tempBusinessData.databaseId);
 					tempBusinesses.push(tempBusinessData);
@@ -93,7 +93,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempBusinessLocationData = new serverClasses.businessLocationData(dbAssoc);
+					let tempBusinessLocationData = new BusinessLocationData(dbAssoc);
 					tempBusinessLocations.push(tempBusinessLocationData);
 					logToConsole(LOG_VERBOSE, `[VRR.Business]: Location '${tempBusinessLocationData.name}' loaded from database successfully!`);
 				}
@@ -124,7 +124,7 @@ function loadBusinessGameScriptsFromDatabase(businessId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempBusinessGameScriptData = new serverClasses.businessGameScriptData(dbAssoc);
+					let tempBusinessGameScriptData = new BusinessGameScriptData(dbAssoc);
 					tempBusinessGameScripts.push(tempBusinessGameScriptData);
 					logToConsole(LOG_VERBOSE, `[VRR.Business]: Game script '${tempBusinessGameScriptData.name}' loaded from database successfully!`);
 				}
@@ -185,7 +185,7 @@ function createBusinessLocationCommand(command, params, client) {
 // ===========================================================================
 
 function createBusiness(name, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = -1, exitVirtualWorld = -1, exitPickupModel = -1, exitBlipModel = -1) {
-	let tempBusinessData = new serverClasses.businessData(false);
+	let tempBusinessData = new BusinessData(false);
 	tempBusinessData.name = name;
 
 	tempBusinessData.entrancePosition = entrancePosition;
@@ -253,6 +253,8 @@ function setBusinessNameCommand(command, params, client) {
 	let oldBusinessName = getBusinessData(businessId).name;
 	getBusinessData(businessId).name = newBusinessName;
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.name", getBusinessData(businessId).name, true);
+
+	getBusinessData(businessId).needsSaved = true;
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}renamed business ${getInlineChatColourByType("businessBlue")}${oldBusinessName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByType("businessBlue")}${newBusinessName}`);
 }
 
@@ -281,6 +283,8 @@ function setBusinessOwnerCommand(command, params, client) {
 
 	getBusinessData(businessId).ownerType = VRR_BIZOWNER_PLAYER;
 	getBusinessData(businessId).ownerId = getServerData().clients[newBusinessOwner.index].accountData.databaseId;
+
+	getBusinessData(businessId).needsSaved = true;
 	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newBusinessOwner.name}`);
 }
 
@@ -308,10 +312,10 @@ function setBusinessClanCommand(command, params, client) {
 		}
 	}
 
-	getBusinessData(businessId).needsSaved = true;
-
 	getBusinessData(businessId).ownerType = VRR_BIZOWNER_CLAN;
 	getBusinessData(businessId).ownerId = getClanData(clanId).databaseId;
+
+	getBusinessData(businessId).needsSaved = true;
 	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan!`);
 }
 
@@ -359,6 +363,7 @@ function setBusinessClanCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).clanRank = getClanRankData(clanId, clanRankId).level;
+
 	getBusinessData(businessId).needsSaved = true;
 	messagePlayerSuccess(`${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}${getInlineChatColourByName("white")}'s clan rank to ${getInlineChatColourByType("clanOrange")}${getClanRankData(clanId, clanRankId).name} ${getInlineChatColourByName("white")}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
 }
@@ -391,6 +396,8 @@ function setBusinessJobCommand(command, params, client) {
 
 	getBusinessData(businessId).ownerType = VRR_BIZOWNER_JOB;
 	getBusinessData(businessId).ownerId = getJobData(jobId).databaseId;
+
+	getBusinessData(businessId).needsSaved = true;
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("jobYellow")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job`);
 }
 
@@ -410,6 +417,8 @@ function setBusinessPublicCommand(command, params, client) {
 
 	getBusinessData(businessId).ownerType = VRR_BIZOWNER_PUBLIC;
 	getBusinessData(businessId).ownerId = 0;
+
+	getBusinessData(businessId).needsSaved = true;
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}owner set to ${getInlineChatColourByName("lightGrey")}public`);
 }
 
@@ -436,6 +445,8 @@ function lockUnlockBusinessCommand(command, params, client) {
 
 	getBusinessData(businessId).locked = !getBusinessData(businessId).locked;
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
+
+	getBusinessData(businessId).needsSaved = true;
 	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
 }
 
@@ -466,10 +477,9 @@ function lockUnlockBusinessCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).interiorLights = !getBusinessData(businessId).interiorLights;
+	updateBusinessInteriorLightsForOccupants(businessId);
 
 	getBusinessData(businessId).needsSaved = true;
-
-	updateBusinessInteriorLightsForOccupants(businessId);
 	meActionToNearbyPlayers(client, `turns ${toLowerCase(getOnOffFromBool(getBusinessData(businessId).interiorLights))} the business lights`);
 }
 
@@ -493,6 +503,7 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 	}
 
 	getBusinessData(businessId).entranceFee = entranceFee;
+	getBusinessData(businessId).needsSaved = true;
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}entrance fee to [#AAAAAAA]$${entranceFee}`);
 }
 
@@ -566,6 +577,8 @@ function setBusinessPickupCommand(command, params, client) {
 	createBusinessEntrancePickup(businessId);
 	createBusinessExitPickup(businessId);
 
+	getBusinessData(businessId).needsSaved = true;
+
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}pickup display to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}'!`);
 }
 
@@ -582,7 +595,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
-		let tempBusinessLocation = new serverClasses.businessLocationData(false);
+		let tempBusinessLocation = new BusinessLocationData(false);
 
 		if(toLowerCase(typeParam) == "none") {
 			tempBusinessLocation.exitPosition = toVector3(0.0, 0.0, 0.0);
@@ -641,6 +654,7 @@ function setBusinessBlipCommand(command, params, client) {
 	}
 
 	resetBusinessBlips();
+	getBusinessData(businessId).needsSaved = true;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}blip display to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
 }
@@ -758,6 +772,8 @@ function withdrawFromBusinessCommand(command, params, client) {
 	getBusinessData(businessId).till -= amount;
 	givePlayerCash(client, amount);
 	updatePlayerCash(client);
+	getBusinessData(businessId).needsSaved = true;
+
 	messagePlayerSuccess(client, `You withdrew $${amount} from business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} till`);
 }
 
@@ -786,6 +802,8 @@ function setBusinessBuyPriceCommand(command, params, client) {
 
 	getBusinessData(businessId).buyPrice = amount;
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.price", getBusinessData(businessId).buyPrice, true);
+
+	getBusinessData(businessId).needsSaved = true;
 	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}'s ${getInlineChatColourByName("white")}for-sale price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
 }
 
@@ -815,6 +833,8 @@ function depositIntoBusinessCommand(command, params, client) {
 	getBusinessData(businessId).till += amount;
 	takePlayerCash(client, amount);
 	updatePlayerCash(client);
+
+	getBusinessData(businessId).needsSaved = true;
 	messagePlayerSuccess(client, `You deposited $${amount} into business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}till`);
 }
 
@@ -861,6 +881,7 @@ function orderItemForBusinessCommand(command, params, client) {
 	getPlayerData(client).businessOrderValue = value;
 	getPlayerData(client).businessOrderCost = orderTotalCost;
 
+	getBusinessData(businessId).needsSaved = true;
 	showPlayerPrompt(client, VRR_PROMPT_BIZORDER, `Ordering ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${makeLargeNumberReadable(pricePerItem)} each will cost a total of $${makeLargeNumberReadable(orderTotalCost)}`, "Business Order Cost");
 }
 
@@ -920,6 +941,7 @@ function buyBusinessCommand(command, params, client) {
 	getBusinessData(businessId).buyPrice = 0;
 
 	updateBusinessPickupLabelData(businessId);
+	getBusinessData(businessId).needsSaved = true;
 
 	messagePlayerSuccess(client, `You are now the owner of ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}`);
 }
@@ -948,6 +970,8 @@ function moveBusinessEntranceCommand(command, params, client) {
 	createBusinessEntranceBlip(businessId);
 	createBusinessEntrancePickup(businessId);
 
+	getBusinessData(businessId).needsSaved = true;
+
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}entrance to their position`);
 }
 
@@ -974,6 +998,8 @@ function moveBusinessExitCommand(command, params, client) {
 
 	createBusinessExitBlip(businessId);
 	createBusinessExitPickup(businessId);
+
+	getBusinessData(businessId).needsSaved = true;
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}exit to their position`);
 }
@@ -1240,7 +1266,7 @@ function deleteBusiness(businessId, deletedBy = 0) {
 
 	removePlayersFromBusiness(businessId);
 
-	getServerData().businesses.splice(businessId, 1);
+	getServerData().businesses[businessId] = false;
 }
 
 // ===========================================================================
@@ -1401,7 +1427,7 @@ function setAllBusinessIndexes() {
 // ===========================================================================
 
 function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
-	let tempItemData = new serverClasses.itemData(false);
+	let tempItemData = new ItemData(false);
 	tempItemData.amount = amount;
 	tempItemData.buyPrice = buyPrice;
 	tempItemData.itemType = getItemTypeData(itemType).databaseId;

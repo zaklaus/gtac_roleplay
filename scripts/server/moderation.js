@@ -379,7 +379,8 @@ function gotoPositionCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.replace(",", "").split(" ");
+	params = params.replace(",", "");
+	splitParams = params.split(" ");
 	let x = splitParams[0] || getPlayerPosition(client).x;
 	let y = splitParams[1] || getPlayerPosition(client).y;
 	let z = splitParams[2] || getPlayerPosition(client).z;
@@ -407,9 +408,10 @@ function teleportForwardCommand(command, params, client) {
 		return false;
 	}
 
-	setPlayerPosition(client, getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	let distance = toFloat(params) || 1;
+	setPlayerPosition(client, getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), distance));
 
-	messagePlayerSuccess(client, `You teleported forward ${params} meters`);
+	messagePlayerSuccess(client, `You teleported forward ${distance} meters`);
 }
 
 // ===========================================================================
@@ -420,9 +422,10 @@ function teleportBackwardCommand(command, params, client) {
 		return false;
 	}
 
-	setPlayerPosition(client, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	let distance = toFloat(params) || 1;
+	setPlayerPosition(client, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), distance));
 
-	messagePlayerSuccess(client, `You teleported backward ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
+	messagePlayerSuccess(client, `You teleported backward ${getInlineChatColourByName("lightGrey")}${distance} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -433,9 +436,10 @@ function teleportLeftCommand(command, params, client) {
 		return false;
 	}
 
-	setPlayerPosition(client, getPosToLeftOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	let distance = toFloat(params) || 1;
+	setPlayerPosition(client, getPosToLeftOfPos(getPlayerPosition(client), fixAngle(getPlayerHeading(client)), distance));
 
-	messagePlayerSuccess(client, `You teleported left ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
+	messagePlayerSuccess(client, `You teleported left ${getInlineChatColourByName("lightGrey")}${distance} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -446,9 +450,10 @@ function teleportUpCommand(command, params, client) {
 		return false;
 	}
 
-	setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), params));
+	let distance = toFloat(params) || 1;
+	setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), distance));
 
-	messagePlayerSuccess(client, `You teleported up ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
+	messagePlayerSuccess(client, `You teleported up ${getInlineChatColourByName("lightGrey")}${distance} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -459,9 +464,10 @@ function teleportDownCommand(command, params, client) {
 		return false;
 	}
 
-	setPlayerPosition(client, getPosBelowPos(getPlayerPosition(client), params));
+	let distance = toFloat(params) || 1;
+	setPlayerPosition(client, getPosBelowPos(getPlayerPosition(client), distance));
 
-	messagePlayerSuccess(client, `You teleported down ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
+	messagePlayerSuccess(client, `You teleported down ${getInlineChatColourByName("lightGrey")}${distance} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -472,9 +478,10 @@ function teleportRightCommand(command, params, client) {
 		return false;
 	}
 
-	setPlayerPosition(client, getPosToRightOfPos(getPlayerPosition(client), getPlayerHeading(client), params));
+	let distance = toFloat(params) || 1;
+	setPlayerPosition(client, getPosToRightOfPos(getPlayerPosition(client), fixAngle(getPlayerHeading(client)), distance));
 
-	messagePlayerSuccess(client, `You teleported right ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}meters`);
+	messagePlayerSuccess(client, `You teleported right ${getInlineChatColourByName("lightGrey")}${distance} ${getInlineChatColourByName("white")}meters`);
 }
 
 // ===========================================================================
@@ -549,25 +556,17 @@ function getPlayerCommand(command, params, client) {
 	//getPlayerData(targetClient).returnToInterior = getPlayerInterior(targetClient);
 
 	if(isPlayerInAnyHouse(targetClient)) {
-		getPlayerData(targetClient).returnToHouse = getEntityData(client, "vrr.inHouse");
+		getPlayerData(targetClient).returnToHouse = getPlayerHouse(targetClient);
 	}
 
 	if(isPlayerInAnyBusiness(targetClient)) {
-		getPlayerData(targetClient).returnToBusiness = getEntityData(client, "vrr.inBusiness");
+		getPlayerData(targetClient).returnToBusiness = getPlayerBusiness(targetClient);
 	}
 
 	setPlayerPosition(targetClient, getPosBehindPos(getPlayerPosition(client), getPlayerHeading(client), 2));
 	setPlayerHeading(targetClient, getPlayerHeading(client));
 	setPlayerInterior(targetClient, getPlayerInterior(client));
 	setPlayerDimension(targetClient, getPlayerDimension(client));
-
-	if(isPlayerInAnyBusiness(client)) {
-		setEntityData(client, "vrr.inBusiness", getPlayerBusiness(client), true);
-	}
-
-	if(isPlayerInAnyBusiness(client)) {
-		setEntityData(client, "vrr.inHouse", getPlayerBusiness(client), true);
-	}
 
 	messagePlayerSuccess(client, `You teleported ${getInlineChatColourByName("lightGrey")}${getPlayerName(targetClient)} ${getInlineChatColourByName("white")}to you.`);
 	messagePlayerAlert(targetClient, `An admin has teleported you to their location`);
@@ -598,14 +597,6 @@ function returnPlayerCommand(command, params, client) {
 	setPlayerHeading(targetClient, getPlayerData(targetClient).returnToHeading);
 	setPlayerInterior(targetClient, getPlayerData(targetClient).returnToInterior);
 	setPlayerDimension(targetClient, getPlayerData(targetClient).returnToDimension);
-
-	if(getPlayerData(targetClient).returnToHouse != null) {
-		setEntityData(client, "vrr.inHouse", getPlayerData(targetClient).returnToHouse, true);
-	}
-
-	if(getPlayerData(targetClient).returnToBusiness != null) {
-		setEntityData(client, "vrr.inBusiness", getPlayerData(targetClient).returnToBusiness, true);
-	}
 
 	getPlayerData(targetClient).returnToPosition = null;
 	getPlayerData(targetClient).returnToHeading = null;
@@ -798,7 +789,7 @@ function givePlayerMoneyCommand(command, params, client) {
         return false;
 	}
 
-	givePlayerMoney(client, toInteger(amount));
+	givePlayerCash(client, toInteger(amount));
 	updatePlayerCash(targetClient);
 	messagePlayerSuccess(client, `You gave ${getInlineChatColourByName("lightGrey")}$${amount} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}`);
 	messagePlayerAlert(client, `An admin gave you ${getInlineChatColourByName("lightGrey")}$${amount}`);

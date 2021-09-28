@@ -82,6 +82,7 @@ function playStreamingRadioCommand(command, params, client) {
 		let clients = getClients();
 		for(let i in clients) {
 			if(getPlayerVehicle(client) == getPlayerVehicle(clients[i])) {
+				setPlayerVanillaRadioStation(clients[i], 0);
 				playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(client));
 			}
 		}
@@ -107,12 +108,13 @@ function playStreamingRadioCommand(command, params, client) {
 				let clients = getClients();
 				for(let i in clients) {
 					if(getEntityData(clients[i], "vrr.inHouse") == houseId) {
+						setPlayerVanillaRadioStation(clients[i], 0);
 						playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(clients[i]));
 					}
 				}
 			}
-		} else if(doesEntityDataExist(client, "vrr.inBusiness")) {
-			let businessId = getEntityData(client, "vrr.inBusiness");
+		} else if(isPlayerInAnyBusiness(client)) {
+			let businessId = getPlayerBusiness(client);
 			if(radioStationId == 0) {
 				getBusinessData(businessId).streamingRadioStation = -1;
 				getPlayerData(client).streamingRadioStation = -1;
@@ -120,8 +122,8 @@ function playStreamingRadioCommand(command, params, client) {
 
 				let clients = getClients();
 				for(let i in clients) {
-					if(getEntityData(clients[i], "vrr.inBusiness") == businessId) {
-						playRadioStreamForPlayer(clients[i], "");
+					if(getPlayerBusiness(clients[i]) == businessId) {
+						stopRadioStreamForPlayer(clients[i]);
 					}
 				}
 			} else {
@@ -131,7 +133,8 @@ function playStreamingRadioCommand(command, params, client) {
 
 				let clients = getClients();
 				for(let i in clients) {
-					if(getEntityData(clients[i], "vrr.inBusiness") == businessId) {
+					if(getPlayerBusiness(clients[i]) == businessId) {
+						setPlayerVanillaRadioStation(clients[i], 0);
 						playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(clients[i]));
 					}
 				}

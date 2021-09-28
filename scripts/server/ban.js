@@ -109,6 +109,8 @@ function subNetBanCommand(command, params, client, fromDiscord) {
 
 	messageAdminAction(`${targetgetPlayerName(client)} has been banned from the server (subnet ban).`);
 	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getPlayerData(client).accountData.databaseId, reason);
+
+    server.banIP(targetClient.ip);
 }
 
 // ===========================================================================

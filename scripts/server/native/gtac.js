@@ -3133,12 +3133,12 @@ let gameData = {
 			ammunation: 20,
 			payAndSpray: 18,
 			vehicleDealership: 6,
-			restaurant: -1,
-			fastFood: -1,
+			restaurant: 0,
+			fastFood: 0,
 			bank: 0,
-			fuelStation: -1,
-			business: -1,
-			house: -1,
+			fuelStation: 0,
+			business: 0,
+			house: 0,
 		},
 		{	// GTA VC
 			policeStation: 0,
@@ -3147,12 +3147,12 @@ let gameData = {
 			ammunation: 16,
 			payAndSpray: 27,
 			vehicleDealership: 7,
-			restaurant: -1,
-			fastFood: -1,
+			restaurant: 0,
+			fastFood: 0,
 			bank: 0,
-			fuelStation: -1,
-			business: -1,
-			house: -1,
+			fuelStation: 0,
+			business: 0,
+			house: 0,
 		},
 		{	// GTA SA
 			policeStation: 30,
@@ -3164,14 +3164,14 @@ let gameData = {
 			airplaneDealership: 5,
 			boatDealership: 9,
 			restaurant: 50,
-			fastFood: -1,
+			fastFood: 0,
 			clothes: 45,
 			pizza: 29,
 			chicken: 14,
 			burger: 10,
 			bank: 52,
 			gasStation: 17,
-			business: -1,
+			business: 0,
 			house: 31,
 			bar: 49,
 			club: 48,
@@ -3182,32 +3182,21 @@ let gameData = {
 			job: 56,
 		},
 		{	// GTA UG
-			policeStation: 8,
-			fireStation: 9,
-			hospital: 12,
-			ammunation: 20,
-			payAndSpray: 18,
-			vehicleDealership: 6,
-			restaurant: -1,
-			fastFood: -1,
-			bank: 52,
-			fuelStation: 0,
-			business: -1,
-			house: -1,
+
 		},
 		{	// GTA IV
-			policeStation: 8,
-			fireStation: 9,
-			hospital: 12,
-			ammunation: 20,
+			policeStation: 60,
+			fireStation: 61,
+			hospital: 62,
+			ammunation: 59,
 			payAndSpray: 18,
 			vehicleDealership: 6,
-			restaurant: -1,
-			fastFood: -1,
+			restaurant: 57,
+			fastFood: 21,
 			bank: 52,
 			fuelStation: 0,
-			business: -1,
-			house: -1,
+			business: 0,
+			house: 29,
 		},
 	],
 	pickupModels: [
@@ -3502,6 +3491,27 @@ let gameData = {
 				["Hot Wings", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
+			coffeeDonutShop: [
+				["Glazed Donut", 500, 2],
+				["Frosted Donut", 500, 2],
+				["Jelly Donut", 500, 2],
+				["Cream-filled Donut", 500, 2],
+				["Apple Fritter", 500, 2],
+				["Pumpkin Spice Latte", 500, 2],
+				["Mocha Latte", 500, 2],
+				["Iced Coffee", 500, 2],
+				["Large Coffee", 500, 2],
+				["Small Coffee", 500, 2],
+			],
+			vehicleRepairShop: [
+				["Vehicle Repair Kit", 500, 2],
+				["Vehicle Decal Kit", 500, 2],
+				["Vehicle Primary Colour Kit", 500, 2],
+				["Vehicle Secondary Colour Kit", 500, 2],
+				//["Vehicle NOS Kit", 500, 2],
+				//["Vehicle Hydraulics Kit", 500, 2],
+				//["Vehicle Body Part Kit", 500, 2],
+			],
 		},
 		{
 			clothingStore: [
@@ -3614,6 +3624,27 @@ let gameData = {
 				["Buffalo Wings", 500, 2],
 				["Hot Wings", 500, 2],
 				["Bottle of Soda", 500, 2],
+			],
+			coffeeDonutShop: [
+				["Glazed Donut", 500, 2],
+				["Frosted Donut", 500, 2],
+				["Jelly Donut", 500, 2],
+				["Cream-filled Donut", 500, 2],
+				["Apple Fritter", 500, 2],
+				["Pumpkin Spice Latte", 500, 2],
+				["Mocha Latte", 500, 2],
+				["Iced Coffee", 500, 2],
+				["Large Coffee", 500, 2],
+				["Small Coffee", 500, 2],
+			],
+			vehicleRepairShop: [
+				["Vehicle Repair Kit", 500, 2],
+				["Vehicle Decal Kit", 500, 2],
+				["Vehicle Primary Colour Kit", 500, 2],
+				["Vehicle Secondary Colour Kit", 500, 2],
+				//["Vehicle NOS Kit", 500, 2],
+				//["Vehicle Hydraulics Kit", 500, 2],
+				//["Vehicle Body Part Kit", 500, 2],
 			],
 		},
 		{
@@ -3734,6 +3765,28 @@ let gameData = {
 				["Buffalo Wings", 500, 2],
 				["Hot Wings", 500, 2],
 				["Bottle of Soda", 500, 2],
+			],
+			coffeeDonutShop: [
+				["Glazed Donut", 500, 2],
+				["Frosted Donut", 500, 2],
+				["Jelly Donut", 500, 2],
+				["Cream-filled Donut", 500, 2],
+				["Apple Fritter", 500, 2],
+				["Pumpkin Spice Latte", 500, 2],
+				["Mocha Latte", 500, 2],
+				["Iced Coffee", 500, 2],
+				["Apple Fritter", 500, 2],
+				["Large Coffee", 500, 2],
+				["Small Coffee", 500, 2],
+			],
+			vehicleRepairShop: [
+				["Vehicle Repair Kit", 500, 2],
+				["Vehicle Decal Kit", 500, 2],
+				["Vehicle Primary Colour Kit", 500, 2],
+				["Vehicle Secondary Colour Kit", 500, 2],
+				//["Vehicle NOS Kit", 500, 2],
+				//["Vehicle Hydraulics Kit", 500, 2],
+				//["Vehicle Body Part Kit", 500, 2],
 			],
 		}
 	],
@@ -4328,7 +4381,9 @@ function setPlayerDimension(client, dimension) {
 function setPlayerInterior(client, interior) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s interior to ${interior}`);
     sendPlayerSetInterior(client, interior);
-    getPlayerCurrentSubAccount(client).interior = interior;
+	if(isPlayerLoggedIn(client) && isPlayerSpawned(client)) {
+		getPlayerCurrentSubAccount(client).interior = interior;
+	}
 }
 
 // ===========================================================================
@@ -4402,6 +4457,7 @@ function getVehicleForNetworkEvent(vehicle) {
 function deleteGameElement(element) {
     logToConsole(LOG_DEBUG, `Destroying game element ${element.id} (Type: ${element.type})`);
     if(element != null) {
+		//removeFromWorld(element);
         destroyElement(element);
         return true;
     }
@@ -4464,7 +4520,11 @@ function getPlayerArmour(client) {
 // ===========================================================================
 
 function setPlayerCash(client, amount) {
-    if(typeof amount != "number") {
+	if(client == null) {
+		return false;
+	}
+
+    if(isNan(amount)) {
         return false;
     }
 
@@ -4475,7 +4535,11 @@ function setPlayerCash(client, amount) {
 // ===========================================================================
 
 function givePlayerCash(client, amount) {
-    if(typeof amount != "number") {
+	if(client == null) {
+		return false;
+	}
+
+    if(isNan(amount)) {
         return false;
     }
 
@@ -4486,7 +4550,11 @@ function givePlayerCash(client, amount) {
 // ===========================================================================
 
 function takePlayerCash(client, amount) {
-    if(typeof amount != "number") {
+	if(client == null) {
+		return false;
+	}
+
+    if(isNan(amount)) {
         return false;
     }
 

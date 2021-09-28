@@ -1060,3 +1060,60 @@ function getPlayerClanRankName(client) {
 }
 
 // ===========================================================================
+
+function showClanFlagListCommand(command, params, client) {
+	let flagList = getServerBitFlagKeys().clanFlagKeys;
+
+	let chunkedList = splitArrayIntoChunks(flagList, 10);
+
+	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Clan Permissions List ${getInlineChatColourByType("clanOrange")}=====================`);
+
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join(", "));
+	}
+}
+
+// ===========================================================================
+
+/*
+function showClanFlagListCommand(command, params, client) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("rankFlags"))) {
+		messagePlayerError(client, "You can not change a clan rank's permissions!");
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messagePlayerError(client, "Clan not found!");
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let rankId = getClanRankFromParams(clanId, splitParams[0]);
+
+	if(!getClanRankData(clanId, rankId)) {
+		messagePlayerError(client, "Clan rank not found!");
+		return false;
+	}
+
+	let tempClanRankData = getClanRankData(clanId, rankId).flags;
+	for(let i in tempClanRankData) {
+		if(getServerBitFlags().clanFlags.indexOf(tempClanRankData)))
+	}
+	let flagList = getServerBitFlag().clanFlags;
+
+	let chunkedList = splitArrayIntoChunks(flagList, 10);
+
+	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Clan Permissions List ${getInlineChatColourByType("clanOrange")}=====================`);
+
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join(", "));
+	}
+}
+*/

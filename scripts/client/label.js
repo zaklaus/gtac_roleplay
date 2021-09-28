@@ -113,7 +113,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
                     break;
 
                 case VRR_BIZLABEL_INFO_ENTERVEH:
-                    bizInfoText = "Enter a vehicle to purchase it";
+                    bizInfoText = "Enter a vehicle to buy it";
                     break;
 
                 case VRR_BIZLABEL_INFO_NONE:

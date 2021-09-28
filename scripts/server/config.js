@@ -45,6 +45,7 @@ function loadGlobalConfig() {
 		phoneSpeakerDistance: 15,
 		phoneTalkDistance: 15,
 		tazerEffectDuration: 15000,
+		vehicleRepairDistance: 5,
 		weaponEquippableTypes: [
 			VRR_ITEM_USETYPE_WEAPON,
 			VRR_ITEM_USETYPE_TAZER,
@@ -52,12 +53,20 @@ function loadGlobalConfig() {
 			VRR_ITEM_USETYPE_SPRAYPAINT,
 			VRR_ITEM_USETYPE_PEPPERSPRAY,
 		],
+		onFootOnlyItems: [
+			VRR_ITEM_USETYPE_VEHREPAIR,
+			VRR_ITEM_USETYPE_VEHCOLOUR,
+			VRR_ITEM_USETYPE_VEHUPGRADE_PART,
+			VRR_ITEM_USETYPE_VEHLIVERY,
+			VRR_ITEM_USETYPE_VEHTIRE,
+		],
 		itemActionStateReset: 5000,
 		subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
 		emailValidationRegex: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
 		itemActionDelayExtraTimeout: 1000,
 		geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
 		geoIPCityDatabaseFilePath: "geoip-city.mmdb",
+		randomTipInterval: 600000,
 	};
 }
 

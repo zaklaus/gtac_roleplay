@@ -391,6 +391,10 @@ function getDistance(vec1, vec2) {
 // ===========================================================================
 
 function logToConsole(tempLogLevel, text) {
+    if(typeof server != "undefined") {
+        text = removeColoursInMessage(text);
+    }
+
 	if((logLevel & tempLogLevel) || logLevel == LOG_ALL) {
 		if(tempLogLevel == LOG_ERROR) {
 			console.error(text);

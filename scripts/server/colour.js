@@ -249,7 +249,7 @@ function getRandomRGB() {
  *
  */
 function getInlineChatColourByName(colourName) {
-	return `[${getHexColourByName(colourName)}]`;
+	return `{${colourName}}`;
 }
 
 // ===========================================================================
@@ -262,7 +262,7 @@ function getInlineChatColourByName(colourName) {
  *
  */
 function getInlineChatColourByType(colourName) {
-	return `[${getHexColourByType(colourName)}]`;
+	return `{${colourName}}`;
 }
 
 // ===========================================================================
@@ -294,6 +294,44 @@ function rgbaArrayFromToColour(colour) {
 function hexFromToColour(colour) {
 	let rgba = rgbaArrayFromToColour(colour);
     return rgbToHex(rgba[0], rgba[1], rgba[2]);
+}
+
+// ===========================================================================
+
+function replaceColoursInMessage(messageText) {
+	for(let i in getServerColours().hex.byName) {
+		let find = `{${i}}`;
+		let re = new RegExp(find, 'g');
+		messageText = messageText.replace(re, `[#${getServerColours().hex.byName[i]}]`);
+	}
+
+	for(let i in getServerColours().hex.byType) {
+		let find = `{${i}}`;
+		let re = new RegExp(find, 'g');
+		messageText = messageText.replace(re, `[#${getServerColours().hex.byType[i]}]`);
+	}
+
+	return messageText;
+}
+
+// ===========================================================================
+
+function removeColoursInMessage(messageText) {
+
+
+	for(let i in getServerColours().hex.byName) {
+		let find = `{${i}}`;
+		let re = new RegExp(find, 'g');
+		messageText = messageText.replace(re, ``);
+	}
+
+	for(let i in getServerColours().hex.byType) {
+		let find = `{${i}}`;
+		let re = new RegExp(find, 'g');
+		messageText = messageText.replace(re, ``);
+	}
+
+	return messageText;
 }
 
 // ===========================================================================

@@ -20,7 +20,7 @@ function initClassScript() {
  * @class Representing data for server configuration
  */
 class ServerConfigData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.password = "";
@@ -83,6 +83,15 @@ class ServerConfigData {
 		this.useRealTime = false;
 		this.realTimeZone = 0;
 
+		this.discordConfig = {
+			eventChannelWebHookURL: "",
+			chatChannelWebHookURL: "",
+			adminChannelWebHookURL: "",
+			sendEvents: true,
+			sendChat: true,
+			sendAdminEvents: true,
+		};
+
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["svr_id"];
 			console.log("1");
@@ -137,6 +146,15 @@ class ServerConfigData {
 			this.introMusicURL = dbAssoc["svr_intro_music"];
 			this.useRealTime = intToBool(dbAssoc["svr_time_realtime_enabled"]);
 			this.realTimeZone = dbAssoc["svr_time_realtime_timezone"];
+
+			this.discordConfig = {
+				eventChannelWebHookURL: dbAssoc["svr_discord_event_webhook"],
+				chatChannelWebHookURL: dbAssoc["svr_discord_chat_webhook"],
+				adminChannelWebHookURL: dbAssoc["svr_discord_admin_webhook"],
+				sendEvents: true,
+				sendChat: true,
+				sendAdminEvents: true,
+			};
 		}
 	}
 };
@@ -191,7 +209,6 @@ class ClientData {
 		this.alcoholLevel = 0;
 
 		this.pedState = VRR_PEDSTATE_NONE;
-
 		this.promptType = VRR_PROMPT_NONE;
 
 		this.businessOrderAmount = 0;
@@ -224,6 +241,10 @@ class ClientData {
 		this.returnToBusiness = null;
 
 		this.changingCharacterName = false;
+
+		this.currentPickup = false;
+
+		this.usingSkinSelect = false;
 	}
 };
 
@@ -231,7 +252,7 @@ class ClientData {
  * @class Representing an account, loaded/saved in the database
  */
 class AccountData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.password = "";
@@ -295,7 +316,7 @@ class AccountData {
  * @class Representing an account's contact list, loaded/saved in the database
  */
 class AccountContactData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.accountId = 0;
 		this.contactAccountId = 0;
@@ -317,7 +338,7 @@ class AccountContactData {
  * @class Representing an account's messages, loaded/saved in the database
  */
 class AccountMessageData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.account = 0;
 		this.whoSent = 0;
@@ -347,7 +368,7 @@ class AccountMessageData {
  * @class Representing an account's staff notes. Visible only to staff and loaded/saved in the database
  */
 class AccountStaffNoteData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.account = 0;
 		this.whoAdded = 0;
@@ -375,7 +396,7 @@ class AccountStaffNoteData {
  * @class Representing a character's (subaccount) data. Loaded and saved in the database
  */
 class SubAccountData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.server = 0;
 		this.firstName = "John";
@@ -481,7 +502,7 @@ class SubAccountData {
  * @class Representing a businesses' data. Loaded and saved in the database
  */
 class BusinessData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.ownerType = VRR_BIZOWNER_NONE;
@@ -521,6 +542,8 @@ class BusinessData {
 
 		this.streamingRadioStation = -1;
 
+		this.labelHelpType = VRR_BIZLABEL_INFO_NONE;
+
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["biz_id"]);
 			this.name = toString(dbAssoc["biz_name"]);
@@ -547,15 +570,17 @@ class BusinessData {
 
 			this.entranceFee = toInteger(dbAssoc["biz_entrance_fee"]);
 			this.till = toInteger(dbAssoc["biz_till"]);
+
+			this.labelHelpType = toInteger(dbAssoc["biz_label_help_type"]);
 		}
-	}
+	};
 };
 
 /**
  * @class Representing a business's location data. Multiple can be used for a single business. Used for things like doors, fuel pumps, drive thru positions, etc. Loaded and saved in the database
  */
 class BusinessLocationData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.type = 0;
@@ -587,7 +612,7 @@ class BusinessLocationData {
  * @class Representing a business's game scripts. Multiple can be used for a single business. Used for things like bar and club NPCs and other actions
  */
 class BusinessGameScriptData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.business = 0;
@@ -609,7 +634,7 @@ class BusinessGameScriptData {
  * @class Representing a house's data. Loaded and saved in the database
  */
 class HouseData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0
 		this.description = "";
 		this.ownerType = VRR_HOUSEOWNER_NONE;
@@ -680,7 +705,7 @@ class HouseData {
  * @class Representing a houses's location data. Multiple can be used for a single house. Used for things like doors, garage entry/exit/vehspawn, gates, etc. Loaded and saved in the database
  */
 class HouseLocationData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.type = 0;
@@ -717,7 +742,7 @@ class HouseLocationData {
  * @class Representing a house's game scripts. Multiple can be used for a single house
  */
 class HouseGameScriptData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.business = 0;
@@ -739,7 +764,7 @@ class HouseGameScriptData {
  * @class Representing a clan's data. Loaded and saved in the database
  */
 class ClanData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.ownerId = 0;
@@ -771,7 +796,7 @@ class ClanData {
  * @class Representing a clan rank's data. Loaded and saved in the database
  */
 class ClanRankData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.clan = 0;
 		this.name = "";
@@ -800,7 +825,7 @@ class ClanRankData {
  * @class Representing a clan member's data. Loaded and saved in the database
  */
 class ClanMemberData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.clan = 0;
 		this.subAccount = 0;
@@ -1334,7 +1359,7 @@ class InteriorTemplateData {
 };
 
 class RadioStationData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
 		this.url = "";
@@ -1452,7 +1477,7 @@ class ItemTypeData {
 	}
 };
 class NPCData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.server = 0;
 		this.firstName = "John";
@@ -1546,7 +1571,7 @@ class NPCData {
 };
 
 class NPCTriggerData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.npcId = 0;
 		this.index = 0;
@@ -1564,7 +1589,7 @@ class NPCTriggerData {
 };
 
 class NPCTriggerConditionData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.triggerId = 0;
 		this.index = 0;
@@ -1583,7 +1608,7 @@ class NPCTriggerConditionData {
 };
 
 class NPCTriggerResponseData {
-	constructor(dbAssoc) {
+	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.triggerId = 0;
 		this.index = 0;
@@ -1598,3 +1623,22 @@ class NPCTriggerResponseData {
 		}
 	}
 };
+
+class BanData {
+	constructor(dbAssoc = false) {
+		this.databaseId = 0;
+		this.type = VRR_BANTYPE_NONE;
+		this.detail = "";
+		this.ipAddress = "";
+		this.name = "";
+		this.reason = "";
+
+		if(dbAssoc) {
+			this.databaseId = toInteger(dbAssoc["ban_id"]);
+			this.type = dbAssoc["ban_type"];
+			this.detail = toInteger(dbAssoc["ban_detail"]);
+			this.ipAddress = toInteger(dbAssoc["ban_ip"]);
+			this.reason = toInteger(dbAssoc["ban_reason"]);
+		}
+	}
+}

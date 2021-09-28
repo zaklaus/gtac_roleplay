@@ -93,6 +93,7 @@ function onProcess(event, deltaTime) {
     forceLocalPlayerEquippedWeaponItem();
     processWantedLevelReset();
     processGameSpecifics();
+    processNearbyPickups();
 }
 
 // ===========================================================================

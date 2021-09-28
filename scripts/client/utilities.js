@@ -727,3 +727,19 @@ function getPlayerFromParams(params) {
 }
 
 // ===========================================================================
+
+function processNearbyPickups() {
+    let pickups = getElementsByType(ELEMENT_PICKUP);
+    for(let i in pickups) {
+        if(getDistance(pickups[i].position, localPlayer.position) < 5) {
+            //if(pickups[i].interior == localPlayer.interior && pickups[i].dimension == localPlayer.dimension) {
+                if(currentPickup != pickups[i]) {
+                    currentPickup = pickups[i];
+                    triggerNetworkEvent("vrr.pickup", pickups[i].id);
+                }
+            //}
+        }
+    }
+}
+
+// ===========================================================================

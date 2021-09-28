@@ -40,8 +40,6 @@ function initServerScripts() {
 
 	initTimers();
 
-	loadGameFixesResource();
-
 	serverStartTime = getCurrentUnixTimestamp();
 
 	initCommandScript();

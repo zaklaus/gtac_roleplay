@@ -455,8 +455,7 @@ function setHouseBlipCommand(command, params, client) {
 		deleteGameElement(getHouseData(houseId).entranceBlip);
 	}
 
-	createHouseEntranceBlip(houseId);
-
+	resetHouseBlips(houseId);
 	getHouseData(houseId).needsSaved = true;
 
 	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
@@ -490,10 +489,8 @@ function moveHouseEntranceCommand(command, params, client) {
 	//createAllHouseBlips(houseId);
 	//createAllHousePickups(houseId);
 
-	deleteHouseEntrancePickup(houseId);
-	deleteHouseEntranceBlip(houseId);
-	createHouseEntrancePickup(houseId);
-	createHouseEntranceBlip(houseId);
+	resetHouseBlips();
+	resetHousePickups();
 
 	getHouseData(houseId).needsSaved = true;
 
@@ -1305,6 +1302,24 @@ function canPlayerLockUnlockHouse(client, houseId) {
 	}
 
 	return false;
+}
+
+// ===========================================================================
+
+function resetHousePickups(houseId) {
+	deleteHouseEntrancePickup(houseId);
+	deleteHouseExitPickup(houseId);
+	createHouseEntrancePickup(houseId);
+	createHouseExitPickup(houseId);
+}
+
+// ===========================================================================
+
+function resetHouseBlips(houseId) {
+	deleteHouseEntranceBlip(houseId);
+	deleteHouseExitBlip(houseId);
+	createHouseEntranceBlip(houseId);
+	createHouseExitBlip(houseId);
 }
 
 // ===========================================================================

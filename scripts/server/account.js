@@ -46,6 +46,36 @@ function autoLoginByIPCommand(command, params, client) {
 
 // ===========================================================================
 
+function toggleNoRandomTipsCommand(command, params, client) {
+	let flagValue = getAccountSettingsFlagValue("noTimedRandomTips");
+
+	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+		messagePlayerSuccess(client, `You will not receive random tips anymore.`);
+	} else {
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		messagePlayerSuccess(client, `You will now receive random tips every 15 minutes.`);
+	}
+	return true;
+}
+
+// ===========================================================================
+
+function toggleNoActionTipsCommand(command, params, client) {
+	let flagValue = getAccountSettingsFlagValue("noActionTips");
+
+	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+		messagePlayerSuccess(client, `You will not receive action-based tips anymore.`);
+	} else {
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		messagePlayerSuccess(client, `You will now receive tips for some actions and commands.`);
+	}
+	return true;
+}
+
+// ===========================================================================
+
 function autoSelectLastCharacterCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
 
@@ -296,6 +326,37 @@ function verifyAccountEmailCommand(command, params, client) {
 
 // ===========================================================================
 
+/*
+function resetAccountPasswordCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let verificationCode = splitParams[0] || "";
+
+	if(!isAccountEmailVerified(getPlayerData(client).accountData)) {
+		messagePlayerError(client, `Your email is not verified. Your password will not be reset!`);
+		return false;
+	}
+
+	if(!areParamsEmpty(verificationCode)) {
+		if(module.hashing.sha512(verificationCode) != getPlayerData(client).accountData.resetPasswordVerificationCode) {
+			messagePlayerError(client, `Invalid reset password verification code! A new one has been created and sent to your email.`);
+			let resetPasswordVerificationCode = generateResetPasswordVerificationCode();
+			setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+			sendEmailVerificationEmail(client, emailVerificationCode);
+			return false;
+		}
+	}
+
+	saveAccountToDatabase(getPlayerData(client).accountData);
+}
+*/
+
+// ===========================================================================
+
 function setAccountDiscordCommand(command, params, client) {
 	messagePlayerError(client, `This command is not yet finished and will be available soon!`);
 	return false;
@@ -371,7 +432,7 @@ function loadAccountFromName(accountName, fullLoad = false) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		accountName = escapeDatabaseString(dbConnection, accountName);
-		let dbQueryString = `SELECT acct_main.*, acct_svr.*, acct_main.acct_ip AS ipstring FROM acct_main INNER JOIN acct_svr ON acct_svr.acct_svr_acct = acct_main.acct_id AND acct_svr.acct_svr_svr = ${getServerId()} WHERE acct_name = '${accountName}' LIMIT 1;`;
+		let dbQueryString = `SELECT acct_main.*, acct_svr.* FROM acct_main INNER JOIN acct_svr ON acct_svr.acct_svr_acct = acct_main.acct_id AND acct_svr.acct_svr_svr = ${getServerId()} WHERE acct_name = '${accountName}' LIMIT 1;`;
 		let dbQuery = queryDatabase(dbConnection, dbQueryString);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
@@ -664,7 +725,7 @@ function createAccount(name, password, email = "") {
 		let safeName = escapeDatabaseString(dbConnection, name);
 		let safeEmail = escapeDatabaseString(dbConnection, email);
 
-		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email, acct_when_registered) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}', UNIX_TIMESTAMP())`);
+		let dbQuery = queryDatabase(dbConnection, `INSERT INTO acct_main (acct_name, acct_pass, acct_email, acct_when_registered) VALUES ('${safeName}', '${hashedPassword}', '${safeEmail}', CURRENT_TIMESTAMP())`);
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			let tempAccountData = loadAccountFromId(getDatabaseInsertId(dbConnection), false);
 			createDefaultAccountServerData(tempAccountData.databaseId);

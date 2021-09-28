@@ -122,41 +122,69 @@ function submitBugReportCommand(command, params, client) {
 // ===========================================================================
 
 function enterExitPropertyCommand(command, params, client) {
-	let closestBusinessEntrance = getClosestBusinessEntrance(getPlayerPosition(client), getPlayerDimension(client));
-	let closestBusinessExit = getClosestBusinessExit(getPlayerPosition(client), getPlayerDimension(client));
-	let closestHouseEntrance = getClosestHouseEntrance(getPlayerPosition(client), getPlayerDimension(client));
-	let closestHouseExit = getClosestHouseExit(getPlayerPosition(client), getPlayerDimension(client));
+	//let closestBusinessEntrance = getClosestBusinessEntrance(getPlayerPosition(client), getPlayerDimension(client));
+	//let closestBusinessExit = getClosestBusinessExit(getPlayerPosition(client), getPlayerDimension(client));
+	//let closestHouseEntrance = getClosestHouseEntrance(getPlayerPosition(client), getPlayerDimension(client));
+	//let closestHouseExit = getClosestHouseExit(getPlayerPosition(client), getPlayerDimension(client));
 
-	let closestEntrance = null;
-	let closestExit = null;
 	let closestProperty = null;
 	let isEntrance = false;
 	let isBusiness = false;
 
-	if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessEntrance).entrancePosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseEntrance).entrancePosition)) {
-		closestEntrance = getBusinessData(closestBusinessEntrance);
-	} else {
-		closestEntrance = getHouseData(closestHouseEntrance);
-	}
+	//if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessEntrance).entrancePosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseEntrance).entrancePosition)) {
+	//	closestEntrance = getBusinessData(closestBusinessEntrance);
+	//} else {
+	//	closestEntrance = getHouseData(closestHouseEntrance);
+	//}
 
-	if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessExit).exitPosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseExit).exitPosition)) {
-		closestExit = getBusinessData(closestBusinessExit);
-	} else {
-		closestExit = getHouseData(closestHouseExit);
-	}
+	//if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessExit).exitPosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseExit).exitPosition)) {
+	//	closestExit = getBusinessData(closestBusinessExit);
+	//} else {
+	//	closestExit = getHouseData(closestHouseExit);
+	//}
 
-	if(getDistance(getPlayerPosition(client), closestEntrance.entrancePosition) <= getDistance(getPlayerPosition(client), closestExit.exitPosition)) {
-		closestProperty = closestEntrance;
-		isEntrance = true;
-	} else {
-		closestProperty = closestExit;
-		isEntrance = false;
-	}
+	//if(getDistance(getPlayerPosition(client), closestEntrance.entrancePosition) <= getDistance(getPlayerPosition(client), closestExit.exitPosition)) {
+	//	closestProperty = closestEntrance;
+	//	isEntrance = true;
+	//} else {
+	//	closestProperty = closestExit;
+	//	isEntrance = false;
+	//}
 
-	if(closestProperty instanceof HouseData) {
-		isBusiness = false;
-	} else {
-		isBusiness = true;
+	if(getPlayerData(client).currentPickup != false) {
+		let ownerType = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.type");
+		let ownerId = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.id");
+
+		//logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} is near pickup for owner ID ${ownerId}`);
+
+		switch(ownerType) {
+			case VRR_PICKUP_BUSINESS_ENTRANCE:
+				isBusiness = true;
+				isEntrance = true;
+				closestProperty = getServerData().businesses[ownerId];
+				break;
+
+			case VRR_PICKUP_BUSINESS_EXIT:
+				isBusiness = true;
+				isEntrance = false;
+				closestProperty = getServerData().businesses[ownerId];
+				break;
+
+			case VRR_PICKUP_HOUSE_ENTRANCE:
+				isBusiness = false;
+				isEntrance = true;
+				closestProperty = getServerData().houses[ownerId];
+				break;
+
+			case VRR_PICKUP_HOUSE_EXIT:
+				isBusiness = false;
+				isEntrance = false;
+				closestProperty = getServerData().houses[ownerId];
+				break;
+
+			default:
+				return false;
+		}
 	}
 
 	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s closest door is ${(isBusiness) ? closestProperty.name : closestProperty.description} ${(isEntrance) ? "entrance" : "exit"}`);
@@ -167,6 +195,12 @@ function enterExitPropertyCommand(command, params, client) {
 				meActionToNearbyPlayers(client, `tries to open the ${(isBusiness) ? "business" : "house"} door but fails because it's locked`);
 				return false;
 			}
+
+			if(!closestProperty.hasInterior) {
+				messagePlayerAlert(client, `This ${(isBusiness) ? "business" : "house"} does not have an interior, but you can still use commands at the door icon.`);
+				return false;
+			}
+
 			clearPlayerStateToEnterExitProperty(client);
 			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
 			meActionToNearbyPlayers(client, `opens the door and enters the ${(isBusiness) ? "business" : "house"}`);
@@ -229,22 +263,6 @@ function enterExitPropertyCommand(command, params, client) {
 		}
 	}
 
-	return true;
-}
-
-// ===========================================================================
-
-function loadGameFixesResource() {
-	//switch(getServerGame()) {
-	//	case GAME_GTA_III:
-	//		if(findResourceByName("asshat-gta3") != null) {
-	//			findResourceByName("asshat-gta3").start();
-	//		}
-	//		break;
-	//
-	//	default:
-	//		break;
-	//}
 	return true;
 }
 

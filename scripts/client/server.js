@@ -57,6 +57,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.weaponDamageEvent", setPlayerWeaponDamageEvent);
     addNetworkHandler("vrr.spawned", onServerSpawnedPlayer);
     addNetworkHandler("vrr.money", setLocalPlayerCash);
+    addNetworkHandler("vrr.armour", setLocalPlayerArmour);
 
     addNetworkHandler("vrr.excludeGroundSnow", excludeModelFromGroundSnow);
     addNetworkHandler("vrr.removeWorldObject", removeWorldObject);
@@ -89,6 +90,10 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.syncElement", forceSyncElementProperties);
     addNetworkHandler("vrr.elementPosition", setElementPosition);
     addNetworkHandler("vrr.elementCollisions", setElementCollisionsEnabled);
+
+    addNetworkHandler("vrr.showRegistration", showRegistrationGUI);
+    addNetworkHandler("vrr.showNewCharacter", showNewCharacterGUI);
+    addNetworkHandler("vrr.showLogin", showLoginGUI);
 }
 
 // ===========================================================================
@@ -332,6 +337,12 @@ function setLocalPlayerPedPartsAndProps(parts, props) {
         localPlayer.changeBodyPart(parts[0], parts[1], parts[2]);
         localPlayer.changeBodyProp(props[0], props[1]);
     }
+}
+
+// ===========================================================================
+
+function setLocalPlayerArmour(armour) {
+    localPlayer.armour = armour;
 }
 
 // ===========================================================================

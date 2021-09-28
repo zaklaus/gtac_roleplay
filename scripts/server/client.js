@@ -29,6 +29,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.afk", playerChangeAFKState);
 
     // Event
+    addNetworkHandler("vrr.pickup", onPlayerNearPickup);
     addNetworkHandler("vrr.enteredSphere", onPlayerEnteredSphere);
     addNetworkHandler("vrr.exitedSphere", onPlayerExitedSphere);
     addNetworkHandler("vrr.playerDeath", onPlayerDeath);
@@ -941,20 +942,24 @@ function makePedPlayAnimation(ped, animationSlot, positionOffset) {
         setElementCollisionsEnabled(ped, false);
         switch(animationData[9]) {
             case VRR_ANIMMOVE_FORWARD:
-                setElementPosition(ped, getPosInFrontOfPos(getElementPosition(ped), getElementHeading(ped), positionOffset));
+                setElementPosition(ped, getPosInFrontOfPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
                 break;
 
             case VRR_ANIMMOVE_BACK:
-                setElementPosition(ped, getPosBehindPos(getElementPosition(ped), getElementHeading(ped), positionOffset));
+                setElementPosition(ped, getPosBehindPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
                 break;
 
             case VRR_ANIMMOVE_LEFT:
-                setElementPosition(ped, getPosToLeftOfPos(getElementPosition(ped), getElementHeading(ped), positionOffset));
+                setElementPosition(ped, getPosToLeftOfPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
                 break;
 
             case VRR_ANIMMOVE_RIGHT:
-                setElementPosition(ped, getPosToRightOfPos(getElementPosition(ped), getElementHeading(ped), positionOffset));
+                setElementPosition(ped, getPosToRightOfPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
                 break;
+        }
+
+        if(getGame() < GAME_GTA_SA) {
+            setPlayerMouseCameraState(client, true);
         }
     }
     triggerNetworkEvent("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4], animationData[5], positionOffset);
@@ -1016,6 +1021,19 @@ function forcePlayerToSyncElementProperties(client, element) {
 
 function sendPlayerPedPartsAndProps(client) {
     triggerNetworkEvent("vrr.ped")
+}
+
+// ===========================================================================
+
+function setPlayerVanillaRadioStation(client, radioStationId) {
+    triggerNetworkEvent("vrr.vanillaRadio", client, radioStationId);
+    return true;
+}
+
+// ===========================================================================
+
+function onPlayerNearPickup(client, pickupId) {
+    getPlayerData(client).currentPickup = getElementFromId(pickupId);
 }
 
 // ===========================================================================

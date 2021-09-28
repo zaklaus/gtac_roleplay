@@ -89,19 +89,52 @@ function getDiscordUserData(discordUserId) {
 // ===========================================================================
 
 function messageDiscordChatChannel(message) {
-    let gameEmoji = getGameEmojiForDiscord(getServerGame());
+    if(!getServerConfig().discordConfig.sendChat) {
+        return false;
+    }
+
+    message = removeColoursInMessage(message);
+    console.warn(message);
+    let payloadData = {
+        "username": "Chat",
+        "content": message,
+    };
+
+    triggerWebHook(getServerConfig().discordConfig.chatChannelWebHookURL, JSON.stringify(payloadData));
 }
 
 // ===========================================================================
 
 function messageDiscordAdminChannel(message) {
-    let gameEmoji = getGameEmojiForDiscord(getServerGame());
+    if(!getServerConfig().discordConfig.sendAdminEvents) {
+        return false;
+    }
+
+    message = removeColoursInMessage(message);
+    console.warn(message);
+    let payloadData = {
+        "username": "Admin Event",
+        "content": message,
+    };
+
+    triggerWebHook(getServerConfig().discordConfig.adminChannelWebHookURL, JSON.stringify(payloadData));
 }
 
 // ===========================================================================
 
 function messageDiscordEventChannel(message) {
-    let gameEmoji = getGameEmojiForDiscord(getServerGame());
+    if(!getServerConfig().discordConfig.sendEvents) {
+        return false;
+    }
+
+    message = removeColoursInMessage(message);
+    console.warn(message);
+    let payloadData = {
+        "username": "Event",
+        "content": message,
+    };
+
+    triggerWebHook(getServerConfig().discordConfig.eventChannelWebHookURL, JSON.stringify(payloadData));
 }
 
 // ===========================================================================

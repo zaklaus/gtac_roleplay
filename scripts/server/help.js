@@ -254,7 +254,7 @@ function showWebsiteHelpMessage(client) {
 
 function showDiscordHelpMessage(client) {
     messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Discord ${getInlineChatColourByType("clanOrange")}=============================`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Discord coming soon!`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}https://discord.gg/hA8GSdYyw6`);
 }
 
 // ===========================================================================

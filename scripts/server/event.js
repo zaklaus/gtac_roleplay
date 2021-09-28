@@ -49,6 +49,8 @@ function onPlayerJoin(event, client) {
     if(isFadeCameraSupported()) {
         fadeCamera(client, true, 1.0);
     }
+
+    messageDiscordEventChannel(`:waving: ${getPlayerDisplayForConsole(client)} has joined the server.`);
 }
 
 // ===========================================================================
@@ -76,6 +78,8 @@ function onPlayerQuit(event, client, quitReasonId) {
         resetClientStuff(client);
         getServerData().clients[client.index] = null;
     }
+
+    messageDiscordEventChannel(`${getPlayerDisplayForConsole(client)} has left the server.`);
 }
 
 // ===========================================================================
@@ -104,8 +108,8 @@ function onPlayerChat(event, client, messageText) {
     }
 
     messageText = messageText.substring(0, 128);
-
-    messagePlayerNormal(null, `${getInlineChatColourByName("white")}💬 [${hexFromToColour(getPlayerColour(client))}]${getCharacterFullName(client)}: ${getInlineChatColourByName("white")}${messageText}`, getPlayerColour(client));
+    messagePlayerNormal(null, replaceColoursInMessage(`${getInlineChatColourByName("white")}💬 [${hexFromToColour(getPlayerColour(client))}]${getCharacterFullName(client)}: ${getInlineChatColourByName("white")}${messageText}`), getPlayerColour(client));
+    messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
 }
 
 // ===========================================================================
@@ -260,7 +264,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
                 ownerType = toLowerCase(getVehicleOwnerTypeText(getVehicleData(vehicle).ownerType));
                 switch(getVehicleData(vehicle).ownerType) {
                     case VRR_VEHOWNER_CLAN:
-                        ownerName = getClanData(getVehicleData(vehicle).ownerId).name;
+                        ownerName = getClanData(getClanIdFromDatabaseId(getVehicleData(vehicle).ownerId)).name;
                         ownerType = "clan";
                         break;
 
@@ -365,7 +369,7 @@ function onPlayerDeath(client, position) {
 		setTimeout(function() {
 			if(getPlayerCurrentSubAccount(client).inJail) {
                 let closestJail = getClosestJail(getPlayerPosition(client));
-                //client.despawnPlayer();
+                client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestJail.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
                 if(getServerGame() == GAME_GTA_IV) {
@@ -380,7 +384,7 @@ function onPlayerDeath(client, position) {
                 updatePlayerSpawnedState(client, true);
 			} else {
                 let closestHospital = getClosestHospital(getPlayerPosition(client));
-                //client.despawnPlayer();
+                client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
                 if(getServerGame() == GAME_GTA_IV) {
@@ -566,16 +570,6 @@ function onPlayerSpawn(client) {
         updatePlayerCash(client);
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
-
-        if(getPlayerCurrentSubAccount(client).inBusiness > 0) {
-            setEntityData(client.player, "vrr.inBusiness", getBusinessIdFromDatabaseId(getPlayerCurrentSubAccount(client).inBusiness), true);
-        }
-
-        if(getPlayerCurrentSubAccount(client).inHouse > 0) {
-            setEntityData(client.player, "vrr.inHouse", getHouseIdFromDatabaseId(getPlayerCurrentSubAccount(client).inHouse), true);
-        }
-
-
     //}
 }
 

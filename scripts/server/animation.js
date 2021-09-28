@@ -40,8 +40,8 @@ function playPlayerAnimationCommand(command, params, client) {
 	getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
     getPlayerData(client).animationStart = getCurrentUnixTimestamp();
 	//setEntityData(getPlayerData(client).ped, "vrr.animation", animationSlot, true);
+	messagePlayerTip(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/stopanim ${getInlineChatColourByName("white")}to stop your animation`);
     makePedPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
-	setPlayerMouseCameraState(client, true);
 }
 
 // ===========================================================================

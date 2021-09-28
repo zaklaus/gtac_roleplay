@@ -1109,7 +1109,7 @@ function getPluralForm(name) {
 
 // ===========================================================================
 
-function removeColoursFromString(str) {
+function removeHexColoursFromString(str) {
 	let matchRegex = /#([a-f0-9]{3}|[a-f0-9]{4}(?:[a-f0-9]{2}){0,2})\b/gi;
 	let matchedHexes = str.match(matchRegex);
 	for(let i in matchHex) {
@@ -1144,6 +1144,8 @@ function showConnectCameraToPlayer(client) {
 	}
 
 	if(isCustomCameraSupported()) {
+		//setPlayerInterior(client, 0);
+		//setPlayerDimension(client, 0);
 		setPlayerCameraLookAt(client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
 	}
 }
@@ -1588,3 +1590,30 @@ function getClientFromSyncerId(syncerId) {
 }
 
 // ===========================================================================
+
+function fixAngle(angle) {
+	angle = radToDeg(angle);
+	if(angle < 0)
+	{
+		angle = Math.abs(angle);
+		angle = ((180-angle+1)+180);
+	}
+	return degToRad(angle);
+}
+
+// ===========================================================================
+
+async function triggerWebHook(webHookURL, payloadData) {
+	return new Promise(resolve => {
+		//console.warn(webHookURL);
+		httpGet(
+			webHookURL,
+			`data=${payloadData}`,
+			function(data) {
+				//console.warn(JSON.parse(data));
+			},
+			function(data) {
+			}
+		);
+	});
+}

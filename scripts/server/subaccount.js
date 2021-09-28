@@ -201,7 +201,7 @@ function createSubAccount(accountId, firstName, lastName) {
 		let safeFirstName = escapeDatabaseString(dbConnection, firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, lastName);
 
-		dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_rot_z, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, UNIX_TIMESTAMP(), 0)`);
+		dbQuery = queryDatabase(dbConnection, `INSERT INTO sacct_main (sacct_acct, sacct_name_first, sacct_name_last, sacct_pos_x, sacct_pos_y, sacct_pos_z, sacct_rot_z, sacct_cash, sacct_server, sacct_health, sacct_when_made, sacct_when_lastlogin) VALUES (${accountId}, '${safeFirstName}', '${safeLastName}', ${getServerConfig().newCharacter.spawnPosition.x}, ${getServerConfig().newCharacter.spawnPosition.y}, ${getServerConfig().newCharacter.spawnPosition.z}, ${getServerConfig().newCharacter.spawnHeading}, ${getServerConfig().newCharacter.money}, ${getServerId()}, 100, CURRENT_TIMESTAMP(), 0)`);
 		//if(dbQuery) {
 			if(getDatabaseInsertId(dbConnection) > 0) {
 				let dbInsertId = getDatabaseInsertId(dbConnection);
@@ -250,7 +250,7 @@ function showCharacterSelectToClient(client) {
 		messagePlayerNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
 		getPlayerData(client).subAccounts.forEach(function(subAccount, index) {
 			let tempSubAccount = getPlayerData(client).subAccounts[0];
-			let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
+			let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 			let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
 			messagePlayerNormal(client, `${index+1} • [#BBBBBB]${subAccount.firstName} ${subAccount.lastName} ($${tempSubAccount.cash}, ${lastPlayedText})`);
 		});
@@ -320,7 +320,7 @@ function checkPreviousCharacter(client) {
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 
-		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
+		let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 
@@ -341,7 +341,7 @@ function checkNextCharacter(client) {
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 
-		let clanName = (tempSubAccount.clan != 0) ? getClanData(tempSubAccount.clan).name : "None";
+		let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
 		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
 

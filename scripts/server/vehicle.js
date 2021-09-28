@@ -452,7 +452,7 @@ function vehicleColourCommand(command, params, client) {
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getGlobalConfig().resprayVehicleCost) {
-		messagePlayerError(client, `You don't have enough money to respray the vehicle (need $${getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash} more!)`);
+		messagePlayerError(client, `You don't have enough money to respray the vehicle (need $${makeLargeNumberReadable(getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash)} more!)`);
 		return false;
 	}
 
@@ -495,7 +495,7 @@ function vehicleRepairCommand(command, params, client) {
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getGlobalConfig().repairVehicleCost) {
-		messagePlayerError(client, `You don't have enough money to repair the vehicle (need $${getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash} more!)`);
+		messagePlayerError(client, `You don't have enough money to repair the vehicle (need $${makeLargeNumberReadable(getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash)} more!)`);
 		return false;
 	}
 
@@ -530,7 +530,7 @@ function vehicleLiveryCommand(command, params, client) {
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getGlobalConfig().repairVehicleCost) {
-		messagePlayerError(client, `You don't have enough money to change the vehicle's livery (need $${getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash} more!)`);
+		messagePlayerError(client, `You don't have enough money to change the vehicle's livery (need $${makeLargeNumberReadable(getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash)} more!)`);
 		return false;
 	}
 
@@ -571,7 +571,7 @@ function buyVehicleCommand(command, params, client) {
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getVehicleData(vehicle).buyPrice) {
-		messagePlayerError(client, `You don't have enough money to buy this vehicle (need $${getVehicleData(vehicle).buyPrice-getPlayerCurrentSubAccount(client).cash} more!)`);
+		messagePlayerError(client, `You don't have enough money to buy this vehicle (need $${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice-getPlayerCurrentSubAccount(client).cash)} more!)`);
 		return false;
 	}
 
@@ -632,7 +632,7 @@ function rentVehicleCommand(command, params, client) {
 	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `rents the ${getVehicleName(vehicle)} and receives a set of vehicle keys!`);
-	messagePlayerAlert(client, `You will be charged $${getVehicleData(vehicle).rentPrice} per minute to use this vehicle. To stop renting this vehicle, use /vehrent again.`);
+	messagePlayerAlert(client, `You will be charged $${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute to use this vehicle. To stop renting this vehicle, use /vehrent again.`);
 
 	if(!getVehicleData(vehicle).engine) {
 		if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
@@ -913,7 +913,7 @@ function setVehicleRentPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).rentPrice = amount;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rent price to ${getInlineChatColourByName("lightGrey")}$${amount}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)} ${getInlineChatColourByName("white")}rent price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
 
 	getVehicleData(vehicle).needsSaved = true;
 }
@@ -938,7 +938,7 @@ function setVehicleBuyPriceCommand(command, params, client) {
 
 	getVehicleData(vehicle).buyPrice = amount;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}'s ${getInlineChatColourByName("white")}buy price to ${getInlineChatColourByName("lightGrey")}$${amount}`);
+	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set their ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}'s ${getInlineChatColourByName("white")}buy price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
 
 	getVehicleData(vehicle).needsSaved = true;
 }

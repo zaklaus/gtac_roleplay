@@ -19,39 +19,38 @@ function messageAdminAction(messageText) {
     if(getServerConfig().discordEnabled) {
         messageDiscord(`:warning: ${messageText}`);
     }
-    //logToConsole(LOG_INFO, `[VRR.Messaging] ADMIN: ${messageText}`);
 }
 
 // ===========================================================================
 
 function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
     if(isConsole(client)) {
+        console.log(messageText);
         logToConsole(LOG_INFO, `[VRR.Messaging] ${messageText}`);
         return true;
     }
 
-    sendChatBoxMessageToPlayer(client, `${messageText}`, colour);
-
-    //if(!isClientFromDiscord(client)) {
-    //
-    //} else {
-    //    messageDiscordUser(client, `${messageText}`);
-    //}
+    sendChatBoxMessageToPlayer(client, `${replaceColoursInMessage(messageText)}`, colour);
 }
 
 // ===========================================================================
 
 function messageAdmins(messageText, colour = COLOUR_WHITE) {
+     let plainMessage = removeColoursInMessage(messageText);
+
     let clients = getClients();
     for(let i in clients) {
         if(isConsole(clients[i])) {
-            logToConsole(LOG_INFO, `[VRR.Messaging] ADMINS: ${messageText}`);
+            logToConsole(LOG_INFO, `[VRR.Messaging] ADMINS: ${plainMessage}`);
         } else {
             if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
-                sendChatBoxMessageToPlayer(clients[i], `🛡️ ${messageText}`, getColourByName("softRed"));
+                messagePlayerNormal(clients[i], `🛡️ ${messageText}`, getColourByName("softRed"));
             }
         }
+    }
 
+    if(getServerConfig().discordConfig.sendAdminEvents) {
+        messageDiscordAdminChannel(plainMessage);
     }
 }
 

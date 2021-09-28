@@ -55,6 +55,8 @@ let calledDeathEvent = false;
 let interiorLightsEnabled = true;
 let interiorLightsColour = toColour(0, 0, 0, 150);
 
-let mouseCameraEnabled = false
+let mouseCameraEnabled = false;
+
+let currentPickup = false;
 
 // ===========================================================================

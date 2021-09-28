@@ -40,14 +40,15 @@ function loadCommands() {
         account: [
             commandData("login", loginCommand, "<password>", getStaffFlagValue("none"), false, false, "Login to an account"),
             commandData("register", registerCommand, "<password>", getStaffFlagValue("none"), false, false, "Creates an account"),
-            commandData("changepass", changePasswordCommand, "<password>", getStaffFlagValue("none"), true, false, "Change an account password"),
+            commandData("changepass", changePasswordCommand, "<old password> <new password>", getStaffFlagValue("none"), true, false, "Change an account password"),
             commandData("iplogin", autoLoginByIPCommand, "", getStaffFlagValue("none"), true, false, "Toggle whether to automatically login if you join with the same IP as your last join"),
             commandData("autolastchar", autoSelectLastCharacterCommand, "", getStaffFlagValue("none"), true, false, "Toggle whether to automatically spawn with the last character you played as"),
             commandData("gui", toggleAccountGUICommand, "", getStaffFlagValue("none"), false, false, "Toggle whether to use GUI. If GUI is disabled on the server, it won't show even if you have GUI enabled."),
             commandData("2fa", toggleAccountTwoFactorAuthCommand, "", getStaffFlagValue("none"), true, false, "Set up and use two-factor authentication."),
             commandData("setemail", setAccountEmailCommand, "<email address>", getStaffFlagValue("none"), true, false, "Sets your email. To reset your password, you must have a valid email set and verified."),
             commandData("verifyemail", verifyAccountEmailCommand, "<verification code>", getStaffFlagValue("none"), true, false, "Confirms/verifies your email."),
-            commandData("setdiscord", setAccountDiscordCommand, "<Name#0000 - discord name and id>", getStaffFlagValue("none"), true, false, "Set up the integration for discord. Allows you to see info and use in-game commands on discord."),
+            //commandData("setdiscord", setAccountDiscordCommand, "<discord id>", getStaffFlagValue("none"), true, false, "Set up the integration for discord. Allows you to see info and use in-game commands on discord."),
+            commandData("notips", toggleNoRandomTipsCommand, "", getStaffFlagValue("none"), true, false, "Turn on and off random tips"),
         ],
         ammunation: [],
         animation: [
@@ -109,6 +110,7 @@ function loadCommands() {
             commandData("bizdefaultitems", giveDefaultItemsToBusinessCommand, "<item template>", getStaffFlagValue("manageItems"), true, true, "Gives the business the default items based on template name"),
             commandData("bizdelflooritems", deleteBusinessFloorItemsCommand, "", getStaffFlagValue("manageItems"), true, true, "Destroys all items on the business floor (for-sale items)"),
             commandData("bizdelstorageitems", deleteBusinessStorageItemsCommand, "", getStaffFlagValue("manageItems"), true, true, "Destroys all items in the business's storage"),
+            commandData("bizdealership", setBusinessEntranceLabelToDealershipCommand, "", getStaffFlagValue("manageBusinesses"), true, true, "Sets the business's door label to vehicle dealership"),
         ],
         chat: [
             commandData("me", meActionCommand, "<message>", getStaffFlagValue("none"), true, false, "Shows a custom action message in chat"),
@@ -130,6 +132,7 @@ function loadCommands() {
         clan: [
             commandData("clans", listClansCommand, "[search text]", getStaffFlagValue("none"), true, true, "List clans (search by partial name, if provided)"),
             commandData("clanranks", listClanRanksCommand, "[clan name]", getStaffFlagValue("none"), true, true, "Shows a list of a clan's ranks"),
+            commandData("clanflags", showClanFlagListCommand, "", getStaffFlagValue("none"), true, true, "Shows a list of clan permission flags"),
 
             commandData("addclan", createClanCommand, "<name>", getStaffFlagValue("manageClans"), true, true, "Creates an new empty, unowned clan."),
             commandData("delclan", deleteClanCommand, "<clan id>", getStaffFlagValue("manageClans"), true, true, "Deletes a clan by ID or name"),
@@ -147,6 +150,7 @@ function loadCommands() {
             commandData("clanmembertitle", setClanMemberTitleCommand, "<player name/id> <title>", getStaffFlagValue("none"), true, true, "Sets a clan members's custom title"),
             commandData("clanaddrankflag", addClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true, "Gives a clan rank a clan permission."),
             commandData("clandelrankflag", removeClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true, "Takes a clan permission from a clan rank"),
+            //commandData("clanrankflags", listClanRankFlagsCommand, "<rank name/id>", getStaffFlagValue("none"), true, true, "Shows a list of a clan rank's current permission flags"),
             commandData("clanaddmemberflag", addClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true, "Gives a clan member a clan permission"),
             commandData("clandelmemberflag", removeClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true, "Takes a clan permission from a clan member"),
         ],
@@ -192,6 +196,8 @@ function loadCommands() {
             commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
 
             commandData("nosave", togglePauseSavingToDatabase, "", getStaffFlagValue("developer"), true, true),
+
+            //commandData("forceresetpass", forceAccountPasswordResetCommand, "<account name>", getStaffFlagValue("developer"), true, true),
             //commandData("loglvl", getServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],

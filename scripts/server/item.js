@@ -107,9 +107,8 @@ function createGroundItemObject(itemId) {
 	setElementRotation(getItemData(itemId).object, getItemTypeData(getItemData(itemId).itemTypeIndex).dropRotation);
 	setElementOnAllDimensions(getItemData(itemId).object, false);
 	setElementDimension(getItemData(itemId).object, getItemData(itemId).dimension);
-	//setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
+	setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
 	addToWorld(getItemData(itemId).object);
-	//setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
 
 	getServerData().groundItemCache.push(itemId);
 }
@@ -208,6 +207,11 @@ function useItemCommand(command, params, client) {
 		return false;
 	}
 
+	if(getPlayerData(client).usingSkinSelect) {
+		messagePlayerError(client, `Your can't use an item while customizing your appearance`);
+		return false;
+	}
+
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_USE;
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	showPlayerItemUseDelay(client, hotBarSlot);
@@ -272,6 +276,11 @@ function pickupItemCommand(command, params, client) {
 		return false;
 	}
 
+	if(getPlayerData(client).usingSkinSelect) {
+		messagePlayerError(client, `Your can't pick up an item while customizing your appearance`);
+		return false;
+	}
+
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_PICKUP;
 	getPlayerData(client).itemActionItem = itemId;
 	showPlayerItemPickupDelay(client, itemId);
@@ -317,6 +326,11 @@ function dropItemCommand(command, params, client) {
 		return false;
 	}
 
+	if(getPlayerData(client).usingSkinSelect) {
+		messagePlayerError(client, `Your can't drop an item while customizing your appearance`);
+		return false;
+	}
+
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_DROP;
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	showPlayerItemDropDelay(client, hotBarSlot);
@@ -350,6 +364,11 @@ function putItemCommand(command, params, client) {
 		return false;
 	}
 
+	if(getPlayerData(client).usingSkinSelect) {
+		messagePlayerError(client, `Your can't store an item while customizing your appearance`);
+		return false;
+	}
+
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_PUT;
 	showPlayerItemPutDelay(client, hotBarSlot);
@@ -380,6 +399,11 @@ function takeItemCommand(command, params, client) {
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
 		messagePlayerError(client, `Your hands are busy.`);
+		return false;
+	}
+
+	if(getPlayerData(client).usingSkinSelect) {
+		messagePlayerError(client, `Your can't take an item while customizing your appearance`);
 		return false;
 	}
 
@@ -627,6 +651,11 @@ function playerUseItem(client, hotBarSlot) {
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				meActionToNearbyPlayers(client, `takes their repair kit and fixes the vehicle`);
 				repairVehicle(vehicle);
+
+				getItemData(itemIndex).value = getItemData(itemIndex).value - getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+				if(getItemData(itemIndex).value == 0) {
+					destroyItem(itemIndex);
+				}
 			}
 			break;
 
@@ -916,11 +945,16 @@ function playerSwitchHotBarSlotCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).activeHotBarSlot == hotBarSlot) {
-		return false;
+		hotBarSlot = -1;
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
 		messagePlayerError(client, `Your hands are busy.`);
+		return false;
+	}
+
+	if(getPlayerData(client).usingSkinSelect) {
+		messagePlayerError(client, `Your can't switch items while customizing your appearance`);
 		return false;
 	}
 

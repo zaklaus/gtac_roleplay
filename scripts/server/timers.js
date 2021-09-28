@@ -81,15 +81,32 @@ function saveAllServerDataToDatabase() {
 
 function initTimers() {
 	//if(!isDevelopmentServer()) {
-		serverTimers.saveDataIntervalTimer = setInterval(saveAllServerDataToDatabase, 600000);
-		//serverTimers.updateTimeRuleTimer = setInterval(updateTimeRule, 60000);
 		serverTimers.updatePingsTimer = setInterval(updatePings, 5000);
-		serverTimers.vehicleRentTimer = setInterval(vehicleRentCheck, 60000);
-		serverTimers.garbageCollectorTimer = setInterval(collectAllGarbage, 60000);
-		serverTimers.payDayTimer = setInterval(checkPayDays, 1800000);
-		serverTimers.randomTipTimer = setInterval(showRandomTipToAllPlayers, 600000);
-		serverTimers.gameTime = setInterval(checkServerGameTime, 60000);
+		serverTimers.oneMinuteTimer = setInterval(oneMinuteTimerFunction, 60000);
+		serverTimers.fifteenMinuteTimer = setInterval(tenMinuteTimerFunction, 600000);
+		serverTimers.thirtyMinuteTimer = setInterval(thirtyMinuteTimerFunction, 1800000);
 	//}
+}
+
+// ===========================================================================
+
+function oneMinuteTimerFunction() {
+	checkServerGameTime();
+	vehicleRentCheck();
+	collectAllGarbage();
+}
+
+// ===========================================================================
+
+function tenMinuteTimerFunction() {
+	showRandomTipToAllPlayers();
+	saveAllServerDataToDatabase();
+}
+
+// ===========================================================================
+
+function thirtyMinuteTimerFunction() {
+	checkPayDays();
 }
 
 // ===========================================================================

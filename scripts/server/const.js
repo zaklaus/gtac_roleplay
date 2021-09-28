@@ -31,7 +31,7 @@ const VRR_PICKUP_BUSINESS_ENTRANCE = 2;
 const VRR_PICKUP_BUSINESS_EXIT = 3;
 const VRR_PICKUP_HOUSE_ENTRANCE = 4;
 const VRR_PICKUP_HOUSE_EXIT = 5;
-const VRR_PICKUP_EXIT = 5;
+const VRR_PICKUP_EXIT = 6;
 
 // Vehicle Owner Types
 const VRR_VEHOWNER_NONE = 0;                     // Not owned

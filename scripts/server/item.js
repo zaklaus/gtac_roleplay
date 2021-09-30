@@ -1298,6 +1298,7 @@ function saveItemToDatabase(itemId) {
 			["item_vw", tempItemData.dimension],
 			["item_buy_price", tempItemData.buyPrice],
 			["item_enabled", tempItemData.enabled],
+			["item_value", tempItemData.value],
 		];
 
 		let dbQuery = null;

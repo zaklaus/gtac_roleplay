@@ -129,6 +129,8 @@
 	<script src="scripts/client/logo.js" type="client" language="javascript" />
 	<script src="scripts/client/afk.js" type="client" language="javascript" />
 	<script src="scripts/client/mousecam.js" type="client" language="javascript" />
+	<script src="scripts/client/radio.js" type="client" language="javascript" />
+	<script src="scripts/client/animation.js" type="client" language="javascript" />
 
 	<!-- Startup -->
 	<script src="scripts/server/startup.js" type="server" language="javascript" />

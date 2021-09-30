@@ -1107,7 +1107,7 @@ function reloadAllVehiclesCommand(command, params, client) {
 
 function respawnAllVehiclesCommand(command, params, client) {
 	for(let i in getServerData().vehicles) {
-		respawnVehicle(getServerData().vehicles[i]);
+		respawnVehicle(getServerData().vehicles[i].vehicle);
 	}
 
 	//spawnAllVehicles();

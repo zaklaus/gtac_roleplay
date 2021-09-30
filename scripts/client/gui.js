@@ -422,3 +422,10 @@ addNetworkHandler("vrr.guiInit", function() {
 });
 
 // ===========================================================================
+
+function hideAllGUI() {
+    closeAllWindows();
+    setChatWindowEnabled(true);
+}
+
+// ===========================================================================

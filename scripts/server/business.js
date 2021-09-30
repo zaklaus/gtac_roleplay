@@ -1752,7 +1752,7 @@ function updateBusinessPickupLabelData(businessId) {
 		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.name", getBusinessData(businessId).name, true);
 		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
 		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_NONE, true);
-		if(getBusinessData(businessId).labelHelpType == VRR_BIZLABEL_ENTERVEHICLE) {
+		if(getBusinessData(businessId).labelHelpType == VRR_BIZLABEL_INFO_ENTERVEHICLE) {
 			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_ENTERVEHICLE, true);
 		} else if(getBusinessData(businessId).labelHelpType == VRR_BIZLABEL_INFO_REFUEL) {
 			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_REFUEL, true);

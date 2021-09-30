@@ -339,6 +339,13 @@ function setLocalPlayerInterior(interior) {
             gta.cameraInterior = interior;
         }
     }
+
+    let vehicles = getElementsByType(ELEMENT_VEHICLE);
+    for(let i in vehicles) {
+        if(getEntityData(vehicles[i], "vrr.interior")) {
+            vehicles[i].interior = getEntityData(vehicles[i], "vrr.interior");
+        }
+    }
 }
 
 // ===========================================================================

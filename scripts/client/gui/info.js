@@ -1,3 +1,12 @@
+// ===========================================================================
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
+// ===========================================================================
+// FILE: info.js
+// DESC: Provides info dialog box GUI
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
 let infoDialog = {
 	window: null,
 	messageLabel: null,

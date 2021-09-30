@@ -1,3 +1,13 @@
+// ===========================================================================
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
+// ===========================================================================
+// FILE: yesno.js
+// DESC: Provides yes/no prompt dialog GUI
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
+
 let yesNoDialog = {
 	window: null,
 	messageLabel: null,

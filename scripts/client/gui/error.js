@@ -1,3 +1,12 @@
+// ===========================================================================
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
+// ===========================================================================
+// FILE: error.js
+// DESC: Provides error box GUI
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
 let errorDialog = {
 	window: null,
 	messageLabel: null,

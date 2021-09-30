@@ -1,3 +1,12 @@
+// ===========================================================================
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
+// ===========================================================================
+// FILE: newchar.js
+// DESC: Provides new character creation GUI
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
 let newCharacter = {
 	window: null,
 	firstNameInput: null,

@@ -1,3 +1,12 @@
+// ===========================================================================
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
+// ===========================================================================
+// FILE: login.js
+// DESC: Provides login GUI
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
 let login = {
 	window: null,
 	logoImage: null,

@@ -1,3 +1,12 @@
+// ===========================================================================
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
+// ===========================================================================
+// FILE: register.js
+// DESC: Provides account registration GUI
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
 let register = {
 	window: null,
 	logoImage: null,

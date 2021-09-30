@@ -1,3 +1,12 @@
+// ===========================================================================
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
+// ===========================================================================
+// FILE: charselect.js
+// DESC: Provides character select GUI
+// TYPE: Client (JavaScript)
+// ===========================================================================
+
 let characterSelect = {
 	window: null,
 	skinImage: null,

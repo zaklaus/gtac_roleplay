@@ -4554,7 +4554,7 @@ function takePlayerCash(client, amount) {
 		return false;
 	}
 
-    if(isNan(amount)) {
+    if(isNaN(amount)) {
         return false;
     }
 

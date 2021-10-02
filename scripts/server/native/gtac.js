@@ -3027,7 +3027,7 @@ let gameData = {
 			["cower", 0, 162, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["fucku", 0, 163, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["phone", 0, 166, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
-			["sit", 0, 169, VRR_ANIMTYPE_BLEND, 1.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+			["sit", 0, 169, VRR_ANIMTYPE_ADD, 1.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["atm", 0, 171, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["cpr", 24, 214, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["idle1", 26, 215, VRR_ANIMTYPE_ADD, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],

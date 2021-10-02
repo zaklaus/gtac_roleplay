@@ -1337,7 +1337,7 @@ function getPosBehindPos(pos, angle, distance) {
 	let y = (pos.y+((Math.sin(angle-(Math.PI/2)))*distance));
 	let z = pos.z;
 
-	return toVector3(x,y,z);
+	return toVector3(x, y, z);
 }
 
 // ===========================================================================
@@ -1617,3 +1617,5 @@ async function triggerWebHook(webHookURL, payloadData) {
 		);
 	});
 }
+
+// ===========================================================================

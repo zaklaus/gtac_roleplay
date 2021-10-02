@@ -1479,6 +1479,11 @@ function deleteItemInPlayerInventoryCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[0]);
 	let hotBarSlot = splitParams[1];
 
+	if(!targetClient) {
+		messagePlayerError(client, `Player not found!`);
+		return false;
+	}
+
 	if(isNaN(hotBarSlot)) {
 		messagePlayerError(client, `The item slot must be a number!`);
 		return false;
@@ -1489,19 +1494,19 @@ function deleteItemInPlayerInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	if(getPlayerData(client).hotBarItems[hotBarSlot-1] == -1) {
-		messagePlayerError(client, `${getCharacterFullName(client)} doesn't have anything in that slot!`);
+	if(getPlayerData(targetClient).hotBarItems[hotBarSlot-1] == -1) {
+		messagePlayerError(client, `${getCharacterFullName(targetClient)} doesn't have anything in that slot!`);
 		return false;
 	}
 
-	if(getItemData(getPlayerData(client).hotBarItems[hotBarSlot-1])) {
-		messagePlayerError(client, `${getCharacterFullName(client)} doesn't have anything in that slot!`);
+	if(!getItemData(getPlayerData(targetClient).hotBarItems[hotBarSlot-1])) {
+		messagePlayerError(client, `${getCharacterFullName(targetClient)} doesn't have anything in that slot!`);
 		return false;
 	}
 
-	let tempName = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[hotBarSlot-1]).itemTypeIndex).name
-	deleteItem(getPlayerData(client).hotBarItems[hotBarSlot-1]);
-	messagePlayerSuccess(client, `You deleted the ${getInlineChatColourByName("lightGrey")}${tempName} ${getInlineChatColourByName("white")}item in ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)}'s ${getInlineChatColourByName("white")}inventory`);
+	let tempName = getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[hotBarSlot-1]).itemTypeIndex).name
+	deleteItem(getPlayerData(targetClient).hotBarItems[hotBarSlot-1]);
+	messagePlayerSuccess(client, `You deleted the ${getInlineChatColourByName("lightGrey")}${tempName} ${getInlineChatColourByName("white")}item in ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}'s ${getInlineChatColourByName("white")}inventory`);
 }
 
 // ===========================================================================

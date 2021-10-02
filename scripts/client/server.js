@@ -210,24 +210,40 @@ function updateInteriorLightsState(state) {
 // ===========================================================================
 
 function forceSyncElementProperties(elementId) {
+    if(getElementFromId(elementId) == null) {
+        return false;
+    }
+
     syncElementProperties(getElementFromId(elementId));
 }
 
 // ===========================================================================
 
 function setElementPosition(elementId, position) {
+    if(getElementFromId(elementId) == null) {
+        return false;
+    }
+
     getElementFromId(elementId).position = position;
 }
 
 // ===========================================================================
 
 function setElementCollisionsEnabled(elementId, state) {
+    if(getElementFromId(elementId) == null) {
+        return false;
+    }
+
     getElementFromId(elementId).collisionsEnabled = state;
 }
 
 // ===========================================================================
 
 function makePedStopAnimation(pedId) {
+    if(getElementFromId(pedId) == null) {
+        return false;
+    }
+
     if(getGame() == GAME_GTA_VC || getGame() == GAME_GTA_SA) {
         getElementFromId(pedId).clearAnimations();
     } else {

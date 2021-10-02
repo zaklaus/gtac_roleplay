@@ -42,6 +42,12 @@ function playPlayerAnimationCommand(command, params, client) {
 	//setEntityData(getPlayerData(client).ped, "vrr.animation", animationSlot, true);
 	messagePlayerTip(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/stopanim ${getInlineChatColourByName("white")}to stop your animation`);
     makePedPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
+
+	if(getAnimationData(animationSlot)[9] != VRR_ANIMMOVE_NONE) {
+		if(getGame() < GAME_GTA_SA) {
+			setPlayerMouseCameraState(client, true);
+		}
+	}
 }
 
 // ===========================================================================

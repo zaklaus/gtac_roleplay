@@ -196,6 +196,8 @@ function loadCommands() {
             commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
 
             commandData("nosave", togglePauseSavingToDatabase, "", getStaffFlagValue("developer"), true, true),
+            commandData("streamradioall", streamAudioURLToAllPlayersCommand, "<url> <volume>", getStaffFlagValue("developer"), true, true),
+            commandData("rumble", streamEventStartToAllPlayersCommand, "<volume>", getStaffFlagValue("developer"), true, true),
 
             //commandData("forceresetpass", forceAccountPasswordResetCommand, "<account name>", getStaffFlagValue("developer"), true, true),
             //commandData("loglvl", getServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
@@ -403,8 +405,9 @@ function loadCommands() {
             commandData("lights", vehicleLightsCommand, "", getStaffFlagValue("none"), true, false),
 
             commandData("vehowner", setVehicleOwnerCommand, "<player id/name>", getStaffFlagValue("manageVehicles"), true, true),
-            commandData("vehclan", setVehicleClanCommand, "<clan id/name>", getStaffFlagValue("manageVehicles"), true, true),
-            commandData("vehbiz", setVehicleToBusinessCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehpublic", setVehiclePublicCommand, "", getStaffFlagValue("manageVehicles"), true, true),
+            commandData("vehclan", setVehicleClanCommand, "<clan id/name>", getStaffFlagValue(""), true, true),
+            commandData("vehbiz", setVehicleToBusinessCommand, "", getStaffFlagValue(""), true, true),
             commandData("vehjob", setVehicleJobCommand, "[job id/name]", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehdelowner", removeVehicleOwnerCommand, "", getStaffFlagValue("manageVehicles"), true, true),
             commandData("vehrank", setVehicleRankCommand, "<rank id/name>", getStaffFlagValue("none"), true, true),
@@ -588,7 +591,6 @@ function enableAllCommandsByType(command, params, client) {
 function onPlayerCommand(event, client, command, params) {
     processPlayerCommand(command, params, client)
 }
-addEventHandler("OnPlayerCommand", onPlayerCommand);
 
 // ===========================================================================
 

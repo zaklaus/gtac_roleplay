@@ -31,6 +31,8 @@ function addAllEventHandlers() {
     addEventHandler("onPedSpawn", onPedSpawn);
     addEventHandler("onPedEnterVehicle", onPedEnteringVehicle);
     addEventHandler("onPedExitVehicle", onPedExitingVehicle);
+
+    addEventHandler("OnPlayerCommand", onPlayerCommand);
 }
 
 // ===========================================================================
@@ -62,9 +64,9 @@ function onPlayerJoined(event, client) {
 // ===========================================================================
 
 function onElementStreamIn(event, element, client) {
-    if(getPlayerDimension(client) != getElementDimension(element)) {
-        event.preventDefault();
-    }
+    //if(getPlayerDimension(client) != getElementDimension(element)) {
+    //    event.preventDefault();
+    //}
 }
 
 // ===========================================================================
@@ -406,7 +408,8 @@ function onPlayerDeath(client, position) {
 
 function onPedSpawn(ped) {
     if(ped.type == ELEMENT_PLAYER) {
-        setTimeout(onPlayerSpawn, 250, ped);
+        //setTimeout(onPlayerSpawn, 250, ped);
+        onPlayerSpawn();
     }
 }
 
@@ -414,11 +417,11 @@ function onPedSpawn(ped) {
 
 function onPlayerSpawn(client) {
     logToConsole(LOG_DEBUG, `[VRR.Event] Checking for ${getPlayerDisplayForConsole(client)}'s player ped`);
-    if(client.player == null) {
-        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player element not set yet. Rechecking ...`);
-        setTimeout(onPlayerSpawn, 500, client);
-        return false;
-    }
+    //if(client.player == null) {
+    //    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player element not set yet. Rechecking ...`);
+    //    setTimeout(onPlayerSpawn, 500, client);
+    //    return false;
+    //}
 
     logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player ped is valid. Continuing spawn processing ...`);
 
@@ -481,6 +484,10 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
         setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
+
+        if(getPlayerCurrentSubAccount(client).interior != 0 || getPlayerCurrentSubAccount(client).dimension != 0) {
+            updateAllInteriorVehiclesForPlayer(client, getPlayerCurrentSubAccount(client).interior, getPlayerCurrentSubAccount(client).dimension);
+        }
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting player health for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).health}`);
         setPlayerHealth(client, getPlayerCurrentSubAccount(client).health);

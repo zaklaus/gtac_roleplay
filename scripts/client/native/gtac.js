@@ -16,8 +16,8 @@ function setUpInitialGame() {
 
     if(gta.game == GAME_GTA_VC) {
         gta.SET_PLAYER_NEVER_GETS_TIRED(gta.GET_PLAYER_ID(), 0);
-        gta.setGameStat(STAT_PROGRESSMADE, 9999);
-        gta.setGameStat(STAT_TOTALPROGRESSINGAME, 9999);
+        gta.setGameStat(STAT_PROGRESSMADE, 0);
+        gta.setGameStat(STAT_TOTALPROGRESSINGAME, 0);
 
         gta.REQUEST_ANIMATION("bikev");
         gta.REQUEST_ANIMATION("bikeh");
@@ -40,6 +40,9 @@ function setUpInitialGame() {
         gta.REQUEST_ANIMATION("strip");
         gta.REQUEST_ANIMATION("lance");
         gta.REQUEST_ANIMATION("skate");
+
+        gta.LOAD_ALL_MODELS_NOW();
+        
     }
 
     if(gta.game == GAME_GTA_SA) {
@@ -100,3 +103,5 @@ function processGameSpecifics() {
 
     destroyAutoCreatedPickups();
 }
+
+// ===========================================================================

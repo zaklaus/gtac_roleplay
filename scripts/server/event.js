@@ -532,9 +532,10 @@ function onPlayerSpawn(client) {
         updatePlayerHotBar(client);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom keybinds to ${getPlayerDisplayForConsole(client)}`);
-        setTimeout(function() {
-            sendAccountKeyBindsToClient(client);
-        }, 5000);
+        sendAccountKeyBindsToClient(client);
+        //setTimeout(function() {
+        //    sendAccountKeyBindsToClient(client);
+        //}, 5000);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
@@ -569,9 +570,10 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
         getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 
-        setTimeout(function() {
-            syncPlayerProperties(client);
-        }, 1000);
+        syncPlayerProperties(client);
+        //setTimeout(function() {
+        //    syncPlayerProperties(client);
+        //}, 1000);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
         updatePlayerCash(client);

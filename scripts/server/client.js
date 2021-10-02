@@ -957,10 +957,6 @@ function makePedPlayAnimation(ped, animationSlot, positionOffset) {
                 setElementPosition(ped, getPosToRightOfPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
                 break;
         }
-
-        if(getGame() < GAME_GTA_SA) {
-            setPlayerMouseCameraState(client, true);
-        }
     }
     triggerNetworkEvent("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4], animationData[5], positionOffset);
 }
@@ -1034,6 +1030,18 @@ function setPlayerVanillaRadioStation(client, radioStationId) {
 
 function onPlayerNearPickup(client, pickupId) {
     getPlayerData(client).currentPickup = getElementFromId(pickupId);
+}
+
+// ===========================================================================
+
+function updateAllInteriorVehiclesForPlayer(client, interior, dimension) {
+    for(let i in getServerData().vehicles) {
+        if(getServerData().vehicles[i].vehicle != false) {
+            if(getServerData().vehicles[i].interior == interior && getServerData().vehicles[i].dimension == dimension) {
+                forcePlayerToSyncElementProperties(client, getServerData().vehicles[i].vehicle);
+            }
+        }
+    }
 }
 
 // ===========================================================================

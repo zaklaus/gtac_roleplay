@@ -149,6 +149,8 @@ function saveVehicleToDatabase(vehicleDataId) {
 			["veh_damage_engine", toInteger(tempVehicleData.engineDamage)],
 			["veh_damage_visual", toInteger(tempVehicleData.visualDamage)],
 			["veh_dirt_level", toInteger(tempVehicleData.dirtLevel)],
+			["veh_int", tempVehicleData.interior],
+			["veh_vw", tempVehicleData.dimension],
 		];
 
 		let dbQuery = null;
@@ -543,9 +545,7 @@ function vehicleLiveryCommand(command, params, client) {
 	getVehicleData(vehicle).needsSaved = true;
 
 	setEntityData(vehicle, "vrr.livery", livery, true);
-	setTimeout(function() {
-		forcePlayerToSyncElementProperties(null, vehicle);
-	}, 1000);
+	forcePlayerToSyncElementProperties(null, vehicle);
 
 	meActionToNearbyPlayers(client, `sets the ${getVehicleName(vehicle)}'s livery/paintjob'`);
 }
@@ -1171,13 +1171,15 @@ function spawnVehicle(vehicleData) {
 
 		//vehicle.position = vehicleData.spawnPosition;
 		vehicle.heading = vehicleData.spawnRotation;
+		vehicle.dimension = vehicleData.dimension;
 	}
 
 	vehicleData.vehicle = vehicle;
 
-	setEntityData(vehicle, "vrr.livery", vehicleData.livery);
-	setEntityData(vehicle, "vrr.upgrades", vehicleData.extras);
-	setEntityData(vehicle, "vrr.interior", vehicleData.interior);
+	setEntityData(vehicle, "vrr.livery", vehicleData.livery, true);
+	setEntityData(vehicle, "vrr.upgrades", vehicleData.extras, true);
+	setEntityData(vehicle, "vrr.interior", vehicleData.interior, true);
+	forcePlayerToSyncElementProperties(null, vehicle);
 
 	return vehicle;
 }
@@ -1254,6 +1256,8 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 	tempVehicleData.ownerType = VRR_VEHOWNER_BIZ;
 	tempVehicleData.ownerId = dealershipId;
 	tempVehicleData.needsSaved = true;
+	tempVehicleData.interior = interior;
+	tempVehicleData.dimension = dimension;
 
 	let slot = getServerData().vehicles.push(tempVehicleData);
 	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
@@ -1270,6 +1274,9 @@ function createTemporaryVehicle(modelId, position, heading, interior = 0, dimens
 
 	let tempVehicleData = new VehicleData(false, vehicle);
 	tempVehicleData.databaseId = -1;
+	tempVehicleData.interior = interior;
+	tempVehicleData.dimension = dimension;
+
 	let slot = getServerData().vehicles.push(tempVehicleData);
 	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
 
@@ -1286,6 +1293,9 @@ function createPermanentVehicle(modelId, position, heading, interior = 0, dimens
 	addToWorld(vehicle);
 
 	let tempVehicleData = new VehicleData(false, vehicle);
+	tempVehicleData.interior = interior;
+	tempVehicleData.dimension = dimension;
+
 	let slot = getServerData().vehicles.push(tempVehicleData);
 	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
 

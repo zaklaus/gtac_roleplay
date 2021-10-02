@@ -220,6 +220,7 @@ function enterExitPropertyCommand(command, params, client) {
 					}
 					updateInteriorLightsForPlayer(client, closestProperty.interiorLights);
 				}, 1000);
+				//updateAllInteriorVehiclesForPlayer(client, closestProperty.exitInterior, closestProperty.exitDimension);
 			}, 1100);
 			if(closestProperty.streamingRadioStation != -1) {
 				if(getRadioStationData(closestProperty.streamingRadioStation)) {

@@ -122,7 +122,7 @@ function quickDatabaseQuery(queryString) {
 	let dbConnection = connectToDatabase();
 	let insertId = 0;
 	if(dbConnection) {
-		logToConsole(LOG_DEBUG, `[VRR.Database] Query string: ${queryString}`);
+		//logToConsole(LOG_DEBUG, `[VRR.Database] Query string: ${queryString}`);
 		let dbQuery = queryDatabase(dbConnection, queryString);
 		if(getDatabaseInsertId(dbConnection)) {
 			insertId = getDatabaseInsertId(dbConnection);
@@ -175,7 +175,7 @@ function executeDatabaseQueryCommand(command, params, client) {
 		messagePlayeSuccess(client, `Database query successful: ${getInlineChatColourByName("lightGrey")}${query}`);
 		messagePlayerInfo(client, `Returns: ${success}`);
 	} else {
-		messagePlayeSuccess(client, `Database query successful: ${getInlineChatColourByName("lightGrey")}${query}`);
+		messagePlayerSuccess(client, `Database query successful: ${getInlineChatColourByName("lightGrey")}${query}`);
 	}
 	return true;
 }

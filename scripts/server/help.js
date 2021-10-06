@@ -127,7 +127,7 @@ function helpCommand(command, params, client) {
 
         case "command":
         case "cmd":
-            if(areThereEnoughParams(params, 2, " ")) {
+            if(splitParams.length >= 2) {
                 showCommandHelpMessage(client, splitParams[2]);
             } else {
                 showCommandHelpMessage(client, false);
@@ -322,7 +322,7 @@ function showClanHelpMessage(client) {
 
 function showCommandHelpMessage(client, commandName) {
     if(!commandName) {
-        messagePlayerSyntax(client, `${getCommandSyntaxText("help")} command <command name>`);
+        messagePlayerSyntax(client, `${getCommandSyntaxText("help")}command <command name>`);
         return false;
     }
 

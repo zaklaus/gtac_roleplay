@@ -328,6 +328,7 @@ function loadCommands() {
             commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("basicModeration"), true, true, "Unfreezes a player, allowing them to move again."),
             commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a player."),
             commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Teleports a player to you."),
+            commandData("getveh", getVehicleCommand, "<vehicle id>", getStaffFlagValue("basicModeration"), true, true, "Teleports a vehicle to you."),
             commandData("returnplr", returnPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Returns a player to their previous position."),
             commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("basicModeration"), true, true, "Teleports you to specific coordinates with optional interior and dimension."),
             commandData("gotoveh", gotoVehicleCommand, "<vehicle id>", getStaffFlagValue("basicModeration"), true, true, "Teleports you to a vehicle by ID."),
@@ -359,7 +360,6 @@ function loadCommands() {
             commandData("getplrbiz", getAllBusinessesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all businesses owned by the player"),
             commandData("getplrveh", getAllVehiclesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Shows a list of all vehicles owned by the player"),
             commandData("geoip", getGeoIPInformationCommand, "<player name/id>", getStaffFlagValue("basicModeration"), true, true, "Retrieves GeoIP information on a player (country & city)"),
-
             commandData("forcepayday", forcePlayerPayDayCommand, "<player name/id>", getStaffFlagValue("manageServer"), true, true, "Gives a player an instant payday."),
         ],
         radio: [

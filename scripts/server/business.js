@@ -243,11 +243,9 @@ function setBusinessNameCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
-		if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_PLAYER && getBusinessData(businessId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
-			messagePlayerError(client, "You don't own this business!");
-			return false;
-		}
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change the name of this business!");
+		return false;
 	}
 
 	let oldBusinessName = getBusinessData(businessId).name;
@@ -260,6 +258,11 @@ function setBusinessNameCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessOwnerCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	let newBusinessOwner = getPlayerFromParams(params);
 	let businessId = getPlayerBusiness(client);
 
@@ -273,10 +276,8 @@ function setBusinessOwnerCommand(command, params, client) {
 		return false;
 	}
 
-	if(getBusinessData(businessId).ownerType != VRR_BIZOWNER_PLAYER || getBusinessData(businessId).ownerId != getPlayerCurrentSubAccount(client).databaseId) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
-			messagePlayerError(client, "You don't own this business!");
-		}
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change the owner of this business!");
 		return false;
 	}
 
@@ -304,11 +305,9 @@ function setBusinessClanCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
-		if(getBusinessData(businessId).ownerType != VRR_BIZOWNER_PLAYER && getBusinessData(businessId).ownerId != getPlayerCurrentSubAccount(client).databaseId) {
-			messagePlayerError(client, "You don't own this business!");
-			return false;
-		}
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change this business clan!");
+		return false;
 	}
 
 	getBusinessData(businessId).ownerType = VRR_BIZOWNER_CLAN;
@@ -330,6 +329,11 @@ function setBusinessClanCommand(command, params, client) {
  *
  */
  function setBusinessRankCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -351,8 +355,8 @@ function setBusinessClanCommand(command, params, client) {
 		return false;
 	}
 
-	if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
-		messagePlayerError(client, "You can't set clan business ranks!");
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change this business rank!");
 		return false;
 	}
 
@@ -435,11 +439,9 @@ function lockUnlockBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
-		if(canPlayerLockUnlockBusiness(client, businessId)) {
-			messagePlayerError(client, "You don't have keys to this business!");
-			return false;
-		}
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change this business rank!");
+		return false;
 	}
 
 	getBusinessData(businessId).locked = !getBusinessData(businessId).locked;
@@ -468,11 +470,9 @@ function lockUnlockBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
-		if(canPlayerSetBusinessInteriorLights(client, businessId)) {
-			messagePlayerError(client, "You don't have keys to this business!");
-			return false;
-		}
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change the interior lights for this business!");
+		return false;
 	}
 
 	getBusinessData(businessId).interiorLights = !getBusinessData(businessId).interiorLights;
@@ -494,11 +494,9 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
-		if(canPlayerSetBusinessEntranceFee(client, businessId)) {
-			messagePlayerError(client, "You don't have keys to this business!");
-			return false;
-		}
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change the entrance fee for this business!");
+		return false;
 	}
 
 	getBusinessData(businessId).entranceFee = entranceFee;
@@ -768,11 +766,9 @@ function withdrawFromBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
-		if(canPlayerWithdrawFromBusinessTill(client, businessId)) {
-			messagePlayerError(client, "You don't have keys to this business!");
-			return false;
-		}
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't withdraw cash from this business!");
+		return false;
 	}
 
 	if(getBusinessData(businessId).till < amount) {
@@ -806,6 +802,11 @@ function setBusinessBuyPriceCommand(command, params, client) {
 		return false;
 	}
 
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change the purchase price for this business!");
+		return false;
+	}
+
 	if(amount < 0) {
 		messagePlayerError(client, `The amount can't be less than 0!`);
 		return false;
@@ -835,6 +836,12 @@ function depositIntoBusinessCommand(command, params, client) {
 		messagePlayerError(client, "Business not found!");
 		return false;
 	}
+
+	// Let anybody deposit money
+	//if(!canPlayerManageBusiness(client, businessId)) {
+	//	messagePlayerError(client, "You can't deposit cash into this business!");
+	//	return false;
+	//}
 
 	if(getPlayerCurrentSubAccount(client).cash < amount) {
 		messagePlayerError(client, `You don't have that much money! You only have $${getPlayerCurrentSubAccount(client).cash}`);
@@ -879,7 +886,12 @@ function orderItemForBusinessCommand(command, params, client) {
 	logToConsole(LOG_DEBUG, `[VRR.Business] ${getPlayerDisplayForConsole(client)} is ordering ${amount} ${splitParams.slice(0,-2).join(" ")} (${value})`);
 
 	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, "You must be inside or near a business door!");
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't order items for this business!");
 		return false;
 	}
 
@@ -921,6 +933,11 @@ function viewBusinessTillAmountCommand(command, params, client) {
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't see the till amount for this business!");
 		return false;
 	}
 
@@ -1890,6 +1907,34 @@ function canPlayerLockUnlockBusiness(client, businessId) {
 	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN && getBusinessData(businessId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
 		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
 			return true;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function canPlayerManageBusiness(client, businessId) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+		return true;
+	}
+
+	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_PLAYER) {
+		if(getBusinessData(businessId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+			return true;
+		}
+	}
+
+	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN) {
+		if(getBusinessData(businessId).ownerId == getPlayerClan(client)) {
+			if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+				return true;
+			}
+
+			//if(getBusinessData(businessId).clanRank <= getClanRankData(getPlayerClan(client), getPlayerClanRank(client)).level) {
+			//	return true;
+			//}
 		}
 	}
 

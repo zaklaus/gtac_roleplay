@@ -65,7 +65,7 @@ function messagePlayerError(client, messageText) {
     if(!isClientFromDiscord(client)) {
         messagePlayerNormal(client, `🚫 ${messageText}`, getColourByName("white"));
     } else {
-        messageDiscordUser(client, `:no_entry_sign: ${messageText}`);
+        messageDiscordUser(client, `🚫 ${messageText}`);
     }
 }
 
@@ -80,7 +80,7 @@ function messagePlayerSyntax(client, messageText) {
     if(!isClientFromDiscord(client)) {
         messagePlayerNormal(client, `⌨️ USAGE: ${getInlineChatColourByName("white")} ${messageText}`, getColourByType("syntaxMessage"));
     } else {
-        messageDiscordUser(client, `:keyboard: ${messageText}`);
+        messageDiscordUser(client, `⌨️ ${messageText}`);
     }
 }
 
@@ -93,9 +93,9 @@ function messagePlayerAlert(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `⚠️ ${getInlineChatColourByName("white")} ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `⚠️ ${messageText}`, getColourByName("white"));
     } else {
-        messageDiscordUser(client, `:warning: ${messageText}`);
+        messageDiscordUser(client, `⚠️ ${messageText}`);
     }
 }
 
@@ -108,9 +108,9 @@ function messagePlayerSuccess(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `👍 ${getInlineChatColourByName("white")} ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `👍 ${messageText}`, getColourByName("white"));
     } else {
-        messageDiscordUser(client, `:thumbsup: ${messageText}`);
+        messageDiscordUser(client, `👍 ${messageText}`);
     }
 }
 
@@ -123,7 +123,7 @@ function messagePlayerInfo(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `ℹ️ ${getInlineChatColourByName("white")} ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `ℹ️ ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:information_source: ${messageText}`);
     }
@@ -138,7 +138,7 @@ function messagePlayerTip(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `ℹ️ ${getInlineChatColourByName("white")} ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `ℹ️ ${messageText}`, getColourByName("white"));
     } else {
         messageDiscordUser(client, `:information_source: ${messageText}`);
     }
@@ -199,8 +199,10 @@ function messagePlayerNewbieTip(client, message) {
 // ===========================================================================
 
 function messagePlayerTimedRandomTip(client, message) {
-    if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noTimedRandomTips"))) {
-        messagePlayerNormal(client, `💡 TIP: ${message}`);
+    if(isPlayerLoggedIn(client) && isPlayerSpawned(client)) {
+        if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noTimedRandomTips"))) {
+            messagePlayerNormal(client, `💡 TIP: ${message}`);
+        }
     }
 }
 

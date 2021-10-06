@@ -1323,3 +1323,30 @@ function resetHouseBlips(houseId) {
 }
 
 // ===========================================================================
+
+function canPlayerManageHouse(client, houseId) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+		return true;
+	}
+
+	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER) {
+		if(getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
+			return true;
+		}
+	}
+
+	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_CLAN) {
+		if(getHouseData(houseId).ownerId == getPlayerClan(client)) {
+			if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageHouses"))) {
+				return true;
+			}
+			//if(getHouseData(houseId).clanRank <= getClanRankData(getPlayerClan(client), getPlayerClanRank(client)).level) {
+			//	return true;
+			//}
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================

@@ -202,6 +202,12 @@ function checkPayDays() {
 			//}
 		}
 	}
+
+	for(let i in getServerData().businesses) {
+		if(getBusinessData(i).ownerType != VRR_BIZOWNER_NONE && getBusinessData(i).ownerType != VRR_BIZOWNER_PUBLIC && getBusinessData(i).ownerType != VRR_BIZOWNER_FACTION) {
+			getBusinessData(businessId).till += 1000;
+		}
+	}
 }
 
 // ===========================================================================

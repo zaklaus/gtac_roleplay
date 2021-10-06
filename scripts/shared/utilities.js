@@ -291,7 +291,7 @@ function toInteger(val) {
 // ===========================================================================
 
 function toFloat(val, fixed = 2) {
-	return parseFloat((val).toFixed(fixed));
+	return parseFloat(val);
 }
 
 // ===========================================================================

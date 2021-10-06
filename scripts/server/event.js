@@ -52,7 +52,7 @@ function onPlayerJoin(event, client) {
         fadeCamera(client, true, 1.0);
     }
 
-    messageDiscordEventChannel(`:waving: ${getPlayerDisplayForConsole(client)} has joined the server.`);
+    messageDiscordEventChannel(`👋 ${getPlayerDisplayForConsole(client)} has joined the server.`);
 }
 
 // ===========================================================================
@@ -72,7 +72,7 @@ function onElementStreamIn(event, element, client) {
 // ===========================================================================
 
 function onPlayerQuit(event, client, quitReasonId) {
-    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
+    logToConsole(LOG_DEBUG, `👋 ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
     updateConnectionLogOnQuit(client, quitReasonId);
     if(isPlayerLoggedIn(client)) {
         messagePlayerNormal(null, `👋 ${getPlayerName(client)} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
@@ -81,7 +81,7 @@ function onPlayerQuit(event, client, quitReasonId) {
         getServerData().clients[client.index] = null;
     }
 
-    messageDiscordEventChannel(`${getPlayerDisplayForConsole(client)} has left the server.`);
+    messageDiscordEventChannel(`👋 ${getPlayerDisplayForConsole(client)} has left the server.`);
 }
 
 // ===========================================================================

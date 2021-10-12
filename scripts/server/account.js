@@ -31,7 +31,7 @@ function loginCommand(command, params, client) {
 
 // ===========================================================================
 
-function autoLoginByIPCommand(command, params, client) {
+function toggleAutoLoginByIPCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
 
 	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
@@ -76,7 +76,7 @@ function toggleNoActionTipsCommand(command, params, client) {
 
 // ===========================================================================
 
-function autoSelectLastCharacterCommand(command, params, client) {
+function toggleAutoSelectLastCharacterCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
 
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
@@ -123,6 +123,24 @@ function toggleAccountGUICommand(command, params, client) {
 			}
 		}
 	}
+	return true;
+}
+
+// ===========================================================================
+
+function toggleAccountLoginAttemptNotificationsCommand(command, params, client) {
+	let flagValue = getAccountSettingsFlagValue("authAttemptAlert");
+
+	if(!isAccountSettingFlagEnabled(getPlayerData(client).accountData, flagValue)) {
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now ${getInlineChatColourByName("white")}be notified by email when somebody tries to login to your account`);
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the login attempt email notifications OFF for their account`);
+	} else {
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not ${getInlineChatColourByName("white")}be notified by email when somebody tries to login to your account`);
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the login attempt email notifications OFF for their account`);
+	}
+
 	return true;
 }
 
@@ -204,7 +222,7 @@ function registerCommand(command, params, client) {
 
 // ===========================================================================
 
-function changePasswordCommand(command, params, client) {
+function changeAccountPasswordCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -780,6 +798,10 @@ function checkLogin(client, password) {
 			messagePlayerError(client, `You must enter a password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		}
+
+		if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("authAttemptAlert"))) {
+			sendAccountLoginFailedNotification(getPlayerData(client).accountData.emailAddress, client.name, client.ip, getServerGame());
+		}
 		return false;
 	}
 
@@ -792,6 +814,10 @@ function checkLogin(client, password) {
 			messagePlayerError(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		}
+
+		if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("authAttemptAlert"))) {
+			sendAccountLoginFailedNotification(getPlayerData(client).accountData.emailAddress, client.name, client.ip, getServerGame());
+		}
 		return false;
 	}
 
@@ -800,6 +826,10 @@ function checkLogin(client, password) {
 	}
 
 	loginSuccess(client);
+
+	if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("authAttemptAlert"))) {
+		sendAccountLoginSuccessNotification(getPlayerData(client).accountData.emailAddress, client.name, client.ip, getServerGame());
+	}
 }
 
 // ===========================================================================
@@ -1170,49 +1200,25 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 // ===========================================================================
 
 function isAccountAutoIPLoginEnabled(accountData) {
-	let accountSettings = accountData.settings;
-	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
-	return hasBitFlag(accountSettings, flagValue);
+	return isAccountSettingFlagEnabled(accountData.settings, getAccountSettingsFlagValue("autoLoginIP"));
 }
 
 // ===========================================================================
 
 function doesPlayerHaveGUIEnabled(client) {
-	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noGUI"))) {
-		return false;
-	}
-
-	return true;
+	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noGUI"));
 }
 
 // ===========================================================================
 
 function doesPlayerHaveLogoEnabled(client) {
-	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noServerLogo"))) {
-		return false;
-	}
-
-	return true;
-}
-
-// ===========================================================================
-
-function doesPlayerHaveAutoLoginByIPEnabled(client) {
-	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoLoginIP"))) {
-		return true;
-	}
-
-	return false;
+	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noServerLogo"));
 }
 
 // ===========================================================================
 
 function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
-	if(hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"))) {
-		return true;
-	}
-
-	return false;
+	return isAccountSettingFlagEnabled(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"));
 }
 
 // ===========================================================================
@@ -1274,6 +1280,52 @@ function verifyAccountEmail(accountData, verificationCode) {
 
 	getPlayerData(client).accountData.emailAddress = emailAddress;
 	getPlayerData(client).accountData.emailVerificationCode = module.hashing.sha512(emailVerificationCode);
+}
+
+// ===========================================================================
+
+function sendAccountLoginFailedNotification(emailAddress, name, ip, game = getServerGame()) {
+	let countryName = module.geoip.getCountryName(getGlobalConfig().geoIPCountryDatabaseFilePath, ip);
+	let subDivisionName = module.geoip.getSubdivisionName(getGlobalConfig().geoIPCityDatabaseFilePath, ip);
+	let cityName = module.geoip.getCityName(getGlobalConfig().geoIPCityDatabaseFilePath, ip);
+
+	let emailBodyText = getEmailConfig().bodyContent.accountAuthFailAlert;
+	emailBodyText = emailBodyText.replace("{GAMENAME}", getGameName(game));
+	emailBodyText = emailBodyText.replace("{IPADDRESS}", ip);
+	emailBodyText = emailBodyText.replace("{LOCATION}", `${cityName}, ${countryName}, ${countryName}`);
+	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
+	emailBodyText = emailBodyText.replace("{TIMESTAMP}", date.toLocaleString('en-US'));
+
+	sendEmail(emailAddress, name, `Login failed on ${getServerName()}`, emailBodyText);
+	return true;
+}
+
+// ===========================================================================
+
+function sendAccountLoginSuccessNotification(emailAddress, name, ip, game = getServerGame()) {
+	let countryName = module.geoip.getCountryName(getGlobalConfig().geoIPCountryDatabaseFilePath, ip);
+	let subDivisionName = module.geoip.getSubdivisionName(getGlobalConfig().geoIPCityDatabaseFilePath, ip);
+	let cityName = module.geoip.getCityName(getGlobalConfig().geoIPCityDatabaseFilePath, ip);
+
+	let emailBodyText = getEmailConfig().bodyContent.accountAuthSuccessAlert;
+	emailBodyText = emailBodyText.replace("{GAMENAME}", getGameName(game));
+	emailBodyText = emailBodyText.replace("{IPADDRESS}", ip);
+	emailBodyText = emailBodyText.replace("{LOCATION}", `${cityName}, ${countryName}, ${countryName}`);
+	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
+	emailBodyText = emailBodyText.replace("{TIMESTAMP}", date.toLocaleString('en-US'));
+
+	sendEmail(emailAddress, name, `Login failed on ${getServerName()}`, emailBodyText);
+	return true;
+}
+
+// ===========================================================================
+
+function isAccountSettingFlagEnabled(accountData, flagValue) {
+	if(hasBitFlag(accountData.settings, flagValue)) {
+		return true;
+	}
+
+	return false;
 }
 
 // ===========================================================================

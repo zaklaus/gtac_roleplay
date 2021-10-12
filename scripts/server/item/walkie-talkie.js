@@ -7,8 +7,6 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// ===========================================================================
-
 function getPlayerActiveWalkieTalkieFrequency(client) {
 	let walkieTalkieSlot = getPlayerFirstItemSlotByUseType(client, VRR_ITEM_USETYPE_WALKIETALKIE);
 

@@ -1619,3 +1619,9 @@ async function triggerWebHook(webHookURL, payloadData) {
 }
 
 // ===========================================================================
+
+function getGameName(gameId = getGame()) {
+	return getGameData().gameNames[gameId];
+}
+
+// ===========================================================================

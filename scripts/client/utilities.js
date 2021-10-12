@@ -401,7 +401,8 @@ function setLocalPlayerDrunkEffect(amount, duration) {
         drunkEffectDurationTimer = setInterval(function() {
             drunkEffectAmount = drunkEffectAmount;
             if(drunkEffectAmount > 0) {
-                gta.SET_MOTION_BLUR(drunkEffectAmount);
+                //gta.SET_MOTION_BLUR(drunkEffectAmount);
+                gta.SET_PLAYER_DRUNKENNESS(drunkEffectAmount, duration);
             } else {
                 clearInterval(drunkEffectDurationTimer);
                 drunkEffectDurationTimer = null;
@@ -539,7 +540,7 @@ function processWantedLevelReset() {
         return false;
     }
 
-    if(isSpawned) {
+    if(!isSpawned) {
         return false;
     }
 

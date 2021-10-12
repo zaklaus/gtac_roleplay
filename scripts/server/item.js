@@ -553,18 +553,6 @@ function playerUseItem(client, hotBarSlot) {
 			messagePlayerError(client, `The ${getItemName(itemIndex)} is a weapon. To use it, switch to it from your items. The use key has no effect.`);
 			break;
 
-		case VRR_ITEM_USETYPE_PHONE:
-			if(getItemData(itemIndex).value == 0) {
-				let phoneNumber = generateRandomPhoneNumber();
-				getItemData(itemIndex).value = phoneNumber;
-				messagePlayerAlert(client, `Your ${getItemName(itemIndex)} has been set up with number ${phoneNumber}`);
-			} else {
-				getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
-				messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} ${getInlineChatColourByName("white")}your phone in slot ${getPlayerData(client).activeHotBarSlot+1} ${getInlineChatColourByName("lightGrey")}(${getItemValueDisplayForItem(itemIndex)})`);
-			}
-			//showPlayerPhoneGUI(client);
-			break;
-
 		case VRR_ITEM_USETYPE_STORAGE:
 			showItemInventoryToPlayer(client, itemIndex);
 			break;
@@ -660,7 +648,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_VEHUPGRADE_PART:
-			vehicle = getClosestVehicle(getPlayerPosition(client));
+			let vehicle = getClosestVehicle(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				meActionToNearbyPlayers(client, `takes their upgrade kit and adds a ${getItemName(itemIndex)} to the vehicle.`);
 				addVehicleUpgrade(vehicle, getItemData(itemIndex).useId);
@@ -668,7 +656,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_VEHLIVERY:
-			vehicle = getClosestVehicle(getPlayerPosition(client));
+			let vehicle = getClosestVehicle(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				meActionToNearbyPlayers(client, `takes their decal kit and adds some decals to the vehicle.`);
 				setVehicleLivery(vehicle, getItemData(itemIndex).useValue);
@@ -676,7 +664,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_VEHCOLOUR:
-			vehicle = getClosestVehicle(getPlayerPosition(client));
+			let vehicle = getClosestVehicle(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				if(getItemData(itemIndex).useId == 1) {
 					meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the primary colour of the vehicle.`);
@@ -690,6 +678,38 @@ function playerUseItem(client, hotBarSlot) {
 			}
 			break;
 
+		case VRR_ITEM_USETYPE_FUELCAN:
+			let vehicle = getClosestVehicle(getPlayerPosition(client));
+			let fuelPump = getClosestFuelPump(getPlayerPosition(client));
+			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getDistance(getPlayerPosition(client), getFuelPumpData(fuelPump).position)) {
+				if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
+					meActionToNearbyPlayers(client, `takes their fuel can and refills the vehicle`);
+					if(getItemData(itemIndex).value < getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue) {
+						getVehicleData(vehicle).fuel += getItemData(itemIndex).value;
+					} else {
+						getVehicleData(vehicle).fuel += getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+					}
+
+					getItemData(itemIndex).value = getItemData(itemIndex).value - getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+					//if(getItemData(itemIndex).value <= 0) {
+					//	destroyItem(itemIndex);
+					//}
+				}
+			} else {
+				if(getDistance(getPlayerPosition(client), getFuelPumpData(fuelPump).position) <= getGlobalConfig().vehicleRepairDistance) {
+					if(getItemData(itemIndex).useId == 1) {
+						meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the primary colour of the vehicle.`);
+						vehicle.colour1 = getItemData(itemIndex).useValue;
+					} else {
+						if(getItemData(itemIndex).useId == 1) {
+							meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the secondary colour of the vehicle.`);
+							vehicle.colour2 = getItemData(itemIndex).useValue;
+						}
+					}
+				}
+			}
+			break;
+
 		case VRR_ITEM_USETYPE_WALKIETALKIE:
 			getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
 			//messagePlayerAlert(client, `You turned ${getBoolRedGreenInlineColour(getItemData(itemIndex).enabled)}${toUpperCase(getOnOffFromBool(getItemData(itemIndex).enabled))} ${getInlineChatColourByName("white")}your walkie talkie in slot ${getPlayerData(client).activeHotBarSlot+1} ${getInlineChatColourByName("lightGrey")}${getItemValueDisplayForItem(itemIndex)}`);
@@ -697,13 +717,19 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_PHONE:
-			getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
-			if(getItemData(itemIndex).enabled) {
-				//messagePlayerAlert(client, `You turned on your phone in slot ${getPlayerData(client).activeHotBarSlot+1} ${getItemValueDisplayForItem(itemIndex)}`);
-				meActionToNearbyPlayers(client, `turns on their phone`);
+			if(getItemData(itemIndex).value == 0) {
+				let phoneNumber = generateRandomPhoneNumber();
+				getItemData(itemIndex).value = phoneNumber;
+				messagePlayerAlert(client, `Your ${getItemName(itemIndex)} has been set up with number ${phoneNumber}`);
 			} else {
-				//messagePlayerAlert(client, `You turned OFF your phone in slot ${getPlayerData(client).activeHotBarSlot+1}`);
-				meActionToNearbyPlayers(client, `turns off their phone`);
+				getItemData(itemIndex).enabled = !getItemData(itemIndex).enabled;
+				if(getItemData(itemIndex).enabled) {
+					//messagePlayerAlert(client, `You turned on your phone in slot ${getPlayerData(client).activeHotBarSlot+1} ${getItemValueDisplayForItem(itemIndex)}`);
+					meActionToNearbyPlayers(client, `turns on their phone`);
+				} else {
+					//messagePlayerAlert(client, `You turned OFF your phone in slot ${getPlayerData(client).activeHotBarSlot+1}`);
+					meActionToNearbyPlayers(client, `turns off their phone`);
+				}
 			}
 			break;
 

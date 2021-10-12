@@ -27,9 +27,23 @@ function isPhoneItemEnabled(itemIndex) {
 // ===========================================================================
 
 function ringPhoneForNearbyPlayers(itemIndex) {
+    /*
     if(isPhoneItemEnabled(itemIndex)) {
+        switch(getItemData(itemIndex).ownerType) {
+            case VRR_ITEM_OWNER_GROUND:
+                playRingtoneForPlayersInRange(getItemData(itemIndex).position, getItemData(i).extra);
+                break;
 
+            case VRR_ITEM_OWNER_VEHTRUNK:
+                playRingtoneForPlayersInRange(getVehiclePosition(getItemData(itemIndex).ownerId), getItemData(i).extra);
+                break;
+
+            case VRR_ITEM_OWNER_VEHDASH:
+                playRingtoneForPlayersInRange(getVehiclePosition(getItemData(itemIndex).ownerId), getItemData(i).extra);
+                break;
+        }
     }
+    */
 }
 
 // ===========================================================================

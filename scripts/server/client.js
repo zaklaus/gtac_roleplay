@@ -713,6 +713,7 @@ function forcePlayerIntoSkinSelect(client) {
         getPlayerData(client).returnToHeading = getPlayerHeading(client);
         getPlayerData(client).returnToInterior = getPlayerInterior(client);
         getPlayerData(client).returnToDimension = getPlayerDimension(client);
+        getPlayerData(client).returnToType = VRR_RETURNTO_TYPE_SKINSELECT;
 
         setPlayerPosition(client, getGameConfig().skinChangePosition[getServerGame()][0]);
         setPlayerHeading(client, getGameConfig().skinChangePosition[getServerGame()][1]);
@@ -859,6 +860,7 @@ function sendPlayerSetArmour(client, armour) {
 // ===========================================================================
 
 function playerFinishedSkinSelection(client, allowedSkinIndex) {
+    triggerNetworkEvent("vrr.skinSelect", client, false);
     if(allowedSkinIndex == -1) {
         restorePlayerCamera(client);
         return false;
@@ -891,7 +893,6 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
 
         meActionToNearbyPlayers(client, `changes their skin to ${allowedSkins[getServerGame()][allowedSkinIndex][1]}`);
     }
-    triggerNetworkEvent("vrr.skinSelect", client, false);
 }
 
 // ===========================================================================

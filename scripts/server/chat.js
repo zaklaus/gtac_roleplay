@@ -61,6 +61,27 @@ function shoutCommand(command, params, client) {
 
 // ===========================================================================
 
+function megaphoneChatCommand(command, params, client) {
+	if(isPlayerMuted(client)) {
+		messagePlayerError(client, "You are muted and can't chat!");
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(canPlayerUseMegaphone(client)) {
+
+	}
+
+	megaPhoneToNearbyPlayers(client, params);
+	return true;
+}
+
+// ===========================================================================
+
 function talkCommand(command, params, client) {
 	if(isPlayerMuted(client)) {
 		messagePlayerError(client, "You are muted and can't chat!");
@@ -178,6 +199,17 @@ function shoutToNearbyPlayers(client, messageText) {
 
 // ===========================================================================
 
+function megaphoneToNearbyPlayers(client, messageText) {
+	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().megaphoneDistance);
+	for(let i in clients) {
+		if(getPlayerInterior(client) == getPlayerInterior(clients[i]) && getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+			messagePlayerShout(clients[i], client, messageText);
+		}
+	}
+}
+
+// ===========================================================================
+
 function doActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().doActionDistance);
 	for(let i in clients) {
@@ -210,3 +242,19 @@ function clanChat(client, messageText) {
 }
 
 // ===========================================================================
+
+function canPlayerUseMegaphone(client) {
+	if(isPlayerHoldingItemOfType(client, VRR_ITEM_USETYPE_MEGAPHONE)) {
+		if(isPlayerActiveItemEnabled(client)) {
+			return true;
+		}
+	}
+
+	if(getPlayerVehicle(client)) {
+		if(doesVehicleHaveMegaphone(getPlayerVehicle(client))) {
+			return true;
+		}
+	}
+
+	return false;
+}

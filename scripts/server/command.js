@@ -129,6 +129,7 @@ function loadCommands() {
             commandData("adminchat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true, "Sends an OOC chat message to other admins"),
             commandData("a", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true, "Sends an OOC chat message to other admins"),
             commandData("achat", adminChatCommand, "<message>", getStaffFlagValue("basicModeration"), true, true, "Sends an OOC chat message to other admins"),
+            commandData("m", megaphoneChatCommand, "<message>", getStaffFlagValue("none"), true, true, "Shouts a message over a megaphone (portable bullhorn/loudspeaker)"),
         ],
         clan: [
             commandData("clans", listClansCommand, "[search text]", getStaffFlagValue("none"), true, true, "List clans (search by partial name, if provided)"),
@@ -262,6 +263,7 @@ function loadCommands() {
             commandData("itemtyperiskmult", setItemTypeRiskMultiplierCommand, "<item type> <risk multiplier>", getStaffFlagValue("manageItems"), true, false),
 
             commandData("delplritem", deleteItemInPlayerInventoryCommand, "<player name/id> <item slot>", getStaffFlagValue("manageItems"), true, false),
+            commandData("delplritems", deleteAllItemsInPlayerInventoryCommand, "<player name/id>", getStaffFlagValue("manageItems"), true, false),
         ],
         job: [
             commandData("takejob", takeJobCommand, "", getStaffFlagValue("none"), true, false),

@@ -31,11 +31,6 @@
             "keyState": 1
         },
         {
-            "keyName": "f",
-            "commandString": "passenger",
-            "keyState": 3
-        },
-        {
             "keyName": "m",
             "commandString": "cursor",
             "keyState": 1
@@ -62,52 +57,52 @@
         },
         {
             "keyName": "0",
-            "commandString": "i 0",
+            "commandString": "item 0",
             "keyState": 1
         },
         {
             "keyName": "1",
-            "commandString": "i 1",
+            "commandString": "item 1",
             "keyState": 1
         },
         {
             "keyName": "2",
-            "commandString": "i 2",
+            "commandString": "item 2",
             "keyState": 1
         },
         {
             "keyName": "3",
-            "commandString": "i 3",
+            "commandString": "item 3",
             "keyState": 1
         },
         {
             "keyName": "4",
-            "commandString": "i 4",
+            "commandString": "item 4",
             "keyState": 1
         },
         {
             "keyName": "5",
-            "commandString": "i 5",
+            "commandString": "item 5",
             "keyState": 1
         },
         {
             "keyName": "6",
-            "commandString": "i 6",
+            "commandString": "item 6",
             "keyState": 1
         },
         {
             "keyName": "7",
-            "commandString": "i 7",
+            "commandString": "item 7",
             "keyState": 1
         },
         {
             "keyName": "8",
-            "commandString": "i 8",
+            "commandString": "item 8",
             "keyState": 1
         },
         {
             "keyName": "9",
-            "commandString": "i 9",
+            "commandString": "item 9",
             "keyState": 1
         }
     ]

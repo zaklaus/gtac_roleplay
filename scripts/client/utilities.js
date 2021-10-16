@@ -670,8 +670,8 @@ function getPosInFrontOfPos(pos, angle, distance) {
 // ===========================================================================
 
 function getAllowedSkinIndexBySkinId(skinId) {
-    for(let i in allowedSkins[game.game]) {
-        if(skinId == allowedSkins[game.game][i][0]) {
+    for(let i in allowedSkins[getGame()]) {
+        if(skinId == allowedSkins[getGame()][i][0]) {
             return i;
         }
     }

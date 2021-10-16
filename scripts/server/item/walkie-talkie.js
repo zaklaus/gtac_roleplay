@@ -26,25 +26,25 @@ function getPlayerActiveWalkieTalkieFrequency(client) {
 function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
     walkieTalkieOutgoingToNearbyPlayers(transmittingPlayer, messageText);
 
-	let clients = getServerData().items;
-	for(let i in clients) {
-		if(isPlayerSpawned(clients[i])) {
-			if(!isSamePlayer(transmittingPlayer, clients[i])) {
-				if(getPlayerActiveWalkieTalkieFrequency(clients[i]) == radioFrequency) {
-					if(getItemData(getPlayerData(clients[i]).hotBarItems[getPlayerFirstItemSlotByUseType(clients[i], VRR_ITEM_USETYPE_WALKIETALKIE)]).enabled) {
-						walkieTalkieIncomingToNearbyPlayers(clients[i], messageText);
-					}
-				}
-			}
-		}
-	}
+	//let clients = getServerData().items;
+	//for(let i in clients) {
+	//	if(isPlayerSpawned(clients[i])) {
+	//		if(!isSamePlayer(transmittingPlayer, clients[i])) {
+	//			if(getPlayerActiveWalkieTalkieFrequency(clients[i]) == radioFrequency) {
+	//				if(getItemData(getPlayerData(clients[i]).hotBarItems[getPlayerFirstItemSlotByUseType(clients[i], VRR_ITEM_USETYPE_WALKIETALKIE)]).enabled) {
+	//					walkieTalkieIncomingToNearbyPlayers(clients[i], messageText);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	let items = getServerData().items;
 	for(let i in items) {
 		if(items[i].enabled) {
 			if(getItemTypeData(items[i].itemTypeIndex).useType == VRR_ITEM_USETYPE_WALKIETALKIE) {
 				if(items[i].value == radioFrequency) {
-					walkieTalkieIncomingToNearbyPlayers(null, messageText, items[i].position);
+					walkieTalkieIncomingToNearbyPlayers(null, messageText, getItemPosition(i));
 				}
 			}
 		}
@@ -63,7 +63,7 @@ function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 // ===========================================================================
 
 function walkieTalkieIncomingToNearbyPlayers(client, messageText, position = null) {
-	let prefix = `${getInlineChatColourByName("lightGrey")}(Radio)`;
+	let prefix = `${getInlineChatColourByName("lightGrey")}(Nearby radio)`;
 	if(client != null) {
 		prefix = `${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(from radio)`;
 	}

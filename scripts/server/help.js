@@ -290,11 +290,12 @@ function showClothesHelpMessage(client) {
 
 function showBindKeysHelpMessage(client) {
     messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Bindable Keys ${getInlineChatColourByType("clanOrange")}============================`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}You can set your own keys binds. Use ${getInlineChatColourByName("lightGrey")}/keybinds ${getInlineChatColourByName("white")}to add, remove, or change your keys.`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Default keys are: [#0066FF]K ${getInlineChatColourByName("white")}for vehicle engine, [#0066FF]I ${getInlineChatColourByName("white")}for lights, and [#0066FF]L ${getInlineChatColourByName("white")}for lock/unlock`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}You can set your own keys binds. Use ${getInlineChatColourByName("lightGrey")}/keybinds ${getInlineChatColourByName("white")}to see your binded keys.`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/bindkey ${getInlineChatColourByName("white")}to add a new keybind and /unbindkey to remove one.`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Default keys are: [#0066FF]K ${getInlineChatColourByName("white")}for vehicle engine, [#0066FF]L ${getInlineChatColourByName("white")}for lights, and [#0066FF]J ${getInlineChatColourByName("white")}for lock/unlock`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}[#0066FF]I ${getInlineChatColourByName("white")}to see your items and [#0066FF]1-9 ${getInlineChatColourByName("white")}to equip an item or [#0066FF]0 (zero) ${getInlineChatColourByName("white")}to equip none.`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}[#0066FF]U ${getInlineChatColourByName("white")}to use or [#0066FF]O ${getInlineChatColourByName("white")}to drop your current item, and [#0066FF]P ${getInlineChatColourByName("white")}to pickup an item from the ground.`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Your keybinds will automatically be usable on all servers`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Your keybinds will automatically be usable on all ${getServerName()} servers`);
 }
 
 // ===========================================================================

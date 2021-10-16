@@ -15,27 +15,10 @@ let skinSelectMessageColourTop = COLOUR_YELLOW;
 let skinSelectMessageColourBottom = COLOUR_WHITE;
 
 let usingSkinSelector = false;
-let usingNewCharacterSkinSelector = false;
 let skinSelectorIndex = 0;
 
 let skinSelectPosition = null;
 let skinSelectHeading = null;
-
-let newCharacterSkinSelectPedPosition = [
-	[],
-	[139.54, -903.00, 26.16],
-	[-379.16, -535.27, 17.28],
-	[2495.03, -1685.66, 13.51],
-	[904.27, -498.00, 14.522],
-];
-
-let newCharacterSkinSelectPedHeading = [
-	[],
-	[15.0],
-	[0.0],
-	[0.01],
-	[3.127],
-];
 
 // ===========================================================================
 
@@ -62,22 +45,22 @@ function loadSkinSelectMessageFontBottom() {
 
 function processSkinSelectKeyPress(keyCode) {
 	if(usingSkinSelector) {
-        if(keyCode == SDLK_RIGHT) {
-            if(allowedSkins[game.game].length-1 == skinSelectorIndex) {
+        if(keyCode == SDLK_RIGHT || keyCode == SDLK_s) {
+            if(skinSelectorIndex >= allowedSkins[getGame()].length-1) {
                 skinSelectorIndex = 0;
             } else {
                 skinSelectorIndex++;
             }
-            localPlayer.skin = allowedSkins[game.game][skinSelectorIndex][0];
-            skinSelectMessageTextTop = allowedSkins[game.game][skinSelectorIndex][1];
-        } else if(keyCode == SDLK_LEFT) {
+            skinSelectMessageTextTop = allowedSkins[getGame()][skinSelectorIndex][1];
+            localPlayer.skin = allowedSkins[getGame()][skinSelectorIndex][0];
+        } else if(keyCode == SDLK_LEFT || keyCode == SDLK_a) {
             if(skinSelectorIndex <= 0) {
-                skinSelectorIndex = allowedSkins[game.game].length-1;
+                skinSelectorIndex = allowedSkins[getGame()].length-1;
             } else {
                 skinSelectorIndex--;
             }
-            localPlayer.skin = allowedSkins[game.game][skinSelectorIndex][0];
-            skinSelectMessageTextTop = allowedSkins[game.game][skinSelectorIndex][1];
+            skinSelectMessageTextTop = allowedSkins[getGame()][skinSelectorIndex][1];
+            localPlayer.skin = allowedSkins[getGame()][skinSelectorIndex][0];
         } else if(keyCode == SDLK_RETURN) {
             triggerNetworkEvent("vrr.skinSelected", skinSelectorIndex);
         } else if(keyCode == SDLK_BACKSPACE) {
@@ -112,10 +95,8 @@ function processSkinSelectRendering() {
 function toggleSkinSelect(state) {
     if(state) {
         skinSelectorIndex = 0;
-        if(localPlayer.skin != allowedSkins[game.game][skinSelectorIndex][0]) {
-            localPlayer.skin = allowedSkins[game.game][skinSelectorIndex][0];
-        }
         usingSkinSelector = true;
+
         let tempPosition = localPlayer.position;
         tempPosition.z += 0.5;
         let frontCameraPosition = getPosInFrontOfPos(tempPosition, localPlayer.heading, 3);
@@ -124,6 +105,7 @@ function toggleSkinSelect(state) {
             game.setCameraLookAt(frontCameraPosition, localPlayer.position, true);
         }
 
+        localPlayer.skin = allowedSkins[getGame()][skinSelectorIndex][0];
         gui.showCursor(true, false);
         localPlayer.invincible = true;
         localPlayer.setProofs(true, true, true, true, true);

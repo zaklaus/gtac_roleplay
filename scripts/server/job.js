@@ -758,7 +758,8 @@ function jobEquipmentCommand(command, params, client) {
 
 	deleteJobItems(client);
 	givePlayerJobEquipment(client, equipmentId-1);
-	messagePlayerSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
+	//messagePlayerSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
+	meActionToNearbyPlayers(client, `grabs the ${jobData.equipment[equipmentId-1].name} equipment from the locker`);
 }
 
 // ===========================================================================

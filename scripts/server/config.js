@@ -10,65 +10,62 @@
 let serverConfig = {};
 let databaseConfig = {};
 let emailConfig = {};
-let globalConfig = {};
 let gameConfig = {};
 
 // ===========================================================================
 
-function loadGlobalConfig() {
-	return {
-		accountPasswordHash: "SHA512",
-		npcFarProximity: 100,
-		npcMediumProximity: 40,
-		npcCloseProximity: 12,
-		meActionDistance: 20,
-		doActionDistance: 15,
-		shoutDistance: 30,
-		talkDistance: 10,
-		whisperDistance: 2,
-		megaphoneDistance: 40,
-		vehicleLockDistance: 5,
-		startWorkingDistance: 5,
-		takeJobDistance: 5,
-		stopWorkingDistance: 10,
-		spawnCarDistance: 5,
-		payAndSprayDistance: 5,
-		keyBind: [],
-		exitPropertyDistance: 3.0,
-		enterPropertyDistance: 3.0,
-		businessDimensionStart: 5000,
-		houseDimensionStart: 100,
-		buyVehicleDriveAwayDistance: 25.0,
-		returnToJobVehicleTime: 30,
-		walkieTalkieSpeakerDistance: 15,
-		walkieTalkieTalkDistance: 15,
-		phoneSpeakerDistance: 15,
-		phoneTalkDistance: 15,
-		tazerEffectDuration: 15000,
-		vehicleRepairDistance: 5,
-		weaponEquippableTypes: [
-			VRR_ITEM_USETYPE_WEAPON,
-			VRR_ITEM_USETYPE_TAZER,
-			VRR_ITEM_USETYPE_EXTINGUISHER,
-			VRR_ITEM_USETYPE_SPRAYPAINT,
-			VRR_ITEM_USETYPE_PEPPERSPRAY,
-		],
-		onFootOnlyItems: [
-			VRR_ITEM_USETYPE_VEHREPAIR,
-			VRR_ITEM_USETYPE_VEHCOLOUR,
-			VRR_ITEM_USETYPE_VEHUPGRADE_PART,
-			VRR_ITEM_USETYPE_VEHLIVERY,
-			VRR_ITEM_USETYPE_VEHTIRE,
-		],
-		itemActionStateReset: 5000,
-		subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-		emailValidationRegex: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
-		itemActionDelayExtraTimeout: 1000,
-		geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
-		geoIPCityDatabaseFilePath: "geoip-city.mmdb",
-		randomTipInterval: 600000,
-	};
-}
+let globalConfig = {
+	accountPasswordHash: "SHA512",
+	npcFarProximity: 100,
+	npcMediumProximity: 40,
+	npcCloseProximity: 12,
+	meActionDistance: 20,
+	doActionDistance: 15,
+	shoutDistance: 30,
+	talkDistance: 10,
+	whisperDistance: 2,
+	megaphoneDistance: 40,
+	vehicleLockDistance: 5,
+	startWorkingDistance: 5,
+	takeJobDistance: 5,
+	stopWorkingDistance: 10,
+	spawnCarDistance: 5,
+	payAndSprayDistance: 5,
+	keyBind: [],
+	exitPropertyDistance: 3.0,
+	enterPropertyDistance: 3.0,
+	businessDimensionStart: 5000,
+	houseDimensionStart: 100,
+	buyVehicleDriveAwayDistance: 25.0,
+	returnToJobVehicleTime: 30,
+	walkieTalkieSpeakerDistance: 15,
+	walkieTalkieTalkDistance: 15,
+	phoneSpeakerDistance: 15,
+	phoneTalkDistance: 15,
+	tazerEffectDuration: 15000,
+	vehicleRepairDistance: 5,
+	weaponEquippableTypes: [
+		VRR_ITEM_USETYPE_WEAPON,
+		VRR_ITEM_USETYPE_TAZER,
+		VRR_ITEM_USETYPE_EXTINGUISHER,
+		VRR_ITEM_USETYPE_SPRAYPAINT,
+		VRR_ITEM_USETYPE_PEPPERSPRAY,
+	],
+	onFootOnlyItems: [
+		VRR_ITEM_USETYPE_VEHREPAIR,
+		VRR_ITEM_USETYPE_VEHCOLOUR,
+		VRR_ITEM_USETYPE_VEHUPGRADE_PART,
+		VRR_ITEM_USETYPE_VEHLIVERY,
+		VRR_ITEM_USETYPE_VEHTIRE,
+	],
+	itemActionStateReset: 5000,
+	subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+	emailValidationRegex: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
+	itemActionDelayExtraTimeout: 1000,
+	geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
+	geoIPCityDatabaseFilePath: "geoip-city.mmdb",
+	randomTipInterval: 600000,
+};
 
 // ===========================================================================
 
@@ -80,7 +77,6 @@ function loadGameConfig() {
 
 function initConfigScript() {
 	logToConsole(LOG_INFO, "[VRR.Config]: Initializing config script ...");
-	globalConfig = loadGlobalConfig();
 	gameConfig = loadGameConfig();
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port, getMultiplayerMod());
 	applyConfigToServer(serverConfig);

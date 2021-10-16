@@ -76,26 +76,26 @@ function syncVehicleProperties(vehicle) {
         }
     }
 
-    if(doesEntityDataExist(vehicle, "vrr.panelStatus")) {
-        let panelsStatus = getEntityData(vehicle, "vrr.panelStatus");
-        for(let i in panelsStatus) {
-            vehicle.setPanelStatus(i, panelsStatus[i]);
-        }
-    }
+    //if(doesEntityDataExist(vehicle, "vrr.panelStatus")) {
+    //    let panelsStatus = getEntityData(vehicle, "vrr.panelStatus");
+    //    for(let i in panelsStatus) {
+    //        vehicle.setPanelStatus(i, panelsStatus[i]);
+    //    }
+    //}
 
-    if(doesEntityDataExist(vehicle, "vrr.wheelStatus")) {
-        let wheelsStatus = getEntityData(vehicle, "vrr.wheelStatus");
-        for(let i in wheelsStatus) {
-            vehicle.setWheelStatus(i, wheelsStatus[i]);
-        }
-    }
+    //if(doesEntityDataExist(vehicle, "vrr.wheelStatus")) {
+    //    let wheelsStatus = getEntityData(vehicle, "vrr.wheelStatus");
+    //    for(let i in wheelsStatus) {
+    //        vehicle.setWheelStatus(i, wheelsStatus[i]);
+    //    }
+    //}
 
-    if(doesEntityDataExist(vehicle, "vrr.lightStatus")) {
-        let lightStatus = getEntityData(vehicle, "vrr.lightStatus");
-        for(let i in lightStatus) {
-            vehicle.setLightStatus(i, lightStatus[i]);
-        }
-    }
+    //if(doesEntityDataExist(vehicle, "vrr.lightStatus")) {
+    //    let lightStatus = getEntityData(vehicle, "vrr.lightStatus");
+    //    for(let i in lightStatus) {
+    //        vehicle.setLightStatus(i, lightStatus[i]);
+    //    }
+    //}
 
     //if(doesEntityDataExist(vehicle, "vrr.suspensionHeight")) {
     //    let suspensionHeight = getEntityData(vehicle, "vrr.suspensionHeight");
@@ -123,8 +123,6 @@ function syncVehicleProperties(vehicle) {
             }
         }
     }
-
-    //gta.REMOVE_UPSIDEDOWN_CAR_CHECK(gta.GET_VEHICLE_ID(vehicle));
 }
 
 // ===========================================================================
@@ -331,7 +329,7 @@ function syncPlayerProperties(player) {
 // ===========================================================================
 
 function syncObjectProperties(object) {
-    if(getGame() == GAME_GTA_III) {
+    if(getGame() == GAME_GTA_III || getGame() == GAME_GTA_VC) {
         if(doesEntityDataExist(object, "vrr.scale")) {
             let scaleFactor = getEntityData(object, "vrr.scale");
             let tempMatrix = object.matrix;

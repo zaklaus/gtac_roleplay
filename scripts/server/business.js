@@ -594,6 +594,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			getBusinessData(businessId).exitDimension = 0;
 			getBusinessData(businessId).exitInterior = -1;
 			getBusinessData(businessId).hasInterior = false;
+			getBusinessData(businessId).exitPickupModel = -1;
 			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
 			return false;
 		}
@@ -607,14 +608,16 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 		getBusinessData(businessId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam][0];
 		getBusinessData(businessId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam][1];
 		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
+		getBusinessData(businessId).exitPickupModel = getGameConfig().pickupModels[getServerGame()].exit;
 		getBusinessData(businessId).hasInterior = true;
 	}
 
-	deleteBusinessExitPickup(businessId);
-	deleteBusinessExitBlip(businessId);
+	//deleteBusinessExitPickup(businessId);
+	//deleteBusinessExitBlip(businessId);
+	//createBusinessExitBlip(businessId);
+	//createBusinessExitPickup(businessId);
 
-	createBusinessExitBlip(businessId);
-	createBusinessExitPickup(businessId);
+	resetBusinessPickups(businessId);
 
 	getBusinessData(businessId).needsSaved = true;
 
@@ -992,11 +995,13 @@ function moveBusinessEntranceCommand(command, params, client) {
 	getBusinessData(businessId).entranceDimension = getPlayerDimension(client);
 	getBusinessData(businessId).entranceInterior = getPlayerInterior(client);
 
-	deleteBusinessEntranceBlip(businessId);
-	deleteBusinessEntrancePickup(businessId);
+	//deleteBusinessEntranceBlip(businessId);
+	//deleteBusinessEntrancePickup(businessId);
+	//createBusinessEntranceBlip(businessId);
+	//createBusinessEntrancePickup(businessId);
 
-	createBusinessEntranceBlip(businessId);
-	createBusinessEntrancePickup(businessId);
+	resetBusinessPickups(businessId);
+	resetBusinessBlips(businessId);
 
 	getBusinessData(businessId).needsSaved = true;
 
@@ -1303,11 +1308,10 @@ function deleteBusiness(businessId, deletedBy = 0) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	deleteBusinessEntrancePickups(businessId);
-	deleteBusinessExitPickups(businessId);
-
-	deleteBusinessEntranceBlips(businessId);
-	deleteBusinessExitBlips(businessId);
+	deleteBusinessEntrancePickup(businessId);
+	deleteBusinessExitPickup(businessId);
+	deleteBusinessEntranceBlip(businessId);
+	deleteBusinessExitBlip(businessId);
 
 	removePlayersFromBusiness(businessId);
 

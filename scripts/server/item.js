@@ -331,6 +331,11 @@ function dropItemCommand(command, params, client) {
 		return false;
 	}
 
+	if(isPlayerItemFromJobEquipment(client, hotBarSlot)) {
+		messagePlayerError(client, `You can't drop job items`);
+		return false;
+	}
+
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_DROP;
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	showPlayerItemDropDelay(client, hotBarSlot);
@@ -366,6 +371,11 @@ function putItemCommand(command, params, client) {
 
 	if(getPlayerData(client).usingSkinSelect) {
 		messagePlayerError(client, `Your can't store an item while customizing your appearance`);
+		return false;
+	}
+
+	if(isPlayerItemFromJobEquipment(client, hotBarSlot)) {
+		messagePlayerError(client, `You can't put job items`);
 		return false;
 	}
 
@@ -406,6 +416,11 @@ function takeItemCommand(command, params, client) {
 		messagePlayerError(client, `Your can't take an item while customizing your appearance`);
 		return false;
 	}
+
+	//if(isPlayerItemFromJobEquipment(client, hotBarSlot)) {
+	//	messagePlayerError(client, `You can't take job items`);
+	//	return false;
+	//}
 
 	getPlayerData(client).itemActionItem = itemId;
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_TAKE;
@@ -635,7 +650,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_VEHREPAIR:
-			let vehicle = getClosestVehicle(getPlayerPosition(client));
+			vehicle = getClosestVehicle(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				meActionToNearbyPlayers(client, `takes their repair kit and fixes the vehicle`);
 				repairVehicle(vehicle);
@@ -648,7 +663,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_VEHUPGRADE_PART:
-			let vehicle = getClosestVehicle(getPlayerPosition(client));
+			vehicle = getClosestVehicle(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				meActionToNearbyPlayers(client, `takes their upgrade kit and adds a ${getItemName(itemIndex)} to the vehicle.`);
 				addVehicleUpgrade(vehicle, getItemData(itemIndex).useId);
@@ -656,7 +671,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_VEHLIVERY:
-			let vehicle = getClosestVehicle(getPlayerPosition(client));
+			vehicle = getClosestVehicle(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				meActionToNearbyPlayers(client, `takes their decal kit and adds some decals to the vehicle.`);
 				setVehicleLivery(vehicle, getItemData(itemIndex).useValue);
@@ -664,7 +679,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_VEHCOLOUR:
-			let vehicle = getClosestVehicle(getPlayerPosition(client));
+			vehicle = getClosestVehicle(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				if(getItemData(itemIndex).useId == 1) {
 					meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the primary colour of the vehicle.`);
@@ -679,7 +694,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_FUELCAN:
-			let vehicle = getClosestVehicle(getPlayerPosition(client));
+			vehicle = getClosestVehicle(getPlayerPosition(client));
 			let fuelPump = getClosestFuelPump(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getDistance(getPlayerPosition(client), getFuelPumpData(fuelPump).position)) {
 				if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
@@ -745,6 +760,18 @@ function playerUseItem(client, hotBarSlot) {
 			givePlayerHealth(client, 50);
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
+			break;
+
+		case VRR_ITEM_USETYPE_BADGE:
+			let clients = getClients();
+			for(let i in clients) {
+				if(getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= 7) {
+					messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Badge ${getInlineChatColourByType("clanOrange")}====================================`);
+					messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}Name: ${getInlineChatColourByName("white")}${getCharacterFullName(client)}`);
+					messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}Type: ${getInlineChatColourByName("white")}${getJobData(getPlayerJob(client)).name}`);
+					messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}Rank: ${getInlineChatColourByName("white")}${getJobRankData(getPlayerJob(client), getPlayerJobRank(client)).name}`);
+				}
+			}
 			break;
 
 		default:
@@ -970,8 +997,10 @@ function playerSwitchHotBarSlotCommand(command, params, client) {
 		hotBarSlot = hotBarSlot-1;
 	}
 
-	if(getPlayerData(client).activeHotBarSlot == hotBarSlot) {
-		hotBarSlot = -1;
+	if(hotBarSlot != -1) {
+		if(getPlayerData(client).activeHotBarSlot == hotBarSlot) {
+			hotBarSlot = -1;
+		}
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
@@ -1005,8 +1034,10 @@ function getClosestItemOnGround(position) {
 
 function setItemDataIndexes() {
 	for(let i in getServerData().items) {
-		getServerData().items[i].index = i;
-		getServerData().items[i].itemTypeIndex = getItemTypeIndexFromDatabaseId(getServerData().items[i].itemType);
+		if(getServerData().items[i]) {
+			getServerData().items[i].index = i;
+			getServerData().items[i].itemTypeIndex = getItemTypeIndexFromDatabaseId(getServerData().items[i].itemType);
+		}
 	}
 }
 
@@ -1055,7 +1086,7 @@ function cachePlayerHotBarItems(client) {
 		return false;
 	}
 
-	for(let i = 0 ; i <= 9 ; i++) {
+	for(let i = 0 ; i < 9 ; i++) {
 		getPlayerData(client).hotBarItems[i] = -1;
 	}
 
@@ -1349,7 +1380,7 @@ function saveItemToDatabase(itemId) {
 // ===========================================================================
 
 function storePlayerItemsInJobLocker(client) {
-	for(let i = 0 ; i <= 8 ; i++) {
+	for(let i = 0 ; i < 9 ; i++) {
 		getPlayerData(client).jobLockerCache[i] = getPlayerData(client).hotBarItems[i];
 		getPlayerData(client).hotBarItems[i] = -1;
 	}
@@ -1367,7 +1398,7 @@ function restorePlayerJobLockerItems(client) {
 		}
 	}
 
-	for(let i = 0 ; i <= 8 ; i++) {
+	for(let i = 0 ; i < 9 ; i++) {
 		getPlayerData(client).hotBarItems[i] = getPlayerData(client).jobLockerCache[i];
 		getPlayerData(client).jobLockerCache[i] = -1;
 	}
@@ -1533,6 +1564,30 @@ function deleteItemInPlayerInventoryCommand(command, params, client) {
 	let tempName = getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[hotBarSlot-1]).itemTypeIndex).name
 	deleteItem(getPlayerData(targetClient).hotBarItems[hotBarSlot-1]);
 	messagePlayerSuccess(client, `You deleted the ${getInlineChatColourByName("lightGrey")}${tempName} ${getInlineChatColourByName("white")}item in ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}'s ${getInlineChatColourByName("white")}inventory`);
+}
+
+// ===========================================================================
+
+function deleteAllItemsInPlayerInventoryCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let hotBarSlot = splitParams[1];
+
+	if(!targetClient) {
+		messagePlayerError(client, `Player not found!`);
+		return false;
+	}
+
+	for(let i = 0; i < 9; i++) {
+		deleteItem(getPlayerData(targetClient).hotBarItems[i]);
+	}
+
+	messagePlayerSuccess(client, `You deleted all items in ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}'s ${getInlineChatColourByName("white")}inventory`);
 }
 
 // ===========================================================================
@@ -1750,6 +1805,32 @@ function switchPlayerActiveHotBarSlot(client, slotId) {
 		showPlayerItemSwitchDelay(client, slotId);
 	}
 	//clearPlayerItemActionStateAfterDelay(client, getGlobalConfig().itemActionStateReset);
+}
+
+// ===========================================================================
+
+function isPlayerItemFromJobEquipment(client, hotBarSlot) {
+	if(getPlayerData(client).hotBarItems[hotBarSlot].databaseId = -1) {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getItemPosition(itemId) {
+	switch(getItemData(itemId).ownerType) {
+		case VRR_ITEM_OWNER_PLAYER:
+			return getPlayerPosition(getPlayerFromCharacterId(getItemData(itemId).ownerId));
+
+		case VRR_ITEM_OWNER_VEHDASH:
+		case VRR_ITEM_OWNER_VEHTRUNK:
+			return getVehiclePosition(getVehicleFromDatabaseId(getItemData(itemId).ownerId));
+
+		case VRR_ITEM_OWNER_GROUND:
+			return getItemData(itemId).position;
+	}
 }
 
 // ===========================================================================

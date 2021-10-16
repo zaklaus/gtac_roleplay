@@ -3278,12 +3278,12 @@ let gameData = {
 		},
 
 		{ // GTA San Andreas
-			business: 1,
-			house: 1,
-			bank: 1,
-			clothes: 1,
-			info: 1,
-			job: 1,
+			business: 255,
+			house: 255,
+			bank: 255,
+			clothes: 255,
+			info: 255,
+			job: 255,
 		}
 	],
 
@@ -4524,7 +4524,7 @@ function setPlayerCash(client, amount) {
 		return false;
 	}
 
-    if(isNan(amount)) {
+    if(isNaN(amount)) {
         return false;
     }
 
@@ -4539,7 +4539,7 @@ function givePlayerCash(client, amount) {
 		return false;
 	}
 
-    if(isNan(amount)) {
+    if(isNaN(amount)) {
         return false;
     }
 

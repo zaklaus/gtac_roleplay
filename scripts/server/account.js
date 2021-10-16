@@ -1200,25 +1200,31 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 // ===========================================================================
 
 function isAccountAutoIPLoginEnabled(accountData) {
-	return isAccountSettingFlagEnabled(accountData.settings, getAccountSettingsFlagValue("autoLoginIP"));
+	return isAccountSettingFlagEnabled(accountData, getAccountSettingsFlagValue("autoLoginIP"));
+}
+
+// ===========================================================================
+
+function doesPlayerHaveAutoIPLoginEnabled(client) {
+	return isAccountAutoIPLoginEnabled(getPlayerData(client).accountData);
 }
 
 // ===========================================================================
 
 function doesPlayerHaveGUIEnabled(client) {
-	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noGUI"));
+	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("noGUI"));
 }
 
 // ===========================================================================
 
 function doesPlayerHaveLogoEnabled(client) {
-	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noServerLogo"));
+	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("noServerLogo"));
 }
 
 // ===========================================================================
 
 function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
-	return isAccountSettingFlagEnabled(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("autoSelectLastCharacter"));
+	return isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("autoSelectLastCharacter"));
 }
 
 // ===========================================================================
@@ -1321,11 +1327,7 @@ function sendAccountLoginSuccessNotification(emailAddress, name, ip, game = getS
 // ===========================================================================
 
 function isAccountSettingFlagEnabled(accountData, flagValue) {
-	if(hasBitFlag(accountData.settings, flagValue)) {
-		return true;
-	}
-
-	return false;
+	return hasBitFlag(accountData.settings, flagValue);
 }
 
-// ===========================================================================
+// ===========================================================================t

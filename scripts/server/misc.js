@@ -343,13 +343,22 @@ function updateServerGameTime() {
 // ===========================================================================
 
 function listOnlineAdminsCommand(command, params, client) {
+	//== Admins ===================================
+	messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Admins ${getInlineChatColourByType("clanOrange")}===================================`);
+
+	let admins = [];
 	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerData(clients[i])) {
-			if(getPlayerData(clients[i]).accountData.flags.admin > 0) {
-				messagePlayerNormal(client, `• [${getPlayerData(clients[i]).accountData.staffTitle}] ${getCharacterFullName(clients[i])}`);
+		if(getPlayerData(clients[i]) != false) {
+			if(getPlayerData(clients[i]).accountData.flags.admin != 0) {
+				admins.push(`${getInlineChatColourByName("lightGrey")}[${getPlayerData(clients[i]).accountData.staffTitle}] ${getInlineChatColourByName("white")}${getCharacterFullName(clients[i])}`);
 			}
 		}
+	}
+
+	let chunkedList = splitArrayIntoChunks(admins, 3);
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join(", "));
 	}
 }
 

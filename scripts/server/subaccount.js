@@ -287,7 +287,7 @@ function checkNewCharacter(client, firstName, lastName) {
 		return true;
 	}
 
-	let skinId = allowedSkins[getServerGame()][getPlayerData(client).creatingCharacterSkin];
+	let skinId = allowedSkins[getServerGame()][getAllowedSkinDataBySkinId(getServerData().newCharacter.skin)][0]
 
 	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName);
 	if(!subAccountData) {

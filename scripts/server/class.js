@@ -239,6 +239,7 @@ class ClientData {
 		this.returnToDimension = null;
 		this.returnToHouse = null;
 		this.returnToBusiness = null;
+		this.returnToType = VRR_RETURNTO_TYPE_NONE;
 
 		this.changingCharacterName = false;
 

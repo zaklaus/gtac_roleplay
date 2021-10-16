@@ -700,7 +700,7 @@ function doesPlayerHaveVehicleKeys(client, vehicle) {
 	}
 
 	if(vehicleData.ownerType == VRR_VEHOWNER_JOB) {
-		if(vehicleData.ownerId == getJobType(getPlayerCurrentSubAccount(client).job)) {
+		if(vehicleData.ownerId == getPlayerCurrentSubAccount(client).job) {
 			return true;
 		}
 	}
@@ -1376,6 +1376,35 @@ function resetVehiclePosition(vehicle) {
 function setAllVehicleIndexes() {
 	for(let i in getServerData().vehicles) {
 		getServerData().vehicles[i].index = i;
+	}
+}
+
+// ===========================================================================
+
+function doesVehicleHaveMegaphone(vehicle) {
+	if(getJobType(getJobIdFromDatabaseId(getVehicleData(vehicle).job)) == VRR_JOB_POLICE) {
+		return true;
+	}
+
+	if(getJobType(getJobIdFromDatabaseId(getVehicleData(vehicle).job)) == VRR_JOB_FIRE) {
+		return true;
+	}
+
+	if(getJobType(getJobIdFromDatabaseId(getVehicleData(vehicle).job)) == VRR_JOB_MEDICAL) {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getVehicleFromDatabaseId(databaseId) {
+	let vehicles = getServerData().vehicles;
+	for(let i in vehicles) {
+		if(vehicles[i].databaseId == databaseId) {
+			return vehicles[i].vehicle;
+		}
 	}
 }
 

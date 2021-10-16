@@ -268,7 +268,7 @@ function hasBitFlag(allFlags, checkForFlag) {
 		return true;
 	}
 
-	return (allFlags & checkForFlag);
+	return ((allFlags & checkForFlag) == allFlags);
 }
 
 // ===========================================================================

@@ -350,11 +350,14 @@ function setLocalPlayerInterior(interior) {
 
 // ===========================================================================
 
-function setSnowState(fallingSnow, groundSnow) {
-    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting falling snow to ${fallingSnow} and ground snow to ${groundSnow}`);
+function setSnowState(falling, ground) {
+    logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting falling snow to ${falling} and ground snow to ${ground}`);
     if(!isNull(snowing)) {
-        snowing = fallingSnow;
-        forceSnowing(groundSnow);
+        if(ground == true) {
+            forceSnowing(ground);
+        } else {
+            snowing = falling;
+        }
     }
 }
 
@@ -484,25 +487,6 @@ function setPlayerWeaponDamageEnabled(clientName, state) {
 function setLocalPlayerCash(amount) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting local player money`);
     localPlayer.money = toInteger(amount);
-}
-
-// ===========================================================================
-
-function removeWorldObject(model, position, range) {
-    if(isRemovingWorldObjectsSupported()) {
-        logToConsole(LOG_DEBUG, `[VRR.Utilities] Removing world object ${model} at X: ${position.x}, Y: ${position.x}, Z: ${position.x} with range of ${range}`);
-
-        if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-            game.removeWorldObject(model, position, range);
-        }
-    }
-}
-
-// ===========================================================================
-
-function excludeModelFromGroundSnow(model) {
-    logToConsole(LOG_DEBUG, `[VRR.Utilities] Disabling ground snow for object model ${model}`);
-    groundSnow.excludeModel(model);
 }
 
 // ===========================================================================

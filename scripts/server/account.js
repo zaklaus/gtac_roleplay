@@ -590,7 +590,7 @@ function loginSuccess(client) {
 
 	getPlayerData(client).accountData.ipAddress = client.ip;
 
-	sendRemovedWorldObjectsToPlayer(client);
+	//sendRemovedWorldObjectsToPlayer(client);
 	sendPlayerChatScrollLines(client, getPlayerData(client).accountData.chatScrollLines);
 
 	messagePlayerNormal(null, `👋 ${getPlayerName(client)} has joined the server`, getColourByName("softYellow"));
@@ -1003,6 +1003,7 @@ function initClient(client) {
 
 	sendPlayerGUIColours(client);
 	sendPlayerGUIInit(client);
+	updatePlayerSnowState(client);
 
 	showConnectCameraToPlayer(client);
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
@@ -1044,7 +1045,7 @@ function initClient(client) {
 			}
 		}
 
-		playRadioStreamForPlayer(client, getServerConfig().introMusicURL, true, getPlayerStreamingRadioVolume(client));
+		playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 	}, 2500);
 }
 
@@ -1058,7 +1059,7 @@ function saveConnectionToDatabase(client) {
 		queryDatabase(dbConnection, dbQueryString);
 		let connectionId = getDatabaseInsertId(dbConnection);
 		setEntityData(client, "vrr.connection", connectionId, false);
-
+		getPlayerData(client).connectionId = connectionId;
 		requestClientInfo(client);
 	}
 }

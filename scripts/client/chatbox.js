@@ -46,9 +46,11 @@ function unBindChatBoxKeys() {
 // ===========================================================================
 
 function receiveChatBoxMessageFromServer(messageString, colour) {
-    message(messageString, colour);
+    if(bottomMessageIndex => chatBoxHistory.length-1) {
+        message(messageString, colour);
+        bottomMessageIndex = chatBoxHistory.length-1;
+    }
     addToChatBoxHistory(messageString, colour);
-    bottomMessageIndex = chatBoxHistory.length-1;
 }
 
 // ===========================================================================

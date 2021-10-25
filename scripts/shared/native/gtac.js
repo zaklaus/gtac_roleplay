@@ -1033,16 +1033,6 @@ function isWeatherSupported() {
 
 // ===========================================================================
 
-function isRemovingWorldObjectsSupported() {
-	if(getGame() == GAME_GTA_III) {
-		return true;
-	}
-
-    return false;
-}
-
-// ===========================================================================
-
 function arePickupsSupported() {
 	if(isGTAIV()) {
 		return false;

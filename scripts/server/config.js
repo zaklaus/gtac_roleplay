@@ -65,6 +65,32 @@ let globalConfig = {
 	geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
 	geoIPCityDatabaseFilePath: "geoip-city.mmdb",
 	randomTipInterval: 600000,
+	accents: [
+        "English",
+        "French",
+        "Russian",
+        "Scottish",
+        "Irish",
+        "Spanish",
+        "Southern American",
+        "Italian",
+        "Australian",
+        "Jamaican",
+        "Israeli",
+        "Dutch",
+        "Brazilian",
+        "Portuguese",
+        "German",
+        "Canadian",
+        "Chinese",
+        "Japanese",
+        "Turkish",
+        "Korean",
+        "Estonian",
+        "Sicilian",
+        "Indian",
+		"Rough",
+    ],
 };
 
 // ===========================================================================
@@ -158,9 +184,12 @@ function saveServerConfigToDatabase() {
 				["svr_newchar_rot_z", getServerConfig().newCharacter.spawnHeading],
 				["svr_newchar_skin", getServerConfig().newCharacter.skin],
 				["svr_newchar_money", getServerConfig().newCharacter.money],
-				["svr_gui_col1_r", getServerConfig().guiColour[0]],
-				["svr_gui_col1_g", getServerConfig().guiColour[1]],
-				["svr_gui_col1_b", getServerConfig().guiColour[2]],
+				["svr_gui_col1_r", getServerConfig().guiColourPrimary[0]],
+				["svr_gui_col1_g", getServerConfig().guiColourPrimary[1]],
+				["svr_gui_col1_b", getServerConfig().guiColourPrimary[2]],
+				["svr_gui_col2_r", getServerConfig().guiColourSecondary[0]],
+				["svr_gui_col2_g", getServerConfig().guiColourSecondary[1]],
+				["svr_gui_col2_b", getServerConfig().guiColourSecondary[2]],
 				["svr_connectcam_pos_x", getServerConfig().connectCameraPosition.x],
 				["svr_connectcam_pos_y", getServerConfig().connectCameraPosition.y],
 				["svr_connectcam_pos_z", getServerConfig().connectCameraPosition.z],
@@ -253,9 +282,9 @@ function setTimeCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split();
-	let hour = toInteger(splitParams[0]) || 0;
-	let minute = toInteger(splitParams[1]) || 0;
+	let splitParams = params.split(" ");
+	let hour = toInteger(splitParams[0]);
+	let minute = toInteger(splitParams[1]);
 
 	if(hour > 23 || hour < 0) {
 		messagePlayerError(client, "The hour must be between 0 and 23!");
@@ -299,7 +328,7 @@ function setMinuteDurationCommand(command, params, client) {
 		return false;
 	}
 
-    let minuteDuration = toInteger(params) || 60000;
+    let minuteDuration = toInteger(params);
 	getServerConfig().minuteDuration = minuteDuration;
 	setTimeMinuteDuration(null, minuteDuration);
 
@@ -326,7 +355,7 @@ function setWeatherCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split();
+	let splitParams = params.split(" ");
 	let weatherId = getWeatherFromParams(splitParams[0]);
 
 	if(!weatherId) {
@@ -361,18 +390,18 @@ function setSnowingCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split();
-    let fallingSnow = intToBool(toInteger(splitParams[0]) || 0) || !getServerConfig().fallingSnow;
-	let groundSnow = intToBool(toInteger(splitParams[1]) || 0) || !getServerConfig().groundSnow;
+	let splitParams = params.split(" ");
+    let falling = splitParams[1];
+	let ground = splitParams[1];
 
-	getServerConfig().fallingSnow = fallingSnow;
-	getServerConfig().groundSnow = groundSnow;
+	getServerConfig().fallingSnow = intToBool(toInteger(falling));
+	getServerConfig().groundSnow = intToBool(toInteger(ground));
 
 	updatePlayerSnowState(null);
 
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} ${getInlineChatColourByName("orange")}turned falling snow ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} ${getInlineChatColourByName("orange")}and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
+    messageAdminAction(`${getPlayerName(client)} ${getInlineChatColourByName("orange")}turned falling snow ${getBoolRedGreenInlineColour(falling)}${getOnOffFromBool(falling)} ${getInlineChatColourByName("orange")}and ground snow ${getBoolRedGreenInlineColour(ground)}${getOnOffFromBool(ground)}`);
     updateServerRules();
 	return true;
 }
@@ -394,7 +423,7 @@ function setServerGUIColoursCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split();
+	let splitParams = params.split(" ");
     let colourRed = toInteger(splitParams[0]) || 255;
 	let colourGreen = toInteger(splitParams[1]) || 255;
 	let colourBlue = toInteger(splitParams[2]) || 255;
@@ -607,6 +636,17 @@ function reloadDatabaseConfigurationCommand(command, params, client) {
 	//}
 
 	return true;
+}
+
+// ===========================================================================
+
+function getServerIntroMusicURL() {
+	//if(server.getCVar("theme") != null) {
+	//	if(server.getCVar("theme") == VRR_THEME_CHRISTMAS) {
+	//
+	//	}
+	//}
+	return getServerConfig().introMusicURL;
 }
 
 // ===========================================================================

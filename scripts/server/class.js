@@ -53,7 +53,10 @@ class ServerConfigData {
 		this.fallingSnow = false;
 		this.groundSnow = false;
 		this.useGUI = true;
-		this.guiColour = [200, 200, 200];
+		this.guiColourPrimary = [200, 200, 200];
+		this.guiColourSecondary = [200, 200, 200];
+		this.guiTextColourPrimary = [0, 0, 0];
+		this.guiTextColourSecondary = [0, 0, 0];
 		this.showLogo = true;
 		this.inflationMultiplier = 1;
 
@@ -120,7 +123,10 @@ class ServerConfigData {
 			this.fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
 			this.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
 			this.useGUI = intToBool(dbAssoc["svr_gui"]);
-			this.guiColour = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
+			this.guiColourPrimary = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
+			this.guiColourSecondary = [toInteger(dbAssoc["svr_gui_col2_r"]), toInteger(dbAssoc["svr_gui_col2_g"]), toInteger(dbAssoc["svr_gui_col2_b"])];
+			this.guiTextColourPrimary = [toInteger(dbAssoc["svr_gui_textcol1_r"]), toInteger(dbAssoc["svr_gui_textcol1_g"]), toInteger(dbAssoc["svr_gui_textcol1_b"])];
+			//this.guiTextColourSecondary = [toInteger(dbAssoc["svr_gui_textcol2_r"]), toInteger(dbAssoc["svr_gui_textcol2_g"]), toInteger(dbAssoc["svr_gui_textcol2_b"])];
 			this.showLogo = intToBool(dbAssoc["svr_logo"]);
 			this.inflationMultiplier = toFloat(dbAssoc["svr_inflation_multiplier"]);
 
@@ -417,6 +423,7 @@ class SubAccountData {
 		this.jobUniform = this.skin;
 		this.lastJobVehicle = null;
 		this.job = 0;
+		this.jobRank = 0;
 		this.weapons = [];
 		this.inJail = false;
 		this.interior = 0;
@@ -466,6 +473,7 @@ class SubAccountData {
 			this.clanRank = toInteger(dbAssoc["sacct_svr_clan_rank"]);
 			this.clanTitle = toInteger(dbAssoc["sacct_svr_clan_title"]);
 			this.job = toInteger(dbAssoc["sacct_svr_job"]);
+			this.jobRank = toInteger(dbAssoc["sacct_svr_job_rank"]);
 			this.interior = toInteger(dbAssoc["sacct_int"]);
 			this.dimension = toInteger(dbAssoc["sacct_vw"]);
 			this.pedScale = toVector3(toFloat(dbAssoc["sacct_svr_scale_x"]), toFloat(dbAssoc["sacct_svr_scale_y"]), toFloat(dbAssoc["sacct_svr_scale_z"]));
@@ -1641,5 +1649,27 @@ class BanData {
 			this.ipAddress = toInteger(dbAssoc["ban_ip"]);
 			this.reason = toInteger(dbAssoc["ban_reason"]);
 		}
+	}
+}
+
+class DeckCardData {
+	constructor(imageName, value) {
+		this.imageName = imageName,
+		this.value = value;
+	}
+}
+
+class DeckCardGameData {
+	constructor() {
+		this.gameType = VRR_DECKCARD_GAME_NONE;
+		this.playedCards = [];
+		this.remainingCards = [];
+	}
+}
+
+class DeckCardHandData {
+	constructor() {
+		this.cards = [];
+		this.total = 0;
 	}
 }

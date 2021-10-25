@@ -697,6 +697,24 @@ function updateServerRules() {
 
 // ===========================================================================
 
+function getAccentFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getGlobalConfig().accents) {
+			if(toLowerCase(getGlobalConfig().accents[i]).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getGlobalConfig().accents[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
 function getWeatherFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getGameData().weatherNames[getServerGame()]) {
@@ -709,9 +727,9 @@ function getWeatherFromParams(params) {
 			return toInteger(params);
 		}
 	}
-	return 0;
-}
 
+	return false;
+}
 
 // ===========================================================================
 
@@ -727,7 +745,8 @@ function getFightStyleFromParams(params) {
 			return toInteger(params);
 		}
 	}
-	return 0;
+
+	return false;
 }
 
 // ===========================================================================
@@ -744,7 +763,8 @@ function getAnimationFromParams(params) {
 			return toInteger(params);
 		}
 	}
-	return 0;
+
+	return false;
 }
 
 // ===========================================================================

@@ -59,9 +59,6 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.money", setLocalPlayerCash);
     addNetworkHandler("vrr.armour", setLocalPlayerArmour);
 
-    addNetworkHandler("vrr.excludeGroundSnow", excludeModelFromGroundSnow);
-    addNetworkHandler("vrr.removeWorldObject", removeWorldObject);
-
     addNetworkHandler("vrr.delKeyBind", unBindAccountKey);
     addNetworkHandler("vrr.addKeyBind", bindAccountKey);
     addNetworkHandler("vrr.clearKeyBinds", clearKeyBinds);
@@ -73,6 +70,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.chatScrollLines", setChatScrollLines);
 
     addNetworkHandler("vrr.radioStream", playStreamingRadio);
+    addNetworkHandler("vrr.audioFileStream", playAudioFile);
     addNetworkHandler("vrr.stopRadioStream", stopStreamingRadio);
     addNetworkHandler("vrr.radioVolume", setStreamingRadioVolume);
 

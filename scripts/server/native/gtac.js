@@ -3278,12 +3278,12 @@ let gameData = {
 		},
 
 		{ // GTA San Andreas
-			business: 255,
-			house: 255,
-			bank: 255,
-			clothes: 255,
-			info: 255,
-			job: 255,
+			business: 1,
+			house: 1,
+			bank: 1,
+			clothes: 1,
+			info: 1,
+			job: 1,
 		}
 	],
 
@@ -3296,31 +3296,6 @@ let gameData = {
 		85,
 		85,
 		85,
-	],
-
-	removedWorldObjects: [
-		false,
-
-		[ // GTA III
-			["fraightback04", toVector3(1229.88, -84.8012, 13.4004), 50.0], // Truck trailer in Easy Credit Autos dealership parking lot
-			["fraightback03", toVector3(1239.49, -68.0529, 11.6914), 50.0], // Truck trailer in Easy Credit Autos dealership parking lot
-		],
-
-		[ // GTA VC
-
-		],
-
-		[ // GTA SA
-
-		],
-
-		[ // GTA UG
-
-		],
-
-		[ // GTA IV
-
-		],
 	],
 
 	excludedGroundSnowModels: [
@@ -3910,6 +3885,8 @@ let gameData = {
 			diner2: [toVector3(454.97, -110.10, 1000.07), 4],
 			diner3: [toVector3(435.27, -80.95, 999.55), 5],
 			smallPoliceStation: [toVector3(322.19, 302.49, 999.14), 5],
+			cinema: [toVector3(2179.95,-1009.75,1021.68), 0],
+			courthouse: [toVector3(1219.51, -1792.69, 2431.34), 0],
 		},
 
 		{ // GTA UG
@@ -4265,7 +4242,6 @@ let gameData = {
 	fuelStations: [
 		false,
 		[	// GTA 3
-
 			{
 				position: toVector3(1161.9, -76.73, 7.27),
 				blip: false,
@@ -4284,6 +4260,15 @@ let gameData = {
 		[	// GTA IV
 
 		]
+	],
+	taxiModels: [
+		[],
+		[110, 128, 148],
+		[150, 160, 216],
+		[420, 438],
+		[],
+		[-1932515764, -956048545, 1208856469],
+		[-1932515764, -956048545, 1208856469],
 	],
 };
 
@@ -4961,6 +4946,16 @@ function setElementInterior(element, interior) {
 
 function setElementCollisionsEnabled(element, state) {
 	triggerNetworkEvent("vrr.elementCollisions", getClientFromSyncerId(element.syncer), element.id, state);
+}
+
+// ===========================================================================
+
+function isTaxiVehicle(vehicle) {
+	if(taxiModels[gta.game].indexOf(vehicle.modelIndex) != -1) {
+		return true;
+	}
+
+	return false;
 }
 
 // ===========================================================================

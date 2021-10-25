@@ -90,7 +90,9 @@ function createHouseCommand(command, params, client) {
 
 	//getHouseData(houseId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created house ${getInlineChatColourByType("houseGreen")}${tempHouseData.description}`);
+	let messageText = `${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created house ${getInlineChatColourByType("houseGreen")}${tempHouseData.description}`;
+	logToConsole(LOG_INFO, messageText);
+	messageAdmins(messageText);
 }
 
 // ===========================================================================

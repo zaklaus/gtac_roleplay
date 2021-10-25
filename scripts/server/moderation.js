@@ -972,7 +972,7 @@ function forcePlayerSkinCommand(command, params, client) {
 	}
 
 	getPlayerCurrentSubAccount(targetClient).skin = skinId;
-	setPlayerSkin(client, skinId);
+	setPlayerSkin(targetClient, skinId);
 
 	messageAdmins(`${client.name} ${getInlineChatColourByName("white")}set ${getPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}skin to ${getInlineChatColourByName("lightGrey")}${getSkinNameFromId(skinId)}`);
 }

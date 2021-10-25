@@ -43,14 +43,14 @@ function loadVehiclesFromDatabase() {
 // ===========================================================================
 
 function saveAllVehiclesToDatabase() {
-	logToConsole(LOG_INFO, "[VRR.Vehicle]: Saving all vehicles to database ...");
+	logToConsole(LOG_INFO, "[VRR.Vehicle]: Saving all server vehicles to database ...");
 	let vehicles = getServerData().vehicles;
 	for(let i in vehicles) {
 		if(vehicles[i].needsSaved) {
 			saveVehicleToDatabase(i);
 		}
 	}
-	logToConsole(LOG_INFO, "[VRR.Vehicle]: Saved all vehicles to database!");
+	logToConsole(LOG_INFO, "[VRR.Vehicle]: Saved all server vehicles to database!");
 
 	return true;
 }
@@ -325,10 +325,7 @@ function vehicleLightsCommand(command, params, client) {
 		return false;
 	}
 
-	getVehicleData(vehicle).lights = !getVehicleData(vehicle).lights;
-	setEntityData(vehicle, "vrr.lights", getVehicleData(vehicle).lights);
 	setVehicleLightsState(vehicle, getVehicleData(vehicle).lights);
-
 	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `turned the ${getVehicleName(vehicle)}'s lights ${toLowerCase(getOnOffFromBool(getVehicleData(vehicle).lights))}`);
@@ -1110,6 +1107,11 @@ function respawnAllVehiclesCommand(command, params, client) {
 		respawnVehicle(getServerData().vehicles[i].vehicle);
 	}
 
+	let clientVehicles = getVehicles().filter(v => getVehicleData(v) == false);
+	for(let i in clientVehicles) {
+		destroyElement(clientVehicles[i]);
+	}
+
 	//spawnAllVehicles();
 
 	messageAdminAction(`All server vehicles have been respawned by an admin!`);
@@ -1132,7 +1134,16 @@ function respawnVehicle(vehicle) {
 	let vehicles = getServerData().vehicles;
 	for(let i in vehicles) {
 		if(vehicle == vehicles[i].vehicle) {
+			if(vehicles[i].spawnLocked == true) {
+				vehicles[i].engine = false;
+			}
+
+			if(vehicles[i].ownerType == VRR_VEHOWNER_JOB) {
+				vehicles[i].locked = true;
+			}
+
 			destroyElement(vehicle);
+			vehicles[i].vehicle = false;
 			let newVehicle = spawnVehicle(vehicles[i]);
 			vehicles[i].vehicle = newVehicle;
 			setEntityData(newVehicle, "vrr.dataSlot", i, false);
@@ -1158,8 +1169,9 @@ function spawnVehicle(vehicleData) {
 			vehicle.colour4 = vehicleData.colour4;
 		}
 
-		if(vehicleData.spawnLocked) {
+		if(vehicleData.spawnLocked == true) {
 			vehicle.engine = false;
+
 		} else {
 			vehicle.engine = intToBool(vehicleData.engine);
 		}

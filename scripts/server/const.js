@@ -312,3 +312,16 @@ const VRR_BIZ_TYPE_PUBLIC = 3;                   // Public business (Government,
 const VRR_RETURNTO_TYPE_NONE = 0;                // "Return to" data is invalid
 const VRR_RETURNTO_TYPE_ADMINGET = 1;            // "Return to" data is from admin teleporting
 const VRR_RETURNTO_TYPE_SKINSELECT = 2;          // "Return to" data is from skin select
+
+const VRR_DECKCARD_GAME_NONE = 0;
+const VRR_DECKCARD_GAME_BLACKJACK = 1;
+const VRR_DECKCARD_GAME_TEXASHOLDEM = 2;
+const VRR_DECKCARD_GAME_FIVECARDDRAW = 3;
+const VRR_DECKCARD_GAME_FIVECARDSTUD = 4;
+const VRR_DECKCARD_GAME_HIGHLOW = 5;
+
+const VRR_DECKCARD_SUIT_NONE = 0;
+const VRR_DECKCARD_SUIT_SPADE = 1;
+const VRR_DECKCARD_SUIT_CLUB = 2;
+const VRR_DECKCARD_SUIT_HEART = 3;
+const VRR_DECKCARD_SUIT_DIAMOND = 4;

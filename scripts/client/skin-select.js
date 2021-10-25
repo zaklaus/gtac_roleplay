@@ -51,16 +51,24 @@ function processSkinSelectKeyPress(keyCode) {
             } else {
                 skinSelectorIndex++;
             }
+            logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[getGame()][skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[getGame()][skinSelectorIndex][0]})`);
             skinSelectMessageTextTop = allowedSkins[getGame()][skinSelectorIndex][1];
             localPlayer.skin = allowedSkins[getGame()][skinSelectorIndex][0];
+            localPlayer.position = skinSelectPosition;
+            localPlayer.heading = skinSelectHeading;
+            localPlayer.clearObjective();
         } else if(keyCode == SDLK_LEFT || keyCode == SDLK_a) {
             if(skinSelectorIndex <= 0) {
                 skinSelectorIndex = allowedSkins[getGame()].length-1;
             } else {
                 skinSelectorIndex--;
             }
+            logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[getGame()][skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[getGame()][skinSelectorIndex][0]})`);
             skinSelectMessageTextTop = allowedSkins[getGame()][skinSelectorIndex][1];
             localPlayer.skin = allowedSkins[getGame()][skinSelectorIndex][0];
+            localPlayer.position = skinSelectPosition;
+            localPlayer.heading = skinSelectHeading;
+            localPlayer.clearObjective();
         } else if(keyCode == SDLK_RETURN) {
             triggerNetworkEvent("vrr.skinSelected", skinSelectorIndex);
         } else if(keyCode == SDLK_BACKSPACE) {
@@ -79,14 +87,11 @@ function processSkinSelectRendering() {
                 skinSelectMessageFontBottom.render(skinSelectMessageTextBottom, [0, game.height-65], game.width, 0.5, 0.0, skinSelectMessageFontBottom.size, skinSelectMessageColourBottom, true, true, false, true);
             //}
         }
-
-        localPlayer.position = skinSelectPosition;
-        localPlayer.heading = skinSelectHeading;
-        if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-            if(gta.game == GAME_GTA_III || gta.game == GAME_GTA_VC) {
-                localPlayer.clearObjective();
-            }
-        }
+        //if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
+        //    if(gta.game == GAME_GTA_III || gta.game == GAME_GTA_VC) {
+        //        localPlayer.clearObjective();
+        //   }
+        //}
     }
 }
 

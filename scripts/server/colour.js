@@ -317,7 +317,9 @@ function replaceColoursInMessage(messageText) {
 // ===========================================================================
 
 function removeColoursInMessage(messageText) {
-
+	if(messageText == null) {
+		return "";
+	}
 
 	for(let i in getServerColours().hex.byName) {
 		let find = `{${i}}`;

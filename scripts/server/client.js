@@ -318,7 +318,7 @@ function showPlayerRegistrationFailedGUI(client, errorMessage) {
 
 function sendPlayerGUIColours(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending GUI colours to ${getPlayerDisplayForConsole(client)}`);
-	triggerNetworkEvent("vrr.guiColour", client, getServerConfig().guiColour[0], getServerConfig().guiColour[1], getServerConfig().guiColour[2]);
+	triggerNetworkEvent("vrr.guiColour", client, getServerConfig().guiColourPrimary[0], getServerConfig().guiColourPrimary[1], getServerConfig().guiColourPrimary[2], getServerConfig().guiColourSecondary[0], getServerConfig().guiColourSecondary[1], getServerConfig().guiColourSecondary[2], getServerConfig().guiTextColourPrimary[0], getServerConfig().guiTextColourPrimary[1], getServerConfig().guiTextColourPrimary[2]);
 }
 
 // ===========================================================================
@@ -910,6 +910,13 @@ function playRadioStreamForPlayer(client, streamURL, loop = true, volume = 0, el
 
 // ===========================================================================
 
+function playAudioFileForPlayer(client, audioName, loop = true, volume = 0, element = false) {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Forcing ${getPlayerDisplayForConsole(client)} to play audio ${audioName}`);
+    triggerNetworkEvent("vrr.audioFileStream", client, audioName, loop, volume);
+}
+
+// ===========================================================================
+
 function stopRadioStreamForPlayer(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Forcing ${getPlayerDisplayForConsole(client)} to stop their radio stream`);
     triggerNetworkEvent("vrr.stopRadioStream", client);
@@ -926,6 +933,8 @@ function setPlayerStreamingRadioVolume(client, volumeLevel, elementId = false) {
 // ===========================================================================
 
 function setVehicleLightsState(vehicle, state) {
+	getVehicleData(vehicle).lights = !getVehicleData(vehicle).lights;
+	setEntityData(vehicle, "vrr.lights", getVehicleData(vehicle).lights);
     triggerNetworkEvent("vrr.veh.lights", null, vehicle.id, state);
 }
 

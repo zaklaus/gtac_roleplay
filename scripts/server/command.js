@@ -37,6 +37,11 @@ function initCommandScript() {
 
 function loadCommands() {
     let tempCommands = {
+        accent: [
+            commandData("accent", setAccentCommand, "<accent name/id>", getStaffFlagValue("none"), false, false, "Sets your character's accent"),
+            commandData("accents", listAccentsCommand, "", getStaffFlagValue("none"), false, false, "Shows a list of all available accents"),
+            commandData("accentlist", listAccentsCommand, "", getStaffFlagValue("none"), false, false, "Shows a list of all available accents"),
+        ],
         account: [
             commandData("login", loginCommand, "<password>", getStaffFlagValue("none"), false, false, "Login to an account"),
             commandData("register", registerCommand, "<password>", getStaffFlagValue("none"), false, false, "Creates an account"),
@@ -198,8 +203,9 @@ function loadCommands() {
             commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
 
             commandData("nosave", togglePauseSavingToDatabase, "", getStaffFlagValue("developer"), true, true),
-            commandData("streamradioall", streamAudioURLToAllPlayersCommand, "<url> <volume>", getStaffFlagValue("developer"), true, true),
-            commandData("rumble", streamEventStartToAllPlayersCommand, "<volume>", getStaffFlagValue("developer"), true, true),
+            commandData("streamurlall", streamAudioURLToAllPlayersCommand, "<url> <volume>", getStaffFlagValue("developer"), true, true),
+            commandData("streamnameall", streamAudioNameToAllPlayersCommand, "<name> <volume>", getStaffFlagValue("developer"), true, true),
+            //commandData("rumble", streamEventStartToAllPlayersCommand, "<volume>", getStaffFlagValue("developer"), true, true),
 
             //commandData("forceresetpass", forceAccountPasswordResetCommand, "<account name>", getStaffFlagValue("developer"), true, true),
             //commandData("loglvl", getServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),

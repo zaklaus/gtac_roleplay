@@ -8,13 +8,6 @@
 // ===========================================================================
 
 function playStreamingRadio(url, loop, volume, element = false) {
-    if(url == "") {
-        if(streamingRadio != null) {
-            streamingRadio.stop();
-        }
-        return true;
-    }
-
     if(streamingRadio != null) {
         streamingRadio.stop();
     }
@@ -40,6 +33,17 @@ function setStreamingRadioVolume(volume) {
         streamingRadioVolume = volume;
         streamingRadio.volume = volume/100;
     }
+}
+
+// ===========================================================================
+
+function playAudioFile(audioName, loop, volume) {
+    let resource = findResourceByName("connectedrp-extra");
+    if(resource == null) {
+        return false;
+    }
+
+    resource.exports.playCustomAudio(audioName, volume/100);
 }
 
 // ===========================================================================

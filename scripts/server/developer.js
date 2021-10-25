@@ -501,15 +501,18 @@ function streamAudioURLToAllPlayersCommand(command, params, client) {
 
 // ===========================================================================
 
-function streamEventStartToAllPlayersCommand(command, params, client) {
+function streamAudioNameToAllPlayersCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
 
-	let volume = toInteger(params);
+	let splitParams = params.split(" ");
+	let name = splitParams[0];
+	let volume = splitParams[1];
 
-	playRadioStreamForPlayer(null, "https://dl.dropboxusercontent.com/s/xw4m0y0guyzrwkk/lets-get-ready-to-rumble.ogg", false, volume);
+	playAudioFileForPlayer(null, name, false, volume);
+	//https://www.dropbox.com/s/xw4m0y0guyzrwkk/lets-get-ready-to-rumble.ogg?dl=0
 }
 
 // ===========================================================================

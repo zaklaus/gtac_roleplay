@@ -151,7 +151,7 @@ function clanChatCommand(command, params, client) {
 function talkToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
-		if(getPlayerInterior(client) == getPlayerInterior(clients[i] && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
+		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
 			messagePlayerTalk(clients[i], client, messageText);
 		}
 	}
@@ -180,7 +180,7 @@ function phoneIncomingToNearbyPlayers(client, messageText) {
 function whisperToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
-		if(getPlayerInterior(client) == getPlayerInterior(clients[i]) && getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
 			messagePlayerWhisper(clients[i], client, messageText);
 		}
 	}
@@ -191,7 +191,7 @@ function whisperToNearbyPlayers(client, messageText) {
 function shoutToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().shoutDistance);
 	for(let i in clients) {
-		if(getPlayerInterior(client) == getPlayerInterior(clients[i]) && getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
 			messagePlayerShout(clients[i], client, messageText);
 		}
 	}
@@ -202,7 +202,7 @@ function shoutToNearbyPlayers(client, messageText) {
 function megaphoneToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().megaphoneDistance);
 	for(let i in clients) {
-		if(getPlayerInterior(client) == getPlayerInterior(clients[i]) && getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
 			messagePlayerShout(clients[i], client, messageText);
 		}
 	}
@@ -213,7 +213,7 @@ function megaphoneToNearbyPlayers(client, messageText) {
 function doActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().doActionDistance);
 	for(let i in clients) {
-		if(getPlayerInterior(client) == getPlayerInterior(clients[i]) && getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
 			messagePlayerDoAction(clients[i], client, messageText);
 		}
 	}
@@ -224,7 +224,7 @@ function doActionToNearbyPlayers(client, messageText) {
 function meActionToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().meActionDistance);
 	for(let i in clients) {
-		if(getPlayerInterior(client) == getPlayerInterior(clients[i]) && getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
 			messagePlayerMeAction(clients[i], client, messageText);
 		}
 	}
@@ -258,3 +258,5 @@ function canPlayerUseMegaphone(client) {
 
 	return false;
 }
+
+// ===========================================================================

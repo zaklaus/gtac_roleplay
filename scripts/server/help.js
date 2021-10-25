@@ -127,11 +127,7 @@ function helpCommand(command, params, client) {
 
         case "command":
         case "cmd":
-            if(splitParams.length >= 2) {
-                showCommandHelpMessage(client, splitParams[2]);
-            } else {
-                showCommandHelpMessage(client, false);
-            }
+            showCommandHelpMessage(client, splitParams[1]);
             break;
 
         case "clan":
@@ -171,6 +167,9 @@ function helpCommand(command, params, client) {
 // == Player Vehicles ==========================
 // == Player Businesses ========================
 // == Clans ====================================
+// == Admins ===================================
+// == Badge ====================================
+// == Accents ==================================
 
 // ===========================================================================
 
@@ -295,6 +294,7 @@ function showBindKeysHelpMessage(client) {
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Default keys are: [#0066FF]K ${getInlineChatColourByName("white")}for vehicle engine, [#0066FF]L ${getInlineChatColourByName("white")}for lights, and [#0066FF]J ${getInlineChatColourByName("white")}for lock/unlock`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}[#0066FF]I ${getInlineChatColourByName("white")}to see your items and [#0066FF]1-9 ${getInlineChatColourByName("white")}to equip an item or [#0066FF]0 (zero) ${getInlineChatColourByName("white")}to equip none.`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}[#0066FF]U ${getInlineChatColourByName("white")}to use or [#0066FF]O ${getInlineChatColourByName("white")}to drop your current item, and [#0066FF]P ${getInlineChatColourByName("white")}to pickup an item from the ground.`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}[#0066FF]M ${getInlineChatColourByName("white")}for mouse cam (free look)`);
     messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Your keybinds will automatically be usable on all ${getServerName()} servers`);
 }
 

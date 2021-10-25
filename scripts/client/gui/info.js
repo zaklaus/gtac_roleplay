@@ -19,11 +19,11 @@ function initInfoDialogGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating info dialog GUI ...`);
 	infoDialog.window = mexui.window(game.width/2-200, game.height/2-70, 400, 140, 'Information', {
 		main: {
-			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
+			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 		},
 		title: {
 			textSize: 11.0,
-			textColour: toColour(0, 0, 0, 255),
+			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},
 		icon: {
@@ -48,7 +48,7 @@ function initInfoDialogGUI() {
 	infoDialog.okayButton = infoDialog.window.button(20, 95, 360, 30, 'OK', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
-			textColour: toColour(0, 0, 0, 255),
+			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			textSize: 10.0,
 			textFont: robotoFont,
 			textAlign: 0.5,

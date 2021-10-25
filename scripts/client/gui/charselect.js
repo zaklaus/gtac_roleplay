@@ -26,11 +26,11 @@ function initCharacterSelectGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating character select GUI ...`);
 	characterSelect.window = mexui.window(game.width/2-215, game.height/2-83, 430, 190, 'Select Character', {
 		main: {
-			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
+			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 		},
 		title: {
 			textSize: 11.0,
-			textColour: toColour(0, 0, 0, 255),
+			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
 		},
 		icon: {
@@ -91,7 +91,7 @@ function initCharacterSelectGUI() {
 	characterSelect.selectCharacterButton = characterSelect.window.button(85, 130, 260, 25, 'SELECT', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
-			textColour: toColour(0, 0, 0, 255),
+			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			textSize: 12.0,
 			textFont: robotoFont,
 			textAlign: 0.5,
@@ -104,7 +104,7 @@ function initCharacterSelectGUI() {
 	characterSelect.newCharacterButton = characterSelect.window.button(5, 160, 420, 25, 'NEW CHARACTER', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
-			textColour: toColour(0, 0, 0, 255),
+			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			textSize: 12.0,
 			textFont: robotoFont,
 			textAlign: 0.5,
@@ -117,7 +117,7 @@ function initCharacterSelectGUI() {
 	characterSelect.previousCharacterButton = characterSelect.window.button(5, 130, 75, 25, '< PREV', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
-			textColour: toColour(0, 0, 0, 255),
+			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			textSize: 10.0,
 			textFont: robotoFont,
 			textAlign: 0.5,
@@ -130,7 +130,7 @@ function initCharacterSelectGUI() {
 	characterSelect.nextCharacterButton = characterSelect.window.button(350, 130, 75, 25, 'NEXT >', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
-			textColour: toColour(0, 0, 0, 255),
+			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			textSize: 10.0,
 			textFont: robotoFont,
 			textAlign: 0.5,

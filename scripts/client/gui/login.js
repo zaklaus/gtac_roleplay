@@ -14,6 +14,8 @@ let login = {
 	passwordLabel: null,
 	passwordInput: null,
 	loginButton: null,
+	forgotPasswordButton: null,
+	resetPasswordLabel: null,
 };
 
 // ===========================================================================
@@ -22,7 +24,7 @@ function initLoginGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating login GUI ...`);
 	login.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
 		main: {
-			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
+			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 			transitionTime: 500,
 		},
 		title: {
@@ -85,7 +87,7 @@ function initLoginGUI() {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
-			textSize: 10.0,
+			textSize: 12.0,
 			textFont: robotoFont,
 			textAlign: 0.5,
 		},
@@ -93,6 +95,33 @@ function initLoginGUI() {
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 		},
 	}, checkLogin);
+
+	/*
+	login.forgotPasswordButton = login.window.button(200, 240, 60, 15, 'FORGOT PASSWORD', {
+		main: {
+			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
+			textColour: toColour(0, 0, 0, 255),
+			textSize: 8.0,
+			textFont: robotoFont,
+			textAlign: 0.5,
+		},
+		focused: {
+			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
+		},
+	}, switchToPasswordResetGUI);
+
+	login.resetPasswordLabel = login.window.text(20, 140, 60, 15, 'Need to reset your password? Click here >', {
+		main: {
+			textSize: 8.0,
+			textAlign: 1.0,
+			textColour: toColour(200, 200, 200, 255),
+			textFont: robotoFont,
+		},
+		focused: {
+			borderColour: toColour(0, 0, 0, 0),
+		},
+	});
+	*/
 
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Created login GUI`);
 }

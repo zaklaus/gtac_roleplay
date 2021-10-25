@@ -23,7 +23,7 @@ function initRegisterGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating register GUI ...`);
 	register.window = mexui.window(game.width/2-130, game.height/2-125, 300, 250, 'Register', {
 		main: {
-			backgroundColour: toColour(windowColour[0], windowColour[1], windowColour[2], windowColour[3]),
+			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 			transitionTime: 500,
 		},
 		title: {

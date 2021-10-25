@@ -180,6 +180,10 @@ function onResourceStart(event, resource) {
     if(resource != thisResource) {
         messageAdmins(`${getInlineChatColourByName("white")}Resource ${getInlineChatColourByName("lightGrey")}${resource.name} ${getInlineChatColourByName("white")}started!`);
     }
+
+    if(resource == thisResource) {
+        initAllClients();
+    }
 }
 
 // ===========================================================================
@@ -192,8 +196,10 @@ function onResourceStop(event, resource) {
     }
 
     if(resource == thisResource) {
-        //saveAllServerDataToDatabase();
+        saveAllServerDataToDatabase();
     }
+
+    collectAllGarbage();
 }
 
 // ===========================================================================
@@ -312,6 +318,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
                 if(getVehicleData(vehicle).ownerType == VRR_VEHOWNER_JOB) {
                     if(getVehicleData(vehicle).ownerId == getPlayerCurrentSubAccount(client).job) {
                         getPlayerCurrentSubAccount(client).lastJobVehicle = vehicle;
+                        messagePlayerInfo(client, `Use /startroute to start working in this vehicle`);
                     }
                 }
             }
@@ -506,12 +513,6 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
         updatePlayerSnowState(client);
-
-        //logToConsole(LOG_DEBUG, `[VRR.Event] Sending ground snow excluded models to ${getPlayerDisplayForConsole(client)}`);
-        //sendExcludedModelsForGroundSnowToPlayer(client);
-
-        //logToConsole(LOG_DEBUG, `[VRR.Event] Sending removed world objects to ${getPlayerDisplayForConsole(client)}`);
-        //sendRemovedWorldObjectsToPlayer(client);
 
         if(getServerGame() == GAME_GTA_SA) {
             logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);

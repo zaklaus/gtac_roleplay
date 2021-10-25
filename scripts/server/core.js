@@ -22,6 +22,7 @@ let serverData = {
 	factions: [],
 	commands: {},
 	groundItemCache: [],
+	groundPlantCache: [],
 	items: [],
 	itemTypes: [],
 	clans: [],

@@ -552,6 +552,9 @@ function playerUseItem(client, hotBarSlot) {
 	let closestPlayer;
 	let tempUseValue;
 
+	let vehicle;
+	let fuelPump;
+
 	let itemIndex = getPlayerData(client).hotBarItems[hotBarSlot];
 
 	if(itemIndex == -1) {
@@ -656,7 +659,7 @@ function playerUseItem(client, hotBarSlot) {
 				repairVehicle(vehicle);
 
 				getItemData(itemIndex).value = getItemData(itemIndex).value - getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
-				if(getItemData(itemIndex).value == 0) {
+				if(getItemData(itemIndex).value <= 0) {
 					destroyItem(itemIndex);
 				}
 			}
@@ -695,7 +698,7 @@ function playerUseItem(client, hotBarSlot) {
 
 		case VRR_ITEM_USETYPE_FUELCAN:
 			vehicle = getClosestVehicle(getPlayerPosition(client));
-			let fuelPump = getClosestFuelPump(getPlayerPosition(client));
+			fuelPump = getClosestFuelPump(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getDistance(getPlayerPosition(client), getFuelPumpData(fuelPump).position)) {
 				if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 					meActionToNearbyPlayers(client, `takes their fuel can and refills the vehicle`);
@@ -762,7 +765,17 @@ function playerUseItem(client, hotBarSlot) {
 			switchPlayerActiveHotBarSlot(client, -1);
 			break;
 
+		case VRR_ITEM_USETYPE_PLANT:
+			meActionToNearbyPlayers(client, `bends down and plants a ${getItemName(itemIndex)} in the ground`);
+			createGroundPlant(itemIndex);
+			if(getItemData(itemIndex).value == 0) {
+				destroyItem(itemIndex);
+				switchPlayerActiveHotBarSlot(client, -1);
+			}
+			break;
+
 		case VRR_ITEM_USETYPE_BADGE:
+			meActionToNearbyPlayers(client, `shows their badge to everyone nearby.`);
 			let clients = getClients();
 			for(let i in clients) {
 				if(getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= 7) {
@@ -1834,3 +1847,10 @@ function getItemPosition(itemId) {
 }
 
 // ===========================================================================
+
+function createGroundPlant(itemId) {
+	createGroundItem(getItemTypeData(itemId).useId, 1, position, dimension);
+	groundPlantCache.push(itemId);
+	groundItemCache.push(itemId);
+
+}

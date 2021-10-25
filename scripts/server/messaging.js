@@ -36,16 +36,13 @@ function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
 // ===========================================================================
 
 function messageAdmins(messageText, colour = COLOUR_WHITE) {
-     let plainMessage = removeColoursInMessage(messageText);
+    let plainMessage = removeColoursInMessage(messageText);
+    console.warn(`🛡️ ${plainMessage}`);
 
     let clients = getClients();
     for(let i in clients) {
-        if(isConsole(clients[i])) {
-            logToConsole(LOG_INFO, `[VRR.Messaging] ADMINS: ${plainMessage}`);
-        } else {
-            if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
-                messagePlayerNormal(clients[i], `🛡️ ${messageText}`, getColourByName("softRed"));
-            }
+        if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
+            messagePlayerNormal(clients[i], `🛡️ ${messageText}`, getColourByName("softRed"));
         }
     }
 
@@ -147,19 +144,19 @@ function messagePlayerTip(client, messageText) {
 // ===========================================================================
 
 function messagePlayerTalk(client, talkingClient, messageText) {
-    messagePlayerNormal(client, `🗣️ ${getPlayerAccentInlineOutput(client)}${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
+    messagePlayerNormal(client, `🗣️ ${getPlayerAccentInlineOutput(talkingClient)}${getClientSubAccountName(talkingClient)} says: ${messageText}`, getColourByType("talkMessage"));
 }
 
 // ===========================================================================
 
 function messagePlayerWhisper(client, whisperingClient, messageText) {
-    messagePlayerNormal(client, `🤫 ${getPlayerAccentInlineOutput(client)}${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
+    messagePlayerNormal(client, `🤫 ${getPlayerAccentInlineOutput(whisperingClient)}${getClientSubAccountName(whisperingClient)} whispers: ${messageText}`, getColourByType("whisperMessage"));
 }
 
 // ===========================================================================
 
 function messagePlayerShout(client, shoutingClient, messageText) {
-    messagePlayerNormal(client, `🗣️ ${getPlayerAccentInlineOutput(client)}${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
+    messagePlayerNormal(client, `🗣️ ${getPlayerAccentInlineOutput(shoutingClient)}${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
 
 // ===========================================================================

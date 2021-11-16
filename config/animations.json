@@ -122,8 +122,13 @@
     "invalid1": [
 
     ],
-    "gta:iv":
-    [
+    "gta:iv": [
         ["dance1", "DAN_LOOP_A", "DANCING", 1, 16.0, true, false, true, false, 0]
+    ],
+    "mafia:one": [
+        ["phonepickup", "TelVytoceni"],
+        ["phonetalk", "TelStativ"],
+        ["phonehangup", "TelZaveseni"],
+        ["phonehangup", "TelZaveseni"],
     ]
 }

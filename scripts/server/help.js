@@ -246,14 +246,14 @@ function showRulesHelpMessage(client) {
 
 function showWebsiteHelpMessage(client) {
     messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Website ${getInlineChatColourByType("clanOrange")}=============================`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}Website coming soon!`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}${server.getCVar("Website")}`);
 }
 
 // ===========================================================================
 
 function showDiscordHelpMessage(client) {
     messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Discord ${getInlineChatColourByType("clanOrange")}=============================`);
-    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}https://discord.gg/hA8GSdYyw6`);
+    messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}• ${getInlineChatColourByName("white")}${server.getCVar("Discord")}`);
 }
 
 // ===========================================================================

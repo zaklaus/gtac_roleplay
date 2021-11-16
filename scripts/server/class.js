@@ -19,7 +19,7 @@ function initClassScript() {
 /**
  * @class Representing data for server configuration
  */
-class ServerConfigData {
+class ServerData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
@@ -382,7 +382,7 @@ class AccountStaffNoteData {
 		this.whenAdded = 0;
 		this.deleted = false;
 		this.whenDeleted = 0;
-		this.server = 0;
+		this.serverId = 0;
 		this.note = "";
 		this.needsSaved = false;
 
@@ -393,7 +393,7 @@ class AccountStaffNoteData {
 			this.whenAdded = dbAssoc["acct_note_when_added"];
 			this.deleted = intToBool(dbAssoc["acct_note_deleted"]);
 			this.whenDeleted = dbAssoc["acct_note_when_deleted"];
-			this.server = dbAssoc["acct_note_server"];
+			this.serverId = dbAssoc["acct_note_server"];
 			this.note = dbAssoc["acct_note_message"];
 		}
 	}
@@ -405,7 +405,7 @@ class AccountStaffNoteData {
 class SubAccountData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
-		this.server = 0;
+		this.serverId = 0;
 		this.firstName = "John";
 		this.lastName = "Doe";
 		this.middleName = "Q";
@@ -458,7 +458,7 @@ class SubAccountData {
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["sacct_id"];
-			this.server = toInteger(dbAssoc["sacct_server"]);
+			this.serverId = toInteger(dbAssoc["sacct_server"]);
 			this.firstName = dbAssoc["sacct_name_first"];
 			this.lastName = dbAssoc["sacct_name_last"];
 			this.middleName = dbAssoc["sacct_name_middle"] || "";
@@ -868,8 +868,8 @@ class VehicleData {
 	constructor(dbAssoc = false, vehicle = false) {
 		// General Info
 		this.databaseId = 0;
-		this.server = getServerId();
-		this.model = (vehicle != false) ? vehicle.modelIndex : 0;
+		this.serverId = getServerId();
+		this.model = (vehicle != false) ? getVehicleModelIndexFromModel(vehicle.modelIndex) : 0;
 		this.vehicle = vehicle;
 		this.index = -1;
 		this.needsSaved = false;
@@ -946,7 +946,7 @@ class VehicleData {
 		if(dbAssoc) {
 			// General Info
 			this.databaseId = toInteger(dbAssoc["veh_id"]);
-			this.server = toInteger(dbAssoc["veh_server"]);
+			this.serverId = toInteger(dbAssoc["veh_server"]);
 			this.model = toInteger(dbAssoc["veh_model"]);
 
 			// Ownership
@@ -1064,6 +1064,7 @@ class CrimeData {
 class JobData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
+		this.serverId = 0;
 		this.type = VRR_JOB_NONE;
 		this.name = "Unnamed";
 		this.enabled = true;
@@ -1084,6 +1085,7 @@ class JobData {
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["job_id"];
+			this.serverId = dbAssoc["job_server"];
 			this.type = dbAssoc["job_type"];
 			this.name = dbAssoc["job_name"];
 			this.enabled = dbAssoc["job_enabled"];
@@ -1314,7 +1316,7 @@ class BlackListedGameScriptData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.enabled = false
-		this.server = 0;
+		this.serverId = 0;
 		this.scriptName = "";
 		this.index = -1;
 		this.needsSaved = false;
@@ -1322,7 +1324,7 @@ class BlackListedGameScriptData {
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["ac_script_bl_id"];
 			this.enabled = intToBool(dbAssoc["ac_script_bl_enabled"]);
-			this.server = dbAssoc["ac_script_bl_server"];
+			this.serverId = dbAssoc["ac_script_bl_server"];
 			this.scriptName = dbAssoc["ac_script_bl_name"];
 		}
 	}
@@ -1332,7 +1334,7 @@ class WhiteListedGameScriptData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.enabled = false
-		this.server = 0;
+		this.serverId = 0;
 		this.scriptName = "";
 		this.index = -1;
 		this.needsSaved = false;
@@ -1340,7 +1342,7 @@ class WhiteListedGameScriptData {
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["ac_script_wl_id"];
 			this.enabled = intToBool(dbAssoc["ac_script_wl_enabled"]);
-			this.server = dbAssoc["ac_script_wl_server"];
+			this.serverId = dbAssoc["ac_script_wl_server"];
 			this.scriptName = dbAssoc["ac_script_wl_name"];
 		}
 	}
@@ -1427,6 +1429,7 @@ class ItemData {
 class ItemTypeData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
+		this.serverId = 0;
 		this.index = 0;
 		this.name = "Unknown";
 		this.enabled = false;
@@ -1456,6 +1459,7 @@ class ItemTypeData {
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["item_type_id"]);
+			this.serverId = toInteger(dbAssoc["item_type_server"]);
 			this.name = dbAssoc["item_type_name"];
 			this.enabled = intToBool(toInteger(dbAssoc["item_type_enabled"]));
 			this.useType = toInteger(dbAssoc["item_type_use_type"]);
@@ -1488,7 +1492,7 @@ class ItemTypeData {
 class NPCData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
-		this.server = 0;
+		this.serverId = 0;
 		this.firstName = "John";
 		this.lastName = "Doe";
 		this.middleName = "Q";
@@ -1534,7 +1538,7 @@ class NPCData {
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["npc_id"]);
-			this.server = toInteger(dbAssoc["npc_server"]);
+			this.serverId = toInteger(dbAssoc["npc_server"]);
 			this.firstName = dbAssoc["npc_name_first"];
 			this.lastName = dbAssoc["npc_name_last"];
 			this.middleName = dbAssoc["npc_name_middle"] || "";

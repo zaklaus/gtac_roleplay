@@ -1,0 +1,10 @@
+{
+    "AccentNotFound": "Accent not found!",
+    "AccentSet": "You set your accent to {ALTCOLOUR}{%1}",
+    "AnimationNotFound": "That animation doesn't exist!",
+    "AnimationCommandTip": "Use /animlist to see a list of valid animations",
+    "AnimationInvalidDistance": "The distance must be between 0 and 3!",
+    "AnimationStopCommandTip": "Use {ALTCOLOUR}/stopanim {RESETCOLOUR}to stop your animation",
+    "CantBanClient": "You cannot ban this person!",
+    "PlayerAccountBanned": "{1} has been account banned"
+}

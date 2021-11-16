@@ -24,7 +24,7 @@ function accountBanCommand(command, params, client) {
 
 	// Prevent banning admins with really high permissions
     if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
-		messagePlayerError(client, "You cannot ban this person!");
+		messagePlayerError(client, getLocaleString(client, "CantBanPlayer"));
         return false;
 	}
 
@@ -49,7 +49,7 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 
 	// Prevent banning admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
-		messagePlayerError(client, "You cannot ban this person!");
+		messagePlayerError(client, getLocaleString(client, "CantBanPlayer"));
 		return false;
     }
 
@@ -74,7 +74,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
 
 	// Prevent banning admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
-		messagePlayerError(client, "You cannot ban this person!");
+		messagePlayerError(client, getLocaleString(client, "CantBanPlayer"));
 		return false;
     }
 
@@ -98,7 +98,7 @@ function subNetBanCommand(command, params, client, fromDiscord) {
 
 	// Prevent banning admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
-		messagePlayerError(client, "You cannot ban this person!");
+		messagePlayerError(client, getLocaleString(client, "CantBanPlayer"));
 		return false;
     }
 

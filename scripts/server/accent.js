@@ -45,14 +45,15 @@ function setAccentCommand(command, params, client) {
 	let accentId = getAccentFromParams(params);
 
 	if(!accentId) {
-		messagePlayerError(client, "Accent not found!");
+		messagePlayerError(client, getLocaleString("AccentNotFound"));
 		return false;
 	}
 
 	let accentString = getGlobalConfig().accents[accentId];
 
 	getPlayerCurrentSubAccount(client).accent = accentString;
-	messagePlayerSuccess(client, `You set your accent to ${getInlineChatColourByName("lightGrey")}${accentString}`);
+
+	messagePlayerSuccess(client, getLocaleString(client, "AccentSet", accentString));
 }
 
 // ===========================================================================

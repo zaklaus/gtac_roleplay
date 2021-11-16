@@ -25,13 +25,13 @@ function playPlayerAnimationCommand(command, params, client) {
     let animationPositionOffset = getAnimationFromParams(splitParams[1]) || 1;
 
 	if(!animationSlot) {
-		messagePlayerError(client, "That animation doesn't exist!");
-		messagePlayerInfo(client, "Use /animlist to see a list of valid animations");
+		messagePlayerError(client, getLocaleString("AnimationNotFound"));
+		messagePlayerInfo(client, getLocaleString("AnimationHelpTip"));
 		return false;
 	}
 
 	if(toInteger(animationPositionOffset) < 0 || toInteger(animationPositionOffset) > 3) {
-		messagePlayerError(client, "The offset must be between 0 and 3!")
+		messagePlayerError(client, getLocaleString("AnimationInvalidDistance"));
 		return false;
 	}
 
@@ -40,11 +40,11 @@ function playPlayerAnimationCommand(command, params, client) {
 	getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
     getPlayerData(client).animationStart = getCurrentUnixTimestamp();
 	//setEntityData(getPlayerData(client).ped, "vrr.animation", animationSlot, true);
-	messagePlayerTip(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/stopanim ${getInlineChatColourByName("white")}to stop your animation`);
+	messagePlayerTip(client, ``);
     makePedPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
 
 	if(getAnimationData(animationSlot)[9] != VRR_ANIMMOVE_NONE) {
-		if(getGame() < GAME_GTA_SA) {
+		if(getGame() < VRR_GAME_GTA_SA) {
 			setPlayerMouseCameraState(client, true);
 		}
 	}

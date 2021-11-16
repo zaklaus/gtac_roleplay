@@ -7,4 +7,51 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-// (V) This may be obsolete with the new translation tool!
+let localeStrings = {};
+
+// ===========================================================================
+
+function initLocaleScript() {
+    localeStrings = loadAllLocaleStrings();
+}
+
+// ===========================================================================
+
+function getLocaleString(client, stringName, ...args) {
+    let tempString = getRawLocaleString(stringName, getPlayerLocaleName(client));
+
+    tempString = replaceColoursInLocaleString(tempString);
+
+    for(let i in args) {
+        tempString = tempString.replace(`{${i}}`, args[i]);
+    }
+}
+
+// ===========================================================================
+
+function getRawLocaleString(stringName, localeName) {
+    return localeStrings[localeName][stringName];
+}
+
+// ===========================================================================
+
+function getPlayerLocaleName(client) {
+    if(client == null) {
+        return getLocaleNameFromParams(`English`);
+    }
+
+    return getPlayerData(client).accountData.locale;
+}
+
+// ===========================================================================
+
+function loadAllLocaleStrings() {
+    let locales = getGlobalConfig().locales;
+    for(let i in locales) {
+        let localeData = locales[i];
+        let localeFile = JSON.parse(loadTextFile(`locale/${localeData[1]}.json`));
+        localeStrings[localeData[1]] = localeFile;
+    }
+}
+
+// ===========================================================================

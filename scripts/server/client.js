@@ -212,7 +212,7 @@ function syncPlayerProperties(client) {
 // ===========================================================================
 
 function updatePlayerSnowState(client) {
-    if(doesGameHaveSnow(getServerGame())) {
+    if(isSnowSupported(getServerGame())) {
         logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s snow state (Falling: ${toUpperCase(getOnOffFromBool(getServerConfig().fallingSnow))}, Ground: ${toUpperCase(getOnOffFromBool(getServerConfig().groundSnow))})`);
         triggerNetworkEvent("vrr.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
     }
@@ -865,12 +865,12 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
         restorePlayerCamera(client);
         return false;
     } else {
-        getPlayerCurrentSubAccount(client).skin = allowedSkins[getServerGame()][allowedSkinIndex][0];
+        getPlayerCurrentSubAccount(client).skin = getSkinIndexFromSkin(allowedSkins[allowedSkinIndex][0]);
         if(isPlayerWorking(client)) {
             messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.");
             setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);
         } else {
-            setPlayerSkin(client, allowedSkins[getServerGame()][allowedSkinIndex][0]);
+            setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
         }
 
         if(getPlayerData(client).returnToPosition != null) {
@@ -891,7 +891,7 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
         switchPlayerActiveHotBarSlot(client, -1);
         cachePlayerHotBarItems(client);
 
-        meActionToNearbyPlayers(client, `changes their skin to ${allowedSkins[getServerGame()][allowedSkinIndex][1]}`);
+        meActionToNearbyPlayers(client, `changes their skin to ${allowedSkins[allowedSkinIndex][1]}`);
     }
 }
 

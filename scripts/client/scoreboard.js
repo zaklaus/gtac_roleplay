@@ -38,7 +38,7 @@ function initScoreBoardListFont() {
 // ===========================================================================
 
 function processScoreBoardRendering() {
-	if(guiReady && isAnyGUIActive()) {
+	if(isAnyGUIActive()) {
 		return false;
 	}
 

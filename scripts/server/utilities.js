@@ -448,10 +448,10 @@ function getSpeedFromVelocity(vel) {
 
 // ===========================================================================
 
-function isValidSkin(skin, game = GAME_GTA_III) {
-	if(game == GAME_GTA_III) {
+function isValidSkin(skin, game = VRR_GAME_GTA_III) {
+	if(game == VRR_GAME_GTA_III) {
 		return true;
-	} else if(game == GAME_GTA_VC) {
+	} else if(game == VRR_GAME_GTA_VC) {
 		switch(skin) {
 			case 111:
 				return false;
@@ -715,6 +715,21 @@ function getAccentFromParams(params) {
 
 // ===========================================================================
 
+function getLocaleNameFromParams(params) {
+	let locales = getLocales();
+	if(isNaN(params)) {
+		for(let i in locales) {
+			if(toLowerCase(i).indexOf(toLowerCase(params)) != -1) {
+				return locales[i];
+			}
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
 function getWeatherFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getGameData().weatherNames[getServerGame()]) {
@@ -895,62 +910,10 @@ function getItemTypeFromParams(params) {
 // ===========================================================================
 
 function clearChatBox(client) {
-	//gta.messages.clear();
+	//game.messages.clear();
 	for(let i = 0; i <= 20; i++) {
 		messageClient(" ", client, COLOUR_WHITE);
 	}
-}
-
-// ===========================================================================
-
-function getSkinIdFromParams(params, gameId = getServerGame()) {
-	if(isNaN(params)) {
-		return getSkinIdFromName(params, gameId);
-	} else {
-		params = toInteger(params);
-		if(gameId == GAME_GTA_IV || gameId == GAME_GTA_IV_EFLC) {
-			return getGameData().gtaivSkinModels[params][1];
-		} else {
-			return params;
-		}
-	}
-
-	return false;
-}
-
-// ===========================================================================
-
-function getSkinNameFromId(modelId, gameId = getServerGame()) {
-	if(gameId >= GAME_GTA_IV) {
-		for(let i in getGameData().gtaivSkinModels) {
-			if(getGameData().gtaivSkinModels[i][1] == modelId) {
-				return getGameData().gtaivSkinModels[i][0];
-			}
-		}
-	} else {
-		let modelIndex = modelId;
-		return getGameData().skinNames[gameId][modelIndex];
-	}
-}
-
-// ===========================================================================
-
-function getSkinIdFromName(params, gameId = getServerGame()) {
-	if(gameId == GAME_GTA_IV || gameId == GAME_GTA_IV_EFLC) {
-		for(let i in gtaivSkinModels) {
-			if(toLowerCase(getGameData().gtaivSkinModels[i][0]).indexOf(toLowerCase(params)) != -1) {
-				return getGameData().gtaivSkinModels[i][1];
-			}
-		}
-	} else {
-		for(let i in getGameData().skinNames[gameId]) {
-			if(toLowerCase(getGameData().skinNames[gameId][i]).indexOf(toLowerCase(params)) != -1) {
-				return i;
-			}
-		}
-	}
-
-	return false;
 }
 
 // ===========================================================================
@@ -1320,72 +1283,6 @@ function getPlayerFromParams(params) {
 
 // ===========================================================================
 
-function getPosToRightOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos((-angle+1.57)+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin((-angle+1.57)+(Math.PI/2)))*distance));
-
-	let rightPos = toVector3(x, y, pos.z);
-
-	return rightPos;
-}
-
-// ===========================================================================
-
-function getPosToLeftOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos((angle+1.57)+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin((angle+1.57)+(Math.PI/2)))*distance));
-
-	let leftPos = toVector3(x, y, pos.z);
-
-	return leftPos;
-}
-
-// ===========================================================================
-
-function getPosInFrontOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
-	let z = pos.z;
-
-	return toVector3(x, y, z);
-}
-
-// ===========================================================================
-
-function getPosBehindPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos(angle-(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin(angle-(Math.PI/2)))*distance));
-	let z = pos.z;
-
-	return toVector3(x, y, z);
-}
-
-// ===========================================================================
-
-function getPosAbovePos(pos, distance) {
-	return toVector3(pos.x, pos.y, pos.z+distance);
-}
-
-// ===========================================================================
-
-function getPosBelowPos(pos, distance) {
-	return toVector3(pos.x, pos.y, pos.z-distance);
-}
-
-// ===========================================================================
-
-function applyOffsetToPos(position, position2) {
-	return toVector3(position.x+position2.x, position.y+position2.y, position.z+position2.z);
-}
-
-// ===========================================================================
-
-function getRandom(min, max) {
-	return Math.floor(Math.random() * (toInteger(max) - toInteger(min) + 1)) + toInteger(min)
-}
-
-// ===========================================================================
-
 function getArrayOfElementId(elements) {
 	let tempArray = [];
 	for(let i in elements) {
@@ -1640,8 +1537,30 @@ async function triggerWebHook(webHookURL, payloadData) {
 
 // ===========================================================================
 
-function getGameName(gameId = getGame()) {
-	return getGameData().gameNames[gameId];
+function clearTemporaryVehicles() {
+	let vehicles = getVehicles();
+	for(let i in vehicles) {
+		if(vehicles[i].owner == -1) {
+			if(!getVehicleData(vehicles[i])) {
+				destroyElement(vehicles[i]);
+			}
+		}
+	}
+}
+
+// ===========================================================================
+
+function clearTemporaryPeds() {
+	let peds = getPeds();
+	for(let i in peds) {
+		if(peds[i].owner == -1) {
+			if(peds[i].isType != ELEMENT_PLAYER) {
+				if(!getNPCData(peds[i])) {
+					destroyElement(peds[i]);
+				}
+			}
+		}
+	}
 }
 
 // ===========================================================================

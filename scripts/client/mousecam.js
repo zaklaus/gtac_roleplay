@@ -14,12 +14,16 @@
 
 function SetStandardControlsEnabled(bEnabled)
 {
-	if (gta.standardControls === undefined)
+	if(typeof gta == "undefined") {
+		return false;
+	}
+
+	if (game.standardControls === undefined)
 	{
-		console.warn("gta.standardControls not implemented");
+		console.warn("game.standardControls not implemented");
 		return;
 	}
-	gta.standardControls = bEnabled;
+	game.standardControls = bEnabled;
 }
 
 function GetCurrentPlayerIndex()
@@ -63,7 +67,7 @@ function GetEntityType(Entity)
 function GetPlaceableMatrix(pPlaceable)
 {
 	if (pPlaceable == GetCamera())
-		return gta.cameraMatrix;
+		return game.cameraMatrix;
 	return pPlaceable.matrix;
 }
 
@@ -81,18 +85,18 @@ function GetMouseSpeed()
 {
 	if (gui.cursorEnabled)
 		return [0,0];
-	let MouseSpeed = gta.getMouseSpeed();
+	let MouseSpeed = game.getMouseSpeed();
 	return [MouseSpeed.x,-MouseSpeed.y];
 }
 
 function GetMouseSensitivity()
 {
-	if (gta.getMouseSensitivity === undefined)
+	if (game.getMouseSensitivity === undefined)
 	{
-		//console.error("gta.getMouseSensitivity not implemented");
+		//console.error("game.getMouseSensitivity not implemented");
 		return [0.0025,0.003];
 	}
-	let MouseSensitivity = gta.getMouseSensitivity();
+	let MouseSensitivity = game.getMouseSensitivity();
 	return [MouseSensitivity.x,MouseSensitivity.y];
 }
 
@@ -118,12 +122,12 @@ function SetEntityCollisionsEnabled(pEntity, bCollisionsEnabled)
 
 function ProcessLineOfSight(vecStartX, vecStartY, vecStartZ, vecEndX, vecEndY, vecEndZ, bCheckBuildings, bCheckVehicles, bCheckPeds, bCheckObjects, bCheckDummies, bCheckSeeThroughStuff, bIgnoreSomeObjectsForCamera)
 {
-	if (gta.processLineOfSight === undefined)
+	if (game.processLineOfSight === undefined)
 	{
-		console.warn("gta.processLineOfSight not implemented");
+		console.warn("game.processLineOfSight not implemented");
 		return [null];
 	}
-	let Result = gta.processLineOfSight([vecStartX, vecStartY, vecStartZ], [vecEndX, vecEndY, vecEndZ], bCheckBuildings, bCheckVehicles, bCheckPeds, bCheckObjects, bCheckDummies, bCheckSeeThroughStuff, bIgnoreSomeObjectsForCamera);
+	let Result = game.processLineOfSight([vecStartX, vecStartY, vecStartZ], [vecEndX, vecEndY, vecEndZ], bCheckBuildings, bCheckVehicles, bCheckPeds, bCheckObjects, bCheckDummies, bCheckSeeThroughStuff, bIgnoreSomeObjectsForCamera);
 	if (Result == null)
 		return [null];
 	return [Result.position.x, Result.position.y ,Result.position.z, Result.normal.x, Result.normal.y ,Result.normal.z, Result.entity];
@@ -133,13 +137,13 @@ function SetPlaceableMatrix(pPlaceable, mat)
 {
 	if (pPlaceable == GetCamera())
 	{
-		gta.setCameraMatrix(mat);
+		game.setCameraMatrix(mat);
 		return;
 	}
 	pPlaceable.matrix = mat;
 }
 
-const UpdateCamera = gta.updateCamera;
+const UpdateCamera = game.updateCamera;
 
 let GetTickCount;
 {
@@ -162,7 +166,7 @@ let GetTickCount;
 		if (bFrames)
 			return bGTA ? GTAFrameCount : FrameCount;
 		else
-			return bGTA ? gta.tickCount : sdl.ticks;
+			return bGTA ? game.tickCount : sdl.ticks;
 	}
 }
 
@@ -466,7 +470,7 @@ function processReturnToRestRotation()
 			let [TargetCameraRotZ2, TargetCameraRotY2] = getCameraRestRotation(Target);
 			if (Speed < 0)
 				TargetCameraRotZ2 += Math.PI;
-			let TimeStep = gta.timeStep/50*60;
+			let TimeStep = game.timeStep/50*60;
 			cameraRotZ += getDifferenceBetweenAngles(cameraRotZ,TargetCameraRotZ2)*applyMultiplierTimeStep(1/20,TimeStep)*Multiplier;
 			cameraRotY += getDifferenceBetweenAngles(cameraRotY,TargetCameraRotY2)*applyMultiplierTimeStep(1/20,TimeStep)*Multiplier;
 		}

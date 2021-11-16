@@ -287,13 +287,13 @@ mexui.isAnyWindowShown = function()
 mexui.setInput = function(showInput)
 {
 	gui.showCursor(showInput, !showInput);
-	//if(gta.game != GAME_GTA_IV) {
+	//if(game.game != VRR_GAME_GTA_IV) {
 	//	if(localPlayer)
 	//	{
 	//		if(showInput)
-	//			gta.setCameraLookAt(new Vec3(gta.cameraMatrix.m41, gta.cameraMatrix.m42, gta.cameraMatrix.m43), localPlayer.position, false);
+	//			game.setCameraLookAt(new Vec3(game.cameraMatrix.m41, game.cameraMatrix.m42, game.cameraMatrix.m43), localPlayer.position, false);
 	//		else
-	//			gta.restoreCamera(false);
+	//			game.restoreCamera(false);
 	//	}
 	//}
 };

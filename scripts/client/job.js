@@ -38,14 +38,14 @@ function setLocalPlayerWorkingState(tempWorking) {
 function showJobRouteStop() {
     logToConsole(LOG_DEBUG, `[VRR.Job] Showing route stop`);
     if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-        if(gta.game == GAME_GTA_SA) {
-            jobRouteStopSphere = gta.createPickup(1318, position, 1);
+        if(game.game == VRR_GAME_GTA_SA) {
+            jobRouteStopSphere = game.createPickup(1318, position, 1);
         } else {
-            jobRouteStopSphere = gta.createSphere(position, 3);
+            jobRouteStopSphere = game.createSphere(position, 3);
             jobRouteStopSphere.colour = colour;
         }
 
-        jobRouteStopBlip = gta.createBlip(position, 0, 2, colour);
+        jobRouteStopBlip = game.createBlip(position, 0, 2, colour);
     }
 }
 
@@ -54,14 +54,14 @@ function showJobRouteStop() {
 function showJobRouteStop(position, colour) {
     logToConsole(LOG_DEBUG, `[VRR.Job] Showing route stop`);
     if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-        if(gta.game == GAME_GTA_SA) {
-            jobRouteStopSphere = gta.createPickup(1318, position, 1);
+        if(game.game == VRR_GAME_GTA_SA) {
+            jobRouteStopSphere = game.createPickup(1318, position, 1);
         } else {
-            jobRouteStopSphere = gta.createSphere(position, 3);
+            jobRouteStopSphere = game.createSphere(position, 3);
             jobRouteStopSphere.colour = colour;
         }
 
-        jobRouteStopBlip = gta.createBlip(position, 0, 2, colour);
+        jobRouteStopBlip = game.createBlip(position, 0, 2, colour);
     }
 }
 

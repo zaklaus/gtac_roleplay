@@ -117,22 +117,22 @@ let weaponSlots = [
 ];
 
 function openAllGarages() {
-    switch(gta.game) {
-        case GAME_GTA_III:
+    switch(game.game) {
+        case VRR_GAME_GTA_III:
             for(let i=0;i<=26;i++) {
                 openGarage(i);
-                //gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
+                game.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
-        case GAME_GTA_VC:
+        case VRR_GAME_GTA_VC:
             for(let i=0;i<=32;i++) {
                 openGarage(i);
-                //gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
+                game.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
-        case GAME_GTA_SA:
+        case VRR_GAME_GTA_SA:
             for(let i=0;i<=44;i++) {
                 openGarage(i);
             }
@@ -146,22 +146,22 @@ function openAllGarages() {
 // ===========================================================================
 
 function closeAllGarages() {
-    switch(gta.game) {
-        case GAME_GTA_III:
+    switch(game.game) {
+        case VRR_GAME_GTA_III:
             for(let i=0;i<=26;i++) {
                 closeGarage(i);
-                //gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
+                game.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
-        case GAME_GTA_VC:
+        case VRR_GAME_GTA_VC:
             for(let i=0;i<=32;i++) {
                 closeGarage(i);
-                //gta.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
+                game.NO_SPECIAL_CAMERA_FOR_THIS_GARAGE(i);
             }
             break;
 
-        case GAME_GTA_SA:
+        case VRR_GAME_GTA_SA:
             for(let i=0;i<=44;i++) {
                 closeGarage(i);
             }
@@ -185,7 +185,7 @@ function setLocalPlayerControlState(controlState, cursorState = false) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting control state to ${controlState} (Cursor: ${cursorState})`);
     controlsEnabled = controlState;
     //localPlayer.invincible = true;
-    //if(getGame() != GAME_GTA_IV) {
+    //if(getGame() != VRR_GAME_GTA_IV) {
     //    localPlayer.collisionsEnabled = controlState;
     //    localPlayer.invincible = false;
     //}
@@ -198,7 +198,7 @@ function fadeLocalCamera(state, time) {
         logToConsole(LOG_DEBUG, `[VRR.Utilities] Fading camera ${(state)?"in":"out"} for ${time} seconds`);
 
         if(isFadeCameraSupported()) {
-            gta.fadeCamera(state, time);
+            game.fadeCamera(state, time);
         }
     }
 }
@@ -214,7 +214,7 @@ function removeLocalPlayerFromVehicle() {
 function restoreLocalCamera() {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Camera restored`);
     if(isCustomCameraSupported()) {
-        gta.restoreCamera(true);
+        game.restoreCamera(true);
     }
 };
 
@@ -231,7 +231,7 @@ function clearLocalPlayerOwnedPeds() {
 function setLocalCameraLookAt(cameraPosition, cameraLookAt) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Set camera to look at [${cameraLookAt.x}, ${cameraLookAt.y}, ${cameraLookAt.z}] from [${cameraPosition.x}, ${cameraPosition.y}, ${cameraPosition.z}]`);
     if(isCustomCameraSupported()) {
-        gta.setCameraLookAt(cameraPosition, cameraLookAt, true);
+        game.setCameraLookAt(cameraPosition, cameraLookAt, true);
     }
 }
 
@@ -242,9 +242,9 @@ function setCityAmbienceState(state, clearElements = false) {
     game.setTrafficEnabled(state);
 
     if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-        gta.setGenerateCarsAroundCamera(state);
-        if(gta.game != GAME_GTA_SA) {
-            gta.setCiviliansEnabled(state);
+        game.setGenerateCarsAroundCamera(state);
+        if(game.game != VRR_GAME_GTA_SA) {
+            game.setCiviliansEnabled(state);
         }
 
         if(clearElements) {
@@ -336,7 +336,7 @@ function setLocalPlayerInterior(interior) {
     if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
         if(!isGTAIV()) {
             localPlayer.interior = interior;
-            gta.cameraInterior = interior;
+            game.cameraInterior = interior;
         }
     }
 
@@ -378,7 +378,7 @@ function isSnowEnabled() {
 function playPedSpeech(pedName, speechId) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Making ${pedName}'s ped talk (${speechId})`);
     if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-        gta.SET_CHAR_SAY(int, int);
+        game.SET_CHAR_SAY(int, int);
     }
 }
 
@@ -404,8 +404,8 @@ function setLocalPlayerDrunkEffect(amount, duration) {
         drunkEffectDurationTimer = setInterval(function() {
             drunkEffectAmount = drunkEffectAmount;
             if(drunkEffectAmount > 0) {
-                //gta.SET_MOTION_BLUR(drunkEffectAmount);
-                gta.SET_PLAYER_DRUNKENNESS(drunkEffectAmount, duration);
+                //game.SET_MOTION_BLUR(drunkEffectAmount);
+                game.SET_PLAYER_DRUNKENNESS(drunkEffectAmount, duration);
             } else {
                 clearInterval(drunkEffectDurationTimer);
                 drunkEffectDurationTimer = null;
@@ -558,25 +558,27 @@ function processLocalPlayerVehicleControlState() {
 function processLocalPlayerSphereEntryExitHandling() {
     let position = getLocalPlayerPosition();
 
-    getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
-        if(getDistance(position, sphere.position) <= sphere.radius) {
-            if(!inSphere) {
-                inSphere = sphere;
-                triggerEvent("OnLocalPlayerEnterSphere", null, sphere);
+    if(areMarkersSupported()) {
+        getElementsByType(ELEMENT_MARKER).forEach(function(sphere) {
+            if(getDistance(position, sphere.position) <= sphere.radius) {
+                if(!inSphere) {
+                    inSphere = sphere;
+                    triggerEvent("OnLocalPlayerEnterSphere", null, sphere);
+                }
+            } else {
+                if(inSphere) {
+                    inSphere = false;
+                    triggerEvent("OnLocalPlayerExitSphere", null, sphere);
+                }
             }
-        } else {
-            if(inSphere) {
-                inSphere = false;
-                triggerEvent("OnLocalPlayerExitSphere", null, sphere);
-            }
-        }
-    });
+        });
+    }
 }
 
 // ===========================================================================
 
 function processJobRouteSphere() {
-    if(gta.game == GAME_GTA_SA) {
+    if(game.game == VRR_GAME_GTA_SA) {
         let position = getLocalPlayerPosition();
         if(jobRouteStopSphere != null) {
             if(getDistance(position, jobRouteStopSphere.position) <= 2.0) {
@@ -643,32 +645,11 @@ function getVehicleForNetworkEvent(vehicleArg) {
 
 // ===========================================================================
 
-function getPosInFrontOfPos(pos, angle, distance) {
-	let x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
-	let y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
-	let z = pos.z;
-
-	return toVector3(x, y, z);
-}
-
-// ===========================================================================
-
-function getAllowedSkinIndexBySkinId(skinId) {
-    for(let i in allowedSkins[getGame()]) {
-        if(skinId == allowedSkins[getGame()][i][0]) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-// ===========================================================================
-
 function setMinuteDuration(minuteDuration) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting minute duration to ${minuteDuration}ms`);
 
     if(isTimeSupported()) {
-        gta.time.minuteDuration = minuteDuration;
+        game.time.minuteDuration = minuteDuration;
     }
 }
 
@@ -732,6 +713,112 @@ function processNearbyPickups() {
             //}
         }
     }
+}
+
+// ===========================================================================
+
+function setUpInitialGame() {
+    if(getGame() == VRR_GAME_GTA_III) {
+        game.SET_PLAYER_NEVER_GETS_TIRED(game.GET_PLAYER_ID(), 0);
+        game.setGameStat(STAT_PROGRESSMADE, 9999);
+        game.setGameStat(STAT_TOTALPROGRESSINGAME, 9999);
+        game.onMission = true;
+        return true;
+    }
+
+    if(getGame() == VRR_GAME_GTA_VC) {
+        game.SET_PLAYER_NEVER_GETS_TIRED(game.GET_PLAYER_ID(), 0);
+        game.setGameStat(STAT_PROGRESSMADE, 0);
+        game.setGameStat(STAT_TOTALPROGRESSINGAME, 0);
+
+        game.REQUEST_ANIMATION("bikev");
+        game.REQUEST_ANIMATION("bikeh");
+        game.REQUEST_ANIMATION("biked");
+        game.REQUEST_ANIMATION("knife");
+        game.REQUEST_ANIMATION("python");
+        game.REQUEST_ANIMATION("shotgun");
+        game.REQUEST_ANIMATION("buddy");
+        game.REQUEST_ANIMATION("tec");
+        game.REQUEST_ANIMATION("uzi");
+        game.REQUEST_ANIMATION("rifle");
+        game.REQUEST_ANIMATION("m60");
+        game.REQUEST_ANIMATION("sniper");
+        game.REQUEST_ANIMATION("grenade");
+        game.REQUEST_ANIMATION("flame");
+        game.REQUEST_ANIMATION("medic");
+        game.REQUEST_ANIMATION("sunbathe");
+        //game.REQUEST_ANIMATION("playidles");
+        game.REQUEST_ANIMATION("riot");
+        game.REQUEST_ANIMATION("strip");
+        game.REQUEST_ANIMATION("lance");
+        game.REQUEST_ANIMATION("skate");
+
+        game.LOAD_ALL_MODELS_NOW();
+        game.onMission = true;
+        return true;
+    }
+
+    if(getGame() == VRR_GAME_GTA_SA) {
+        game.setGameStat(STAT_WEAPONTYPE_PISTOL_SKILL, 400);
+        game.setGameStat(STAT_WEAPONTYPE_PISTOL_SILENCED_SKILL, 400);
+        game.setGameStat(STAT_WEAPONTYPE_DESERT_EAGLE_SKILL, 400);
+        game.setGameStat(STAT_WEAPONTYPE_SHOTGUN_SKILL, 400);
+        game.setGameStat(STAT_WEAPONTYPE_SAWNOFF_SHOTGUN_SKILL, 1);
+        game.setGameStat(STAT_WEAPONTYPE_SPAS12_SHOTGUN_SKILL, 400);
+        game.setGameStat(STAT_WEAPONTYPE_MICRO_UZI_SKILL, 400);
+        game.setGameStat(STAT_WEAPONTYPE_MP5_SKILL, 400);
+        game.setGameStat(STAT_WEAPONTYPE_AK47_SKILL, 400);
+        game.setGameStat(STAT_WEAPONTYPE_M4_SKILL, 400);
+        game.setGameStat(STAT_DRIVING_SKILL, 9999);
+        game.setGameStat(STAT_FAT, 0);
+        game.setGameStat(STAT_ENERGY, 9999);
+        game.setGameStat(STAT_CYCLE_SKILL, 9999);
+        game.setGameStat(STAT_BIKE_SKILL, 9999);
+        game.setGameStat(STAT_GAMBLING, 9999);
+        game.setGameStat(STAT_PROGRESS_MADE, 9999);
+        game.setGameStat(STAT_RESPECT, 0);
+        game.setGameStat(STAT_RESPECT_TOTAL, 0);
+        game.setGameStat(STAT_SEX_APPEAL, 0);
+        game.setGameStat(STAT_STAMINA, 9999);
+        game.setGameStat(STAT_TOTAL_PROGRESS, 100);
+        game.setGameStat(STAT_UNDERWATER_STAMINA, 9999);
+        game.setGameStat(STAT_BODY_MUSCLE, 0);
+
+        game.setDefaultInteriors(false);
+        game.onMission = true;
+        return true;
+    }
+
+    if(getGame() == VRR_GAME_GTA_IV) {
+        natives.allowEmergencyServices(false);
+        natives.setCreateRandomCops(true);
+        natives.setMaxWantedLevel(0);
+        natives.setWantedMultiplier(0.0);
+        natives.allowPlayerToCarryNonMissionObjects(natives.getPlayerId(), true);
+
+        natives.setPlayerTeam(natives.getPlayerId(), 0);
+        natives.usePlayerColourInsteadOfTeamColour(true);
+        natives.loadAllObjectsNow();
+
+        natives.requestAnims("DANCING");
+        return true;
+    }
+
+    if(getGame() == VRR_GAME_MAFIA_ONE) {
+        game.mapEnabled = false;
+        game.setTrafficEnabled(false);
+        return true;
+    }
+}
+
+// ===========================================================================
+
+function processGameSpecifics() {
+    if(game.game != VRR_GAME_GTA_IV) {
+        game.clearMessages();
+    }
+
+    destroyAutoCreatedPickups();
 }
 
 // ===========================================================================

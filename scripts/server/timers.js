@@ -13,7 +13,7 @@ let serverTimers = {};
 
 function updateTimeRule() {
 	if(isTimeSupported()) {
-		server.setRule("Time", makeReadableTime(gta.time.hour, gta.time.minute));
+		server.setRule("Time", makeReadableTime(game.time.hour, game.time.minute));
 	}
 }
 

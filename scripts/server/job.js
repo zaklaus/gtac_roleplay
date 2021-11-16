@@ -203,7 +203,7 @@ function createAllJobBlips() {
 	logToConsole(LOG_DEBUG, `[VRR.Job] Spawning all job location blips ...`);
 	for(let i in getServerData().jobs) {
 		for(let j in getServerData().jobs[i].locations) {
-			getServerData().jobs[i].locations[j].blip = gta.createBlip((getServerData().jobs[i].blipModel!=0) ? getServerData().jobs[i].blipModel : 0, getServerData().jobs[i].locations[j].position, 2, getColourByName("yellow"));
+			getServerData().jobs[i].locations[j].blip = game.createBlip((getServerData().jobs[i].blipModel!=0) ? getServerData().jobs[i].blipModel : 0, getServerData().jobs[i].locations[j].position, 2, getColourByName("yellow"));
 			addToWorld(getServerData().jobs[i].locations[j].blip);
 			logToConsole(LOG_DEBUG, `[VRR.Job] Job '${getServerData().jobs[i].name}' location blip ${j} spawned!`);
 		}
@@ -220,7 +220,7 @@ function createAllJobPickups() {
 		if(getServerData().jobs[i].pickupModel != 0) {
 			for(let j in getServerData().jobs[i].locations) {
 				pickupCount++;
-				getServerData().jobs[i].locations[j].pickup = gta.createPickup(getServerData().jobs[i].pickupModel, getServerData().jobs[i].locations[j].position);
+				getServerData().jobs[i].locations[j].pickup = game.createPickup(getServerData().jobs[i].pickupModel, getServerData().jobs[i].locations[j].position);
 				getServerData().jobs[i].locations[j].pickup.onAllDimensions = false;
 				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.owner.type", VRR_PICKUP_JOB, false);
 				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.owner.id", j, false);
@@ -1619,7 +1619,7 @@ function createJobLocationBlip(jobId, locationId) {
 			blipModelId = getJobData(jobId).blipModel;
 		}
 
-		getJobData(jobId).locations[locationId].blip = gta.createBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
+		getJobData(jobId).locations[locationId].blip = game.createBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
 		//getJobData(jobId).locations[locationId].blip.onAllDimensions = false;
 		getJobData(jobId).locations[locationId].blip.dimension = getJobData(jobId).locations[locationId].dimension;
 		addToWorld(getJobData(jobId).locations[locationId].blip);

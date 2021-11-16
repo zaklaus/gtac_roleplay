@@ -9,12 +9,12 @@
 
 function processSync(event, deltaTime) {
     if(localPlayer != null) {
-        if(!doesGameHaveServerElements()) {
+        if(!areServerElementsSupported()) {
             triggerNetworkEvent("vrr.player.position", localPlayer.position);
             triggerNetworkEvent("vrr.player.heading", localPlayer.heading);
         }
 
-        //if(gta.game == GAME_GTA_SA) {
+        //if(game.game == VRR_GAME_GTA_SA) {
         //    let lookAtPos = getLocalPlayerLookAtPosition();
         //    triggerNetworkEvent("vrr.player.lookat", lookAtPos);
         //    setEntityData(localPlayer, "vrr.headLook", lookAtPos);
@@ -102,7 +102,7 @@ function syncVehicleProperties(vehicle) {
     //    vehicle.setSuspensionHeight(suspensionHeight);
     //}
 
-    if(getGame() == GAME_GTA_SA) {
+    if(getGame() == VRR_GAME_GTA_SA) {
         if(doesEntityDataExist(vehicle, "vrr.upgrades")) {
             let upgrades = getEntityData(vehicle, "vrr.upgrades");
             for(let i in upgrades) {
@@ -113,12 +113,12 @@ function syncVehicleProperties(vehicle) {
         }
     }
 
-    if(getGame() == GAME_GTA_SA || getGame() == GAME_GTA_IV) {
+    if(getGame() == VRR_GAME_GTA_SA || getGame() == VRR_GAME_GTA_IV) {
         if(doesEntityDataExist(vehicle, "vrr.livery")) {
             let livery = getEntityData(vehicle, "vrr.livery");
-            if(getGame() == GAME_GTA_SA) {
+            if(getGame() == VRR_GAME_GTA_SA) {
                 vehicle.setPaintJob(livery);
-            } else if(getGame() == GAME_GTA_IV) {
+            } else if(getGame() == VRR_GAME_GTA_IV) {
                 vehicle.livery = livery;
             }
         }
@@ -128,7 +128,7 @@ function syncVehicleProperties(vehicle) {
 // ===========================================================================
 
 function syncCivilianProperties(civilian) {
-    if(getGame() == GAME_GTA_III) {
+    if(getGame() == VRR_GAME_GTA_III) {
         if(doesEntityDataExist(civilian, "vrr.scale")) {
             let scaleFactor = getEntityData(civilian, "vrr.scale");
             let tempMatrix = civilian.matrix;
@@ -140,21 +140,21 @@ function syncCivilianProperties(civilian) {
         }
     }
 
-    if(getGame() == GAME_GTA_SA) {
+    if(getGame() == VRR_GAME_GTA_SA) {
         if(doesEntityDataExist(civilian, "vrr.fightStyle")) {
             let fightStyle = getEntityData(civilian, "vrr.fightStyle");
             civilian.setFightStyle(fightStyle[0], fightStyle[1]);
         }
     }
 
-    if(getGame() == GAME_GTA_III) {
+    if(getGame() == VRR_GAME_GTA_III) {
         if(doesEntityDataExist(civilian, "vrr.walkStyle")) {
             let walkStyle = getEntityData(civilian, "vrr.walkStyle");
             civilian.walkStyle = walkStyle;
         }
     }
 
-    if(getGame() == GAME_GTA_IV) {
+    if(getGame() == VRR_GAME_GTA_IV) {
         if(doesEntityDataExist(civilian, "vrr.bodyPropHair")) {
             let bodyPropHair = getEntityData(civilian, "vrr.bodyPropHair");
             civilian.changeBodyProp(0, bodyPropHair[0], bodyPropHair[1]);
@@ -220,7 +220,7 @@ function syncCivilianProperties(civilian) {
 // ===========================================================================
 
 function syncPlayerProperties(player) {
-    if(getGame() == GAME_GTA_III) {
+    if(getGame() == VRR_GAME_GTA_III) {
         if(doesEntityDataExist(player, "vrr.scale")) {
             let scaleFactor = getEntityData(player, "vrr.scale");
             let tempMatrix = player.matrix;
@@ -232,21 +232,21 @@ function syncPlayerProperties(player) {
         }
     }
 
-    if(getGame() == GAME_GTA_SA) {
+    if(getGame() == VRR_GAME_GTA_SA) {
         if(doesEntityDataExist(player, "vrr.fightStyle")) {
             let fightStyle = getEntityData(player, "vrr.fightStyle");
             player.setFightStyle(fightStyle[0], fightStyle[1]);
         }
     }
 
-    //if(getGame() == GAME_GTA_SA) {
+    //if(getGame() == VRR_GAME_GTA_SA) {
     //    if(doesEntityDataExist(player, "vrr.walkStyle")) {
     //        let walkStyle = getEntityData(player, "vrr.walkStyle");
     //        player.walkStyle = walkStyle;
     //    }
     //}
 
-    if(getGame() == GAME_GTA_IV) {
+    if(getGame() == VRR_GAME_GTA_IV) {
         if(doesEntityDataExist(player, "vrr.bodyPartHair")) {
             let bodyPartHead = getEntityData(player, "vrr.bodyPartHair");
             player.changeBodyPart(0, bodyPartHead[0], bodyPartHair[1]);
@@ -268,7 +268,7 @@ function syncPlayerProperties(player) {
         }
     }
 
-    if(getGame() == GAME_GTA_IV) {
+    if(getGame() == VRR_GAME_GTA_IV) {
         if(doesEntityDataExist(player, "vrr.bodyPropHair")) {
             let bodyPropHair = getEntityData(player, "vrr.bodyPropHair");
             player.changeBodyProp(0, bodyPropHair[0], bodyPropHair[1]);
@@ -329,7 +329,7 @@ function syncPlayerProperties(player) {
 // ===========================================================================
 
 function syncObjectProperties(object) {
-    if(getGame() == GAME_GTA_III || getGame() == GAME_GTA_VC) {
+    if(getGame() == VRR_GAME_GTA_III || getGame() == VRR_GAME_GTA_VC) {
         if(doesEntityDataExist(object, "vrr.scale")) {
             let scaleFactor = getEntityData(object, "vrr.scale");
             let tempMatrix = object.matrix;

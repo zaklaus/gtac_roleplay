@@ -10,7 +10,7 @@
 function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loop, loopNoControl, freezeLastFrame, returnToOriginalPosition) {
     if(getGame() < VRR_GAME_GTA_IV) {
         if(animType == VRR_ANIMTYPE_ADD) {
-            if(getGame() == GAME_GTA_VC || getGame() == GAME_GTA_SA) {
+            if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
                 getElementFromId(pedId).clearAnimations();
             } else {
                 getElementFromId(pedId).clearObjective();

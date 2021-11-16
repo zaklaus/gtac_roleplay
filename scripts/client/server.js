@@ -186,10 +186,10 @@ function setEnterPropertyKey(key) {
 function setGameScriptState(scriptName, state) {
     if(state == VRR_GAMESCRIPT_FORCE) {
         logToConsole(`[VRR.Server] Starting game script '${scriptName}'`);
-        gta.startNewScript(scriptName);
+        game.startNewScript(scriptName);
     } else if(state == VRR_GAMESCRIPT_DENY) {
         logToConsole(`[VRR.Server] Terminating game script '${scriptName}'`);
-        gta.terminateScript(scriptName);
+        game.terminateScript(scriptName);
     }
 }
 
@@ -242,7 +242,7 @@ function makePedStopAnimation(pedId) {
         return false;
     }
 
-    if(getGame() == GAME_GTA_VC || getGame() == GAME_GTA_SA) {
+    if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
         getElementFromId(pedId).clearAnimations();
     } else {
         getElementFromId(pedId).clearObjective();

@@ -240,6 +240,7 @@ function loadCommands() {
         item: [
             commandData("i", playerSwitchHotBarSlotCommand, "<slot id>", getStaffFlagValue("none"), true, false, "Switches to the item in the specified slot of your inventory."),
             commandData("addgrounditem", createGroundItemCommand, "<item name/id>", getStaffFlagValue("manageItems"), true, false, "Spawns a new item on the ground at your position."),
+            commandData("additem", createItemCommand, "<item name/id>", getStaffFlagValue("manageItems"), true, false, "Spawns a new item in your hotbar inventory."),
             commandData("delgrounditem", deleteGroundItemCommand, "", getStaffFlagValue("manageItems"), true, false, "Destroys the nearest item on the ground."),
             commandData("pickup", pickupItemCommand, "", getStaffFlagValue("none"), true, false, "Picks up the nearest item."),
             commandData("drop", dropItemCommand, "[slot]", getStaffFlagValue("none"), true, false, "Drops your currently equipped item or the item in the specified slot"),

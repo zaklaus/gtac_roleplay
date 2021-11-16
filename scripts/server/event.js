@@ -32,6 +32,9 @@ function addAllEventHandlers() {
     addEventHandler("onPedEnterVehicle", onPedEnteringVehicle);
     addEventHandler("onPedExitVehicle", onPedExitingVehicle);
 
+    addEventHandler("onPedEnteringVehicle", onPedEnteringVehicle);
+    addEventHandler("onPedExitingVehicle", onPedExitingVehicle);
+
     addEventHandler("OnPlayerCommand", onPlayerCommand);
 }
 
@@ -48,6 +51,8 @@ function onPlayerConnect(event, ipAddress, port) {
 // ===========================================================================
 
 function onPlayerJoin(event, client) {
+    logToConsole(LOG_DEBUG, `[VRR.Event] Client ${client.name}[${client.index}] joining from ${ipAddress}`);
+
     if(isFadeCameraSupported()) {
         fadeCamera(client, true, 1.0);
     }
@@ -72,7 +77,7 @@ function onElementStreamIn(event, element, client) {
 // ===========================================================================
 
 function onPlayerQuit(event, client, quitReasonId) {
-    logToConsole(LOG_DEBUG, `👋 ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
+    logToConsole(LOG_DEBUG, `👋 Client ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
     updateConnectionLogOnQuit(client, quitReasonId);
     if(isPlayerLoggedIn(client)) {
         messagePlayerNormal(null, `👋 ${getPlayerName(client)} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
@@ -82,6 +87,8 @@ function onPlayerQuit(event, client, quitReasonId) {
     }
 
     messageDiscordEventChannel(`👋 ${getPlayerDisplayForConsole(client)} has left the server.`);
+
+    clearTemporaryVehicles();
 }
 
 // ===========================================================================
@@ -381,7 +388,7 @@ function onPlayerDeath(client, position) {
                 client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestJail.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
-                if(getServerGame() == GAME_GTA_IV) {
+                if(getServerGame() == VRR_GAME_GTA_IV) {
                     spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
                 } else {
                     spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
@@ -396,7 +403,7 @@ function onPlayerDeath(client, position) {
                 client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
-                if(getServerGame() == GAME_GTA_IV) {
+                if(getServerGame() == VRR_GAME_GTA_IV) {
                     spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
                 } else {
                     spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
@@ -455,7 +462,7 @@ function onPlayerSpawn(client) {
 
     logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)}'s player data is valid. Continuing spawn processing ...`);
 
-    if(getServerGame() == GAME_GTA_IV) {
+    if(getServerGame() == VRR_GAME_GTA_IV) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped body parts and props`);
         setEntityData(client.player, "vrr.bodyParts", getPlayerCurrentSubAccount(client).bodyParts, true);
         setEntityData(client.player, "vrr.bodyProps", getPlayerCurrentSubAccount(client).bodyProps, true);
@@ -514,7 +521,7 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
         updatePlayerSnowState(client);
 
-        if(getServerGame() == GAME_GTA_SA) {
+        if(getServerGame() == VRR_GAME_GTA_SA) {
             logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
             setEntityData(client.player, "vrr.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
 

@@ -87,7 +87,7 @@ function setNewCharacterSkinCommand(command, params, client) {
 	getServerConfig().newCharacter.skin = skinId;
 	getServerConfig().needsSaved = true;
 
-    messagePlayerNormal(client, `The new character skin has been set to ${getSkinNameFromId(skinId)} (ID ${skinId})`);
+    messagePlayerNormal(client, `The new character skin has been set to ${getSkinNameFromModel(skinId)} (ID ${skinId})`);
 	return true;
 }
 
@@ -151,40 +151,44 @@ function enterExitPropertyCommand(command, params, client) {
 	//	isEntrance = false;
 	//}
 
-	if(getPlayerData(client).currentPickup != false) {
-		let ownerType = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.type");
-		let ownerId = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.id");
+	if(!getPlayerData(client).currentPickup) {
+		return false;
+	}
 
-		//logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} is near pickup for owner ID ${ownerId}`);
+	let ownerType = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.type");
+	let ownerId = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.id");
 
-		switch(ownerType) {
-			case VRR_PICKUP_BUSINESS_ENTRANCE:
-				isBusiness = true;
-				isEntrance = true;
-				closestProperty = getServerData().businesses[ownerId];
-				break;
+	switch(ownerType) {
+		case VRR_PICKUP_BUSINESS_ENTRANCE:
+			isBusiness = true;
+			isEntrance = true;
+			closestProperty = getServerData().businesses[ownerId];
+			break;
 
-			case VRR_PICKUP_BUSINESS_EXIT:
-				isBusiness = true;
-				isEntrance = false;
-				closestProperty = getServerData().businesses[ownerId];
-				break;
+		case VRR_PICKUP_BUSINESS_EXIT:
+			isBusiness = true;
+			isEntrance = false;
+			closestProperty = getServerData().businesses[ownerId];
+			break;
 
-			case VRR_PICKUP_HOUSE_ENTRANCE:
-				isBusiness = false;
-				isEntrance = true;
-				closestProperty = getServerData().houses[ownerId];
-				break;
+		case VRR_PICKUP_HOUSE_ENTRANCE:
+			isBusiness = false;
+			isEntrance = true;
+			closestProperty = getServerData().houses[ownerId];
+			break;
 
-			case VRR_PICKUP_HOUSE_EXIT:
-				isBusiness = false;
-				isEntrance = false;
-				closestProperty = getServerData().houses[ownerId];
-				break;
+		case VRR_PICKUP_HOUSE_EXIT:
+			isBusiness = false;
+			isEntrance = false;
+			closestProperty = getServerData().houses[ownerId];
+			break;
 
-			default:
-				return false;
-		}
+		default:
+			return false;
+	}
+
+	if(closestProperty == null) {
+		return false;
 	}
 
 	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s closest door is ${(isBusiness) ? closestProperty.name : closestProperty.description} ${(isEntrance) ? "entrance" : "exit"}`);
@@ -295,7 +299,7 @@ function getPlayerInfoCommand(command, params, client) {
 		`${getInlineChatColourByName("white")}Registered: ${getPlayerData(targetClient).accountData}`,
 		`${getInlineChatColourByName("white")}Game Version: ${getInlineChatColourByName("lightGrey")}${targetClient.gameVersion}`,
 		`${getInlineChatColourByName("white")}Client Version: ${getInlineChatColourByName("lightGrey")}${getPlayerData(targetClient).clientVersion}`,
-		`${getInlineChatColourByName("white")}Skin: ${getInlineChatColourByName("lightGrey")}${getSkinNameFromId(getPlayerCurrentSubAccount(targetClient).skin)}[${getPlayerCurrentSubAccount(targetClient).skin}]`,
+		`${getInlineChatColourByName("white")}Skin: ${getInlineChatColourByName("lightGrey")}${getSkinNameFromModel(getPlayerCurrentSubAccount(targetClient).skin)}[${getPlayerCurrentSubAccount(targetClient).skin}]`,
 		`${getInlineChatColourByName("white")}Clan: ${getInlineChatColourByName("lightGrey")}${clan}`,
 		`${getInlineChatColourByName("white")}Job: ${getInlineChatColourByName("lightGrey")}${job}`,
 
@@ -358,8 +362,8 @@ function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
 
 function updateServerGameTime() {
 	if(isTimeSupported()) {
-		gta.time.hour = getServerConfig().hour;
-		gta.time.minute = getServerConfig().minute;
+		game.time.hour = getServerConfig().hour;
+		game.time.minute = getServerConfig().minute;
 	}
 }
 

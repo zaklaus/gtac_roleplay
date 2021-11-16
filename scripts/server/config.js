@@ -119,7 +119,7 @@ function loadServerConfigFromGameAndPort(gameId, port, mpMod) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
-				let tempServerConfigData = new ServerConfigData(dbAssoc);
+				let tempServerConfigData = new ServerData(dbAssoc);
 				freeDatabaseQuery(dbQuery);
 				return tempServerConfigData;
 			}
@@ -139,7 +139,7 @@ function loadServerConfigFromId(tempServerId) {
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
-				let tempServerConfigData = new ServerConfigData(dbAssoc);
+				let tempServerConfigData = new ServerData(dbAssoc);
 				freeDatabaseQuery(dbQuery);
 				return tempServerConfigData;
 			}
@@ -157,7 +157,7 @@ function applyConfigToServer(tempServerConfig) {
 	}
 
 	if(isWeatherSupported()) {
-		gta.forceWeather(tempServerConfig.weather);
+		game.forceWeather(tempServerConfig.weather);
 	}
 
 	updateServerRules();
@@ -299,8 +299,8 @@ function setTimeCommand(command, params, client) {
 	getServerConfig().hour = hour;
 	getServerConfig().minute = minute;
 
-    gta.time.hour = getServerConfig().hour;
-    gta.time.minute = getServerConfig().minute;
+    game.time.hour = getServerConfig().hour;
+    game.time.minute = getServerConfig().minute;
 
 	//checkServerGameTime();
 
@@ -363,7 +363,7 @@ function setWeatherCommand(command, params, client) {
 		return false;
     }
 
-    gta.forceWeather(toInteger(weatherId));
+    game.forceWeather(toInteger(weatherId));
 	getServerConfig().weather = weatherId;
 
 	getServerConfig().needsSaved = true;

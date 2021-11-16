@@ -37,6 +37,7 @@ function initServerScripts() {
 	initGUIScript();
 	initEconomyScript();
 	initRadioScript();
+	initLocaleScript();
 
 	initTimers();
 

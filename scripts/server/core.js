@@ -34,6 +34,11 @@ let serverData = {
 
 // ===========================================================================
 
+// Pre-cache allowed skins
+let allowedSkins = getAllowedSkins(getGame());
+
+// ===========================================================================
+
 function initServerData() {
 	// Pre-allocate translation cache language slots
 	//getServerData().translation.cache = new Array(getServerData().translation.languages.length);

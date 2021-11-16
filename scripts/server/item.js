@@ -103,12 +103,15 @@ function createGroundItemObject(itemId) {
 		deleteGroundItemObject(itemId);
 	}
 
-	getItemData(itemId).object = createGameObject(getItemTypeData(getItemData(itemId).itemTypeIndex).dropModel, applyOffsetToPos(getItemData(itemId).position, getItemTypeData(getItemData(itemId).itemTypeIndex).dropPosition));
-	setElementRotation(getItemData(itemId).object, getItemTypeData(getItemData(itemId).itemTypeIndex).dropRotation);
-	setElementOnAllDimensions(getItemData(itemId).object, false);
-	setElementDimension(getItemData(itemId).object, getItemData(itemId).dimension);
-	setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
-	addToWorld(getItemData(itemId).object);
+	let object = createGameObject(getItemTypeData(getItemData(itemId).itemTypeIndex).dropModel, applyOffsetToPos(getItemData(itemId).position, getItemTypeData(getItemData(itemId).itemTypeIndex).dropPosition));
+	if(object != false) {
+		getItemData(itemId).object = object;
+		setElementRotation(getItemData(itemId).object, getItemTypeData(getItemData(itemId).itemTypeIndex).dropRotation);
+		setElementOnAllDimensions(getItemData(itemId).object, false);
+		setElementDimension(getItemData(itemId).object, getItemData(itemId).dimension);
+		setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
+		addToWorld(getItemData(itemId).object);
+	}
 
 	getServerData().groundItemCache.push(itemId);
 }
@@ -1341,7 +1344,7 @@ function saveAllItemsToDatabase() {
 	for(let i in getServerData().items) {
 		if(getServerData().items[i].needsSaved) {
 			if(getServerData().items[i].databaseId != -1) {
-				saveItemToDatabase(i);
+				saveItemToDatabase(getServerData().items[i]);
 			}
 		}
 	}
@@ -1349,39 +1352,98 @@ function saveAllItemsToDatabase() {
 
 // ===========================================================================
 
-function saveItemToDatabase(itemId) {
-	let tempItemData = getServerData().items[itemId];
-	logToConsole(LOG_VERBOSE, `[VRR.Item]: Saving item '${itemId}' to database ...`);
+function saveItemToDatabase(itemData) {
+	logToConsole(LOG_VERBOSE, `[VRR.Item]: Saving item '${itemData.index}' to database ...`);
 
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let data = [
 			["item_server", getServerId()],
-			["item_type", tempItemData.itemType],
-			["item_owner_type", tempItemData.ownerType],
-			["item_owner_id", tempItemData.ownerId],
-			["item_amount", tempItemData.amount],
-			["item_pos_x", tempItemData.position.x],
-			["item_pos_y", tempItemData.position.y],
-			["item_pos_z", tempItemData.position.z],
-			["item_int", tempItemData.interior],
-			["item_vw", tempItemData.dimension],
-			["item_buy_price", tempItemData.buyPrice],
-			["item_enabled", tempItemData.enabled],
-			["item_value", tempItemData.value],
+			["item_type", itemData.itemType],
+			["item_owner_type", itemData.ownerType],
+			["item_owner_id", itemData.ownerId],
+			["item_amount", itemData.amount],
+			["item_pos_x", itemData.position.x],
+			["item_pos_y", itemData.position.y],
+			["item_pos_z", itemData.position.z],
+			["item_int", itemData.interior],
+			["item_vw", itemData.dimension],
+			["item_buy_price", itemData.buyPrice],
+			["item_enabled", itemData.enabled],
+			["item_value", itemData.value],
 		];
 
 		let dbQuery = null;
-		if(tempItemData.databaseId == 0) {
+		if(itemData.databaseId == 0) {
 			let queryString = createDatabaseInsertQuery("item_main", data);
 			dbQuery = queryDatabase(dbConnection, queryString);
-			getServerData().items[itemId].databaseId = getDatabaseInsertId(dbConnection);
+			itemData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let queryString = createDatabaseUpdateQuery("item_main", data, `item_id=${tempItemData.databaseId}`);
+			let queryString = createDatabaseUpdateQuery("item_main", data, `item_id=${itemData.databaseId}`);
 			dbQuery = queryDatabase(dbConnection, queryString);
 		}
 
-		getItemData(itemId).needsSaved = false;
+		itemData.needsSaved = false;
+		freeDatabaseQuery(dbQuery);
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+
+	return false;
+}
+
+function saveItemTypeToDatabase(itemTypeData) {
+	logToConsole(LOG_VERBOSE, `[VRR.Item]: Saving item type '${itemTypeData.name}' to database ...`);
+
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let data = [
+			["item_type_id", itemTypeData.databaseId],
+			["item_type_server", itemTypeData.serverId],
+			["item_type_name", itemTypeData.name],
+			["item_type_enabled", itemTypeData.enabled],
+			["item_type_use_type", itemTypeData.useType],
+			["item_type_drop_type", itemTypeData.dropType],
+			["item_type_use_id", itemTypeData.useId],
+			["item_type_drop_pos_x", itemTypeData.dropPosition.x],
+			["item_type_drop_pos_y", itemTypeData.dropPosition.y],
+			["item_type_drop_pos_z", itemTypeData.dropPosition.z],
+			["item_type_drop_rot_x", itemTypeData.dropRotation.x],
+			["item_type_drop_rot_y", itemTypeData.dropRotation.y],
+			["item_type_drop_rot_z", itemTypeData.dropRotation.z],
+			["item_type_drop_scale_x", itemTypeData.dropScale.x],
+			["item_type_drop_scale_y", itemTypeData.dropScale.y],
+			["item_type_drop_scale_z", itemTypeData.dropScale.z],
+			["item_type_drop_model", itemTypeData.dropModel],
+			["item_type_use_value", itemTypeData.useValue],
+			//["item_type_max_value", itemTypeData.maxValue],
+			["item_type_order_price", itemTypeData.orderPrice],
+			["item_type_order_value", itemTypeData.orderValue],
+			["item_type_demand_multiplier", itemTypeData.demandMultiplier],
+			["item_type_supply_multiplier", itemTypeData.supplyMultiplier],
+			["item_type_risk_multiplier", itemTypeData.riskMultiplier],
+			["item_type_size", itemTypeData.size],
+			["item_type_capacity", itemTypeData.capacity],
+			["item_type_delay_use", itemTypeData.useDelay],
+			["item_type_delay_switch", itemTypeData.switchDelay],
+			["item_type_delay_pickup", itemTypeData.pickupDelay],
+			["item_type_delay_put", itemTypeData.putDelay],
+			["item_type_delay_take", itemTypeData.takeDelay],
+			["item_type_delay_give", itemTypeData.giveDelay],
+			["item_type_delay_drop", itemTypeData.dropDelay],
+		];
+
+		let dbQuery = null;
+		if(itemTypeData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("item_type", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
+			itemTypeData.databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let queryString = createDatabaseUpdateQuery("item_type", data, `item_type_id=${itemTypeData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
+		}
+
+		itemTypeData.needsSaved = false;
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;

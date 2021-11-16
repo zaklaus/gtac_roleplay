@@ -287,8 +287,6 @@ function checkNewCharacter(client, firstName, lastName) {
 		return true;
 	}
 
-	let skinId = allowedSkins[getServerGame()][getAllowedSkinDataBySkinId(getServerConfig().newCharacter.skin)][0]
-
 	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName);
 	if(!subAccountData) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -296,7 +294,7 @@ function checkNewCharacter(client, firstName, lastName) {
 		} else {
 			messagePlayerAlert(client, "Your character could not be created!");
 		}
-		messagePlayerAlert(client, `${getServerName()} staff have been notified of the problem and will fix it shortly.`);
+		messagePlayerAlert(client, `${getServerName()} staff have been notified of the problem and will fix it soon.`);
 		return false;
 	}
 
@@ -372,14 +370,10 @@ function selectCharacter(client, characterId = -1) {
 	//setPlayerCameraLookAt(client, getPosBehindPos(spawnPosition, spawnHeading, 5), spawnPosition);
 	getPlayerData(client).pedState = VRR_PEDSTATE_SPAWNING;
 
-	if(!isGTAIV()) {
-		spawnPlayer(client, spawnPosition, spawnHeading, skin, spawnInterior, spawnDimension);
+	if(getGame() < VRR_GAME_MAFIA_ONE) {
+		spawnPlayer(client, spawnPosition, spawnHeading, getGameData().skins[getGame()][skin][0], spawnInterior, spawnDimension);
 	} else {
-		//setPlayerPosition(client, spawnPosition);
-		//setPlayerHeading(client, spawnHeading);
-		//setPlayerSkin(client, skin);
-		//restorePlayerCamera(client);
-		spawnPlayer(client, spawnPosition, spawnHeading, skin, spawnInterior, spawnDimension);
+		spawnPlayer(client, getGameData().skins[getGame()][skin][0], spawnPosition, spawnHeading);
 	}
 
 	logToConsole(LOG_DEBUG, `[VRR.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
@@ -609,7 +603,7 @@ function forceFightStyleCommand(command, params, client) {
 // ===========================================================================
 
 function createDefaultSubAccountServerData(databaseId, thisServerSkin) {
-	for(let i = 1 ; i <= 4 ; i++) {
+	for(let i = 1 ; i <= 5 ; i++) {
 		if(i == getServerId()) {
 			let dbQueryString = `INSERT INTO sacct_svr (sacct_svr_sacct, sacct_svr_server, sacct_svr_skin) VALUES (${databaseId}, ${i}, ${thisServerSkin})`;
 			quickDatabaseQuery(dbQueryString);

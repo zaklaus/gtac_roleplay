@@ -79,7 +79,7 @@ function saveVehicleToDatabase(vehicleDataId) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		if(!tempVehicleData.spawnLocked) {
-			if(doesGameHaveServerElements()) {
+			if(areServerElementsSupported()) {
 				tempVehicleData.spawnPosition = tempVehicleData.vehicle.position;
 				tempVehicleData.spawnRotation = tempVehicleData.vehicle.heading;
 			} else {
@@ -207,15 +207,15 @@ function createVehicleCommand(command, params, client) {
 		return false;
 	}
 
-	let modelId = getVehicleModelIdFromParams(params);
+	let modelIndex = getVehicleModelIndexFromParams(params);
 
-	if(!modelId) {
+	if(!modelIndex) {
 		messagePlayerError(client, "That vehicle type is invalid!");
 		return false;
 	}
 
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
-	let vehicle = createPermanentVehicle(modelId, frontPos, getPlayerHeading(client), getPlayerInterior(client), getPlayerDimension(client));
+	let vehicle = createPermanentVehicle(modelIndex, frontPos, getPlayerHeading(client), getPlayerInterior(client), getPlayerDimension(client));
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created a ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}!`);
 }
@@ -228,15 +228,15 @@ function createTemporaryVehicleCommand(command, params, client) {
 		return false;
 	}
 
-	let modelId = getVehicleModelIdFromParams(params);
+	let modelIndex = getVehicleModelIndexFromParams(params);
 
-	if(!modelId) {
+	if(!modelIndex) {
 		messagePlayerError(client, "That vehicle type is invalid!");
 		return false;
 	}
 
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
-	let vehicle = createTemporaryVehicle(modelId, frontPos, getPlayerHeading(client), getPlayerInterior(client), getPlayerDimension(client));
+	let vehicle = createTemporaryVehicle(modelIndex, frontPos, getPlayerHeading(client), getPlayerInterior(client), getPlayerDimension(client));
 
 	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created a temporary ${getInlineChatColourByType("vehiclePurple")}${getVehicleName(vehicle)}`);
 }
@@ -737,12 +737,6 @@ function doesClientOwnVehicle(client, vehicle) {
 
 // ===========================================================================
 
-function getVehicleName(vehicle) {
-	return getVehicleNameFromModelId(vehicle.modelIndex) || "Unknown";
-}
-
-// ===========================================================================
-
 function setVehicleJobCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
@@ -1159,7 +1153,7 @@ function spawnVehicle(vehicleData) {
 	let vehicle = createGameVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
 	addToWorld(vehicle);
 
-	if(doesGameHaveServerElements()) {
+	if(isSnowSupported()) {
 		if(vehicleData.colour1IsRGBA && vehicleData.colour2IsRGBA) {
 			vehicle.setRGBColours(vehicleData.colour1RGBA, vehicleData.colour2RGBA);
 		} else {
@@ -1250,8 +1244,8 @@ async function getPlayerNewVehicle(client) {
 
 // ===========================================================================
 
-function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, dealershipId, interior = 0, dimension = 0) {
-	let vehicle = createGameVehicle(model, spawnPosition, spawnRotation);
+function createNewDealershipVehicle(modelIndex, spawnPosition, spawnRotation, price, dealershipId, interior = 0, dimension = 0) {
+	let vehicle = createGameVehicle(modelIndex, spawnPosition, spawnRotation);
 	if(!vehicle) {
 		return false;
 	}
@@ -1277,17 +1271,24 @@ function createNewDealershipVehicle(model, spawnPosition, spawnRotation, price, 
 
 // ===========================================================================
 
-function createTemporaryVehicle(modelId, position, heading, interior = 0, dimension = 0) {
-	let vehicle = createGameVehicle(modelId, position, heading);
+function createTemporaryVehicle(modelIndex, position, heading, interior = 0, dimension = 0) {
+	let vehicle = createGameVehicle(modelIndex, position, heading);
 	setVehicleHeading(vehicle, heading);
 	setElementInterior(vehicle, interior);
 	setElementDimension(vehicle, dimension);
 	addToWorld(vehicle);
 
 	let tempVehicleData = new VehicleData(false, vehicle);
+	tempVehicleData.model = modelIndex;
 	tempVehicleData.databaseId = -1;
 	tempVehicleData.interior = interior;
 	tempVehicleData.dimension = dimension;
+	if(!isGameFeatureSupported("vehicleColours")) {
+		tempVehicleData.colour1 = 0;
+		tempVehicleData.colour2 = 0;
+		tempVehicleData.colour3 = 0;
+		tempVehicleData.colour4 = 0;
+	}
 
 	let slot = getServerData().vehicles.push(tempVehicleData);
 	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
@@ -1297,16 +1298,23 @@ function createTemporaryVehicle(modelId, position, heading, interior = 0, dimens
 
 // ===========================================================================
 
-function createPermanentVehicle(modelId, position, heading, interior = 0, dimension = 0) {
-	let vehicle = createGameVehicle(modelId, position, heading);
+function createPermanentVehicle(modelIndex, position, heading, interior = 0, dimension = 0) {
+	let vehicle = createGameVehicle(modelIndex, position, heading);
 	setVehicleHeading(vehicle, heading);
 	setElementInterior(vehicle, interior);
 	setElementDimension(vehicle, dimension);
 	addToWorld(vehicle);
 
 	let tempVehicleData = new VehicleData(false, vehicle);
+	tempVehicleData.model = modelIndex;
 	tempVehicleData.interior = interior;
 	tempVehicleData.dimension = dimension;
+	if(!isGameFeatureSupported("vehicleColours")) {
+		tempVehicleData.colour1 = 0;
+		tempVehicleData.colour2 = 0;
+		tempVehicleData.colour3 = 0;
+		tempVehicleData.colour4 = 0;
+	}
 
 	let slot = getServerData().vehicles.push(tempVehicleData);
 	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);

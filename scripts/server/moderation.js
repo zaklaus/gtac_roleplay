@@ -959,22 +959,22 @@ function forcePlayerSkinCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let skinId = getSkinIdFromParams(splitParams[1]);
+	let skinIndex = getSkinModelIndexFromParams(splitParams[1]);
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
         return false;
 	}
 
-	if(!skinId) {
+	if(!skinIndex) {
         messagePlayerError(client, "That skin is invalid!");
         return false;
 	}
 
-	getPlayerCurrentSubAccount(targetClient).skin = skinId;
-	setPlayerSkin(targetClient, skinId);
+	getPlayerCurrentSubAccount(targetClient).skin = skinIndex;
+	setPlayerSkin(targetClient, skinIndex);
 
-	messageAdmins(`${client.name} ${getInlineChatColourByName("white")}set ${getPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}skin to ${getInlineChatColourByName("lightGrey")}${getSkinNameFromId(skinId)}`);
+	messageAdmins(`${client.name} ${getInlineChatColourByName("white")}set ${getPlayerName(targetClient)}'s ${getInlineChatColourByName("white")}skin to ${getInlineChatColourByName("lightGrey")}${getGameData().skins[getGame()][skinIndex][1]}`);
 }
 
 // ===========================================================================

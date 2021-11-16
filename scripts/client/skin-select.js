@@ -10,7 +10,7 @@
 let skinSelectMessageFontTop = null;
 let skinSelectMessageFontBottom = null;
 let skinSelectMessageTextTop = "Skin Name";
-let skinSelectMessageTextBottom = "Choose a skin using LEFT and RIGHT arrows. Use ENTER to finish or BACKSPACE to cancel.";
+let skinSelectMessageTextBottom = "Choose a skin using PAGEUP and PAGEDOWN keys. Use ENTER to finish or BACKSPACE to cancel.";
 let skinSelectMessageColourTop = COLOUR_YELLOW;
 let skinSelectMessageColourBottom = COLOUR_WHITE;
 
@@ -45,35 +45,34 @@ function loadSkinSelectMessageFontBottom() {
 
 function processSkinSelectKeyPress(keyCode) {
 	if(usingSkinSelector) {
-        if(keyCode == SDLK_RIGHT || keyCode == SDLK_s) {
-            if(skinSelectorIndex >= allowedSkins[getGame()].length-1) {
-                skinSelectorIndex = 0;
+        if(keyCode == SDLK_PAGEUP) {
+            if(skinSelectorIndex >= allowedSkins.length-1) {
+                skinSelectorIndex = 1;
             } else {
-                skinSelectorIndex++;
+                skinSelectorIndex = skinSelectorIndex + 1;
             }
-            logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[getGame()][skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[getGame()][skinSelectorIndex][0]})`);
-            skinSelectMessageTextTop = allowedSkins[getGame()][skinSelectorIndex][1];
-            localPlayer.skin = allowedSkins[getGame()][skinSelectorIndex][0];
-            localPlayer.position = skinSelectPosition;
-            localPlayer.heading = skinSelectHeading;
-            localPlayer.clearObjective();
-        } else if(keyCode == SDLK_LEFT || keyCode == SDLK_a) {
+            logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[skinSelectorIndex][0]})`);
+            skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
+            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        } else if(keyCode == SDLK_PAGEDOWN) {
             if(skinSelectorIndex <= 0) {
-                skinSelectorIndex = allowedSkins[getGame()].length-1;
+                skinSelectorIndex = allowedSkins.length-1;
             } else {
-                skinSelectorIndex--;
+                skinSelectorIndex = skinSelectorIndex - 1;
             }
-            logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[getGame()][skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[getGame()][skinSelectorIndex][0]})`);
-            skinSelectMessageTextTop = allowedSkins[getGame()][skinSelectorIndex][1];
-            localPlayer.skin = allowedSkins[getGame()][skinSelectorIndex][0];
-            localPlayer.position = skinSelectPosition;
-            localPlayer.heading = skinSelectHeading;
-            localPlayer.clearObjective();
+            logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[skinSelectorIndex][0]})`);
+            skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
+            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
         } else if(keyCode == SDLK_RETURN) {
             triggerNetworkEvent("vrr.skinSelected", skinSelectorIndex);
+            toggleSkinSelect(false);
+            return true;
         } else if(keyCode == SDLK_BACKSPACE) {
             triggerNetworkEvent("vrr.skinSelected", -1);
+            toggleSkinSelect(false);
+            return true;
         }
+        localPlayer.heading = skinSelectHeading;
     }
 }
 
@@ -82,16 +81,11 @@ function processSkinSelectKeyPress(keyCode) {
 function processSkinSelectRendering() {
 	if(usingSkinSelector) {
         if(skinSelectMessageFontTop != null && skinSelectMessageFontBottom != null) {
-            //if(gta.game != GAME_GTA_VC) {
+            if(skinSelectMessageTextTop != "" && skinSelectMessageTextBottom != "") {
                 skinSelectMessageFontTop.render(skinSelectMessageTextTop, [0, game.height-100], game.width, 0.5, 0.0, skinSelectMessageFontTop.size, skinSelectMessageColourTop, true, true, false, true);
                 skinSelectMessageFontBottom.render(skinSelectMessageTextBottom, [0, game.height-65], game.width, 0.5, 0.0, skinSelectMessageFontBottom.size, skinSelectMessageColourBottom, true, true, false, true);
-            //}
+            }
         }
-        //if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-        //    if(gta.game == GAME_GTA_III || gta.game == GAME_GTA_VC) {
-        //        localPlayer.clearObjective();
-        //   }
-        //}
     }
 }
 
@@ -99,31 +93,36 @@ function processSkinSelectRendering() {
 
 function toggleSkinSelect(state) {
     if(state) {
-        skinSelectorIndex = 0;
-        usingSkinSelector = true;
+        skinSelectorIndex = getAllowedSkinIndexFromSkin(localPlayer.skin);
+        if(!skinSelectorIndex) {
+            skinSelectorIndex = 0;
+        }
 
-        let tempPosition = localPlayer.position;
-        tempPosition.z += 0.5;
-        let frontCameraPosition = getPosInFrontOfPos(tempPosition, localPlayer.heading, 3);
+        usingSkinSelector = true;
+        skinSelectPosition = localPlayer.position;
+        skinSelectHeading = localPlayer.heading;
 
         if(isCustomCameraSupported()) {
+            let tempPosition = localPlayer.position;
+            tempPosition.z += 0.5;
+            let frontCameraPosition = getPosInFrontOfPos(tempPosition, localPlayer.heading, 3);
             game.setCameraLookAt(frontCameraPosition, localPlayer.position, true);
         }
 
-        localPlayer.skin = allowedSkins[getGame()][skinSelectorIndex][0];
+        localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
         gui.showCursor(true, false);
-        localPlayer.invincible = true;
-        localPlayer.setProofs(true, true, true, true, true);
+        //localPlayer.invincible = true;
+        //localPlayer.setProofs(true, true, true, true, true);
         localPlayer.collisionsEnabled = false;
-        skinSelectPosition = localPlayer.position;
-        skinSelectHeading = localPlayer.heading;
+
     } else {
         usingSkinSelector = false;
-        //gta.restoreCamera(true);
+        //game.restoreCamera(true);
         gui.showCursor(false, true);
         if(localPlayer) {
-            localPlayer.invincible = false;
-            localPlayer.setProofs(false, false, false, false, false);
+            //localPlayer.invincible = false;
+            //localPlayer.setProofs(false, false, false, false, false);
             localPlayer.collisionsEnabled = true;
         }
     }

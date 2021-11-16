@@ -59,4 +59,7 @@ let mouseCameraEnabled = false;
 
 let currentPickup = false;
 
+// Pre-cache all allowed skins
+let allowedSkins = getAllowedSkins(getGame());
+
 // ===========================================================================

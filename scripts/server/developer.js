@@ -150,7 +150,37 @@ function addServerLogLevelCommand(command, params, client) {
 			return;
 	}
 
-	messageAdminAction(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}enabled log level ${getInlineChatColourByName("lightGrey")}${toLowerCase(params)}`);
+	messageAdminAction(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}enabled log level {ALTCOLOUR}${toLowerCase(params)}`);
+
+	return true;
+}
+
+// ===========================================================================
+
+function getServerLogLevelCommand(command, params, client) {
+	let logLevels = [];
+
+	if(hasBitFlag(logLevel, LOG_DEBUG)) {
+		logLevels.push("debug");
+	}
+
+	if(hasBitFlag(logLevel, LOG_WARN)) {
+		logLevels.push("warn");
+	}
+
+	if(hasBitFlag(logLevel, LOG_ERROR)) {
+		logLevels.push("error");
+	}
+
+	if(hasBitFlag(logLevel, LOG_INFO)) {
+		logLevels.push("info");
+	}
+
+	if(hasBitFlag(logLevel, LOG_VERBOSE)) {
+		logLevels.push("verbose");
+	}
+
+	messagePlayerAlert(`{MAINCOLOUR}Current log levels: {ALTCOLOUR}${toLowerCase(logLevels.join(", "))}`);
 
 	return true;
 }
@@ -188,7 +218,7 @@ function removeServerLogLevelCommand(command, params, client) {
 			return;
 	}
 
-	messageAdminAction(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}disabled log level ${getInlineChatColourByName("lightGrey")}${toLowerCase(params)}`);
+	messageAdminAction(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}disabled log level {ALTCOLOUR}${toLowerCase(params)}`);
 
 	return true;
 }
@@ -225,12 +255,12 @@ function simulateCommandForPlayerCommand(command, params, client) {
 	}
 
 	if(!getCommand(tempCommand)) {
-		messagePlayerError(client, `The command ${getInlineChatColourByName("lightGrey")}/${command} ${getInlineChatColourByName("white")}does not exist! Use /help for commands and information.`);
+		messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Use /help for commands and information.`);
 		return false;
 	}
 
 	getCommand(toLowerCase(tempCommand)).handlerFunction(tempCommand, tempParams, targetClient);
-	messagePlayerSuccess(client, `The command string ${getInlineChatColourByName("lightGrey")}/${tempCommand} ${tempParams}${getInlineChatColourByName("white")} has been simulated for ${getInlineChatColourByName("lightGrey")}${targetgetPlayerName(client)}`);
+	messagePlayerSuccess(client, `The command string {ALTCOLOUR}/${tempCommand} ${tempParams}{MAINCOLOUR} has been simulated for {ALTCOLOUR}${targetgetPlayerName(client)}`);
 	return true;
 }
 
@@ -260,7 +290,7 @@ function simulateCommandForAllPlayersCommand(command, params, client) {
 	let tempParams = splitParams.slice(1).join(" ");
 
 	if(!getCommand(tempCommand)) {
-		messagePlayerError(client, `The command ${getInlineChatColourByName("lightGrey")}/${command} ${getInlineChatColourByName("white")}does not exist! Use /help for commands and information.`);
+		messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Use /help for commands and information.`);
 		return false;
 	}
 
@@ -270,7 +300,7 @@ function simulateCommandForAllPlayersCommand(command, params, client) {
 			getCommand(toLowerCase(tempCommand)).handlerFunction(tempCommand, tempParams, clients[i]);
 		}
 	}
-	messagePlayerSuccess(client, `The command string ${getInlineChatColourByName("lightGrey")}/${tempCommand} ${tempParams}${getInlineChatColourByName("white")} has been simulated for all players!`);
+	messagePlayerSuccess(client, `The command string {ALTCOLOUR}/${tempCommand} ${tempParams}{MAINCOLOUR} has been simulated for all players!`);
 	return true;
 }
 
@@ -329,9 +359,9 @@ function executeClientCodeCommand(command, params, client) {
 // ===========================================================================
 
 function saveAllServerDataCommand(command, params, client) {
-	messageAdmins(`${getInlineChatColourByType("clanOrange")}Vortrex has forced a manual save of all data. Initiating ...`);
+	messageAdmins(`{clanOrange}Vortrex has forced a manual save of all data. Initiating ...`);
 	saveAllServerDataToDatabase();
-	messageAdmins(`${getInlineChatColourByType("clanOrange")}All server data saved to database successfully!`);
+	messageAdmins(`{clanOrange}All server data saved to database successfully!`);
 	return true;
 }
 
@@ -345,7 +375,7 @@ function testEmailCommand(command, params, client) {
 // ===========================================================================
 
 function restartGameModeCommand(command, params, client) {
-	messagePlayerNormal(null, `${getInlineChatColourByType("clanOrange")}The server game mode is restarting!`, getColourByName("orange"));
+	messagePlayerNormal(null, `{clanOrange}The server game mode is restarting!`, getColourByName("orange"));
 	consoleCommand("refresh");
 	thisResource.restart();
 	return true;
@@ -465,7 +495,7 @@ function resetAllAccountsHotkeysToDefault() {
 
 // ===========================================================================
 
-function togglePauseSavingToDatabase() {
+function togglePauseSavingToDatabaseCommand(command, params, client) {
 	getServerConfig().pauseSavingToDatabase = !getServerConfig().pauseSavingToDatabase;
 }
 

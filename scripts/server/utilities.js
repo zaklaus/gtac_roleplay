@@ -337,6 +337,8 @@ function getCardinalDirection(pos1, pos2) {
 // ===========================================================================
 
 function getTimeDifferenceDisplay(timeStamp2, timeStamp1) {
+	timeStamp1 = timeStamp1 * 1000;
+	timeStamp2 = timeStamp2 * 1000;
     if(isNaN(timeStamp1) || isNaN(timeStamp2)) {
         return "Unknown";
     }
@@ -1538,11 +1540,13 @@ async function triggerWebHook(webHookURL, payloadData) {
 // ===========================================================================
 
 function clearTemporaryVehicles() {
-	let vehicles = getVehicles();
+	let vehicles = getElementsByType(ELEMENT_VEHICLE);
 	for(let i in vehicles) {
 		if(vehicles[i].owner == -1) {
 			if(!getVehicleData(vehicles[i])) {
-				destroyElement(vehicles[i]);
+				if(isVehicleUnoccupied(vehicles[i])) {
+					destroyElement(vehicles[i]);
+				}
 			}
 		}
 	}
@@ -1551,12 +1555,14 @@ function clearTemporaryVehicles() {
 // ===========================================================================
 
 function clearTemporaryPeds() {
-	let peds = getPeds();
+	let peds = getElementsByType(ELEMENT_PED);
 	for(let i in peds) {
 		if(peds[i].owner == -1) {
-			if(peds[i].isType != ELEMENT_PLAYER) {
-				if(!getNPCData(peds[i])) {
-					destroyElement(peds[i]);
+			if(!peds[i].isType(ELEMENT_PLAYER)) {
+				if(peds[i].vehicle == null) {
+					if(!getNPCData(peds[i])) {
+						destroyElement(peds[i]);
+					}
 				}
 			}
 		}

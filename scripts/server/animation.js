@@ -65,7 +65,7 @@ function showAnimationListCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(animList, 10);
 
-	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Animation List ${getInlineChatColourByType("clanOrange")}===========================`);
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Animation List {clanOrange}===========================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));

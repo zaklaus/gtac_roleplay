@@ -170,12 +170,12 @@ function executeDatabaseQueryCommand(command, params, client) {
 	let success = quickDatabaseQuery(params);
 
 	if(!success) {
-		messagePlayerAlert(client, `Database query failed to execute: ${getInlineChatColourByName("lightGrey")}${query}`);
+		messagePlayerAlert(client, `Database query failed to execute: {ALTCOLOUR}${query}`);
 	} else if(typeof success != "boolean") {
-		messagePlayeSuccess(client, `Database query successful: ${getInlineChatColourByName("lightGrey")}${query}`);
+		messagePlayeSuccess(client, `Database query successful: {ALTCOLOUR}${query}`);
 		messagePlayerInfo(client, `Returns: ${success}`);
 	} else {
-		messagePlayerSuccess(client, `Database query successful: ${getInlineChatColourByName("lightGrey")}${query}`);
+		messagePlayerSuccess(client, `Database query successful: {ALTCOLOUR}${query}`);
 	}
 	return true;
 }

@@ -18,7 +18,6 @@ let serverData = {
 	clients: new Array(128),
 	businesses: [],
 	houses: [],
-	families: [],
 	factions: [],
 	commands: {},
 	groundItemCache: [],
@@ -30,6 +29,32 @@ let serverData = {
 		whiteListedGameScripts: [],
 		blackListedGameScripts: [],
 	},
+	localeStrings: {},
+	jobRankNames: [
+		[
+			"Police Officer I",
+			"Detective",
+			"Sergeant",
+			"Lieutenant",
+			"Captain",
+			"Chief of Police",
+		],
+		[
+			"Paramedic",
+			"Senior Paramedic",
+			"Lieutenant",
+			"Lieutenant",
+			"Captain",
+			"Chief of Department",
+		],
+		[
+			"Firefighter",
+			"Senior Firefighter",
+			"Fire Marshal",
+			"Captain",
+			"Chief of Department",
+		]
+	]
 };
 
 // ===========================================================================

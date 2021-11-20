@@ -422,6 +422,12 @@ function Enum(constantsList) {
 
 // ===========================================================================
 
+function clearArray(array) {
+	array.splice(0, array.length)
+}
+
+// ===========================================================================
+
 function isServerScript() {
 	return (typeof server != "undefined");
 }
@@ -510,8 +516,8 @@ function isCustomCameraSupported() {
 
 // ===========================================================================
 
-function isFightStyleSupported() {
-	return supportedFeatures.fightStyle[getGame()];
+function areFightStylesSupported() {
+	return supportedFeatures.fightStyles[getGame()];
 }
 
 // ===========================================================================

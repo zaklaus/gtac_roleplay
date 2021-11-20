@@ -201,14 +201,13 @@ function loadCommands() {
             commandData("docmdall", simulateCommandForAllPlayersCommand, "<command> [params]", getStaffFlagValue("developer"), true, true),
             commandData("addloglvl", addServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
             commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
+            commandData("loglvl", getServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
 
-            commandData("nosave", togglePauseSavingToDatabase, "", getStaffFlagValue("developer"), true, true),
+            commandData("nosave", togglePauseSavingToDatabaseCommand, "", getStaffFlagValue("developer"), true, true),
             commandData("streamurlall", streamAudioURLToAllPlayersCommand, "<url> <volume>", getStaffFlagValue("developer"), true, true),
             commandData("streamnameall", streamAudioNameToAllPlayersCommand, "<name> <volume>", getStaffFlagValue("developer"), true, true),
-            //commandData("rumble", streamEventStartToAllPlayersCommand, "<volume>", getStaffFlagValue("developer"), true, true),
 
             //commandData("forceresetpass", forceAccountPasswordResetCommand, "<account name>", getStaffFlagValue("developer"), true, true),
-            //commandData("loglvl", getServerLogLevelCommand, "<log level name>", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],
         email: [
@@ -216,6 +215,20 @@ function loadCommands() {
         ],
         help: [
             commandData("help", helpCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("commands", helpCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("cmds", helpCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("info", helpCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("veh", helpGetCarCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("v", helpGetCarCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("car", helpGetCarCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("cars", helpGetCarCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("spawncar", helpGetCarCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("spawnveh", helpGetCarCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("skin", helpGetSkinCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("skins", helpGetSkinCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("clothes", helpGetSkinCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("setskin", helpGetSkinCommand, "", getStaffFlagValue("none"), false, false),
+            commandData("changeskin", helpGetSkinCommand, "", getStaffFlagValue("none"), false, false),
         ],
         house: [
             commandData("addhouse", createHouseCommand, "<description>", getStaffFlagValue("manageHouses"), true, false),
@@ -521,12 +534,12 @@ function disableCommand(command, params, client) {
     params = toLowerCase(params);
 
     if(!getCommand(params)) {
-        messagePlayerError(client, `The command ${getInlineChatColourByName("lightGrey")}/${params} ${getInlineChatColourByName("white")} does not exist!`);
+        messagePlayerError(client, `The command {ALTCOLOUR}/${params} {MAINCOLOUR} does not exist!`);
         return false;
     }
 
     getCommand(params).enabled = false;
-	messagePlayerSuccess(client, `Command ${getInlineChatColourByName("lightGrey")}/${params} ${getInlineChatColourByName("white")}has been disabled!`);
+	messagePlayerSuccess(client, `Command {ALTCOLOUR}/${params} {MAINCOLOUR}has been disabled!`);
 	return true;
 }
 
@@ -541,12 +554,12 @@ function enableCommand(command, params, client) {
     params = toLowerCase(params);
 
     if(!getCommand(params)) {
-        messagePlayerError(client, `The command ${getInlineChatColourByName("lightGrey")}/${params} ${getInlineChatColourByName("white")} does not exist!`);
+        messagePlayerError(client, `The command {ALTCOLOUR}/${params} {MAINCOLOUR} does not exist!`);
         return false;
     }
 
     getCommand(params).enabled = true;
-	messagePlayerSuccess(client, `Command ${getInlineChatColourByName("lightGrey")}/${params} ${getInlineChatColourByName("white")}has been enabled!`);
+	messagePlayerSuccess(client, `Command {ALTCOLOUR}/${params} {MAINCOLOUR}has been enabled!`);
 	return true;
 }
 
@@ -561,7 +574,7 @@ function disableAllCommandsByType(command, params, client) {
     params = toLowerCase(params);
 
     if(isNull(getServerData().commands[params])) {
-        messagePlayerError(client, `Command type ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}does not exist!`);
+        messagePlayerError(client, `Command type {ALTCOLOUR}${params} {MAINCOLOUR}does not exist!`);
         return false;
     }
 
@@ -569,7 +582,7 @@ function disableAllCommandsByType(command, params, client) {
         getServerData().commands[params][i].enabled = false;
     }
 
-	messagePlayerSuccess(client, `${getInlineChatColourByType("clanOrange")}All ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}commands have been disabled!`);
+	messagePlayerSuccess(client, `{clanOrange}All {ALTCOLOUR}${params} {MAINCOLOUR}commands have been disabled!`);
 	return true;
 }
 
@@ -584,7 +597,7 @@ function enableAllCommandsByType(command, params, client) {
     params = toLowerCase(params);
 
     if(isNull(getServerData().commands[params])) {
-        messagePlayerError(client, `Command type ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}does not exist!`);
+        messagePlayerError(client, `Command type {ALTCOLOUR}${params} {MAINCOLOUR}does not exist!`);
         return false;
     }
 
@@ -592,7 +605,7 @@ function enableAllCommandsByType(command, params, client) {
         getServerData().commands[params][i].enabled = true;
     }
 
-	messagePlayerSuccess(client, `${getInlineChatColourByType("clanOrange")}All ${getInlineChatColourByName("lightGrey")}${params} ${getInlineChatColourByName("white")}commands have been enabled!`);
+	messagePlayerSuccess(client, `{clanOrange}All {ALTCOLOUR}${params} {MAINCOLOUR}commands have been enabled!`);
 	return true;
 }
 
@@ -618,20 +631,20 @@ function processPlayerCommand(command, params, client) {
 
     if(!doesCommandExist(toLowerCase(command))) {
         console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
-        messagePlayerError(client, `The command ${getInlineChatColourByName("lightGrey")}/${command} ${getInlineChatColourByName("white")}does not exist! Use /help for commands and information.`);
+        messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Use /help for commands and information.`);
         return false;
     }
 
     if(!commandData.enabled) {
         console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (command is disabled): /${command} ${paramsDisplay}`);
-        messagePlayerError(client, `The command ${getInlineChatColourByName("lightGrey")}/${command} ${getInlineChatColourByName("white")}is disabled!`);
+        messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}is disabled!`);
         return false;
     }
 
 	if(doesCommandRequireLogin(toLowerCase(command))) {
 		if(!isPlayerLoggedIn(client)) {
             console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (requires login first): /${command} ${paramsDisplay}`);
-			messagePlayerError(client, `You must be logged in to use the ${getInlineChatColourByName("lightGrey")}/${command} ${getInlineChatColourByName("white")}command!`);
+			messagePlayerError(client, `You must be logged in to use the {ALTCOLOUR}/${command} {MAINCOLOUR}command!`);
 			return false;
 		}
 	}
@@ -639,7 +652,7 @@ function processPlayerCommand(command, params, client) {
 	//if(isClientFromDiscord(client)) {
 	//	if(!isCommandAllowedOnDiscord(command)) {
     //        console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command from discord, but failed (not available on discord): /${command} ${paramsDisplay}`);
-	//		messagePlayerError(client, `The ${getInlineChatColourByName("lightGrey")}/${command} ${getInlineChatColourByName("white")} command isn't available on discord!`);
+	//		messagePlayerError(client, `The {ALTCOLOUR}/${command} {MAINCOLOUR} command isn't available on discord!`);
 	//		return false;
 	//	}
 	//}
@@ -647,7 +660,7 @@ function processPlayerCommand(command, params, client) {
     if(!client.console) {
         if(!doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(toLowerCase(command)))) {
             console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (no permission): /${command} ${paramsDisplay}`);
-            messagePlayerError(client, `You do not have permission to use the ${getInlineChatColourByName("lightGrey")}/${toLowerCase(command)} ${getInlineChatColourByName("white")}command!`);
+            messagePlayerError(client, `You do not have permission to use the {ALTCOLOUR}/${toLowerCase(command)} {MAINCOLOUR}command!`);
             return false;
         }
     }

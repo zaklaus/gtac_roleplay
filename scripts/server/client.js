@@ -865,7 +865,7 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
         restorePlayerCamera(client);
         return false;
     } else {
-        getPlayerCurrentSubAccount(client).skin = getSkinIndexFromSkin(allowedSkins[allowedSkinIndex][0]);
+        getPlayerCurrentSubAccount(client).skin = getSkinIndexFromModel(allowedSkins[allowedSkinIndex][0]);
         if(isPlayerWorking(client)) {
             messagePlayerAlert(client, "Your new skin has been saved but won't be shown until you stop working.");
             setPlayerSkin(client, getJobData(getPlayerCurrentSubAccount(client).job).uniforms[getPlayerData(client).jobUniform].skinId);

@@ -7,12 +7,10 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let localeStrings = {};
-
-// ===========================================================================
-
 function initLocaleScript() {
-    localeStrings = loadAllLocaleStrings();
+    logToConsole(LOG_INFO, "[VRR.Locale]: Initializing locale script ...");
+    getServerData().localeStrings = loadAllLocaleStrings();
+	logToConsole(LOG_INFO, "[VRR.Locale]: Locale script initialized!");
 }
 
 // ===========================================================================
@@ -20,17 +18,19 @@ function initLocaleScript() {
 function getLocaleString(client, stringName, ...args) {
     let tempString = getRawLocaleString(stringName, getPlayerLocaleName(client));
 
-    tempString = replaceColoursInLocaleString(tempString);
+    tempString = replaceColoursInMessage(tempString);
 
-    for(let i in args) {
-        tempString = tempString.replace(`{${i}}`, args[i]);
+    for(let i = 1; i <= args.length; i++) {
+        tempString = tempString.replace(`{${i}}`, args[i-1]);
     }
+
+    return tempString;
 }
 
 // ===========================================================================
 
 function getRawLocaleString(stringName, localeName) {
-    return localeStrings[localeName][stringName];
+    return getLocaleStrings()[localeName][stringName];
 }
 
 // ===========================================================================
@@ -40,18 +40,29 @@ function getPlayerLocaleName(client) {
         return getLocaleNameFromParams(`English`);
     }
 
-    return getPlayerData(client).accountData.locale;
+    return "english";
+    //return getPlayerData(client).accountData.locale;
 }
 
 // ===========================================================================
 
 function loadAllLocaleStrings() {
+    let tempLocaleStrings = {};
+
     let locales = getGlobalConfig().locales;
     for(let i in locales) {
         let localeData = locales[i];
         let localeFile = JSON.parse(loadTextFile(`locale/${localeData[1]}.json`));
-        localeStrings[localeData[1]] = localeFile;
+        tempLocaleStrings[localeData[1]] = localeFile;
     }
+
+    return tempLocaleStrings;
+}
+
+// ===========================================================================
+
+function getLocaleStrings() {
+    return getServerData().localeStrings;
 }
 
 // ===========================================================================

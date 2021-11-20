@@ -287,21 +287,21 @@ function getPlayerInfoCommand(command, params, client) {
 		}
 	}
 
-	messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Admins ${getInlineChatColourByType("clanOrange")}===================================`);
+	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Player Info {clanOrange}==============================`);
 
-	let clan = (getPlayerCurrentSubAccount(targetClient).clan != 0) ? `${getInlineChatColourByName("lightGrey")}${getClanData(getClanIdFromDatabaseId(getPlayerCurrentSubAccount(targetClient).clan)).name}[${getPlayerCurrentSubAccount(targetClient).clan}] (Rank: ${getClanRankData(clanId, getPlayerCurrentSubAccount(targetClient).clanRank).name}[Level: ${getClanRankData(clanId, getPlayerCurrentSubAccount(targetClient).clanRank).level}, DBID: ${getClanRankData(clanId, getPlayerCurrentSubAccount(targetClient).clanRank).databaseId}` : `(None)`;
-	let job = (getPlayerCurrentSubAccount(targetClient).job != 0) ? `${getInlineChatColourByName("lightGrey")}${getJobData(getJobIdFromDatabaseId(getPlayerCurrentSubAccount(targetClient).job)).name}[${getPlayerCurrentSubAccount(targetClient).job}] (Rank: ${getPlayerCurrentSubAccount(targetClient).jobRank})` : `(None)`;
+	let clan = (getPlayerCurrentSubAccount(targetClient).clan != 0) ? `{ALTCOLOUR}${getClanData(getClanIdFromDatabaseId(getPlayerCurrentSubAccount(targetClient).clan)).name}[${getPlayerCurrentSubAccount(targetClient).clan}] (Rank: ${getClanRankData(getPlayerCurrentSubAccount(targetClient).clan, getPlayerCurrentSubAccount(targetClient).clanRank).name}[Level: ${getClanRankData(getPlayerCurrentSubAccount(targetClient).clan, getPlayerCurrentSubAccount(targetClient).clanRank).level}, DBID: ${getClanRankData(getPlayerCurrentSubAccount(targetClient).clan, getPlayerCurrentSubAccount(targetClient).clanRank).databaseId}` : `(None)`;
+	let job = (getPlayerCurrentSubAccount(targetClient).job != 0) ? `{ALTCOLOUR}${getJobData(getJobIdFromDatabaseId(getPlayerCurrentSubAccount(targetClient).job)).name}[${getPlayerCurrentSubAccount(targetClient).job}] (Rank: ${getPlayerCurrentSubAccount(targetClient).jobRank})` : `(None)`;
 
 	let stats = [
-		`${getInlineChatColourByName("white")}Account: ${getInlineChatColourByName("lightGrey")}${getPlayerData(targetClient).accountData.name}[${getPlayerData(targetClient).accountData.databaseId}]`,
-		`${getInlineChatColourByName("white")}Character: ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}[${getPlayerCurrentSubAccount(targetClient).databaseId}]`,
-		`${getInlineChatColourByName("white")}Connected: ${getInlineChatColourByName("lightGrey")}${getTimeDifferenceDisplay(Math.ceil(sdl.tick/1000), getPlayerData(targetClient).connectTime)} ago`,
-		`${getInlineChatColourByName("white")}Registered: ${getPlayerData(targetClient).accountData}`,
-		`${getInlineChatColourByName("white")}Game Version: ${getInlineChatColourByName("lightGrey")}${targetClient.gameVersion}`,
-		`${getInlineChatColourByName("white")}Client Version: ${getInlineChatColourByName("lightGrey")}${getPlayerData(targetClient).clientVersion}`,
-		`${getInlineChatColourByName("white")}Skin: ${getInlineChatColourByName("lightGrey")}${getSkinNameFromModel(getPlayerCurrentSubAccount(targetClient).skin)}[${getPlayerCurrentSubAccount(targetClient).skin}]`,
-		`${getInlineChatColourByName("white")}Clan: ${getInlineChatColourByName("lightGrey")}${clan}`,
-		`${getInlineChatColourByName("white")}Job: ${getInlineChatColourByName("lightGrey")}${job}`,
+		`{MAINCOLOUR}Account: {ALTCOLOUR}${getPlayerData(targetClient).accountData.name}[${getPlayerData(targetClient).accountData.databaseId}]`,
+		`{MAINCOLOUR}Character: {ALTCOLOUR}${getCharacterFullName(targetClient)}[${getPlayerCurrentSubAccount(targetClient).databaseId}]`,
+		`{MAINCOLOUR}Connected: {ALTCOLOUR}${getTimeDifferenceDisplay(Math.ceil(sdl.tick/1000), getPlayerData(targetClient).connectTime)} ago`,
+		`{MAINCOLOUR}Registered: ${getPlayerData(targetClient).accountData}`,
+		`{MAINCOLOUR}Game Version: {ALTCOLOUR}${targetClient.gameVersion}`,
+		`{MAINCOLOUR}Client Version: {ALTCOLOUR}${getPlayerData(targetClient).clientVersion}`,
+		`{MAINCOLOUR}Skin: {ALTCOLOUR}${getSkinNameFromModel(getPlayerCurrentSubAccount(targetClient).skin)}[${getPlayerCurrentSubAccount(targetClient).skin}]`,
+		`{MAINCOLOUR}Clan: {ALTCOLOUR}${clan}`,
+		`{MAINCOLOUR}Job: {ALTCOLOUR}${job}`,
 
 	]
 
@@ -354,7 +354,7 @@ function showPlayerPrompt(client, promptType, promptMessage, promptTitle) {
 		showPlayerPromptGUI(client, promptMessage, promptTitle);
 	} else {
 		messagePlayerNormal(client, `❓ ${promptMessage}`);
-		messagePlayerInfo(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/yes or ${getInlineChatColourByName("lightGrey")}/no`);
+		messagePlayerInfo(client, `{MAINCOLOUR}Use {ALTCOLOUR}/yes or {ALTCOLOUR}/no`);
 	}
 }
 
@@ -371,14 +371,14 @@ function updateServerGameTime() {
 
 function listOnlineAdminsCommand(command, params, client) {
 	//== Admins ===================================
-	messagePlayerNormal(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Admins ${getInlineChatColourByType("clanOrange")}===================================`);
+	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Admins {clanOrange}===================================`);
 
 	let admins = [];
 	let clients = getClients();
 	for(let i in clients) {
 		if(getPlayerData(clients[i]) != false) {
 			if(getPlayerData(clients[i]).accountData.flags.admin != 0) {
-				admins.push(`${getInlineChatColourByName("lightGrey")}[${getPlayerData(clients[i]).accountData.staffTitle}] ${getInlineChatColourByName("white")}${getCharacterFullName(clients[i])}`);
+				admins.push(`{ALTCOLOUR}[${getPlayerData(clients[i]).accountData.staffTitle}] {MAINCOLOUR}${getCharacterFullName(clients[i])}`);
 			}
 		}
 	}

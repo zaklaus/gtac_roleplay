@@ -26,8 +26,6 @@ let serverColours = {
 			clanOrange: "FF9900",
 			vehiclePurple: "960096",
 			jobYellow: "FFFF00",
-			ALTCOLOUR: "C8C8C8",
-			MAINCOLOUR: "FFFFFF",
 		},
 		byName: {
 			white: "FFFFFF",
@@ -305,7 +303,17 @@ function replaceColoursInMessage(messageText) {
 		return "";
 	}
 
-	messageText = messageText.replace("{RESETCOLOUR}", "[/#]");
+	let tempFind = `{RESETCOLOUR}`;
+	let tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, "[/#]");
+
+	tempFind = `{ALTCOLOUR}`;
+	tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, "[#C8C8C8]");
+
+	tempFind = `{MAINCOLOUR}`;
+	tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, "[#FFFFFF]");
 
 	for(let i in getServerColours().hex.byName) {
 		let find = `{${i}}`;

@@ -39,11 +39,12 @@ function initServerScripts() {
 	initRadioScript();
 	initLocaleScript();
 
+	initCommandScript();
 	initTimers();
 
 	serverStartTime = getCurrentUnixTimestamp();
 
-	initCommandScript();
+	initAllClients();
 }
 
 // ===========================================================================

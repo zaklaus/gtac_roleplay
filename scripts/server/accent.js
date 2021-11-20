@@ -63,7 +63,7 @@ function listAccentsCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(stationList, 8);
 
-	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Accents ${getInlineChatColourByType("clanOrange")}==================================`);
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Accents {clanOrange}==================================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));

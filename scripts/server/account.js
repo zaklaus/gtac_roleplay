@@ -133,11 +133,11 @@ function toggleAccountLoginAttemptNotificationsCommand(command, params, client) 
 
 	if(!isAccountSettingFlagEnabled(getPlayerData(client).accountData, flagValue)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now ${getInlineChatColourByName("white")}be notified by email when somebody tries to login to your account`);
+		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now {MAINCOLOUR}be notified by email when somebody tries to login to your account`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the login attempt email notifications OFF for their account`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not ${getInlineChatColourByName("white")}be notified by email when somebody tries to login to your account`);
+		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not {MAINCOLOUR}be notified by email when somebody tries to login to your account`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the login attempt email notifications OFF for their account`);
 	}
 
@@ -151,14 +151,14 @@ function toggleAccountServerLogoCommand(command, params, client) {
 
 	if(!doesPlayerHaveLogoEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now ${getInlineChatColourByName("white")}be shown the server logo (if enabled on current server)`);
+		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now {MAINCOLOUR}be shown the server logo (if enabled on current server)`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo ON for their account`);
 		if(getServerConfig().showLogo) {
 			updatePlayerShowLogoState(client, true);
 		}
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not ${getInlineChatColourByName("white")}be shown the server logo.`);
+		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not {MAINCOLOUR}be shown the server logo.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo OFF for their account`);
 		updatePlayerShowLogoState(client, false);
 	}
@@ -176,25 +176,25 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	if(getEmailConfig().enabled) {
 		if(getPlayerData(client).accountData.emailAddress != "") {
 			messagePlayerError(client, `You need to add your email to your account to use two-factor authentication.`);
-			messagePlayerTip(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/setemail ${getInlineChatColourByName("white")}to add your email.`);
+			messagePlayerTip(client, `{MAINCOLOUR}Use {ALTCOLOUR}/setemail {MAINCOLOUR}to add your email.`);
 			return false;
 		}
 
 		if(isAccountEmailVerified(getPlayerData(client).accountData)) {
 			messagePlayerError(client, `You need to verify your email to your account to use two-factor authentication.`);
-			messagePlayerTip(client, `${getInlineChatColourByName("white")}Use ${getInlineChatColourByName("lightGrey")}/verifyemail ${getInlineChatColourByName("white")}to verify your email.`);
+			messagePlayerTip(client, `{MAINCOLOUR}Use {ALTCOLOUR}/verifyemail {MAINCOLOUR}to verify your email.`);
 			return false;
 		}
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You have turned ${getBoolRedGreenInlineColour(false)}ON ${getInlineChatColourByName("white")} two factor authentication!${getInlineChatColourByName("lightGrey")}${addtoAuthenticatorCode}`);
+		messagePlayerSuccess(client, `{MAINCOLOUR}You have turned ${getBoolRedGreenInlineColour(false)}ON {MAINCOLOUR} two factor authentication!{ALTCOLOUR}${addtoAuthenticatorCode}`);
 		messagePlayerAlert(client, `You will be required to enter a code sent to your email every time you log on.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF ${getInlineChatColourByName("white")}two-factor authentication for login.`);
+		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF {MAINCOLOUR}two-factor authentication for login.`);
 		messagePlayerAlert(client, `You won't be required to enter a code sent to your email every time you log on anymore.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}

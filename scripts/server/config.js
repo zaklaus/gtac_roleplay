@@ -91,6 +91,9 @@ let globalConfig = {
         "Indian",
 		"Rough",
     ],
+	locales: [
+		["English", "english"],
+	],
 };
 
 // ===========================================================================
@@ -368,7 +371,7 @@ function setWeatherCommand(command, params, client) {
 
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} set the weather to ${getInlineChatColourByName("lightGrey")}${getGameData().weatherNames[getServerGame()][toInteger(weatherId)]}`);
+    messageAdminAction(`${getPlayerName(client)} set the weather to {ALTCOLOUR}${getGameData().weatherNames[getServerGame()][toInteger(weatherId)]}`);
     updateServerRules();
 	return true;
 }

@@ -144,7 +144,7 @@ function listClansCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(nameList, 5);
 
-	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Clans ${getInlineChatColourByType("clanOrange")}====================================`);
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clans {clanOrange}====================================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));
@@ -171,7 +171,7 @@ function listClanRanksCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(rankNameList, 5);
 
-	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Clan Ranks (${getClanData(clanId).name}) ${getInlineChatColourByType("clanOrange")}=====================`);
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clan Ranks (${getClanData(clanId).name}) {clanOrange}=====================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));
@@ -193,7 +193,7 @@ function createClanCommand(command, params, client) {
 
 	// Create clan without owner. Can set owner with /clanowner afterward
 	createClan(params);
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created clan ${getInlineChatColourByType("clanOrange")}${params}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}created clan {clanOrange}${params}`);
 }
 
 // ===========================================================================
@@ -211,7 +211,7 @@ function deleteClanCommand(command, params, client) {
 		return false;
 	}
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}deleted clan ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}deleted clan {clanOrange}${getClanData(clanId).name}`);
 	deleteClan(clanId);
 }
 
@@ -246,7 +246,7 @@ function setClanOwnerCommand(command, params, client) {
 	getPlayerCurrentSubAccount(targetClient).clan = getClanData(clanId).databaseId;
 	getPlayerCurrentSubAccount(targetClient).clanFlags = getClanFlagValue("all");
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set clan ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}owner to ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set clan {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}owner to {ALTCOLOUR}${getCharacterFullName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -271,7 +271,7 @@ function setClanTagCommand(command, params, client) {
 
 	getClanData(clanId).params = params;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set clan ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).index} ${getInlineChatColourByName("white")}tag to ${getInlineChatColourByName("lightGrey")}${params}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set clan {clanOrange}${getClanData(clanId).index} {MAINCOLOUR}tag to {ALTCOLOUR}${params}`);
 }
 
 // ===========================================================================
@@ -296,7 +296,7 @@ function setClanNameCommand(command, params, client) {
 
 	getClanData(clanId).name = params;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set clan ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).index} ${getInlineChatColourByName("white")}name to ${getInlineChatColourByName("lightGrey")}${params}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set clan {clanOrange}${getClanData(clanId).index} {MAINCOLOUR}name to {ALTCOLOUR}${params}`);
 }
 
 // ===========================================================================
@@ -325,8 +325,8 @@ function createClanRankCommand(command, params, client) {
 
 	let rankIndex = createClanRank(clanId, rankId, rankName);
 
-	messagePlayerSuccess(client, `You added the ${getInlineChatColourByName("lightGrey")}${rankName} ${getInlineChatColourByName("white")}rank (Level ${getInlineChatColourByName("lightGrey")}${rankId}`);
-	messagePlayerSuccess(client, `Use ${getInlineChatColourByName("lightGrey")}/addclanrankflag ${rankName} <clan flag name> ${getInlineChatColourByName("white")} to add permission flags to this rank.`);
+	messagePlayerSuccess(client, `You added the {ALTCOLOUR}${rankName} {MAINCOLOUR}rank (Level {ALTCOLOUR}${rankId}`);
+	messagePlayerSuccess(client, `Use {ALTCOLOUR}/addclanrankflag ${rankName} <clan flag name> {MAINCOLOUR} to add permission flags to this rank.`);
 }
 
 // ===========================================================================
@@ -359,7 +359,7 @@ function deleteClanRankCommand(command, params, client) {
 
 	removeClanRank(clanId, rankId);
 
-	messagePlayerSuccess(client, `You removed the ${getInlineChatColourByName("lightGrey")}${tempRankName} ${getInlineChatColourByName("white")}rank`);
+	messagePlayerSuccess(client, `You removed the {ALTCOLOUR}${tempRankName} {MAINCOLOUR}rank`);
 }
 
 // ===========================================================================
@@ -404,8 +404,8 @@ function setClanMemberTagCommand(command, params, client) {
 
 	getPlayerCurrentSubAccount(targetClient).clanTag = splitParams[1];
 
-	messagePlayerSuccess(client, `You set ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}'s ${getInlineChatColourByName("white")}clan tag to ${getInlineChatColourByName("lightGrey")}${splitParams[1]}`);
-	messagePlayerAlert(client, `${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)} ${getInlineChatColourByName("white")}set your clan tag to ${getInlineChatColourByName("lightGrey")}${splitParams[1]}`);
+	messagePlayerSuccess(client, `You set {ALTCOLOUR}${getCharacterFullName(targetClient)}'s {MAINCOLOUR}clan tag to {ALTCOLOUR}${splitParams[1]}`);
+	messagePlayerAlert(client, `{ALTCOLOUR}${getCharacterFullName(targetClient)} {MAINCOLOUR}set your clan tag to {ALTCOLOUR}${splitParams[1]}`);
 }
 
 // ===========================================================================
@@ -486,7 +486,7 @@ function addClanMemberFlagCommand(command, params, client) {
 
 	let flagValue = getClanFlagValue(splitParams[1]);
 	getPlayerCurrentSubAccount(client).clanFlags = getPlayerCurrentSubAccount(client).clanFlags | flagValue;
-	messagePlayerSuccess(client, `You added the ${getInlineChatColourByName("lightGrey")}${splitParams[1]} ${getInlineChatColourByName("white")}clan flag to ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)}`);
+	messagePlayerSuccess(client, `You added the {ALTCOLOUR}${splitParams[1]} {MAINCOLOUR}clan flag to {ALTCOLOUR}${getCharacterFullName(client)}`);
 }
 
 // ===========================================================================
@@ -538,7 +538,7 @@ function removeClanMemberFlagCommand(command, params, client) {
 
 	let flagValue = getClanFlagValue(splitParams[1]);
 	getPlayerCurrentSubAccount(client).clanFlags = getPlayerCurrentSubAccount(client).clanFlags & ~flagValue;
-	messagePlayerSuccess(client, `You removed the ${getInlineChatColourByName("lightGrey")}${splitParams[1]} ${getInlineChatColourByName("white")}clan flag from ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)}`);
+	messagePlayerSuccess(client, `You removed the {ALTCOLOUR}${splitParams[1]} {MAINCOLOUR}clan flag from {ALTCOLOUR}${getCharacterFullName(client)}`);
 }
 
 // ===========================================================================
@@ -577,7 +577,7 @@ function addClanRankFlagCommand(command, params, client) {
 	let flagValue = getClanFlagValue(splitParams[1]);
 
 	getClanRankData(clanId, rankId).flags = getClanRankData(clanId, rankId).flags | flagValue;
-	messagePlayerSuccess(client, `You added the ${getInlineChatColourByName("lightGrey")}${splitParams[1]} ${getInlineChatColourByName("white")}clan flag to rank ${getInlineChatColourByName("lightGrey")}${getClanRankData(clanId, rankId).name}`);
+	messagePlayerSuccess(client, `You added the {ALTCOLOUR}${splitParams[1]} {MAINCOLOUR}clan flag to rank {ALTCOLOUR}${getClanRankData(clanId, rankId).name}`);
 }
 
 // ===========================================================================
@@ -616,7 +616,7 @@ function removeClanRankFlagCommand(command, params, client) {
 	let flagValue = getClanFlagValue(splitParams[1]);
 
 	getClanRankData(clanId, rankId).flags = getClanRankData(clanId, rankId).flags & ~flagValue;
-	messagePlayerSuccess(client, `You removed the ${getInlineChatColourByName("lightGrey")}${splitParams[1]} ${getInlineChatColourByName("white")}clan flag from rank ${getInlineChatColourByName("lightGrey")}${getClanRankData(clanId, rankId).name}`);
+	messagePlayerSuccess(client, `You removed the {ALTCOLOUR}${splitParams[1]} {MAINCOLOUR}clan flag from rank {ALTCOLOUR}${getClanRankData(clanId, rankId).name}`);
 }
 
 // ===========================================================================
@@ -663,7 +663,7 @@ function setClanMemberTitleCommand(command, params, client) {
 
 	let oldMemberTitle = getPlayerCurrentSubAccount(client).clanTitle;
 	getPlayerCurrentSubAccount(client).clanTitle = splitParams[1];
-	messagePlayerSuccess(client, `You changed the name of ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(client)} ${getInlineChatColourByName("white")}from ${getInlineChatColourByName("lightGrey")}${oldMemberTitle} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${params}`);
+	messagePlayerSuccess(client, `You changed the name of {ALTCOLOUR}${getCharacterFullName(client)} {MAINCOLOUR}from {ALTCOLOUR}${oldMemberTitle} {MAINCOLOUR}to {ALTCOLOUR}${params}`);
 }
 
 // ===========================================================================
@@ -696,7 +696,7 @@ function setClanRankTitleCommand(command, params, client) {
 
 	let oldRankName = getClanRankData(clanId, rankId).name;
 	getClanRankData(clanId, rankId).name = splitParams[1];
-	messagePlayerSuccess(client, `You changed the name of rank ${rankId} from ${getInlineChatColourByName("lightGrey")}${oldRankName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${params}`);
+	messagePlayerSuccess(client, `You changed the name of rank ${rankId} from {ALTCOLOUR}${oldRankName} {MAINCOLOUR}to {ALTCOLOUR}${params}`);
 }
 
 // ===========================================================================
@@ -757,7 +757,7 @@ function setClanMemberRankCommand(command, params, client) {
 	let oldClanRank = getClanRankData(clanId, getPlayerClanRank(targetClient));
 	getPlayerCurrentSubAccount(targetClient).clanRank = getClanRankData(clanId, rankId).databaseId;
 	getPlayerCurrentSubAccount(targetClient).clanRankIndex = rankId;
-	messagePlayerSuccess(client, `You changed ${getInlineChatColourByName("lightGrey")}${getCharacterFullName(targetClient)}'s ${getInlineChatColourByName("white")}rank from ${getInlineChatColourByName("lightGrey")}${oldClanRank.name} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${getClanRankData(clanId, rankId).name}`);
+	messagePlayerSuccess(client, `You changed {ALTCOLOUR}${getCharacterFullName(targetClient)}'s {MAINCOLOUR}rank from {ALTCOLOUR}${oldClanRank.name} {MAINCOLOUR}to {ALTCOLOUR}${getClanRankData(clanId, rankId).name}`);
 }
 
 // ===========================================================================
@@ -1066,7 +1066,7 @@ function showClanFlagListCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(flagList, 10);
 
-	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Clan Permissions List ${getInlineChatColourByType("clanOrange")}=====================`);
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clan Permissions List {clanOrange}=====================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));
@@ -1110,7 +1110,7 @@ function showClanFlagListCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(flagList, 10);
 
-	messagePlayerInfo(client, `${getInlineChatColourByType("clanOrange")}== ${getInlineChatColourByType("jobYellow")}Clan Permissions List ${getInlineChatColourByType("clanOrange")}=====================`);
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clan Permissions List {clanOrange}=====================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));

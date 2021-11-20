@@ -72,8 +72,9 @@ function megaphoneChatCommand(command, params, client) {
 		return false;
 	}
 
-	if(canPlayerUseMegaphone(client)) {
-
+	if(!canPlayerUseMegaphone(client)) {
+		messagePlayerError(client, "You must have a megaphone item or be in an emergency vehicle!");
+		return false;
 	}
 
 	megaPhoneToNearbyPlayers(client, params);
@@ -127,7 +128,7 @@ function adminChatCommand(command, params, client) {
 		return false;
 	}
 
-	messageAdmins(`${getInlineChatColourByType("jobYellow")}[Admin Chat] ${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} [#CCCCCC](${getPlayerStaffTitle(client)})${getInlineChatColourByName("white")}: ${params}`);
+	messageAdmins(`{jobYellow}[Admin Chat] {ALTCOLOUR}${getPlayerName(client)} [#CCCCCC](${getPlayerStaffTitle(client)}){MAINCOLOUR}: ${params}`);
 }
 
 // ===========================================================================
@@ -162,7 +163,7 @@ function talkToNearbyPlayers(client, messageText) {
 function phoneOutgoingToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
-		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(to phone): ${getInlineChatColourByName("white")}${messageText}`);
+		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} {ALTCOLOUR}(to phone): {MAINCOLOUR}${messageText}`);
 	}
 }
 
@@ -171,7 +172,7 @@ function phoneOutgoingToNearbyPlayers(client, messageText) {
 function phoneIncomingToNearbyPlayers(client, messageText) {
 	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().radioSpeakerDistance);
 	for(let i in clients) {
-		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(from phone): ${getInlineChatColourByName("white")}${messageText}`);
+		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} {ALTCOLOUR}(from phone): {MAINCOLOUR}${messageText}`);
 	}
 }
 
@@ -244,7 +245,7 @@ function clanChat(client, messageText) {
 // ===========================================================================
 
 function canPlayerUseMegaphone(client) {
-	if(isPlayerHoldingItemOfType(client, VRR_ITEM_USETYPE_MEGAPHONE)) {
+	if(getPlayerFirstItemSlotByUseType(client, VRR_ITEM_USETYPE_MEGAPHONE) != -1) {
 		if(isPlayerActiveItemEnabled(client)) {
 			return true;
 		}

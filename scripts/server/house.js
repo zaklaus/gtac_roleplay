@@ -90,7 +90,7 @@ function createHouseCommand(command, params, client) {
 
 	//getHouseData(houseId).needsSaved = true;
 
-	let messageText = `${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created house ${getInlineChatColourByType("houseGreen")}${tempHouseData.description}`;
+	let messageText = `{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}created house {houseGreen}${tempHouseData.description}`;
 	logToConsole(LOG_INFO, messageText);
 	messageAdmins(messageText);
 }
@@ -125,7 +125,7 @@ function lockUnlockHouseCommand(command, params, client) {
 	setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.locked", getHouseData(houseId).locked, true);
 	getHouseData(houseId).needsSaved = true;
 
-	messagePlayerSuccess(client, `House ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}${getLockedUnlockedTextFromBool((getHouseData(houseId).locked))}!`);
+	messagePlayerSuccess(client, `House {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}${getLockedUnlockedTextFromBool((getHouseData(houseId).locked))}!`);
 }
 
 // ===========================================================================
@@ -189,7 +189,7 @@ function setHouseDescriptionCommand(command, params, client) {
 
 	getHouseData(houseId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}renamed house ${getInlineChatColourByType("houseGreen")}${oldDescription} ${getInlineChatColourByName("white")}to ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}renamed house {houseGreen}${oldDescription} {MAINCOLOUR}to {houseGreen}${getHouseData(houseId).description}`);
 }
 
 // ===========================================================================
@@ -228,7 +228,7 @@ function setHouseOwnerCommand(command, params, client) {
 
 	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_PLAYER;
 	getHouseData(houseId).ownerId = getServerData().clients[newHouseOwner.index].accountData.databaseId;
-	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newHouseOwner.name}`);
+	messagePlayerSuccess(`{MAINCOLOUR}You gave house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}to {ALTCOLOUR}${newHouseOwner.name}`);
 }
 
 // ===========================================================================
@@ -268,7 +268,7 @@ function setHouseClanCommand(command, params, client) {
 
 	getHouseData(houseId).ownerType = VRR_HOUSEOWNER_CLAN;
 	getHouseData(houseId).ownerId = getClanData(clanId).databaseId;
-	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")} to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan!`);
+	messagePlayerSuccess(`{MAINCOLOUR}You gave house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR} to the {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}clan!`);
 }
 
 // ===========================================================================
@@ -316,7 +316,7 @@ function setHouseClanCommand(command, params, client) {
 
 	getHouseData(houseId).clanRank = getClanRankData(clanId, clanRankId).level;
 	getHouseData(houseId).needsSaved = true;
-	messagePlayerSuccess(`${getInlineChatColourByName("white")}You set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}${getInlineChatColourByName("white")}'s clan rank to ${getInlineChatColourByType("clanOrange")}${getClanRankData(clanId, clanRankId).name} ${getInlineChatColourByName("white")}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
+	messagePlayerSuccess(`{MAINCOLOUR}You set house {houseGreen}${getHouseData(houseId).description}{MAINCOLOUR}'s clan rank to {clanOrange}${getClanRankData(clanId, clanRankId).name} {MAINCOLOUR}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
 }
 
 // ===========================================================================
@@ -391,13 +391,13 @@ function setHouseInteriorTypeCommand(command, params, client) {
 			tempHouseLocation.exitPosition = toVector3(0.0, 0.0, 0.0);
 			tempHouseLocation.exitInterior = -1;
 			getHouseData(houseId).hasInterior = false;
-			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}interior`);
+			messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}removed house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}interior`);
 			return false;
 		}
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid interior type! Use an interior type name");
-			messagePlayerInfo(client, `Interior Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
+			messagePlayerInfo(client, `Interior Types: {ALTCOLOUR}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
@@ -496,7 +496,7 @@ function moveHouseEntranceCommand(command, params, client) {
 
 	getHouseData(houseId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}entrance to their position`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}moved house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}entrance to their position`);
 }
 
 // ===========================================================================
@@ -536,7 +536,7 @@ function moveHouseExitCommand(command, params, client) {
 
 	getHouseData(houseId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}exit to their position`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}moved house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}exit to their position`);
 }
 
 // ===========================================================================
@@ -558,7 +558,7 @@ function deleteHouseCommand(command, params, client) {
 		return false;
 	}
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}deleted house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}deleted house {houseGreen}${getHouseData(houseId).description}`);
 	deleteHouse(houseId, getPlayerData(client).accountData.databaseId);
 }
 
@@ -1005,7 +1005,7 @@ function getHouseInfoCommand(command, params, client) {
 			break;
 	}
 
-	messagePlayerNormal(client, `🏠 ${getInlineChatColourByType("houseGreen")}[House Info] ${getInlineChatColourByName("white")}Description: ${getInlineChatColourByName("lightGrey")}${getHouseData(houseId).description}, ${getInlineChatColourByName("white")}Owner: ${getInlineChatColourByName("lightGrey")}${ownerName} (${getHouseOwnerTypeText(getHouseData(houseId).ownerType)}), ${getInlineChatColourByName("white")}Locked: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(intToBool(getHouseData(houseId).locked))}, ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${houseId}/${getHouseData(houseId).databaseId}`);
+	messagePlayerNormal(client, `🏠 {houseGreen}[House Info] {MAINCOLOUR}Description: {ALTCOLOUR}${getHouseData(houseId).description}, {MAINCOLOUR}Owner: {ALTCOLOUR}${ownerName} (${getHouseOwnerTypeText(getHouseData(houseId).ownerType)}), {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(intToBool(getHouseData(houseId).locked))}, {MAINCOLOUR}ID: {ALTCOLOUR}${houseId}/${getHouseData(houseId).databaseId}`);
 }
 
 // ===========================================================================
@@ -1033,7 +1033,7 @@ function setHouseBuyPriceCommand(command, params, client) {
 
 	getHouseData(houseId).buyPrice = amount;
 	setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", getHouseData(houseId).buyPrice, true);
-	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}'s ${getInlineChatColourByName("white")}for-sale price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You set house {houseGreen}${getHouseData(houseId).description}'s {MAINCOLOUR}for-sale price to {ALTCOLOUR}$${makeLargeNumberReadable(amount)}`);
 }
 
 // ===========================================================================
@@ -1061,7 +1061,7 @@ function setHouseRentPriceCommand(command, params, client) {
 
 	getHouseData(houseId).rentPrice = amount;
 	setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", `Rent: ${getHouseData(houseId).rentPrice}`, true);
-	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}'s ${getInlineChatColourByName("white")}rent price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You set house {houseGreen}${getHouseData(houseId).description}'s {MAINCOLOUR}rent price to {ALTCOLOUR}$${makeLargeNumberReadable(amount)}`);
 }
 
 // ===========================================================================
@@ -1075,12 +1075,12 @@ function buyHouseCommand(command, params, client) {
 	}
 
 	if(getHouseData(houseId).buyPrice <= 0) {
-		messagePlayerError(client, `${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description} ${getInlineChatColourByName("white")}is not for sale!`);
+		messagePlayerError(client, `{houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}is not for sale!`);
 		return false;
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getHouseData(houseId).buyPrice) {
-		messagePlayerError(client, `You don't have enough money to buy house ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).name}!`);
+		messagePlayerError(client, `You don't have enough money to buy house {houseGreen}${getHouseData(houseId).name}!`);
 		return false;
 	}
 
@@ -1090,7 +1090,7 @@ function buyHouseCommand(command, params, client) {
 
 	updateHousePickupLabelData(houseId);
 
-	messagePlayerSuccess(client, `You are now the owner of ${getInlineChatColourByType("houseGreen")}${getHouseData(houseId).description}`);
+	messagePlayerSuccess(client, `You are now the owner of {houseGreen}${getHouseData(houseId).description}`);
 }
 
 // ===========================================================================

@@ -23,6 +23,15 @@ function messageAdminAction(messageText) {
 
 // ===========================================================================
 
+/**
+ * Sends a normal message to a player without any extra type
+ *
+ * @param {Client} client - The client/player to send the message to
+ * @param {string} messageText - The message string
+ * @param {Colour} colour - Colour given by toColour
+ * @return {bool} Whether or not the message was sent
+ *
+ */
 function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
     if(isConsole(client)) {
         console.log(messageText);
@@ -31,18 +40,19 @@ function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
     }
 
     sendChatBoxMessageToPlayer(client, `${replaceColoursInMessage(messageText)}`, colour);
+    return true;
 }
 
 // ===========================================================================
 
-function messageAdmins(messageText, colour = COLOUR_WHITE) {
+function messageAdmins(messageText, colour = getColourByName("softRed")) {
     let plainMessage = removeColoursInMessage(messageText);
     console.warn(`🛡️ ${plainMessage}`);
 
     let clients = getClients();
     for(let i in clients) {
         if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
-            messagePlayerNormal(clients[i], `🛡️ ${messageText}`, getColourByName("softRed"));
+            messagePlayerNormal(clients[i], `🛡️ ${messageText}`, colour);
         }
     }
 
@@ -60,9 +70,9 @@ function messagePlayerError(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `🚫 ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `❌ ${messageText}`, getColourByName("white"));
     } else {
-        messageDiscordUser(client, `🚫 ${messageText}`);
+        messageDiscordUser(client, `❌ ${messageText}`);
     }
 }
 
@@ -75,7 +85,7 @@ function messagePlayerSyntax(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `⌨️ USAGE: ${getInlineChatColourByName("white")} ${messageText}`, getColourByType("syntaxMessage"));
+        messagePlayerNormal(client, `⌨️ USAGE: {MAINCOLOUR} ${messageText}`, getColourByType("syntaxMessage"));
     } else {
         messageDiscordUser(client, `⌨️ ${messageText}`);
     }
@@ -105,9 +115,9 @@ function messagePlayerSuccess(client, messageText) {
     }
 
     if(!isClientFromDiscord(client)) {
-        messagePlayerNormal(client, `👍 ${messageText}`, getColourByName("white"));
+        messagePlayerNormal(client, `✔️ ${messageText}`, getColourByName("white"));
     } else {
-        messageDiscordUser(client, `👍 ${messageText}`);
+        messageDiscordUser(client, `✔️ ${messageText}`);
     }
 }
 
@@ -176,13 +186,13 @@ function messagePlayerMeAction(client, doingActionClient, messageText) {
 // ===========================================================================
 
 function messagePlayerClanChat(client, clanChattingClient, messageText) {
-    messagePlayerNormal(client, `👥 ${getInlineChatColourByName("clanOrange")}${(getPlayerClanRankName(clanChattingClient) != false) ? getPlayerClanRankName(clanChattingClient) : "No Rank"} ${getCharacterFullName(clanChattingClient)} ${getInlineChatColourByName("white")}says (clan): ${getInlineChatColourByName("lightGrey")}${messageText}`, getColourByType("clanChatMessage"));
+    messagePlayerNormal(client, `👥 ${getInlineChatColourByName("clanOrange")}${(getPlayerClanRankName(clanChattingClient) != false) ? getPlayerClanRankName(clanChattingClient) : "No Rank"} ${getCharacterFullName(clanChattingClient)} {MAINCOLOUR}says (clan): {ALTCOLOUR}${messageText}`, getColourByType("clanChatMessage"));
 }
 
 // ===========================================================================
 
 function messagePlayerAdminChat(client, adminChattingClient, messageText) {
-    messagePlayerNormal(client, `🛡️ [ADMIN CHAT] ${getInlineChatColourByName("lightGrey")}${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: ${getInlineChatColourByName("white")}${messageText}`, getColourByType("orange"));
+    messagePlayerNormal(client, `🛡️ [ADMIN CHAT] {ALTCOLOUR}${getPlayerData(adminChattingClient).accountData.staffTitle} [#CCCCCC]${getPlayerData(adminChattingClient).accountData.name}: {MAINCOLOUR}${messageText}`, getColourByType("orange"));
 }
 
 // ===========================================================================

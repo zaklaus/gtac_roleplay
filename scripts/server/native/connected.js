@@ -3,17 +3,8 @@
 // https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
 // FILE: gtac.js
-// DESC: Provides natives for GTA Connected (GTA III, VC, SA, & IV)
+// DESC: Provides natives for GTA and Mafia Connected mods
 // TYPE: Server (JavaScript)
-// ===========================================================================
-
-// ===========================================================================
-// Vortrex's Roleplay Resource
-// https://github.com/VortrexFTW/gtac_roleplay
-// ===========================================================================
-// FILE: game-data.js
-// DESC: Provides coords, ids, names, and other data for the games
-// TYPE: Shared (JavaScript)
 // ===========================================================================
 
 // ===========================================================================
@@ -198,7 +189,7 @@ function setPlayerSkin(client, skinIndex) {
 // ===========================================================================
 
 function getPlayerSkin(client) {
-    return getSkinIndexFromSkin(client.player.modelIndex);
+    return getSkinIndexFromModel(client.player.modelIndex);
 }
 
 // ===========================================================================
@@ -373,11 +364,11 @@ function getServerName() {
 
 // ===========================================================================
 
-function createGamePickup(model, position, type) {
+function createGamePickup(modelIndex, position, type) {
     if(!isGameFeatureSupported("pickups")) {
         return false;
     }
-    return game.createPickup(model, position, type);
+    return game.createPickup(modelIndex, position, type);
 }
 
 // ===========================================================================
@@ -391,11 +382,11 @@ function createGameBlip(position, type = 0, colour = toColour(255, 255, 255, 255
 
 // ===========================================================================
 
-function createGameObject(model, position) {
+function createGameObject(modelIndex, position) {
     if(!isGameFeatureSupported("objects")) {
         return false;
     }
-    return game.createObject(model, position);
+    return game.createObject(getGameData().objects[getGame()][modelIndex][0], position);
 }
 
 // ===========================================================================
@@ -547,7 +538,7 @@ function setPlayerFightStyle(client, fightStyleId) {
 		return false;
 	}
 
-	if(!isFightStyleSupported()) {
+	if(!areFightStylesSupported()) {
 		return false;
 	}
 

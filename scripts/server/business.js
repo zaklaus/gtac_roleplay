@@ -153,7 +153,7 @@ function createBusinessCommand(command, params, client) {
 	createBusinessEntranceBlip(businessId-1);
 	createBusinessExitBlip(businessId-1);
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created business ${getInlineChatColourByType("businessBlue")}${tempBusinessData.name}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}created business {businessBlue}${tempBusinessData.name}`);
 }
 
 // ===========================================================================
@@ -179,7 +179,7 @@ function createBusinessLocationCommand(command, params, client) {
 	let tempBusinessLocationData = createBusinessLocation(locationType, businessId);
 	getServerData().businesses[businessId].push(tempBusinessLocationData);
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}created location ${getInlineChatColourByType("businessBlue")}${params} ${getInlineChatColourByName("white")}for business ${getInlineChatColourByType("businessBlue")}${tempBusinessData.name}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}created location {businessBlue}${params} {MAINCOLOUR}for business {businessBlue}${tempBusinessData.name}`);
 }
 
 // ===========================================================================
@@ -219,7 +219,7 @@ function deleteBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}deleted business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}deleted business {businessBlue}${getBusinessData(businessId).name}`);
 	deleteBusiness(businessId, getPlayerData(client).accountData.databaseId);
 }
 
@@ -252,7 +252,7 @@ function setBusinessNameCommand(command, params, client) {
 	getBusinessData(businessId).name = newBusinessName;
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.name", getBusinessData(businessId).name, true);
 	getBusinessData(businessId).needsSaved = true;
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}renamed business ${getInlineChatColourByType("businessBlue")}${oldBusinessName} ${getInlineChatColourByName("white")}to ${getInlineChatColourByType("businessBlue")}${newBusinessName}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}renamed business {businessBlue}${oldBusinessName} {MAINCOLOUR}to {businessBlue}${newBusinessName}`);
 }
 
 // ===========================================================================
@@ -285,7 +285,7 @@ function setBusinessOwnerCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = getPlayerCurrentSubAccount(newBusinessOwner).databaseId;
 	getBusinessData(businessId).needsSaved = true;
 
-	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}to ${getInlineChatColourByName("lightGrey")}${newBusinessOwner.name}`);
+	messagePlayerSuccess(`{MAINCOLOUR}You gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to {ALTCOLOUR}${newBusinessOwner.name}`);
 }
 
 // ===========================================================================
@@ -314,7 +314,7 @@ function setBusinessClanCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = getClanData(clanId).databaseId;
 	getBusinessData(businessId).needsSaved = true;
 
-	messagePlayerSuccess(`${getInlineChatColourByName("white")}You gave business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}to the ${getInlineChatColourByType("clanOrange")}${getClanData(clanId).name} ${getInlineChatColourByName("white")}clan!`);
+	messagePlayerSuccess(`{MAINCOLOUR}You gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to the {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}clan!`);
 }
 
 // ===========================================================================
@@ -368,7 +368,7 @@ function setBusinessClanCommand(command, params, client) {
 	getBusinessData(businessId).clanRank = getClanRankData(clanId, clanRankId).level;
 
 	getBusinessData(businessId).needsSaved = true;
-	messagePlayerSuccess(`${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}${getInlineChatColourByName("white")}'s clan rank to ${getInlineChatColourByType("clanOrange")}${getClanRankData(clanId, clanRankId).name} ${getInlineChatColourByName("white")}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
+	messagePlayerSuccess(`{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR}'s clan rank to {clanOrange}${getClanRankData(clanId, clanRankId).name} {MAINCOLOUR}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
 }
 
 // ===========================================================================
@@ -401,7 +401,7 @@ function setBusinessJobCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = getJobData(jobId).databaseId;
 
 	getBusinessData(businessId).needsSaved = true;
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}owner to the ${getInlineChatColourByType("jobYellow")}${getJobData(jobId).name} ${getInlineChatColourByName("white")}job`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner to the {jobYellow}${getJobData(jobId).name} {MAINCOLOUR}job`);
 }
 
 // ===========================================================================
@@ -422,7 +422,7 @@ function setBusinessPublicCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = 0;
 
 	getBusinessData(businessId).needsSaved = true;
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}owner set to ${getInlineChatColourByName("lightGrey")}public`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner set to {ALTCOLOUR}public`);
 }
 
 // ===========================================================================
@@ -448,7 +448,7 @@ function lockUnlockBusinessCommand(command, params, client) {
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
 
 	getBusinessData(businessId).needsSaved = true;
-	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
+	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
 }
 
 // ===========================================================================
@@ -501,7 +501,7 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 
 	getBusinessData(businessId).entranceFee = entranceFee;
 	getBusinessData(businessId).needsSaved = true;
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}entrance fee to [#AAAAAAA]$${entranceFee}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}entrance fee to [#AAAAAAA]$${entranceFee}`);
 }
 
 // ===========================================================================
@@ -542,7 +542,7 @@ function getBusinessInfoCommand(command, params, client) {
 			break;
 	}
 
-	messagePlayerInfo(client, `🏢 ${getInlineChatColourByType("businessBlue")}[Business Info] ${getInlineChatColourByName("white")}Name: ${getInlineChatColourByName("lightGrey")}${getBusinessData(businessId).name}, ${getInlineChatColourByName("white")}Owner: ${getInlineChatColourByName("lightGrey")}${ownerName} (${getBusinessOwnerTypeText(getBusinessData(businessId).ownerType)}), ${getInlineChatColourByName("white")}Locked: ${getInlineChatColourByName("lightGrey")}${getYesNoFromBool(intToBool(getBusinessData(businessId).locked))}, ${getInlineChatColourByName("white")}ID: ${getInlineChatColourByName("lightGrey")}${businessId}/${getBusinessData(businessId).databaseId}`);
+	messagePlayerInfo(client, `🏢 {businessBlue}[Business Info] {MAINCOLOUR}Name: {ALTCOLOUR}${getBusinessData(businessId).name}, {MAINCOLOUR}Owner: {ALTCOLOUR}${ownerName} (${getBusinessOwnerTypeText(getBusinessData(businessId).ownerType)}), {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(intToBool(getBusinessData(businessId).locked))}, {MAINCOLOUR}ID: {ALTCOLOUR}${businessId}/${getBusinessData(businessId).databaseId}`);
 }
 
 // ===========================================================================
@@ -560,7 +560,7 @@ function setBusinessPickupCommand(command, params, client) {
 	if(isNaN(typeParam)) {
 		if(isNull(getGameConfig().pickupModels[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid business type! Use a business type name or a pickup model ID");
-			messagePlayerInfo(client, `Pickup Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`)
+			messagePlayerInfo(client, `Pickup Types: {ALTCOLOUR}${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
@@ -573,7 +573,7 @@ function setBusinessPickupCommand(command, params, client) {
 
 	getBusinessData(businessId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}pickup display to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}'!`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}pickup display to {ALTCOLOUR}${toLowerCase(typeParam)}'!`);
 }
 
 // ===========================================================================
@@ -595,13 +595,13 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			getBusinessData(businessId).exitInterior = -1;
 			getBusinessData(businessId).hasInterior = false;
 			getBusinessData(businessId).exitPickupModel = -1;
-			messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}removed business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior`);
+			messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}removed business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}interior`);
 			return false;
 		}
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid interior type! Use an interior type name");
-			messagePlayerInfo(client, `Interior Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
+			messagePlayerInfo(client, `Interior Types: {ALTCOLOUR}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
@@ -621,7 +621,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 
 	getBusinessData(businessId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}interior type to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}interior type to {ALTCOLOUR}${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -640,7 +640,7 @@ function setBusinessBlipCommand(command, params, client) {
 	if(isNaN(typeParam)) {
 		if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid business type! Use a business type name or a blip image ID");
-			messagePlayerInfo(client, `Blip Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
+			messagePlayerInfo(client, `Blip Types: {ALTCOLOUR}${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
 			return false;
 		}
 
@@ -652,7 +652,7 @@ function setBusinessBlipCommand(command, params, client) {
 	resetBusinessBlips(businessId);
 	getBusinessData(businessId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}blip display to ${getInlineChatColourByName("lightGrey")}${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}blip display to {ALTCOLOUR}${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -673,7 +673,7 @@ function giveDefaultItemsToBusinessCommand(command, params, client) {
 
 	if(isNull(getGameConfig().defaultBusinessItems[getServerGame()][typeParam])) {
 		messagePlayerError(client, "Invalid business items type! Use a business items type name");
-		messagePlayerInfo(client, `Blip Types: ${getInlineChatColourByName("lightGrey")}${Object.keys(getGameConfig().defaultBusinessItems[getServerGame()]).join(", ")}`)
+		messagePlayerInfo(client, `Blip Types: {ALTCOLOUR}${Object.keys(getGameConfig().defaultBusinessItems[getServerGame()]).join(", ")}`)
 		return false;
 	}
 
@@ -688,7 +688,7 @@ function giveDefaultItemsToBusinessCommand(command, params, client) {
 
 	cacheBusinessItems(businessId);
 	updateBusinessPickupLabelData(businessId);
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}gave business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}the default items for ${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}the default items for ${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -704,7 +704,7 @@ function setBusinessEntranceLabelToDealershipCommand(command, params, client) {
 	}
 
 	updateBusinessPickupLabelData(businessId);
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}gave business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}the default items for ${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}the default items for ${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -726,7 +726,7 @@ function deleteBusinessFloorItemsCommand(command, params, client) {
 
 	cacheBusinessItems(businessId);
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}deleted all on-sale items for business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}deleted all on-sale items for business {businessBlue}${getBusinessData(businessId).name}`);
 }
 
 // ===========================================================================
@@ -748,7 +748,7 @@ function deleteBusinessStorageItemsCommand(command, params, client) {
 
 	cacheBusinessItems(businessId);
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}deleted all stored items for business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}deleted all stored items for business {businessBlue}${getBusinessData(businessId).name}`);
 }
 
 // ===========================================================================
@@ -775,7 +775,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	}
 
 	if(getBusinessData(businessId).till < amount) {
-		messagePlayerError(client, `Business ${getInlineChatColourByType("businessBlue")}${tempBusinessData.name} doesn't have that much money! Use /bizbalance.`);
+		messagePlayerError(client, `Business {businessBlue}${tempBusinessData.name} doesn't have that much money! Use /bizbalance.`);
 		return false;
 	}
 
@@ -784,7 +784,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	updatePlayerCash(client);
 	getBusinessData(businessId).needsSaved = true;
 
-	messagePlayerSuccess(client, `You withdrew $${amount} from business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} till`);
+	messagePlayerSuccess(client, `You withdrew $${amount} from business {businessBlue}${getBusinessData(businessId).name} till`);
 }
 
 // ===========================================================================
@@ -819,7 +819,7 @@ function setBusinessBuyPriceCommand(command, params, client) {
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.price", getBusinessData(businessId).buyPrice, true);
 
 	getBusinessData(businessId).needsSaved = true;
-	messagePlayerSuccess(client, `${getInlineChatColourByName("white")}You set business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}'s ${getInlineChatColourByName("white")}for-sale price to ${getInlineChatColourByName("lightGrey")}$${makeLargeNumberReadable(amount)}`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name}'s {MAINCOLOUR}for-sale price to {ALTCOLOUR}$${makeLargeNumberReadable(amount)}`);
 }
 
 // ===========================================================================
@@ -856,7 +856,7 @@ function depositIntoBusinessCommand(command, params, client) {
 	updatePlayerCash(client);
 
 	getBusinessData(businessId).needsSaved = true;
-	messagePlayerSuccess(client, `You deposited $${amount} into business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}till`);
+	messagePlayerSuccess(client, `You deposited $${amount} into business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}till`);
 }
 
 // ===========================================================================
@@ -877,7 +877,7 @@ function orderItemForBusinessCommand(command, params, client) {
 
 	if(!getItemTypeData(itemType)) {
 		messagePlayerError(client, `Invalid item type name or ID!`);
-		messagePlayerInfo(client, `Use ${getInlineChatColourByName("lightGrey")}/itemtypes ${getInlineChatColourByName("white")}for a list of items`);
+		messagePlayerInfo(client, `Use {ALTCOLOUR}/itemtypes {MAINCOLOUR}for a list of items`);
 		return false;
 	}
 	let pricePerItem = getOrderPriceForItemType(itemType);
@@ -916,13 +916,13 @@ function orderItemForBusinessCommand(command, params, client) {
 function orderItemForBusiness(businessId, itemType, amount) {
 	if(getBusinessData(businessId).till < orderTotalCost) {
 		let neededAmount = orderTotalCost-getBusinessData(businessId).till;
-		//messagePlayerError(client, `The business doesn't have enough money (needs ${getInlineChatColourByName("lightGrey")}$${neededAmount} ${getInlineChatColourByName("white")}more)! Use ${getInlineChatColourByName("lightGrey")}/bizdeposit ${getInlineChatColourByName("white")}to add money to the business.`);
+		//messagePlayerError(client, `The business doesn't have enough money (needs {ALTCOLOUR}$${neededAmount} {MAINCOLOUR}more)! Use {ALTCOLOUR}/bizdeposit {MAINCOLOUR}to add money to the business.`);
 		return false;
 	}
 
 	getBusinessData(businessId).till -= orderTotalCost;
 	addToBusinessInventory(businessId, itemType, amount);
-	//messagePlayerSuccess(client, `You ordered ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${getItemTypeData(itemType).orderPrice} each for business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}`);
+	//messagePlayerSuccess(client, `You ordered ${amount} ${getPluralForm(getItemTypeData(itemType).name)} (${getItemValueDisplay(itemType, value)}) at $${getItemTypeData(itemType).orderPrice} each for business {businessBlue}${getBusinessData(businessId).name}`);
 }
 
 // ===========================================================================
@@ -944,7 +944,7 @@ function viewBusinessTillAmountCommand(command, params, client) {
 		return false;
 	}
 
-	messagePlayerSuccess(client, `Business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}till has ${getInlineChatColourByName("lightGrey")}$${getBusinessData(businessId).till}`);
+	messagePlayerSuccess(client, `Business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}till has {ALTCOLOUR}$${getBusinessData(businessId).till}`);
 }
 
 // ===========================================================================
@@ -958,12 +958,12 @@ function buyBusinessCommand(command, params, client) {
 	}
 
 	if(getBusinessData(businessId).buyPrice <= 0) {
-		messagePlayerError(client, `Business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}is not for sale!`);
+		messagePlayerError(client, `Business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}is not for sale!`);
 		return false;
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getBusinessData(businessId).buyPrice) {
-		messagePlayerError(client, `You don't have enough money to buy business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}!`);
+		messagePlayerError(client, `You don't have enough money to buy business {businessBlue}${getBusinessData(businessId).name}!`);
 		return false;
 	}
 
@@ -974,7 +974,7 @@ function buyBusinessCommand(command, params, client) {
 	updateBusinessPickupLabelData(businessId);
 	getBusinessData(businessId).needsSaved = true;
 
-	messagePlayerSuccess(client, `You are now the owner of ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name}`);
+	messagePlayerSuccess(client, `You are now the owner of {businessBlue}${getBusinessData(businessId).name}`);
 }
 
 // ===========================================================================
@@ -1005,7 +1005,7 @@ function moveBusinessEntranceCommand(command, params, client) {
 
 	getBusinessData(businessId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}entrance to their position`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}moved business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}entrance to their position`);
 }
 
 // ===========================================================================
@@ -1034,7 +1034,7 @@ function moveBusinessExitCommand(command, params, client) {
 
 	getBusinessData(businessId).needsSaved = true;
 
-	messageAdmins(`${getInlineChatColourByName("lightGrey")}${getPlayerName(client)} ${getInlineChatColourByName("white")}moved business ${getInlineChatColourByType("businessBlue")}${getBusinessData(businessId).name} ${getInlineChatColourByName("white")}exit to their position`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}moved business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}exit to their position`);
 }
 
 // ===========================================================================
@@ -1516,7 +1516,7 @@ function buyFromBusinessCommand(command, params, client) {
 	if(getBusinessData(businessId).hasInterior) {
 		if(!getPlayerBusiness(client)) {
 			if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
-				messagePlayerTip(client, `You need to enter the business first! Press ${getInlineChatColourByName("lightGrey")}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "enter")).key)} ${getInlineChatColourByName("white")}to enter and exit a business`);
+				messagePlayerTip(client, `You need to enter the business first! Press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "enter")).key)} {MAINCOLOUR}to enter and exit a business`);
 			} else {
 				messagePlayerNormal(client, `You need to enter the business first! Use /enter to enter and exit a business`);
 			}
@@ -1562,7 +1562,7 @@ function buyFromBusinessCommand(command, params, client) {
 	let priceEach = (amount > 1) ? `($${individualCost} each)` : ``;
 
 	if(getPlayerCurrentSubAccount(client).cash < totalCost) {
-		messagePlayerError(client, `You don't have enough money! You need ${getInlineChatColourByName("lightGrey")}${getBusinessData(businessId).floorItemCache[itemSlot-1].buyPrice*amount-getPlayerCurrentSubAccount(client).cash} ${getInlineChatColourByName("white")}more!`);
+		messagePlayerError(client, `You don't have enough money! You need {ALTCOLOUR}${getBusinessData(businessId).floorItemCache[itemSlot-1].buyPrice*amount-getPlayerCurrentSubAccount(client).cash} {MAINCOLOUR}more!`);
 		return false;
 	}
 
@@ -1576,7 +1576,7 @@ function buyFromBusinessCommand(command, params, client) {
 		destroyItem(getBusinessData(businessId).floorItemCache[itemSlot-1]);
 	}
 
-	//messagePlayerSuccess(client, `You bought ${amount} ${getInlineChatColourByName("lightGrey")}${itemName} ${getInlineChatColourByName("white")}for ${totalCost} ${priceEach}`);
+	//messagePlayerSuccess(client, `You bought ${amount} {ALTCOLOUR}${itemName} {MAINCOLOUR}for ${totalCost} ${priceEach}`);
 	meActionToNearbyPlayers(client, `buys a ${itemName}`);
 
 	if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand("inv")) {
@@ -1619,7 +1619,7 @@ function setBusinessItemSellPriceCommand(command, params, client) {
 
 	getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).buyPrice = newPrice;
 
-	messagePlayerSuccess(client, `You changed the price of the ${getInlineChatColourByName("lightGrey")}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).itemTypeIndex).name}'s ${getInlineChatColourByName("white")}in slot ${getInlineChatColourByName("lightGrey")}${itemSlot} ${getInlineChatColourByName("white")}from $${makeLargeNumberReadable(oldPrice)} to $${makeLargeNumberReadable(newprice)}`);
+	messagePlayerSuccess(client, `You changed the price of the {ALTCOLOUR}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).itemTypeIndex).name}'s {MAINCOLOUR}in slot {ALTCOLOUR}${itemSlot} {MAINCOLOUR}from $${makeLargeNumberReadable(oldPrice)} to $${makeLargeNumberReadable(newprice)}`);
 }
 
 // ===========================================================================

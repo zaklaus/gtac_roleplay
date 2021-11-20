@@ -56,21 +56,21 @@ function walkieTalkieTransmit(radioFrequency, messageText, transmittingPlayer) {
 function walkieTalkieOutgoingToNearbyPlayers(client, messageText) {
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
 	for(let i in clients) {
-		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(to radio): ${getInlineChatColourByName("white")}${messageText}`);
+		messagePlayerNormal(clients[i], `[#CCCCCC]${getCharacterFullName(client)} {ALTCOLOUR}(to radio): {MAINCOLOUR}${messageText}`);
 	}
 }
 
 // ===========================================================================
 
 function walkieTalkieIncomingToNearbyPlayers(client, messageText, position = null) {
-	let prefix = `${getInlineChatColourByName("lightGrey")}(Nearby radio)`;
+	let prefix = `{ALTCOLOUR}(Nearby radio)`;
 	if(client != null) {
-		prefix = `${getCharacterFullName(client)} ${getInlineChatColourByName("lightGrey")}(from radio)`;
+		prefix = `${getCharacterFullName(client)} {ALTCOLOUR}(from radio)`;
 	}
 
 	let clients = getPlayersInRange(getPlayerPosition(client), getGlobalConfig().walkieTalkieSpeakerDistance);
 	for(let i in clients) {
-		messagePlayerNormal(clients[i], `[#CCCCCC]${prefix}: ${getInlineChatColourByName("white")}${messageText}`);
+		messagePlayerNormal(clients[i], `[#CCCCCC]${prefix}: {MAINCOLOUR}${messageText}`);
 	}
 }
 
@@ -108,7 +108,7 @@ function setWalkieTalkieFrequencyCommand(command, params, client) {
 		if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "use")) {
 			messagePlayerError(client, `Your walkie talkie is turned off. Press ${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "use")).key)} to turn it on`);
 		} else {
-			messagePlayerError(client, `Your walkie talkie is turned off. Type ${getInlineChatColourByName("lightGrey")}/use ${getInlineChatColourByName("white")}to turn it on`);
+			messagePlayerError(client, `Your walkie talkie is turned off. Type {ALTCOLOUR}/use {MAINCOLOUR}to turn it on`);
 		}
 		return false;
 	}

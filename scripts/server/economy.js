@@ -39,9 +39,9 @@ function playerPayDay(client) {
 	let netIncome = grossIncome-taxAmount;
 
 	messagePlayerAlert(client, "== Payday! =============================");
-	messagePlayerInfo(client, `Paycheck: ${getInlineChatColourByName("lightGrey")}$${grossIncome}`);
-	messagePlayerInfo(client, `Taxes: ${getInlineChatColourByName("lightGrey")}$${taxAmount}`);
-	messagePlayerInfo(client, `You receive: ${getInlineChatColourByName("lightGrey")}$${netIncome}`);
+	messagePlayerInfo(client, `Paycheck: {ALTCOLOUR}$${grossIncome}`);
+	messagePlayerInfo(client, `Taxes: {ALTCOLOUR}$${taxAmount}`);
+	messagePlayerInfo(client, `You receive: {ALTCOLOUR}$${netIncome}`);
 
 	givePlayerCash(client, netIncome);
 }

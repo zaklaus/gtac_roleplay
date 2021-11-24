@@ -9,7 +9,7 @@
 
 let scriptVersion = "1.0";
 let serverStartTime = 0;
-let logLevel = LOG_INFO;
+let logLevel = LOG_ERROR|LOG_WARN|LOG_INFO;
 
 // ===========================================================================
 

@@ -22,15 +22,20 @@ function accountBanCommand(command, params, client) {
 		return false;
 	}
 
+    let splitParams = params.split(" ");
+    let targetClient = getPlayerFromParams(splitParams[0]);
+    let reason = splitParams.slice(1).join(" ");
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!")
+        return false;
+    }
+
 	// Prevent banning admins with really high permissions
     if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
 		messagePlayerError(client, getLocaleString(client, "CantBanPlayer"));
         return false;
 	}
-
-    let splitParams = params.split(" ");
-    let targetClient = getPlayerFromParams(splitParams[0]);
-    let reason = splitParams.slice(1).join(" ");
 
     logToConsole(LOG_WARN, `[VRR.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) account was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
 
@@ -47,20 +52,26 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 		return false;
 	}
 
+    let splitParams = params.split(" ");
+    let targetClient = getPlayerFromParams(splitParams[0]);
+    let reason = splitParams.slice(1).join(" ");
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!")
+        return false;
+    }
+
 	// Prevent banning admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
 		messagePlayerError(client, getLocaleString(client, "CantBanPlayer"));
 		return false;
     }
 
-    let splitParams = params.split(" ");
-    let targetClient = getPlayerFromParams(splitParams[0]);
-    let reason = splitParams.slice(1).join(" ");
-
     logToConsole(LOG_WARN, `[VRR.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name})'s subaccount was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
 
 	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been character banned.`);
     banSubAccount(getPlayerData(targetClient).currentSubAccountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
+
     disconnectPlayer(client);
 }
 
@@ -72,18 +83,24 @@ function ipBanCommand(command, params, client, fromDiscord) {
 		return false;
     }
 
+    let splitParams = params.split(" ");
+    let targetClient = getPlayerFromParams(splitParams[0]);
+    let reason = splitParams.slice(1).join(" ");
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!")
+        return false;
+    }
+
 	// Prevent banning admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
 		messagePlayerError(client, getLocaleString(client, "CantBanPlayer"));
 		return false;
     }
 
-    let splitParams = params.split(" ");
-    let targetClient = getPlayerFromParams(splitParams[0]);
-    let reason = splitParams.slice(1).join(" ");
-
     messageAdminAction(`${targetgetPlayerName(client)} has been IP banned.`);
     banIPAddress(targetClient.ip, getPlayerData(client).accountData.databaseId, reason);
+
     server.banIP(targetClient.ip);
     targetClient.disconnect();
 }
@@ -96,16 +113,21 @@ function subNetBanCommand(command, params, client, fromDiscord) {
 		return false;
     }
 
+    let splitParams = params.split(" ");
+    let targetClient = getPlayerFromParams(splitParams[0]);
+    let octetAmount = Number(splitParams[1]);
+    let reason = splitParams.slice(2).join(" ");
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!")
+        return false;
+    }
+
 	// Prevent banning admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, "ManageServer") || doesPlayerHaveStaffPermission(targetClient, "Developer")) {
 		messagePlayerError(client, getLocaleString(client, "CantBanPlayer"));
 		return false;
     }
-
-    let splitParams = params.split(" ");
-    let targetClient = getPlayerFromParams(splitParams[0]);
-    let octetAmount = Number(splitParams[1]);
-    let reason = splitParams.slice(2).join(" ");
 
 	messageAdminAction(`${targetgetPlayerName(client)} has been banned from the server (subnet ban).`);
 	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getPlayerData(client).accountData.databaseId, reason);

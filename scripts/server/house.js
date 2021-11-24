@@ -591,7 +591,7 @@ function deleteHouse(houseId, whoDeleted = 0) {
 
 	removePlayersFromHouse(houseId);
 
-	getServerData().houses[houseId] = false;
+	getServerData().houses.splice(houseId, 1);
 }
 
 // ===========================================================================

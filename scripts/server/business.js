@@ -1308,14 +1308,12 @@ function deleteBusiness(businessId, deletedBy = 0) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	deleteBusinessEntrancePickup(businessId);
-	deleteBusinessExitPickup(businessId);
-	deleteBusinessEntranceBlip(businessId);
-	deleteBusinessExitBlip(businessId);
+	deleteAllBusinessBlips(businessId);
+	deleteAllBusinessPickups(businessId);
 
 	removePlayersFromBusiness(businessId);
 
-	getServerData().businesses[businessId] = false;
+	getServerData().businesses.splice(businessId, 1);
 }
 
 // ===========================================================================
@@ -1809,8 +1807,7 @@ function getBusinessIdFromDatabaseId(databaseId) {
 // ===========================================================================
 
 function resetBusinessPickups(businessId) {
-	deleteBusinessEntrancePickup(businessId);
-	deleteBusinessExitPickup(businessId);
+	deleteBusinessPickups(businessId);
 	createBusinessEntrancePickup(businessId);
 	createBusinessExitPickup(businessId);
 }
@@ -1818,8 +1815,7 @@ function resetBusinessPickups(businessId) {
 // ===========================================================================
 
 function resetBusinessBlips(businessId) {
-	deleteBusinessEntranceBlip(businessId);
-	deleteBusinessExitBlip(businessId);
+	deleteBusinessBlips(businessId);
 	createBusinessEntranceBlip(businessId);
 	createBusinessExitBlip(businessId);
 }
@@ -1946,3 +1942,18 @@ function canPlayerManageBusiness(client, businessId) {
 }
 
 // ===========================================================================
+
+function deleteBusinessBlips(business) {
+	deleteBusinessExitBlip(business);
+	deleteBusinessEntranceBlip(business);
+}
+
+// ===========================================================================
+
+function deleteBusinessPickups(business) {
+	deleteBusinessExitPickup(business);
+	deleteBusinessEntrancePickup(business);
+}
+
+// ===========================================================================
+

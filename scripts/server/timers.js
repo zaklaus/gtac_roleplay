@@ -65,7 +65,7 @@ function saveAllServerDataToDatabase() {
 	try {
 		saveAllItemTypesToDatabase();
 	} catch(error) {
-		logToConsole(LOG_ERROR, `Could not save items to database: ${error}`);
+		logToConsole(LOG_ERROR, `Could not save item types to database: ${error}`);
 	}
 
 	try {

@@ -141,6 +141,12 @@ function helpCommand(command, params, client) {
             showClanHelpMessage(client);
             break;
 
+        case "radio":
+        case "radiostations":
+        case "music":
+            showRadioHelpMessage(client);
+            break;
+
         default:
             showMainHelpMessage(client);
             break;
@@ -313,11 +319,19 @@ function showBusinessHelpMessage(client) {
 
 function showClanHelpMessage(client) {
     messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clan {clanOrange}================================`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/addclan {MAINCOLOUR}to create a clan (Similar to factions/groups/families)`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Ask an admin to create a clan (Similar to factions/groups/families)`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Clan owners have full control over their clan once it's created`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Clan commands: {ALTCOLOUR}/clan, /clanmotd, /clanname, /clanowner, /clanhouse, /clanbiz, /claninvite, /clanuninvite, /clansetrank`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}{ALTCOLOUR}/clanflags, /clanaddrank, /clandelrank, /clanaddrankflag, /clandelrankflag, /clanaddmemberflag, /clandelmemberflag`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}{ALTCOLOUR}/clanranks, /clanaddrank, /clandelrank, /clanrankname, /clanaddrankflag, /clandelrankflag`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}{ALTCOLOUR}/clanaddmemberflag, /clandelmemberflag`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}{ALTCOLOUR}/clanranks, /clanflags, /clanaddrank, /clandelrank, /clanaddrankflag, /clandelrankflag, /clanaddmemberflag, /clandelmemberflag`);
+}
+
+// ===========================================================================
+
+function showRadioHelpMessage(client) {
+    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Radio {clanOrange}===============================`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostations {MAINCOLOUR}to set the station for your vehicle, house, or business`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostations {MAINCOLOUR}to see a list of stations`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}You can change your radio streaming volume using {ALTCOLOUR}/radiovolume {MAINCOLOUR}with 0-100 as the percent.`);
 }
 
 // ===========================================================================

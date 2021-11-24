@@ -403,29 +403,7 @@ function switchCharacterCommand(command, params, client) {
 		return false;
 	}
 
-	getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
-	getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
-	getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
-	getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
-	getPlayerCurrentSubAccount(client).health = getPlayerHealth(client);
-	getPlayerCurrentSubAccount(client).armour = getPlayerArmour(client);
-
-	getPlayerCurrentSubAccount(client).inHouse = (isPlayerInAnyHouse(client) ? getPlayerHouse(client) : 0);
-	getPlayerCurrentSubAccount(client).inBusiness = (isPlayerInAnyBusiness(client) ? getPlayerBusiness(client) : 0);
-
-	logToConsole(client, `Saving ${getPlayerDisplayForConsole(client)}'s subaccount (${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}] to database`)
-	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
-
-	disableCityAmbienceForPlayer(client);
-
-	resetClientStuff(client);
-
-	//client.despawnPlayer();
-	getPlayerData(client).switchingCharacter = true;
-	//spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
-	//showCharacterSelectCameraToPlayer(client);
-	showConnectCameraToPlayer(client);
-	showCharacterSelectToClient(client);
+	forcePlayerIntoSwitchCharacterScreen(client);
 }
 
 // ===========================================================================
@@ -615,3 +593,27 @@ function createDefaultSubAccountServerData(databaseId, thisServerSkin) {
 }
 
 // ===========================================================================
+
+function forcePlayerIntoSwitchCharacterScreen(client) {
+	getPlayerCurrentSubAccount(client).spawnPosition = getPlayerPosition(client);
+	getPlayerCurrentSubAccount(client).spawnHeading = getPlayerHeading(client);
+	getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
+	getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
+	getPlayerCurrentSubAccount(client).health = getPlayerHealth(client);
+	getPlayerCurrentSubAccount(client).armour = getPlayerArmour(client);
+
+	getPlayerCurrentSubAccount(client).inHouse = (isPlayerInAnyHouse(client) ? getPlayerHouse(client) : 0);
+	getPlayerCurrentSubAccount(client).inBusiness = (isPlayerInAnyBusiness(client) ? getPlayerBusiness(client) : 0);
+
+	logToConsole(client, `Saving ${getPlayerDisplayForConsole(client)}'s subaccount (${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}] to database`)
+	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
+
+	disableCityAmbienceForPlayer(client);
+
+	resetClientStuff(client);
+
+	getPlayerData(client).switchingCharacter = true;
+
+	showConnectCameraToPlayer(client);
+	showCharacterSelectToClient(client);
+}

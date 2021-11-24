@@ -41,7 +41,7 @@ function addAllEventHandlers() {
 // ===========================================================================
 
 function onPlayerConnect(event, ipAddress, port) {
-    logToConsole(LOG_DEBUG, `[VRR.Event] Client connecting (IP: ${ipAddress})`);
+    logToConsole(LOG_INFO, `[VRR.Event] Client connecting (IP: ${ipAddress})`);
     //if(isIpAddressBanned(ipAddress)) {
     //    messagePlayerError(client, "You are banned from this server!");
     //    return false;
@@ -51,7 +51,7 @@ function onPlayerConnect(event, ipAddress, port) {
 // ===========================================================================
 
 function onPlayerJoin(event, client) {
-    logToConsole(LOG_DEBUG, `[VRR.Event] Client ${client.name}[${client.index}] joining from ${client.ip}`);
+    logToConsole(LOG_INFO, `[VRR.Event] Client ${client.name}[${client.index}] joining from ${client.ip}`);
 
     if(isFadeCameraSupported()) {
         fadeCamera(client, true, 1.0);
@@ -77,7 +77,7 @@ function onElementStreamIn(event, element, client) {
 // ===========================================================================
 
 function onPlayerQuit(event, client, quitReasonId) {
-    logToConsole(LOG_DEBUG, `👋 Client ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
+    logToConsole(LOG_INFO, `👋 Client ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
     updateConnectionLogOnQuit(client, quitReasonId);
     if(isPlayerLoggedIn(client)) {
         messagePlayerNormal(null, `👋 ${getPlayerName(client)} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));

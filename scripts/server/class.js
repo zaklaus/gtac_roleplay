@@ -824,8 +824,7 @@ class ClanRankData {
 			this.level = toInteger(dbAssoc["clan_rank_level"]);
 			this.flags = toInteger(dbAssoc["clan_rank_flags"]);
 			this.tag = dbAssoc["clan_rank_tag"];
-			this.enabled = intToBool(toInteger(dbAssoc["clan_enabled"]));
-			this.colour = toColour(toInteger(dbAssoc["clan_colour_r"]), toInteger(dbAssoc["clan_colour_g"]), toInteger(dbAssoc["clan_colour_b"]));
+			this.enabled = intToBool(toInteger(dbAssoc["clan_rank_enabled"]));
 		}
 	}
 };

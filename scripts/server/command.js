@@ -77,7 +77,9 @@ function loadCommands() {
         ],
         ban: [
             commandData("aban", accountBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's account."),
+            commandData("acctban", accountBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's account."),
             commandData("cban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's character."),
+            commandData("charban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's character."),
             commandData("saban", subAccountBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's character (subaccount)."),
             commandData("ipban", ipBanCommand, "<player name/id> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's IP."),
             commandData("subnetban", subNetBanCommand, "<player name/id> <range> <reason>", getStaffFlagValue("basicModeration"), true, true, "Bans a player's subnet."),
@@ -154,8 +156,11 @@ function loadCommands() {
             commandData("clanranktag", setClanRankTagCommand, "<rank name/id> <tag>", getStaffFlagValue("none"), true, true, "Sets a clan rank's custom tag"),
             commandData("clanmembertag", setClanMemberTagCommand, "<player name/id> <tag>", getStaffFlagValue("none"), true, true, "Sets a clan members's custom tag"),
             commandData("clanrankname", setClanRankTitleCommand, "<rank name/id> <new name>", getStaffFlagValue("none"), true, true, "Sets a clan rank's title"),
+            commandData("clanranklevel", setClanRankLevelCommand, "<rank name/id> <new level>", getStaffFlagValue("none"), true, true, "Sets a clan rank's level"),
+            //commandData("clanrankenabled", toggleClanRankEnabledCommand, "<rank name/id>", getStaffFlagValue("none"), true, true, "Enables/disables a clan rank"),
             commandData("clanmembertitle", setClanMemberTitleCommand, "<player name/id> <title>", getStaffFlagValue("none"), true, true, "Sets a clan members's custom title"),
             commandData("clanaddrankflag", addClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true, "Gives a clan rank a clan permission."),
+            //commandData("clanrankflags", showClanRankFlagsCommand, "<rank name/id>", getStaffFlagValue("none"), true, true, "Lists a clan rank's permission flags"),
             commandData("clandelrankflag", removeClanRankFlagCommand, "<rank name/id> <flag name>", getStaffFlagValue("none"), true, true, "Takes a clan permission from a clan rank"),
             //commandData("clanrankflags", listClanRankFlagsCommand, "<rank name/id>", getStaffFlagValue("none"), true, true, "Shows a list of a clan rank's current permission flags"),
             commandData("clanaddmemberflag", addClanMemberFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("none"), true, true, "Gives a clan member a clan permission"),
@@ -207,7 +212,7 @@ function loadCommands() {
             commandData("streamurlall", streamAudioURLToAllPlayersCommand, "<url> <volume>", getStaffFlagValue("developer"), true, true),
             commandData("streamnameall", streamAudioNameToAllPlayersCommand, "<name> <volume>", getStaffFlagValue("developer"), true, true),
 
-            //commandData("forceresetpass", forceAccountPasswordResetCommand, "<account name>", getStaffFlagValue("developer"), true, true),
+            commandData("forceresetpass", forceAccountPasswordResetCommand, "<account name>", getStaffFlagValue("developer"), true, true),
         ],
         discord: [],
         email: [
@@ -281,6 +286,7 @@ function loadCommands() {
             commandData("itemtypeuseval", setItemTypeUseValueCommand, "<item type> <use value>", getStaffFlagValue("manageItems"), true, false),
             commandData("itemtypeorderprice", setItemTypeOrderPriceCommand, "<item type> <price>", getStaffFlagValue("manageItems"), true, false),
             commandData("itemtyperiskmult", setItemTypeRiskMultiplierCommand, "<item type> <risk multiplier>", getStaffFlagValue("manageItems"), true, false),
+            commandData("itemtypeenabled", toggleItemTypeEnabledCommand, "<item type>", getStaffFlagValue("manageItems"), true, false),
 
             commandData("delplritem", deleteItemInPlayerInventoryCommand, "<player name/id> <item slot>", getStaffFlagValue("manageItems"), true, false),
             commandData("delplritems", deleteAllItemsInPlayerInventoryCommand, "<player name/id>", getStaffFlagValue("manageItems"), true, false),

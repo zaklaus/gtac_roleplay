@@ -51,7 +51,7 @@ function saveAllServerDataToDatabase() {
 	}
 
 	try {
-		saveServerConfigToDatabase(getServerConfig());
+		saveServerConfigToDatabase();
 	} catch(error) {
 		logToConsole(LOG_ERROR, `Could not save server config to database: ${error}`);
 	}

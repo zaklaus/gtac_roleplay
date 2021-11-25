@@ -600,17 +600,22 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_FOOD:
-			meActionToNearbyPlayers(client, `eats their ${getItemName(itemIndex)}`);
-			givePlayerHealth(client, getItemData(itemIndex).useValue);
-			deleteItem(itemIndex);
-			switchPlayerActiveHotBarSlot(client, -1);
+			meActionToNearbyPlayers(client, `eats some of their ${getItemName(itemIndex)}`);
+			givePlayerHealth(client, getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue);
+			if(getItemData(itemIndex).value <= 0) {
+				deleteItem(itemIndex);
+				switchPlayerActiveHotBarSlot(client, -1);
+			}
 			break;
 
 		case VRR_ITEM_USETYPE_DRINK:
-			meActionToNearbyPlayers(client, `drinks their ${getItemName(itemIndex)}`);
-			givePlayerHealth(client, getItemData(itemIndex).useValue);
-			deleteItem(itemIndex);
-			switchPlayerActiveHotBarSlot(client, -1);
+			meActionToNearbyPlayers(client, `drink some of their ${getItemName(itemIndex)}`);
+			givePlayerHealth(client, getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue);
+			getItemData(itemIndex).value = getItemData(itemIndex).value - getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			if(getItemData(itemIndex).value <= 0) {
+				deleteItem(itemIndex);
+				switchPlayerActiveHotBarSlot(client, -1);
+			}
 			break;
 
 		case VRR_ITEM_USETYPE_ARMOUR:
@@ -860,6 +865,18 @@ function playerPutItem(client, hotBarSlot) {
 
 	let	bestNewOwner = getBestNewOwnerToPutItem(client);
 
+	getItemData(itemId).ownerType = bestNewOwner[0];
+	getItemData(itemId).ownerId = bestNewOwner[1];
+	getItemData(itemId).position = toVector(0.0, 0.0, 0.0);
+	getItemData(itemId).dimension = 0;
+	getItemData(itemId).needsSaved = true;
+
+	resyncWeaponItemAmmo(client);
+	clearPlayerWeapons(client);
+
+	getPlayerData(client).hotBarItems[hotBarSlot] = -1;
+	updatePlayerHotBar(client);
+
 	switch(bestNewOwner[0]) {
 		case VRR_ITEM_OWNER_HOUSE:
 			meActionToNearbyPlayers(client, `places ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} in the house`);
@@ -874,21 +891,9 @@ function playerPutItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_OWNER_VEHTRUNK:
-			meActionToNearbyPlayers(client, `places ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} in the ${getVehicleName(bestNewOwner[1])}'s trunk`);
+			meActionToNearbyPlayers(client, `places ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} in the ${getVehicleName(getVehicleFromDatabaseId(bestNewOwner[1]))}'s trunk`);
 			break;
 	}
-
-	resyncWeaponItemAmmo(client);
-	clearPlayerWeapons(client);
-
-	getItemData(itemId).ownerType = ownerType;
-	getItemData(itemId).ownerId = ownerId;
-	getItemData(itemId).position = toVector(0.0, 0.0, 0.0);
-	getItemData(itemId).dimension = 0;
-	getItemData(itemId).needsSaved = true;
-
-	getPlayerData(client).hotBarItems[hotBarSlot] = -1;
-	updatePlayerHotBar(client);
 }
 
 // ===========================================================================
@@ -912,6 +917,18 @@ function playerPickupItem(client, itemId) {
 // ===========================================================================
 
 function playerTakeItem(client, itemId) {
+	let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
+	if(firstSlot == -1) {
+		messagePlayerError(client, "You don't have enough space to hold another item");
+		return false;
+	}
+
+	getItemData(itemId).ownerType = VRR_ITEM_OWNER_PLAYER;
+	getItemData(itemId).ownerId = getPlayerCurrentSubAccount(client).databaseId;
+
+	getPlayerData(client).hotBarItems[firstSlot] = itemId;
+	updatePlayerHotBar(client);
+
 	switch(bestOwner[1]) {
 		case VRR_ITEM_OWNER_HOUSE:
 			meActionToNearbyPlayers(client, `takes ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} from the house`);
@@ -928,15 +945,6 @@ function playerTakeItem(client, itemId) {
 		case VRR_ITEM_OWNER_VEHTRUNK:
 			meActionToNearbyPlayers(client, `takes ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} from the trunk`);
 			break;
-	}
-
-	let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
-	if(firstSlot != -1) {
-		getItemData(itemId).ownerType = VRR_ITEM_OWNER_PLAYER;
-		getItemData(itemId).ownerId = getPlayerCurrentSubAccount(client).databaseId;
-
-		getPlayerData(client).hotBarItems[firstSlot] = itemId;
-		updatePlayerHotBar(client);
 	}
 }
 

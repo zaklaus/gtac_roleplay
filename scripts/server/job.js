@@ -564,6 +564,7 @@ function stopWorking(client) {
 	setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
 	deleteJobItems(client);
 	restorePlayerJobLockerItems(client);
+	respawnJobVehicle(client);
 
 	let jobId = getPlayerJob(client);
 	switch(getJobType(jobId)) {
@@ -1731,6 +1732,15 @@ function deleteJobItems(client) {
 
 function getJobRankName(jobId, rankId) {
 	return jobRankNames[jobId][rankId];
+}
+
+// ===========================================================================
+
+function respawnPlayerLastJobVehicle(client) {
+	if(getPlayerCurrentSubAccount(client).lastJobVehicle == null) {
+		return false;
+	}
+	respawnVehicle(getPlayerCurrentSubAccount(client).lastJobVehicle);
 }
 
 // ===========================================================================

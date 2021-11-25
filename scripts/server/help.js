@@ -253,14 +253,14 @@ function showRulesHelpMessage(client) {
 
 function showWebsiteHelpMessage(client) {
     messagePlayerInfo(client, `{clanOrange}== {jobYellow}Website {clanOrange}=============================`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${server.getCVar("Website")}`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${server.getRule("Website")}`);
 }
 
 // ===========================================================================
 
 function showDiscordHelpMessage(client) {
     messagePlayerInfo(client, `{clanOrange}== {jobYellow}Discord {clanOrange}=============================`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${server.getCVar("Discord")}`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${server.getRule("Website")}`);
 }
 
 // ===========================================================================

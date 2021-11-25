@@ -948,27 +948,35 @@ function sendPlayerEnterPropertyKey(client, key) {
 
 function makePedPlayAnimation(ped, animationSlot, positionOffset) {
     let animationData = getAnimationData(animationSlot);
-    if(animationData[9] != VRR_ANIMMOVE_NONE) {
-        setElementCollisionsEnabled(ped, false);
+    let freezePlayer = false;
+    //if(animationData[9] != VRR_ANIMMOVE_NONE) {
         switch(animationData[9]) {
             case VRR_ANIMMOVE_FORWARD:
+                setElementCollisionsEnabled(ped, false);
                 setElementPosition(ped, getPosInFrontOfPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
+                freezePlayer = true;
                 break;
 
             case VRR_ANIMMOVE_BACK:
+                setElementCollisionsEnabled(ped, false);
                 setElementPosition(ped, getPosBehindPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
+                freezePlayer = true;
                 break;
 
             case VRR_ANIMMOVE_LEFT:
+                setElementCollisionsEnabled(ped, false);
                 setElementPosition(ped, getPosToLeftOfPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
+                freezePlayer = true;
                 break;
 
             case VRR_ANIMMOVE_RIGHT:
+                setElementCollisionsEnabled(ped, false);
                 setElementPosition(ped, getPosToRightOfPos(getElementPosition(ped), fixAngle(getElementHeading(ped)), positionOffset));
+                freezePlayer = true;
                 break;
         }
-    }
-    triggerNetworkEvent("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4], animationData[5], positionOffset);
+    //}
+    triggerNetworkEvent("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4], animationData[5], positionOffset, freezePlayer);
 }
 
 // ===========================================================================

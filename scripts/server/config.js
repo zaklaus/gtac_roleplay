@@ -169,7 +169,7 @@ function applyConfigToServer(tempServerConfig) {
 // ===========================================================================
 
 function saveServerConfigToDatabase() {
-	logToConsole(LOG_DEBUG, `[VRR.Config]: Saving server ${serverConfigData.databaseId} configuration to database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Config]: Saving server ${getServerConfig().databaseId} configuration to database ...`);
 	if(getServerConfig().needsSaved) {
 		let dbConnection = connectToDatabase();
 		if(dbConnection) {
@@ -226,7 +226,7 @@ function saveServerConfigToDatabase() {
 			];
 
 			let dbQuery = null;
-			let queryString = createDatabaseUpdateQuery("svr_main", data, `svr_id=${serverConfig.databaseId}`);
+			let queryString = createDatabaseUpdateQuery("svr_main", data, `svr_id=${getServerConfig().databaseId}`);
 			dbQuery = queryDatabase(dbConnection, queryString);
 
 			getServerConfig().needsSaved = false;
@@ -235,13 +235,12 @@ function saveServerConfigToDatabase() {
 
 		}
 	}
-	logToConsole(LOG_DEBUG, `[VRR.Config]: Server ${serverConfigData.databaseId} configuration saved to database!`);
+	logToConsole(LOG_DEBUG, `[VRR.Config]: Server ${getServerConfig().databaseId} configuration saved to database!`);
 }
 
 // ===========================================================================
 
 /**
- * This is a command handler function.
  *
  * @return {ServerConfigData} - Server configuration data
  *

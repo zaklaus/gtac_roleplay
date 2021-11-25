@@ -7,7 +7,7 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loop, loopNoControl, freezeLastFrame, returnToOriginalPosition) {
+function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loop, loopNoControl, freezeLastFrame, returnToOriginalPosition, freezePlayer) {
     if(getGame() < VRR_GAME_GTA_IV) {
         if(animType == VRR_ANIMTYPE_ADD) {
             if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
@@ -17,7 +17,7 @@ function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loo
             }
             getElementFromId(pedId).addAnimation(animGroup, animId);
 
-            if(getElementFromId(pedId) == localPlayer) {
+            if(getElementFromId(pedId) == localPlayer && !freezePlayer) {
                 inAnimation = true;
                 setLocalPlayerControlState(false, false);
                 localPlayer.collisionsEnabled = false;

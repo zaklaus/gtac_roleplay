@@ -1186,16 +1186,19 @@ function getClosestCivilian(position) {
 // ===========================================================================
 
 function getClosestPlayer(position, exemptClient) {
-	let clients = getClients();
-	let closest = 0;
-	for(let i in clients) {
-		if(exemptClient != clients[i]) {
-			if(getDistance(getPlayerPosition(clients[i]), position) < getDistance(getPlayerPosition(clients[closest]), position)) {
-				closest = i;
-			}
-		}
-	}
-	return clients[closest];
+	//let clients = getClients();
+	//let closest = 0;
+	//for(let i in clients) {
+	//	if(exemptClient != clients[i]) {
+	//		if(getDistance(getPlayerPosition(clients[i]), position) < getDistance(getPlayerPosition(clients[closest]), position)) {
+	//			closest = i;
+	//		}
+	//	}
+	//}
+
+	return getElementsByType(ELEMENT_PLAYER).filter((fp) => fp != exemptClient).reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
+
+	//return clients[closest];
 }
 
 // ===========================================================================
@@ -1567,6 +1570,12 @@ function clearTemporaryPeds() {
 			}
 		}
 	}
+}
+
+// ===========================================================================
+
+function getVehicleTrunkPosition(vehicle) {
+	return getPosBehindPos(getVehiclePosition(vehicle), getVehicleHeading(vehicle), 3);
 }
 
 // ===========================================================================

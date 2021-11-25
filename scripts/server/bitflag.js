@@ -27,42 +27,42 @@ let serverBitFlags = {
 
 let serverBitFlagKeys = {
 	staffFlagKeys: [
-		"none",
-		"basicModeration",
-		"manageHouses",
-		"manageVehicles",
-		"manageBusinesses",
-		"manageClans",
-		"manageServer",
-		"manageAdmins",
-		"manageJobs",
-		"manageItems",
-		"manageWorld",
-		"manageAntiCheat",
-		"developer",
+		"None",
+		"BasicModeration",
+		"ManageHouses",
+		"ManageVehicles",
+		"ManageBusinesses",
+		"ManageClans",
+		"ManageServer",
+		"ManageAdmins",
+		"ManageJobs",
+		"ManageItems",
+		"ManageWorld",
+		"ManageAntiCheat",
+		"Developer",
 	],
 	moderationFlagKeys: [
-		"none",
-		"muted",
-		"frozen",
-		"hackerBox",
-		"gunBanned",
-		"jobBanned",
-		"ammuBanned",
-		"noSkinCustomization",
-		"desyncWeapons",
-		"hackerWorld",
-		"adminJailed",
-		"exemptFromAntiCheat",
-		"exemptFromBans",
-		"forceTutorial",
-		"characterNameNeedsStaffApproval",
-		"emailVerified",
-		"twoFactorAuthVerified",
-		"nonRoleplayCharacterName",
+		"None",
+		"Muted",
+		"Frozen",
+		"HackerBox",
+		"GunBanned",
+		"JobBanned",
+		"AmmuBanned",
+		"NoSkinCustomization",
+		"DesyncWeapons",
+		"HackerWorld",
+		"AdminJailed",
+		"ExemptFromAntiCheat",
+		"ExemptFromBans",
+		"ForceTutorial",
+		"CharacterNameNeedsStaffApproval",
+		"EmailVerified",
+		"TwoFactorAuthVerified",
+		"NonRoleplayCharacterName",
 	],
 	factionFlagKeys: [
-		"none",
+		"None",
 		"police",
 		"medical",
 		"fire",
@@ -70,7 +70,7 @@ let serverBitFlagKeys = {
 		"generic",
 	],
 	clanFlagKeys: [
-		"none",
+		"None",
 		"illegal",
 		"legal",
 		"mafia",
@@ -82,41 +82,41 @@ let serverBitFlagKeys = {
 		"hitContracts"
 	],
 	clanPermissionFlagKeys: [
-		"none",
-		"startTurfWar",
-		"startPointWar",
-		"inviteMember",
-		"suspendMember",
-		"removeMember",
-		"memberRank",
-		"clanTag",
-		"clanName",
-		"manageVehicles",
-		"manageHouses",
-		"manageBusinesses",
-		"manageNPCs",
-		"manageRanks",
-		"owner",
+		"None",
+		"StartTurfWar",
+		"StartPointWar",
+		"InviteMember",
+		"SuspendMember",
+		"RemoveMember",
+		"MemberRank",
+		"ClanTag",
+		"ClanName",
+		"ManageVehicles",
+		"ManageHouses",
+		"ManageBusinesses",
+		"ManageNPCs",
+		"ManageRanks",
+		"Owner",
 	],
 	accountSettingsFlagKeys: [
-		"none",
-		"useWhiteList",
-		"useBlackList",
-		"twoStepAuth",
-		"authAttemptAlert",
-		"noGUI",
-		"autoLoginIP",
-		"noServerLogo",
-		"autoSelectLastCharacter",
-		"showRealTimeClock",
-		"useGUIForItems",
-		"useRadialWheelItems", // If this is disabled, use MMORPG-style hotbar IF useGUIForItems is enabled
-		"disableKeyBinds",
-		"noTimedRandomTips",
-		"noActionTips",
+		"None",
+		"UseWhiteList",
+		"UseBlackList",
+		"TwoStepAuth",
+		"AuthAttemptAlert",
+		"NoGUI",
+		"AutoLoginIP",
+		"NoServerLogo",
+		"AutoSelectLastCharacter",
+		"ShowRealTimeClock",
+		"UseGUIForItems",
+		"UseRadialWheelItems", // If this is disabled, use MMORPG-style hotbar IF UseGUIForItems is enabled
+		"NoKeyBinds",
+		"NoRandomTips",
+		"NoActionTips",
 	],
 	npcTriggerTypeKeys: [
-		"none",
+		"None",
 		"farProximity",               // Comes within a far distance of NPC
 		"mediumProximity",            // Comes within a medium distance of NPC
 		"nearProximity",              // Comes within a close distance of NPC
@@ -142,7 +142,7 @@ let serverBitFlagKeys = {
 		"attackedByFist",             // Any element is attacked by fist
 	],
 	npcTriggerConditionTypeKeys: [
-		"none",
+		"None",
 		"isInLineOfSight",
 		"isFarProximity",
 		"isMediumProximity",
@@ -180,7 +180,7 @@ let serverBitFlagKeys = {
 		"isWhispering",
 	],
 	npcTriggerResponseTypeKeys: [
-		"none",
+		"None",
 		"shout",
 		"talk",
 		"whisper",
@@ -209,7 +209,7 @@ let serverBitFlagKeys = {
 		"searchArea",
 	],
 	seenHelpTipsKeys: [
-		"none",
+		"None",
 		"vehicleEngineOffWhenEntering",
 		"vehicleLockedAfterEntryAttempt",
 		"showItemsAfterPurchase",
@@ -272,7 +272,7 @@ function doesPlayerHaveStaffPermission(client, requiredFlags) {
 		return true;
 	}
 
-	if(requiredFlags == getStaffFlagValue("none")) {
+	if(requiredFlags == getStaffFlagValue("None")) {
 		return true;
 	}
 
@@ -282,7 +282,7 @@ function doesPlayerHaveStaffPermission(client, requiredFlags) {
 	}
 
 	// -1 is automatic override (having -1 for staff flags is basically god mode admin level)
-    if(staffFlags == getStaffFlagValue("all")) {
+    if(staffFlags == getStaffFlagValue("All")) {
         return true;
     }
 
@@ -300,11 +300,11 @@ function doesPlayerHaveClanPermission(client, requiredFlags) {
 		return true;
 	}
 
-	if(requiredFlags == getClanFlagValue("none")) {
+	if(requiredFlags == getClanFlagValue("None")) {
 		return true;
 	}
 
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageClans"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageClans"))) {
 		return true;
 	}
 
@@ -312,7 +312,7 @@ function doesPlayerHaveClanPermission(client, requiredFlags) {
 	clanFlags = getPlayerCurrentSubAccount(client).clanFlags | getClanRankFlags(getPlayerCurrentSubAccount(client).clanRank);
 
 	// -1 is automatic override (having -1 for staff flags is basically god mode admin level)
-    if(clanFlags == getClanFlagValue("all")) {
+    if(clanFlags == getClanFlagValue("All")) {
         return true;
     }
 
@@ -326,7 +326,7 @@ function doesPlayerHaveClanPermission(client, requiredFlags) {
 // ===========================================================================
 
 function getStaffFlagValue(flagName) {
-    if(flagName == "all") {
+    if(flagName == "All") {
         return -1;
 	}
 
@@ -340,7 +340,7 @@ function getStaffFlagValue(flagName) {
 // ===========================================================================
 
 function getClanFlagValue(flagName) {
-    if(flagName == "all") {
+    if(flagName == "All") {
         return -1;
 	}
 
@@ -354,7 +354,7 @@ function getClanFlagValue(flagName) {
 // ===========================================================================
 
 function getAccountSettingsFlagValue(flagName) {
-    if(flagName == "all") {
+    if(flagName == "All") {
         return -1;
 	}
 
@@ -368,7 +368,7 @@ function getAccountSettingsFlagValue(flagName) {
 // ===========================================================================
 
 function getModerationFlagValue(flagName) {
-    if(flagName == "all") {
+    if(flagName == "All") {
         return -1;
 	}
 
@@ -427,7 +427,7 @@ function takePlayerStaffFlag(client, flagName) {
 // ===========================================================================
 
 function clearPlayerStaffFlags(client) {
-	getPlayerData(client).accountData.flags.admin = getStaffFlagValue("none");
+	getPlayerData(client).accountData.flags.admin = getStaffFlagValue("None");
 	return true;
 }
 

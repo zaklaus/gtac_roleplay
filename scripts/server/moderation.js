@@ -27,8 +27,8 @@ function kickClientCommand(command, params, client) {
     }
 
 	// Prevent kicking admins with really high permissions
-	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot kick this person!");
 			return false;
 		}
@@ -56,8 +56,8 @@ function setClientStaffTitleCommand(command, params, client) {
 	}
 
 	// Prevent setting titles on staff with really high permissions
-	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot set this person's staff title!");
 			return false;
 		}
@@ -84,8 +84,8 @@ function muteClientCommand(command, params, client) {
     }
 
 	// Prevent muting admins with really high permissions
-	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot mute this person!");
 			return false;
 		}
@@ -111,8 +111,8 @@ function unMuteClientCommand(command, params, client) {
     }
 
 	// Prevent unmuting admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot unmute this person!");
 			return false;
 		}
@@ -137,8 +137,8 @@ function freezeClientCommand(command, params, client) {
     }
 
 	// Prevent freeze admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot freeze this person!");
 			return false;
 		}
@@ -164,8 +164,8 @@ function unFreezeClientCommand(command, params, client) {
     }
 
 	// Prevent unfreezing admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot freeze this person!");
 			return false;
 		}
@@ -675,7 +675,7 @@ function addStaffFlagCommand(command, params, client) {
 
 	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "none";
+	let flagName = splitParams[1] || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -683,8 +683,8 @@ function addStaffFlagCommand(command, params, client) {
     }
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot give staff flags to this person!");
 			return false;
 		}
@@ -709,7 +709,7 @@ function takeStaffFlagCommand(command, params, client) {
 
 	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "none";
+	let flagName = splitParams[1] || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -717,8 +717,8 @@ function takeStaffFlagCommand(command, params, client) {
     }
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot take staff flags from this person!");
 			return false;
 		}
@@ -743,7 +743,7 @@ function clearStaffFlagsCommand(command, params, client) {
 
 	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "none";
+	let flagName = splitParams[1] || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -751,8 +751,8 @@ function clearStaffFlagsCommand(command, params, client) {
     }
 
 	// Prevent setting flags on admins with really high permissions
-	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("manageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagsCommand("developer"))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("manageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagsCommand("developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot clear staff flags for this person!");
 			return false;
 		}
@@ -789,7 +789,6 @@ function getStaffFlagsCommand(command, params, client) {
 
 	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "none";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -805,7 +804,22 @@ function getStaffFlagsCommand(command, params, client) {
 		}
 	}
 
-	messagePlayerInfo(client, `{MAINCOLOUR}${getPlayerName(targetClient)}'s staff flags: {ALTCOLOUR}${tempStaffFlags.join(getInlineChatColourByName("white"))}, {ALTCOLOUR}")}`);
+	let flagList = [];
+	for(let i in getServerBitFlagKeys().staffFlagKeys) {
+		if(doesPlayerHaveStaffPermission(client, getStaffFlagValue(getServerBitFlagKeys().staffFlagKeys[i]))) {
+			flagList.push(`{softGreen}${getServerBitFlagKeys().staffFlagKeys[i]}`);
+		} else {
+			flagList.push(`{softRed}${getServerBitFlagKeys().staffFlagKeys[i]}`);
+		}
+	}
+
+	let chunkedList = splitArrayIntoChunks(flagList, 6);
+
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Player Staff Flags {clanOrange}=========================`);
+
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join("{MAINCOLOUR}, "));
+	}
 }
 
 // ===========================================================================
@@ -818,14 +832,14 @@ function allStaffFlagsCommand(command, params, client) {
 
 	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "none";
+	let flagName = splitParams[1] || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
         return false;
 	}
 
-	messagePlayerInfo(client, `{MAINCOLOUR}Staff flags: {ALTCOLOUR}${getServerBitFlagKeys().join(getInlineChatColourByName("white"))}, {ALTCOLOUR}")}`);
+	messagePlayerInfo(client, `{MAINCOLOUR}Staff flags: {ALTCOLOUR}${getServerBitFlagKeys().staffFlagKeys.join(getInlineChatColourByName("white"))}, {ALTCOLOUR}")}`);
 }
 
 // ===========================================================================
@@ -862,14 +876,14 @@ function forcePlayerAccentCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let newAccent = splitParams[1] || "none";
+	let newAccent = splitParams[1] || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
         return false;
 	}
 
-	if(toLowerCase(newAccent) == "none") {
+	if(toLowerCase(newAccent) == "None") {
 		newAccent = "";
 	}
 

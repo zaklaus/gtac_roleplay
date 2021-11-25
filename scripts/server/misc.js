@@ -77,7 +77,7 @@ function setNewCharacterSkinCommand(command, params, client) {
 		return false;
 	}
 
-	skinId = getSkinModelIndexFromParams(params);
+	let skinId = getSkinModelIndexFromParams(params);
 
 	getServerConfig().newCharacter.skin = skinId;
 	getServerConfig().needsSaved = true;
@@ -272,7 +272,7 @@ function getPlayerInfoCommand(command, params, client) {
 	let targetClient = client;
 
 	if(!areParamsEmpty(params)) {
-		if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
+		if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("BasicModeration"))) {
 			targetClient = getPlayerFromParams(params);
 
 			if(!getPlayerData(targetClient)) {

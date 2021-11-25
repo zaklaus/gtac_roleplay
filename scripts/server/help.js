@@ -363,7 +363,7 @@ function showCommandHelpMessage(client, commandName) {
 
     //messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Usable on Discord: ${getYesNoFromBool(command.allowOnDiscord)}`);
 
-    //if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
+    //if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("BasicModeration"))) {
     //    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Usable on Discord: ${getYesNoFromBool(command.allowOnDiscord)}`);
     //}
 }

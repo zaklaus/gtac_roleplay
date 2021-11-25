@@ -224,7 +224,9 @@ function showRandomTipToAllPlayers() {
 	let clients = getClients();
 	for(let i in clients) {
 		if(isPlayerLoggedIn(clients[i]) && isPlayerSpawned(clients[i])) {
-			messagePlayerTimedRandomTip(null, randomTips[tipId]);
+			if(!doesPlayerHaveRandomTipsDisabled(clients[i])) {
+				messagePlayerTimedRandomTip(null, randomTips[tipId]);
+			}
 		}
 	}
 }

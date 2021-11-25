@@ -51,7 +51,7 @@ function messageAdmins(messageText, colour = getColourByName("softRed")) {
 
     let clients = getClients();
     for(let i in clients) {
-        if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("basicModeration"))) {
+        if(doesPlayerHaveStaffPermission(clients[i], getStaffFlagValue("BasicModeration"))) {
             messagePlayerNormal(clients[i], `🛡️ ${messageText}`, colour);
         }
     }
@@ -198,7 +198,7 @@ function messagePlayerAdminChat(client, adminChattingClient, messageText) {
 // ===========================================================================
 
 function messagePlayerNewbieTip(client, message) {
-    if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noActionTips"))) {
+    if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("NoActionTips"))) {
         messagePlayerNormal(client, `💡 TIP: ${message}`);
     }
 }
@@ -207,7 +207,7 @@ function messagePlayerNewbieTip(client, message) {
 
 function messagePlayerTimedRandomTip(client, message) {
     if(isPlayerLoggedIn(client) && isPlayerSpawned(client)) {
-        if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("noTimedRandomTips"))) {
+        if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("NoRandomTips"))) {
             messagePlayerNormal(client, `💡 TIP: ${message}`);
         }
     }

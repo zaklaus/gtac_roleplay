@@ -71,13 +71,15 @@ function loadSubAccountsFromAccount(accountId) {
 
 					// Check if clan and rank are still valid
 					if(tempSubAccount.clan != 0) {
-						if(!getClanData(getClanIdFromDatabaseId(tempSubAccount.clan))) {
+						let clanId = getClanIdFromDatabaseId(tempSubAccount.clan);
+						if(!getClanData(clanId)) {
 							tempSubAccount.clan = 0;
 							tempSubAccount.clanRank = 0;
 							tempSubAccount.clanTitle = "";
 							tempSubAccount.clanFlags = 0;
 						} else {
-							if(!getClanRankData(getClanIdFromDatabaseId(tempSubAccount.clan), tempSubAccount.clanRank)) {
+							let rankId = getClanRankIdFromDatabaseId(clanId, tempSubAccount.clanRank);
+							if(!getClanRankData(clanId, rankId)) {
 								tempSubAccount.clanRank = 0;
 							}
 						}
@@ -100,7 +102,7 @@ function saveSubAccountToDatabase(subAccountData) {
 	let dbConnection = connectToDatabase();
 
 	if(dbConnection) {
-		let safeClanTag = escapeDatabaseString(dbConnection, subAccountData.clanTag);
+		let safeClanTag = escapeDatabaseString(dbConnection, subAccountData.ClanTag);
 		let safeClanTitle = escapeDatabaseString(dbConnection, subAccountData.clanTitle);
 		let safeFirstName = escapeDatabaseString(dbConnection, subAccountData.firstName);
 		let safeLastName = escapeDatabaseString(dbConnection, subAccountData.lastName);
@@ -124,6 +126,7 @@ function saveSubAccountToDatabase(subAccountData) {
 			["sacct_inbusiness", (subAccountData.inBusiness != 0) ? getBusinessData(subAccountData.inBusiness).databaseId : 0],
 			["sacct_health", subAccountData.health],
 			["sacct_armour", subAccountData.armour],
+			["sacct_accent", subAccountData.accent],
 		];
 
 		let dbQuery = null;
@@ -234,9 +237,9 @@ function showCharacterSelectToClient(client) {
 		getPlayerData(client).currentSubAccount = 0;
 		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
-		let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
+		let ClanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
-		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, ClanName, lastPlayedText, tempSubAccount.skin);
 
 		//spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
 		//setTimeout(function() {
@@ -250,7 +253,7 @@ function showCharacterSelectToClient(client) {
 		messagePlayerNormal(client, `You have the following characters. Use /usechar <id> to select one:`, getColourByName("teal"));
 		getPlayerData(client).subAccounts.forEach(function(subAccount, index) {
 			let tempSubAccount = getPlayerData(client).subAccounts[0];
-			let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
+			let ClanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 			let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
 			messagePlayerNormal(client, `${index+1} • [#BBBBBB]${subAccount.firstName} ${subAccount.lastName} ($${tempSubAccount.cash}, ${lastPlayedText})`);
 		});
@@ -318,9 +321,9 @@ function checkPreviousCharacter(client) {
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 
-		let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
+		let ClanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
-		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, ClanName, lastPlayedText, tempSubAccount.skin);
 
 		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 	}
@@ -339,9 +342,9 @@ function checkNextCharacter(client) {
 		let subAccountId = getPlayerData(client).currentSubAccount;
 		let tempSubAccount = getPlayerData(client).subAccounts[subAccountId];
 
-		let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
+		let ClanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${getTimeDifferenceDisplay(tempSubAccount.lastLogin, getCurrentUnixTimestamp())} ago` : "Never";
-		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, tempSubAccount.skin);
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, ClanName, lastPlayedText, tempSubAccount.skin);
 
 		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 	}
@@ -519,7 +522,7 @@ function setFightStyleCommand(command, params, client) {
 	}
 
 	if(!isPlayerAtGym(client)) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("BasicModeration"))) {
 			messagePlayerError(client, `You need to be at a gym!`);
 			return false
 		}
@@ -565,7 +568,7 @@ function forceFightStyleCommand(command, params, client) {
 	}
 
 	if(!isPlayerAtGym(client)) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("basicModeration"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("BasicModeration"))) {
 			messagePlayerError(client, `You need to be at a gym!`);
 			return false
 		}

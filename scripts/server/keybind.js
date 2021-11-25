@@ -139,7 +139,7 @@ function doesPlayerHaveKeyBindForKey(client, key) {
 // ===========================================================================
 
 function doesPlayerHaveKeyBindsDisabled(client) {
-    return hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("disableKeyBinds"));
+    return hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("NoKeyBinds"));
 }
 
 // ===========================================================================

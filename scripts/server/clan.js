@@ -157,7 +157,7 @@ function listClanRanksCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!areParamsEmpty(params)) {
-		if(doesPlayerHaveStaffPermission(client, "manageClans")) {
+		if(doesPlayerHaveStaffPermission(client, "ManageClans")) {
 			clanId = getClanFromParams(params);
 		}
 	}
@@ -244,7 +244,7 @@ function setClanOwnerCommand(command, params, client) {
 
 	getClanData(clanId).owner = getPlayerCurrentSubAccount(targetClient).databaseId;
 	getPlayerCurrentSubAccount(targetClient).clan = getClanData(clanId).databaseId;
-	getPlayerCurrentSubAccount(targetClient).clanFlags = getClanFlagValue("all");
+	getPlayerCurrentSubAccount(targetClient).clanFlags = getClanFlagValue("All");
 
 	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set clan {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}owner to {ALTCOLOUR}${getCharacterFullName(targetClient)}`);
 }
@@ -252,7 +252,7 @@ function setClanOwnerCommand(command, params, client) {
 // ===========================================================================
 
 function setClanTagCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("clanTag"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ClanTag"))) {
 		messagePlayerError(client, "You can not change the clan tag!");
 		return false;
 	}
@@ -277,7 +277,7 @@ function setClanTagCommand(command, params, client) {
 // ===========================================================================
 
 function setClanNameCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("clanName"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ClanName"))) {
 		messagePlayerError(client, "You can not change the clan name!");
 		return false;
 	}
@@ -302,7 +302,7 @@ function setClanNameCommand(command, params, client) {
 // ===========================================================================
 
 function createClanRankCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("manageRanks"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ManageRanks"))) {
 		messagePlayerError(client, "You can not add new clan ranks!");
 		return false;
 	}
@@ -332,7 +332,7 @@ function createClanRankCommand(command, params, client) {
 // ===========================================================================
 
 function deleteClanRankCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("manageRanks"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ManageRanks"))) {
 		messagePlayerError(client, "You can not remove clan ranks!");
 		return false;
 	}
@@ -384,25 +384,25 @@ function setClanMemberTagCommand(command, params, client) {
 	}
 
 	if(!arePlayersInSameClan(client, targetClient)) {
-		if(!doesPlayerHaveStaffPermission("manageClans")) {
+		if(!doesPlayerHaveStaffPermission("ManageClans")) {
 			messagePlayerError(client, "That player is not in your clan!");
 			return false;
 		}
 	}
 
-	if(!doesPlayerHaveStaffPermission("manageClans") && !doesPlayerHaveClanPermission("memberFlags")) {
+	if(!doesPlayerHaveStaffPermission("ManageClans") && !doesPlayerHaveClanPermission("memberFlags")) {
 		messagePlayerError(client, "You cannot set clan member flags!");
 		return false;
 	}
 
 	if(getPlayerClanRank(client) <= getPlayerClanRank(targetClient)) {
-		if(!doesPlayerHaveStaffPermission("manageClans")) {
+		if(!doesPlayerHaveStaffPermission("ManageClans")) {
 			messagePlayerError(client, "You cannot set that clan member's flags!");
 			return false;
 		}
 	}
 
-	getPlayerCurrentSubAccount(targetClient).clanTag = splitParams[1];
+	getPlayerCurrentSubAccount(targetClient).ClanTag = splitParams[1];
 
 	messagePlayerSuccess(client, `You set {ALTCOLOUR}${getCharacterFullName(targetClient)}'s {MAINCOLOUR}clan tag to {ALTCOLOUR}${splitParams[1]}`);
 	messagePlayerAlert(client, `{ALTCOLOUR}${getCharacterFullName(targetClient)} {MAINCOLOUR}set your clan tag to {ALTCOLOUR}${splitParams[1]}`);
@@ -411,7 +411,7 @@ function setClanMemberTagCommand(command, params, client) {
 // ===========================================================================
 
 function setClanRankTagCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("manageRanks"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ManageRanks"))) {
 		messagePlayerError(client, "You can't change any clan ranks's tag!");
 		return false;
 	}
@@ -430,7 +430,7 @@ function setClanRankTagCommand(command, params, client) {
 	}
 
 	if(getClanRankData(clanId, rankId).level > getClanRankData(clanId, getPlayerClanRank(client)).level) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageClans"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageClans"))) {
 			messagePlayerError(client, "You can't change this rank's tag (it's a higher rank than yours)");
 			return false;
 		}
@@ -442,7 +442,7 @@ function setClanRankTagCommand(command, params, client) {
 // ===========================================================================
 
 function setClanRankLevelCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("manageRanks"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ManageRanks"))) {
 		messagePlayerError(client, "You can't change any clan rank's level!");
 		return false;
 	}
@@ -469,7 +469,7 @@ function setClanRankLevelCommand(command, params, client) {
 	}
 
 	if(getClanRankData(clanId, rankId).level > getClanRankData(clanId, getPlayerClanRank(client)).level) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageClans"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageClans"))) {
 			messagePlayerError(client, "You can't change this rank's level (it's a higher rank than yours)");
 			return false;
 		}
@@ -517,19 +517,19 @@ function addClanMemberFlagCommand(command, params, client) {
 	}
 
 	if(!arePlayersInSameClan(client, targetClient)) {
-		if(!doesPlayerHaveStaffPermission("manageClans")) {
+		if(!doesPlayerHaveStaffPermission("ManageClans")) {
 			messagePlayerError(client, "That player is not in your clan!");
 			return false;
 		}
 	}
 
-	if(!doesPlayerHaveStaffPermission("manageClans") && !doesPlayerHaveClanPermission("memberFlags")) {
+	if(!doesPlayerHaveStaffPermission("ManageClans") && !doesPlayerHaveClanPermission("memberFlags")) {
 		messagePlayerError(client, "You cannot set clan member flags!");
 		return false;
 	}
 
 	if(getPlayerClanRank(client) <= getPlayerClanRank(targetClient)) {
-		if(!doesPlayerHaveStaffPermission("manageClans")) {
+		if(!doesPlayerHaveStaffPermission("ManageClans")) {
 			messagePlayerError(client, "You cannot set that clan member's flags!");
 			return false;
 		}
@@ -569,19 +569,19 @@ function removeClanMemberFlagCommand(command, params, client) {
 	}
 
 	if(!arePlayersInSameClan(client, targetClient)) {
-		if(!doesPlayerHaveStaffPermission("manageClans")) {
+		if(!doesPlayerHaveStaffPermission("ManageClans")) {
 			messagePlayerError(client, "That player is not in your clan!");
 			return false;
 		}
 	}
 
-	if(!doesPlayerHaveStaffPermission("manageClans") && !doesPlayerHaveClanPermission("memberFlags")) {
+	if(!doesPlayerHaveStaffPermission("ManageClans") && !doesPlayerHaveClanPermission("memberFlags")) {
 		messagePlayerError(client, "You cannot set clan member flags!");
 		return false;
 	}
 
 	if(getPlayerClanRank(client) <= getPlayerClanRank(targetClient)) {
-		if(!doesPlayerHaveStaffPermission("manageClans")) {
+		if(!doesPlayerHaveStaffPermission("ManageClans")) {
 			messagePlayerError(client, "You cannot set that clan member's flags!");
 			return false;
 		}
@@ -595,7 +595,7 @@ function removeClanMemberFlagCommand(command, params, client) {
 // ===========================================================================
 
 function addClanRankFlagCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("manageRanks"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ManageRanks"))) {
 		messagePlayerError(client, "You can not change a clan rank's permissions!");
 		return false;
 	}
@@ -634,7 +634,7 @@ function addClanRankFlagCommand(command, params, client) {
 // ===========================================================================
 
 function removeClanRankFlagCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("manageRanks"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ManageRanks"))) {
 		messagePlayerError(client, "You can not change a clan rank's permissions!");
 		return false;
 	}
@@ -672,6 +672,54 @@ function removeClanRankFlagCommand(command, params, client) {
 
 // ===========================================================================
 
+function showClanRankFlagsCommand(command, params, client) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("ManageRanks"))) {
+		messagePlayerError(client, "You can not change a clan rank's permissions!");
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let clanId = getPlayerClan(client);
+
+	if(!getClanData(clanId)) {
+		messagePlayerError(client, "Clan not found!");
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let rankId = getClanRankFromParams(clanId, splitParams[0]);
+
+	if(!getClanRankData(clanId, rankId)) {
+		messagePlayerError(client, "Clan rank not found!");
+		return false;
+	}
+
+	let currentFlags = getClanRankData(clanId, rankId).flags;
+	let clanFlagKeys = getServerBitFlagKeys().clanPermissionFlagKeys.filter((flagKey) => flagKey != "None");
+	let flagList = [];
+	for(let i in clanFlagKeys) {
+		if(hasBitFlag(currentFlags, getClanFlagValue(clanFlagKeys[i]))) {
+			flagList.push(`{softGreen}${clanFlagKeys[i]}`);
+		} else {
+			flagList.push(`{softRed}${clanFlagKeys[i]}`);
+		}
+	}
+
+	let chunkedList = splitArrayIntoChunks(flagList, 6);
+
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clan Rank Flags {clanOrange}=========================`);
+
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join("{MAINCOLOUR}, "));
+	}
+}
+
+// ===========================================================================
+
 function setClanMemberTitleCommand(command, params, client) {
 	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("manageMembers"))) {
 		messagePlayerError(client, "You can not change a clan member's title!");
@@ -699,14 +747,14 @@ function setClanMemberTitleCommand(command, params, client) {
 	}
 
 	if(!arePlayersInSameClan(client, targetClient)) {
-		if(!doesPlayerHaveStaffPermission(client, "manageClans")) {
+		if(!doesPlayerHaveStaffPermission(client, "ManageClans")) {
 			messagePlayerError(client, "That player is not in your clan!");
 			return false;
 		}
 	}
 
 	if(getPlayerClanRank(client) <= getPlayerClanRank(targetClient)) {
-		if(!doesPlayerHaveStaffPermission(client, "manageClans")) {
+		if(!doesPlayerHaveStaffPermission(client, "ManageClans")) {
 			messagePlayerError(client, "You cannot set that clan member's custom title!");
 			return false;
 		}
@@ -753,7 +801,7 @@ function setClanRankTitleCommand(command, params, client) {
 // ===========================================================================
 
 function setClanMemberRankCommand(command, params, client) {
-	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("memberRank"))) {
+	if(!doesPlayerHaveClanPermission(client, getClanFlagValue("MemberRank"))) {
 		messagePlayerError(client, "You can not change a clan member's rank!");
 		return false;
 	}
@@ -785,21 +833,21 @@ function setClanMemberRankCommand(command, params, client) {
 	}
 
 	if(!arePlayersInSameClan(client, targetClient)) {
-		if(!doesPlayerHaveStaffPermission(client, "manageClans")) {
+		if(!doesPlayerHaveStaffPermission(client, "ManageClans")) {
 			messagePlayerError(client, "That player is not in your clan!");
 			return false;
 		}
 	}
 
 	if(getPlayerClanRank(client) <= getPlayerClanRank(targetClient)) {
-		if(!doesPlayerHaveStaffPermission(client, "manageClans")) {
+		if(!doesPlayerHaveStaffPermission(client, "ManageClans")) {
 			messagePlayerError(client, "You cannot set that clan member's rank!");
 			return false;
 		}
 	}
 
 	if(getPlayerClanRank(client) <= getPlayerClanRank(targetClient)) {
-		if(!doesPlayerHaveStaffPermission(client, "manageClans")) {
+		if(!doesPlayerHaveStaffPermission(client, "ManageClans")) {
 			messagePlayerError(client, "You can't set a member's rank that high!");
 			return false;
 		}

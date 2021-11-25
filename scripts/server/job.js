@@ -1269,7 +1269,7 @@ function stopReturnToJobVehicleCountdown(client) {
 // ===========================================================================
 
 function canPlayerUseJob(client, jobId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageJobs"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageJobs"))) {
 		return true;
 	}
 
@@ -1643,7 +1643,7 @@ function getPlayerJob(client) {
 // ===========================================================================
 
 function canPlayerUseJobs(client) {
-	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getServerBitFlags().moderationFlags.jobBanned)) {
+	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getServerBitFlags().moderationFlags.JobBanned)) {
 		return false;
 	}
 

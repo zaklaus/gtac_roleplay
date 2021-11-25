@@ -32,7 +32,7 @@ function loginCommand(command, params, client) {
 // ===========================================================================
 
 function toggleAutoLoginByIPCommand(command, params, client) {
-	let flagValue = getAccountSettingsFlagValue("autoLoginIP");
+	let flagValue = getAccountSettingsFlagValue("AutoLoginIP");
 
 	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
@@ -47,7 +47,7 @@ function toggleAutoLoginByIPCommand(command, params, client) {
 // ===========================================================================
 
 function toggleNoRandomTipsCommand(command, params, client) {
-	let flagValue = getAccountSettingsFlagValue("noTimedRandomTips");
+	let flagValue = getAccountSettingsFlagValue("NoRandomTips");
 
 	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
@@ -62,7 +62,7 @@ function toggleNoRandomTipsCommand(command, params, client) {
 // ===========================================================================
 
 function toggleNoActionTipsCommand(command, params, client) {
-	let flagValue = getAccountSettingsFlagValue("noActionTips");
+	let flagValue = getAccountSettingsFlagValue("NoActionTips");
 
 	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
@@ -77,7 +77,7 @@ function toggleNoActionTipsCommand(command, params, client) {
 // ===========================================================================
 
 function toggleAutoSelectLastCharacterCommand(command, params, client) {
-	let flagValue = getAccountSettingsFlagValue("autoSelectLastCharacter");
+	let flagValue = getAccountSettingsFlagValue("AutoSelectLastCharacter");
 
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
@@ -92,7 +92,7 @@ function toggleAutoSelectLastCharacterCommand(command, params, client) {
 // ===========================================================================
 
 function toggleAccountGUICommand(command, params, client) {
-	let flagValue = getAccountSettingsFlagValue("noGUI");
+	let flagValue = getAccountSettingsFlagValue("NoGUI");
 
 	if(!doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
@@ -129,7 +129,7 @@ function toggleAccountGUICommand(command, params, client) {
 // ===========================================================================
 
 function toggleAccountLoginAttemptNotificationsCommand(command, params, client) {
-	let flagValue = getAccountSettingsFlagValue("authAttemptAlert");
+	let flagValue = getAccountSettingsFlagValue("AuthAttemptAlert");
 
 	if(!isAccountSettingFlagEnabled(getPlayerData(client).accountData, flagValue)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
@@ -147,7 +147,7 @@ function toggleAccountLoginAttemptNotificationsCommand(command, params, client) 
 // ===========================================================================
 
 function toggleAccountServerLogoCommand(command, params, client) {
-	let flagValue = getAccountSettingsFlagValue("noServerLogo");
+	let flagValue = getAccountSettingsFlagValue("NoServerLogo");
 
 	if(!doesPlayerHaveLogoEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
@@ -171,7 +171,7 @@ function toggleAccountServerLogoCommand(command, params, client) {
 // UNFINISHED!
 // TO-DO: Make GUI, add command to generate code to add to auth app and command to input code returned by auth app
 function toggleAccountTwoFactorAuthCommand(command, params, client) {
-	let flagValue = getAccountSettingsFlagValue("twoStepAuth");
+	let flagValue = getAccountSettingsFlagValue("TwoStepAuth");
 
 	if(getEmailConfig().enabled) {
 		if(getPlayerData(client).accountData.emailAddress != "") {
@@ -334,7 +334,7 @@ function verifyAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	getPlayerData(client).accountData.flags.moderation = addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("emailVerified"));
+	getPlayerData(client).accountData.flags.moderation = addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("EmailVerified"));
 	getPlayerData(client).accountData.emailVerificationCode = "";
 
 	messagePlayerSuccess(client, `Your email has been verified!`);
@@ -570,7 +570,7 @@ function loginSuccess(client) {
 
 	updateConnectionLogOnAuth(client, getPlayerData(client).accountData.databaseId);
 
-	if(doesPlayerHaveStaffPermission(client, "developer") || doesPlayerHaveStaffPermission(client, "manageServer")) {
+	if(doesPlayerHaveStaffPermission(client, "Developer") || doesPlayerHaveStaffPermission(client, "ManageServer")) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has needed permissions and is being given administrator access`);
 		client.administrator = true;
 	}
@@ -799,7 +799,7 @@ function checkLogin(client, password) {
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		}
 
-		if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("authAttemptAlert"))) {
+		if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("AuthAttemptAlert"))) {
 			sendAccountLoginFailedNotification(getPlayerData(client).accountData.emailAddress, client.name, client.ip, getServerGame());
 		}
 		return false;
@@ -815,7 +815,7 @@ function checkLogin(client, password) {
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled) with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		}
 
-		if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("authAttemptAlert"))) {
+		if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("AuthAttemptAlert"))) {
 			sendAccountLoginFailedNotification(getPlayerData(client).accountData.emailAddress, client.name, client.ip, getServerGame());
 		}
 		return false;
@@ -827,7 +827,7 @@ function checkLogin(client, password) {
 
 	loginSuccess(client);
 
-	if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("authAttemptAlert"))) {
+	if(isAccountEmailVerified(getPlayerData(client).accountData) && isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("AuthAttemptAlert"))) {
 		sendAccountLoginSuccessNotification(getPlayerData(client).accountData.emailAddress, client.name, client.ip, getServerGame());
 	}
 }
@@ -1201,7 +1201,7 @@ function loadAccountMessagesFromDatabase(accountDatabaseID) {
 // ===========================================================================
 
 function isAccountAutoIPLoginEnabled(accountData) {
-	return isAccountSettingFlagEnabled(accountData, getAccountSettingsFlagValue("autoLoginIP"));
+	return isAccountSettingFlagEnabled(accountData, getAccountSettingsFlagValue("AutoLoginIP"));
 }
 
 // ===========================================================================
@@ -1213,19 +1213,19 @@ function doesPlayerHaveAutoIPLoginEnabled(client) {
 // ===========================================================================
 
 function doesPlayerHaveGUIEnabled(client) {
-	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("noGUI"));
+	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("NoGUI"));
 }
 
 // ===========================================================================
 
 function doesPlayerHaveLogoEnabled(client) {
-	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("noServerLogo"));
+	return !isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("NoServerLogo"));
 }
 
 // ===========================================================================
 
 function doesPlayerHaveAutoSelectLastCharacterEnabled(client) {
-	return isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("autoSelectLastCharacter"));
+	return isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("AutoSelectLastCharacter"));
 }
 
 // ===========================================================================
@@ -1237,13 +1237,13 @@ function getPlayerStaffTitle(client) {
 // ===========================================================================
 
 function isAccountEmailVerified(accountData) {
-	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("emailVerified"));
+	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("EmailVerified"));
 }
 
 // ===========================================================================
 
 function isAccountTwoFactorAuthenticationVerified(accountData) {
-	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("twoFactorAuthVerified"));
+	return hasBitFlag(accountData.flags.moderation, getModerationFlagValue("TwoFactorAuthVerified"));
 }
 
 // ===========================================================================
@@ -1331,4 +1331,10 @@ function isAccountSettingFlagEnabled(accountData, flagValue) {
 	return hasBitFlag(accountData.settings, flagValue);
 }
 
-// ===========================================================================t
+// ===========================================================================
+
+function doesPlayerHaveRandomTipsDisabled(client) {
+	return isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("NoRandomTips"));
+}
+
+// ===========================================================================

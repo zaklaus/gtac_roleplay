@@ -337,16 +337,28 @@ function removeColoursInMessage(messageText) {
 		return "";
 	}
 
+	let tempFind = `{RESETCOLOUR}`;
+	let tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, "");
+
+	tempFind = `{ALTCOLOUR}`;
+	tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, "");
+
+	tempFind = `{MAINCOLOUR}`;
+	tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, "");
+
 	for(let i in getServerColours().hex.byName) {
 		let find = `{${i}}`;
 		let re = new RegExp(find, 'g');
-		messageText = messageText.replace(re, ``);
+		messageText = messageText.replace(re, "");
 	}
 
 	for(let i in getServerColours().hex.byType) {
 		let find = `{${i}}`;
 		let re = new RegExp(find, 'g');
-		messageText = messageText.replace(re, ``);
+		messageText = messageText.replace(re, "");
 	}
 
 	return messageText;

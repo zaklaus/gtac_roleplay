@@ -189,14 +189,14 @@ function getPlayerStreamingRadioVolume(client) {
 // ===========================================================================
 
 function showRadioStationListCommand(command, params, client) {
-	let stationList = getServerData().radioStations.map(function(x) { return `{ALTCOLOUR}${x.index}: {MAINCOLOUR}${x.name}`; });
+	let stationList = getServerData().radioStations.map(function(x) { return `{ALTCOLOUR}${toInteger(x.index)+1}: {MAINCOLOUR}${x.name}`; });
 
 	let chunkedList = splitArrayIntoChunks(stationList, 4);
 
 	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Radio Stations {clanOrange}===========================`);
 
 	for(let i in chunkedList) {
-		messagePlayerInfo(client, chunkedList[i+1].join(", "));
+		messagePlayerInfo(client, chunkedList[i].join(", "));
 	}
 }
 

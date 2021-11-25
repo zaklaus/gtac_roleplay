@@ -100,8 +100,8 @@ function saveVehicleToDatabase(vehicleDataId) {
 			["veh_owner_id", tempVehicleData.ownerId],
 			["veh_locked", boolToInt(tempVehicleData.locked)],
 			["veh_spawn_lock", boolToInt(tempVehicleData.spawnLocked)],
-			["veh_buy_price", boolToInt(tempVehicleData.buyPrice)],
-			["veh_rent_price", boolToInt(tempVehicleData.rentPrice)],
+			["veh_buy_price", tempVehicleData.buyPrice],
+			["veh_rent_price", tempVehicleData.rentPrice],
 			["veh_pos_x", tempVehicleData.spawnPosition.x],
 			["veh_pos_y", tempVehicleData.spawnPosition.y],
 			["veh_pos_z", tempVehicleData.spawnPosition.z],
@@ -444,7 +444,7 @@ function vehicleColourCommand(command, params, client) {
 	}
 
 	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
 			messagePlayerError(client, "You need to be at a pay-n-spray!");
 			return false;
 		}
@@ -487,7 +487,7 @@ function vehicleRepairCommand(command, params, client) {
 	}
 
 	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
 			messagePlayerError(client, "You need to be at a pay-n-spray!");
 			return false;
 		}
@@ -522,7 +522,7 @@ function vehicleLiveryCommand(command, params, client) {
 	}
 
 	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
 			messagePlayerError(client, "You need to be at a pay-n-spray!");
 			return false;
 		}
@@ -573,10 +573,6 @@ function buyVehicleCommand(command, params, client) {
 	}
 
 	getPlayerData(client).buyingVehicle = vehicle;
-
-	//getPlayerCurrentSubAccount(client).cash -= getVehicleData(vehicle).buyPrice;
-	//getVehicleData(vehicle).buyPrice = 0;
-	//getVehicleData(vehicle).rentPrice = 0;
 	getVehicleData(vehicle).engine = true;
 	vehicle.engine = true;
 
@@ -666,7 +662,7 @@ function stopRentingVehicleCommand(command, params, client) {
 function doesPlayerHaveVehicleKeys(client, vehicle) {
 	let vehicleData = getVehicleData(vehicle);
 
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
 		return true;
 	}
 
@@ -714,7 +710,7 @@ function doesPlayerHaveVehicleKeys(client, vehicle) {
 function doesClientOwnVehicle(client, vehicle) {
 	let vehicleData = getVehicleData(vehicle);
 
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
 		return true;
 	}
 
@@ -726,7 +722,7 @@ function doesClientOwnVehicle(client, vehicle) {
 
 	if(vehicleData.ownerType == VRR_VEHOWNER_CLAN) {
 		if(vehicleData.ownerId == getPlayerCurrentSubAccount(client).clan) {
-			if(doesPlayerHaveClanPermission(client, "manageVehicles") || doesPlayerHaveClanPermission(client, "owner")) {
+			if(doesPlayerHaveClanPermission(client, "ManageVehicles") || doesPlayerHaveClanPermission(client, "owner")) {
 				return true;
 			}
 		}
@@ -895,7 +891,7 @@ function setVehicleRentPriceCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!doesClientOwnVehicle(client, vehicle)) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
 			messagePlayerError(client, "You can't set the rent price for this vehicle!");
 		}
 	}
@@ -903,10 +899,11 @@ function setVehicleRentPriceCommand(command, params, client) {
 	let amount = toInteger(params) || 0;
 
 	getVehicleData(vehicle).rentPrice = amount;
+	getVehicleData(vehicle).needsSaved = true;
 
 	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set their {vehiclePurple}${getVehicleName(vehicle)} {MAINCOLOUR}rent price to {ALTCOLOUR}$${makeLargeNumberReadable(amount)}`);
 
-	getVehicleData(vehicle).needsSaved = true;
+
 }
 
 // ===========================================================================
@@ -920,7 +917,7 @@ function setVehicleBuyPriceCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!doesClientOwnVehicle(client, vehicle)) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageVehicles"))) {
+		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
 			messagePlayerError(client, "You can't set the buy price for this vehicle!");
 		}
 	}
@@ -928,10 +925,9 @@ function setVehicleBuyPriceCommand(command, params, client) {
 	let amount = toInteger(params) || 0;
 
 	getVehicleData(vehicle).buyPrice = amount;
+	getVehicleData(vehicle).needsSaved = true;
 
 	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set their {vehiclePurple}${getVehicleName(vehicle)}'s {MAINCOLOUR}buy price to {ALTCOLOUR}$${makeLargeNumberReadable(amount)}`);
-
-	getVehicleData(vehicle).needsSaved = true;
 }
 
 // ===========================================================================
@@ -952,6 +948,8 @@ function removeVehicleOwnerCommand(command, params, client) {
 
 	getVehicleData(vehicle).ownerType = VRR_VEHOWNER_NONE;
 	getVehicleData(vehicle).ownerId = 0;
+
+	getVehicleData(vehicle).needsSaved = true;
 
 	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set their {vehiclePurple}${getVehicleName(vehicle)} {MAINCOLOUR}owner to nobody!`);
 	messagePlayerInfo(client, `Nobody will be able to use this vehicle until it receives a new owner (either bought or set by admin).`);
@@ -1328,31 +1326,33 @@ function checkVehicleBuying() {
 	let clients = getClients();
 	for(let i in clients) {
 		if(getPlayerData(clients[i])) {
-			if(getPlayerData(clients[i]).buyingVehicle) {
-				if(getPlayerVehicle(clients[i]) == getPlayerData(clients[i]).buyingVehicle) {
-					if(getDistance(getVehiclePosition(getPlayerData(clients[i]).buyingVehicle), getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
-						if(getPlayerCurrentSubAccount(clients[i]).cash < getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice) {
-							messagePlayerError(client, "You don't have enough money to buy this vehicle!");
-							respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
-							getPlayerData(clients[i]).buyingVehicle = false;
-							return false;
-						}
+			if(isPlayerInAnyVehicle(clients[i])) {
+				if(getPlayerData(clients[i]).buyingVehicle) {
+					if(getPlayerVehicle(clients[i]) == getPlayerData(clients[i]).buyingVehicle) {
+						if(getDistance(getVehiclePosition(getPlayerData(clients[i]).buyingVehicle), getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
+							if(getPlayerCurrentSubAccount(clients[i]).cash < getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice) {
+								messagePlayerError(client, "You don't have enough money to buy this vehicle!");
+								respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
+								getPlayerData(clients[i]).buyingVehicle = false;
+								return false;
+							}
 
-						createNewDealershipVehicle(getVehicleData(getPlayerData(clients[i]).buyingVehicle).model, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice, getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId);
-						takePlayerCash(clients[i], getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice);
-						updatePlayerCash(clients[i]);
-						getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId = getPlayerCurrentSubAccount(clients[i]).databaseId;
-						getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerType = VRR_VEHOWNER_PLAYER;
-						getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice = 0;
-						getVehicleData(getPlayerData(clients[i]).buyingVehicle).rentPrice = 0;
-						getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnLocked = false;
+							createNewDealershipVehicle(getVehicleData(getPlayerData(clients[i]).buyingVehicle).model, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice, getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId);
+							takePlayerCash(clients[i], getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice);
+							updatePlayerCash(clients[i]);
+							getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId = getPlayerCurrentSubAccount(clients[i]).databaseId;
+							getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerType = VRR_VEHOWNER_PLAYER;
+							getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice = 0;
+							getVehicleData(getPlayerData(clients[i]).buyingVehicle).rentPrice = 0;
+							getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnLocked = false;
+							getPlayerData(clients[i]).buyingVehicle = false;
+							messagePlayerSuccess(clients[i], "This vehicle is now yours! It will save wherever you leave it.");
+						}
+					} else {
+						messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
+						respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
 						getPlayerData(clients[i]).buyingVehicle = false;
-						messagePlayerSuccess(clients[i], "This vehicle is now yours! It will save wherever you leave it.");
 					}
-				} else {
-					messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
-					respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
-					getPlayerData(clients[i]).buyingVehicle = false;
 				}
 			}
 		}

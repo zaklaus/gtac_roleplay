@@ -589,7 +589,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
-		if(toLowerCase(typeParam) == "none") {
+		if(toLowerCase(typeParam) == "None") {
 			getBusinessData(businessId).exitPosition = toVector3(0.0, 0.0, 0.0);
 			getBusinessData(businessId).exitDimension = 0;
 			getBusinessData(businessId).exitInterior = -1;
@@ -1856,7 +1856,7 @@ function updateBusinessInteriorLightsForOccupants(businessId) {
 // ===========================================================================
 
 function canPlayerWithdrawFromBusinessTill(client, businessId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageBusinesses"))) {
 		return true;
 	}
 
@@ -1865,7 +1865,7 @@ function canPlayerWithdrawFromBusinessTill(client, businessId) {
 	}
 
 	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN && getBusinessData(businessId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
-		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageBusinesses"))) {
 			return true;
 		}
 	}
@@ -1876,7 +1876,7 @@ function canPlayerWithdrawFromBusinessTill(client, businessId) {
 // ===========================================================================
 
 function canPlayerSetBusinessInteriorLights(client, businessId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageBusinesses"))) {
 		return true;
 	}
 
@@ -1885,7 +1885,7 @@ function canPlayerSetBusinessInteriorLights(client, businessId) {
 	}
 
 	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN && getBusinessData(businessId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
-		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageBusinesses"))) {
 			return true;
 		}
 	}
@@ -1896,7 +1896,7 @@ function canPlayerSetBusinessInteriorLights(client, businessId) {
 // ===========================================================================
 
 function canPlayerLockUnlockBusiness(client, businessId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageBusinesses"))) {
 		return true;
 	}
 
@@ -1905,7 +1905,7 @@ function canPlayerLockUnlockBusiness(client, businessId) {
 	}
 
 	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN && getBusinessData(businessId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
-		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageBusinesses"))) {
 			return true;
 		}
 	}
@@ -1916,7 +1916,7 @@ function canPlayerLockUnlockBusiness(client, businessId) {
 // ===========================================================================
 
 function canPlayerManageBusiness(client, businessId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageBusinesses"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageBusinesses"))) {
 		return true;
 	}
 
@@ -1928,7 +1928,7 @@ function canPlayerManageBusiness(client, businessId) {
 
 	if(getBusinessData(businessId).ownerType == VRR_BIZOWNER_CLAN) {
 		if(getBusinessData(businessId).ownerId == getPlayerClan(client)) {
-			if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageBusinesses"))) {
+			if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageBusinesses"))) {
 				return true;
 			}
 

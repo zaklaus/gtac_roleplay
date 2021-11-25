@@ -217,7 +217,7 @@ function setHouseOwnerCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageHouses"))) {
 		if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER && getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
 			messagePlayerError(client, "You don't own this house!");
 			return false;
@@ -257,7 +257,7 @@ function setHouseClanCommand(command, params, client) {
 		return false;
 	}
 
-	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageHouses"))) {
 		if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER && getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
 			messagePlayerError(client, "You don't own this house!");
 			return false;
@@ -304,7 +304,7 @@ function setHouseClanCommand(command, params, client) {
 		return false;
 	}
 
-	if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageHouses"))) {
+	if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageHouses"))) {
 		messagePlayerError(client, "You can't set clan house ranks!");
 		return false;
 	}
@@ -340,7 +340,7 @@ function setHousePickupCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
-		if(toLowerCase(typeParam) == "none") {
+		if(toLowerCase(typeParam) == "None") {
 			getHouseData(houseId).entrancePickupModel = -1;
 		} else {
 			if(isNull(getGameConfig().pickupModels[getServerGame()][typeParam])) {
@@ -376,7 +376,7 @@ function setHousePickupCommand(command, params, client) {
  */
 function setHouseInteriorTypeCommand(command, params, client) {
 	let splitParams = params.split(" ");
-	let typeParam = splitParams[0] || "none";
+	let typeParam = splitParams[0] || "None";
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
@@ -387,7 +387,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 	if(isNaN(typeParam)) {
 		let tempHouseLocation = new HouseLocationData(false);
 
-		if(toLowerCase(typeParam) == "none") {
+		if(toLowerCase(typeParam) == "None") {
 			tempHouseLocation.exitPosition = toVector3(0.0, 0.0, 0.0);
 			tempHouseLocation.exitInterior = -1;
 			getHouseData(houseId).hasInterior = false;
@@ -438,7 +438,7 @@ function setHouseBlipCommand(command, params, client) {
 	}
 
 	if(isNaN(typeParam)) {
-		if(toLowerCase(typeParam) == "none") {
+		if(toLowerCase(typeParam) == "None") {
 			getHouseData(houseId).entranceBlipModel = -1;
 		} else {
 			if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
@@ -1269,7 +1269,7 @@ function updateHouseInteriorLightsForOccupants(houseId) {
 // ===========================================================================
 
 function canPlayerSetHouseInteriorLights(client, houseId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageHouses"))) {
 		return true;
 	}
 
@@ -1278,7 +1278,7 @@ function canPlayerSetHouseInteriorLights(client, houseId) {
 	}
 
 	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_CLAN && getHouseData(houseId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
-		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageHouses"))) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageHouses"))) {
 			return true;
 		}
 	}
@@ -1289,7 +1289,7 @@ function canPlayerSetHouseInteriorLights(client, houseId) {
 // ===========================================================================
 
 function canPlayerLockUnlockHouse(client, houseId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageHouses"))) {
 		return true;
 	}
 
@@ -1298,7 +1298,7 @@ function canPlayerLockUnlockHouse(client, houseId) {
 	}
 
 	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_CLAN && getHouseData(houseId).ownerId == getClanData(getPlayerClan(client)).databaseId) {
-		if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageHouses"))) {
+		if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageHouses"))) {
 			return true;
 		}
 	}
@@ -1327,7 +1327,7 @@ function resetHouseBlips(houseId) {
 // ===========================================================================
 
 function canPlayerManageHouse(client, houseId) {
-	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("manageHouses"))) {
+	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageHouses"))) {
 		return true;
 	}
 
@@ -1339,7 +1339,7 @@ function canPlayerManageHouse(client, houseId) {
 
 	if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_CLAN) {
 		if(getHouseData(houseId).ownerId == getPlayerClan(client)) {
-			if(doesPlayerHaveClanPermission(client, getClanFlagValue("manageHouses"))) {
+			if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageHouses"))) {
 				return true;
 			}
 			//if(getHouseData(houseId).clanRank <= getClanRankData(getPlayerClan(client), getPlayerClanRank(client)).level) {

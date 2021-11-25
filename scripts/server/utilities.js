@@ -602,7 +602,7 @@ function canClientUseFireJob(client) {
 // ===========================================================================
 
 function canClientUseAmmunations(client) {
-	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.ammuBanned) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.AmmuBanned) {
 		return false;
 	}
 
@@ -612,7 +612,7 @@ function canClientUseAmmunations(client) {
 // ===========================================================================
 
 function canClientUseGuns(client) {
-	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.gunBanned) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.GunBanned) {
 		return false;
 	}
 

@@ -129,6 +129,6 @@
         ["phonepickup", "TelVytoceni"],
         ["phonetalk", "TelStativ"],
         ["phonehangup", "TelZaveseni"],
-        ["phonehangup", "TelZaveseni"],
+        ["phonehangup", "TelZaveseni"]
     ]
 }

@@ -435,6 +435,7 @@ class SubAccountData {
 		this.armour = 100;
 		this.inHouse = 0;
 		this.inBusiness = 0;
+		this.accent = "";
 
 		this.bodyParts = {
 			hair: [0,0],
@@ -483,6 +484,7 @@ class SubAccountData {
 			this.armour = toInteger(dbAssoc["sacct_armour"]);
 			this.inHouse = toInteger(dbAssoc["sacct_inhouse"]);
 			this.inBusiness = toInteger(dbAssoc["sacct_inbusiness"]);
+			this.accent = toInteger(dbAssoc["sacct_accent"]);
 
 			this.bodyParts = {
 				hair: [toInteger(dbAssoc["sacct_svr_hd_part_hair_model"]) || 0, toInteger(dbAssoc["sacct_svr_hd_part_hair_texture"]) || 0],

@@ -77,17 +77,12 @@ function setNewCharacterSkinCommand(command, params, client) {
 		return false;
 	}
 
-	let skinId = 0;
-	if(areParamsEmpty(params)) {
-		skinId = client.player.modelIndex;
-	} else {
-		skinId = getSkinFromParams(params);
-	}
+	skinId = getSkinModelIndexFromParams(params);
 
 	getServerConfig().newCharacter.skin = skinId;
 	getServerConfig().needsSaved = true;
 
-    messagePlayerNormal(client, `The new character skin has been set to ${getSkinNameFromModel(skinId)} (ID ${skinId})`);
+    messagePlayerNormal(client, `The new character skin has been set to ${getSkinNameFromModel(skinId)} (Index ${skinId})`);
 	return true;
 }
 

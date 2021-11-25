@@ -396,11 +396,7 @@ function onPlayerDeath(client, position) {
                 client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestJail.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
-                if(getServerGame() == VRR_GAME_GTA_IV) {
-                    spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
-                } else {
-                    spawnPlayer(client, closestJail.position, closestJail.heading, getPlayerCurrentSubAccount(client).skin);
-                }
+                spawnPlayer(client, closestJail.position, closestJail.heading, getGameData().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
 
                 if(isFadeCameraSupported()) {
                     fadeCamera(client, true, 1.0);
@@ -411,11 +407,7 @@ function onPlayerDeath(client, position) {
                 client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
-                if(getServerGame() == VRR_GAME_GTA_IV) {
-                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
-                } else {
-                    spawnPlayer(client, closestHospital.position, closestHospital.heading, getPlayerCurrentSubAccount(client).skin);
-                }
+                spawnPlayer(client, closestJail.position, closestJail.heading, getGameData().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
 
                 if(isFadeCameraSupported()) {
                     fadeCamera(client, true, 1.0);

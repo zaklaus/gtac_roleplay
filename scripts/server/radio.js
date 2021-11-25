@@ -196,7 +196,7 @@ function showRadioStationListCommand(command, params, client) {
 	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Radio Stations {clanOrange}===========================`);
 
 	for(let i in chunkedList) {
-		messagePlayerInfo(client, chunkedList[i].join(", "));
+		messagePlayerInfo(client, chunkedList[i+1].join(", "));
 	}
 }
 

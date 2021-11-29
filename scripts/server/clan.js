@@ -207,7 +207,7 @@ function deleteClanCommand(command, params, client) {
 	let clanId = getClanFromParams(params);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "That clan ID does not exist!");
+		messagePlayerError(client, "Clan not found!");
 		return false;
 	}
 

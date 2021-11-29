@@ -528,6 +528,7 @@ function sendPlayerRemoveFromVehicle(client) {
 
 function sendChatBoxMessageToPlayer(client, message, colour) {
     triggerNetworkEvent("vrr.m", client, message, colour)
+    //messageClient(message, client, colour);
 }
 
 // ===========================================================================
@@ -933,7 +934,6 @@ function setPlayerStreamingRadioVolume(client, volumeLevel, elementId = false) {
 // ===========================================================================
 
 function setVehicleLightsState(vehicle, state) {
-	getVehicleData(vehicle).lights = !getVehicleData(vehicle).lights;
 	setEntityData(vehicle, "vrr.lights", getVehicleData(vehicle).lights);
     triggerNetworkEvent("vrr.veh.lights", null, vehicle.id, state);
 }

@@ -26,6 +26,7 @@ let renderLabelDistance = 7.5;
 
 let propertyLabelLockedOffset = 16;
 let propertyLabelNameOffset = 18;
+let propertyLabelPriceOffset = 16;
 
 // ===========================================================================
 
@@ -64,7 +65,7 @@ function initLabelJobHelpFont() {
 
 // ===========================================================================
 
-function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, bizLabelInfoType) {
+function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, rentPrice, labelInfoType) {
     if(localPlayer == null) {
         return false;
     }
@@ -86,46 +87,74 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
     }
 
     let text = "";
-    if(price > 0) {
+    if(price > "0") {
         text = `For sale: $${price}`;
         let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
         propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(200, 200, 200, 255), false, true, false, true);
 
-        screenPosition.y -= propertyLabelLockedOffset;
+        screenPosition.y -= propertyLabelPriceOffset;
     }
 
-    text = (locked) ? "LOCKED" : "UNLOCKED";
+    text = "";
+    if(rentPrice != "0") {
+        text = `For rent: $${rentPrice} every payday`;
+        let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
+        propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(200, 200, 200, 255), false, true, false, true);
+
+        screenPosition.y -= propertyLabelPriceOffset;
+    }
+
+
     if(isBusiness) {
         text = (locked) ? "CLOSED" : "OPEN";
-        if(!locked && bizLabelInfoType != VRR_BIZLABEL_INFO_NONE) {
-            let bizInfoText = "";
-            switch(bizLabelInfoType) {
-                case VRR_BIZLABEL_INFO_ENTER:
-                    if(enterPropertyKey) {
-                        bizInfoText = `Press ${toUpperCase(getKeyNameFromId(enterPropertyKey))} to enter`;
-                    } else {
-                        bizInfoText = `Use /enter to enter here`;
-                    }
-                    break;
+    } else {
+        text = (locked) ? "LOCKED" : "UNLOCKED";
+    }
 
-                case VRR_BIZLABEL_INFO_BUY:
-                    bizInfoText = `Use /buy to purchase items`;
-                    break;
+    if(!locked && labelInfoType != VRR_PROPLABEL_INFO_NONE) {
+        let infoText = "";
+        switch(labelInfoType) {
+            case VRR_PROPLABEL_INFO_ENTER:
+                if(enterPropertyKey) {
+                    infoText = `Press ${toUpperCase(getKeyNameFromId(enterPropertyKey))} to enter`;
+                } else {
+                    infoText = `Use /enter to enter`;
+                }
+                break;
 
-                case VRR_BIZLABEL_INFO_ENTERVEH:
-                    bizInfoText = "Enter a vehicle to buy it";
-                    break;
+            case VRR_PROPLABEL_INFO_BUY:
+                infoText = `Use /buy to purchase items`;
+                break;
 
-                case VRR_BIZLABEL_INFO_NONE:
-                default:
-                    bizInfoText = "";
-                    break;
-            }
-            if(getDistance(localPlayer.position, position) <= renderLabelDistance-2) {
-                let size = propertyLabelLockedFont.measure(bizInfoText, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
-                propertyLabelLockedFont.render(bizInfoText, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(234, 198, 126, 255), false, true, false, true);
-                screenPosition.y -= propertyLabelLockedOffset;
-            }
+            case VRR_PROPLABEL_INFO_BUYBIZ:
+                infoText = `Use /bizbuy to buy this business`;
+                break;
+
+            //case VRR_PROPLABEL_INFO_RENTBIZ:
+            //    infoText = `Use /bizrent to buy this business`;
+            //    break;
+
+            case VRR_PROPLABEL_INFO_BUYHOUSE:
+                infoText = `Use /housebuy to buy this house`;
+                break;
+
+            case VRR_PROPLABEL_INFO_RENTHOUSE:
+                infoText = `Use /houserent to rent this house`;
+                break;
+
+            case VRR_PROPLABEL_INFO_ENTERVEH:
+                infoText = "Enter a vehicle in the parking lot to buy it";
+                break;
+
+            case VRR_PROPLABEL_INFO_NONE:
+            default:
+                infoText = "";
+                break;
+        }
+        if(getDistance(localPlayer.position, position) <= renderLabelDistance-2) {
+            let size = propertyLabelLockedFont.measure(infoText, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
+            propertyLabelLockedFont.render(infoText, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(234, 198, 126, 255), false, true, false, true);
+            screenPosition.y -= propertyLabelLockedOffset;
         }
     }
 
@@ -224,23 +253,28 @@ function processLabelRendering() {
             for(let i in pickups) {
                 if(pickups[i].getData("vrr.label.type") != null) {
                     if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
-                        let price = 0;
-                        let bizLabelInfoType = VRR_BIZLABEL_INFO_NONE;
+                        let price = "0";
+                        let rentPrice = "0";
+                        let labelInfoType = VRR_PROPLABEL_INFO_NONE;
                         if(pickups[i].getData("vrr.label.price") != null) {
                             price = makeLargeNumberReadable(pickups[i].getData("vrr.label.price"));
                         }
 
+                        if(pickups[i].getData("vrr.label.rentprice") != null) {
+                            rentPrice = makeLargeNumberReadable(pickups[i].getData("vrr.label.rentprice"));
+                        }
+
                         if(pickups[i].getData("vrr.label.help") != null) {
-                            bizLabelInfoType = pickups[i].getData("vrr.label.help");
+                            labelInfoType = pickups[i].getData("vrr.label.help");
                         }
 
                         switch(pickups[i].getData("vrr.label.type")) {
                             case VRR_LABEL_BUSINESS:
-                                renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), true, price, bizLabelInfoType);
+                                renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), true, price, rentPrice, labelInfoType);
                                 break;
 
                             case VRR_LABEL_HOUSE:
-                                renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), false, price, bizLabelInfoType);
+                                renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), false, price, rentPrice, labelInfoType);
                                 break;
 
                             case VRR_LABEL_JOB:

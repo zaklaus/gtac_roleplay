@@ -237,11 +237,11 @@ function gotoVehicleCommand(command, params, client) {
 		return false;
 	}
 
-	if(typeof getServerData().vehicles[toInteger(params)-1] == "undefined") {
+	if(typeof getServerData().vehicles[toInteger(params)] == "undefined") {
 		messagePlayerError(client, "That vehicle ID doesn't exist!");
 	}
 
-	let vehicle = getServerData().vehicles[toInteger(params)-1].vehicle;
+	let vehicle = getServerData().vehicles[toInteger(params)].vehicle;
 
 	setPlayerVelocity(client, toVector3(0.0, 0.0, 0.0));
 	setPlayerPosition(client, getPosAbovePos(getVehiclePosition(vehicle), 3.0));
@@ -427,21 +427,17 @@ function gotoPositionCommand(command, params, client) {
 	}
 
 	params = params.replace(",", "");
-	splitParams = params.split(" ");
-	let x = splitParams[0] || getPlayerPosition(client).x;
-	let y = splitParams[1] || getPlayerPosition(client).y;
-	let z = splitParams[2] || getPlayerPosition(client).z;
-	let int = splitParams[3] || getPlayerInterior(client);
-	let vw = splitParams[4] || getPlayerDimension(client);
-
-	let newPosition = toVector3(toInteger(x), toInteger(y), toInteger(z));
-
-	let jobId = getJobFromParams(splitParams[0]) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let splitParams = params.split(" ");
+	let x = splitParams[0];
+	let y = splitParams[1];
+	let z = splitParams[2];
+	let int = splitParams[3];
+	let vw = splitParams[4];
 
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
-	setPlayerPosition(client, newPosition);
 	setPlayerInterior(client, toInteger(int));
 	setPlayerDimension(client, toInteger(vw));
+	setPlayerPosition(client, toVector3(toFloat(x), toFloat(y), toFloat(z)));
 	updateInteriorLightsForPlayer(client, true);
 
 	messagePlayerSuccess(client, `You teleported to coordinates {ALTCOLOUR}${x}, ${y}, ${z} with interior ${int} and dimension ${vw}`);
@@ -973,7 +969,7 @@ function forcePlayerSkinCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let skinIndex = getSkinModelIndexFromParams(splitParams[1]);
+	let skinIndex = getSkinModelIndexFromParams(splitParams.slice(1).join(" "));
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");

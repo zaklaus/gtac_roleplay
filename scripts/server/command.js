@@ -396,6 +396,7 @@ function loadCommands() {
             commandData("radiostation", playStreamingRadioCommand, "<radio station id>", getStaffFlagValue("None"), true, false, "Plays a radio station in your vehicle, house, or business (depending on which one you're in)"),
             commandData("radiostations", showRadioStationListCommand, "", getStaffFlagValue("None"), true, false, "Shows a list of all available radio stations"),
             commandData("radiovolume", setStreamingRadioVolumeCommand, "<volume level>", getStaffFlagValue("None"), true, false, "Sets the radio streaming volume (for your game only)."),
+            commandData("radioreloadall", reloadAllRadioStationsCommand, "", getStaffFlagValue("ManageServer"), true, false, "Reloads all radio stations from database (use after making changes)"),
         ],
         security: [],
         startup: [],
@@ -441,10 +442,11 @@ function loadCommands() {
             commandData("vehjob", setVehicleJobCommand, "[job id/name]", getStaffFlagValue("ManageVehicles"), true, true),
             commandData("vehdelowner", removeVehicleOwnerCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
             commandData("vehrank", setVehicleRankCommand, "<rank id/name>", getStaffFlagValue("None"), true, true),
-
             commandData("vehinfo", getVehicleInfoCommand, "", getStaffFlagValue("None"), true, true),
             commandData("vehpark", toggleVehicleSpawnLockCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+
             commandData("vehrespawnall", respawnAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+            commandData("vehrespawnempty", respawnEmptyVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
             commandData("vehreloadall", reloadAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
 
             commandData("vehrent", rentVehicleCommand, "", getStaffFlagValue("None"), true, true),
@@ -452,9 +454,9 @@ function loadCommands() {
             commandData("vehbuyprice", setVehicleBuyPriceCommand, "", getStaffFlagValue("None"), true, true),
             commandData("stoprent", stopRentingVehicleCommand, "", getStaffFlagValue("None"), true, true),
             commandData("vehbuy", buyVehicleCommand, "", getStaffFlagValue("None"), true, true),
-            commandData("vehcolour", vehicleColourCommand, "<colour1> <colour2>", getStaffFlagValue("None"), true, true),
-            commandData("vehlivery", vehicleLiveryCommand, "<livery id>", getStaffFlagValue("None"), true, true),
-            commandData("vehrepair", vehicleRepairCommand, "", getStaffFlagValue("None"), true, true),
+            commandData("vehcolour", vehicleAdminColourCommand, "<colour1> <colour2>", getStaffFlagValue("None"), true, true),
+            commandData("vehlivery", vehicleAdminLiveryCommand, "<livery id>", getStaffFlagValue("None"), true, true),
+            commandData("vehrepair", vehicleAdminRepairCommand, "", getStaffFlagValue("None"), true, true),
             commandData("passenger", enterVehicleAsPassengerCommand, "", getStaffFlagValue("None"), true, true),
         ],
     };

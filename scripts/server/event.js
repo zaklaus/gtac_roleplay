@@ -20,6 +20,7 @@ function addAllEventHandlers() {
     addEventHandler("onResourceStop", onResourceStop);
 
     addEventHandler("onProcess", onProcess);
+    addEventHandler("onEntityProcess", onEntityProcess);
 
     addEventHandler("onPlayerConnect", onPlayerConnect);
     addEventHandler("onPlayerJoin", onPlayerJoin);
@@ -27,6 +28,7 @@ function addAllEventHandlers() {
     addEventHandler("onPlayerChat", onPlayerChat);
     addEventHandler("onPlayerQuit", onPlayerQuit);
     addEventHandler("onElementStreamIn", onElementStreamIn);
+    addEventHandler("onElementStreamOut", onElementStreamOut);
 
     addEventHandler("onPedSpawn", onPedSpawn);
     addEventHandler("onPedEnterVehicle", onPedEnteringVehicle);
@@ -72,6 +74,12 @@ function onElementStreamIn(event, element, client) {
     //if(getPlayerDimension(client) != getElementDimension(element)) {
     //    event.preventDefault();
     //}
+}
+
+// ===========================================================================
+
+function onElementStreamOut(event, element, client) {
+
 }
 
 // ===========================================================================
@@ -125,11 +133,19 @@ function onPlayerChat(event, client, messageText) {
 // ===========================================================================
 
 function onProcess(event, deltaTime) {
-    checkVehicleBuying();
     updateServerGameTime();
     //checkPlayerSpawning();
     //checkPlayerPedState();
     //checkVehicleBurning();
+
+    getClients().forEach((client) => {
+        checkVehicleBuying(client);
+    });
+}
+
+// ===========================================================================
+
+function onEntityProcess(event, entity) {
 }
 
 // ===========================================================================
@@ -360,13 +376,11 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
 function onPlayerExitedVehicle(client, vehicle) {
     getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 
-    //let vehicle = getPlayerData(client).lastVehicle;
+    stopRadioStreamForPlayer(client);
 
     if(!getVehicleData(vehicle)) {
         return false;
     }
-
-    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
     if(isPlayerWorking(client)) {
         if(isPlayerOnJobRoute(client)) {
@@ -376,7 +390,7 @@ function onPlayerExitedVehicle(client, vehicle) {
         }
     }
 
-    stopRadioStreamForPlayer(client);
+    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 }
 
 // ===========================================================================
@@ -392,7 +406,7 @@ function onPlayerDeath(client, position) {
         }
 		setTimeout(function() {
 			if(getPlayerCurrentSubAccount(client).inJail) {
-                let closestJail = getClosestJail(getPlayerPosition(client));
+                let closestJail = getClosestPoliceStation(getPlayerPosition(client));
                 client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestJail.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
@@ -407,7 +421,7 @@ function onPlayerDeath(client, position) {
                 client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
-                spawnPlayer(client, closestJail.position, closestJail.heading, getGameData().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
+                spawnPlayer(client, closestHospital.position, closestHospital.heading, getGameData().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
 
                 if(isFadeCameraSupported()) {
                     fadeCamera(client, true, 1.0);

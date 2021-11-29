@@ -16,7 +16,7 @@ function attemptToSignalToNearbyTaxi(client) {
         return false;
     }
 
-    let nearbyTaxis = getVehicles().filter((v) > getPlayerPosition(client).distance(v.position) <= 15 && isTaxiVehicle(v));
+    let nearbyTaxis = getElementsByType(ELEMENT_VEHICLE).filter((v) > getPlayerPosition(client).distance(v.position) <= 15 && isTaxiVehicle(v));
 
     let closestTaxi = nearbyTaxis.reduce((i, j) => (i.position.distance(pos) < j.position.distance(pos)) ? i : j);
     if(!closestTaxi.getOccupant(0).isType(ELEMENT_PLAYER)) {

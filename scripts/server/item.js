@@ -1354,7 +1354,7 @@ function listItemInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	if(getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).useType != VRR_ITEM_USETYPE_STORAGE) {
+	if(getItemTypeData(getItemData(itemId).itemTypeIndex).useType != VRR_ITEM_USETYPE_STORAGE) {
 		messagePlayerError(client, "This item can't hold anything!");
 		return false;
 	}

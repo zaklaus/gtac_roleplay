@@ -45,7 +45,7 @@ function setAccentCommand(command, params, client) {
 	let accentId = getAccentFromParams(params);
 
 	if(!accentId) {
-		messagePlayerError(client, getLocaleString("AccentNotFound"));
+		messagePlayerError(client, getLocaleString(client, "AccentNotFound"));
 		return false;
 	}
 

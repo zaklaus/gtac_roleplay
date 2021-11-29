@@ -138,16 +138,17 @@ function makeReadableTime(hour, minute) {
 // ===========================================================================
 
 function getClosestVehicle(position) {
-	let vehicles = getServerData().vehicles;
-	let closest = 0;
-	for(let i in vehicles) {
-		if(vehicles[i] != null) {
-			if(vehicles[closest] == null || getDistance(getVehiclePosition(vehicles[i].vehicle), position) < getDistance(getVehiclePosition(vehicles[closest].vehicle), position)) {
-				closest = i;
-			}
-		}
-	}
-	return vehicles[closest].vehicle;
+	//let vehicles = getServerData().vehicles;
+	//let closest = 0;
+	//for(let i in vehicles) {
+	//	if(vehicles[i] != null) {
+	//		if(vehicles[closest] == null || getDistance(getVehiclePosition(vehicles[i].vehicle), position) < getDistance(getVehiclePosition(vehicles[closest].vehicle), position)) {
+	//			closest = i;
+	//		}
+	//	}
+	//}
+	//return vehicles[closest].vehicle;
+	return getClosestElementByType(ELEMENT_VEHICLE, position);
 }
 
 // ===========================================================================
@@ -354,7 +355,7 @@ function getTimeDifferenceDisplay(timeStamp2, timeStamp1) {
 // ===========================================================================
 
 function getVehiclesInRange(position, range) {
-	let vehicles = getVehicles();
+	let vehicles = getElementsByType(ELEMENT_VEHICLE);
 	let inRangeVehicles = [];
 	for(let i in vehicles) {
 		if(getDistance(position, vehicles[i].position) <= range) {
@@ -382,7 +383,7 @@ function getPlayersInRange(position, range) {
 // ===========================================================================
 
 function getCiviliansInRange(position, range) {
-	let peds = getPeds();
+	let peds = getElementsByType(ELEMENT_PED).filter((ped) => !ped.isType(ELEMENT_PLAYER));
 	let inRangeCivilians = [];
 	for(let i in peds) {
 		if(peds[i].isType(ELEMENT_PED)) {
@@ -1576,6 +1577,55 @@ function clearTemporaryPeds() {
 
 function getVehicleTrunkPosition(vehicle) {
 	return getPosBehindPos(getVehiclePosition(vehicle), getVehicleHeading(vehicle), 3);
+}
+
+// ===========================================================================
+
+function isPlayerWeaponBanned(client) {
+	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("WeaponBanned"))) {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function isPlayerJobBanned(client) {
+	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("JobBanned"))) {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function isPlayerPoliceBanned(client) {
+	let jobId = getJobFromParams("Police");
+	if(doesJobHaveWhiteListEnabled(jobId)) {
+		if(isPlayerOnJobWhiteList(client, jobId)) {
+			return true;
+		}
+	}
+
+	if(doesJobHaveBlackListEnabled(jobId)) {
+		if(!isPlayerOnJobBlackList(client, jobId)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function isPlayerExemptFromAntiCheat(client) {
+	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("ExemptFromAntiCheat"))) {
+		return true;
+	}
+
+	return false;
 }
 
 // ===========================================================================

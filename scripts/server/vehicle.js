@@ -325,6 +325,7 @@ function vehicleLightsCommand(command, params, client) {
 		return false;
 	}
 
+	getVehicleData(vehicle).lights = !getVehicleData(vehicle).lights;
 	setVehicleLightsState(vehicle, getVehicleData(vehicle).lights);
 	getVehicleData(vehicle).needsSaved = true;
 
@@ -425,7 +426,7 @@ function vehicleSirenCommand(command, params, client) {
 
 // ===========================================================================
 
-function vehicleColourCommand(command, params, client) {
+function vehicleAdminColourCommand(command, params, client) {
 	if(areParamsEmpty(params) && areThereEnoughParams(params, 2)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -473,7 +474,7 @@ function vehicleColourCommand(command, params, client) {
 
 // ===========================================================================
 
-function vehicleRepairCommand(command, params, client) {
+function vehicleAdminRepairCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
 		return false;
@@ -508,7 +509,7 @@ function vehicleRepairCommand(command, params, client) {
 
 // ===========================================================================
 
-function vehicleLiveryCommand(command, params, client) {
+function vehicleAdminLiveryCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
 		messagePlayerError(client, "You need to be in a vehicle!");
 		return false;
@@ -1099,14 +1100,33 @@ function respawnAllVehiclesCommand(command, params, client) {
 		respawnVehicle(getServerData().vehicles[i].vehicle);
 	}
 
-	let clientVehicles = getVehicles().filter(v => getVehicleData(v) == false);
+	let clientVehicles = getElementsByType(ELEMENT_VEHICLE).filter(v => getVehicleData(v) == false);
 	for(let i in clientVehicles) {
 		destroyElement(clientVehicles[i]);
 	}
 
 	//spawnAllVehicles();
 
-	messageAdminAction(`All server vehicles have been respawned by an admin!`);
+	messageAdminAction(`All vehicles have been respawned by an admin!`);
+}
+
+// ===========================================================================
+
+function respawnEmptyVehiclesCommand(command, params, client) {
+	for(let i in getServerData().vehicles) {
+		if(!isVehicleUnoccupied(getServerData().vehicles[i].vehicle)) {
+			respawnVehicle(getServerData().vehicles[i].vehicle);
+		}
+	}
+
+	let clientVehicles = getElementsByType(ELEMENT_VEHICLE).filter(v => getVehicleData(v) == false);
+	for(let i in clientVehicles) {
+		if(!isVehicleUnoccupied(clientVehicles[i])) {
+			destroyElement(clientVehicles[i]);
+		}
+	}
+
+	messageAdminAction(`All empty vehicles have been respawned by an admin!`);
 }
 
 // ===========================================================================
@@ -1322,37 +1342,34 @@ function createPermanentVehicle(modelIndex, position, heading, interior = 0, dim
 
 // ===========================================================================
 
-function checkVehicleBuying() {
-	let clients = getClients();
-	for(let i in clients) {
-		if(getPlayerData(clients[i])) {
-			if(isPlayerInAnyVehicle(clients[i])) {
-				if(getPlayerData(clients[i]).buyingVehicle) {
-					if(getPlayerVehicle(clients[i]) == getPlayerData(clients[i]).buyingVehicle) {
-						if(getDistance(getVehiclePosition(getPlayerData(clients[i]).buyingVehicle), getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
-							if(getPlayerCurrentSubAccount(clients[i]).cash < getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice) {
-								messagePlayerError(client, "You don't have enough money to buy this vehicle!");
-								respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
-								getPlayerData(clients[i]).buyingVehicle = false;
-								return false;
-							}
-
-							createNewDealershipVehicle(getVehicleData(getPlayerData(clients[i]).buyingVehicle).model, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice, getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId);
-							takePlayerCash(clients[i], getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice);
-							updatePlayerCash(clients[i]);
-							getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerId = getPlayerCurrentSubAccount(clients[i]).databaseId;
-							getVehicleData(getPlayerData(clients[i]).buyingVehicle).ownerType = VRR_VEHOWNER_PLAYER;
-							getVehicleData(getPlayerData(clients[i]).buyingVehicle).buyPrice = 0;
-							getVehicleData(getPlayerData(clients[i]).buyingVehicle).rentPrice = 0;
-							getVehicleData(getPlayerData(clients[i]).buyingVehicle).spawnLocked = false;
-							getPlayerData(clients[i]).buyingVehicle = false;
-							messagePlayerSuccess(clients[i], "This vehicle is now yours! It will save wherever you leave it.");
+function checkVehicleBuying(client) {
+	if(isPlayerInAnyVehicle(client)) {
+		if(getPlayerData(client)) {
+			if(getPlayerData(client).buyingVehicle) {
+				if(getPlayerVehicle(client) == getPlayerData(client).buyingVehicle) {
+					if(getDistance(getVehiclePosition(getPlayerData(client).buyingVehicle), getVehicleData(getPlayerData(client).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
+						if(getPlayerCurrentSubAccount(client).cash < getVehicleData(getPlayerData(client).buyingVehicle).buyPrice) {
+							messagePlayerError(client, "You don't have enough money to buy this vehicle!");
+							respawnVehicle(getPlayerData(client).buyingVehicle);
+							getPlayerData(client).buyingVehicle = false;
+							return false;
 						}
-					} else {
-						messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
-						respawnVehicle(getPlayerData(clients[i]).buyingVehicle);
-						getPlayerData(clients[i]).buyingVehicle = false;
+
+						createNewDealershipVehicle(getVehicleData(getPlayerData(client).buyingVehicle).model, getVehicleData(getPlayerData(client).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(client).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(client).buyingVehicle).buyPrice, getVehicleData(getPlayerData(client).buyingVehicle).ownerId);
+						takePlayerCash(client, getVehicleData(getPlayerData(client).buyingVehicle).buyPrice);
+						updatePlayerCash(client);
+						getVehicleData(getPlayerData(client).buyingVehicle).ownerId = getPlayerCurrentSubAccount(client).databaseId;
+						getVehicleData(getPlayerData(client).buyingVehicle).ownerType = VRR_VEHOWNER_PLAYER;
+						getVehicleData(getPlayerData(client).buyingVehicle).buyPrice = 0;
+						getVehicleData(getPlayerData(client).buyingVehicle).rentPrice = 0;
+						getVehicleData(getPlayerData(client).buyingVehicle).spawnLocked = false;
+						getPlayerData(client).buyingVehicle = false;
+						messagePlayerSuccess(client, "This vehicle is now yours! It will save wherever you leave it.");
 					}
+				} else {
+					messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
+					respawnVehicle(getPlayerData(client).buyingVehicle);
+					getPlayerData(client).buyingVehicle = false;
 				}
 			}
 		}
@@ -1438,6 +1455,14 @@ function isVehicleUnoccupied(vehicle) {
 	}
 
 	return false;
+}
+
+// ===========================================================================
+
+function getClosestTaxi(position) {
+	getElementsByTypeInRange(ELEMENT_VEHICLE, position, 25)
+		.filter(v => isTaxiVehicle(vehicles[i]))
+		.reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
 }
 
 // ===========================================================================

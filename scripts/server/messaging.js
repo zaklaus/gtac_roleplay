@@ -33,10 +33,8 @@ function messageAdminAction(messageText) {
  *
  */
 function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
-    if(isConsole(client)) {
-        console.log(messageText);
-        logToConsole(LOG_INFO, `[VRR.Messaging] ${messageText}`);
-        return true;
+    if(isConsole(client) || client == null) {
+        logToConsole(LOG_INFO, `${removeColoursInMessage(messageText)}`);
     }
 
     sendChatBoxMessageToPlayer(client, `${replaceColoursInMessage(messageText)}`, colour);
@@ -65,7 +63,7 @@ function messageAdmins(messageText, colour = getColourByName("softRed")) {
 
 function messagePlayerError(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[VRR.Messaging] ERROR:  ${messageText}`);
+        logToConsole(LOG_INFO, `❌ ${messageText}`);
         return true;
     }
 
@@ -80,7 +78,7 @@ function messagePlayerError(client, messageText) {
 
 function messagePlayerSyntax(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[VRR.Messaging] USAGE:  ${messageText}`);
+        logToConsole(LOG_INFO, `⌨️ ${messageText}`);
         return true;
     }
 
@@ -95,7 +93,7 @@ function messagePlayerSyntax(client, messageText) {
 
 function messagePlayerAlert(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[VRR.Messaging] ALERT: ${messageText}`);
+        logToConsole(LOG_INFO, `⚠️ ${messageText}`);
         return true;
     }
 
@@ -110,7 +108,7 @@ function messagePlayerAlert(client, messageText) {
 
 function messagePlayerSuccess(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[VRR.Messaging] SUCCESS: ${messageText}`);
+        logToConsole(LOG_INFO, `✔️ ${messageText}`);
         return true;
     }
 
@@ -125,7 +123,7 @@ function messagePlayerSuccess(client, messageText) {
 
 function messagePlayerInfo(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[VRR.Messaging] INFO: ${messageText}`);
+        logToConsole(LOG_INFO, `ℹ️ ${messageText}`);
         return true;
     }
 
@@ -140,7 +138,7 @@ function messagePlayerInfo(client, messageText) {
 
 function messagePlayerTip(client, messageText) {
     if(isConsole(client)) {
-        logToConsole(LOG_INFO, `[VRR.Messaging] TIP: ${messageText}`);
+        logToConsole(LOG_INFO, `ℹ️ ${messageText}`);
         return true;
     }
 

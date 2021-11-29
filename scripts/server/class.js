@@ -553,7 +553,7 @@ class BusinessData {
 
 		this.streamingRadioStation = -1;
 
-		this.labelHelpType = VRR_BIZLABEL_INFO_NONE;
+		this.labelHelpType = VRR_PROPLABEL_INFO_NONE;
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["biz_id"]);

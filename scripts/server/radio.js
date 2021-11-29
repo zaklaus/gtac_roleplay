@@ -215,3 +215,14 @@ function getRadioStationData(radioStationId) {
 }
 
 // ===========================================================================
+
+function reloadAllRadioStationsCommand(command, params, client) {
+	stopRadioStreamForPlayer(null);
+	getServerData().radioStations.splice(0, getServerData().radioStations.length-1);
+	getServerData().radioStations = loadRadioStationsFromDatabase();
+	setRadioStationIndexes();
+
+	messageAdminAction(`All radio stations have been reloaded by an admin!`);
+}
+
+// ===========================================================================

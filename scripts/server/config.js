@@ -286,7 +286,7 @@ function setTimeCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 	let hour = toInteger(splitParams[0]);
-	let minute = toInteger(splitParams[1]);
+	let minute = toInteger(splitParams[1]) || 0;
 
 	if(hour > 23 || hour < 0) {
 		messagePlayerError(client, "The hour must be between 0 and 23!");
@@ -393,7 +393,7 @@ function setSnowingCommand(command, params, client) {
 	}
 
 	let splitParams = params.split(" ");
-    let falling = splitParams[1];
+    let falling = splitParams[0];
 	let ground = splitParams[1];
 
 	getServerConfig().fallingSnow = intToBool(toInteger(falling));

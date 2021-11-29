@@ -311,7 +311,7 @@ function clearLocalPlayerWeapons() {
 // ===========================================================================
 
 function getClosestVehicle(pos) {
-    return getVehicles().reduce((i, j) => (i.position.distance(pos) < j.position.distance(pos)) ? i : j);
+    return getElementsByType(ELEMENT_VEHICLE).reduce((i, j) => (i.position.distance(pos) < j.position.distance(pos)) ? i : j);
 }
 
 // ===========================================================================
@@ -352,12 +352,10 @@ function setLocalPlayerInterior(interior) {
 
 function setSnowState(falling, ground) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting falling snow to ${falling} and ground snow to ${ground}`);
-    if(!isNull(snowing)) {
-        if(ground == true) {
-            forceSnowing(ground);
-        } else {
-            snowing = falling;
-        }
+    snowing = falling;
+    if(ground) {
+        forceSnowing(false);
+        forceSnowing(ground);
     }
 }
 

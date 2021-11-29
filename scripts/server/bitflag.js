@@ -46,7 +46,7 @@ let serverBitFlagKeys = {
 		"Muted",
 		"Frozen",
 		"HackerBox",
-		"GunBanned",
+		"WeaponBanned",
 		"JobBanned",
 		"AmmuBanned",
 		"NoSkinCustomization",

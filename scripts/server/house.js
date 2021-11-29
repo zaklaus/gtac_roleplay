@@ -397,7 +397,14 @@ function setHouseInteriorTypeCommand(command, params, client) {
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid interior type! Use an interior type name");
-			messagePlayerInfo(client, `Interior Types: {ALTCOLOUR}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
+			messagePlayerError(client, "Invalid interior type! Use an interior type name");
+			let interiorTypesList = Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ");
+			let chunkedList = splitArrayIntoChunks(interiorTypesList, 10);
+
+			messagePlayerInfo(client, `{clanOrange}== {jobYellow}Interior Types {clanOrange}=======================`);
+			for(let i in chunkedList) {
+				messagePlayerInfo(client, chunkedList[i].join(", "));
+			}
 			return false;
 		}
 
@@ -862,7 +869,14 @@ function createHouseEntrancePickup(houseId) {
 		setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.locked", getHouseData(houseId).locked, true);
 		if(getHouseData(houseId).buyPrice > 0) {
 			setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", getHouseData(houseId).buyPrice, true);
+			setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_BUYHOUSE, true);
+		} else {
+			if(getHouseData(houseId).rentPrice > 0) {
+				setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.rentprice", getHouseData(houseId).rentPrice, true);
+				setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_RENTHOUSE, true);
+			}
 		}
+
 		addToWorld(getHouseData(houseId).entrancePickup);
 	}
 }

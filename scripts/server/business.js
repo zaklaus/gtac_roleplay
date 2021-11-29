@@ -601,7 +601,13 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid interior type! Use an interior type name");
-			messagePlayerInfo(client, `Interior Types: {ALTCOLOUR}${Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ")}`)
+			let interiorTypesList = Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ");
+			let chunkedList = splitArrayIntoChunks(interiorTypesList, 10);
+
+			messagePlayerInfo(client, `{clanOrange}== {jobYellow}Interior Types {clanOrange}=======================`);
+			for(let i in chunkedList) {
+				messagePlayerInfo(client, chunkedList[i].join(", "));
+			}
 			return false;
 		}
 
@@ -1574,6 +1580,14 @@ function buyFromBusinessCommand(command, params, client) {
 		destroyItem(getBusinessData(businessId).floorItemCache[itemSlot-1]);
 	}
 
+	let useType = getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).itemTypeIndex).useType;
+	if(useType == VRR_ITEM_USETYPE_WEAPON || VRR_ITEM_USETYPE_TAZER) {
+		if(isPlayerWeaponBanned(client) && !isPlayerExemptFromAntiCheat(client)) {
+			messagePlayerError(client, `You are not allowed to buy weapons`);
+			return false;
+		}
+	}
+
 	//messagePlayerSuccess(client, `You bought ${amount} {ALTCOLOUR}${itemName} {MAINCOLOUR}for ${totalCost} ${priceEach}`);
 	meActionToNearbyPlayers(client, `buys a ${itemName}`);
 
@@ -1770,19 +1784,24 @@ function updateBusinessPickupLabelData(businessId) {
 		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.type", VRR_LABEL_BUSINESS, true);
 		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.name", getBusinessData(businessId).name, true);
 		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
-		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_NONE, true);
-		if(getBusinessData(businessId).labelHelpType == VRR_BIZLABEL_INFO_ENTERVEHICLE) {
-			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_ENTERVEHICLE, true);
-		} else if(getBusinessData(businessId).labelHelpType == VRR_BIZLABEL_INFO_REFUEL) {
-			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_REFUEL, true);
-		} else if(getBusinessData(businessId).labelHelpType == VRR_BIZLABEL_INFO_REPAIR) {
-			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_REPAIR, true);
+		setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_NONE, true);
+		if(getBusinessData(businessId).labelHelpType == VRR_PROPLABEL_INFO_ENTERVEHICLE) {
+			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_ENTERVEHICLE, true);
+		} else if(getBusinessData(businessId).labelHelpType == VRR_PROPLABEL_INFO_ENTER) {
+			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_ENTER, true);
+		} else if(getBusinessData(businessId).labelHelpType == VRR_PROPLABEL_INFO_REPAIR) {
+			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_REPAIR, true);
 		} else {
-			if(getBusinessData(businessId).hasInterior) {
-				setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_ENTER, true);
+			if(getBusinessData(businessId).buyPrice > 0) {
+				setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.price", getBusinessData(businessId).buyPrice, true);
+				setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_BUYBIZ, true);
 			} else {
-				if(doesBusinessHaveAnyItemsToBuy(businessId)) {
-					setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_BIZLABEL_INFO_BUY, true);
+				if(getBusinessData(businessId).hasInterior) {
+					setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_ENTER, true);
+				} else {
+					if(doesBusinessHaveAnyItemsToBuy(businessId)) {
+						setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_BUY, true);
+					}
 				}
 			}
 		}

@@ -1184,7 +1184,7 @@ function reloadAllHousesCommand(command, params, client) {
 		deleteHouseEntrancePickup(i);
 	}
 
-	getServerData().houses = null;
+	clearArray(getServerData().houses);
 	getServerData().houses = loadHousesFromDatabase();
 	createAllHousePickups();
 	createAllHouseBlips();

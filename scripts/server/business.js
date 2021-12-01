@@ -1450,7 +1450,7 @@ function reloadAllBusinessesCommand(command, params, client) {
 	}
 
 	//forceAllPlayersToStopWorking();
-	getServerData().businesses = null;
+	clearArray(getServerData().businesses);
 	getServerData().businesses = loadBusinessesFromDatabase();
 	createAllBusinessPickups();
 	createAllBusinessBlips();

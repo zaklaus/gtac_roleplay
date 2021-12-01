@@ -418,15 +418,9 @@ function stopWorkingCommand(command, params, client) {
 		return false;
 	}
 
-	//if(getPlayerCurrentSubAccount(client).job != closestJob.jobType) {
-	//    messagePlayerError(client, "This is not your job!");
-	//    messagePlayerInfo(client, "Use /quitjob if you want to quit your current job and take this one.");
-	//    break;
-	//}
-
-	messagePlayerSuccess(client, "You have stopped working!");
+	deleteJobItems(client);
 	stopWorking(client);
-	//showApproachCurrentJobTip(client);
+	messagePlayerSuccess(client, "You have stopped working!");
 	return true;
 }
 
@@ -549,14 +543,7 @@ function stopWorking(client) {
 			//client.player.removeFromVehicle();
 		}
 
-		let vehicleData = getVehicleData(jobVehicle);
-		jobVehicle.fix();
-		jobVehicle.position = vehicleData.spawnPosition;
-		jobVehicle.heading = vehicleData.spawnRotation;
-		jobVehicle.locked = true;
-		jobVehicle.engine = false;
-		jobVehicle.lights = false;
-		jobVehicle.siren = true;
+		respawnVehicle(jobVehicle);
 
 		getPlayerCurrentSubAccount(client).lastJobVehicle = false;
 	}
@@ -569,27 +556,27 @@ function stopWorking(client) {
 	let jobId = getPlayerJob(client);
 	switch(getJobType(jobId)) {
 		case VRR_JOB_POLICE:
-			messagePlayerInfo(client, "Your uniform, equipment, and police car have been returned to the police station");
+			messagePlayerInfo(client, "Your uniform, equipment, and vehicle have been returned to the police station");
 			break;
 
 		case VRR_JOB_MEDICAL:
-			messagePlayerInfo(client, "Your uniform and ambulance have been returned to the hospital");
+			messagePlayerInfo(client, "Your uniform, equipment, and vehicle have been returned to the hospital");
 			break;
 
 		case VRR_JOB_FIRE:
-			messagePlayerInfo(client, "Your uniform and fire truck have been returned to the fire station");
+			messagePlayerInfo(client, "Your uniform, equipment, and vehicle have been returned to the fire station");
 			break;
 
 		case VRR_JOB_BUS:
-			messagePlayerInfo(client, "Your bus has been returned to the bus depot");
+			messagePlayerInfo(client, "Your vehicle has been returned to the bus depot");
 			break;
 
 		case VRR_JOB_TAXI:
-			messagePlayerInfo(client, "Your taxi has been returned to the taxi depot");
+			messagePlayerInfo(client, "Your vehicle has been returned to the taxi depot");
 			break;
 
 		case VRR_JOB_GARBAGE:
-			messagePlayerInfo(client, "Your trash truck has been returned to the city landfill");
+			messagePlayerInfo(client, "Your vehicle has been returned to the city trash dump");
 			break;
 
 		case VRR_JOB_WEAPON:

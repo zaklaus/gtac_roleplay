@@ -863,7 +863,20 @@ function sendPlayerSetArmour(client, armour) {
 function playerFinishedSkinSelection(client, allowedSkinIndex) {
     triggerNetworkEvent("vrr.skinSelect", client, false);
     if(allowedSkinIndex == -1) {
+        messagePlayerAlert(client, "You canceled the skin change.");
         restorePlayerCamera(client);
+
+        if(getPlayerData(client).returnToPosition != null && getPlayerData(client).returnToType == VRR_RETURNTO_TYPE_SKINSELECT) {
+            setPlayerPosition(client, getPlayerData(client).returnToPosition);
+            setPlayerHeading(client, getPlayerData(client).returnToHeading);
+            setPlayerInterior(client, getPlayerData(client).returnToInterior);
+            setPlayerDimension(client, getPlayerData(client).returnToDimension);
+
+            getPlayerData(client).returnToPosition = null;
+            getPlayerData(client).returnToHeading = null;
+            getPlayerData(client).returnToInterior = null;
+            getPlayerData(client).returnToDimension = null;
+        }
         return false;
     } else {
         getPlayerCurrentSubAccount(client).skin = getSkinIndexFromModel(allowedSkins[allowedSkinIndex][0]);
@@ -874,7 +887,7 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
             setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
         }
 
-        if(getPlayerData(client).returnToPosition != null) {
+        if(getPlayerData(client).returnToPosition != null && getPlayerData(client).returnToType == VRR_RETURNTO_TYPE_SKINSELECT) {
             setPlayerPosition(client, getPlayerData(client).returnToPosition);
             setPlayerHeading(client, getPlayerData(client).returnToHeading);
             setPlayerInterior(client, getPlayerData(client).returnToInterior);

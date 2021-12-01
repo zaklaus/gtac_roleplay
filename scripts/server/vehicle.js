@@ -1343,37 +1343,53 @@ function createPermanentVehicle(modelIndex, position, heading, interior = 0, dim
 // ===========================================================================
 
 function checkVehicleBuying(client) {
-	if(isPlayerInAnyVehicle(client)) {
-		if(getPlayerData(client)) {
-			if(getPlayerData(client).buyingVehicle) {
-				if(getPlayerVehicle(client) == getPlayerData(client).buyingVehicle) {
-					if(getDistance(getVehiclePosition(getPlayerData(client).buyingVehicle), getVehicleData(getPlayerData(client).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
-						if(getPlayerCurrentSubAccount(client).cash < getVehicleData(getPlayerData(client).buyingVehicle).buyPrice) {
-							messagePlayerError(client, "You don't have enough money to buy this vehicle!");
-							respawnVehicle(getPlayerData(client).buyingVehicle);
-							getPlayerData(client).buyingVehicle = false;
-							return false;
-						}
-
-						createNewDealershipVehicle(getVehicleData(getPlayerData(client).buyingVehicle).model, getVehicleData(getPlayerData(client).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(client).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(client).buyingVehicle).buyPrice, getVehicleData(getPlayerData(client).buyingVehicle).ownerId);
-						takePlayerCash(client, getVehicleData(getPlayerData(client).buyingVehicle).buyPrice);
-						updatePlayerCash(client);
-						getVehicleData(getPlayerData(client).buyingVehicle).ownerId = getPlayerCurrentSubAccount(client).databaseId;
-						getVehicleData(getPlayerData(client).buyingVehicle).ownerType = VRR_VEHOWNER_PLAYER;
-						getVehicleData(getPlayerData(client).buyingVehicle).buyPrice = 0;
-						getVehicleData(getPlayerData(client).buyingVehicle).rentPrice = 0;
-						getVehicleData(getPlayerData(client).buyingVehicle).spawnLocked = false;
-						getPlayerData(client).buyingVehicle = false;
-						messagePlayerSuccess(client, "This vehicle is now yours! It will save wherever you leave it.");
-					}
-				} else {
-					messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
-					respawnVehicle(getPlayerData(client).buyingVehicle);
-					getPlayerData(client).buyingVehicle = false;
-				}
-			}
-		}
+	if(!isPlayerLoggedIn(client)) {
+		return false;
 	}
+
+	if(!isPlayerSpawned(client)) {
+		return false;
+	}
+
+	if(!getPlayerData(client)) {
+		return false;
+	}
+
+	if(!getPlayerData(client).buyingVehicle) {
+		return false;
+	}
+
+	if(!isPlayerInAnyVehicle(client)) {
+		if(getPlayerData(client).buyingVehicle != false) {
+			messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
+			respawnVehicle(getPlayerData(client).buyingVehicle);
+			getPlayerData(client).buyingVehicle = false;
+		}
+		return false;
+	}
+
+	if(getDistance(getVehiclePosition(getPlayerData(client).buyingVehicle), getVehicleData(getPlayerData(client).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
+		if(getPlayerCurrentSubAccount(client).cash < getVehicleData(getPlayerData(client).buyingVehicle).buyPrice) {
+			messagePlayerError(client, "You don't have enough money to buy this vehicle!");
+			respawnVehicle(getPlayerData(client).buyingVehicle);
+			getPlayerData(client).buyingVehicle = false;
+			return false;
+		}
+
+		createNewDealershipVehicle(getVehicleData(getPlayerData(client).buyingVehicle).model, getVehicleData(getPlayerData(client).buyingVehicle).spawnPosition, getVehicleData(getPlayerData(client).buyingVehicle).spawnRotation, getVehicleData(getPlayerData(client).buyingVehicle).buyPrice, getVehicleData(getPlayerData(client).buyingVehicle).ownerId);
+		takePlayerCash(client, getVehicleData(getPlayerData(client).buyingVehicle).buyPrice);
+		updatePlayerCash(client);
+		getVehicleData(getPlayerData(client).buyingVehicle).ownerId = getPlayerCurrentSubAccount(client).databaseId;
+		getVehicleData(getPlayerData(client).buyingVehicle).ownerType = VRR_VEHOWNER_PLAYER;
+		getVehicleData(getPlayerData(client).buyingVehicle).buyPrice = 0;
+		getVehicleData(getPlayerData(client).buyingVehicle).rentPrice = 0;
+		getVehicleData(getPlayerData(client).buyingVehicle).spawnLocked = false;
+		getPlayerData(client).buyingVehicle = false;
+		messagePlayerSuccess(client, "This vehicle is now yours! It will save wherever you leave it.");
+		return true;
+	}
+
+	return false;
 }
 
 // ===========================================================================

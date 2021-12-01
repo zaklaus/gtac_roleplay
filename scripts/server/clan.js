@@ -627,7 +627,7 @@ function addClanRankFlagCommand(command, params, client) {
 
 	let flagValue = getClanFlagValue(splitParams[1]);
 
-	getClanRankData(clanId, rankId).flags = getClanRankData(clanId, rankId).flags | flagValue;
+	getClanRankData(clanId, rankId).flags = addBitFlag(getClanRankData(clanId, rankId).flags, flagValue);
 	messagePlayerSuccess(client, `You added the {ALTCOLOUR}${splitParams[1]} {MAINCOLOUR}clan flag to rank {ALTCOLOUR}${getClanRankData(clanId, rankId).name}`);
 }
 
@@ -666,7 +666,7 @@ function removeClanRankFlagCommand(command, params, client) {
 
 	let flagValue = getClanFlagValue(splitParams[1]);
 
-	getClanRankData(clanId, rankId).flags = getClanRankData(clanId, rankId).flags & ~flagValue;
+	getClanRankData(clanId, rankId).flags = removeBitFlag(getClanRankData(clanId, rankId).flags, flagValue);
 	messagePlayerSuccess(client, `You removed the {ALTCOLOUR}${splitParams[1]} {MAINCOLOUR}clan flag from rank {ALTCOLOUR}${getClanRankData(clanId, rankId).name}`);
 }
 
@@ -699,7 +699,7 @@ function showClanRankFlagsCommand(command, params, client) {
 	}
 
 	let currentFlags = getClanRankData(clanId, rankId).flags;
-	let clanFlagKeys = getServerBitFlagKeys().clanPermissionFlagKeys.filter((flagKey) => flagKey != "None");
+	let clanFlagKeys = getServerBitFlagKeys().clanFlagKeys.filter((flagKey) => flagKey != "None");
 	let flagList = [];
 	for(let i in clanFlagKeys) {
 		if(hasBitFlag(currentFlags, getClanFlagValue(clanFlagKeys[i]))) {

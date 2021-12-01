@@ -69,7 +69,7 @@ let serverBitFlagKeys = {
 		"government",
 		"generic",
 	],
-	clanFlagKeys: [
+	clanTypeFlagKeys: [
 		"None",
 		"illegal",
 		"legal",
@@ -81,7 +81,7 @@ let serverBitFlagKeys = {
 		"vigilante",
 		"hitContracts"
 	],
-	clanPermissionFlagKeys: [
+	clanFlagKeys: [
 		"None",
 		"StartTurfWar",
 		"StartPointWar",
@@ -226,7 +226,7 @@ function initBitFlagScript() {
 	serverBitFlags.accountSettingsFlags = createBitFlagTable(serverBitFlagKeys.accountSettingsFlagKeys);
 	//serverBitFlags.subAccountSettingsFlags = createBitFlagTable(getServerData().subAccountSettingsFlagKeys);
 	serverBitFlags.clanFlags = createBitFlagTable(serverBitFlagKeys.clanFlagKeys);
-	serverBitFlags.clanPermissionFlags = createBitFlagTable(serverBitFlagKeys.clanPermissionFlagKeys);
+	serverBitFlags.clanTypeFlagKeys = createBitFlagTable(serverBitFlagKeys.clanTypeFlagKeys);
 	serverBitFlags.factionFlags = createBitFlagTable(serverBitFlagKeys.factionFlagKeys);
 	serverBitFlags.npcTriggerTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerTypeKeys);
 	serverBitFlags.npcTriggerConditionTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerConditionTypeKeys);
@@ -262,7 +262,10 @@ function hasBitFlag(allFlags, checkForFlag) {
 		return true;
 	}
 
-	return ((allFlags & checkForFlag) == allFlags);
+	if(allFlags & checkForFlag == allFlags) {
+		return true;
+	}
+	return false;
 }
 
 // ===========================================================================
@@ -330,7 +333,7 @@ function getStaffFlagValue(flagName) {
         return -1;
 	}
 
-	if(typeof serverBitFlags.staffFlags[flagName] === "undefined") {
+	if(typeof serverBitFlags.staffFlags[flagName] == "undefined") {
 		return false;
 	}
 
@@ -344,7 +347,7 @@ function getClanFlagValue(flagName) {
         return -1;
 	}
 
-	if(typeof getServerBitFlags().clanFlags[flagName] === "undefined") {
+	if(typeof getServerBitFlags().clanFlags[flagName] == "undefined") {
 		return false;
 	}
 
@@ -358,7 +361,7 @@ function getAccountSettingsFlagValue(flagName) {
         return -1;
 	}
 
-	if(typeof serverBitFlags.accountSettingsFlags[flagName] === "undefined") {
+	if(typeof serverBitFlags.accountSettingsFlags[flagName] == "undefined") {
 		return false;
 	}
 
@@ -372,7 +375,7 @@ function getModerationFlagValue(flagName) {
         return -1;
 	}
 
-	if(typeof serverBitFlags.moderationFlags[flagName] === "undefined") {
+	if(typeof serverBitFlags.moderationFlags[flagName] == "undefined") {
 		return false;
 	}
 

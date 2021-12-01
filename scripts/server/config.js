@@ -212,17 +212,17 @@ function saveServerConfigToDatabase() {
 				["svr_charselect_int", getServerConfig().characterSelectInterior],
 				["svr_charselect_vw", getServerConfig().characterSelectDimension],
 				["svr_inflation_multiplier", getServerConfig().inflationMultiplier],
-				["svr_ac_enabled", getServerConfig().antiCheat.enabled],
-				["svr_ac_check_scripts", getServerConfig().antiCheat.checkGameScripts],
-				["svr_ac_script_wl", getServerConfig().antiCheat.gameScriptWhiteListEnabled],
-				["svr_ac_script_bl", getServerConfig().antiCheat.gameScriptBlackListEnabled],
+				["svr_ac_enabled", boolToInt(getServerConfig().antiCheat.enabled)],
+				["svr_ac_check_scripts", boolToInt(getServerConfig().antiCheat.checkGameScripts)],
+				["svr_ac_script_wl", boolToInt(getServerConfig().antiCheat.gameScriptWhiteListEnabled)],
+				["svr_ac_script_bl", boolToInt(getServerConfig().antiCheat.gameScriptBlackListEnabled)],
 				["svr_job_pickups", boolToInt(getServerConfig().createJobPickups)],
 				["svr_job_blips", boolToInt(getServerConfig().createJobBlips)],
 				["svr_biz_pickups", boolToInt(getServerConfig().createBusinessPickups)],
 				["svr_biz_blips", boolToInt(getServerConfig().createBusinessBlips)],
 				["svr_house_pickups", boolToInt(getServerConfig().createHousePickups)],
 				["svr_house_blips", boolToInt(getServerConfig().createHouseBlips)],
-				["svr_intro_music", getServerConfig().introMusic],
+				["svr_intro_music", getServerConfig().introMusicURL],
 			];
 
 			let dbQuery = null;

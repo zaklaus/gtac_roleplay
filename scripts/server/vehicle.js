@@ -181,6 +181,7 @@ function spawnAllVehicles() {
 		let vehicle = spawnVehicle(getServerData().vehicles[i]);
 		getServerData().vehicles[i].vehicle = vehicle;
 		setEntityData(vehicle, "vrr.dataSlot", i, false);
+		setAllVehicleIndexes();
 	}
 }
 
@@ -1002,7 +1003,7 @@ function getVehicleInfoCommand(command, params, client) {
 			break;
 	}
 
-	messagePlayerNormal(client, `🚗 {vehiclePurple}[Vehicle Info] {MAINCOLOUR}ID: {ALTCOLOUR}${getElementId(vehicle)}, {MAINCOLOUR}DatabaseID: {ALTCOLOUR}${vehicleData.databaseId}, {MAINCOLOUR}Owner: {ALTCOLOUR}${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), {MAINCOLOUR}Type: {ALTCOLOUR}${getVehicleName(vehicle)}[${vehicle.modelIndex}], {MAINCOLOUR}BuyPrice: {ALTCOLOUR}${vehicleData.buyPrice}, {MAINCOLOUR}RentPrice: {ALTCOLOUR}${vehicleData.rentPrice}`);
+	messagePlayerNormal(client, `🚗 {vehiclePurple}[Vehicle Info] {MAINCOLOUR}ID: {ALTCOLOUR}${getElementId(vehicle)}, {MAINCOLOUR}Index: {ALTCOLOUR}${vehicleData.index}, {MAINCOLOUR}DatabaseID: {ALTCOLOUR}${vehicleData.databaseId}, {MAINCOLOUR}Owner: {ALTCOLOUR}${ownerName}[ID ${vehicleData.ownerId}] (${ownerType}), {MAINCOLOUR}Type: {ALTCOLOUR}${getVehicleName(vehicle)}[ID: ${vehicle.modelIndex}, Index: ${getVehicleModelIndexFromModel(vehicle.modelIndex)}], {MAINCOLOUR}BuyPrice: {ALTCOLOUR}${vehicleData.buyPrice}, {MAINCOLOUR}RentPrice: {ALTCOLOUR}${vehicleData.rentPrice}`);
 }
 
 // ===========================================================================
@@ -1100,12 +1101,12 @@ function respawnAllVehiclesCommand(command, params, client) {
 		respawnVehicle(getServerData().vehicles[i].vehicle);
 	}
 
-	let clientVehicles = getElementsByType(ELEMENT_VEHICLE).filter(v => getVehicleData(v) == false);
-	for(let i in clientVehicles) {
-		destroyElement(clientVehicles[i]);
+	let randomVehicles = getElementsByType(ELEMENT_VEHICLE).filter(v => getVehicleData(v) == false);
+	for(let i in randomVehicles) {
+		destroyElement(randomVehicles[i]);
 	}
 
-	//spawnAllVehicles();
+	setAllVehicleIndexes();
 
 	messageAdminAction(`All vehicles have been respawned by an admin!`);
 }

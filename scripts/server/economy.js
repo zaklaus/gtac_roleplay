@@ -28,19 +28,19 @@ function applyServerInflationMultiplier(value) {
 
 function playerPayDay(client) {
 	let wealth = calculateWealth(client);
-	let taxAmount = calculateTax(wealth);
 	let grossIncome = getPlayerData(client).payDayAmount;
 
 	// Public Beta Bonus
-	taxAmount = 0;
-	grossIncome = grossIncome*2;
-	grossIncome = grossIncome + 2000;
+	grossIncome = grossIncome + getGlobalConfig().economy.passiveIncomePerPayDay;
+	grossIncome = grossIncome*getGlobalConfig().economy.grossIncomeMultiplier;
+
+	incomeTaxAmount = calculateIncomeTax(wealth);
 
 	let netIncome = grossIncome-taxAmount;
 
 	messagePlayerAlert(client, "== Payday! =============================");
 	messagePlayerInfo(client, `Paycheck: {ALTCOLOUR}$${grossIncome}`);
-	messagePlayerInfo(client, `Taxes: {ALTCOLOUR}$${taxAmount}`);
+	messagePlayerInfo(client, `Taxes: {ALTCOLOUR}$${incomeTaxAmount}`);
 	messagePlayerInfo(client, `You receive: {ALTCOLOUR}$${netIncome}`);
 
 	givePlayerCash(client, netIncome);
@@ -49,15 +49,21 @@ function playerPayDay(client) {
 // ===========================================================================
 
 function calculateWealth(client) {
-	// To-do
-	return 0;
+	let vehicles = getAllVehiclesOwnedByPlayer(client);
+	let houses = getAllHousesOwnedByPlayer(client);
+	let businesses = getAllBusinessesOwnedByPlayer(client);
+
+	let vehicleUpKeep = applyServerInflationMultiplier(vehicles.length*getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle);
+	let houseUpKeep = applyServerInflationMultiplier(houses.length*getGlobalConfig().economy.upKeepCosts.upKeepPerHouse);
+	let businessUpKeep = applyServerInflationMultiplier(businesses.length*getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness);
+
+	return vehicleUpKeep+houseUpKeep+businessUpKeep;
 }
 
 // ===========================================================================
 
-function calculateTax(client) {
-	// To-do
-	return 0;
+function calculateIncomeTax(amount) {
+	return amount*getGlobalConfig().economy.incomeTaxRate;
 }
 
 // ===========================================================================

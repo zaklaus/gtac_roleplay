@@ -1076,3 +1076,9 @@ function updateAllInteriorVehiclesForPlayer(client, interior, dimension) {
 }
 
 // ===========================================================================
+
+function setPlayerBuyingVehicleState(state, vehicle, position) {
+
+}
+
+// ===========================================================================

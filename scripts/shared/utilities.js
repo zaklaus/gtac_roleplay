@@ -851,3 +851,13 @@ function getRandom(min, max) {
 }
 
 // ===========================================================================
+
+function splitArrayIntoChunks(originalArray, perChunk) {
+	let tempArray = [];
+	for (let i = 0; i < originalArray.length; i += perChunk) {
+		tempArray.push(originalArray.slice(i, i + perChunk));
+	}
+	return tempArray;
+}
+
+// ===========================================================================

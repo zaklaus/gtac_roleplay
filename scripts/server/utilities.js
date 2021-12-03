@@ -367,36 +367,6 @@ function getVehiclesInRange(position, range) {
 
 // ===========================================================================
 
-function getPlayersInRange(position, range) {
-	let clients = getClients();
-	let inRangePlayers = [];
-	for(let i in clients) {
-		if(isPlayerSpawned(clients[i])) {
-			if(getDistance(position, getPlayerPosition(clients[i])) <= range) {
-				inRangePlayers.push(clients[i]);
-			}
-		}
-	}
-	return inRangePlayers;
-}
-
-// ===========================================================================
-
-function getCiviliansInRange(position, range) {
-	let peds = getElementsByType(ELEMENT_PED).filter((ped) => !ped.isType(ELEMENT_PLAYER));
-	let inRangeCivilians = [];
-	for(let i in peds) {
-		if(peds[i].isType(ELEMENT_PED)) {
-			if(getDistance(position, peds[i].position) <= range) {
-				inRangeCivilians.push(peds[i]);
-			}
-		}
-	}
-	return inRangeCivilians;
-}
-
-// ===========================================================================
-
 function getFileData(filePath) {
 	let file = openFile(filePath, false);
 	if(!file) {
@@ -1169,7 +1139,13 @@ function getClientsInRange(position, distance) {
 // ===========================================================================
 
 function getCiviliansInRange(position, distance) {
-	return getElementsByType(ELEMENT_PED).filter(x => x.position.distance(position) <= distance);
+	return getElementsByType(ELEMENT_PED).filter(x => !x.isType(ELEMENT_PLAYER) && x.position.distance(position) <= distance);
+}
+
+// ===========================================================================
+
+function getPlayersInRange(position, distance) {
+	return getElementsByType(ELEMENT_PLAYER).filter(x => x.position.distance(position) <= distance);
 }
 
 // ===========================================================================
@@ -1450,16 +1426,6 @@ function doesNameContainInvalidCharacters(name) {
 
 function fixCharacterName(name) {
 	return String(name.charAt(0).toUpperCase()) + String(name.slice(1).toLowerCase());
-}
-
-// ===========================================================================
-
-function splitArrayIntoChunks(originalArray, perChunk) {
-	let tempArray = [];
-	for (let i = 0; i < originalArray.length; i += perChunk) {
-		tempArray.push(originalArray.slice(i, i + perChunk));
-	}
-	return tempArray;
 }
 
 // ===========================================================================

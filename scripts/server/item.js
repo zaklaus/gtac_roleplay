@@ -1789,29 +1789,20 @@ function clearPlayerItemActionStateAfterDelay(client, delay) {
 
 function showBusinessFloorInventoryToPlayer(client, businessId) {
 	let itemDisplay = [];
-	messagePlayerNormal(client, `💲 {businessBlue}== Business Items =========================`);
+
 	for(let i in getBusinessData(businessId).floorItemCache) {
 		if(getBusinessData(businessId).floorItemCache == -1) {
-			//itemDisplay.push(`{jobYellow}${toInteger(i)+1}{ALTCOLOUR}(Empty)`);
-			messagePlayerNormal(client, `${getInlineChatColourByName("yellow")}${toInteger(i)+1}{ALTCOLOUR}(Empty)`, COLOUR_WHITE);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}{ALTCOLOUR}(Empty)`);
 		} else {
-			//itemDisplay.push(`{jobYellow}${toInteger(i)+1}: {MAINCOLOUR}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}{ALTCOLOUR}${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])} - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`);
-			messagePlayerNormal(client, `${getInlineChatColourByName("yellow")}${toInteger(i)+1}: {MAINCOLOUR}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name}{ALTCOLOUR}${getItemValueDisplayForItem(getBusinessData(businessId).floorItemCache[i])} - [${(getPlayerCurrentSubAccount(client).cash<getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? rgbToHex(205, 60, 60) : rgbToHex(50, 205, 50)}]$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice} [#CCCCCC] - ${getItemData(getBusinessData(businessId).floorItemCache[i]).amount} available`, COLOUR_WHITE);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}: {ALTCOLOUR}${getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[i]).itemTypeIndex).name} - ${(getPlayerCurrentSubAccount(client).cash > getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice) ? "{softGreen}" : "{softRed}"}$${getItemData(getBusinessData(businessId).floorItemCache[i]).buyPrice}`);
 		}
-
-		//messagePlayerNormal(client, splitItemDisplay[i].join("{MAINCOLOUR}, "), COLOUR_WHITE);
 	}
 
-	//messagePlayerNormal(client, `💲 {businessBlue}== Business Items =========================`);
-	//let perChunk=5;
-	//let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-	//	const ch = Math.floor(i/perChunk);
-	//	all[ch] = [].concat((all[ch]||[]),one);
-	//	return all
-	//}, []);
-	//for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-	//	messagePlayerNormal(client, splitItemDisplay[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
-	//}
+	messagePlayerNormal(client, `💲 {businessBlue}== Business Items =========================`);
+	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
+	for(let i in chunkedList) {
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+	}
 }
 
 // ===========================================================================
@@ -1820,22 +1811,17 @@ function showBusinessStorageInventoryToPlayer(client, businessId) {
 	let itemDisplay = [];
 	for(let i in getBusinessData(businessId).storageItemCache) {
 		if(getBusinessData(businessId).storageItemCache == -1) {
-			itemDisplay.push(`${getInlineChatColourByName("yellow")}${toInteger(i)+1}{ALTCOLOUR}(Empty)`);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}{ALTCOLOUR}(Empty)`);
 		} else {
-			itemDisplay.push(`${getInlineChatColourByName("yellow")}${toInteger(i)+1}: {MAINCOLOUR}${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}{ALTCOLOUR}${getItemValueDisplayForItem(getBusinessData(businessId).storageItemCache[i])}  - [#CCCCCC]${getItemData(getBusinessData(businessId).storageItemCache[i]).amount} available`);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}: {ALTCOLOUR}${getItemTypeData(getItemData(getBusinessData(businessId).storageItemCache[i]).itemTypeIndex).name}`);
 		}
 	}
 
 	messagePlayerNormal(client, `🏢 {businessBlue}== Business Storage =======================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	}, []);
 
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
+	for(let i in chunkedList) {
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
 	}
 }
 
@@ -1845,22 +1831,17 @@ function showItemInventoryToPlayer(client, itemId) {
 	let itemDisplay = [];
 	for(let i in getItemData(itemId).itemCache) {
 		if(getItemData(itemId).itemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}{ALTCOLOUR}(Empty)`);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}{ALTCOLOUR}(Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: {ALTCOLOUR}${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}${getItemValueDisplayForItem(getItemData(itemId).itemCache[i])}`);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}: {ALTCOLOUR}${getItemTypeData(getItemData(getItemData(itemId).itemCache[i]).itemTypeIndex).name}`);
 		}
 	}
 
 	messagePlayerNormal(client, `📦 {ALTCOLOUR}== Items Inside ===========================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	 }, []);
 
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
+	for(let i in chunkedList) {
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
 	}
 }
 
@@ -1870,14 +1851,14 @@ function showPlayerInventoryToPlayer(client, targetClient) {
 	resyncWeaponItemAmmo(targetClient);
 	let itemDisplay = [];
 	for(let i in getPlayerData(targetClient).hotBarItems) {
-		let colour = getInlineChatColourByName("lightGrey");
+		let colour = "{ALTCOLOUR}";
 		if(getPlayerData(targetClient).activeHotBarSlot == i) {
-			colour = getInlineChatColourByName("yellow");
+			colour = "{yellow}";
 		}
 		if(getPlayerData(targetClient).hotBarItems[i] == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${colour}(Empty)`);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}: ${colour}(Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: ${colour}${getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[i]).itemTypeIndex).name}${getItemValueDisplayForItem(getPlayerData(targetClient).hotBarItems[i])}`);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}: ${colour}${getItemTypeData(getItemData(getPlayerData(targetClient).hotBarItems[i]).itemTypeIndex).name}`);
 		}
 	}
 
@@ -1887,15 +1868,9 @@ function showPlayerInventoryToPlayer(client, targetClient) {
 		messagePlayerNormal(client, `🎒 {ALTCOLOUR}== ${getCharacterFullName(targetClient)}'s Inventory =========================`);
 	}
 
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	}, []);
-
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
+	for(let i in chunkedList) {
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
 	}
 }
 
@@ -1905,22 +1880,17 @@ function showHouseInventoryToPlayer(client, houseId) {
 	let itemDisplay = [];
 	for(let i in getHouseData(houseId).itemCache) {
 		if(getHouseData(houseId).itemCache == -1) {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}{ALTCOLOUR}(Empty)`);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}{ALTCOLOUR}(Empty)`);
 		} else {
-			itemDisplay.push(`[#CCCCCC]${toInteger(i)+1}: {ALTCOLOUR}${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}${getItemValueDisplayForItem(getBusinessData(houseId).itemCache[i])}`);
+			itemDisplay.push(`{MAINCOLOUR}${toInteger(i)+1}: {ALTCOLOUR}${getItemTypeData(getItemData(getHouseData(houseId).itemCache[i]).itemTypeIndex).name}`);
 		}
 	}
 
 	messagePlayerNormal(client, `🏠 {houseGreen}== House Items ============================`);
-	let perChunk=5;
-	let splitItemDisplay = itemDisplay.reduce((all,one,i) => {
-		const ch = Math.floor(i/perChunk);
-		all[ch] = [].concat((all[ch]||[]),one);
-		return all
-	 }, []);
+	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 
-	for(let i = 0 ; i <= splitItemDisplay.length-1 ; i++) {
-		messagePlayerNormal(client, splitItemDisplay[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+	for(let i in chunkedList) {
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
 	}
 }
 

@@ -44,6 +44,27 @@ let globalConfig = {
 	phoneTalkDistance: 15,
 	tazerEffectDuration: 15000,
 	vehicleRepairDistance: 5,
+	itemActionStateReset: 5000,
+	subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+	emailValidationRegex: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
+	itemActionDelayExtraTimeout: 1000,
+	geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
+	geoIPCityDatabaseFilePath: "geoip-city.mmdb",
+	randomTipInterval: 600000,
+	locales: [
+		["English", "english"],
+	],
+	economy: {
+		passiveIncomePerPayDay: 1000,
+		applyTax: true,
+		applyUpkeep: true,
+		grossIncomeMultiplier: 1.0,
+		upKeepCosts: {
+			upKeepPerVehicle: 250,
+			upKeepPerHouse: 350,
+			upKeepPerBusiness: 600
+		}
+	},
 	weaponEquippableTypes: [
 		VRR_ITEM_USETYPE_WEAPON,
 		VRR_ITEM_USETYPE_TAZER,
@@ -58,42 +79,6 @@ let globalConfig = {
 		VRR_ITEM_USETYPE_VEHLIVERY,
 		VRR_ITEM_USETYPE_VEHTIRE,
 	],
-	itemActionStateReset: 5000,
-	subAccountNameAllowedCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-	emailValidationRegex: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
-	itemActionDelayExtraTimeout: 1000,
-	geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
-	geoIPCityDatabaseFilePath: "geoip-city.mmdb",
-	randomTipInterval: 600000,
-	accents: [
-        "English",
-        "French",
-        "Russian",
-        "Scottish",
-        "Irish",
-        "Spanish",
-        "Southern American",
-        "Italian",
-        "Australian",
-        "Jamaican",
-        "Israeli",
-        "Dutch",
-        "Brazilian",
-        "Portuguese",
-        "German",
-        "Canadian",
-        "Chinese",
-        "Japanese",
-        "Turkish",
-        "Korean",
-        "Estonian",
-        "Sicilian",
-        "Indian",
-		"Rough",
-    ],
-	locales: [
-		["English", "english"],
-	],
 };
 
 // ===========================================================================
@@ -101,6 +86,41 @@ let globalConfig = {
 function loadGameConfig() {
 	return gameData;
 };
+
+// ===========================================================================
+
+function loadGlobalConfig() {
+	//let roleplayConfig = JSON.parse(loadTextFile(`config/roleplay.json`));
+	//if(roleplayConfig != null) {
+	//	globalConfig = roleplayConfig;
+	//}
+
+	//let localeConfig = JSON.parse(loadTextFile(`config/locale.json`));
+	//if(localeConfig != null) {
+	//	globalConfig.locales = localeConfig;
+	//}
+
+	//let economyConfig = JSON.parse(loadTextFile(`config/economy.json`));
+	//if(economyConfig != null) {
+	//	globalConfig.economy = economyConfig;
+	//}
+
+	//getGlobalConfig().weaponEquippableTypes = [
+	//	VRR_ITEM_USETYPE_WEAPON,
+	//	VRR_ITEM_USETYPE_TAZER,
+	//	VRR_ITEM_USETYPE_EXTINGUISHER,
+	//	VRR_ITEM_USETYPE_SPRAYPAINT,
+	//	VRR_ITEM_USETYPE_PEPPERSPRAY,
+	//];
+
+	//getGlobalConfig().onFootOnlyItems = [
+	//	VRR_ITEM_USETYPE_VEHREPAIR,
+	//	VRR_ITEM_USETYPE_VEHCOLOUR,
+	//	VRR_ITEM_USETYPE_VEHUPGRADE_PART,
+	//	VRR_ITEM_USETYPE_VEHLIVERY,
+	//	VRR_ITEM_USETYPE_VEHTIRE,
+	//];
+}
 
 // ===========================================================================
 
@@ -393,11 +413,11 @@ function setSnowingCommand(command, params, client) {
 	}
 
 	let splitParams = params.split(" ");
-    let falling = splitParams[0];
-	let ground = splitParams[1];
+    let falling = toInteger(splitParams[0]);
+	let ground = toInteger(splitParams[1]);
 
-	getServerConfig().fallingSnow = intToBool(toInteger(falling));
-	getServerConfig().groundSnow = intToBool(toInteger(ground));
+	getServerConfig().fallingSnow = intToBool(falling);
+	getServerConfig().groundSnow = intToBool(ground);
 
 	updatePlayerSnowState(null);
 

@@ -711,7 +711,7 @@ function showClanRankFlagsCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(flagList, 6);
 
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clan Rank Flags {clanOrange}=========================`);
+	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clan Rank Flags (${getClanRankData(clanId, rankId).name}){clanOrange}===================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join("{MAINCOLOUR}, "));

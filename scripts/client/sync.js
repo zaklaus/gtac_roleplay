@@ -123,6 +123,18 @@ function syncVehicleProperties(vehicle) {
             }
         }
     }
+
+    if(getGame() == VRR_GAME_GTA_III) {
+        if(vehicle.isOwner && vehicle.modelIndex == 116) {
+            vehicle.colour1 = 0;
+            vehicle.colour2 = 1;
+        }
+    } else if(getGame() == VRR_GAME_GTA_VC) {
+        if(vehicle.isOwner && vehicle.modelIndex == 156) {
+            vehicle.colour1 = 0;
+            vehicle.colour2 = 1;
+        }
+    }
 }
 
 // ===========================================================================

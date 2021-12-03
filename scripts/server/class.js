@@ -583,6 +583,7 @@ class BusinessData {
 			this.till = toInteger(dbAssoc["biz_till"]);
 
 			this.labelHelpType = toInteger(dbAssoc["biz_label_help_type"]);
+			this.streamingRadioStation = toInteger(dbAssoc["biz_radiostation"]);
 		}
 	};
 };

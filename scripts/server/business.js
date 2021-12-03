@@ -601,7 +601,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 
 		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid interior type! Use an interior type name");
-			let interiorTypesList = Object.keys(getGameConfig().interiorTemplates[getServerGame()]).join(", ");
+			let interiorTypesList = Object.keys(getGameConfig().interiorTemplates[getServerGame()]);
 			let chunkedList = splitArrayIntoChunks(interiorTypesList, 10);
 
 			messagePlayerInfo(client, `{clanOrange}== {jobYellow}Interior Types {clanOrange}=======================`);
@@ -700,8 +700,6 @@ function giveDefaultItemsToBusinessCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessEntranceLabelToDealershipCommand(command, params, client) {
-	let splitParams = params.split(" ");
-
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -709,8 +707,9 @@ function setBusinessEntranceLabelToDealershipCommand(command, params, client) {
 		return false;
 	}
 
+	getBusinessData(businessId).labelHelpType == VRR_PROPLABEL_INFO_ENTERVEHICLE;
 	updateBusinessPickupLabelData(businessId);
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}the default items for ${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set the business type of {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to dealership`);
 }
 
 // ===========================================================================
@@ -718,7 +717,6 @@ function setBusinessEntranceLabelToDealershipCommand(command, params, client) {
 function deleteBusinessFloorItemsCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
-	let typeParam = splitParams[0] || "business";
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -740,7 +738,6 @@ function deleteBusinessFloorItemsCommand(command, params, client) {
 function deleteBusinessStorageItemsCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
-	let typeParam = splitParams[0] || "business";
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -1155,6 +1152,8 @@ function saveBusinessToDatabase(businessId) {
 			["biz_exit_blip", tempBusinessData.exitBlipModel],
 			["biz_has_interior", boolToInt(tempBusinessData.hasInterior)],
 			["biz_interior_lights", boolToInt(tempBusinessData.interiorLights)],
+			["biz_label_help_type", tempBusinessData.labelHelpType],
+			["biz_radiostation", tempBusinessData.streamingRadioStation],
 		];
 
 		let dbQuery = null;

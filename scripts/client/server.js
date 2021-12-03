@@ -89,6 +89,8 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.elementPosition", setElementPosition);
     addNetworkHandler("vrr.elementCollisions", setElementCollisionsEnabled);
 
+    addNetworkHandler("vrr.vehBuyState", setVehiclePurchaseState);
+
     addNetworkHandler("vrr.showRegistration", showRegistrationGUI);
     addNetworkHandler("vrr.showNewCharacter", showNewCharacterGUI);
     addNetworkHandler("vrr.showLogin", showLoginGUI);

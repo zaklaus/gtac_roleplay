@@ -59,6 +59,10 @@ let mouseCameraEnabled = false;
 
 let currentPickup = false;
 
+let vehiclePurchaseState = VRR_VEHBUYSTATE_NONE;
+let vehiclePurchasing = null;
+let vehiclePurchasePosition = null;
+
 // Pre-cache all allowed skins
 let allowedSkins = getAllowedSkins(getGame());
 

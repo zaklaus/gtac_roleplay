@@ -820,3 +820,33 @@ function processGameSpecifics() {
 }
 
 // ===========================================================================
+
+function processVehiclePurchasing() {
+    if(vehiclePurchaseState == VRR_VEHBUYSTATE_TESTDRIVE) {
+        if(inVehicle == false) {
+            vehiclePurchaseState = VRR_VEHBUYSTATE_EXITEDVEH;
+            triggerNetworkEvent("vrr.vehBuyState", VRR_VEHBUYSTATE_EXITEDVEH);
+            return false;
+        } else {
+            if(vehiclePurchasing.id == inVehicle) {
+                if(getDistance(inVehicle.position, vehiclePurchasePosition) >= 25) {
+                    vehiclePurchaseState = VRR_VEHBUYSTATE_FARENOUGH;
+                    triggerNetworkEvent("vrr.vehBuyState", VRR_VEHBUYSTATE_FARENOUGH);
+                }
+            } else {
+                vehiclePurchaseState = VRR_VEHBUYSTATE_WRONGVEH;
+                triggerNetworkEvent("vrr.vehBuyState", VRR_VEHBUYSTATE_WRONGVEH);
+            }
+        }
+    }
+}
+
+// ===========================================================================
+
+function setVehiclePurchaseState(state, vehicle, position) {
+    vehiclePurchaseState = state;
+    vehiclePurchasePosition = position;
+    vehiclePurchasing = vehicle;
+}
+
+// ===========================================================================

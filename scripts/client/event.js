@@ -94,6 +94,7 @@ function onProcess(event, deltaTime) {
     processWantedLevelReset();
     processGameSpecifics();
     processNearbyPickups();
+    processVehiclePurchasing();
 }
 
 // ===========================================================================

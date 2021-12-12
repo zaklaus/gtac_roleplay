@@ -390,6 +390,8 @@ function onPlayerExitedVehicle(client, vehicle) {
         }
     }
 
+    getVehicleData(vehicle).respawnTime = getCurrentUnixTimestamp() + getGlobalConfig().vehicleInactiveRespawnDelay;
+
     logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 }
 
@@ -555,9 +557,6 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom keybinds to ${getPlayerDisplayForConsole(client)}`);
         sendAccountKeyBindsToClient(client);
-        //setTimeout(function() {
-        //    sendAccountKeyBindsToClient(client);
-        //}, 5000);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;

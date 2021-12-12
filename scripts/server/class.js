@@ -97,7 +97,6 @@ class ServerData {
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["svr_id"];
-			console.log("1");
 			this.newCharacter = {
 				spawnPosition: toVector3(dbAssoc["svr_newchar_pos_x"], dbAssoc["svr_newchar_pos_y"], dbAssoc["svr_newchar_pos_z"]),
 				spawnHeading: dbAssoc["svr_newchar_rot_z"],
@@ -944,6 +943,8 @@ class VehicleData {
 
 		this.interior = 0;
 		this.dimension = 0;
+
+		this.respawnTime = 0;
 
 		if(dbAssoc) {
 			// General Info

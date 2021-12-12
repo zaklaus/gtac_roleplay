@@ -262,9 +262,10 @@ function hasBitFlag(allFlags, checkForFlag) {
 		return true;
 	}
 
-	if(allFlags & checkForFlag == allFlags) {
+	if((allFlags & checkForFlag) == allFlags) {
 		return true;
 	}
+
 	return false;
 }
 
@@ -289,7 +290,7 @@ function doesPlayerHaveStaffPermission(client, requiredFlags) {
         return true;
     }
 
-    if(staffFlags & requiredFlags) {
+    if(hasBitFlag(staffFlags, requiredFlags)) {
         return true;
     }
 
@@ -319,7 +320,7 @@ function doesPlayerHaveClanPermission(client, requiredFlags) {
         return true;
     }
 
-    if(clanFlags & requiredFlags) {
+    if(hasBitFlag(clanFlags, requiredFlags)) {
         return true;
     }
 
@@ -407,13 +408,15 @@ function takePlayerStaffFlag(client, flagName) {
 // ===========================================================================
 
 function addBitFlag(allFlags, flagValue) {
-	return allFlags | flagValue;
+	allFlags |= flagValue;
+	return;
 }
 
 // ===========================================================================
 
 function removeBitFlag(allFlags, flagValue) {
-	return allFlags & ~flagValue;
+	allFlags ^= flagValue;
+	return;
 }
 
 // ===========================================================================

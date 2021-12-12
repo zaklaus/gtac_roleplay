@@ -79,6 +79,7 @@ let globalConfig = {
 		VRR_ITEM_USETYPE_VEHLIVERY,
 		VRR_ITEM_USETYPE_VEHTIRE,
 	],
+	vehicleInactiveRespawnDelay: 1800000, // 20 minutes
 };
 
 // ===========================================================================
@@ -423,7 +424,7 @@ function setSnowingCommand(command, params, client) {
 
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} ${getInlineChatColourByName("orange")}turned falling snow ${getBoolRedGreenInlineColour(falling)}${getOnOffFromBool(falling)} ${getInlineChatColourByName("orange")}and ground snow ${getBoolRedGreenInlineColour(ground)}${getOnOffFromBool(ground)}`);
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned falling snow ${getBoolRedGreenInlineColour(falling)}${getOnOffFromBool(falling)} {MAINCOLOUR}and ground snow ${getBoolRedGreenInlineColour(ground)}${getOnOffFromBool(ground)}`);
     updateServerRules();
 	return true;
 }
@@ -477,11 +478,132 @@ function setServerGUIColoursCommand(command, params, client) {
  */
 function toggleServerLogoCommand(command, params, client) {
 	getServerConfig().useLogo = !getServerConfig().useLogo;
+	getServerConfig().needsSaved = true;
 
 	updatePlayerShowLogoState(null, getServerConfig().useLogo);
 
-    messageAdminAction(`${getPlayerName(client)} turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned the server logo image ${getBoolRedGreenInlineColour(getServerConfig().useLogo)}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);
     updateServerRules();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function toggleServerJobBlipsCommand(command, params, client) {
+	getServerConfig().createJobBlips = !getServerConfig().createJobBlips;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(getServerConfig().createJobBlips)}${toUpperCase(getOnOffFromBool(getServerConfig().createJobBlips))} {MAINCOLOUR}all job blips`);
+	resetAllJobBlips();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function toggleServerJobPickupsCommand(command, params, client) {
+	getServerConfig().createJobPickups = !getServerConfig().createJobPickups;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(getServerConfig().createJobPickups)}${toUpperCase(getOnOffFromBool(getServerConfig().createJobPickups))} {MAINCOLOUR}all job pickups`);
+	resetAllJobPickups();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function toggleServerBusinessBlipsCommand(command, params, client) {
+	getServerConfig().createBusinessBlips = !getServerConfig().createBusinessBlips;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(getServerConfig().createBusinessBlips)}${toUpperCase(getOnOffFromBool(getServerConfig().createBusinessBlips))} {MAINCOLOUR}all business blips`);
+	resetAllBusinessBlips();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function toggleServerBusinessPickupsCommand(command, params, client) {
+	getServerConfig().createBusinessPickups = !getServerConfig().createBusinessPickups;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(getServerConfig().createBusinessPickups)}${toUpperCase(getOnOffFromBool(getServerConfig().createBusinessPickups))} {MAINCOLOUR}all business pickups`);
+	resetAllBusinessPickups();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function toggleServerHouseBlipsCommand(command, params, client) {
+	getServerConfig().createHouseBlips = !getServerConfig().createHouseBlips;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(getServerConfig().createHouseBlips)}${toUpperCase(getOnOffFromBool(getServerConfig().createHouseBlips))} {MAINCOLOUR}all house blips`);
+	resetAllHouseBlips();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function toggleServerHousePickupsCommand(command, params, client) {
+	getServerConfig().createHousePickups = !getServerConfig().createHousePickups;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(getServerConfig().createHousePickups)}${toUpperCase(getOnOffFromBool(getServerConfig().createHousePickups))} {MAINCOLOUR}all house pickups`);
+	resetAllHousePickups();
 	return true;
 }
 
@@ -500,7 +622,7 @@ function toggleAntiCheatScriptWhitelist(command, params, client) {
 	getServerConfig().antiCheat.gameScriptWhiteListEnabled = !getServerConfig().antiCheat.gameScriptWhiteListEnabled;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} turned anticheat game script whitelist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptWhiteListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptWhiteListEnabled))}`);
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned anticheat game script whitelist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptWhiteListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptWhiteListEnabled))}`);
     updateServerRules();
 	return true;
 }
@@ -520,7 +642,7 @@ function toggleAntiCheatScriptBlacklist(command, params, client) {
 	getServerConfig().antiCheat.gameScriptBlackListEnabled = !getServerConfig().antiCheat.gameScriptBlackListEnabled;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} turned anticheat game script blacklist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptBlackListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptBlackListEnabled))}`);
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned anticheat game script blacklist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptBlackListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptBlackListEnabled))}`);
     updateServerRules();
 	return true;
 }
@@ -540,7 +662,7 @@ function toggleServerGUICommand(command, params, client) {
     getServerConfig().useGUI = !getServerConfig().useGUI;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} turned GUI ${toLowerCase(getOnOffFromBool(getServerConfig().useGUI))} for this server`);
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned GUI ${toLowerCase(getOnOffFromBool(getServerConfig().useGUI))} for this server`);
     updateServerRules();
 	return true;
 }
@@ -560,7 +682,7 @@ function toggleServerUseRealWorldTimeCommand(command, params, client) {
     getServerConfig().useRealTime = !getServerConfig().useRealTime;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} turned real-world time ${toLowerCase(getOnOffFromBool(getServerConfig().useRealTime))} for this server (GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)})`);
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned real-world time ${toLowerCase(getOnOffFromBool(getServerConfig().useRealTime))} for this server (GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)})`);
 	updateServerGameTime();
     updateServerRules();
 	return true;
@@ -586,7 +708,7 @@ function setServerRealWorldTimeZoneCommand(command, params, client) {
     getServerConfig().realTimeZone = toInteger(params);
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} set the time zone for in-game's real-world time to GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)}`);
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}set the time zone for in-game's real-world time to GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)}`);
 	updateServerGameTime();
     updateServerRules();
 	return true;
@@ -608,8 +730,7 @@ function reloadServerConfigurationCommand(command, params, client) {
 	applyConfigToServer(serverConfig);
 	updateServerRules();
 
-    messageAdminAction(`${getPlayerName(client)} reloaded the server configuration`);
-
+    messagePlayerSuccess(client, `You reloaded the server configuration!`);
 	return true;
 }
 
@@ -626,7 +747,7 @@ function reloadServerConfigurationCommand(command, params, client) {
  */
 function reloadEmailConfigurationCommand(command, params, client) {
 	emailConfig = loadEmailConfiguration();
-    messageAdminAction(`${getPlayerName(client)} reloaded the email configuration`);
+    messagePlayerSuccess(client, `You reloaded the email configuration!`);
 	return true;
 }
 
@@ -642,20 +763,18 @@ function reloadEmailConfigurationCommand(command, params, client) {
  *
  */
 function reloadDatabaseConfigurationCommand(command, params, client) {
-	//if(!databaseInUse) {
-		if(databaseConfig.usePersistentConnection && isDatabaseConnected(persistentDatabaseConnection)) {
-			console.warn(`[VRR.Database] Closing persistent database connection`);
-			persistentDatabaseConnection.close();
-			persistentDatabaseConnection = null;
-		}
-		databaseEnabled = false;
-		databaseConfig = loadEmailConfig();
-		messageAdminAction(`${getPlayerName(client)} reloaded the database configuration`);
-		databaseEnabled = true;
-		if(databaseConfig.usePersistentConnection) {
-			connectToDatabase();
-		}
-	//}
+	if(databaseConfig.usePersistentConnection && isDatabaseConnected(persistentDatabaseConnection)) {
+		console.warn(`[VRR.Database] Closing persistent database connection`);
+		persistentDatabaseConnection.close();
+		persistentDatabaseConnection = null;
+	}
+	databaseEnabled = false;
+	databaseConfig = loadEmailConfig();
+	messagePlayerSuccess(client, `You reloaded the database configuration!`);
+	databaseEnabled = true;
+	if(databaseConfig.usePersistentConnection) {
+		connectToDatabase();
+	}
 
 	return true;
 }
@@ -663,11 +782,6 @@ function reloadDatabaseConfigurationCommand(command, params, client) {
 // ===========================================================================
 
 function getServerIntroMusicURL() {
-	//if(server.getCVar("theme") != null) {
-	//	if(server.getCVar("theme") == VRR_THEME_CHRISTMAS) {
-	//
-	//	}
-	//}
 	return getServerConfig().introMusicURL;
 }
 

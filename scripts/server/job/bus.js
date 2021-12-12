@@ -437,7 +437,7 @@ function finishSuccessfulBusRoute(client) {
     let payout = toInteger(applyServerInflationMultiplier(getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).payout));
     getPlayerData(client).payDayAmount = getPlayerData(client).payDayAmount + payout;
     messagePlayerNormal(client, `You finished the ${getBusRouteData(getPlayerData(client).jobRouteIsland, getPlayerData(client).jobRoute).name} bus route!. Your bus has been returned to the bus depot.`, getColourByName("yellow"));
-    messagePlayerNormal(client, `You earned {ALTCOLOUR}$${payout}{MAINCOLOUR}. Your total paycheck of {ALTCOLOUR}${getPlayerData(client).payDayAmount} will be received next payday.`);
+    messagePlayerNormal(client, `You earned {ALTCOLOUR}$${payout}{MAINCOLOUR}. Your total paycheck of {ALTCOLOUR}${getPlayerData(client).payDayAmount} {MAINCOLOUR}will be received next payday.`);
     getPlayerData(client).jobRouteVehicle = false;
     getPlayerData(client).jobRoute = 0;
     getPlayerData(client).jobRouteStop = 0;

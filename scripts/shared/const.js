@@ -46,6 +46,7 @@ const VRR_KEYSTATE_UP = 1;
 const VRR_KEYSTATE_DOWN = 2;
 const VRR_KEYSTATE_HOLDSHORT = 3;
 const VRR_KEYSTATE_HOLDLONG = 4;
+const VRR_KEYSTATE_COMBO = 4;
 
 // Business Label Info Types
 const VRR_PROPLABEL_INFO_NONE = 0;

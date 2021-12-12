@@ -812,7 +812,7 @@ function setUpInitialGame() {
 // ===========================================================================
 
 function processGameSpecifics() {
-    if(game.game != VRR_GAME_GTA_IV) {
+    if(game.game < VRR_GAME_GTA_IV) {
         game.clearMessages();
     }
 

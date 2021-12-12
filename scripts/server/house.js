@@ -1339,6 +1339,22 @@ function resetHouseBlips(houseId) {
 
 // ===========================================================================
 
+function resetAllHousePickups() {
+	for(let i in getServerData().houses) {
+		resetHousePickups(i);
+	}
+}
+
+// ===========================================================================
+
+function resetAllHouseBlips() {
+	for(let i in getServerData().houses) {
+		resetHouseBlips(i);
+	}
+}
+
+// ===========================================================================
+
 function canPlayerManageHouse(client, houseId) {
 	if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageHouses"))) {
 		return true;

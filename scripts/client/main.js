@@ -46,6 +46,7 @@ let streamingRadioVolume = 50;
 let streamingRadioElement = false;
 
 let enterPropertyKey = null;
+let disableGUIKey = getKeyIdFromParams("insert");
 
 let inAnimation = false;
 let forcedAnimation = null;

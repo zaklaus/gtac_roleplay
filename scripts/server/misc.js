@@ -371,7 +371,7 @@ function listOnlineAdminsCommand(command, params, client) {
 	let admins = [];
 	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerData(clients[i]) != false) {
+		if(getPlayerData(clients[i])) {
 			if(getPlayerData(clients[i]).accountData.flags.admin != 0) {
 				admins.push(`{ALTCOLOUR}[${getPlayerData(clients[i]).accountData.staffTitle}] {MAINCOLOUR}${getCharacterFullName(clients[i])}`);
 			}
@@ -385,3 +385,64 @@ function listOnlineAdminsCommand(command, params, client) {
 }
 
 // ===========================================================================
+
+function gpsCommand(command, params, client) {
+	//== Businesses ===================================
+	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Businesses {clanOrange}================================`);
+
+	switch(toLowerCase(params)) {
+		case "skin":
+		case "skins":
+		case "clothes":
+			useType = VRR_ITEM_USETYPE_SKIN;
+			break;
+
+		case "gun":
+		case "guns":
+		case "weapon":
+		case "weapons":
+		case "wep":
+			useType = VRR_ITEM_USETYPE_WEAPON;
+			break;
+
+		case "food":
+		case "eat":
+			useType = VRR_ITEM_USETYPE_FOOD;
+			break;
+
+		case "drink":
+			useType = VRR_ITEM_USETYPE_DRINK;
+			break;
+
+		case "repair":
+			useType = VRR_ITEM_USETYPE_VEHREPAIR;
+			break;
+
+		case "colour":
+			useType = VRR_ITEM_USETYPE_VEHCOLOUR;
+			break;
+
+		default: {
+			let itemTypeId = getItemTypeFromParams(params);
+			if(getItemTypeData(itemTypeId)) {
+				useType = getItemTypeData(itemTypeId).useType;
+			}
+		}
+	}
+
+	let businessId = getClosestBusinessWithBuyableItemOfUseType(useType);
+	if(!businessId) {
+		messagePlayerError(client, `There is no business with that item available`);
+		return false;
+	}
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, `There is no business with that item available`);
+		return false;
+	}
+
+	blinkGenericGPSBlipForPlayer(client, getColourByType("businessBlue"), 10);
+}
+
+// ===========================================================================
+

@@ -11,13 +11,8 @@ function initJobScript() {
 	logToConsole(LOG_INFO, "[VRR.Job]: Initializing job script ...");
 	getServerData().jobs = loadJobsFromDatabase();
 
-	if(getServerConfig().createJobPickups) {
-		createAllJobPickups();
-	}
-
-	if(getServerConfig().createJobBlips) {
-		createAllJobBlips();
-	}
+	createAllJobPickups();
+	createAllJobBlips();
 
 	setAllJobDataIndexes();
 	logToConsole(LOG_INFO, "[VRR.Job]: Job script initialized successfully!");
@@ -200,6 +195,10 @@ function loadJobEquipmentItemsFromDatabase(jobEquipmentDatabaseId) {
 // ===========================================================================
 
 function createAllJobBlips() {
+	if(!getServerConfig().createJobBlips) {
+		return false;
+	}
+
 	logToConsole(LOG_DEBUG, `[VRR.Job] Spawning all job location blips ...`);
 	for(let i in getServerData().jobs) {
 		for(let j in getServerData().jobs[i].locations) {
@@ -214,6 +213,10 @@ function createAllJobBlips() {
 // ===========================================================================
 
 function createAllJobPickups() {
+	if(!getServerConfig().createJobPickups) {
+		return false;
+	}
+
 	logToConsole(LOG_DEBUG, `[VRR.Job] Spawning all job location pickups ...`);
 	let pickupCount = 0;
 	for(let i in getServerData().jobs) {
@@ -1728,6 +1731,52 @@ function respawnPlayerLastJobVehicle(client) {
 		return false;
 	}
 	respawnVehicle(getPlayerCurrentSubAccount(client).lastJobVehicle);
+}
+
+// ===========================================================================
+
+function resetAllJobBlips() {
+	deleteAllJobBlips();
+	createAllJobBlips();
+}
+
+// ===========================================================================
+
+function resetAllJobPickups() {
+	deleteAllJobPickups();
+	createAllJobPickups();
+}
+
+// ===========================================================================
+
+function deleteAllJobBlips() {
+	for(let i in getServerData().jobs) {
+		deleteJobBlips(i);
+	}
+}
+
+// ===========================================================================
+
+function deleteAllJobPickups() {
+	for(let i in getServerData().jobs) {
+		deleteJobPickups(i);
+	}
+}
+
+// ===========================================================================
+
+function deleteJobBlips(jobId) {
+	for(let j in getServerData().jobs[jobId].locations) {
+		deleteJobLocationBlip(jobId, j);
+	}
+}
+
+// ===========================================================================
+
+function deleteJobPickups(jobId) {
+	for(let j in getServerData().jobs[jobId].locations) {
+		deleteJobLocationPickup(jobId, j);
+	}
 }
 
 // ===========================================================================

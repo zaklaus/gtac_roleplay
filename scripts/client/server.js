@@ -162,7 +162,11 @@ function tellServerItemActionDelayComplete() {
 // ===========================================================================
 
 function sendServerClientInfo() {
-    triggerNetworkEvent("vrr.clientInfo", `${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_PATCH}.${CLIENT_VERSION_BUILD}`, game.width, game.height);
+    let clientVersion = "0.0.0.0";
+    if(typeof CLIENT_VERSION_MAJOR != "undefined") {
+        clientVersion = `${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_PATCH}.${CLIENT_VERSION_BUILD}`;
+    }
+    triggerNetworkEvent("vrr.clientInfo", clientVersion, game.width, game.height);
 }
 
 // ===========================================================================

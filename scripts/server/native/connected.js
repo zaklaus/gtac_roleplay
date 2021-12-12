@@ -156,13 +156,14 @@ function getVehicleForNetworkEvent(vehicle) {
 // ===========================================================================
 
 function deleteGameElement(element) {
-    logToConsole(LOG_DEBUG, `Destroying game element ${element.id} (Type: ${element.type})`);
-    if(element != null) {
-		//removeFromWorld(element);
-        destroyElement(element);
-        return true;
+    try {
+        if(element != null) {
+            destroyElement(element);
+            return true;
+        }
+    } catch(error) {
+        return false;
     }
-    return false;
 }
 
 // ===========================================================================

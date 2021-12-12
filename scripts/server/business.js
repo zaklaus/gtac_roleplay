@@ -14,12 +14,14 @@ function initBusinessScript() {
 	cacheAllBusinessItems();
 
 	if(getServerConfig().createBusinessPickups) {
-		createAllBusinessPickups();
+
 	}
 
 	if(getServerConfig().createBusinessBlips) {
-		createAllBusinessBlips();
+
 	}
+	createAllBusinessPickups();
+	createAllBusinessBlips();
 
 	setAllBusinessIndexes();
 
@@ -290,6 +292,39 @@ function setBusinessOwnerCommand(command, params, client) {
 
 // ===========================================================================
 
+function setBusinessJobCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let jobId = getJobFromParams(params);
+	let businessId = getPlayerBusiness(client);
+
+	if(!getJobData(jobId)) {
+		messagePlayerError(client, "Job not found!");
+		return false;
+	}
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change the owner of this business!");
+		return false;
+	}
+
+	getBusinessData(businessId).ownerType = VRR_BIZOWNER_JOB;
+	getBusinessData(businessId).ownerId = getJobData(jobId).databaseId;
+	getBusinessData(businessId).needsSaved = true;
+
+	messagePlayerSuccess(`{MAINCOLOUR}You set the owner of business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to the {jobYellow}${getJobData(jobId).name}`);
+}
+
+// ===========================================================================
+
 function setBusinessClanCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -306,7 +341,7 @@ function setBusinessClanCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change this business clan!");
+		messagePlayerError(client, "You can't give this business to a clan!");
 		return false;
 	}
 
@@ -315,6 +350,40 @@ function setBusinessClanCommand(command, params, client) {
 	getBusinessData(businessId).needsSaved = true;
 
 	messagePlayerSuccess(`{MAINCOLOUR}You gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to the {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}clan!`);
+}
+
+// ===========================================================================
+
+function setBusinessRankCommand(command, params, client) {
+	let businessId = getPlayerBusiness(client);
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError("Business not found!");
+		return false;
+	}
+
+	let rankId = params;
+
+	if(!canPlayerManageBusiness(client, businessId)) {
+		messagePlayerError(client, "You can't change this business rank level!");
+		return false;
+	}
+
+	if(getVehicleData(vehicle).ownerType == VRR_VEHOWNER_CLAN) {
+		let clanId = getClanIdFromDatabaseId(getBusinessData(businessId).ownerId);
+		rankId = getClanRankFromParams(clanId, params);
+		if(!getClanRankData(clanId, rankId)) {
+			messagePlayerError(client, "Clan rank not found!");
+			return false;
+		}
+		getBusinessData(businessId).rank = getClanRankData(clanId, rankId).databaseId;
+		messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set their {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}rank to {ALTCOLOUR}${getClanRankData(clanId, rankId).name} {MAINCOLOUR}of the {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}clan!`);
+	} else if(getBusinessData(businessId).ownerType == VRR_VEHOWNER_JOB) {
+		getBusinessData(businessId).rank = rankId;
+		messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}rank to {ALTCOLOUR}${rankId} {MAINCOLOUR}of the {jobYellow}${getJobData(getJobIdFromDatabaseId(getBusinessData(businessId).ownerId)).name} {MAINCOLOUR}job!`);
+	}
+
+	getBusinessData(businessId).needsSaved = true;
 }
 
 // ===========================================================================
@@ -543,6 +612,40 @@ function getBusinessInfoCommand(command, params, client) {
 	}
 
 	messagePlayerInfo(client, `🏢 {businessBlue}[Business Info] {MAINCOLOUR}Name: {ALTCOLOUR}${getBusinessData(businessId).name}, {MAINCOLOUR}Owner: {ALTCOLOUR}${ownerName} (${getBusinessOwnerTypeText(getBusinessData(businessId).ownerType)}), {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(intToBool(getBusinessData(businessId).locked))}, {MAINCOLOUR}ID: {ALTCOLOUR}${businessId}/${getBusinessData(businessId).databaseId}`);
+}
+
+// ===========================================================================
+
+function getBusinessFloorItemsCommand(command, params, client) {
+	let businessId = getPlayerBusiness(client);
+
+	if(!areParamsEmpty(params)) {
+		businessId = getBusinessFromParams(params);
+	}
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	showBusinessFloorInventoryToPlayer(client, businessId);
+}
+
+// ===========================================================================
+
+function getBusinessStorageItemsCommand(command, params, client) {
+	let businessId = getPlayerBusiness(client);
+
+	if(!areParamsEmpty(params)) {
+		businessId = getBusinessFromParams(params);
+	}
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, "Business not found!");
+		return false;
+	}
+
+	showBusinessStorageInventoryToPlayer(client, businessId);
 }
 
 // ===========================================================================
@@ -1180,6 +1283,10 @@ function saveBusinessToDatabase(businessId) {
 // ===========================================================================
 
 function createAllBusinessPickups() {
+	if(!getServerConfig().createBusinessPickups) {
+		return false;
+	}
+
 	for(let i in getServerData().businesses) {
 		createBusinessEntrancePickup(i);
 		createBusinessExitPickup(i);
@@ -1190,6 +1297,10 @@ function createAllBusinessPickups() {
 // ===========================================================================
 
 function createAllBusinessBlips() {
+	if(!getServerConfig().createBusinessBlips) {
+		return false;
+	}
+
 	for(let i in getServerData().businesses) {
 		createBusinessEntranceBlip(i);
 		createBusinessExitBlip(i);
@@ -1836,6 +1947,46 @@ function resetBusinessBlips(businessId) {
 	deleteBusinessBlips(businessId);
 	createBusinessEntranceBlip(businessId);
 	createBusinessExitBlip(businessId);
+}
+
+// ===========================================================================
+
+function resetAllBusinessPickups(businessId) {
+	deleteBusinessPickups(businessId);
+	createBusinessEntrancePickup(businessId);
+	createBusinessExitPickup(businessId);
+}
+
+// ===========================================================================
+
+function resetAllBusinessBlips() {
+	for(let i in getServerData().businesses) {
+		deleteBusinessBlips(i);
+		createBusinessBlips(i);
+	}
+}
+
+// ===========================================================================
+
+function createBusinessBlips(businessId) {
+	createBusinessEntranceBlip(businessId);
+	createBusinessExitBlip(businessId);
+}
+
+// ===========================================================================
+
+function resetAllBusinessPickups() {
+	for(let i in getServerData().businesses) {
+		deleteBusinessPickups(i);
+		createBusinessPickups(i);
+	}
+}
+
+// ===========================================================================
+
+function createBusinessPickups(businessId) {
+	createBusinessEntrancePickup(businessId);
+	createBusinessExitPickup(businessId);
 }
 
 // ===========================================================================

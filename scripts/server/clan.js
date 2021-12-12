@@ -627,7 +627,7 @@ function addClanRankFlagCommand(command, params, client) {
 
 	let flagValue = getClanFlagValue(splitParams[1]);
 
-	getClanRankData(clanId, rankId).flags = addBitFlag(getClanRankData(clanId, rankId).flags, flagValue);
+	addBitFlag(getClanRankData(clanId, rankId).flags, flagValue);
 	messagePlayerSuccess(client, `You added the {ALTCOLOUR}${splitParams[1]} {MAINCOLOUR}clan flag to rank {ALTCOLOUR}${getClanRankData(clanId, rankId).name}`);
 }
 
@@ -666,7 +666,7 @@ function removeClanRankFlagCommand(command, params, client) {
 
 	let flagValue = getClanFlagValue(splitParams[1]);
 
-	getClanRankData(clanId, rankId).flags = removeBitFlag(getClanRankData(clanId, rankId).flags, flagValue);
+	removeBitFlag(getClanRankData(clanId, rankId).flags, flagValue);
 	messagePlayerSuccess(client, `You removed the {ALTCOLOUR}${splitParams[1]} {MAINCOLOUR}clan flag from rank {ALTCOLOUR}${getClanRankData(clanId, rankId).name}`);
 }
 

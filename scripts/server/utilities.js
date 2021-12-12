@@ -1139,19 +1139,19 @@ function getClientsInRange(position, distance) {
 // ===========================================================================
 
 function getCiviliansInRange(position, distance) {
-	return getElementsByType(ELEMENT_PED).filter(x => !x.isType(ELEMENT_PLAYER) && x.position.distance(position) <= distance);
+	return getElementsByType(ELEMENT_PED).filter(x => !x.isType(ELEMENT_PLAYER) && getElementPosition(x).position.distance(position) <= distance);
 }
 
 // ===========================================================================
 
 function getPlayersInRange(position, distance) {
-	return getElementsByType(ELEMENT_PLAYER).filter(x => x.position.distance(position) <= distance);
+	return getClients().filter(x => getPlayerPosition(x).distance(position) <= distance);
 }
 
 // ===========================================================================
 
 function getElementsByTypeInRange(elementType, position, distance) {
-	return getElementsByType(elementType).filter(x => x.position.distance(position) <= distance);
+	return getElementsByType(elementType).filter(x => getElementPosition(x).position.distance(position) <= distance);
 }
 
 // ===========================================================================

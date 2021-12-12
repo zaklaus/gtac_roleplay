@@ -36,10 +36,10 @@ function toggleAutoLoginByIPCommand(command, params, client) {
 
 	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerSuccess(client, `You will not be automatically logged in via your current IP (${client.ip})`);
+		messagePlayerSuccess(client, `Automatic login by IP is now {softRed}OFF {white}`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messagePlayerSuccess(client, `You will now be automatically logged in from your current IP (${client.ip})`);
+		messagePlayerSuccess(client, `Automatic login by IP is now {softGreen}ON {white}(${client.ip})`);
 	}
 	return true;
 }
@@ -51,10 +51,10 @@ function toggleNoRandomTipsCommand(command, params, client) {
 
 	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerSuccess(client, `You will not receive random tips anymore.`);
+		messagePlayerSuccess(client, `Random tips are now {softRed}OFF`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messagePlayerSuccess(client, `You will now receive random tips every 15 minutes.`);
+		messagePlayerSuccess(client, `Random tips are now {softGreen}ON`);
 	}
 	return true;
 }
@@ -66,10 +66,10 @@ function toggleNoActionTipsCommand(command, params, client) {
 
 	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerSuccess(client, `You will not receive action-based tips anymore.`);
+		messagePlayerSuccess(client, `Action tips are now {softRed}OFF`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messagePlayerSuccess(client, `You will now receive tips for some actions and commands.`);
+		messagePlayerSuccess(client, `Action tips are now {softGreen}ON`);
 	}
 	return true;
 }
@@ -81,10 +81,10 @@ function toggleAutoSelectLastCharacterCommand(command, params, client) {
 
 	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerSuccess(client, `You will not be automatically spawned as your last used character`);
+		messagePlayerSuccess(client, `Automatic spawn as last used character is now {softRed}OFF`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messagePlayerSuccess(client, `You will now be automatically spawned as your last used character`);
+		messagePlayerSuccess(client, `Automatic spawn as last used character is now {softGreen}ON`);
 	}
 	return true;
 }
@@ -96,11 +96,11 @@ function toggleAccountGUICommand(command, params, client) {
 
 	if(!doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
-		messagePlayerNormal(client, `⚙️ You will now be shown GUI (if enabled on current server)`);
+		messagePlayerNormal(client, `⚙️ GUI is now {softGreen}ON. {white}(if server has it enabled)`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	} else {
 		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
-		messagePlayerNormal(client, `⚙️ You will not be shown GUI anymore. Any GUI stuff will be shown as messages in the chatbox instead.`);
+		messagePlayerNormal(client, `⚙️ GUI is now {softRed}OFF. {white}(Any GUI stuff will be use via commands and message in the chatbox)`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account OFF.`);
 	}
 
@@ -110,6 +110,7 @@ function toggleAccountGUICommand(command, params, client) {
 				showPlayerLoginGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI`);
 			} else {
+				hideAllPlayerGUI(client);
 				messagePlayerNormal(client, `👋 Welcome back to ${getServerName()}, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
 			}
@@ -118,6 +119,7 @@ function toggleAccountGUICommand(command, params, client) {
 				showPlayerRegistrationGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 			} else {
+				hideAllPlayerGUI(client);
 				messagePlayerNormal(client, `👋 Welcome to ${getServerName()}, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled)`);
 			}
@@ -188,12 +190,12 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
-		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
 		messagePlayerSuccess(client, `{MAINCOLOUR}You have turned ${getBoolRedGreenInlineColour(false)}ON {MAINCOLOUR} two factor authentication!{ALTCOLOUR}${addtoAuthenticatorCode}`);
 		messagePlayerAlert(client, `You will be required to enter a code sent to your email every time you log on.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
-		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
+		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
 		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF {MAINCOLOUR}two-factor authentication for login.`);
 		messagePlayerAlert(client, `You won't be required to enter a code sent to your email every time you log on anymore.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
@@ -334,7 +336,7 @@ function verifyAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	getPlayerData(client).accountData.flags.moderation = addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("EmailVerified"));
+	addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("EmailVerified"));
 	getPlayerData(client).accountData.emailVerificationCode = "";
 
 	messagePlayerSuccess(client, `Your email has been verified!`);
@@ -646,7 +648,7 @@ function saveAccountToDatabase(accountData) {
 
 function saveAccountKeyBindToDatabase(keyBindData) {
 	if(keyBindData.databaseId == -1) {
-		// Keybind is a default keybind, don't save
+		// Keybind is a default or temporary keybind, don't save
 		return false;
 	}
 
@@ -780,7 +782,7 @@ function checkLogin(client, password) {
 	if(!isPlayerRegistered(client)) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is not registered`);
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerRegistratonGUI(client);
+			showPlayerRegistrationGUI(client);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 		} else {
 			messagePlayerError(client, "Your name is not registered! Use /register to make an account.");
@@ -1044,6 +1046,8 @@ function initClient(client) {
 				}
 			}
 		}
+
+		addPlayerKeyBind(client, getKeyIdFromParams("insert"), "gui", "");
 
 		playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 	}, 2500);

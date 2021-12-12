@@ -107,6 +107,7 @@ function oneMinuteTimerFunction() {
 function tenMinuteTimerFunction() {
 	showRandomTipToAllPlayers();
 	saveAllServerDataToDatabase();
+	checkInactiveVehicleRespawns();
 }
 
 // ===========================================================================
@@ -227,6 +228,17 @@ function showRandomTipToAllPlayers() {
 			if(!doesPlayerHaveRandomTipsDisabled(clients[i])) {
 				messagePlayerTimedRandomTip(null, randomTips[tipId]);
 			}
+		}
+	}
+}
+
+// ===========================================================================
+
+function checkInactiveVehicleRespawns() {
+	let vehicles = getElementsByType(ELEMENT_VEHICLE);
+	for(let i in vehicles) {
+		if(getCurrentUnixTimestamp() - getVehicleData(vehicles[i]).respawnTime >= getGlobalConfig().vehicleInactiveRespawnDelay) {
+			respawnVehicle(vehicles[i]);
 		}
 	}
 }

@@ -109,14 +109,19 @@ function loadCommands() {
             commandData("bizitemprice", setBusinessItemSellPriceCommand, "<item slot> <sell price>", getStaffFlagValue("None"), true, true, "Sets the purchase price of a business item"),
             commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("None"), true, true, "Changes a business name"),
             commandData("bizowner", setBusinessOwnerCommand, "<player name/id>", getStaffFlagValue("None"), true, true, "Changes the owner of a business"),
-            commandData("bizclan", setBusinessClanCommand, "", getStaffFlagValue("None"), true, true, "Gives a business to a clan"),
+            commandData("bizpublic", setBusinessPublicCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Changes a business to public (city hall, govt buildings, etc)"),
+            commandData("bizpublic", setBusinessJobCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Changes the owner of a business to a job"),
+            commandData("bizrank", setBusinessRankCommand, "", getStaffFlagValue("None"), true, true, "Changes the job/clan rank required to use the business"),
+            commandData("bizclan", setBusinessClanCommand, "", getStaffFlagValue("None"), true, true, "Changes the owner of a business to a clan"),
             commandData("bizbuyprice", setBusinessBuyPriceCommand, "<amount>", getStaffFlagValue("None"), true, true, "Changes the price to buy the business"),
             commandData("bizblip", setBusinessBlipCommand, "<type name/model id>", getStaffFlagValue("ManageBusinesses"), true, true, "Sets the business blip display"),
             commandData("bizpickup", setBusinessPickupCommand, "<type name/model id>", getStaffFlagValue("ManageBusinesses"), true, true, "Sets the business pickup display"),
-            commandData("bizinfo", getBusinessInfoCommand, "[id]", getStaffFlagValue("None"), true, true, "Shows business information"),
-            commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Shows business information"),
+            commandData("bizinfo", getBusinessInfoCommand, "[business id]", getStaffFlagValue("None"), true, true, "Shows business information"),
+            commandData("bizflooritems", getBusinessFloorItemsCommand, "[business id]", getStaffFlagValue("None"), true, true, "Shows all business floor items (for sale) to a player"),
+            commandData("bizflooritems", getBusinessStorageItemsCommand, "[business id]", getStaffFlagValue("None"), true, true, "Shows all business storage items (i.e. back room) to a player"),
+            commandData("bizentrance", moveBusinessEntranceCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Moves the entrance (exterior point) of the business"),
             commandData("bizexit", moveBusinessExitCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Moves the exit (interior point) of the business"),
-            commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("ManageBusinesses"), true, true, "Changes the business' interior"),
+            commandData("bizinttype", setBusinessInteriorTypeCommand, "<interior template name/business id>", getStaffFlagValue("ManageBusinesses"), true, true, "Changes the business interior"),
             commandData("bizdefaultitems", giveDefaultItemsToBusinessCommand, "<item template>", getStaffFlagValue("ManageItems"), true, true, "Gives the business the default items based on template name"),
             commandData("bizdelflooritems", deleteBusinessFloorItemsCommand, "", getStaffFlagValue("ManageItems"), true, true, "Destroys all items on the business floor (for-sale items)"),
             commandData("bizdelstorageitems", deleteBusinessStorageItemsCommand, "", getStaffFlagValue("ManageItems"), true, true, "Destroys all items in the business's storage"),
@@ -187,11 +192,16 @@ function loadCommands() {
             commandData("newcharspawn", setNewCharacterSpawnPositionCommand, "", getStaffFlagValue("ManageServer"), true, true, "Sets the starting spawn position for new characters"),
             commandData("newcharcash", setNewCharacterMoneyCommand, "<amount>", getStaffFlagValue("ManageServer"), true, true, "Sets the starting money for new characters"),
             commandData("newcharskin", setNewCharacterSkinCommand, "[skin id]", getStaffFlagValue("ManageServer"), true, true, "Sets the default skin for new characters"),
-            commandData("jobinfo", getJobInfoCommand, "", getStaffFlagValue("None"), true, true, "Get info for nearest or specified job"),
-            commandData("joblocinfo", getJobLocationInfoCommand, "", getStaffFlagValue("None"), true, true, "Get info for nearest or specified job location"),
             commandData("reloadcfg", reloadServerConfigurationCommand, "", getStaffFlagValue("ManageServer"), true, true, "Loads and applies the server configuration"),
             commandData("reloademailcfg", reloadEmailConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the email configuration"),
             commandData("reloaddbcfg", reloadDatabaseConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the database configuration"),
+
+            commandData("setbizblips", toggleServerBusinessBlipsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all business blips on/off"),
+            commandData("sethouseblips", toggleServerHouseBlipsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all house blips on/off"),
+            commandData("setjobblips", toggleServerJobBlipsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all job blips on/off"),
+            commandData("setbizpickups", toggleServerBusinessPickupsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all business pickups on/off"),
+            commandData("sethousepickups", toggleServerHousePickupsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all house pickups on/off"),
+            commandData("setjobpickups", toggleServerJobPickupsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all job pickups on/off"),
         ],
         core: [],
         database: [
@@ -309,8 +319,6 @@ function loadCommands() {
             commandData("fare", taxiSetFareCommand, "", getStaffFlagValue("None"), true, false),
 
             // Police
-            //commandData("tazer", policeTazerCommand, "", getStaffFlagValue("None"), true, false),
-            //commandData("cuff", policeCuffCommand, "", getStaffFlagValue("None"), true, false),
             commandData("detain", policeDetainCommand, "", getStaffFlagValue("None"), true, false),
             commandData("drag", policeDragCommand, "", getStaffFlagValue("None"), true, false),
             commandData("search", policeSearchCommand, "", getStaffFlagValue("None"), true, false),
@@ -322,7 +330,6 @@ function loadCommands() {
             // Admin Job Stuff
             commandData("addjobloc", createJobLocationCommand, "<job name/id>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("deljobloc", deleteJobLocationCommand, "", getStaffFlagValue("ManageJobs"), true, false),
-            //commandData("jobloctoggle", toggleJobLocationCommand, "", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobwhitelist", toggleJobWhiteListCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobblacklist", toggleJobBlackListCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobtoggle", toggleJobEnabledCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
@@ -331,6 +338,9 @@ function loadCommands() {
             commandData("jobdelplayerbl", removePlayerFromJobBlackListCommand, "<player name/id> [job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobdelplayerbl", removePlayerFromJobWhiteListCommand, "<player name/id> [job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobreloadall", reloadAllJobsCommand, "", getStaffFlagValue("ManageJobs"), true, false),
+
+            commandData("jobinfo", getJobInfoCommand, "", getStaffFlagValue("None"), true, true, "Get info for nearest or specified job"),
+            commandData("joblocinfo", getJobLocationInfoCommand, "", getStaffFlagValue("None"), true, true, "Get info for nearest or specified job location"),
         ],
         keybind: [
             commandData("bindkey", addKeyBindCommand, "<key id/name> <command> [params]", getStaffFlagValue("None"), true, false, "Binds a key to a command and optional parameters"),
@@ -741,3 +751,4 @@ function getCommandAliasesNames(command) {
 }
 
 // ===========================================================================
+

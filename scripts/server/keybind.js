@@ -69,10 +69,14 @@ function removeKeyBindCommand(command, params, client) {
 
 // ===========================================================================
 
-function addPlayerKeyBind(client, keyId, tempCommand, tempParams) {
-    let keyBindData = new KeyBindData(false, keyId, `${tempCommand} ${tempParams}`);
+function addPlayerKeyBind(client, keys, command, params, tempKey = false) {
+    let keyBindData = new KeyBindData(false, keys, `${command} ${params}`);
+    if(tempKey == true) {
+        keyBindData.databaseId = -1;
+    }
+
     getPlayerData(client).accountData.keyBinds.push(keyBindData);
-    sendAddAccountKeyBindToClient(client, keyId, KEYSTATE_UP);
+    sendAddAccountKeyBindToClient(client, keys, (keys.length > 1) ? VRR_KEYSTATE_COMBO : VRR_KEYSTATE_UP);
 
     if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
         let keyId = getPlayerKeyBindForCommand(client, "enter");

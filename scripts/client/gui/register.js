@@ -158,6 +158,8 @@ function showRegistrationGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	register.window.shown = true;
+
+	showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
 }
 
 // ===========================================================================

@@ -172,6 +172,8 @@ function showNewCharacter() {
 	mexui.setInput(true);
 	setHUDEnabled(false);
 	newCharacter.window.shown = true;
+
+	showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
 }
 
 // ===========================================================================

@@ -52,7 +52,7 @@ function processSmallGameMessageRendering() {
     if(renderSmallGameMessage) {
         if(smallGameMessageFont != null) {
             if(smallGameMessageFont != "") {
-                smallGameMessageFont.render(smallGameMessageText, [0, game.height-50], game.width, 0.5, 0.0, smallGameMessageFont.size, smallGameMessageColour, true, true, false, true);
+                smallGameMessageFont.render(smallGameMessageText, [0, game.height-90], game.width, 0.5, 0.0, smallGameMessageFont.size, smallGameMessageColour, true, true, false, true);
             }
         }
     }

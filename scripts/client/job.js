@@ -35,22 +35,6 @@ function setLocalPlayerWorkingState(tempWorking) {
 
 // ===========================================================================
 
-function showJobRouteStop() {
-    logToConsole(LOG_DEBUG, `[VRR.Job] Showing route stop`);
-    if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-        if(game.game == VRR_GAME_GTA_SA) {
-            jobRouteStopSphere = game.createPickup(1318, position, 1);
-        } else {
-            jobRouteStopSphere = game.createSphere(position, 3);
-            jobRouteStopSphere.colour = colour;
-        }
-
-        jobRouteStopBlip = game.createBlip(position, 0, 2, colour);
-    }
-}
-
-// ===========================================================================
-
 function showJobRouteStop(position, colour) {
     logToConsole(LOG_DEBUG, `[VRR.Job] Showing route stop`);
     if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
@@ -61,7 +45,11 @@ function showJobRouteStop(position, colour) {
             jobRouteStopSphere.colour = colour;
         }
 
-        jobRouteStopBlip = game.createBlip(position, 0, 2, colour);
+        if(jobRouteStopBlip != null) {
+            destroyElement(jobRouteStopBlip);
+        }
+
+        blinkJobRouteStopBlip(10, position, colour);
     }
 }
 
@@ -74,6 +62,25 @@ function enteredJobRouteSphere() {
     destroyElement(jobRouteStopBlip);
     jobRouteStopSphere = null;
     jobRouteStopBlip = null;
+}
+
+// ===========================================================================
+
+function blinkJobRouteStopBlip(times, position, colour) {
+    for(let i = 1 ; i <= times ; i++) {
+        setTimeout(function() {
+            if(jobRouteStopBlip != null) {
+                destroyElement(jobRouteStopBlip);
+                jobRouteStopBlip = null;
+            } else {
+                jobRouteStopBlip = game.createBlip(position, 0, 2, colour);
+            }
+        }, 500*i);
+    }
+
+    setTimeout(function() {
+        jobRouteStopBlip = game.createBlip(position, 0, 2, colour);
+    }, 500*times+1);
 }
 
 // ===========================================================================

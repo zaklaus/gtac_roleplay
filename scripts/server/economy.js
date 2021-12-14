@@ -34,9 +34,9 @@ function playerPayDay(client) {
 	grossIncome = grossIncome + getGlobalConfig().economy.passiveIncomePerPayDay;
 	grossIncome = grossIncome*getGlobalConfig().economy.grossIncomeMultiplier;
 
-	incomeTaxAmount = calculateIncomeTax(wealth);
+	let incomeTaxAmount = calculateIncomeTax(wealth);
 
-	let netIncome = grossIncome-taxAmount;
+	let netIncome = grossIncome-incomeTaxAmount;
 
 	messagePlayerAlert(client, "== Payday! =============================");
 	messagePlayerInfo(client, `Paycheck: {ALTCOLOUR}$${grossIncome}`);

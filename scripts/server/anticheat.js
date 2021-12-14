@@ -75,3 +75,165 @@ function clearPlayerStateToEnterExitProperty(client) {
 }
 
 // ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function addAntiCheatBlackListedScriptCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let scriptName = params;
+    let tempBlackListedGameScriptData = new BlackListedGameScriptData(false);
+    tempBlackListedGameScriptData.scriptName = scriptName;
+    tempBlackListedGameScriptData.serverId = getServerId();
+    tempBlackListedGameScriptData.enabled = true;
+	tempBlackListedGameScriptData.needsSaved = true;
+	getServerConfig().antiCheat.blackListedGameScripts.push(tempBlackListedGameScriptData);
+
+    if(getServerConfig().antiCheat.gameScriptBlackListEnabled) {
+        sendPlayerGameScriptState(null, scriptName, VRR_GAMESCRIPT_DENY);
+    }
+
+	messagePlayerSuccess(client, `You added {ALTCOLOUR}${scriptName} {MAINCOLOUR} to the anticheat game script blacklist`);
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function addAntiCheatWhiteListedScriptCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let scriptName = params;
+    let tempWhiteListedGameScriptData = new WhiteListedGameScriptData(false);
+    tempWhiteListedGameScriptData.scriptName = scriptName;
+    tempWhiteListedGameScriptData.serverId = getServerId();
+    tempWhiteListedGameScriptData.enabled = true;
+	tempWhiteListedGameScriptData.needsSaved = true;
+	getServerConfig().antiCheat.whiteListedGameScripts.push(tempWhiteListedGameScriptData);
+
+    if(getServerConfig().antiCheat.gameScriptWhiteListEnabled) {
+        sendPlayerGameScriptState(null, scriptName, VRR_GAMESCRIPT_ALLOW);
+    }
+
+	messagePlayerSuccess(client, `You added {ALTCOLOUR}${scriptName} {MAINCOLOUR} to the anticheat game script whitelist`);
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function removeAntiCheatWhiteListedScriptCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let whiteListScriptId = getAntiCheatWhiteListedScriptFromParams(params);
+
+	getServerConfig().antiCheat.whiteListedGameScripts.splice(whiteListScriptId, 1);
+
+    if(getServerConfig().antiCheat.gameScriptWhiteListEnabled) {
+        sendPlayerGameScriptState(null, scriptName, VRR_GAMESCRIPT_NONE);
+    }
+
+	messagePlayerSuccess(client, `You removed {ALTCOLOUR}${scriptName} {MAINCOLOUR} from the anticheat game script whitelist`);
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function removeAntiCheatBlackListedScriptCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let blackListScriptId = getAntiCheatBlackListedScriptFromParams(params);
+
+	getServerConfig().antiCheat.blackListedGameScripts.splice(blackListScriptId, 1);
+
+    if(getServerConfig().antiCheat.gameScriptBlackListEnabled) {
+        sendPlayerGameScriptState(null, scriptName, VRR_GAMESCRIPT_NONE);
+    }
+
+	messagePlayerSuccess(client, `You removed {ALTCOLOUR}${scriptName} {MAINCOLOUR} from the anticheat game script blacklist`);
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+ function toggleAntiCheatScriptWhiteListCommand(command, params, client) {
+	getServerConfig().antiCheat.gameScriptWhiteListEnabled = !getServerConfig().antiCheat.gameScriptWhiteListEnabled;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned anticheat game script whitelist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptWhiteListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptWhiteListEnabled))}`);
+    updateServerRules();
+	return true;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function toggleAntiCheatScriptBlackListCommand(command, params, client) {
+	getServerConfig().antiCheat.gameScriptBlackListEnabled = !getServerConfig().antiCheat.gameScriptBlackListEnabled;
+	getServerConfig().needsSaved = true;
+
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned anticheat game script blacklist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptBlackListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptBlackListEnabled))}`);
+    updateServerRules();
+	return true;
+}

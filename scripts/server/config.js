@@ -618,46 +618,6 @@ function toggleServerLogoCommand(command, params, client) {
  * @return {bool} Whether or not the command was successful
  *
  */
-function toggleAntiCheatScriptWhitelist(command, params, client) {
-	getServerConfig().antiCheat.gameScriptWhiteListEnabled = !getServerConfig().antiCheat.gameScriptWhiteListEnabled;
-	getServerConfig().needsSaved = true;
-
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned anticheat game script whitelist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptWhiteListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptWhiteListEnabled))}`);
-    updateServerRules();
-	return true;
-}
-
-// ===========================================================================
-
-/**
- * This is a command handler function.
- *
- * @param {string} command - The command name used by the player
- * @param {string} params - The parameters/args string used with the command by the player
- * @param {Client} client - The client/player that used the command
- * @return {bool} Whether or not the command was successful
- *
- */
-function toggleAntiCheatScriptBlacklist(command, params, client) {
-	getServerConfig().antiCheat.gameScriptBlackListEnabled = !getServerConfig().antiCheat.gameScriptBlackListEnabled;
-	getServerConfig().needsSaved = true;
-
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned anticheat game script blacklist ${getBoolRedGreenInlineColour(getServerConfig().antiCheat.gameScriptBlackListEnabled)}${toUpperCase(getOnOffFromBool(getServerConfig().antiCheat.gameScriptBlackListEnabled))}`);
-    updateServerRules();
-	return true;
-}
-
-// ===========================================================================
-
-/**
- * This is a command handler function.
- *
- * @param {string} command - The command name used by the player
- * @param {string} params - The parameters/args string used with the command by the player
- * @param {Client} client - The client/player that used the command
- * @return {bool} Whether or not the command was successful
- *
- */
 function toggleServerGUICommand(command, params, client) {
     getServerConfig().useGUI = !getServerConfig().useGUI;
 	getServerConfig().needsSaved = true;

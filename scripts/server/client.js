@@ -678,6 +678,8 @@ function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, he
             break;
 
         default:
+            getPlayerData(client).health = getPlayerData(client).health-(healthLoss*getPlayerData(client).incomingDamageMultiplier);
+            setPlayerHealth(client, getPlayerData(client).health);
             break;
     }
 }

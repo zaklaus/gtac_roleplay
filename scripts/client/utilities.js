@@ -534,18 +534,20 @@ function processWantedLevelReset() {
 function processLocalPlayerVehicleControlState() {
     let position = getLocalPlayerPosition();
 
-    if(inVehicle && localPlayer.vehicle != null) {
-        if(!localPlayer.vehicle.engine) {
-            localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
-            localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
-            if(parkedVehiclePosition) {
-                localPlayer.vehicle.position = parkedVehiclePosition;
-                localPlayer.vehicle.heading = parkedVehicleHeading;
-            }
-        } else {
-            if(parkedVehiclePosition) {
-                parkedVehiclePosition = false;
-                parkedVehicleHeading = false;
+    if(areServerElementsSupported()) {
+        if(inVehicle && localPlayer.vehicle != null) {
+            if(!localPlayer.vehicle.engine) {
+                localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
+                localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
+                if(parkedVehiclePosition) {
+                    localPlayer.vehicle.position = parkedVehiclePosition;
+                    localPlayer.vehicle.heading = parkedVehicleHeading;
+                }
+            } else {
+                if(parkedVehiclePosition) {
+                    parkedVehiclePosition = false;
+                    parkedVehicleHeading = false;
+                }
             }
         }
     }

@@ -181,10 +181,10 @@ function onPedInflictDamage(event, damagedEntity, damagerEntity, weaponId, healt
     if(!isNull(damagedEntity) && !isNull(damagerEntity)) {
         if(damagedEntity.isType(ELEMENT_PLAYER)) {
             if(damagedEntity == localPlayer) {
-                if(!weaponDamageEnabled[damagerEntity.name]) {
+                //if(!weaponDamageEnabled[damagerEntity.name]) {
                     event.preventDefault();
                     triggerNetworkEvent("vrr.weaponDamage", damagerEntity.name, weaponId, pedPiece, healthLoss);
-                }
+                //}
             }
         }
     }

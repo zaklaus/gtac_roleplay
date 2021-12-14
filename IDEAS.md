@@ -362,3 +362,6 @@ So this: `/tempveh infernus | /vehrgb 0 0 0 0 {RETURN} | /vehrgb 1 {2} {3} {4} {
 	* Vehicle repair kit
 	* (All vehicle mod types)
 ---
+### Quick Reply
+	* When somebody sends a private message, use /reply to quickly reply without having to find their ID to use the private message command
+---

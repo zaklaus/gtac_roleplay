@@ -18,9 +18,10 @@ let serverBitFlags = {
 	subAccountSettingsFlags: {},
 	accountFlags: {},
 	seenHelpTipsFlags: {},
-	npcTriggerTypeKeys: {},
-	npcTriggerConditionTypeKeys: {},
-	npcTriggerResponseTypeKeys: {},
+	npcTriggerTypeFlags: {},
+	npcTriggerConditionTypesFlags: {},
+	npcTriggerResponseTypeFlags: {},
+	serverSettings: {}
 };
 
 // ===========================================================================
@@ -63,23 +64,23 @@ let serverBitFlagKeys = {
 	],
 	factionFlagKeys: [
 		"None",
-		"police",
-		"medical",
-		"fire",
-		"government",
-		"generic",
+		"Police",
+		"Medical",
+		"Fire",
+		"Government",
+		"Generic",
 	],
 	clanTypeFlagKeys: [
 		"None",
-		"illegal",
-		"legal",
-		"mafia",
-		"streetGang",
-		"weapons",
-		"drugs",
-		"humanTrafficking",
-		"vigilante",
-		"hitContracts"
+		"Illegal",
+		"Legal",
+		"Mafia",
+		"StreetGang",
+		"Weapons",
+		"Drugs",
+		"HumanTrafficking",
+		"Vigilante",
+		"HitContracts"
 	],
 	clanFlagKeys: [
 		"None",
@@ -117,103 +118,123 @@ let serverBitFlagKeys = {
 	],
 	npcTriggerTypeKeys: [
 		"None",
-		"farProximity",               // Comes within a far distance of NPC
-		"mediumProximity",            // Comes within a medium distance of NPC
-		"nearProximity",              // Comes within a close distance of NPC
-		"enterLineOfSight",           // Enters the NPC's line of sight
-		"exitLineOfSight",            // Leaves the NPC's line of sight
-		"pedCollision",               // Bumps into ped on foot
-		"vehicleCollision",           // Bumps into ped with a vehicle
-		"shootGun",                   // Shoots a gun (target isn't a factor, it's just about only shooting a gun in general)
-		"swingMelee",                 // Swings a melee weapon (target doesnt matter, it's just about only swinging a melee weapon in general)
-		"hotwireVehicleStart",        // Begin attempt to hotwire a vehicle
-		"hotwireVehicleFail",         // Failed to hotwire a vehicle
-		"hotwireVehicleSucceed",      // Succeeded at hotwiring a vehicle
-		"vehicleAlarmStart",          // Vehicle alarm goes off
-		"vehicleAlarmStop",           // Vehicle alarm shuts off (disabled, battery dead, damaged, or just turned off legitly)
-		"sirenStart",                 // Any vehicle with a siren that gets activated
-		"sirenStop",                  // Any vehicle with a siren that gets deactivated
-		"vehicleEnter",               // Enters any vehicle
-		"vehicleExit",                // Exits any vehicle
-		"propertyEnter",              // Enters any interior
-		"propertyExit",               // Exits any interior
-		"attackedByMelee",            // Any element is attacked by melee weapon
-		"attackedByGun",              // Any element is attacked by gun
-		"attackedByFist",             // Any element is attacked by fist
+		"FarProximity",               // Comes within a far distance of NPC
+		"MediumProximity",            // Comes within a medium distance of NPC
+		"NearProximity",              // Comes within a close distance of NPC
+		"EnterLineOfSight",           // Enters the NPC's line of sight
+		"ExitLineOfSight",            // Leaves the NPC's line of sight
+		"PedCollision",               // Bumps into ped on foot
+		"VehicleCollision",           // Bumps into ped with a vehicle
+		"ShootGun",                   // Shoots a gun (target isn't a factor, it's just about only shooting a gun in general)
+		"SwingMelee",                 // Swings a melee weapon (target doesnt matter, it's just about only swinging a melee weapon in general)
+		"HotwireVehicleStart",        // Begin attempt to hotwire a vehicle
+		"HotwireVehicleFail",         // Failed to hotwire a vehicle
+		"HotwireVehicleSucceed",      // Succeeded at hotwiring a vehicle
+		"VehicleAlarmStart",          // Vehicle alarm goes off
+		"VehicleAlarmStop",           // Vehicle alarm shuts off (disabled, battery dead, damaged, or just turned off legitly)
+		"SirenStart",                 // Any vehicle with a siren that gets activated
+		"SirenStop",                  // Any vehicle with a siren that gets deactivated
+		"VehicleEnter",               // Enters any vehicle
+		"VehicleExit",                // Exits any vehicle
+		"PropertyEnter",              // Enters any interior
+		"PropertyExit",               // Exits any interior
+		"AttackedByMelee",            // Any element is attacked by melee weapon
+		"AttackedByGun",              // Any element is attacked by gun
+		"AttackedByFist",             // Any element is attacked by fist
 	],
 	npcTriggerConditionTypeKeys: [
 		"None",
-		"isInLineOfSight",
-		"isFarProximity",
-		"isMediumProximity",
-		"isNearProximity",
-		"isEnemyClan",
-		"isAllyClan",
-		"isSameClan",
-		"isNotInClan",
-		"isLawEnforcement",
-		"isFirefighter",
-		"isParamedic",
-		"isCriminal",
-		"hasWantedLevel",
-		"isSelfVehicle",
-		"isPlayerVehicle",
-		"isOtherVehicle",
-		"isClanVehicle",
-		"isEmergencyVehicle",
-		"isPoliceVehicle",
-		"isDriver",
-		"isInFrontSeat",
-		"isInSeatId",
-		"vehicleLocked",
-		"vehicleHotwired",
-		"isPistol",
-		"isShotgun",
-		"isAutomatic",
-		"isRifle",
-		"isAssaultRifle",
-		"isSniper",
-		"isRPG",
-		"isFlameThrower",
-		"isTalking",
-		"isShouting",
-		"isWhispering",
+		"IsInLineOfSight",
+		"IsFarProximity",
+		"IsMediumProximity",
+		"IsNearProximity",
+		"IsEnemyClan",
+		"IsAllyClan",
+		"IsSameClan",
+		"IsNotInClan",
+		"IsLawEnforcement",
+		"IsFirefighter",
+		"IsParamedic",
+		"IsCriminal",
+		"HasWantedLevel",
+		"IsSelfVehicle",
+		"IsPlayerVehicle",
+		"IsOtherVehicle",
+		"IsClanVehicle",
+		"IsEmergencyVehicle",
+		"IsPoliceVehicle",
+		"IsDriver",
+		"IsInFrontSeat",
+		"IsInSeatId",
+		"VehicleLocked",
+		"VehicleHotwired",
+		"IsPistol",
+		"IsShotgun",
+		"IsAutomatic",
+		"IsRifle",
+		"IsAssaultRifle",
+		"IsSniper",
+		"IsRPG",
+		"IsFlameThrower",
+		"IsTalking",
+		"IsShouting",
+		"IsWhispering",
 	],
 	npcTriggerResponseTypeKeys: [
 		"None",
-		"shout",
-		"talk",
-		"whisper",
-		"switchWeapon",
-		"shootWeapon",
-		"aimWeapon",
-		"fleeSprint",
-		"fleeWalk",
-		"fleeRun",
-		"attackMelee",
-		"attackFist",
-		"walkToward",
-		"runToward",
-		"sprintToward",
-		"crouch",
-		"phoneCall",
-		"walkieTalkieMessage",
-		"switchRadioStation",
-		"toggleSiren",
-		"fleeTo",
-		"driveTo",
-		"enterVehicle",
-		"exitVehicle",
-		"pullOutOfVehicle",
-		"enterProperty",
-		"searchArea",
+		"Shout",
+		"Talk",
+		"Whisper",
+		"SwitchWeapon",
+		"ShootWeapon",
+		"AimWeapon",
+		"FleeSprint",
+		"FleeWalk",
+		"FleeRun",
+		"AttackMelee",
+		"AttackFist",
+		"WalkToward",
+		"RunToward",
+		"SprintToward",
+		"Crouch",
+		"PhoneCall",
+		"WalkieTalkieMessage",
+		"SwitchRadioStation",
+		"ToggleSiren",
+		"FleeTo",
+		"DriveTo",
+		"EnterVehicle",
+		"ExitVehicle",
+		"PullOutOfVehicle",
+		"EnterProperty",
+		"SearchArea",
 	],
 	seenHelpTipsKeys: [
 		"None",
-		"vehicleEngineOffWhenEntering",
-		"vehicleLockedAfterEntryAttempt",
-		"showItemsAfterPurchase",
-		"buyCommandAfterEnterBusiness",
+		"VehicleEngineOffWhenEntering",
+		"VehicleLockedAfterEntryAttempt",
+		"ShowItemsAfterPurchase",
+		"BuyCommandAfterEnterBusiness",
+	],
+	serverSettingsKeys: [
+		"None",
+		"GUI",
+		"ServerLogo",
+		"FallingSnow",
+		"GroundSnow",
+		"Anticheat",
+		"CheckGameScripts",
+		"GameScriptBlackList",
+		"GameScriptWhiteList",
+		"JobBlips",
+		"JobPickups",
+		"BusinessBlips",
+		"BusinessPickups",
+		"HouseBlips",
+		"HousePickups",
+		"DiscordBot",
+		"RealTime",
+		"Testing",
 	],
 };
 
@@ -231,6 +252,7 @@ function initBitFlagScript() {
 	serverBitFlags.npcTriggerTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerTypeKeys);
 	serverBitFlags.npcTriggerConditionTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerConditionTypeKeys);
 	serverBitFlags.npcTriggerResponseTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerResponseTypeKeys);
+	serverBitFlags.serverSettings = createBitFlagTable(serverBitFlagKeys.serverSettingsKeys);
 	logToConsole(LOG_INFO, "[VRR.BitFlag]: Bit flag script initialized successfully!");
 	return true;
 }
@@ -381,6 +403,20 @@ function getModerationFlagValue(flagName) {
 	}
 
 	return serverBitFlags.moderationFlags[flagName];
+}
+
+// ===========================================================================
+
+function getServerSettingFlagValue(flagName) {
+    if(flagName == "All") {
+        return -1;
+	}
+
+	if(typeof serverBitFlags.serverSettings[flagName] == "undefined") {
+		return false;
+	}
+
+	return serverBitFlags.serverSettings[flagName];
 }
 
 // ===========================================================================

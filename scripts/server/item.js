@@ -168,7 +168,8 @@ function createItemCommand(command, params, client) {
 	//	return false;
 	//}
 
-	let itemId = createGroundItem(itemType, toInteger(value), getPlayerPosition(client), getPlayerDimension(client));
+	let itemId = createItem(itemType, toInteger(value), VRR_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
+	cachePlayerHotBarItems(client);
 	messagePlayerSuccess(client, `You created a ${getItemTypeData(itemType).name} in your inventory`);
 }
 

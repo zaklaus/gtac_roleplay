@@ -121,7 +121,10 @@ function sendResourceStoppedSignalToServer() {
 function setPlayer2DRendering(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState) {
     logToConsole(LOG_DEBUG, `[VRR.Main] Updating render states (HUD: ${hudState}, Labels: ${labelState}, Bottom Text: ${smallGameMessageState}, Scoreboard: ${scoreboardState}, HotBar: ${hotBarState}, Item Action Delay: ${itemActionDelayState})`);
     renderHUD = hudState;
-    setHUDEnabled(hudState);
+
+    if(typeof setHUDEnabled != "undefined") {
+        setHUDEnabled(hudState);
+    }
 
     renderLabels = labelState;
     renderSmallGameMessage = smallGameMessageState;
@@ -272,7 +275,9 @@ function setLocalPlayerPedPartsAndProps(parts, props) {
 // ===========================================================================
 
 function setLocalPlayerArmour(armour) {
-    localPlayer.armour = armour;
+    if(typeof localPlayer.armour != "undefined") {
+        localPlayer.armour = armour;
+    }
 }
 
 // ===========================================================================

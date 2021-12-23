@@ -292,9 +292,15 @@ function giveLocalPlayerWeapon(weaponId, ammo, active) {
 
 function giveLocalPlayerWeapon(weaponId, ammo, active) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Giving weapon ${weaponId} with ${ammo} ammo`);
-    localPlayer.giveWeapon(weaponId, ammo, active);
-    forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(weaponId));
-    forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(weaponId));
+    if(getGame() == VRR_GAME_MAFIA_ONE) {
+        localPlayer.giveWeapon(weaponId, 0, ammo);
+        forceWeaponAmmo = 0;
+        forceWeaponClipAmmo = ammo;
+    } else {
+        localPlayer.giveWeapon(weaponId, ammo, active);
+        forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(weaponId));
+        forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(weaponId));
+    }
     forceWeapon = weaponId;
 }
 
@@ -318,15 +324,22 @@ function getClosestVehicle(pos) {
 
 function setLocalPlayerPosition(position) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting position to ${position.x}, ${position.y}, ${position.z}`);
-    localPlayer.velocity = toVector3(0.0, 0.0, 0.0);
-    localPlayer.position = position;
+    if(typeof localPlayer.velocity != "undefined") {
+        localPlayer.velocity = toVector3(0.0, 0.0, 0.0);
+    }
+
+    if(typeof localPlayer.position != "undefined") {
+        localPlayer.position = position;
+    }
 }
 
 // ===========================================================================
 
 function setLocalPlayerHeading(heading) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting heading to ${heading}`);
-    localPlayer.heading = heading;
+    if(typeof localPlayer.heading != "undefined") {
+        localPlayer.heading = heading;
+    }
 }
 
 // ===========================================================================
@@ -484,13 +497,15 @@ function setPlayerWeaponDamageEnabled(clientName, state) {
 
 function setLocalPlayerCash(amount) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting local player money`);
-    localPlayer.money = toInteger(amount);
+    if(typeof localPlayer.money != "undefined") {
+        localPlayer.money = toInteger(amount);
+    }
 }
 
 // ===========================================================================
 
 function destroyAutoCreatedPickups() {
-    if(arePickupsSupported()) {
+    if(typeof ELEMENT_PICKUP != "undefined") {
         getElementsByType(ELEMENT_PICKUP).forEach(function(pickup) {
             if(pickup.isOwner) {
                 destroyElement(pickup);
@@ -526,7 +541,9 @@ function processWantedLevelReset() {
         return false;
     }
 
-    localPlayer.wantedLevel = 0;
+    if(typeof localPlayer.wantedLevel != "undefined") {
+        localPlayer.wantedLevel = 0;
+    }
 }
 
 // ===========================================================================
@@ -537,8 +554,11 @@ function processLocalPlayerVehicleControlState() {
     if(areServerElementsSupported()) {
         if(inVehicle && localPlayer.vehicle != null) {
             if(!localPlayer.vehicle.engine) {
-                localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
-                localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
+                if(typeof localPlayer.vehicle.velocity != "undefined") {
+                    localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
+                    localPlayer.vehicle.turnVelocity = toVector3(0.0, 0.0, 0.0);
+                }
+
                 if(parkedVehiclePosition) {
                     localPlayer.vehicle.position = parkedVehiclePosition;
                     localPlayer.vehicle.heading = parkedVehicleHeading;
@@ -591,18 +611,20 @@ function processJobRouteSphere() {
 // ===========================================================================
 
 function forceLocalPlayerEquippedWeaponItem() {
-    if(forceWeapon != 0) {
-        if(localPlayer.weapon != forceWeapon) {
-            localPlayer.weapon = forceWeapon;
-            localPlayer.setWeaponClipAmmunition(getWeaponSlot(forceWeapon), forceWeaponClipAmmo);
-            localPlayer.setWeaponAmmunition(getWeaponSlot(forceWeapon), forceWeaponAmmo);
+    if(typeof localPlayer.weapon != "undefined") {
+        if(forceWeapon != 0) {
+            if(localPlayer.weapon != forceWeapon) {
+                localPlayer.weapon = forceWeapon;
+                localPlayer.setWeaponClipAmmunition(getWeaponSlot(forceWeapon), forceWeaponClipAmmo);
+                localPlayer.setWeaponAmmunition(getWeaponSlot(forceWeapon), forceWeaponAmmo);
+            } else {
+                forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(forceWeapon));
+                forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(forceWeapon));
+            }
         } else {
-            forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(forceWeapon));
-            forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(forceWeapon));
-        }
-    } else {
-        if(localPlayer.weapon > 0) {
-            localPlayer.clearWeapons();
+            if(localPlayer.weapon > 0) {
+                localPlayer.clearWeapons();
+            }
         }
     }
 }
@@ -702,15 +724,17 @@ function getPlayerFromParams(params) {
 // ===========================================================================
 
 function processNearbyPickups() {
-    let pickups = getElementsByType(ELEMENT_PICKUP);
-    for(let i in pickups) {
-        if(getDistance(pickups[i].position, localPlayer.position) < 5) {
-            //if(pickups[i].interior == localPlayer.interior && pickups[i].dimension == localPlayer.dimension) {
-                if(currentPickup != pickups[i]) {
-                    currentPickup = pickups[i];
-                    triggerNetworkEvent("vrr.pickup", pickups[i].id);
-                }
-            //}
+    if(typeof ELEMENT_PICKUP != "undefined") {
+        let pickups = getElementsByType(ELEMENT_PICKUP);
+        for(let i in pickups) {
+            if(getDistance(pickups[i].position, localPlayer.position) < 5) {
+                //if(pickups[i].interior == localPlayer.interior && pickups[i].dimension == localPlayer.dimension) {
+                    if(currentPickup != pickups[i]) {
+                        currentPickup = pickups[i];
+                        triggerNetworkEvent("vrr.pickup", pickups[i].id);
+                    }
+                //}
+            }
         }
     }
 }

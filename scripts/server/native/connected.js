@@ -61,7 +61,13 @@ function getPlayerVehicle(client) {
 // ===========================================================================
 
 function getPlayerDimension(client) {
-    return client.player.dimension;
+    if(!areServerElementsSupported()) {
+        return getPlayerData(client).syncDimension;
+    } else {
+        if(client.player != null) {
+            return client.player.dimension;
+        }
+    }
 }
 
 // ===========================================================================
@@ -74,7 +80,13 @@ function getPlayerInterior(client) {
 
 function setPlayerDimension(client, dimension) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s dimension to ${dimension}`);
-    client.player.dimension = dimension;
+    if(!areServerElementsSupported()) {
+        getPlayerData(client).syncDimension = dimension;
+    } else {
+        if(client.player != null) {
+            client.player.dimension = dimension;
+        }
+    }
 }
 
 // ===========================================================================
@@ -288,25 +300,37 @@ function getPlayerWeaponAmmo(client) {
 
 function setPlayerVelocity(client, velocity) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s velocity to ${velocity.x}, ${velocity.y}, ${velocity.z}`);
-    client.player.velocity = velocity;
+    if(typeof client.player.velocity != "undefined") {
+        client.player.velocity = velocity;
+    }
 }
 
 // ===========================================================================
 
 function getPlayerVelocity(client, velocity) {
-    return client.player.velocity;
+    if(typeof client.player.velocity != "undefined") {
+        return client.player.velocity;
+    }
+    return toVector3(0.0, 0.0, 0.0);
 }
 
 // ===========================================================================
 
 function getElementDimension(element) {
-    return element.dimension;
+    if(typeof element.dimension != "undefined") {
+        return element.dimension;
+    }
+    return 0;
 }
 
 // ===========================================================================
 
 function setElementDimension(element, dimension) {
-    return element.dimension = dimension;
+    if(typeof element.dimension != "undefined") {
+        element.dimension = dimension;
+        return true;
+    }
+    return false;
 }
 
 // ===========================================================================
@@ -603,7 +627,20 @@ function isTaxiVehicle(vehicle) {
 // ===========================================================================
 
 function getVehicleName(vehicle) {
-	return getVehicleNameFromModel(vehicle.modelIndex) || "Unknown";
+    let model = getElementModel(vehicle);
+	return getVehicleNameFromModel(model) || "Unknown";
+}
+
+// ===========================================================================
+
+function getElementModel(element) {
+    if(typeof element.modelIndex != "undefined") {
+        return element.modelIndex;
+    }
+
+    if(typeof element.model != "undefined") {
+        return element.model;
+    }
 }
 
 // ===========================================================================

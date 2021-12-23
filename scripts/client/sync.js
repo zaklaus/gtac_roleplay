@@ -358,7 +358,9 @@ function syncObjectProperties(object) {
 
 function syncElementProperties(element) {
     if(doesEntityDataExist(element, "vrr.interior")) {
-        element.interior = getEntityData(element, "vrr.interior");
+        if(typeof element.interior != "undefined") {
+            element.interior = getEntityData(element, "vrr.interior");
+        }
     }
 
     switch(element.type) {

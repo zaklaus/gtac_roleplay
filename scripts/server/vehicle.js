@@ -215,8 +215,13 @@ function createVehicleCommand(command, params, client) {
 		return false;
 	}
 
+	let heading = getPlayerHeading(client);
+	if(getGame() == VRR_GAME_MAFIA_ONE) {
+		heading = degToRad(getPlayerHeading(client));
+	}
+
 	let frontPos = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), getGlobalConfig().spawnCarDistance);
-	let vehicle = createPermanentVehicle(modelIndex, frontPos, getPlayerHeading(client), getPlayerInterior(client), getPlayerDimension(client));
+	let vehicle = createPermanentVehicle(modelIndex, frontPos, heading, getPlayerInterior(client), getPlayerDimension(client));
 
 	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}created a {vehiclePurple}${getVehicleName(vehicle)}!`);
 }
@@ -1172,7 +1177,11 @@ function spawnVehicle(vehicleData) {
 	let vehicle = createGameVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
 	addToWorld(vehicle);
 
-	if(isSnowSupported()) {
+	if(!vehicle) {
+		return false;
+	}
+
+	if(isGameFeatureSupported("vehicleColours")) {
 		if(vehicleData.colour1IsRGBA && vehicleData.colour2IsRGBA) {
 			vehicle.setRGBColours(vehicleData.colour1RGBA, vehicleData.colour2RGBA);
 		} else {
@@ -1181,23 +1190,16 @@ function spawnVehicle(vehicleData) {
 			vehicle.colour3 = vehicleData.colour3;
 			vehicle.colour4 = vehicleData.colour4;
 		}
-
-		if(vehicleData.spawnLocked == true) {
-			vehicle.engine = false;
-
-		} else {
-			vehicle.engine = intToBool(vehicleData.engine);
-		}
-
-		vehicle.locked = intToBool(vehicleData.locked);
-
-		//vehicle.lights = intToBool(vehicleData.lights);
-		//vehicle.health = vehicleData.health;
-
-		//vehicle.position = vehicleData.spawnPosition;
-		vehicle.heading = vehicleData.spawnRotation;
-		vehicle.dimension = vehicleData.dimension;
 	}
+
+	if(vehicleData.spawnLocked == true) {
+		vehicle.engine = false;
+	} else {
+		vehicle.engine = intToBool(vehicleData.engine);
+	}
+
+	vehicle.locked = intToBool(vehicleData.locked);
+	vehicle.dimension = vehicleData.dimension;
 
 	vehicleData.vehicle = vehicle;
 

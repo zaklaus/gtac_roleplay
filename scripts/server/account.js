@@ -34,11 +34,11 @@ function loginCommand(command, params, client) {
 function toggleAutoLoginByIPCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("AutoLoginIP");
 
-	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `Automatic login by IP is now {softRed}OFF {white}`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `Automatic login by IP is now {softGreen}ON {white}(${client.ip})`);
 	}
 	return true;
@@ -49,11 +49,11 @@ function toggleAutoLoginByIPCommand(command, params, client) {
 function toggleNoRandomTipsCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("NoRandomTips");
 
-	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `Random tips are now {softRed}OFF`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `Random tips are now {softGreen}ON`);
 	}
 	return true;
@@ -64,11 +64,11 @@ function toggleNoRandomTipsCommand(command, params, client) {
 function toggleNoActionTipsCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("NoActionTips");
 
-	if(isAccountAutoIPLoginEnabled(getPlayerData(client).accountData)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `Action tips are now {softRed}OFF`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `Action tips are now {softGreen}ON`);
 	}
 	return true;
@@ -79,11 +79,11 @@ function toggleNoActionTipsCommand(command, params, client) {
 function toggleAutoSelectLastCharacterCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("AutoSelectLastCharacter");
 
-	if(doesPlayerHaveAutoSelectLastCharacterEnabled(client)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `Automatic spawn as last used character is now {softRed}OFF`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `Automatic spawn as last used character is now {softGreen}ON`);
 	}
 	return true;
@@ -95,11 +95,11 @@ function toggleAccountGUICommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("NoGUI");
 
 	if(!doesPlayerHaveGUIEnabled(client)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerNormal(client, `⚙️ GUI is now {softGreen}ON. {white}(if server has it enabled)`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerNormal(client, `⚙️ GUI is now {softRed}OFF. {white}(Any GUI stuff will be use via commands and message in the chatbox)`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account OFF.`);
 	}
@@ -133,12 +133,12 @@ function toggleAccountGUICommand(command, params, client) {
 function toggleAccountLoginAttemptNotificationsCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("AuthAttemptAlert");
 
-	if(!isAccountSettingFlagEnabled(getPlayerData(client).accountData, flagValue)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now {MAINCOLOUR}be notified by email when somebody tries to login to your account`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the login attempt email notifications OFF for their account`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not {MAINCOLOUR}be notified by email when somebody tries to login to your account`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the login attempt email notifications OFF for their account`);
 	}
@@ -152,14 +152,14 @@ function toggleAccountServerLogoCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("NoServerLogo");
 
 	if(!doesPlayerHaveLogoEnabled(client)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(true)}now {MAINCOLOUR}be shown the server logo (if enabled on current server)`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo ON for their account`);
 		if(getServerConfig().showLogo) {
 			updatePlayerShowLogoState(client, true);
 		}
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerNormal(client, `⚙️ You will ${getBoolRedGreenInlineColour(false)}not {MAINCOLOUR}be shown the server logo.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled the server logo OFF for their account`);
 		updatePlayerShowLogoState(client, false);
@@ -190,12 +190,12 @@ function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings & ~flagValue;
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `{MAINCOLOUR}You have turned ${getBoolRedGreenInlineColour(false)}ON {MAINCOLOUR} two factor authentication!{ALTCOLOUR}${addtoAuthenticatorCode}`);
 		messagePlayerAlert(client, `You will be required to enter a code sent to your email every time you log on.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
-		getPlayerData(client).accountData.settings = getPlayerData(client).accountData.settings | flagValue;
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF {MAINCOLOUR}two-factor authentication for login.`);
 		messagePlayerAlert(client, `You won't be required to enter a code sent to your email every time you log on anymore.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
@@ -336,7 +336,7 @@ function verifyAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("EmailVerified"));
+	getPlayerData(client).accountData.flags.moderation = addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("EmailVerified"));
 	getPlayerData(client).accountData.emailVerificationCode = "";
 
 	messagePlayerSuccess(client, `Your email has been verified!`);
@@ -1031,25 +1031,25 @@ function initClient(client) {
 					if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);
 						showPlayerLoginGUI(client);
+						addPlayerKeyBind(client, getKeyIdFromParams("insert"), "gui", "");
 					} else {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
 						messagePlayerNormal(client, `Welcome back to ${getServerName()}, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
 					}
+					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 				}
 			} else {
 				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI.`);
 					showPlayerRegistrationGUI(client);
+					addPlayerKeyBind(client, getKeyIdFromParams("insert"), "gui", "");
 				} else {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
 					messagePlayerNormal(client, `Welcome to ${getServerName()}, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
 				}
+				playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 			}
 		}
-
-		addPlayerKeyBind(client, getKeyIdFromParams("insert"), "gui", "");
-
-		playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 	}, 2500);
 }
 

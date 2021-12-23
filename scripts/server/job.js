@@ -1416,6 +1416,102 @@ function saveJobToDatabase(jobData) {
 
 // ===========================================================================
 
+function saveJobRouteToDatabase(jobId, jobRouteId) {
+	let tempJobRouteData = getJobRouteData(jobId, jobRouteId);
+	if(!tempJobRouteData) {
+		// Invalid job route data
+		return false;
+	}
+
+	if(!tempJobRouteData.needsSaved) {
+		return false;
+	}
+
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job route ${tempJobRouteData.name} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let data = [
+			["job_route_job", getJobData(jobId).databaseId],
+			["job_route_enabled", boolToInt(tempJobRouteData.enabled)],
+			["job_route_name", tempJobRouteData.name],
+			["job_route_col1_r", tempJobRouteData.vehicleColour1],
+			["job_route_col2_r", tempJobRouteData.vehicleColour2],
+			["job_route_start_msg", tempJobRouteData.startMessage],
+			["job_route_finish_msg", tempJobRouteData.finishMessage],
+			["job_route_pay", tempJobRouteData.pay],
+			["job_route_detail", tempJobRouteData.detail],
+		];
+
+		let dbQuery = null;
+		if(tempJobRouteData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("job_route", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
+			getServerData().jobs[jobId].routes[jobRouteId].databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let queryString = createDatabaseUpdateQuery("job_route", data, `job_route_id=${tempJobRouteData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
+		}
+		getServerData().jobs[jobId].routes[jobRouteId].needsSaved = false;
+
+		freeDatabaseQuery(dbQuery);
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Saved job route ${tempJobRouteData.name} to database!`);
+
+	return false;
+}
+
+// ===========================================================================
+
+function saveJobRouteToDatabase(jobId, jobRouteId, jobRoutePositionId) {
+	let tempJobRoutePositionData = getJobRoutePositionData(jobId, jobRouteId, jobRoutePositionId);
+	if(!tempJobRoutePositionData) {
+		// Invalid job route data
+		return false;
+	}
+
+	if(!tempJobRoutePositionData.needsSaved) {
+		return false;
+	}
+
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job route ${temtempJobRoutePositionDatapJobRouteData.name} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let data = [
+			["job_route_pos_job", getJobRouteData(jobId, jobRouteId).databaseId],
+			["job_route_pos_enabled", boolToInt(tempJobRoutePositionData.enabled)],
+			["job_route_pos_name", tempJobRoutePositionData.name],
+			["job_route_pos_x", tempJobRoutePositionData.position.x],
+			["job_route_pos_y", tempJobRoutePositionData.position.y],
+			["job_route_pos_z", tempJobRoutePositionData.position.z],
+			["job_route_finish_msg", tempJobRoutePositionData.finishMessage],
+			["job_route_pay", tempJobRoutePositionData.pay],
+			["job_route_detail", tempJobRoutePositionData.de],
+		];
+
+		let dbQuery = null;
+		if(tempJobRouteData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("job_route", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
+			getServerData().jobs[jobId].routes[jobRouteId].databaseId = getDatabaseInsertId(dbConnection);
+		} else {
+			let queryString = createDatabaseUpdateQuery("job_route", data, `job_route_id=${tempJobRouteData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
+		}
+		getServerData().jobs[jobId].routes[jobRouteId].needsSaved = false;
+
+		freeDatabaseQuery(dbQuery);
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Saved job route ${tempJobRouteData.name} to database!`);
+
+	return false;
+}
+
+// ===========================================================================
+
 function saveJobLocationToDatabase(jobLocationData) {
 	if(jobLocationData == null) {
 		// Invalid job location data
@@ -1777,6 +1873,25 @@ function deleteJobPickups(jobId) {
 	for(let j in getServerData().jobs[jobId].locations) {
 		deleteJobLocationPickup(jobId, j);
 	}
+}
+
+// ===========================================================================
+
+function createJobRouteCommand(command, params, client) {
+	let jobId = getPlayerJob(client);
+
+	if(!getJobData(jobId)) {
+		messagePlayerError(client, `You need to take the job that you want to make a route for.`);
+		return false;
+	}
+
+	if(!isPlayerWorking(client)) {
+		messagePlayerError(client, `You need to be working! Use /startwork at a job site.`);
+		return false;
+	}
+
+	//messagePlayerSuccess(client, `{MAINCOLOUR}You now have the {jobYellow}${jobData.name} {MAINCOLOUR}job`);
+	return true;
 }
 
 // ===========================================================================

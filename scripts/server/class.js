@@ -1351,20 +1351,6 @@ class WhiteListedGameScriptData {
 	}
 };
 
-class RemovedWorldObjectData {
-	constructor(model, position, range) {
-		this.model = model;
-		this.position = position;
-		this.range = range;
-	}
-};
-
-class ExcludedGroundSnowModel {
-	constructor(model) {
-		this.model = model;
-	}
-};
-
 class InteriorTemplateData {
 	constructor(exitPosition, exitInterior) {
 		this.exitPosition = exitPosition;
@@ -1680,3 +1666,57 @@ class DeckCardHandData {
 		this.total = 0;
 	}
 }
+
+class JobRouteData {
+	constructor(dbAssoc = false) {
+		this.databaseId = 0;
+		this.name = "";
+		this.jobId = 0;
+		this.enabled = false;
+		this.index = -1;
+		this.jobIndex = -1;
+		this.needsSaved = false;
+		this.pay = 0;
+		this.vehicleColour1 = toColour(255, 255, 255, 255);
+		this.vehicleColour2 = toColour(255, 255, 255, 255);
+		this.detail = 0;
+
+		if(dbAssoc) {
+			this.databaseId = toInteger(dbAssoc["job_route_id"]);
+			this.name = toString(dbAssoc["job_route_name"]);
+			this.jobId = toInteger(dbAssoc["job_route_job"]);
+			this.enabled = intToBool(toInteger(dbAssoc["job_route_enabled"]));
+			this.pay = toInteger(dbAssoc["job_route_pay"]);
+			this.startMessage = toString(dbAssoc["job_route_start_msg"]);
+			this.finishMessage = toString(dbAssoc["job_route_finish_msg"]);
+			this.colour1 = toColour(toInteger(dbAssoc["job_route_col1_r"]), toInteger(dbAssoc["job_route_col1_g"]), toInteger(dbAssoc["job_route_col1_b"]), 255);
+			this.colour2 = toColour(toInteger(dbAssoc["job_route_col2_r"]), toInteger(dbAssoc["job_route_col2_g"]), toInteger(dbAssoc["job_route_col2_b"]), 255);
+			this.detail = toInteger(dbAssoc["job_route_detail"]);
+		}
+	}
+};
+
+class JobRoutePositionData {
+	constructor(dbAssoc = false) {
+		this.databaseId = 0;
+		this.name = "";
+		this.routeId = 0;
+		this.enabled = false;
+		this.index = -1;
+		this.routeIndex = -1;
+		this.needsSaved = false;
+		this.position = toVector3(0.0, 0.0, 0.0);
+		this.stopDelay = 0;
+		this.pay = 0;
+
+		if(dbAssoc) {
+			this.databaseId = toInteger(dbAssoc["job_route_pos_id"]);
+			this.name = toString(dbAssoc["job_route_pos_name"]);
+			this.routeId = toInteger(dbAssoc["job_route_pos_route"]);
+			this.enabled = intToBool(toInteger(dbAssoc["job_route_pos_enabled"]));
+			this.position = toVector3(toFloat(dbAssoc["job_route_pos_x"]), toFloat(dbAssoc["job_route_pos_y"]), toFloat(dbAssoc["job_route_pos_z"]));
+			this.stopDelay = toInteger(dbAssoc["job_route_pos_delay"]);
+			this.pay = toInteger(dbAssoc["job_route_pos_pay"]);
+		}
+	}
+};

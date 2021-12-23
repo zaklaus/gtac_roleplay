@@ -79,6 +79,7 @@ function initGUI() {
 	guiReady = true;
 
 	logToConsole(LOG_DEBUG, `[VRR.GUI] All GUI created successfully!`);
+	triggerNetworkEvent("vrr.guiReady", true);
 };
 
 // ===========================================================================
@@ -231,7 +232,6 @@ addNetworkHandler("vrr.guiColour", function(red1, green1, blue1, red2, green2, b
 	focusedColour = [red1+focusedColourOffset, green1+focusedColourOffset, blue1+focusedColourOffset];
 
 	initGUI();
-	triggerNetworkEvent("vrr.guiReady", true);
 });
 
 // ===========================================================================

@@ -382,13 +382,12 @@ function selectCharacter(client, characterId = -1) {
 	removePlayerKeyBind(client, getKeyIdFromParams("insert"));
 
 	logToConsole(LOG_DEBUG, `[VRR.SubAccount] Spawned ${getPlayerDisplayForConsole(client)} as character ID ${getPlayerData(client).currentSubAccount} with skin ${skin} (${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})`);
-	onPlayerSpawn(client);
 
-	//setTimeout(function() {
-	//	onPlayerSpawn(client);
-	//}, 1000);
+	setTimeout(function() {
+		onPlayerSpawn(client);
+	}, 500);
 
-	playRadioStreamForPlayer(client, "");
+	stopRadioStreamForPlayer(client);
 
 	getPlayerCurrentSubAccount(client).lastLogin = getCurrentUnixTimestamp();
 }

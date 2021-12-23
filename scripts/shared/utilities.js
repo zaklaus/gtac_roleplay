@@ -795,14 +795,19 @@ function getPosInFrontOfPos(pos, angle, distance) {
 	let y = pos.y;
 	let z = pos.z;
 
-	if(getGame() < VRR_GAME_MAFIA_ONE) {
+	if(getGame() != VRR_GAME_MAFIA_ONE) {
+		x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
 		y = (pos.y+((Math.sin(angle+(Math.PI/2)))*distance));
 	} else {
-		angle = radToDeg(angle);
+		while(angle < 0.0)
+        	angle += 360.0;
+
+		while(angle > 360.0)
+			angle -= 360.0;
+
+		x = (pos.x+((Math.cos(angle-(Math.PI/2)))*distance));
 		z = (pos.z+((Math.sin(angle+(Math.PI/2)))*distance));
 	}
-
-	x = (pos.x+((Math.cos(angle+(Math.PI/2)))*distance));
 
 	return toVector3(x, y, z);
 }

@@ -284,7 +284,7 @@ function hasBitFlag(allFlags, checkForFlag) {
 		return true;
 	}
 
-	if((allFlags & checkForFlag) == allFlags) {
+	if((allFlags & checkForFlag) == checkForFlag) {
 		return true;
 	}
 
@@ -444,15 +444,13 @@ function takePlayerStaffFlag(client, flagName) {
 // ===========================================================================
 
 function addBitFlag(allFlags, flagValue) {
-	allFlags |= flagValue;
-	return;
+	return allFlags | flagValue;
 }
 
 // ===========================================================================
 
 function removeBitFlag(allFlags, flagValue) {
-	allFlags ^= flagValue;
-	return;
+	return allFlags ^ flagValue;
 }
 
 // ===========================================================================

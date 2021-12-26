@@ -237,3 +237,15 @@ function toggleAntiCheatScriptBlackListCommand(command, params, client) {
     updateServerRules();
 	return true;
 }
+
+// ===========================================================================
+
+function isPlayerExemptFromAntiCheat(client) {
+	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("ExemptFromAntiCheat"))) {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================

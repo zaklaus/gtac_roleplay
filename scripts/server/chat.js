@@ -150,9 +150,9 @@ function clanChatCommand(command, params, client) {
 // ===========================================================================
 
 function talkToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
+	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || (getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= getGlobalConfig().talkDistance && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
 			messagePlayerTalk(clients[i], client, messageText);
 		}
 	}
@@ -161,27 +161,31 @@ function talkToNearbyPlayers(client, messageText) {
 // ===========================================================================
 
 function phoneOutgoingToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
+	let clients = getClients();
 	for(let i in clients) {
-		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} {ALTCOLOUR}(to phone): {MAINCOLOUR}${messageText}`);
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || (getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= getGlobalConfig().talkDistance && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
+			messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} {ALTCOLOUR}(to phone): {MAINCOLOUR}${messageText}`);
+		}
 	}
 }
 
 // ===========================================================================
 
 function phoneIncomingToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().radioSpeakerDistance);
+	let clients = getClients();
 	for(let i in clients) {
-		messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} {ALTCOLOUR}(from phone): {MAINCOLOUR}${messageText}`);
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || (getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= getGlobalConfig().phoneSpeakerDistance && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
+			messagePlayerNormal(`[#CCCCCC]${getCharacterFullName(client)} {ALTCOLOUR}(from phone): {MAINCOLOUR}${messageText}`);
+		}
 	}
 }
 
 // ===========================================================================
 
 function whisperToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().talkDistance);
+	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || (getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= getGlobalConfig().whisperDistance && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
 			messagePlayerWhisper(clients[i], client, messageText);
 		}
 	}
@@ -190,9 +194,9 @@ function whisperToNearbyPlayers(client, messageText) {
 // ===========================================================================
 
 function shoutToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().shoutDistance);
+	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || (getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= getGlobalConfig().shoutDistance && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
 			messagePlayerShout(clients[i], client, messageText);
 		}
 	}
@@ -201,9 +205,9 @@ function shoutToNearbyPlayers(client, messageText) {
 // ===========================================================================
 
 function megaphoneToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().megaphoneDistance);
+	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || (getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= getGlobalConfig().megaphoneDistance && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
 			messagePlayerShout(clients[i], client, messageText);
 		}
 	}
@@ -212,9 +216,9 @@ function megaphoneToNearbyPlayers(client, messageText) {
 // ===========================================================================
 
 function doActionToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().doActionDistance);
+	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || (getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= getGlobalConfig().doActionDistance && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
 			messagePlayerDoAction(clients[i], client, messageText);
 		}
 	}
@@ -223,9 +227,9 @@ function doActionToNearbyPlayers(client, messageText) {
 // ===========================================================================
 
 function meActionToNearbyPlayers(client, messageText) {
-	let clients = getClientsInRange(getPlayerPosition(client), getGlobalConfig().meActionDistance);
+	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerDimension(client) == getPlayerDimension(clients[i])) {
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || (getDistance(getPlayerPosition(client), getPlayerPosition(clients[i])) <= getGlobalConfig().meActionDistance && getPlayerDimension(client) == getPlayerDimension(clients[i]))) {
 			messagePlayerMeAction(clients[i], client, messageText);
 		}
 	}
@@ -236,7 +240,7 @@ function meActionToNearbyPlayers(client, messageText) {
 function clanChat(client, messageText) {
 	let clients = getClients();
 	for(let i in clients) {
-		if(arePlayersInSameClan(client, clients[i])) {
+		if(hasBitFlag(getPlayerData(clients[i]).accountData.flags.moderation, getModerationFlagValue("CanHearEverything")) || arePlayersInSameClan(client, clients[i])) {
 			messagePlayerClanChat(clients[i], client, messageText);
 		}
 	}

@@ -1680,6 +1680,7 @@ class JobRouteData {
 		this.vehicleColour1 = toColour(255, 255, 255, 255);
 		this.vehicleColour2 = toColour(255, 255, 255, 255);
 		this.detail = 0;
+		this.locations = [];
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["job_route_id"]);
@@ -1696,7 +1697,7 @@ class JobRouteData {
 	}
 };
 
-class JobRoutePositionData {
+class JobRouteLocationData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
 		this.name = "";
@@ -1708,15 +1709,17 @@ class JobRoutePositionData {
 		this.position = toVector3(0.0, 0.0, 0.0);
 		this.stopDelay = 0;
 		this.pay = 0;
+		this.previousStop = 0;
 
 		if(dbAssoc) {
-			this.databaseId = toInteger(dbAssoc["job_route_pos_id"]);
-			this.name = toString(dbAssoc["job_route_pos_name"]);
-			this.routeId = toInteger(dbAssoc["job_route_pos_route"]);
-			this.enabled = intToBool(toInteger(dbAssoc["job_route_pos_enabled"]));
-			this.position = toVector3(toFloat(dbAssoc["job_route_pos_x"]), toFloat(dbAssoc["job_route_pos_y"]), toFloat(dbAssoc["job_route_pos_z"]));
-			this.stopDelay = toInteger(dbAssoc["job_route_pos_delay"]);
-			this.pay = toInteger(dbAssoc["job_route_pos_pay"]);
+			this.databaseId = toInteger(dbAssoc["job_route_loc_id"]);
+			this.name = toString(dbAssoc["job_route_loc_name"]);
+			this.routeId = toInteger(dbAssoc["job_route_loc_route"]);
+			this.enabled = intToBool(toInteger(dbAssoc["job_route_loc_enabled"]));
+			this.position = toVector3(toFloat(dbAssoc["job_route_loc_x"]), toFloat(dbAssoc["job_route_loc_y"]), toFloat(dbAssoc["job_route_loc_z"]));
+			this.stopDelay = toInteger(dbAssoc["job_route_loc_delay"]);
+			this.pay = toInteger(dbAssoc["job_route_loc_pay"]);
+			this.previousStop = toInteger(dbAssoc["job_route_loc_prev"]);
 		}
 	}
 };

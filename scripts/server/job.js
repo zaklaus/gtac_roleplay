@@ -14,7 +14,8 @@ function initJobScript() {
 	createAllJobPickups();
 	createAllJobBlips();
 
-	setAllJobDataIndexes();
+	setAllJobIndexes();
+
 	logToConsole(LOG_INFO, "[VRR.Job]: Job script initialized successfully!");
 	return true;
 }
@@ -38,6 +39,7 @@ function loadJobsFromDatabase() {
 					tempJobData.locations = loadJobLocationsFromDatabase(tempJobData.databaseId);
 					tempJobData.equipment = loadJobEquipmentsFromDatabase(tempJobData.databaseId);
 					tempJobData.uniforms = loadJobUniformsFromDatabase(tempJobData.databaseId);
+					tempJobData.routes = loadJobRoutesFromDatabase(tempJobData.databaseId);
 					tempJobs.push(tempJobData);
 					logToConsole(LOG_DEBUG, `[VRR.Job]: Job '${tempJobData.name}' loaded from database successfully!`);
 				}
@@ -69,10 +71,77 @@ function loadAllJobUniformsFromDatabase() {
 
 // ===========================================================================
 
+function loadAllJobRoutesFromDatabase() {
+	for(let i in getServerData().jobs) {
+		getServerData().jobs[i].routes = loadJobRoutesFromDatabase(getServerData().jobs[i].databaseId);
+	}
+}
+
+// ===========================================================================
+
 function loadAllJobLocationsFromDatabase() {
 	for(let i in getServerData().jobs) {
 		getServerData().jobs[i].locations = loadJobLocationsFromDatabase(getServerData().jobs[i].databaseId);
 	}
+}
+
+// ===========================================================================
+
+function loadJobRoutesFromDatabase(jobDatabaseId) {
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Loading job routes for job ${jobDatabaseId} from database ...`);
+
+	let tempJobRoutes = [];
+	let dbConnection = connectToDatabase();
+	let dbQuery = null;
+	let dbAssoc;
+
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_route` WHERE `job_route_enabled` = 1 AND `job_route_job` = " + toString(jobDatabaseId));
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempJobRouteData = new JobEquipmentData(dbAssoc);
+					tempJobRouteData.locations = loadJobRouteLocationsFromDatabase(tempJobRouteData.databaseId);
+					tempJobRoutes.push(tempJobRouteData);
+					logToConsole(LOG_DEBUG, `[VRR.Job]: Job equipment '${tempJobRouteData.name}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_DEBUG, `[VRR.Job]: ${tempJobRoutes.length} job routes for job ${jobDatabaseId} loaded from database successfully!`);
+	return tempJobRoutes;
+}
+
+// ===========================================================================
+
+function loadJobRouteLocationsFromDatabase(jobRouteId) {
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Loading locations for job route ${jobRouteId} from database ...`);
+
+	let tempJobRouteLocations = [];
+	let dbConnection = connectToDatabase();
+	let dbQuery = null;
+	let dbAssoc;
+
+	if(dbConnection) {
+		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_route_loc` WHERE `job_route_loc_enabled` = 1 AND `job_route_loc_route` = " + toString(jobRouteId));
+		if(dbQuery) {
+			if(dbQuery.numRows > 0) {
+				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+					let tempJobRouteLocationData = new JobRouteLocationData(dbAssoc);
+					tempJobRouteLocations.push(tempJobRouteLocationData);
+					logToConsole(LOG_DEBUG, `[VRR.Job]: Job route location '${tempJobRouteLocationData.databaseId}' loaded from database successfully!`);
+				}
+			}
+			freeDatabaseQuery(dbQuery);
+		}
+		disconnectFromDatabase(dbConnection);
+	}
+
+	logToConsole(LOG_DEBUG, `[VRR.Job]: ${tempJobRouteLocations.length} locations for job route ${jobRouteId} loaded from database successfully!`);
+	return tempJobEquipmentItems;
 }
 
 // ===========================================================================
@@ -203,6 +272,8 @@ function createAllJobBlips() {
 	for(let i in getServerData().jobs) {
 		for(let j in getServerData().jobs[i].locations) {
 			getServerData().jobs[i].locations[j].blip = game.createBlip((getServerData().jobs[i].blipModel!=0) ? getServerData().jobs[i].blipModel : 0, getServerData().jobs[i].locations[j].position, 2, getColourByName("yellow"));
+			setElementStreamInDistance(getServerData().jobs[i].locations[j].blip, getGlobalConfig().jobBlipStreamInDistance);
+			setElementStreamOutDistance(getServerData().jobs[i].locations[j].blip, getGlobalConfig().jobBlipStreamOutDistance);
 			addToWorld(getServerData().jobs[i].locations[j].blip);
 			logToConsole(LOG_DEBUG, `[VRR.Job] Job '${getServerData().jobs[i].name}' location blip ${j} spawned!`);
 		}
@@ -1378,34 +1449,41 @@ function saveJobToDatabase(jobData) {
 		return false;
 	}
 
+	if(!jobData.needsSaved) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job ${jobData.name} doesn't need saved. Skipping ...`);
+		return false;
+	}
+
 	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job ${jobData.name} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeName = escapeDatabaseString(dbConnection, jobData.name);
-		// If job hasn't been added to database, ID will be 0
-		if(jobData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO job_main (job_name, job_enabled, job_pickup, job_blip, job_type, job_colour_r, job_colour_g, job_colour_b, job_whitelist, job_blacklist) VALUES ('${safeName}', ${boolToInt(jobData.enabled)}, ${jobData.pickupModel}, ${jobData.blipModel}, ${jobData.type}, ${jobData.colourArray[0]}, ${jobData.colourArray[1]}, ${jobData.colourArray[2]})`;
-			queryDatabase(dbConnection, dbQueryString);
+		let data = [
+			["job_name", safeName],
+			["job_enabled", boolToInt(jobData.enabled)],
+			["job_pickup", jobData.pickupModel],
+			["job_blip", jobData.blipModel],
+			["job_type", jobData.type],
+			["job_colour_r", jobData.colourArray[0]],
+			["job_colour_g", jobData.colourArray[1]],
+			["job_colour_b", jobData.colourArray[2]],
+			["job_walkietalkiefreq", jobData.walkieTalkieFrequency],
+			["job_wl", jobData.whiteListEnabled],
+			["job_bl", jobData.blackListEnabled],
+		];
+
+		let dbQuery = null;
+		if(tempJobRouteData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("job_main", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			jobData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-
-			let dbQueryString =
-				`UPDATE job_main SET
-					job_name='${safeName}',
-					job_enabled=${boolToInt(jobData.enabled)},
-					job_pickup=${jobData.pickupModel},
-					job_blip=${jobData.blipModel},
-					job_type=${jobData.type},
-					job_colour_r=${jobData.colourArray[0]},
-					job_colour_g=${jobData.colourArray[1]},
-					job_colour_b=${jobData.colourArray[2]},
-					job_walkietalkiefreq=${jobData.walkieTalkieFrequency},
-					job_wl=${jobData.whiteListEnabled},
-					job_bl=${jobData.blackListEnabled}
-				WHERE job_id=${jobData.databaseId}`;
-
-			queryDatabase(dbConnection, dbQueryString);
+			let queryString = createDatabaseUpdateQuery("job_main", data, `job_id=${jobData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+		jobData.needsSaved = false;
+
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
@@ -1416,96 +1494,98 @@ function saveJobToDatabase(jobData) {
 
 // ===========================================================================
 
-function saveJobRouteToDatabase(jobId, jobRouteId) {
-	let tempJobRouteData = getJobRouteData(jobId, jobRouteId);
-	if(!tempJobRouteData) {
+function saveJobRouteToDatabase(jobRouteData) {
+	if(!jobRouteData) {
 		// Invalid job route data
 		return false;
 	}
 
-	if(!tempJobRouteData.needsSaved) {
+	if(!jobRouteData.needsSaved) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job route ${jobRouteData.name} (${jobRouteData.databaseId}) doesn't need saved. Skipping ...`);
 		return false;
 	}
 
-	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job route ${tempJobRouteData.name} to database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job route ${jobRouteData.name} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, jobRouteData.name);
 		let data = [
-			["job_route_job", getJobData(jobId).databaseId],
-			["job_route_enabled", boolToInt(tempJobRouteData.enabled)],
-			["job_route_name", tempJobRouteData.name],
-			["job_route_col1_r", tempJobRouteData.vehicleColour1],
-			["job_route_col2_r", tempJobRouteData.vehicleColour2],
-			["job_route_start_msg", tempJobRouteData.startMessage],
-			["job_route_finish_msg", tempJobRouteData.finishMessage],
-			["job_route_pay", tempJobRouteData.pay],
-			["job_route_detail", tempJobRouteData.detail],
+			["job_route_job", jobRouteData.jobId],
+			["job_route_enabled", boolToInt(jobRouteData.enabled)],
+			["job_route_name", safeName],
+			["job_route_col1_r", jobRouteData.vehicleColour1],
+			["job_route_col2_r", jobRouteData.vehicleColour2],
+			["job_route_start_msg", jobRouteData.startMessage],
+			["job_route_finish_msg", jobRouteData.finishMessage],
+			["job_route_pay", jobRouteData.pay],
+			["job_route_detail", jobRouteData.detail],
 		];
 
 		let dbQuery = null;
-		if(tempJobRouteData.databaseId == 0) {
+		if(jobRouteData.databaseId == 0) {
 			let queryString = createDatabaseInsertQuery("job_route", data);
 			dbQuery = queryDatabase(dbConnection, queryString);
-			getServerData().jobs[jobId].routes[jobRouteId].databaseId = getDatabaseInsertId(dbConnection);
+			jobRouteData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let queryString = createDatabaseUpdateQuery("job_route", data, `job_route_id=${tempJobRouteData.databaseId}`);
+			let queryString = createDatabaseUpdateQuery("job_route", data, `job_route_id=${jobRouteData.databaseId}`);
 			dbQuery = queryDatabase(dbConnection, queryString);
 		}
-		getServerData().jobs[jobId].routes[jobRouteId].needsSaved = false;
+		jobRouteData.needsSaved = false;
 
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	logToConsole(LOG_DEBUG, `[VRR.Job]: Saved job route ${tempJobRouteData.name} to database!`);
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Saved job route ${jobRouteData.name} to database!`);
 
 	return false;
 }
 
 // ===========================================================================
 
-function saveJobRouteToDatabase(jobId, jobRouteId, jobRoutePositionId) {
-	let tempJobRoutePositionData = getJobRoutePositionData(jobId, jobRouteId, jobRoutePositionId);
-	if(!tempJobRoutePositionData) {
-		// Invalid job route data
+function saveJobRouteLocationsToDatabase(jobRouteLocationData) {
+	if(!jobRouteLocationData) {
+		// Invalid job route position data
 		return false;
 	}
 
-	if(!tempJobRoutePositionData.needsSaved) {
+	if(!jobRouteLocationData.needsSaved) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job route location ${jobRouteLocationData.name} (${jobRouteLocationData.databaseId}) doesn't need saved. Skipping ...`);
 		return false;
 	}
 
-	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job route ${temtempJobRoutePositionDatapJobRouteData.name} to database ...`);
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job route location ${jobRouteLocationData.name} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, jobRouteLocationData.name);
 		let data = [
-			["job_route_pos_job", getJobRouteData(jobId, jobRouteId).databaseId],
-			["job_route_pos_enabled", boolToInt(tempJobRoutePositionData.enabled)],
-			["job_route_pos_name", tempJobRoutePositionData.name],
-			["job_route_pos_x", tempJobRoutePositionData.position.x],
-			["job_route_pos_y", tempJobRoutePositionData.position.y],
-			["job_route_pos_z", tempJobRoutePositionData.position.z],
-			["job_route_finish_msg", tempJobRoutePositionData.finishMessage],
-			["job_route_pay", tempJobRoutePositionData.pay],
-			["job_route_detail", tempJobRoutePositionData.de],
+			["job_route_loc_route", jobRouteLocationData.routeId],
+			["job_route_loc_enabled", boolToInt(jobRouteLocationData.enabled)],
+			["job_route_loc_name", safeName],
+			["job_route_loc_x", jobRouteLocationData.position.x],
+			["job_route_loc_y", jobRouteLocationData.position.y],
+			["job_route_loc_z", jobRouteLocationData.position.z],
+			["job_route_loc_pay", jobRouteLocationData.pay],
+			["job_route_loc_delay", jobRouteLocationData.stopDelay],
+			["job_route_loc_prev", jobRouteLocationData.previousStop]
 		];
 
 		let dbQuery = null;
-		if(tempJobRouteData.databaseId == 0) {
-			let queryString = createDatabaseInsertQuery("job_route", data);
+		if(jobRouteLocationData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("job_route_loc", data);
 			dbQuery = queryDatabase(dbConnection, queryString);
-			getServerData().jobs[jobId].routes[jobRouteId].databaseId = getDatabaseInsertId(dbConnection);
+			jobRouteLocationData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let queryString = createDatabaseUpdateQuery("job_route", data, `job_route_id=${tempJobRouteData.databaseId}`);
+			let queryString = createDatabaseUpdateQuery("job_route_loc", data, `job_route_loc_id=${jobRouteLocationData.databaseId}`);
 			dbQuery = queryDatabase(dbConnection, queryString);
 		}
-		getServerData().jobs[jobId].routes[jobRouteId].needsSaved = false;
+		jobRouteLocationData.needsSaved = false;
 
 		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
-	logToConsole(LOG_DEBUG, `[VRR.Job]: Saved job route ${tempJobRouteData.name} to database!`);
+	logToConsole(LOG_DEBUG, `[VRR.Job]: Saved job route location ${jobRoutePositionData.name} (${jobRouteLocationData.databaseId}) to database!`);
 
 	return false;
 }
@@ -1518,22 +1598,40 @@ function saveJobLocationToDatabase(jobLocationData) {
 		return false;
 	}
 
+	if(!jobLocationData.needsSaved) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job location ${jobLocationData.name} (${jobLocationData.databaseId}) doesn't need saved. Skipping ...`);
+		return false;
+	}
+
 	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job location ${jobLocationData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		// If job location hasn't been added to database, ID will be 0
-		if(jobLocationData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO job_loc (job_loc_job, job_loc_enabled, job_loc_pos_x, job_loc_pos_y, job_loc_pos_z, job_loc_int, job_loc_vw) VALUES (${jobLocationData.job}, ${boolToInt(jobLocationData.enabled)}, ${jobLocationData.position.x}, ${jobLocationData.position.y}, ${jobLocationData.position.z}, ${jobLocationData.interior}, ${jobLocationData.dimension})`;
+		let data = [
+			["job_loc_job", jobLocationData.job],
+			["job_loc_enabled", boolToInt(jobLocationData.enabled)],
+			["job_loc_pos_x", jobLocationData.position.x],
+			["job_loc_pos_y", jobLocationData.position.y],
+			["job_loc_pos_z", jobLocationData.position.z],
+			["job_loc_int", jobLocationData.interior],
+			["job_loc_vw", jobLocationData.dimension],
+		];
 
-			queryDatabase(dbConnection, dbQueryString);
+		let dbQuery = null;
+		if(tempJobRouteData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("job_loc", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			jobLocationData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE job_loc SET job_loc_job=${jobLocationData.job}, job_loc_enabled=${boolToInt(jobLocationData.enabled)}, job_loc_pos_x=${jobLocationData.position.x}, job_loc_pos_y=${jobLocationData.position.y}, job_loc_pos_z=${jobLocationData.position.z}, job_loc_int=${jobLocationData.interior}, job_loc_vw=${jobLocationData.dimension} WHERE job_loc_id=${jobLocationData.databaseId}`;
-			queryDatabase(dbConnection, dbQueryString);
+			let queryString = createDatabaseUpdateQuery("job_loc", data, `job_loc_id=${jobLocationData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+		jobLocationData.needsSaved = false;
+
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
+
 	logToConsole(LOG_DEBUG, `[VRR.Job]: Saved job location ${jobLocationData.databaseId} to database`);
 
 	return false;
@@ -1547,19 +1645,34 @@ function saveJobEquipmentToDatabase(jobEquipmentData) {
 		return false;
 	}
 
+	if(!jobEquipmentData.needsSaved) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job equipment ${jobEquipmentData.name} (${jobEquipmentData.databaseId}) doesn't need saved. Skipping ...`);
+		return false;
+	}
+
 	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job equipment ${jobEquipmentData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeName = escapeDatabaseString(dbConnection, jobEquipmentData.name);
-		// If job equipment hasn't been added to database, ID will be 0
-		if(jobEquipmentData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO job_equip (job_equip_job, job_equip_enabled, job_equip_minrank, job_equip_name) VALUES (${jobEquipmentData.job}, ${boolToInt(jobEquipmentData.enabled)}, ${jobEquipmentData.requiredRank}, '${safeName}')`;
-			queryDatabase(dbConnection, dbQueryString);
+		let data = [
+			["job_equip_job", jobEquipmentData.job],
+			["job_equip_enabled", boolToInt(jobEquipmentData.enabled)],
+			["job_equip_minrank", jobLocationData.requiredRank],
+			["job_equip_name", safeName],
+		];
+
+		let dbQuery = null;
+		if(tempJobRouteData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("job_equip", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			jobEquipmentData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE job_equip SET job_equip_job=${jobEquipmentData.job}, job_equip_enabled=${boolToInt(jobEquipmentData.enabled)}, job_equip_minrank=${jobEquipmentData.requiredRank}, job_equip_name='${safeName}' WHERE job_equip_id=${jobEquipmentData.databaseId}`;
-			queryDatabase(dbConnection, dbQueryString);
+			let queryString = createDatabaseUpdateQuery("job_equip", data, `job_equip_id=${jobEquipmentData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+		jobEquipmentData.needsSaved = false;
+
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
@@ -1576,18 +1689,33 @@ function saveJobEquipmentItemToDatabase(jobEquipmentItemData) {
 		return false;
 	}
 
+	if(!jobEquipmentItemData.needsSaved) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job equipment item ${jobEquipmentItemData.databaseId} doesn't need saved. Skipping ...`);
+		return false;
+	}
+
 	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job equipment weapon ${jobEquipmentItemData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		// If job equipment item hasn't been added to database, ID will be 0
-		if(jobEquipmentItemData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO job_equip_item (job_equip_item_equip, job_equip_item_enabled, job_equip_item_type, job_equip_item_value) VALUES (${jobEquipmentItemData.equipmentId}, ${boolToInt(jobEquipmentItemData.enabled)}, ${jobEquipmentItemData.itemType}, ${jobEquipmentItemData.value})`;
-			queryDatabase(dbConnection, dbQueryString);
+		let data = [
+			["job_equip_item_equip", jobEquipmentItemData.equipmentId],
+			["job_equip_item_enabled", boolToInt(jobEquipmentItemData.enabled)],
+			["job_equip_item_type", jobEquipmentItemData.itemType],
+			["job_equip_item_value", jobEquipmentItemData.value],
+		];
+
+		let dbQuery = null;
+		if(tempJobRouteData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("job_equip_item", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			jobEquipmentItemData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE job_equip_item SET job_equip_item_equip=${jobEquipmentItemData.equipmentId}, job_equip_item_enabled=${boolToInt(jobEquipmentItemData.enabled)}, job_equip_item_type=${jobEquipmentItemData.itemType}, job_equip_item_value=${jobEquipmentItemData.value} WHERE job_equip_item_id=${jobEquipmentItemData.databaseId}`;
-			queryDatabase(dbConnection, dbQueryString);
+			let queryString = createDatabaseUpdateQuery("job_equip_item", data, `job_equip_id=${jobEquipmentItemData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+		jobEquipmentItemData.needsSaved = false;
+
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
@@ -1604,19 +1732,34 @@ function saveJobUniformToDatabase(jobUniformData) {
 		return false;
 	}
 
+	if(!jobUniformData.needSaved) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job uniform ${jobUniformData.databaseId} doesn't need saved. Skipping ...`);
+		return false;
+	}
+
 	logToConsole(LOG_DEBUG, `[VRR.Job]: Saving job uniform ${jobUniformData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeName = escapeDatabaseString(dbConnection, jobUniformData.name);
-		// If job uniform hasn't been added to database, ID will be 0
-		if(jobUniformData.databaseId == 0) {
-			let dbQueryString = `INSERT INTO job_uniform (job_uniform_job, job_uniform_enabled, job_uniform_minrank, job_uniform_name) VALUES (${jobUniformData.job}, ${boolToInt(jobUniformData.enabled)}, ${jobUniformData.requiredRank}, '${safeName}')`;
-			queryDatabase(dbConnection, dbQueryString);
+		let data = [
+			["job_uniform_job", jobUniformData.jobId],
+			["job_uniform_enabled", boolToInt(jobUniformData.enabled)],
+			["job_uniform_minrank", jobUniformData.requiredRank],
+			["job_uniform_name", safeName],
+		];
+
+		let dbQuery = null;
+		if(tempJobRouteData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("job_uniform", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
 			jobUniformData.databaseId = getDatabaseInsertId(dbConnection);
 		} else {
-			let dbQueryString = `UPDATE job_uniform SET job_uniform_job=${jobUniformData.job}, job_uniform_enabled=${boolToInt(jobUniformData.enabled)}, job_uniform_minrank=${jobUniformData.requiredRank}, job_uniform_name='${safeName}', job_uniform_skin=${jobUniformData.skin} WHERE job_uniform_id=${jobUniformData.databaseId}`;
-			queryDatabase(dbConnection, dbQueryString);
+			let queryString = createDatabaseUpdateQuery("job_uniform", data, `job_uniform_id=${jobUniformData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
 		}
+		jobUniformData.needsSaved = false;
+
+		freeDatabaseQuery(dbQuery);
 		disconnectFromDatabase(dbConnection);
 		return true;
 	}
@@ -1644,6 +1787,14 @@ function saveAllJobsToDatabase() {
 
 			for(let n in getServerData().jobs[i].equipment[m].items) {
 				saveJobEquipmentItemToDatabase(getServerData().jobs[i].equipment[m].items[n]);
+			}
+		}
+
+		for(let p in getServerData().jobs[i].routes) {
+			saveJobRouteToDatabase(getServerData().jobs[i].routes[p]);
+
+			for(let q in getServerData().jobs[i].routes[p].routes) {
+				saveJobRouteLocationToDatabase(getServerData().jobs[i].routes[p].locations[q]);
 			}
 		}
 	}
@@ -1707,6 +1858,8 @@ function createJobLocationBlip(jobId, locationId) {
 		}
 
 		getJobData(jobId).locations[locationId].blip = game.createBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
+		setElementStreamInDistance(getServerData().jobs[i].locations[j].blip, 30);
+		setElementStreamOutDistance(getServerData().jobs[i].locations[j].blip, 40);
 		//getJobData(jobId).locations[locationId].blip.onAllDimensions = false;
 		getJobData(jobId).locations[locationId].blip.dimension = getJobData(jobId).locations[locationId].dimension;
 		addToWorld(getJobData(jobId).locations[locationId].blip);
@@ -1895,3 +2048,39 @@ function createJobRouteCommand(command, params, client) {
 }
 
 // ===========================================================================
+
+function setAllJobIndexes() {
+	for(let i in getServerData().jobs) {
+		getServerData().jobs[i].index = i;
+
+		for(let j in getServerData().jobs[i].locations) {
+			getServerData().jobs[i].locations[j].index = j;
+			getServerData().jobs[i].locations[j].jobIndex = i;
+		}
+
+		for(let k in getServerData().jobs[i].uniforms) {
+			getServerData().jobs[i].uniforms[k].index = k;
+			getServerData().jobs[i].uniforms[k].jobIndex = i;
+		}
+
+		for(let m in getServerData().jobs[i].equipment) {
+			getServerData().jobs[i].equipment[m].index = m;
+			getServerData().jobs[i].equipment[m].jobIndex = i;
+
+			for(let n in getServerData().jobs[i].equipment[m].items) {
+				getServerData().jobs[i].equipment[m].items[n].index = n;
+				getServerData().jobs[i].equipment[m].items[n].equipmentIndex = m;
+			}
+		}
+
+		for(let p in getServerData().jobs[i].routes) {
+			getServerData().jobs[i].routes[j].index = p;
+			getServerData().jobs[i].routes[j].jobIndex = i;
+
+			for(let q in getServerData().jobs[i].routes[p].locations) {
+				getServerData().jobs[i].routes[p].items[q].index = n;
+				getServerData().jobs[i].routes[p].items[q].routeIndex = p;
+			}
+		}
+	}
+}

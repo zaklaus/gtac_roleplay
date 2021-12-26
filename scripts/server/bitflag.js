@@ -61,6 +61,7 @@ let serverBitFlagKeys = {
 		"EmailVerified",
 		"TwoFactorAuthVerified",
 		"NonRoleplayCharacterName",
+		"CanHearEverything",
 	],
 	factionFlagKeys: [
 		"None",

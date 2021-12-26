@@ -814,15 +814,26 @@ function setUpInitialGame() {
     }
 
     if(getGame() == VRR_GAME_GTA_IV) {
-        natives.allowEmergencyServices(false);
+        natives.allowEmergencyServices(true);
         natives.setCreateRandomCops(true);
         natives.setMaxWantedLevel(0);
         natives.setWantedMultiplier(0.0);
         natives.allowPlayerToCarryNonMissionObjects(natives.getPlayerId(), true);
-
         natives.setPlayerTeam(natives.getPlayerId(), 0);
-        natives.usePlayerColourInsteadOfTeamColour(true);
         natives.loadAllObjectsNow();
+        natives.setCellphoneRanked(false);
+        natives.setOverrideNoSprintingOnPhoneInMultiplayer(false);
+        natives.setPlayersDropMoneyInNetworkGame(false);
+        natives.setSyncWeatherAndGameTime(false);
+        natives.usePlayerColourInsteadOfTeamColour(true);
+        natives.setDisplayPlayerNameAndIcon(false);
+        natives.removeTemporaryRadarBlipsForPickups();
+        natives.setPickupsFixCars(false);
+        natives.displayCash(true);
+        natives.displayAmmo(true);
+        natives.displayHud(true);
+        natives.displayAreaName(true);
+        natives.setPoliceRadarBlips(false);
 
         natives.requestAnims("DANCING");
         return true;

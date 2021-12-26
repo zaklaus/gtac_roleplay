@@ -424,6 +424,46 @@ function setElementOnAllDimensions(element, state) {
 
 // ===========================================================================
 
+function setElementDefaultExistance(element, state) {
+    if(!isNull(element) && element != false) {
+        element.defaultExistance = state;
+    }
+}
+
+// ===========================================================================
+
+function setElementExistsFor(element, client, state) {
+    if(!isNull(element) && element != false) {
+        element.setExistsFor(client, state);
+    }
+}
+
+// ===========================================================================
+
+function clearElementExistsFor(element) {
+    if(!isNull(element) && element != false) {
+        element.clearExistsFor();
+    }
+}
+
+// ===========================================================================
+
+function setElementStreamInDistance(element, distance) {
+    if(!isNull(element) && element != false) {
+        element.streamInDistance = distance;
+    }
+}
+
+// ===========================================================================
+
+function setElementStreamOutDistance(element, distance) {
+    if(!isNull(element) && element != false) {
+        element.streamOutDistance = distance;
+    }
+}
+
+// ===========================================================================
+
 function destroyGameElement(element) {
     if(!isNull(element) && element != false) {
         destroyElement(element);

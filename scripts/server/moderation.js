@@ -1079,5 +1079,43 @@ function forceAccountPasswordResetCommand(command, params, client) {
 	}
 }
 
+// ===========================================================================
+
+function isPlayerWeaponBanned(client) {
+	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("WeaponBanned"))) {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function isPlayerJobBanned(client) {
+	if(hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("JobBanned"))) {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function isPlayerPoliceBanned(client) {
+	let jobId = getJobFromParams("Police");
+	if(doesJobHaveWhiteListEnabled(jobId)) {
+		if(isPlayerOnJobWhiteList(client, jobId)) {
+			return true;
+		}
+	}
+
+	if(doesJobHaveBlackListEnabled(jobId)) {
+		if(!isPlayerOnJobBlackList(client, jobId)) {
+			return true;
+		}
+	}
+
+	return false;
+}
 
 // ===========================================================================

@@ -1198,7 +1198,10 @@ function spawnVehicle(vehicleData) {
 		vehicle.engine = intToBool(vehicleData.engine);
 	}
 
-	vehicle.locked = intToBool(vehicleData.locked);
+	if(typeof vehicle.locked != "undefined") {
+		vehicle.locked = intToBool(vehicleData.locked);
+	}
+
 	vehicle.dimension = vehicleData.dimension;
 
 	vehicleData.vehicle = vehicle;

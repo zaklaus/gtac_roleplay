@@ -51,10 +51,18 @@ function setVehicleEngine(vehicleId, state) {
 // ===========================================================================
 
 function setVehicleLights(vehicleId, state) {
-    if(!state) {
-        getElementFromId(vehicleId).lightStatus = 2;
+    if(getGame() != VRR_GAME_MAFIA_ONE) {
+        if(!state) {
+            getElementFromId(vehicleId).lightStatus = 2;
+        } else {
+            getElementFromId(vehicleId).lightStatus = 1;
+        }
     } else {
-        getElementFromId(vehicleId).lightStatus = 1;
+        if(!state) {
+            getElementFromId(vehicleId).lights = false;
+        } else {
+            getElementFromId(vehicleId).lights = true;
+        }
     }
 }
 

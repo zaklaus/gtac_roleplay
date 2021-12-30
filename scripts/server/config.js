@@ -80,13 +80,6 @@ let globalConfig = {
 		VRR_ITEM_USETYPE_VEHTIRE,
 	],
 	vehicleInactiveRespawnDelay: 1800000, // 20 minutes
-	housePickupStreamInDistance: 50,
-	housePickupStreamOutDistance: 75,
-	businessPickupStreamInDistance: 50,
-	businessPickupStreamOutDistance: 75,
-	jobPickupStreamInDistance: 50,
-	jobPickupStreamOutDistance: 75,
-	vehicleTrunkRearDistance: 3,
 };
 
 // ===========================================================================

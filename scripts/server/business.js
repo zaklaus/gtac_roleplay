@@ -1324,8 +1324,6 @@ function createBusinessEntrancePickup(businessId) {
 		getBusinessData(businessId).entrancePickup = createGamePickup(pickupModelId, getBusinessData(businessId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].business);
 		setElementOnAllDimensions(getBusinessData(businessId).entrancePickup, false);
 		setElementDimension(getBusinessData(businessId).entrancePickup, getBusinessData(businessId).entranceDimension);
-		setElementStreamInDistance(getBusinessData(businessId).entrancePickup, getGlobalConfig().businessPickupStreamInDistance);
-		setElementStreamOutDistance(getBusinessData(businessId).entrancePickup, getGlobalConfig().businessPickupStreamOutDistance);
 		updateBusinessPickupLabelData(businessId);
 		addToWorld(getBusinessData(businessId).entrancePickup);
 	}
@@ -1348,8 +1346,11 @@ function createBusinessEntranceBlip(businessId) {
 		getBusinessData(businessId).entranceBlip = createGameBlip(getBusinessData(businessId).entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
 		setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
 		setElementDimension(getBusinessData(businessId).entranceBlip, getBusinessData(businessId).entranceDimension);
-		setElementStreamInDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().businessBlipStreamInDistance);
-		setElementStreamOutDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().businessBlipStreamOutDistance);
+		//getBusinessData(businessId).entranceBlip.streamInDistance = 300;
+		//getBusinessData(businessId).entranceBlip.streamOutDistance = 350;
+		//getBusinessData(businessId).entranceBlip.interior = getBusinessData(businessId).entranceInterior;
+		//setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_ENTRANCE, false);
+		//setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.id", businessId, false);
 		addToWorld(getBusinessData(businessId).entranceBlip);
 	}
 }
@@ -1372,8 +1373,9 @@ function createBusinessExitPickup(businessId) {
 			getBusinessData(businessId).exitPickup = createGamePickup(pickupModelId, getBusinessData(businessId).exitPosition, getGameConfig().pickupTypes[getServerGame()].business);
 			setElementDimension(getBusinessData(businessId).exitPickup, getBusinessData(businessId).exitDimension);
 			setElementOnAllDimensions(getBusinessData(businessId).exitPickup, false);
-			setElementStreamInDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().businessPickupStreamInDistance);
-			setElementStreamOutDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().businessPickupStreamOutDistance);
+			//setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.type", VRR_PICKUP_BUSINESS_EXIT, false);
+			//setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.id", businessId, false);
+			//getBusinessData(businessId).exitPickup.interior = getBusinessData(businessId).exitInterior;
 			updateBusinessPickupLabelData(businessId);
 			addToWorld(getBusinessData(businessId).exitPickup);
 		}
@@ -1398,8 +1400,9 @@ function createBusinessExitBlip(businessId) {
 			getBusinessData(businessId).exitBlip = createGameBlip(getBusinessData(businessId).exitPosition, blipModelId, 1, getColourByName("businessBlue"));
 			setElementDimension(getBusinessData(businessId).exitBlip, getBusinessData(businessId).entranceDimension);
 			setElementOnAllDimensions(getBusinessData(businessId).exitBlip, false);
-			setElementStreamInDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().businessBlipStreamInDistance);
-			setElementStreamOutDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().businessBlipStreamOutDistance);
+			//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
+			//setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_EXIT, false);
+			//setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.id", businessId, false);
 			addToWorld(getBusinessData(businessId).exitBlip);
 		}
 	}

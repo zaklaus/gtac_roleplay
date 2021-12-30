@@ -556,34 +556,6 @@ function isValidVehicleModel(model) {
     }
 
     return false;
-
-    /*
-	if(getGame() == VRR_GAME_GTA_III) {
-		if(modelId < 90 || modelId > 150) {
-			return false;
-		}
-
-		return true;
-	}
-
-	if(getGame() == VRR_GAME_GTA_VC) {
-		if(modelId < 130 || modelId > 236) {
-			return false;
-		}
-
-		return true;
-	}
-
-	if(getGame() == VRR_GAME_GTA_SA) {
-		return true;
-	}
-
-	if(getGame() == VRR_GAME_GTA_IV) {
-		return true;
-	}
-
-	return false;
-    */
 }
 
 // ===========================================================================

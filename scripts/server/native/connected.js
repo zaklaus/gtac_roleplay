@@ -480,9 +480,41 @@ function setVehicleSiren(vehicle, siren) {
 
 // ===========================================================================
 
-function setVehicleColours(vehicle, colour1, colour2) {
+function getVehicleLights(vehicle) {
+	return vehicle.lights;
+}
+
+// ===========================================================================
+
+function getVehicleEngine(vehicle) {
+	return vehicle.engine;
+}
+
+// ===========================================================================
+
+function getVehicleLocked(vehicle) {
+	return vehicle.locked;
+}
+
+// ===========================================================================
+
+function getVehicleSiren(vehicle) {
+	return vehicle.siren;
+}
+
+// ===========================================================================
+
+function setVehicleColours(vehicle, colour1, colour2, colour3 = -1, colour4 = -1) {
 	vehicle.colour1 = colour1;
 	vehicle.colour2 = colour2;
+
+    if(colour3 != -1) {
+        vehicle.colour3 = colour3;
+    }
+
+    if(colour4 != -1) {
+        vehicle.colour4 = colour4;
+    }
 }
 
 // ===========================================================================

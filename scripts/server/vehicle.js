@@ -78,13 +78,15 @@ function saveVehicleToDatabase(vehicleDataId) {
 	logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Saving vehicle ${tempVehicleData.databaseId} to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		if(!tempVehicleData.spawnLocked) {
-			if(areServerElementsSupported()) {
-				tempVehicleData.spawnPosition = tempVehicleData.vehicle.position;
-				tempVehicleData.spawnRotation = tempVehicleData.vehicle.heading;
-			} else {
-				tempVehicleData.spawnPosition = tempVehicleData.syncPosition;
-				tempVehicleData.spawnRotation = tempVehicleData.syncHeading;
+		if(tempVehicleData.vehicle != false) {
+			if(!tempVehicleData.spawnLocked) {
+				if(areServerElementsSupported()) {
+					tempVehicleData.spawnPosition = tempVehicleData.vehicle.position;
+					tempVehicleData.spawnRotation = tempVehicleData.vehicle.heading;
+				} else {
+					tempVehicleData.spawnPosition = tempVehicleData.syncPosition;
+					tempVehicleData.spawnRotation = tempVehicleData.syncHeading;
+				}
 			}
 		}
 
@@ -1174,6 +1176,7 @@ function respawnVehicle(vehicle) {
 // ===========================================================================
 
 function spawnVehicle(vehicleData) {
+	logToConsole(LOG_DEBUG, `[VRR.Vehicle]: Spawning ${getVehicleNameFromModel(vehicleData.model)} at ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z} with heading ${vehicleData.spawnRotation}`);
 	let vehicle = createGameVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
 	addToWorld(vehicle);
 
@@ -1184,25 +1187,30 @@ function spawnVehicle(vehicleData) {
 	if(isGameFeatureSupported("vehicleColours")) {
 		if(vehicleData.colour1IsRGBA && vehicleData.colour2IsRGBA) {
 			vehicle.setRGBColours(vehicleData.colour1RGBA, vehicleData.colour2RGBA);
+			let colour1 = rgbaArrayFromToColour(vehicleData.colour1RGBA);
+			let colour2 = rgbaArrayFromToColour(vehicleData.colour2RGBA);
+			logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s colours to RGBA [${colour1[0]}, ${colour1[1]}, ${colour1[2]}, ${colour1[3]}], [(]${colour2[0]}, ${colour2[1]}, ${colour2[2]}, ${colour2[3]}]`);
+			vehicle.setRGBColours(vehicleData.colour1RGBA, vehicleData.colour2RGBA);
 		} else {
-			vehicle.colour1 = vehicleData.colour1;
-			vehicle.colour2 = vehicleData.colour2;
-			vehicle.colour3 = vehicleData.colour3;
-			vehicle.colour4 = vehicleData.colour4;
+			setVehicleColours(vehicle, vehicleData.colour1, vehicleData.colour2, vehicleData.colour3, vehicleData.colour4);
+			logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s colours to ${vehicleData.colour1}, ${vehicleData.colour2}, ${vehicleData.colour3}, ${vehicleData.colour4}`);
 		}
 	}
 
 	if(vehicleData.spawnLocked == true) {
-		vehicle.engine = false;
+		setVehicleEngine(vehicle, false);
+		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s engine to OFF`);
 	} else {
-		vehicle.engine = intToBool(vehicleData.engine);
+		setVehicleEngine(vehicle, intToBool(vehicleData.engine));
+		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s engine to ${toUpperCase(getOnOffFromBool(getVehicleEngineState(vehicle)))}`);
 	}
 
 	if(typeof vehicle.locked != "undefined") {
-		vehicle.locked = intToBool(vehicleData.locked);
+		setVehicleLocked(vehicle, intToBool(vehicleData.locked));
+		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s lock state to ${toUpperCase(getOnOffFromBool(getVehicleLockState(vehicle)))}`);
 	}
 
-	vehicle.dimension = vehicleData.dimension;
+	setElementDimension(vehicle.dimension, vehicleData.dimension);
 
 	vehicleData.vehicle = vehicle;
 

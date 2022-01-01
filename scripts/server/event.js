@@ -95,9 +95,6 @@ function onPlayerQuit(event, client, quitReasonId) {
     }
 
     messageDiscordEventChannel(`👋 ${getPlayerDisplayForConsole(client)} has left the server.`);
-
-    clearTemporaryVehicles();
-    clearTemporaryPeds();
 }
 
 // ===========================================================================

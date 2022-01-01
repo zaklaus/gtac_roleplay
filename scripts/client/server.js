@@ -123,7 +123,11 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
     renderHUD = hudState;
 
     if(typeof setHUDEnabled != "undefined") {
-        setHUDEnabled(hudState);
+        if(getGame() == VRR_GAME_GTA_IV) {
+            natives.displayHud(false);
+        } else {
+            setHUDEnabled(hudState);
+        }
     }
 
     renderLabels = labelState;

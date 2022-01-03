@@ -68,16 +68,16 @@ const VRR_GATEOWNER_PUBLIC = 5;                 // Is a public gate. Technically
 
 // Business Location Types
 const VRR_BIZLOC_NONE = 0;                       // None
-const VRR_BIZLOC_MAINDOOR = 0;                   // Main entrance/exit
-const VRR_BIZLOC_DOOR = 1;                       // Any other entrance/exit
-const VRR_BIZLOC_FUEL = 2;                       // Fuel pump
-const VRR_BIZLOC_DRIVETHRU = 3;                  // Drivethrough
-const VRR_BIZLOC_VENDMACHINE = 4;                // Vending machine
+const VRR_BIZLOC_GATE = 1;                       // Center of any moveable gate that belongs to the biz
+const VRR_BIZLOC_GARAGE = 2;                     // Location for attached garage (pos1 = outside, pos2 = inside). Use pos to teleport or spawn veh/ped
+const VRR_BIZLOC_FUEL = 3;                       // Fuel pump
+const VRR_BIZLOC_DRIVETHRU = 4;                  // Drivethrough
+const VRR_BIZLOC_VENDMACHINE = 5;                // Vending machine
 
 // House Location Types
 const VRR_HOUSELOC_NONE = 0;                     // None
-const VRR_HOUSELOC_MAINDOOR = 0;                 // Main entrance/exit
-const VRR_HOUSELOC_DOOR = 1;                     // Any other entrance/exit
+const VRR_HOUSELOC_GATE = 1;                     // Center of any moveable gate that belongs to the house
+const VRR_HOUSELOC_GARAGE = 2;                   // Location for garage (pos1 = outside, pos2 = inside). Use pos to teleport or spawn veh/ped
 
 // Account Contact Types
 const VRR_CONTACT_NONE = 0;

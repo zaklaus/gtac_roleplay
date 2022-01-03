@@ -1144,7 +1144,6 @@ function stopRentingVehicle(client) {
 	getPlayerData(client).rentingVehicle = false;
 	getVehicleData(vehicle).rentedBy = false;
 	respawnVehicle(vehicle);
-
 	getVehicleData(vehicle).needsSaved = true;
 }
 
@@ -1164,6 +1163,7 @@ function respawnVehicle(vehicle) {
 
 			destroyElement(vehicle);
 			vehicles[i].vehicle = false;
+
 			let newVehicle = spawnVehicle(vehicles[i]);
 			vehicles[i].vehicle = newVehicle;
 			setEntityData(newVehicle, "vrr.dataSlot", i, false);
@@ -1178,6 +1178,7 @@ function respawnVehicle(vehicle) {
 function spawnVehicle(vehicleData) {
 	logToConsole(LOG_DEBUG, `[VRR.Vehicle]: Spawning ${getVehicleNameFromModel(vehicleData.model)} at ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z} with heading ${vehicleData.spawnRotation}`);
 	let vehicle = createGameVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
+	setVehicleHeading(vehicle, vehicleData.spawnRotation)
 	addToWorld(vehicle);
 
 	if(!vehicle) {
@@ -1202,12 +1203,12 @@ function spawnVehicle(vehicleData) {
 		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s engine to OFF`);
 	} else {
 		setVehicleEngine(vehicle, intToBool(vehicleData.engine));
-		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s engine to ${toUpperCase(getOnOffFromBool(getVehicleEngineState(vehicle)))}`);
+		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s engine to ${toUpperCase(getOnOffFromBool(getVehicleEngine(vehicle)))}`);
 	}
 
 	if(typeof vehicle.locked != "undefined") {
 		setVehicleLocked(vehicle, intToBool(vehicleData.locked));
-		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s lock state to ${toUpperCase(getOnOffFromBool(getVehicleLockState(vehicle)))}`);
+		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s lock state to ${toUpperCase(getOnOffFromBool(getVehicleLocked(vehicle)))}`);
 	}
 
 	setElementDimension(vehicle.dimension, vehicleData.dimension);

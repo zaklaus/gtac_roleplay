@@ -155,6 +155,18 @@ function setVehicleHeading(vehicle, heading) {
 
 // ===========================================================================
 
+function getElementTransient(element) {
+    return element.transient;
+}
+
+// ===========================================================================
+
+function setElementTransient(element, state) {
+    return element.transient = state;
+}
+
+// ===========================================================================
+
 function getVehicleSyncer(vehicle) {
     return getElementSyncer(vehicle);
 }

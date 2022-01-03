@@ -863,7 +863,7 @@ function createHouseEntrancePickup(houseId) {
 		setElementDimension(getHouseData(houseId).entrancePickup, getHouseData(houseId).entranceDimension);
 		setElementStreamInDistance(getBusinessData(businessId).entrancePickup, getGlobalConfig().housePickupStreamInDistance);
 		setElementStreamOutDistance(getBusinessData(businessId).entrancePickup, getGlobalConfig().housePickupStreamOutDistance);
-
+		setElementTransient(getHouseData(houseId).entrancePickup, false);
 		setEntityData(getHouseData(houseId).entrancePickup, "vrr.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
 		setEntityData(getHouseData(houseId).entrancePickup, "vrr.owner.id", houseId, false);
 		setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.type", VRR_LABEL_HOUSE, true);
@@ -902,6 +902,7 @@ function createHouseEntranceBlip(houseId) {
 		setElementOnAllDimensions(getHouseData(houseId).entranceBlip, false);
 		setElementStreamInDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().houseBlipStreamInDistance);
 		setElementStreamOutDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().houseBlipStreamOutDistance);
+		setElementTransient(getHouseData(houseId).entranceBlip, false);
 		setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
 		setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.id", houseId, false);
 		addToWorld(getHouseData(houseId).entranceBlip);
@@ -928,6 +929,7 @@ function createHouseExitPickup(houseId) {
 			setElementOnAllDimensions(getHouseData(houseId).exitPickup, false);
 			setElementStreamInDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().housePickupStreamInDistance);
 			setElementStreamOutDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().housePickupStreamOutDistance);
+			setElementTransient(getHouseData(houseId).exitPickup, false);
 			setEntityData(getHouseData(houseId).exitPickup, "vrr.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
 			setEntityData(getHouseData(houseId).exitPickup, "vrr.owner.id", houseId, false);
 			setEntityData(getHouseData(houseId).exitPickup, "vrr.label.type", VRR_LABEL_EXIT, true);
@@ -956,6 +958,7 @@ function createHouseExitBlip(houseId) {
 			setElementOnAllDimensions(getHouseData(houseId).exitBlip, false);
 			setElementStreamInDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().houseBlipStreamInDistance);
 			setElementStreamOutDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().houseBlipStreamOutDistance);
+			setElementTransient(getHouseData(houseId).exitBlip, false);
 			setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.type", VRR_BLIP_HOUSE_EXIT, false);
 			setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.id", houseId, false);
 			addToWorld(getHouseData(houseId).exitBlip);

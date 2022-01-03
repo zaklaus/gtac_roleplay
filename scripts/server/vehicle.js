@@ -1178,6 +1178,8 @@ function respawnVehicle(vehicle) {
 function spawnVehicle(vehicleData) {
 	logToConsole(LOG_DEBUG, `[VRR.Vehicle]: Spawning ${getVehicleNameFromModel(vehicleData.model)} at ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z} with heading ${vehicleData.spawnRotation}`);
 	let vehicle = createGameVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
+	setVehicleHeading(vehicle, vehicleData.spawnRotation);
+	setElementTransient(vehicle, false);
 	addToWorld(vehicle);
 
 	if(!vehicle) {

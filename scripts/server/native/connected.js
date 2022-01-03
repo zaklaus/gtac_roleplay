@@ -348,7 +348,7 @@ function setElementDimension(element, dimension) {
 // ===========================================================================
 
 function setElementRotation(element, rotation) {
-    return element.setRotation(rotation);
+    return element.rotation = rotation;
 }
 
 // ===========================================================================
@@ -545,7 +545,7 @@ function getVehicleEngine(vehicle) {
 // ===========================================================================
 
 function getVehicleLocked(vehicle) {
-	return vehicle.locked;
+	return vehicle.lockedStatus;
 }
 
 // ===========================================================================

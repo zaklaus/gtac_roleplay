@@ -104,6 +104,11 @@
             "keyName": "9",
             "commandString": "item 9",
             "keyState": 1
+        },
+        {
+            "keyName": "insert",
+            "commandString": "gui",
+            "keyState": 1
         }
     ]
 }

@@ -75,7 +75,7 @@ function addPlayerKeyBind(client, keys, command, params, tempKey = false) {
         keyBindData.databaseId = -1;
     }
 
-    getPlayerData(client).accountData.keyBinds.push(keyBindData);
+    getPlayerData(client).keyBinds.push(keyBindData);
     sendAddAccountKeyBindToClient(client, keys, (keys.length > 1) ? VRR_KEYSTATE_COMBO : VRR_KEYSTATE_UP);
 
     if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
@@ -90,10 +90,13 @@ function addPlayerKeyBind(client, keys, command, params, tempKey = false) {
 // ===========================================================================
 
 function removePlayerKeyBind(client, keyId) {
-    quickDatabaseQuery(`DELETE FROM acct_hotkey WHERE acct_hotkey_acct = ${getPlayerData(client).accountData.databaseId} AND acct_hotkey_key = ${keyId}`);
-    for(let i in getPlayerData(client).accountData.keyBinds) {
-        if(getPlayerData(client).accountData.keyBinds[i].key == keyId) {
-            getPlayerData(client).accountData.keyBinds.splice(i, 1);
+    if(isPlayerLoggedIn(client)) {
+        quickDatabaseQuery(`DELETE FROM acct_hotkey WHERE acct_hotkey_acct = ${getPlayerData(client).accountData.databaseId} AND acct_hotkey_key = ${keyId}`);
+    }
+
+    for(let i in getPlayerData(client).keyBinds) {
+        if(getPlayerData(client).keyBinds[i].key == keyId) {
+            getPlayerData(client).keyBinds.splice(i, 1);
         }
     }
     sendRemoveAccountKeyBindToClient(client, keyId);
@@ -110,8 +113,8 @@ function removePlayerKeyBind(client, keyId) {
 // ===========================================================================
 
 function doesPlayerHaveKeyBindForCommand(client, command) {
-    for(let i in getPlayerData(client).accountData.keyBinds) {
-        if(toLowerCase(getPlayerData(client).accountData.keyBinds[i].commandString.split(" ")[0]) == toLowerCase(command)) {
+    for(let i in getPlayerData(client).keyBinds) {
+        if(toLowerCase(getPlayerData(client).keyBinds[i].commandString.split(" ")[0]) == toLowerCase(command)) {
             return true;
         }
     }
@@ -121,9 +124,9 @@ function doesPlayerHaveKeyBindForCommand(client, command) {
 // ===========================================================================
 
 function getPlayerKeyBindForCommand(client, command) {
-    for(let i in getPlayerData(client).accountData.keyBinds) {
-        if(toLowerCase(getPlayerData(client).accountData.keyBinds[i].commandString.split(" ")[0]) == toLowerCase(command)) {
-            return getPlayerData(client).accountData.keyBinds[i];
+    for(let i in getPlayerData(client).keyBinds) {
+        if(toLowerCase(getPlayerData(client).keyBinds[i].commandString.split(" ")[0]) == toLowerCase(command)) {
+            return getPlayerData(client).keyBinds[i];
         }
     }
     return false;
@@ -132,8 +135,8 @@ function getPlayerKeyBindForCommand(client, command) {
 // ===========================================================================
 
 function doesPlayerHaveKeyBindForKey(client, key) {
-    for(let i in getPlayerData(client).accountData.keyBinds) {
-        if(getPlayerData(client).accountData.keyBinds[i].key == key) {
+    for(let i in getPlayerData(client).keyBinds) {
+        if(getPlayerData(client).keyBinds[i].key == key) {
             return true;
         }
     }
@@ -149,9 +152,9 @@ function doesPlayerHaveKeyBindsDisabled(client) {
 // ===========================================================================
 
 function getPlayerKeyBindForKey(client, key) {
-    for(let i in getPlayerData(client).accountData.keyBinds) {
-        if(getPlayerData(client).accountData.keyBinds[i].key == key) {
-            return getPlayerData(client).accountData.keyBinds[i];
+    for(let i in getPlayerData(client).keyBinds) {
+        if(getPlayerData(client).keyBinds[i].key == key) {
+            return getPlayerData(client).keyBinds[i];
         }
     }
     return false;
@@ -188,8 +191,8 @@ function playerUsedKeyBind(client, key) {
 
 function sendAccountKeyBindsToClient(client) {
     sendClearKeyBindsToClient(client);
-    for(let i in getPlayerData(client).accountData.keyBinds) {
-        sendAddAccountKeyBindToClient(client, getPlayerData(client).accountData.keyBinds[i].key, getPlayerData(client).accountData.keyBinds[i].keyState);
+    for(let i in getPlayerData(client).keyBinds) {
+        sendAddAccountKeyBindToClient(client, getPlayerData(client).keyBinds[i].key, getPlayerData(client).keyBinds[i].keyState);
     }
 }
 
@@ -203,7 +206,7 @@ function loadKeyBindConfiguration() {
 // ===========================================================================
 
 function showKeyBindListCommand(command, params, client) {
-	let keybindList = getPlayerData(client).accountData.keyBinds.map(function(x) { return `{ALTCOLOUR}${toUpperCase(getKeyNameFromId(x.key))}: {MAINCOLOUR}${x.commandString}`; });
+	let keybindList = getPlayerData(client).keyBinds.map(function(x) { return `{ALTCOLOUR}${toUpperCase(getKeyNameFromId(x.key))}: {MAINCOLOUR}${x.commandString}`; });
 
 	let chunkedList = splitArrayIntoChunks(keybindList, 6);
 

@@ -281,6 +281,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
         getPlayerData(client).lastVehicle = vehicle;
+        getVehicleData(vehicle).respawnTime = getCurrentUnixTimestamp() + getGlobalConfig().vehicleInactiveRespawnDelay;
 
         if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
             vehicle.engine = getVehicleData(vehicle).engine;

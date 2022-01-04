@@ -238,7 +238,11 @@ function checkInactiveVehicleRespawns() {
 	let vehicles = getElementsByType(ELEMENT_VEHICLE);
 	for(let i in vehicles) {
 		if(getCurrentUnixTimestamp() - getVehicleData(vehicles[i]).respawnTime >= getGlobalConfig().vehicleInactiveRespawnDelay) {
-			respawnVehicle(vehicles[i]);
+			if(!isVehicleUnoccupied(vehicles[i])) {
+				getVehicleData(vehicles[i]).respawnTime = getCurrentUnixTimestamp() + getGlobalConfig().vehicleInactiveRespawnDelay;
+			} else {
+				respawnVehicle(vehicles[i]);
+			}
 		}
 	}
 }

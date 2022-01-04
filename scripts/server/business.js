@@ -1424,8 +1424,8 @@ function deleteBusiness(businessId, deletedBy = 0) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	deleteAllBusinessBlips(businessId);
-	deleteAllBusinessPickups(businessId);
+	deleteBusinessBlips(businessId);
+	deleteBusinessPickups(businessId);
 
 	removePlayersFromBusiness(businessId);
 

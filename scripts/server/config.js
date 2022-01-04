@@ -63,7 +63,8 @@ let globalConfig = {
 			upKeepPerVehicle: 250,
 			upKeepPerHouse: 350,
 			upKeepPerBusiness: 600
-		}
+		},
+		incomeTaxRate: 0.7,
 	},
 	weaponEquippableTypes: [
 		VRR_ITEM_USETYPE_WEAPON,

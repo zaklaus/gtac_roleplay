@@ -526,7 +526,6 @@ function streamAudioURLToAllPlayersCommand(command, params, client) {
 	let volume = splitParams[1];
 
 	playRadioStreamForPlayer(null, url, false, volume);
-	//https://www.dropbox.com/s/xw4m0y0guyzrwkk/lets-get-ready-to-rumble.ogg?dl=0
 }
 
 // ===========================================================================
@@ -542,7 +541,54 @@ function streamAudioNameToAllPlayersCommand(command, params, client) {
 	let volume = splitParams[1];
 
 	playAudioFileForPlayer(null, name, false, volume);
-	//https://www.dropbox.com/s/xw4m0y0guyzrwkk/lets-get-ready-to-rumble.ogg?dl=0
+}
+
+// ===========================================================================
+
+function fixAllServerBlipsCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let blips = getElementsByType(ELEMENT_BLIP);
+	blips.forEach((blip) => {
+		deleteGameElement(blip);
+	});
+
+	createAllJobBlips();
+	createAllBusinessBlips();
+	createAllHouseBlips();
+}
+
+// ===========================================================================
+
+function fixAllServerPickupsCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let pickups = getElementsByType(ELEMENT_PICKUP);
+	pickups.forEach((pickup) => {
+		deleteGameElement(pickup);
+	});
+
+	createAllJobPickups();
+	createAllBusinessPickups();
+	createAllHousePickups();
+}
+
+// ===========================================================================
+
+function resetAllServerAmbienceElementsCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	clearTemporaryPeds();
+	cleartTemporaryVehicles();
 }
 
 // ===========================================================================

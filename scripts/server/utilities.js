@@ -1514,3 +1514,33 @@ function getVehicleTrunkPosition(vehicle) {
 }
 
 // ===========================================================================
+
+function clearTemporaryVehicles() {
+	let vehicles = getElementsByType(ELEMENT_VEHICLE);
+	for(let i in vehicles) {
+		if(vehicles[i].owner == -1) {
+			if(!getVehicleData(vehicles[i])) {
+				if(isVehicleUnoccupied(vehicles[i])) {
+					destroyElement(vehicles[i]);
+				}
+			}
+		}
+	}
+}
+
+// ===========================================================================
+
+function clearTemporaryPeds() {
+	let peds = getElementsByType(ELEMENT_PED);
+	for(let i in peds) {
+		if(peds[i].owner == -1) {
+			if(!peds[i].isType(ELEMENT_PLAYER)) {
+				if(peds[i].vehicle == null) {
+					if(!getNPCData(peds[i])) {
+						destroyElement(peds[i]);
+					}
+				}
+			}
+		}
+	}
+}

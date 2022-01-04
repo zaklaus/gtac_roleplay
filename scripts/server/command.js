@@ -224,6 +224,9 @@ function loadCommands() {
             commandData("streamnameall", streamAudioNameToAllPlayersCommand, "<name> <volume>", getStaffFlagValue("Developer"), true, true),
 
             commandData("forceresetpass", forceAccountPasswordResetCommand, "<account name>", getStaffFlagValue("Developer"), true, true),
+            commandData("fixblips", fixAllServerBlipsCommand, "", getStaffFlagValue("Developer"), true, true),
+            commandData("fixpickups", fixAllServerPickupsCommand, "", getStaffFlagValue("Developer"), true, true),
+            commandData("resetambience", resetAllServerAmbienceElementsCommand, "", getStaffFlagValue("Developer"), true, true),
         ],
         discord: [],
         email: [
@@ -650,7 +653,13 @@ function processPlayerCommand(command, params, client) {
 
     if(!doesCommandExist(toLowerCase(command))) {
         console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
-        messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Use /help for commands and information.`);
+
+        let possibleCommand = getCommandFromParams(command);
+        if(possibleCommand != false && doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(toLowerCase(possibleCommand.command)))) {
+            messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Did you mean {ALTCOLOUR}/${possibleCommand.command} ?`);
+        } else {
+            messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Use /help for commands and information.`);
+        }
         return false;
     }
 
@@ -751,4 +760,3 @@ function getCommandAliasesNames(command) {
 }
 
 // ===========================================================================
-

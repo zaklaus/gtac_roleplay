@@ -4353,7 +4353,18 @@ let gameData = {
 				blip: false,
 				name: "Los Santos",
 			},
-
+			{
+				position: toVector3(2290.06, 2428.15, 10.82),
+				heading: 0.0,
+				blip: false,
+				name: "Las Venturas",
+			},
+			{
+				position: toVector3(-1606.92, 718.08, 12.23),
+				heading: 0.0,
+				blip: false,
+				name: "San Fierro",
+			},
 		],
 		[	// GTA UG
 

@@ -251,6 +251,8 @@ class ClientData {
 		this.currentPickup = false;
 
 		this.usingSkinSelect = false;
+
+		this.keyBinds = [];
 	}
 };
 
@@ -276,7 +278,6 @@ class AccountData {
 
 		this.notes = [];
 		this.messages = [];
-		this.keyBinds = [];
 		this.contacts = [];
 		this.subAccounts = [];
 
@@ -306,7 +307,6 @@ class AccountData {
 
 			this.notes = [];
 			this.messages = [];
-			this.keyBinds = [];
 			this.contacts = [];
 			this.subAccounts = [];
 

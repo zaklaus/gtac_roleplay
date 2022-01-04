@@ -147,6 +147,14 @@ function helpCommand(command, params, client) {
             showRadioHelpMessage(client);
             break;
 
+        case "economy":
+        case "wealth":
+        case "tax":
+        case "taxes":
+        case "payday":
+            showWealthAndTaxHelpMessage(client);
+            break;
+
         default:
             showMainHelpMessage(client);
             break;
@@ -177,6 +185,7 @@ function helpCommand(command, params, client) {
 // == Badge ====================================
 // == Accents ==================================
 // == Player Info ==============================
+// == Wealth and Tax ===========================
 
 // ===========================================================================
 
@@ -332,6 +341,16 @@ function showRadioHelpMessage(client) {
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostations {MAINCOLOUR}to set the station for your vehicle, house, or business`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostations {MAINCOLOUR}to see a list of stations`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}You can change your radio streaming volume using {ALTCOLOUR}/radiovolume {MAINCOLOUR}with 0-100 as the percent.`);
+}
+
+// ===========================================================================
+
+function showWealthAndTaxHelpMessage(client) {
+    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Wealth and Tax {clanOrange}===========================`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your taxes on payday are calculated by your wealth.`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your wealth is a total sum based on how many vehicles, houses, and businesses you have.`);
+	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Each vehicle is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle}, {MAINCOLOUR}each house is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerHouse}, {MAINCOLOUR}and each business is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness}`);
+	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your current wealth is $${wealth} ({ALTCOLOUR}$${getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle*vehicles.length} {MAINCOLOUR}from ${vehicles.length} vehicles, {ALTCOLOUR}$${getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness*businesses.length} {MAINCOLOUR}from ${businesses.length} businesses, and {ALTCOLOUR}$${getGlobalConfig().economy.upKeepCosts.upKeepPerHouse*houses.length} {MAINCOLOUR}from ${houses.length} houses)`)
 }
 
 // ===========================================================================

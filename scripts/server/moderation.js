@@ -855,11 +855,11 @@ function givePlayerMoneyCommand(command, params, client) {
         return false;
 	}
 
-	givePlayerCash(client, toInteger(amount));
+	givePlayerCash(targetClient, toInteger(amount));
 	updatePlayerCash(targetClient);
 	//messagePlayerSuccess(client, `You gave {ALTCOLOUR}$${amount} {MAINCOLOUR}to {ALTCOLOUR}${getCharacterFullName(targetClient)}`);
 	messageAdmins(`${client.name} {MAINCOLOUR}gave {ALTCOLOUR}$${amount} {MAINCOLOUR}to {ALTCOLOUR}${getCharacterFullName(targetClient)}`)
-	messagePlayerAlert(client, `An admin gave you {ALTCOLOUR}$${amount}`);
+	messagePlayerAlert(targetClient, `An admin gave you {ALTCOLOUR}$${amount}`);
 }
 
 // ===========================================================================

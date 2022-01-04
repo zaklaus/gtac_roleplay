@@ -85,3 +85,30 @@ function forcePlayerPayDayCommand(command, params, client) {
 }
 
 // ===========================================================================
+
+function taxInfoCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let wealth = calculateWealth(client);
+	let tax = calculateIncomeTax(wealth);
+
+	messagePlayerInfo(client, `Your tax on payday is: $${tax}. Use {ALTCOLOUR}/help tax {MAINCOLOUR}for more information.`);
+}
+
+// ===========================================================================
+
+function wealthInfoCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let wealth = calculateWealth(client);
+
+	messagePlayerInfo(client, `Your wealth is: $${wealth}. Use {ALTCOLOUR}/help wealth {MAINCOLOUR}for more information.`);
+}
+
+// ===========================================================================

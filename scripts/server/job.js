@@ -946,7 +946,7 @@ function deleteJobLocationCommand(command, params, client) {
 	let tempIndex = closestJobLocation.index;
 	let tempJob = closestJobLocation.job;
 	deleteJobLocation(closestJobLocation);
-	getJobData(tempJob).locations.splice(tempIndex, 1);
+	getJobData(getJobIdFromDatabaseId(tempJob)).locations.splice(tempIndex, 1);
 }
 
 // ===========================================================================

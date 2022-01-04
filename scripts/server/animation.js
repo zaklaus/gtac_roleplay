@@ -26,7 +26,7 @@ function playPlayerAnimationCommand(command, params, client) {
 
 	if(!animationSlot) {
 		messagePlayerError(client, getLocaleString("AnimationNotFound"));
-		messagePlayerInfo(client, getLocaleString("AnimationHelpTip"));
+		messagePlayerInfo(client, getLocaleString("AnimationHelpTip"), `{ALTCOLOUR}/animlist{MAINCOLOUR}`);
 		return false;
 	}
 

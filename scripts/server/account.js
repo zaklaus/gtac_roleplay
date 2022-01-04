@@ -16,7 +16,7 @@ function initAccountScript() {
 
 function loginCommand(command, params, client) {
 	if(!isPlayerRegistered(client)) {
-		messagePlayerError(client, "Your name is not registered! Use /register to make an account.");
+		messagePlayerError(client, getLocaleString(client, "NameNotRegistered"));
 		return false;
 	}
 
@@ -36,10 +36,10 @@ function toggleAutoLoginByIPCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Automatic login by IP is now {softRed}OFF {white}`);
+		messagePlayerSuccess(client, getLocaleString(client, "AutomaticLoginIP", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Automatic login by IP is now {softGreen}ON {white}(${client.ip})`);
+		messagePlayerSuccess(client, getLocaleString(client, "AutomaticLoginIPToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
 	}
 	return true;
 }
@@ -51,10 +51,10 @@ function toggleNoRandomTipsCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Random tips are now {softRed}OFF`);
+		messagePlayerSuccess(client, getLocaleString(client, "RandomTipsToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Random tips are now {softGreen}ON`);
+		messagePlayerSuccess(client, getLocaleString(client, "RandomTipsToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
 	}
 	return true;
 }
@@ -66,10 +66,10 @@ function toggleNoActionTipsCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Action tips are now {softRed}OFF`);
+		messagePlayerSuccess(client, getLocaleString(client, "ActionTipsToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Action tips are now {softGreen}ON`);
+		messagePlayerSuccess(client, getLocaleString(client, "ActionTipsToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
 	}
 	return true;
 }
@@ -81,10 +81,10 @@ function toggleAutoSelectLastCharacterCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Automatic spawn as last used character is now {softRed}OFF`);
+		messagePlayerSuccess(client, getLocaleString(client, "AutoSpawnLastCharToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Automatic spawn as last used character is now {softGreen}ON`);
+		messagePlayerSuccess(client, getLocaleString(client, "AutoSpawnLastCharToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
 	}
 	return true;
 }
@@ -96,12 +96,12 @@ function toggleAccountGUICommand(command, params, client) {
 
 	if(!doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerNormal(client, `⚙️ GUI is now {softGreen}ON. {white}(if server has it enabled)`);
+		messagePlayerNormal(client, getLocaleString(client, "GUIAccountSettingToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerNormal(client, `⚙️ GUI is now {softRed}OFF. {white}(Any GUI stuff will be use via commands and message in the chatbox)`);
-		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account OFF.`);
+		messagePlayerNormal(client, getLocaleString(client, "GUIAccountSettingToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	}
 
 	if(!isPlayerLoggedIn(client)) {
@@ -459,7 +459,6 @@ function loadAccountFromName(accountName, fullLoad = false) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 				let tempAccountData = new AccountData(dbAssoc);
 				if(fullLoad) {
-					tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 					tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
 					tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
 					tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
@@ -486,7 +485,6 @@ function loadAccountFromId(accountId, fullLoad = false) {
 			let tempAccountData = new AccountData(dbAssoc);
 			freeDatabaseQuery(dbQuery);
 			if(fullLoad) {
-				tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 				tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
 				tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
 				tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
@@ -749,7 +747,6 @@ function createAccount(name, password, email = "") {
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			let tempAccountData = loadAccountFromId(getDatabaseInsertId(dbConnection), false);
 			createDefaultAccountServerData(tempAccountData.databaseId);
-			tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 			tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
 			tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
 			tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
@@ -1031,12 +1028,12 @@ function initClient(client) {
 					if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);
 						showPlayerLoginGUI(client);
-						addPlayerKeyBind(client, getKeyIdFromParams("insert"), "gui", "");
 					} else {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
 						messagePlayerNormal(client, `Welcome back to ${getServerName()}, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
 					}
 					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
+					loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 				}
 			} else {
 				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {

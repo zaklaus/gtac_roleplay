@@ -688,6 +688,20 @@ function getAccentFromParams(params) {
 
 // ===========================================================================
 
+function getCommandFromParams(params) {
+	for(let i in serverCommands) {
+		for(let j in serverCommands[i]) {
+			if(toLowerCase(serverCommands[i][j].command).indexOf(toLowerCase(params)) != -1) {
+				return serverCommands[i][j];
+			}
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
 function getLocaleNameFromParams(params) {
 	let locales = getLocales();
 	if(isNaN(params)) {
@@ -1381,13 +1395,13 @@ function isConsole(client) {
 // ===========================================================================
 
 function updateConnectionLogOnQuit(client, quitReasonId) {
-	quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=NOW(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${toInteger(getEntityData(client, "vrr.connection"))}`);
+	quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=NOW(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${getPlayerData(client).connectionId}`);
 }
 
 // ===========================================================================
 
 function updateConnectionLogOnAuth(client, authId) {
-	quickDatabaseQuery(`UPDATE conn_main SET conn_auth=${authId} WHERE conn_id = ${toInteger(getEntityData(client, "vrr.connection"))}`);
+	quickDatabaseQuery(`UPDATE conn_main SET conn_auth=${authId} WHERE conn_id = ${getPlayerData(client).connectionId}`);
 }
 
 // ===========================================================================
@@ -1398,7 +1412,7 @@ function updateConnectionLogOnClientInfoReceive(client, clientVersion, screenWid
 		let safeClientVersion = escapeDatabaseString(dbConnection, clientVersion);
 		let safeScreenWidth = escapeDatabaseString(dbConnection, toString(screenWidth));
 		let safeScreenHeight = escapeDatabaseString(dbConnection, toString(screenHeight));
-    	quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${toInteger(getEntityData(client, "vrr.connection"))}`);
+    	quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${getPlayerData(client).connectionId}`);
 	}
 }
 
@@ -1426,24 +1440,6 @@ function doesNameContainInvalidCharacters(name) {
 
 function fixCharacterName(name) {
 	return String(name.charAt(0).toUpperCase()) + String(name.slice(1).toLowerCase());
-}
-
-// ===========================================================================
-
-function getAllVehiclesOwnedByPlayer(client) {
-	return getServerData().vehicles.filter((v) => v.ownerType == VRR_VEHOWNER_PLAYER && v.ownerId == getPlayerCurrentSubAccount(client).databaseId);
-}
-
-// ===========================================================================
-
-function getAllBusinessesOwnedByPlayer(client) {
-	return getServerData().businesses.filter((b) => b.ownerType == VRR_BIZOWNER_PLAYER && b.ownerId == getPlayerCurrentSubAccount(client).databaseId);
-}
-
-// ===========================================================================
-
-function getAllHousesOwnedByPlayer(client) {
-	return getServerData().houses.filter((h) => h.ownerType == VRR_HOUSEOWNER_PLAYER && h.ownerId == getPlayerCurrentSubAccount(client).databaseId);
 }
 
 // ===========================================================================

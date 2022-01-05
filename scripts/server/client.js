@@ -498,7 +498,7 @@ function sendPlayerFrozenState(client, state) {
 
 // ===========================================================================
 
-function givePlayerWeapon(client, weaponId, ammo, active) {
+function givePlayerWeapon(client, weaponId, ammo, active = true) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to give weapon (Weapon: ${weaponId}, Ammo: ${ammo})`);
     triggerNetworkEvent("vrr.giveWeapon", client, weaponId, ammo, active);
 }
@@ -675,6 +675,17 @@ function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, he
                 meActionToNearbyPlayers(damagerEntity, `electrifies ${getCharacterFullName(client)} with their tazer`);
                 tazePlayer(client);
             }
+            break;
+
+        case VRR_WEAPON_DAMAGE_EVENT_EXTINGUISH:
+            break;
+
+        case VRR_WEAPON_DAMAGE_EVENT_MACE:
+            break;
+
+        case VRR_WEAPON_DAMAGE_EVENT_NORMAL:
+            getPlayerData(client).health = getPlayerData(client).health-(healthLoss*getPlayerData(client).incomingDamageMultiplier);
+            setPlayerHealth(client, getPlayerData(client).health);
             break;
 
         default:

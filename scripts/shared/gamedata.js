@@ -3476,15 +3476,21 @@ let gameData = {
 				["Outfit", 500, 2]
 			],
 			legalGunStore: [
+                ["Baseball Bat", 500, 2],
 				["Colt 45", 500, 2],
 				["Shotgun", 500, 2],
-				["Baseball Bat", 500, 2]
+                ["Colt 45 Ammo", 500, 2],
+                ["Shotgun Ammo", 500, 2],
 			],
 			illegalGunStore: [
 				["Uzi", 500, 2],
 				["AK-47", 500, 2],
 				["M16", 500, 2],
-				["Sniper Rifle", 500, 2]
+				["Sniper Rifle", 500, 2],
+                ["Uzi Ammo", 500, 2],
+                ["AK-47 Ammo", 500, 2],
+                ["M16 Ammo", 500, 2],
+                ["Shotgun Ammo", 500, 2],
 			],
 			gasStation: [
 				["Bottle of Soda", 500, 2],
@@ -3492,6 +3498,7 @@ let gameData = {
 				["Slice of Pizza", 500, 2],
 				["Bottle of Water", 500, 2],
 				["Can of Beer", 500, 2],
+                ["Pack of Smokes", 500, 2],
 			],
 			electronicsStore: [
 				["Phone", 500, 2],
@@ -3603,12 +3610,16 @@ let gameData = {
 				["Outfit", 500, 2]
 			],
 			legalGunStore: [
+                ["Baseball Bat", 500, 2],
+				["Brass Knuckles", 500, 2],
 				["Colt .45", 500, 2],
 				["Python", 500, 2],
 				["Shotgun", 500, 2],
 				["Stubby Shotgun", 500, 2],
-				["Baseball Bat", 500, 2],
-				["Brass Knuckles", 500, 2],
+				["Colt .45 Ammo", 500, 2],
+				["Python Ammo", 500, 2],
+				["Shotgun Ammo", 500, 2],
+				["Stubby Shotgun Ammo", 500, 2],
 			],
 			illegalGunStore: [
 				["Uzi", 500, 2],
@@ -3619,6 +3630,14 @@ let gameData = {
 				["M4", 500, 2],
 				["Sniper Rifle", 500, 2],
 				["Laser Sniper", 500, 2],
+				["Uzi Ammo", 500, 2],
+				["MP5 Ammo", 500, 2],
+				["Tec-9 Ammo", 500, 2],
+				["Ingram Ammo", 500, 2],
+				["Ruger Ammo", 500, 2],
+				["M4 Ammo", 500, 2],
+				["Sniper Rifle Ammo", 500, 2],
+				["Laser Sniper Ammo", 500, 2],
 			],
 			gasStation: [
 				["Bottle of Soda", 500, 2],
@@ -3743,7 +3762,11 @@ let gameData = {
 				["9mm", 500, 2],
 				["Desert Eagle", 500, 2],
 				["Shotgun", 500, 2],
-				["Country Rifle", 500, 2]
+				["Country Rifle", 500, 2],
+				["9mm Ammo", 500, 2],
+				["Desert Eagle Ammo", 500, 2],
+				["Shotgun Ammo", 500, 2],
+				["Country Rifle Ammo", 500, 2],
 			],
 			illegalGunStore: [
 				["Micro SMG/Uzi", 500, 2],
@@ -3752,21 +3775,32 @@ let gameData = {
 				["AK-47", 500, 2],
 				["M4", 500, 2],
 				["Combat Shotgun", 500, 2],
-				["Sniper Rifle", 500, 2]
+				["Sniper Rifle", 500, 2],
+				["Micro SMG/Uzi Ammo", 500, 2],
+				["MP5 Ammo", 500, 2],
+				["Tec-9 Ammo", 500, 2],
+				["AK-47 Ammo", 500, 2],
+				["M4 Ammo", 500, 2],
+				["Combat Shotgun Ammo", 500, 2],
+				["Sniper Rifle Ammo", 500, 2],
 			],
 			sexShop: [
 				["Purple Dildo", 500, 2],
 				["Dildo", 500, 2],
 				["Vibrator", 500, 2],
 				["Silver Vibrator", 500, 2],
-				["Flowers", 500, 2]
+				["Flowers", 500, 2],
+                ["Cane", 500, 2],
+                ["Pool Cue", 500, 2],
 			],
 			gasStation: [
 				["Bottle of Soda", 500, 2],
 				["Can of Soda", 500, 2],
 				["Slice of Pizza", 500, 2],
 				["Bottle of Water", 500, 2],
-				["Can of Beer", 500, 2]
+				["Can of Beer", 500, 2],
+                ["Cane", 500, 2],
+                ["Pool Cue", 500, 2],
 			],
 			electronicsStore: [
 				["Phone", 500, 2],

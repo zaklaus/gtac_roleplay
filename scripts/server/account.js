@@ -1019,6 +1019,8 @@ function initClient(client) {
 			let sessionId = saveConnectionToDatabase(client);
 			getServerData().clients[client.index].session = sessionId;
 			getServerData().clients[client.index].connectTime = Math.ceil(sdl.ticks);
+			getServerData().clients[client.index].keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
+			sendAccountKeyBindsToClient(client);
 
 			if(tempAccountData != false) {
 				if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {
@@ -1033,13 +1035,11 @@ function initClient(client) {
 						messagePlayerNormal(client, `Welcome back to ${getServerName()}, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
 					}
 					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
-					loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 				}
 			} else {
 				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI.`);
 					showPlayerRegistrationGUI(client);
-					addPlayerKeyBind(client, getKeyIdFromParams("insert"), "gui", "");
 				} else {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
 					messagePlayerNormal(client, `Welcome to ${getServerName()}, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
@@ -1059,7 +1059,6 @@ function saveConnectionToDatabase(client) {
 		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (NOW(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', '${client.ip}')`;
 		queryDatabase(dbConnection, dbQueryString);
 		let connectionId = getDatabaseInsertId(dbConnection);
-		setEntityData(client, "vrr.connection", connectionId, false);
 		getPlayerData(client).connectionId = connectionId;
 		requestClientInfo(client);
 	}
@@ -1093,19 +1092,21 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 		tempAccountKeybinds.push(tempKeyBindData);
 	}
 
-	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID} AND acct_hotkey_server = ${getServerId()}`);
-		if(dbQuery) {
-			if(dbQuery.numRows > 0) {
-				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempAccountKeyBindData = new KeyBindData(dbAssoc);
-					tempAccountKeybinds.push(tempAccountKeyBindData);
-					logToConsole(LOG_DEBUG, `[VRR.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${toUpperCase(getKeyNameFromId(tempAccountKeyBindData.key))}') loaded from database successfully!`);
+	if(accountDatabaseID != 0) {
+		if(dbConnection) {
+			dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID} AND acct_hotkey_server = ${getServerId()}`);
+			if(dbQuery) {
+				if(dbQuery.numRows > 0) {
+					while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+						let tempAccountKeyBindData = new KeyBindData(dbAssoc);
+						tempAccountKeybinds.push(tempAccountKeyBindData);
+						logToConsole(LOG_DEBUG, `[VRR.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${toUpperCase(getKeyNameFromId(tempAccountKeyBindData.key))}') loaded from database successfully!`);
+					}
 				}
+				freeDatabaseQuery(dbQuery);
 			}
-			freeDatabaseQuery(dbQuery);
+			disconnectFromDatabase(dbConnection);
 		}
-		disconnectFromDatabase(dbConnection);
 	}
 
 	logToConsole(LOG_DEBUG, `[VRR.Account]: ${tempAccountKeybinds.length} account keybinds for account ${accountDatabaseID} loaded from database successfully!`);

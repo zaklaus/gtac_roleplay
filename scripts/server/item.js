@@ -109,7 +109,7 @@ function createGroundItemObject(itemId) {
 		setElementRotation(getItemData(itemId).object, getItemTypeData(getItemData(itemId).itemTypeIndex).dropRotation);
 		setElementOnAllDimensions(getItemData(itemId).object, false);
 		setElementDimension(getItemData(itemId).object, getItemData(itemId).dimension);
-		setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
+		//setEntityData(getItemData(itemId).object, "vrr.scale", getItemTypeData(getItemData(itemId).itemTypeIndex).dropScale, true);
 		addToWorld(getItemData(itemId).object);
 	}
 
@@ -593,7 +593,26 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_WEAPON:
-			messagePlayerError(client, `The ${getItemName(itemIndex)} is a weapon. To use it, switch to it from your items. The use key has no effect.`);
+			for(let i in getPlayerData(client).hotBarItems) {
+				if(getPlayerData(client).hotBarItems[i] != -1) {
+					if(getItemData(getPlayerData(client).hotBarItems[i]) != false) {
+						if(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useType == VRR_ITEM_USETYPE_AMMO_CLIP) {
+							if(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useId == getItemTypeData(getItemData(itemIndex).itemTypeIndex).databaseId) {
+								givePlayerWeaponAmmo(client, getItemData(getPlayerData(client).hotBarItems[i]).value);
+								getItemData(getPlayerData(client).hotBarItems[hotBarSlot]).value = getItemData(getPlayerData(client).hotBarItems[hotBarSlot]).value + getItemData(getPlayerData(client).hotBarItems[i]).value;
+								deleteItem(getPlayerData(client).hotBarItems[i]);
+								meActionToNearbyPlayers(client, `loads some ammo into their ${getItemTypeData(getItemData(itemIndex).itemTypeIndex).name}`);
+								return true;
+							}
+						}
+					}
+				}
+			}
+			messagePlayerError(client, `You don't have any ammo to load into your ${getItemTypeData(getItemData(itemIndex).itemTypeIndex).name}!`);
+			break;
+
+		case VRR_ITEM_USETYPE_AMMO_CLIP:
+			messagePlayerError(client, `To load this ammo into a weapon, equip the weapon and ${(doesPlayerHaveKeyBindForCommand(client, "use")) ? `press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "use").key))}` : `{ALTCOLOUR}/use`}`);
 			break;
 
 		case VRR_ITEM_USETYPE_STORAGE:
@@ -603,6 +622,7 @@ function playerUseItem(client, hotBarSlot) {
 		case VRR_ITEM_USETYPE_FOOD:
 			meActionToNearbyPlayers(client, `eats some of their ${getItemName(itemIndex)}`);
 			givePlayerHealth(client, getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue);
+			getItemData(itemIndex).value = getItemData(itemIndex).value - getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
 			if(getItemData(itemIndex).value <= 0) {
 				deleteItem(itemIndex);
 				switchPlayerActiveHotBarSlot(client, -1);
@@ -714,7 +734,7 @@ function playerUseItem(client, hotBarSlot) {
 			vehicle = getClosestVehicle(getPlayerPosition(client));
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				meActionToNearbyPlayers(client, `takes their decal kit and adds some decals to the vehicle.`);
-				setVehicleLivery(vehicle, getItemData(itemIndex).useValue);
+				setVehicleLivery(vehicle, getItemData(itemIndex).value);
 			}
 			break;
 
@@ -723,11 +743,11 @@ function playerUseItem(client, hotBarSlot) {
 			if(getDistance(getPlayerPosition(client), getVehiclePosition(vehicle)) <= getGlobalConfig().vehicleRepairDistance) {
 				if(getItemData(itemIndex).useId == 1) {
 					meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the primary colour of the vehicle.`);
-					vehicle.colour1 = getItemData(itemIndex).useValue;
+					vehicle.colour1 = getItemData(itemIndex).value;
 				} else {
 					if(getItemData(itemIndex).useId == 1) {
 						meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the secondary colour of the vehicle.`);
-						vehicle.colour2 = getItemData(itemIndex).useValue;
+						vehicle.colour2 = getItemData(itemIndex).value;
 					}
 				}
 			}
@@ -754,11 +774,11 @@ function playerUseItem(client, hotBarSlot) {
 				if(getDistance(getPlayerPosition(client), getFuelPumpData(fuelPump).position) <= getGlobalConfig().vehicleRepairDistance) {
 					if(getItemData(itemIndex).useId == 1) {
 						meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the primary colour of the vehicle.`);
-						vehicle.colour1 = getItemData(itemIndex).useValue;
+						vehicle.colour1 = getItemTypeData(itemIndex).value;
 					} else {
 						if(getItemData(itemIndex).useId == 1) {
 							meActionToNearbyPlayers(client, `takes their vehicle colour kit and changes the secondary colour of the vehicle.`);
-							vehicle.colour2 = getItemData(itemIndex).useValue;
+							vehicle.colour2 = getItemData(itemIndex).value;
 						}
 					}
 				}
@@ -790,14 +810,24 @@ function playerUseItem(client, hotBarSlot) {
 
 		case VRR_ITEM_USETYPE_SMOKEDRUG:
 			meActionToNearbyPlayers(client, `smokes some ${getItemName(itemIndex)}`);
-			givePlayerHealth(client, 25);
+			getPlayerData(client).incomingDamageMultiplier = getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			givePlayerHealth(client, 100);
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
 			break;
 
 		case VRR_ITEM_USETYPE_SNORTDRUG:
 			meActionToNearbyPlayers(client, `snorts some ${getItemName(itemIndex)}`);
-			givePlayerHealth(client, 50);
+			getPlayerData(client).incomingDamageMultiplier = getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			givePlayerHealth(client, 100);
+			deleteItem(itemIndex);
+			switchPlayerActiveHotBarSlot(client, -1);
+			break;
+
+		case VRR_ITEM_USETYPE_INJECTDRUG:
+			meActionToNearbyPlayers(client, `shoots up some ${getItemName(itemIndex)}`);
+			getPlayerData(client).incomingDamageMultiplier = getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			givePlayerHealth(client, 100);
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
 			break;
@@ -822,6 +852,10 @@ function playerUseItem(client, hotBarSlot) {
 					messagePlayerNormal(client, `{clanOrange}Rank: {MAINCOLOUR}${getJobRankName(getPlayerJob(client), getPlayerJobRank(client))}`);
 				}
 			}
+			break;
+
+		case VRR_ITEM_USETYPE_AMMOCLIP:
+			messagePlayerError(client, `Equip a compatible weapon and press R to use an ammo clip/magazine`);
 			break;
 
 		default:
@@ -1945,5 +1979,3 @@ function createGroundPlant(itemId) {
 	groundItemCache.push(itemId);
 
 }
-
-// ===========================================================================

@@ -253,6 +253,10 @@ class ClientData {
 		this.usingSkinSelect = false;
 
 		this.keyBinds = [];
+
+		this.connectionId = 0;
+
+		this.incomingDamageMultiplier = 1;
 	}
 };
 

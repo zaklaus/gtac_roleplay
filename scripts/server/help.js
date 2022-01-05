@@ -347,10 +347,10 @@ function showRadioHelpMessage(client) {
 
 function showWealthAndTaxHelpMessage(client) {
     messagePlayerInfo(client, `{clanOrange}== {jobYellow}Wealth and Tax {clanOrange}===========================`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your taxes on payday are calculated by your wealth.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your wealth is a total sum based on how many vehicles, houses, and businesses you have.`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your taxes on payday are ${100*getGlobalConfig().economy.incomeTaxRate}% of your calculated wealth.`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your calculated wealth is a total sum based on how many vehicles, houses, and businesses you have.`);
 	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Each vehicle is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle}, {MAINCOLOUR}each house is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerHouse}, {MAINCOLOUR}and each business is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness}`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your current wealth is $${wealth} ({ALTCOLOUR}$${getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle*vehicles.length} {MAINCOLOUR}from ${vehicles.length} vehicles, {ALTCOLOUR}$${getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness*businesses.length} {MAINCOLOUR}from ${businesses.length} businesses, and {ALTCOLOUR}$${getGlobalConfig().economy.upKeepCosts.upKeepPerHouse*houses.length} {MAINCOLOUR}from ${houses.length} houses)`)
+	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/wealth {MAINCOLOUR}to see your current wealth, and {ALTCOLOUR}/tax {MAINCOLOUR}to see how much you'll pay in tax each payday`);
 }
 
 // ===========================================================================

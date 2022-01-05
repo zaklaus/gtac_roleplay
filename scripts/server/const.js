@@ -221,6 +221,7 @@ const VRR_ITEM_USETYPE_SMOKEDRUG = 48;           //
 const VRR_ITEM_USETYPE_SNORTDRUG = 49;           //
 const VRR_ITEM_USETYPE_PLANT = 50;
 const VRR_ITEM_USETYPE_MEGAPHONE = 51;
+const VRR_ITEM_USETYPE_INJECTDRUG = 52;
 
 // Item Drop Types
 const VRR_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped

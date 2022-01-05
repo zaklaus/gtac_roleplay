@@ -229,6 +229,11 @@ function loadCommands() {
             commandData("resetambience", resetAllServerAmbienceElementsCommand, "", getStaffFlagValue("Developer"), true, true),
         ],
         discord: [],
+        economy: [
+            commandData("tax", taxInfoCommand, "", getStaffFlagValue("None"), true, true),
+            commandData("wealth", wealthInfoCommand, "", getStaffFlagValue("None"), true, true),
+            commandData("forcepayday", forcePlayerPayDayCommand, "<player name/id>", getStaffFlagValue("ManageServer"), true, true, "Gives a player an instant payday."),
+        ],
         email: [
             commandData("testemail", testEmailCommand, "<email address>", getStaffFlagValue("Developer"), true, true),
         ],
@@ -271,6 +276,7 @@ function loadCommands() {
         ],
         item: [
             commandData("i", playerSwitchHotBarSlotCommand, "<slot id>", getStaffFlagValue("None"), true, false, "Switches to the item in the specified slot of your inventory."),
+            commandData("item", playerSwitchHotBarSlotCommand, "<slot id>", getStaffFlagValue("None"), true, false, "Switches to the item in the specified slot of your inventory."),
             commandData("addgrounditem", createGroundItemCommand, "<item name/id>", getStaffFlagValue("ManageItems"), true, false, "Spawns a new item on the ground at your position."),
             commandData("additem", createItemCommand, "<item name/id>", getStaffFlagValue("ManageItems"), true, false, "Spawns a new item in your hotbar inventory."),
             commandData("delgrounditem", deleteGroundItemCommand, "", getStaffFlagValue("ManageItems"), true, false, "Destroys the nearest item on the ground."),
@@ -388,7 +394,7 @@ function loadCommands() {
             commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you downward a certain distance in meters."),
             commandData("int", playerInteriorCommand, "<interior id>", getStaffFlagValue("BasicModeration"), true, true, "Gets or sets a player's game interior."),
             commandData("vw", playerVirtualWorldCommand, "<virtual world id>", getStaffFlagValue("BasicModeration"), true, true, "Gets or sets a player's virtual world/dimension."),
-            commandData("addstaffflag", addStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("ManageAdmins"), true, true, "Gives a player a staff flaf (this server only)."),
+            commandData("addstaffflag", addStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("ManageAdmins"), true, true, "Gives a player a staff flag by name (this server only)."),
             commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("ManageAdmins"), true, true, "Takes a player's staff flag by name (this server only)."),
             commandData("getstaffflags", getStaffFlagsCommand, "<player name/id>", getStaffFlagValue("ManageAdmins"), true, true, "Shows a list of all staff flags a player has (this server only)."),
             commandData("clearstaffflags", clearStaffFlagsCommand, "<player name/id>", getStaffFlagValue("ManageAdmins"), true, true, "Removes all staff flags for a player (this server only)."),
@@ -403,7 +409,6 @@ function loadCommands() {
             commandData("getplrbiz", getAllBusinessesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all businesses owned by the player"),
             commandData("getplrveh", getAllVehiclesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all vehicles owned by the player"),
             commandData("geoip", getGeoIPInformationCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Retrieves GeoIP information on a player (country & city)"),
-            commandData("forcepayday", forcePlayerPayDayCommand, "<player name/id>", getStaffFlagValue("ManageServer"), true, true, "Gives a player an instant payday."),
         ],
         radio: [
             commandData("radiostation", playStreamingRadioCommand, "<radio station id>", getStaffFlagValue("None"), true, false, "Plays a radio station in your vehicle, house, or business (depending on which one you're in)"),

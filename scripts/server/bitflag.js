@@ -434,11 +434,12 @@ function givePlayerStaffFlag(client, flagName) {
 // ===========================================================================
 
 function takePlayerStaffFlag(client, flagName) {
-	if(!getStaffFlagValue(flagName)) {
+	let flagValue = getStaffFlagValue(flagName);
+	if(!flagValue) {
 		return false;
 	}
 
-	getPlayerData(client).accountData.flags.admin = getPlayerData(client).accountData.flags.admin & ~getStaffFlagValue(flagName);
+	getPlayerData(client).accountData.flags.admin = removeBitFlag(getPlayerData(client).accountData.flags.admin, flagValue);
 	return true;
 }
 

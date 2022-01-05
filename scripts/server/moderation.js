@@ -678,17 +678,17 @@ function addStaffFlagCommand(command, params, client) {
         return false;
     }
 
+	if(getStaffFlagValue(flagName) == false) {
+		messagePlayerError(client, "That staff flag doesn't exist!");
+        return false;
+	}
+
 	// Prevent setting flags on admins with really high permissions
     if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot give staff flags to this person!");
 			return false;
 		}
-	}
-
-	if(!getStaffFlagValue(flagName)) {
-		messagePlayerError(client, "That staff flag doesn't exist!");
-        return false;
 	}
 
 	givePlayerStaffFlag(targetClient, flagName);
@@ -712,17 +712,17 @@ function takeStaffFlagCommand(command, params, client) {
         return false;
     }
 
+	if(getStaffFlagValue(flagName) == false) {
+		messagePlayerError(client, "That staff flag doesn't exist!");
+        return false;
+	}
+
 	// Prevent setting flags on admins with really high permissions
     if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot take staff flags from this person!");
 			return false;
 		}
-	}
-
-	if(!getStaffFlagValue(flagName)) {
-		messagePlayerError(client, "That staff flag doesn't exist!");
-        return false;
 	}
 
 	takePlayerStaffFlag(targetClient, flagName);
@@ -739,7 +739,6 @@ function clearStaffFlagsCommand(command, params, client) {
 
 	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -752,11 +751,6 @@ function clearStaffFlagsCommand(command, params, client) {
 			messagePlayerError(client, "You cannot clear staff flags for this person!");
 			return false;
 		}
-	}
-
-	if(!getStaffFlagValue(flagName)) {
-		messagePlayerError(client, "That staff flag doesn't exist!");
-        return false;
 	}
 
 	clearPlayerStaffFlags(targetClient);
@@ -809,7 +803,7 @@ function getStaffFlagsCommand(command, params, client) {
 		}
 	}
 
-	let chunkedList = splitArrayIntoChunks(flagList, 6);
+	let chunkedList = splitArrayIntoChunks(flagList, 8);
 
 	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Player Staff Flags {clanOrange}=========================`);
 

@@ -648,3 +648,15 @@ function getElementModel(element) {
 }
 
 // ===========================================================================
+
+function givePlayerWeaponAmmo(client, ammo) {
+    givePlayerWeapon(client, getPlayerWeapon(client), getPlayerWeaponAmmo(client) + ammo);
+}
+
+// ===========================================================================
+
+function getPlayerWeapon(client) {
+    return client.player.weapon;
+}
+
+// ===========================================================================

@@ -87,6 +87,7 @@ function onElementStreamOut(event, element, client) {
 function onPlayerQuit(event, client, quitReasonId) {
     logToConsole(LOG_INFO, `👋 Client ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
     updateConnectionLogOnQuit(client, quitReasonId);
+
     if(isPlayerLoggedIn(client)) {
         messagePlayerNormal(null, `👋 ${getPlayerName(client)} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
         savePlayerToDatabase(client);

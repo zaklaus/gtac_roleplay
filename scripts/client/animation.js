@@ -8,8 +8,9 @@
 // ===========================================================================
 
 function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loop, loopNoControl, freezeLastFrame, returnToOriginalPosition, freezePlayer) {
+    logToConsole(LOG_DEBUG, `[VRR.Animation] Playing animation ${animGroup}/${animId} for ped ${pedId}`);
     if(getGame() < VRR_GAME_GTA_IV) {
-        if(animType == VRR_ANIMTYPE_ADD) {
+        if(animType == VRR_ANIMTYPE_NORMAL) {
             if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
                 getElementFromId(pedId).clearAnimations();
             } else {
@@ -43,6 +44,29 @@ function forcePedAnimation(pedId, animGroup, animId, animType, animSpeed, loop, 
         setLocalPlayerControlState(false, false);
         getElementFromId(pedId).position = getElementFromId(pedId).position;
         getElementFromId(pedId).addAnimation(animGroup, animId);
+
+        inAnimation = true;
+        setLocalPlayerControlState(false, false);
+        localPlayer.collisionsEnabled = false;
+    }
+}
+
+// ===========================================================================
+
+function makePedStopAnimation(pedId) {
+    if(getElementFromId(pedId) == null) {
+        return false;
+    }
+
+    if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
+        getElementFromId(pedId).clearAnimations();
+    } else {
+        getElementFromId(pedId).clearObjective();
+    }
+
+    if(getElementFromId(pedId) == localPlayer) {
+        localPlayer.collisionsEnabled = true;
+        setLocalPlayerControlState(true, false);
     }
 }
 

@@ -1072,6 +1072,13 @@ function setPlayerVanillaRadioStation(client, radioStationId) {
 
 // ===========================================================================
 
+function forcePlayerWantedLevel(client, wantedLevel) {
+    triggerNetworkEvent("vrr.wantedLevel", client, wantedLevel);
+    return true;
+}
+
+// ===========================================================================
+
 function onPlayerNearPickup(client, pickupId) {
     getPlayerData(client).currentPickup = getElementFromId(pickupId);
 }

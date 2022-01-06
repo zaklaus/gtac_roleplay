@@ -247,16 +247,17 @@ class ClientData {
 		this.returnToType = VRR_RETURNTO_TYPE_NONE;
 
 		this.changingCharacterName = false;
-
 		this.currentPickup = false;
-
 		this.usingSkinSelect = false;
-
 		this.keyBinds = [];
-
 		this.connectionId = 0;
-
 		this.incomingDamageMultiplier = 1;
+
+		this.currentAnimation = -1;
+		this.currentAnimationPositionOffset = false;
+		this.currentAnimationPositionReturnTo = false;
+		this.animationStart = 0;
+		this.animationForced = false;
 	}
 };
 
@@ -1449,6 +1450,20 @@ class ItemTypeData {
 		this.takeDelay = 0;
 		this.giveDelay = 0;
 		this.dropDelay = 0;
+		this.useAnimationName = "";
+		this.dropAnimationName = "";
+		this.pickupAnimationName = "";
+		this.giveAnimationName = "";
+		this.putAnimationName = "";
+		this.takeAnimationName = "";
+		this.switchAnimationName = "";
+		this.useAnimationIndex = false;
+		this.dropAnimationIndex = false;
+		this.pickupAnimationIndex = false;
+		this.giveAnimationIndex = false;
+		this.putAnimationIndex = false;
+		this.takeAnimationIndex = false;
+		this.switchAnimationIndex = false;
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["item_type_id"]);
@@ -1479,6 +1494,13 @@ class ItemTypeData {
 			this.takeDelay = toInteger(dbAssoc["item_type_delay_take"]);
 			this.giveDelay = toInteger(dbAssoc["item_type_delay_give"]);
 			this.dropDelay = toInteger(dbAssoc["item_type_delay_drop"]);
+			this.useAnimationName = toInteger(dbAssoc["item_type_anim_use"]);
+			this.switchAnimationName = toInteger(dbAssoc["item_type_anim_switch"]);
+			this.pickupAnimationName = toInteger(dbAssoc["item_type_anim_pickup"]);
+			this.putAnimationName = toInteger(dbAssoc["item_type_anim_put"]);
+			this.takeAnimationName = toInteger(dbAssoc["item_type_anim_take"]);
+			this.giveAnimationName = toInteger(dbAssoc["item_type_anim_give"]);
+			this.dropAnimationName = toInteger(dbAssoc["item_type_anim_drop"]);
 		}
 	}
 };

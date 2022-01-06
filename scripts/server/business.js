@@ -707,7 +707,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			let interiorTypesList = Object.keys(getGameConfig().interiorTemplates[getServerGame()]);
 			let chunkedList = splitArrayIntoChunks(interiorTypesList, 10);
 
-			messagePlayerInfo(client, `{clanOrange}== {jobYellow}Interior Types {clanOrange}=======================`);
+			messagePlayerNormal(client, `{clanOrange}== {jobYellow}Interior Types {clanOrange}=======================`);
 			for(let i in chunkedList) {
 				messagePlayerInfo(client, chunkedList[i].join(", "));
 			}

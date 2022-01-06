@@ -527,9 +527,6 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting player armour for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).armour}`);
         setPlayerArmour(client, getPlayerCurrentSubAccount(client).armour);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
-        updateAllPlayerNameTags();
-
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
         sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
 
@@ -556,9 +553,6 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
         updatePlayerHotBar(client);
-
-        logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom keybinds to ${getPlayerDisplayForConsole(client)}`);
-        sendAccountKeyBindsToClient(client);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
@@ -600,6 +594,9 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
         updatePlayerCash(client);
+
+        logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
+        updateAllPlayerNameTags();
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
     //}

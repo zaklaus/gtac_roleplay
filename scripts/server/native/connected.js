@@ -223,6 +223,7 @@ function getPlayerHealth(client) {
 function setPlayerArmour(client, armour) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s armour to ${armour}`);
     sendPlayerSetArmour(client, armour);
+    //client.player.armour = armour;
 }
 
 // ===========================================================================

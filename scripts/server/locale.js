@@ -17,6 +17,9 @@ function initLocaleScript() {
 
 function getLocaleString(client, stringName, ...args) {
     let tempString = getRawLocaleString(stringName, getPlayerLocaleName(client));
+    if(tempString == "") {
+        submitBugReport(client, `(AUTOMATED REPORT) Locale string "${stringName}" is missing for "${getPlayerLocaleName(client)}"`);
+    }
 
     tempString = replaceColoursInMessage(tempString);
 

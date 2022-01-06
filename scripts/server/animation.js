@@ -22,39 +22,45 @@ function playPlayerAnimationCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 	let animationSlot = getAnimationFromParams(splitParams[0]);
-    let animationPositionOffset = getAnimationFromParams(splitParams[1]) || 1;
+    let animationPositionOffset = 1;
 
 	if(!animationSlot) {
-		messagePlayerError(client, getLocaleString("AnimationNotFound"));
-		messagePlayerInfo(client, getLocaleString("AnimationHelpTip"), `{ALTCOLOUR}/animlist{MAINCOLOUR}`);
+		messagePlayerError(client, getLocaleString(client, "AnimationNotFound"));
+		messagePlayerInfo(client, getLocaleString(client, "AnimationHelpTip"), `{ALTCOLOUR}/animlist{MAINCOLOUR}`);
 		return false;
 	}
 
 	if(toInteger(animationPositionOffset) < 0 || toInteger(animationPositionOffset) > 3) {
-		messagePlayerError(client, getLocaleString("AnimationInvalidDistance"));
+		messagePlayerError(client, getLocaleString(client, "AnimationInvalidDistance"));
 		return false;
 	}
 
-    getPlayerData(client).currentAnimation = animationSlot;
-	getPlayerData(client).currentAnimationPositionOffset = animationSlot;
-	getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
-    getPlayerData(client).animationStart = getCurrentUnixTimestamp();
-	//setEntityData(getPlayerData(client).ped, "vrr.animation", animationSlot, true);
-	messagePlayerTip(client, ``);
-    makePedPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
-
-	if(getAnimationData(animationSlot)[9] != VRR_ANIMMOVE_NONE) {
-		if(getGame() < VRR_GAME_GTA_SA) {
-			setPlayerMouseCameraState(client, true);
-		}
+	if(isPlayerHandCuffed(client) || isPlayerTazed(client) || isPlayerInForcedAnimation(client)) {
+		messagePlayerError(client, `You aren't able to do that`);
+		return false;
 	}
+
+	messagePlayerTip(client, getLocaleString(client, "AnimationStopCommandTip"));
+	makePlayerPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
 }
 
 // ===========================================================================
 
 function stopPlayerAnimationCommand(command, params, client) {
+	if(isPlayerHandCuffed(client) || isPlayerTazed(client) || isPlayerInForcedAnimation(client)) {
+		messagePlayerError(client, `You aren't able to do that`);
+		return false;
+	}
+
 	setPlayerPosition(client, getPlayerData(client).currentAnimationPositionReturnTo);
 	makePedStopAnimation(getPlayerData(client).ped);
+
+	getPlayerData(client).currentAnimation = -1;
+	getPlayerData(client).currentAnimationPositionOffset = false;
+	getPlayerData(client).currentAnimationPositionReturnTo = false;
+    getPlayerData(client).animationStart = 0;
+	getPlayerData(client).animationForced = false;
+
 	setPlayerMouseCameraState(client, false);
 }
 
@@ -68,7 +74,7 @@ function showAnimationListCommand(command, params, client) {
 	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Animation List {clanOrange}===========================`);
 
 	for(let i in chunkedList) {
-		messagePlayerInfo(client, chunkedList[i].join(", "));
+		messagePlayerNormal(client, chunkedList[i].join(", "));
 	}
 }
 
@@ -76,6 +82,30 @@ function showAnimationListCommand(command, params, client) {
 
 function getAnimationData(animationSlot, gameId = getServerGame()) {
     return getGameData().animations[gameId][animationSlot];
+}
+
+// ===========================================================================
+
+function isPlayerInForcedAnimation(client) {
+	return getPlayerData(client).animationForced;
+}
+
+// ===========================================================================
+
+function makePlayerPlayAnimation(client, animationSlot, offsetPosition = 1) {
+    getPlayerData(client).currentAnimation = animationSlot;
+	getPlayerData(client).currentAnimationPositionOffset = offsetPosition;
+	getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
+    getPlayerData(client).animationStart = getCurrentUnixTimestamp();
+	getPlayerData(client).animationForced = false;
+
+    makePedPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
+
+	if(getAnimationData(animationSlot)[9] != VRR_ANIMMOVE_NONE) {
+		if(getGame() < VRR_GAME_GTA_SA) {
+			setPlayerMouseCameraState(client, true);
+		}
+	}
 }
 
 // ===========================================================================

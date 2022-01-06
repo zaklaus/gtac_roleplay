@@ -789,14 +789,14 @@ function getStaffFlagsCommand(command, params, client) {
 	let serverBitFlagKeys = getServerBitFlagKeys();
 	for(let i in serverBitFlagKeys) {
 		let tempFlagValue = getStaffFlagValue(serverBitFlagKeys[i]);
-		if(doesPlayerHaveStaffPermission(client, tempFlagValue)) {
+		if(doesPlayerHaveStaffPermission(targetClient, tempFlagValue)) {
 			tempStaffFlags.push(serverBitFlagKeys[i]);
 		}
 	}
 
 	let flagList = [];
 	for(let i in getServerBitFlagKeys().staffFlagKeys) {
-		if(doesPlayerHaveStaffPermission(client, getStaffFlagValue(getServerBitFlagKeys().staffFlagKeys[i]))) {
+		if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue(getServerBitFlagKeys().staffFlagKeys[i]))) {
 			flagList.push(`{softGreen}${getServerBitFlagKeys().staffFlagKeys[i]}`);
 		} else {
 			flagList.push(`{softRed}${getServerBitFlagKeys().staffFlagKeys[i]}`);
@@ -805,7 +805,7 @@ function getStaffFlagsCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(flagList, 8);
 
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Player Staff Flags {clanOrange}=========================`);
+	messagePlayeNormal(client, `{clanOrange}== {jobYellow}Staff Flags (${targetClient.name}) {clanOrange}=========================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join("{MAINCOLOUR}, "));
@@ -979,6 +979,28 @@ function forcePlayerSkinCommand(command, params, client) {
 	setPlayerSkin(targetClient, skinIndex);
 
 	messageAdmins(`${client.name} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s {MAINCOLOUR}skin to {ALTCOLOUR}${getGameData().skins[getGame()][skinIndex][1]}`);
+}
+
+// ===========================================================================
+
+function forcePlayerWantedLevelCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let splitParams = params.split(" ");
+	let targetClient = getPlayerFromParams(splitParams[0]);
+	let wantedLevel = splitParams[1];
+
+    if(!targetClient) {
+        messagePlayerError(client, "That player is not connected!");
+        return false;
+	}
+
+	forcePlayerWantedLevel(targetClient, wantedLevel);
+
+	//messageAdmins(`${client.name} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s {MAINCOLOUR}skin to {ALTCOLOUR}${getGameData().skins[getGame()][skinIndex][1]}`);
 }
 
 // ===========================================================================

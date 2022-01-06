@@ -58,6 +58,7 @@ function addAllNetworkHandlers() {
     addNetworkHandler("vrr.spawned", onServerSpawnedPlayer);
     addNetworkHandler("vrr.money", setLocalPlayerCash);
     addNetworkHandler("vrr.armour", setLocalPlayerArmour);
+    addNetworkHandler("vrr.wantedLevel", forceLocalPlayerWantedLevel);
 
     addNetworkHandler("vrr.delKeyBind", unBindAccountKey);
     addNetworkHandler("vrr.addKeyBind", bindAccountKey);
@@ -80,6 +81,7 @@ function addAllNetworkHandlers() {
 
     addNetworkHandler("vrr.pedAnim", makePedPlayAnimation);
     addNetworkHandler("vrr.pedStopAnim", makePedStopAnimation);
+    addNetworkHandler("vrr.forcePedAnim", forcePedAnimation);
     addNetworkHandler("vrr.hideAllGUI", hideAllGUI);
     addNetworkHandler("vrr.gameScript", setGameScriptState);
     addNetworkHandler("vrr.clientInfo", serverRequestedClientInfo);
@@ -250,25 +252,6 @@ function setElementCollisionsEnabled(elementId, state) {
 
 // ===========================================================================
 
-function makePedStopAnimation(pedId) {
-    if(getElementFromId(pedId) == null) {
-        return false;
-    }
-
-    if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
-        getElementFromId(pedId).clearAnimations();
-    } else {
-        getElementFromId(pedId).clearObjective();
-    }
-
-    if(getElementFromId(pedId) == localPlayer) {
-        localPlayer.collisionsEnabled = true;
-        setLocalPlayerControlState(true, false);
-    }
-}
-
-// ===========================================================================
-
 function setLocalPlayerPedPartsAndProps(parts, props) {
     for(let i in parts) {
         localPlayer.changeBodyPart(parts[0], parts[1], parts[2]);
@@ -282,6 +265,12 @@ function setLocalPlayerArmour(armour) {
     if(typeof localPlayer.armour != "undefined") {
         localPlayer.armour = armour;
     }
+}
+
+// ===========================================================================
+
+function forceLocalPlayerWantedLevel(wantedLevel) {
+    forceWantedLevel = toInteger(wantedLevel);
 }
 
 // ===========================================================================

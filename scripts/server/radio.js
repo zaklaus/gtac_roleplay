@@ -193,7 +193,7 @@ function showRadioStationListCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(stationList, 4);
 
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Radio Stations {clanOrange}===========================`);
+	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Radio Stations {clanOrange}===========================`);
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));

@@ -409,6 +409,7 @@ function loadCommands() {
             commandData("getplrbiz", getAllBusinessesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all businesses owned by the player"),
             commandData("getplrveh", getAllVehiclesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all vehicles owned by the player"),
             commandData("geoip", getGeoIPInformationCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Retrieves GeoIP information on a player (country & city)"),
+            commandData("setstars", forcePlayerWantedLevelCommand, "<player name/id> <wanted level>", getStaffFlagValue("BasicModeration"), true, true, "Forces a player to have a wanted level"),
         ],
         radio: [
             commandData("radiostation", playStreamingRadioCommand, "<radio station id>", getStaffFlagValue("None"), true, false, "Plays a radio station in your vehicle, house, or business (depending on which one you're in)"),

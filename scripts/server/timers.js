@@ -97,8 +97,16 @@ function initTimers() {
 // ===========================================================================
 
 function oneMinuteTimerFunction() {
+	logToConsole(LOG_DEBUG, `[VRR.Event] Checking server game time`);
 	checkServerGameTime();
+
+	logToConsole(LOG_DEBUG, `[VRR.Event] Checking rentable vehicles`);
 	vehicleRentCheck();
+
+	logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
+	updateAllPlayerNameTags();
+
+	logToConsole(LOG_DEBUG, `[VRR.Event] Collecting all garbage`);
 	collectAllGarbage();
 }
 

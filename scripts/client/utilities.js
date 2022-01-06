@@ -542,7 +542,7 @@ function processWantedLevelReset() {
     }
 
     if(typeof localPlayer.wantedLevel != "undefined") {
-        localPlayer.wantedLevel = 0;
+        localPlayer.wantedLevel = forceWantedLevel;
     }
 }
 

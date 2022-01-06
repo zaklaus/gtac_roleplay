@@ -12,6 +12,7 @@ function initItemScript() {
 	getServerData().itemTypes = loadItemTypesFromDatabase();
 	getServerData().items = loadItemsFromDatabase();
 
+	setItemTypeDataIndexes();
 	setItemDataIndexes();
 
 	cacheAllGroundItems();
@@ -216,6 +217,10 @@ function useItemCommand(command, params, client) {
 		return false;
 	}
 
+	if(getItemTypeData(getItemData(itemId).itemTypeIndex).useAnimationIndex != false) {
+		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).useAnimationIndex, 0.0);
+	}
+
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_USE;
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	showPlayerItemUseDelay(client, hotBarSlot);
@@ -285,6 +290,10 @@ function pickupItemCommand(command, params, client) {
 		return false;
 	}
 
+	if(getItemTypeData(getItemData(itemId).itemTypeIndex).dropAnimationIndex != false) {
+		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).pickupAnimationIndex, 0.0);
+	}
+
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_PICKUP;
 	getPlayerData(client).itemActionItem = itemId;
 	showPlayerItemPickupDelay(client, itemId);
@@ -342,6 +351,10 @@ function dropItemCommand(command, params, client) {
 		return false;
 	}
 
+	if(getItemTypeData(getItemData(itemId).itemTypeIndex).dropAnimationIndex != false) {
+		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).dropAnimationIndex, 0.0);
+	}
+
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_DROP;
 	getPlayerData(client).itemActionItem = hotBarSlot;
 	showPlayerItemDropDelay(client, hotBarSlot);
@@ -383,6 +396,10 @@ function putItemCommand(command, params, client) {
 	if(isPlayerItemFromJobEquipment(client, hotBarSlot)) {
 		messagePlayerError(client, `You can't put job items`);
 		return false;
+	}
+
+	if(getItemTypeData(getItemData(itemId).itemTypeIndex).putAnimationIndex != false) {
+		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).putAnimationIndex, 0.0);
 	}
 
 	getPlayerData(client).itemActionItem = hotBarSlot;
@@ -427,6 +444,10 @@ function takeItemCommand(command, params, client) {
 	//	messagePlayerError(client, `You can't take job items`);
 	//	return false;
 	//}
+
+	if(getItemTypeData(getItemData(itemId).itemTypeIndex).takeAnimationIndex != false) {
+		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).takeAnimationIndex, 0.0);
+	}
 
 	getPlayerData(client).itemActionItem = itemId;
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_TAKE;
@@ -630,7 +651,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_DRINK:
-			meActionToNearbyPlayers(client, `drink some of their ${getItemName(itemIndex)}`);
+			meActionToNearbyPlayers(client, `drinks some of their ${getItemName(itemIndex)}`);
 			givePlayerHealth(client, getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue);
 			getItemData(itemIndex).value = getItemData(itemIndex).value - getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
 			if(getItemData(itemIndex).value <= 0) {
@@ -810,24 +831,27 @@ function playerUseItem(client, hotBarSlot) {
 
 		case VRR_ITEM_USETYPE_SMOKEDRUG:
 			meActionToNearbyPlayers(client, `smokes some ${getItemName(itemIndex)}`);
-			getPlayerData(client).incomingDamageMultiplier = getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
-			givePlayerHealth(client, 100);
+			if(getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > 25) {
+				getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			}
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
 			break;
 
 		case VRR_ITEM_USETYPE_SNORTDRUG:
 			meActionToNearbyPlayers(client, `snorts some ${getItemName(itemIndex)}`);
-			getPlayerData(client).incomingDamageMultiplier = getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
-			givePlayerHealth(client, 100);
+			if(getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > 25) {
+				getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			}
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
 			break;
 
 		case VRR_ITEM_USETYPE_INJECTDRUG:
 			meActionToNearbyPlayers(client, `shoots up some ${getItemName(itemIndex)}`);
-			getPlayerData(client).incomingDamageMultiplier = getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
-			givePlayerHealth(client, 100);
+			if(getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > 25) {
+				getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			}
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
 			break;
@@ -854,7 +878,7 @@ function playerUseItem(client, hotBarSlot) {
 			}
 			break;
 
-		case VRR_ITEM_USETYPE_AMMOCLIP:
+		case VRR_ITEM_USETYPE_AMMO_CLIP:
 			messagePlayerError(client, `Equip a compatible weapon and press R to use an ammo clip/magazine`);
 			break;
 
@@ -1127,6 +1151,23 @@ function setItemDataIndexes() {
 		if(getServerData().items[i]) {
 			getServerData().items[i].index = i;
 			getServerData().items[i].itemTypeIndex = getItemTypeIndexFromDatabaseId(getServerData().items[i].itemType);
+		}
+	}
+}
+
+// ===========================================================================
+
+function setItemTypeDataIndexes() {
+	for(let i in getServerData().itemTypes) {
+		if(getServerData().itemTypes[i]) {
+			getServerData().itemTypes[i].index = i;
+			getServerData().itemTypes[i].useAnimationIndex = getAnimationFromParams(getServerData().itemTypes[i].useAnimationName);
+			getServerData().itemTypes[i].switchAnimationIndex = getAnimationFromParams(getServerData().itemTypes[i].switchAnimationName);
+			getServerData().itemTypes[i].dropAnimationIndex = getAnimationFromParams(getServerData().itemTypes[i].dropAnimationName);
+			getServerData().itemTypes[i].putAnimationIndex = getAnimationFromParams(getServerData().itemTypes[i].putAnimationName);
+			getServerData().itemTypes[i].takeAnimationIndex = getAnimationFromParams(getServerData().itemTypes[i].takeAnimationName);
+			getServerData().itemTypes[i].giveAnimationIndex = getAnimationFromParams(getServerData().itemTypes[i].giveAnimationName);
+			getServerData().itemTypes[i].pickupAnimationIndex = getAnimationFromParams(getServerData().itemTypes[i].pickupAnimationName);
 		}
 	}
 }

@@ -96,8 +96,7 @@ function initLoginGUI() {
 		},
 	}, checkLogin);
 
-	/*
-	login.forgotPasswordButton = login.window.button(200, 240, 60, 15, 'FORGOT PASSWORD', {
+	login.forgotPasswordButton = login.window.button(200, 240, 60, 15, 'RESET PASS', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
@@ -110,7 +109,7 @@ function initLoginGUI() {
 		},
 	}, switchToPasswordResetGUI);
 
-	login.resetPasswordLabel = login.window.text(20, 140, 60, 15, 'Need to reset your password? Click here >', {
+	login.resetPasswordLabel = login.window.text(20, 140, 60, 15, 'Forgot your password?', {
 		main: {
 			textSize: 8.0,
 			textAlign: 1.0,
@@ -121,7 +120,6 @@ function initLoginGUI() {
 			borderColour: toColour(0, 0, 0, 0),
 		},
 	});
-	*/
 
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Created login GUI`);
 }
@@ -134,7 +132,8 @@ function showLoginGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	login.window.shown = true;
-
+	mexui.focusedControl = login.passwordInput;
+	guiSubmitKey = checkLogin;
 	showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
 }
 
@@ -158,7 +157,15 @@ function loginFailed(errorMessage) {
 
 function loginSuccess() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Server reports login was successful`);
+	guiSubmitKey = false;
 	closeAllWindows();
 }
 
 // ===========================================================================
+
+function switchToPasswordResetGUI() {
+	closeAllWindows();
+	logToConsole(LOG_DEBUG, `[VRR.GUI] Showing password reset dialog window`);
+	showResetPasswordGUI();
+	return false;
+}

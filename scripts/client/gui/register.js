@@ -158,7 +158,8 @@ function showRegistrationGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	register.window.shown = true;
-
+	mexui.focusedControl = register.passwordInput;
+	guiSubmitKey = checkRegistration;
 	showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
 }
 
@@ -166,6 +167,7 @@ function showRegistrationGUI() {
 
 function registrationSuccess() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Server reports registration was successful`);
+	guiSubmitKey = false;
 	closeAllWindows();
 }
 

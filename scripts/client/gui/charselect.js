@@ -29,16 +29,16 @@ function initCharacterSelectGUI() {
 			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 		},
 		title: {
-			textSize: 11.0,
-			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
-			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+			textSize: 0.0,
+			textColour: toColour(0, 0, 0, 0),
 		},
 		icon: {
 			textSize: 0.0,
 			textColour: toColour(0, 0, 0, 0),
-			backgroundColour: toColour(0, 0, 0, 0),
-		}
+		},
 	});
+	characterSelect.window.titleBarIconSize = toVector2(0,0);
+	characterSelect.window.titleBarHeight = 0;
 
 	characterSelect.nameText = characterSelect.window.text(5, 40, 200, 25, 'Lastname, Firstname', {
 		main: {
@@ -88,7 +88,7 @@ function initCharacterSelectGUI() {
 		}
 	});
 
-	characterSelect.selectCharacterButton = characterSelect.window.button(85, 130, 260, 25, 'SELECT', {
+	characterSelect.selectCharacterButton = characterSelect.window.button(85, 130, 260, 25, 'PLAY', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
@@ -168,12 +168,7 @@ function showCharacterSelectGUI(firstName, lastName, cash, clan, lastPlayed, ski
 function showNewCharacter() {
 	closeAllWindows();
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Showing new character dialog window`);
-	setChatWindowEnabled(false);
-	mexui.setInput(true);
-	setHUDEnabled(false);
-	newCharacter.window.shown = true;
-
-	showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
+	showNewCharacterGUI();
 }
 
 // ===========================================================================
@@ -209,6 +204,9 @@ function switchCharacterSelectGUI(firstName, lastName, cash, clan, lastPlayed, s
 	characterSelect.lastPlayedText.text = `Last Played: ${lastPlayed}`;
 	characterSelect.skinImage = characterSelect.window.image(310, 32, 100, 90, "files/images/skins/none.png");
 	characterSelect.window.shown = true;
+	guiSubmitKey = selectThisCharacter;
+	guiLeftKey = selectPreviousCharacter;
+	guiRightKey = selectNextCharacter;
 }
 
 // ===========================================================================

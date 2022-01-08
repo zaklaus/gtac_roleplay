@@ -46,7 +46,7 @@ function initErrorDialogGUI() {
         },
     });
 
-    errorDialog.okayButton = errorDialog.window.button(20, 95, 360, 30, 'OK', {
+    errorDialog.okayButton = errorDialog.window.button(5, 105, 395, 30, 'OK', {
         main: {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),

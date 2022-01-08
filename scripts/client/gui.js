@@ -28,6 +28,12 @@ let textInputAlpha = 180;
 
 let guiReady = false;
 
+let guiSubmitKey = false;
+let guiLeftKey = false;
+let guiRightKey = false;
+let guiUpKey = false;
+let guiDownKey = false;
+
 // ===========================================================================
 
 let placesOfOrigin = [
@@ -70,10 +76,10 @@ function initGUI() {
 	initInfoDialogGUI();
 	initErrorDialogGUI();
 	initYesNoDialogGUI();
-	initResetPasswordGUI();
-	initChangePasswordGUI();
 	initTwoFactorAuthenticationGUI();
 	initListGUI();
+	initResetPasswordGUI();
+	initChangePasswordGUI();
 
 	closeAllWindows();
 	guiReady = true;
@@ -98,47 +104,64 @@ let closeAllWindows = function() {
 	resetPassword.window.shown = false;
 	passwordChange.window.shown = false;
 	mexui.setInput(false);
+	mexui.focusedControl = false;
+
+	guiSubmitKey = false;
+	guiLeftKey = false;
+	guiRightKey = false;
+	guiUpKey = false;
+	guiDownKey = false;
 }
 
 // ===========================================================================
 
 let isAnyGUIActive = function() {
 	if(!guiReady) {
-		if(infoDialog.window.shown) {
-			return true;
-		}
+		return false;
+	}
 
-		if(yesNoDialog.window.shown) {
-			return true;
-		}
+	if(infoDialog.window.shown == true) {
+		return true;
+	}
 
-		if(errorDialog.window.shown) {
-			return true;
-		}
+	if(yesNoDialog.window.shown == true) {
+		return true;
+	}
 
-		if(register.window.shown) {
-			return true;
-		}
+	if(errorDialog.window.shown == true) {
+		return true;
+	}
 
-		if(login.window.shown) {
-			return true;
-		}
+	if(register.window.shown == true) {
+		return true;
+	}
 
-		if(newCharacter.window.shown) {
-			return true;
-		}
+	if(login.window.shown == true) {
+		return true;
+	}
 
-		if(characterSelect.window.shown) {
-			return true;
-		}
+	if(newCharacter.window.shown == true) {
+		return true;
+	}
 
-		if(twoFactorAuth.window.shown) {
-			return true;
-		}
+	if(characterSelect.window.shown == true) {
+		return true;
+	}
 
-		if(listDialog.window.shown) {
-			return true;
-		}
+	if(twoFactorAuth.window.shown == true) {
+		return true;
+	}
+
+	if(listDialog.window.shown == true) {
+		return true;
+	}
+
+	if(resetPassword.window.shown == true) {
+		return true;
+	}
+
+	if(passwordChange.window.shown == true) {
+		return true;
 	}
 
 	return false;
@@ -224,6 +247,13 @@ addNetworkHandler("vrr.newCharacterFailed", function(errorMessage) {
 
 // ===========================================================================
 
+addNetworkHandler("vrr.changePassword", function() {
+	logToConsole(LOG_DEBUG, `[VRR.GUI] Received signal to change password from server`);
+	showChangePasswordGUI();
+});
+
+// ===========================================================================
+
 addNetworkHandler("vrr.guiColour", function(red1, green1, blue1, red2, green2, blue2, red3, green3, blue3) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received new GUI colours from server: ${red1}, ${green1}, ${blue1} / ${red2}, ${green2}, ${blue2} / ${red3}, ${green3}, ${blue3}`);
 	primaryColour = [red1, green1, blue1];
@@ -247,6 +277,29 @@ addNetworkHandler("vrr.guiInit", function() {
 function hideAllGUI() {
     closeAllWindows();
     setChatWindowEnabled(true);
+	guiSubmitKey = false;
+}
+
+// ===========================================================================
+
+function processGUIKeyPress(keyCode) {
+	if(!isAnyGUIActive()) {
+		return false;
+	}
+
+	if(keyCode == SDLK_RETURN || keyCode == SDLK_RETURN2) {
+		if(guiSubmitKey != false) {
+			guiSubmitKey();
+		}
+	} else if(keyCode == SDLK_LEFT) {
+		if(guiLeftKey != false) {
+			guiLeftKey();
+		}
+	} else if(keyCode == SDLK_RIGHT) {
+		if(guiRightKey != false) {
+			guiRightKey();
+		}
+	}
 }
 
 // ===========================================================================

@@ -105,6 +105,8 @@ function showTwoFactorAuthGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	twoFactorAuth.window.shown = true;
+	mexui.focusedControl = twoFactorAuth.codeInput;
+	guiSubmitKey = checkTwoFactorAuth;
 }
 
 // ===========================================================================

@@ -184,11 +184,12 @@ function setLocalPlayerFrozenState(state) {
 function setLocalPlayerControlState(controlState, cursorState = false) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Setting control state to ${controlState} (Cursor: ${cursorState})`);
     controlsEnabled = controlState;
-    //localPlayer.invincible = true;
-    //if(getGame() != VRR_GAME_GTA_IV) {
-    //    localPlayer.collisionsEnabled = controlState;
-    //    localPlayer.invincible = false;
-    //}
+    if(getGame() == VRR_GAME_GTA_III || getGame() == VRR_GAME_GTA_VC) {
+        game.SET_PLAYER_CONTROL(localClient.index, boolToInt(controlState));
+    }
+
+    localPlayer.collisionsEnabled = controlState;
+    localPlayer.invincible = true;
 }
 
 // ===========================================================================

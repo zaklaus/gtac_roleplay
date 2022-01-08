@@ -111,20 +111,10 @@ function toggleSkinSelect(state) {
 
         localPlayer.skin = allowedSkins[skinSelectorIndex][0];
         skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
-        gui.showCursor(true, false);
-        //localPlayer.invincible = true;
-        //localPlayer.setProofs(true, true, true, true, true);
-        localPlayer.collisionsEnabled = false;
-
+        setLocalPlayerControlState(false, false);
     } else {
         usingSkinSelector = false;
-        //game.restoreCamera(true);
-        gui.showCursor(false, true);
-        if(localPlayer) {
-            //localPlayer.invincible = false;
-            //localPlayer.setProofs(false, false, false, false, false);
-            localPlayer.collisionsEnabled = true;
-        }
+        setLocalPlayerControlState(false, false);
     }
 }
 

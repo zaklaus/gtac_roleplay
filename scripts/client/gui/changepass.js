@@ -158,12 +158,15 @@ function showChangePasswordGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	passwordChange.window.shown = true;
+	mexui.focusedControl = passwordChange.passwordInput;
+	guiSubmitKey = checkChangePassword;
 }
 
 // ===========================================================================
 
 function passwordChangeSuccess() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Server reports password change was successful`);
+	guiSubmitKey = false;
 	closeAllWindows();
 }
 

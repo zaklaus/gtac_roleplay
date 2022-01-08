@@ -48,6 +48,8 @@ function addAllNetworkHandlers() {
     // Account
     addNetworkHandler("vrr.checkLogin", checkLogin);
     addNetworkHandler("vrr.checkRegistration", checkRegistration);
+    addNetworkHandler("vrr.checkResetPassword", checkAccountResetPasswordRequest);
+    addNetworkHandler("vrr.checkChangePassword", checkAccountChangePassword);
 
     // Developer
     addNetworkHandler("vrr.runCodeSuccess", clientRunCodeSuccess);
@@ -284,6 +286,13 @@ function setPlayerWeaponDamageEvent(client, eventType) {
 function sendJobRouteStopToPlayer(client, position, colour) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending job route stop data to ${getPlayerDisplayForConsole(client)}`);
     triggerNetworkEvent("vrr.showJobRouteStop", client, position, colour);
+}
+
+// ===========================================================================
+
+function showPlayerChangePasswordGUI(client) {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending change password GUI signal to ${getPlayerDisplayForConsole(client)}`);
+    triggerNetworkEvent("vrr.changePassword", client);
 }
 
 // ===========================================================================

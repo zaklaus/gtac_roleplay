@@ -258,6 +258,9 @@ class ClientData {
 		this.currentAnimationPositionReturnTo = false;
 		this.animationStart = 0;
 		this.animationForced = false;
+
+		this.passwordResetState = VRR_RESETPASS_STATE_NONE;
+		this.passwordResetCode = "";
 	}
 };
 

@@ -131,7 +131,8 @@ function showResetPasswordGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	resetPassword.window.shown = true;
-
+	mexui.focusedControl = resetPassword.emailInput;
+	guiSubmitButton = checkResetPassword;
 	showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
 }
 
@@ -153,14 +154,21 @@ function resetPasswordFailed(errorMessage) {
 
 // ===========================================================================
 
-function resetPasswordSuccess() {
+function resetPasswordCodeStep() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Server reports password reset was successful`);
+
+	resetPassword.messageLabel.text = "Check your email for a reset code";
+	resetPassword.messageLabel.styles.main.textColour = toColour(180, 32, 32, 255);
+	resetPassword.emailInput.text = "";
+
+	guiSubmitKey = false;
 	closeAllWindows();
 }
 
 // ===========================================================================
 
 function switchToLoginGUI() {
+	guiSubmitKey = false;
     closeAllWindows();
     showLoginGUI();
 }

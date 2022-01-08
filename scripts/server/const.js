@@ -292,9 +292,9 @@ const VRR_2FA_STATE_CODEINPUT = 1;               // Waiting on player to enter c
 const VRR_2FA_STATE_SETUP_CODETOAPP = 2;         // Providing player with a code to put in their auth app
 const VRR_2FA_STATE_SETUP_CODEFROMAPP = 3;       // Waiting on player to enter code from auth app to set up
 
-const VRR_FORGOTPASS_STATE_NONE = 0;             // None
-const VRR_FORGOTPASS_STATE_CODEINPUT = 1;        // Waiting on player to enter code sent via email
-const VRR_FORGOTPASS_STATE_SETPASS = 2;          // Waiting on player to enter new password
+const VRR_RESETPASS_STATE_NONE = 0;             // None
+const VRR_RESETPASS_STATE_CODEINPUT = 1;        // Waiting on player to enter code sent via email
+const VRR_RESETPASS_STATE_SETPASS = 2;          // Waiting on player to enter new password
 
 const VRR_NPC_COND_MATCH_NONE = 0;               // None (invalid)
 const VRR_NPC_COND_MATCH_EQ = 1;                 // Must be equal to

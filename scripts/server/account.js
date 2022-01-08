@@ -36,7 +36,7 @@ function toggleAutoLoginByIPCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, getLocaleString(client, "AutomaticLoginIP", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
+		messagePlayerSuccess(client, getLocaleString(client, "AutomaticLoginIPToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, getLocaleString(client, "AutomaticLoginIPToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
@@ -939,6 +939,66 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 // ===========================================================================
 
+function checkAccountResetPasswordRequest(client, inputText) {
+	if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_NONE) {
+		if(toLowerCase(getPlayerData(client).accountData.emailAddress) != toLowerCase(inputText)) {
+			return false;
+		}
+
+		let passwordResetCode = generateEmailVerificationCode();
+		getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_CODEINPUT;
+		getPlayerData(client).passwordResetCode = passwordResetCode;
+		sendPasswordResetEmail(getPlayerData(client).accountData.emailAddress, passwordResetCode);
+	} else if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_CODEINPUT) {
+		if(getPlayerData(client).passwordResetCode == inputText) {
+			getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_SETPASS;
+			showChangePasswordGUI(client);
+		} else {
+			getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
+			client.disconnect();
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function checkAccountChangePassword(client, oldPassword, newPassword, confirmNewPassword) {
+	if(!isPlayerLoggedIn(client)) {
+		if(getPlayerData(client).passwordResetState != VRR_RESETPASS_STATE_SETPASS) {
+			//getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
+			//client.disconnect();
+			return false;
+		}
+	}
+
+	if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), oldPassword))) {
+		messagePlayerError(client, `The old password is incorrect!`);
+		return false;
+	}
+
+	if(!doesPasswordMeetRequirements(newPassword)) {
+		messagePlayerError(client, `The new password must meet the requirements!`);
+		messagePlayerInfo(client, `Passwords must have at least one capital letter, one lowercase letter, and one number!`);
+		return false;
+	}
+
+	if(newPassword != confirmNewPassword) {
+		messagePlayerError(client, `The new password and confirm new password aren't the same!`);
+		return false;
+	}
+
+	getPlayerData(client).accountData.password = hashAccountPassword(getPlayerData(client).accountData.name, params);
+	messagePlayerSuccess(client, `Your password has been changed!`);
+
+	if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_SETPASS) {
+		getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
+	}
+}
+
+// ===========================================================================
+
 function isValidEmailAddress(emailAddress) {
 	return true;
 }
@@ -1274,6 +1334,16 @@ function sendEmailVerificationEmail(client, emailVerificationCode) {
 	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
 
 	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on ${getServerName()}`, emailBodyText);
+}
+
+// ===========================================================================
+
+function sendPasswordResetEmail(client, verificationCode) {
+	let emailBodyText = getEmailConfig().bodyContent.confirmPasswordReset;
+	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", verificationCode);
+	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
+
+	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Reset your password on ${getServerName()}`, emailBodyText);
 }
 
 // ===========================================================================

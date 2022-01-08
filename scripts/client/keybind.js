@@ -62,7 +62,19 @@ function hasKeyBindDelayElapsed() {
 // ===========================================================================
 
 function canLocalPlayerUseKeyBinds() {
-    return true; //(!usingSkinSelector && isSpawned && !itemActionDelayEnabled);
+    if(isAnyGUIActive()) {
+        return false;
+    }
+
+    if(!isSpawned) {
+        return false;
+    }
+
+    if(itemActionDelayEnabled) {
+        return false;
+    }
+
+    return true;
 }
 
 // ===========================================================================

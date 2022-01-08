@@ -20,13 +20,15 @@ function tazePlayer(client) {
     setPlayerControlState(client, false);
 
     let animationId = getAnimationFromParams("tazed");
-    forcePedAnimation(client.player, animationId);
+    if(animationId != false) {
+        forcePedAnimation(client.player, animationId);
 
-    getPlayerData(client).currentAnimation = animationId;
-	getPlayerData(client).currentAnimationPositionOffset = toVector3(0.0, 0.0, 0.0);
-	getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
-    getPlayerData(client).animationStart = getCurrentUnixTimestamp();
-    getPlayerData(client).animationForced = true;
+        getPlayerData(client).currentAnimation = animationId;
+        getPlayerData(client).currentAnimationPositionOffset = toVector3(0.0, 0.0, 0.0);
+        getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
+        getPlayerData(client).animationStart = getCurrentUnixTimestamp();
+        getPlayerData(client).animationForced = true;
+    }
 
     setTimeout(function() {
         unTazePlayer(client);

@@ -40,8 +40,8 @@ function playPlayerAnimationCommand(command, params, client) {
 		return false;
 	}
 
-	messagePlayerTip(client, getLocaleString(client, "AnimationStopCommandTip"));
-	makePlayerPlayAnimation(getPlayerData(client).ped, animationSlot, animationPositionOffset);
+	messagePlayerTip(client, getLocaleString(client, "AnimationStopCommandTip", "{ALTCOLOUR}/stopanim{MAINCOLOUR}"));
+	makePlayerPlayAnimation(client, animationSlot, animationPositionOffset);
 }
 
 // ===========================================================================

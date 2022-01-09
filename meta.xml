@@ -9,11 +9,11 @@
 	<script src="scripts/shared/gamedata.js" type="server" language="javascript" />
 	<script src="scripts/shared/gamedata.js" type="client" language="javascript" />
 
-	<!-- Multiplayer Mod -->
+	<!-- Multiplayer Mod (Wrapped Natives) -->
 	<script src="scripts/server/native/connected.js" type="server" language="javascript" />
 	<script src="scripts/client/native/connected.js" type="client" language="javascript" />
 
-	<!-- Server -->
+	<!-- Server Scripts -->
 	<script src="scripts/server/class.js" type="server" language="javascript" />
 	<script src="scripts/server/accent.js" type="server" language="javascript" />
 	<script src="scripts/server/account.js" type="server" language="javascript" />
@@ -44,12 +44,11 @@
 	<script src="scripts/server/messaging.js" type="server" language="javascript" />
 	<script src="scripts/server/misc.js" type="server" language="javascript" />
 	<script src="scripts/server/npc.js" type="server" language="javascript" />
-	<script src="scripts/server/moderation.js" type="server" language="javascript" />
+	<script src="scripts/server/staff.js" type="server" language="javascript" />
 	<script src="scripts/server/radio.js" type="server" language="javascript" />
 	<script src="scripts/server/security.js" type="server" language="javascript" />
 	<script src="scripts/server/subaccount.js" type="server" language="javascript" />
 	<script src="scripts/server/timers.js" type="server" language="javascript" />
-	<script src="scripts/server/translate.js" type="server" language="javascript" />
 	<script src="scripts/server/trigger.js" type="server" language="javascript" />
 	<script src="scripts/server/utilities.js" type="server" language="javascript" />
 	<script src="scripts/server/vehicle.js" type="server" language="javascript" />
@@ -57,6 +56,7 @@
 	<script src="scripts/server/core.js" type="server" language="javascript" />
 	<script src="scripts/server/command.js" type="server" language="javascript" />
 
+	<!-- Server Business Scripts -->
 	<script src="scripts/server/business/bakery.js" type="server" language="javascript" />
 	<script src="scripts/server/business/bar.js" type="server" language="javascript" />
 	<script src="scripts/server/business/burger.js" type="server" language="javascript" />
@@ -69,6 +69,7 @@
 	<script src="scripts/server/business/vehicle.js" type="server" language="javascript" />
 	<script src="scripts/server/business/weapon.js" type="server" language="javascript" />
 
+	<!-- Server Job Scripts -->
 	<script src="scripts/server/job/bus.js" type="server" language="javascript" />
 	<script src="scripts/server/job/drug.js" type="server" language="javascript" />
 	<script src="scripts/server/job/fire.js" type="server" language="javascript" />
@@ -78,6 +79,7 @@
 	<script src="scripts/server/job/taxi.js" type="server" language="javascript" />
 	<script src="scripts/server/job/weapon.js" type="server" language="javascript" />
 
+	<!-- Server Item Scripts -->
 	<script src="scripts/server/item/food.js" type="server" language="javascript" />
 	<script src="scripts/server/item/drink.js" type="server" language="javascript" />
 	<script src="scripts/server/item/walkie-talkie.js" type="server" language="javascript" />
@@ -86,7 +88,7 @@
 	<script src="scripts/server/item/rope.js" type="server" language="javascript" />
 	<script src="scripts/server/item/tazer.js" type="server" language="javascript" />
 
-	<!-- Extra Files -->
+	<!-- Extra Client Files -->
 	<file type="client" src="files/fonts/roboto-regular.ttf" />
 	<file type="client" src="files/fonts/pricedown.ttf" />
 	<file type="client" src="files/images/skins/none.png" />
@@ -130,10 +132,6 @@
 	<script src="scripts/client/mousecam.js" type="client" language="javascript" />
 	<script src="scripts/client/radio.js" type="client" language="javascript" />
 	<script src="scripts/client/animation.js" type="client" language="javascript" />
-
-	<!-- Startup -->
-	<script src="scripts/server/startup.js" type="server" language="javascript" />
-	<script src="scripts/client/startup.js" type="client" language="javascript" />
 
 	<!-- MexUI -->
 	<file type="client" src="third-party/mexui/Images/down-arrow.png" />
@@ -198,4 +196,8 @@
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/WeekDay.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Control/Year.js" />
 	<script language="javascript" type="client" src="third-party/mexui/Core/Init.js" />
+
+	<!-- Startup -->
+	<script src="scripts/server/startup.js" type="server" language="javascript" />
+	<script src="scripts/client/startup.js" type="client" language="javascript" />
 </meta>

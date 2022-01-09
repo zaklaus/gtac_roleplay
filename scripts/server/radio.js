@@ -193,7 +193,7 @@ function showRadioStationListCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(stationList, 4);
 
-	messagePlayerNormal(client, makeChatSectionHeader(getLocaleString(client, "HeaderRadioStationsList")));
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderRadioStationsList")));
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));

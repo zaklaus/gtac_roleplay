@@ -21,19 +21,12 @@ function tazePlayer(client) {
 
     let animationId = getAnimationFromParams("tazed");
     if(animationId != false) {
-        forcePedAnimation(client.player, animationId);
-
-        getPlayerData(client).currentAnimation = animationId;
-        getPlayerData(client).currentAnimationPositionOffset = toVector3(0.0, 0.0, 0.0);
-        getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
-        getPlayerData(client).animationStart = getCurrentUnixTimestamp();
-        getPlayerData(client).animationForced = true;
+        forcePlayerPlayAnimation(client, animationId);
     }
 
     setTimeout(function() {
         unTazePlayer(client);
         doActionToNearbyPlayers(client, `The tazer effect wears off`);
-
     }, getGlobalConfig().tazerEffectDuration);
 }
 
@@ -45,8 +38,7 @@ function unTazePlayer(client) {
     setPlayerControlState(client, true);
     setPlayerPosition(client, getPlayerData(client).currentAnimationPositionReturnTo);
     makePedStopAnimation(getPlayerData(client).ped);
-    setPlayerMouseCameraState(client, false);
-    getPlayerData(client).forcedPedAnimation = -1;
+
 }
 
 // ===========================================================================

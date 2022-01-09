@@ -2,14 +2,14 @@
 // Vortrex's Roleplay Resource
 // https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
-// FILE: staff.js
-// DESC: Provides staff commands, functions and usage
+// FILE: moderation.js
+// DESC: Provides moderation commands, functions and usage
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-function initStaffScript() {
-	logToConsole(LOG_INFO, "[VRR.Staff]: Initializing staff script ...");
-	logToConsole(LOG_INFO, "[VRR.Staff]: Staff script initialized successfully!");
+function initModerationScript() {
+	logToConsole(LOG_INFO, "[VRR.Moderation]: Initializing moderation script ...");
+	logToConsole(LOG_INFO, "[VRR.Moderation]: Moderation script initialized successfully!");
 }
 
 // ===========================================================================

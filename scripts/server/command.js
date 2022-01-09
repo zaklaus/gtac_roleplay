@@ -711,7 +711,7 @@ addCommandHandler("cmd", function(command, params, client) {
     }
 
     let splitParams = params.split(" ");
-    let newCommand = splitParams[0];
+    let newCommand = getParam(params, " ", 1);
     let newParams = splitParams.slice(1).join(" ");
 
     getCommand(newCommand).handlerFunction(newCommand, newParams, client);
@@ -790,7 +790,7 @@ function areThereEnoughParams(params, requiredAmount, delimiter = " ") {
 // ===========================================================================
 
 function getParam(params, delimiter, index) {
-	return params.split(delimiter)[index];
+	return params.split(delimiter)[index-1];
 }
 
 // ===========================================================================

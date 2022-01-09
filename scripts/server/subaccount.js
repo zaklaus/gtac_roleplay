@@ -416,9 +416,8 @@ function newCharacterCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let firstName = splitParams[0];
-	let lastName = splitParams[1];
+let firstName = getParam(params, " ", 1);
+	let lastName = getParam(params, " ", 2);
 
 	checkNewCharacter(client, firstName, lastName);
 }
@@ -541,9 +540,8 @@ function forceFightStyleCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let fightStyleId = getFightStyleFromParams(splitParams[1]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let fightStyleId = getFightStyleFromParams(getParam(params, " ", 2));
 
 	//if(!targetClient) {
 	//	messagePlayerError(client, `Player not found!`);

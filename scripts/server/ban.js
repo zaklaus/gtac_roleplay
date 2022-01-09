@@ -23,7 +23,7 @@ function accountBanCommand(command, params, client) {
 	}
 
     let splitParams = params.split(" ");
-    let targetClient = getPlayerFromParams(splitParams[0]);
+    let targetClient = getPlayerFromParams(getParam(params, " ", 1));
     let reason = splitParams.slice(1).join(" ");
 
     if(!targetClient) {
@@ -53,7 +53,7 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 	}
 
     let splitParams = params.split(" ");
-    let targetClient = getPlayerFromParams(splitParams[0]);
+    let targetClient = getPlayerFromParams(getParam(params, " ", 1));
     let reason = splitParams.slice(1).join(" ");
 
     if(!targetClient) {
@@ -84,7 +84,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
     }
 
     let splitParams = params.split(" ");
-    let targetClient = getPlayerFromParams(splitParams[0]);
+    let targetClient = getPlayerFromParams(getParam(params, " ", 1));
     let reason = splitParams.slice(1).join(" ");
 
     if(!targetClient) {
@@ -114,8 +114,8 @@ function subNetBanCommand(command, params, client, fromDiscord) {
     }
 
     let splitParams = params.split(" ");
-    let targetClient = getPlayerFromParams(splitParams[0]);
-    let octetAmount = Number(splitParams[1]);
+    let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+    let octetAmount = Number(getParam(params, " ", 2));
     let reason = splitParams.slice(2).join(" ");
 
     if(!targetClient) {

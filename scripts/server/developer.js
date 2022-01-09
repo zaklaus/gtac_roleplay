@@ -243,9 +243,8 @@ function simulateCommandForPlayerCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let tempCommand = splitParams[1];
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let tempCommand = getParam(params, " ", 2);
 	tempCommand.replace("/", "");
 	let tempParams = splitParams.slice(2).join(" ");
 
@@ -284,8 +283,7 @@ function simulateCommandForAllPlayersCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let tempCommand = splitParams[0];
+	let tempCommand = getParam(params, " ", 1);
 	tempCommand.replace("/", "");
 	let tempParams = splitParams.slice(1).join(" ");
 
@@ -335,8 +333,7 @@ function executeClientCodeCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let targetCode = splitParams.slice(1).join(" ");
 
 	if(!targetClient) {
@@ -521,9 +518,8 @@ function streamAudioURLToAllPlayersCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let url = splitParams[0];
-	let volume = splitParams[1];
+	let url = getParam(params, " ", 1);
+	let volume = getParam(params, " ", 2);
 
 	playRadioStreamForPlayer(null, url, false, volume);
 }
@@ -536,9 +532,8 @@ function streamAudioNameToAllPlayersCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let name = splitParams[0];
-	let volume = splitParams[1];
+	let name = getParam(params, " ", 1);
+	let volume = getParam(params, " ", 2);
 
 	playAudioFileForPlayer(null, name, false, volume);
 }

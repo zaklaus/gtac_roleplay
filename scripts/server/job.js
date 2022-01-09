@@ -1013,8 +1013,8 @@ function addPlayerToJobBlackListCommand(command, params, client) {
 		return false;
 	}
 
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let jobId = getJobFromParams(getParam(params, " ", 2)) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	if(!targetClient) {
 		messagePlayerError(client, `That player was not found!`);
@@ -1043,8 +1043,8 @@ function removePlayerFromJobBlackListCommand(command, params, client) {
 		return false;
 	}
 
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let jobId = getJobFromParams(getParam(params, " ", 2)) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	if(!targetClient) {
 		messagePlayerError(client, `That player was not found!`);
@@ -1073,8 +1073,8 @@ function addPlayerToJobWhiteListCommand(command, params, client) {
 		return false;
 	}
 
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let jobId = getJobFromParams(getParam(params, " ", 2)) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	if(!targetClient) {
 		messagePlayerError(client, `That player was not found!`);
@@ -1103,8 +1103,8 @@ function removePlayerFromJobWhiteListCommand(command, params, client) {
 		return false;
 	}
 
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let jobId = getJobFromParams(splitParams[1]) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let jobId = getJobFromParams(getParam(params, " ", 2)) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
 
 	if(!targetClient) {
 		messagePlayerError(client, `That player was not found!`);

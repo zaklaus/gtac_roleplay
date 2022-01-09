@@ -304,9 +304,8 @@ function setTimeCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let hour = toInteger(splitParams[0]);
-	let minute = toInteger(splitParams[1]) || 0;
+	let hour = toInteger(getParam(params, " ", 1));
+	let minute = toInteger(getParam(params, " ", 2)) || 0;
 
 	if(hour > 23 || hour < 0) {
 		messagePlayerError(client, "The hour must be between 0 and 23!");
@@ -377,8 +376,7 @@ function setWeatherCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let weatherId = getWeatherFromParams(splitParams[0]);
+	let weatherId = getWeatherFromParams(getParam(params, " ", 1));
 
 	if(!weatherId) {
 		messagePlayerError(client, `That weather ID or name is invalid!`);
@@ -413,8 +411,8 @@ function setSnowingCommand(command, params, client) {
 	}
 
 	let splitParams = params.split(" ");
-    let falling = toInteger(splitParams[0]);
-	let ground = toInteger(splitParams[1]);
+    let falling = toInteger(getParam(params, " ", 1));
+	let ground = toInteger(getParam(params, " ", 2));
 
 	getServerConfig().fallingSnow = intToBool(falling);
 	getServerConfig().groundSnow = intToBool(ground);
@@ -446,9 +444,9 @@ function setServerGUIColoursCommand(command, params, client) {
 	}
 
 	let splitParams = params.split(" ");
-    let colourRed = toInteger(splitParams[0]) || 255;
-	let colourGreen = toInteger(splitParams[1]) || 255;
-	let colourBlue = toInteger(splitParams[2]) || 255;
+    let colourRed = toInteger(getParam(params, " ", 1)) || 255;
+	let colourGreen = toInteger(getParam(params, " ", 2)) || 255;
+	let colourBlue = toInteger(getParam(params, " ", 3)) || 255;
 
 	getServerConfig().guiColour = [colourRed, colourGreen, colourBlue];
 

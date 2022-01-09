@@ -166,8 +166,8 @@ function createBusinessLocationCommand(command, params, client) {
 		return false;
 	}
 
-	let locationType = toString(splitParams[0]);
-	let businessId = (isPlayerInAnyBusiness(splitParams[1])) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
+	let locationType = toString(getParam(params, " ", 1));
+	let businessId = (isPlayerInAnyBusiness(getParam(params, " ", 2))) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!areParamsEmpty(params)) {
 		businessId = getBusinessFromParams(params);
@@ -228,7 +228,7 @@ function deleteBusinessCommand(command, params, client) {
 // ===========================================================================
 
 function deleteBusinessLocationCommand(command, params, client) {
-	//let businessId = toInteger(splitParams[1]);
+	//let businessId = toInteger(getParam(params, " ", 2));
 	//deleteBusinessLocation(businessId);
 	//messagePlayerSuccess(client, `Business '${tempBusinessData.name} deleted!`);
 }
@@ -554,8 +554,7 @@ function lockUnlockBusinessCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessEntranceFeeCommand(command, params, client) {
-	let splitParams = params.split(" ");
-	let entranceFee = toInteger(splitParams[0]) || 0;
+	let entranceFee = toInteger(getParam(params, " ", 1)) || 0;
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -651,8 +650,7 @@ function getBusinessStorageItemsCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessPickupCommand(command, params, client) {
-	let splitParams = params.split(" ");
-	let typeParam = splitParams[0] || "business";
+	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -682,8 +680,7 @@ function setBusinessPickupCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessInteriorTypeCommand(command, params, client) {
-	let splitParams = params.split(" ");
-	let typeParam = splitParams[0] || "business";
+	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -738,7 +735,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 function setBusinessBlipCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
-	let typeParam = splitParams[0] || "business";
+	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -769,7 +766,7 @@ function setBusinessBlipCommand(command, params, client) {
 function giveDefaultItemsToBusinessCommand(command, params, client) {
 	let splitParams = params.split(" ");
 
-	let typeParam = splitParams[0] || "business";
+	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -867,7 +864,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 
-	let amount = toInteger(splitParams[0]) || 0;
+	let amount = toInteger(getParam(params, " ", 1)) || 0;
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -903,7 +900,7 @@ function setBusinessBuyPriceCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 
-	let amount = toInteger(splitParams[0]) || 0;
+	let amount = toInteger(getParam(params, " ", 1)) || 0;
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -938,7 +935,7 @@ function depositIntoBusinessCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 
-	let amount = toInteger(splitParams[0]) || 0;
+	let amount = toInteger(getParam(params, " ", 1)) || 0;
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -978,7 +975,6 @@ function orderItemForBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
 	let itemType = getItemTypeFromParams(splitParams.slice(0,-2).join(" "));
 
 	if(!getItemTypeData(itemType)) {
@@ -1638,7 +1634,7 @@ function buyFromBusinessCommand(command, params, client) {
 		}
 	}
 
-	let itemSlot = toInteger(splitParams[0]) || 1;
+	let itemSlot = toInteger(getParam(params, " ", 1)) || 1;
 
 	if(typeof getBusinessData(businessId).floorItemCache[itemSlot-1] == "undefined") {
 		messagePlayerError(client, `Item slot ${itemSlot} doesn't exist!`);
@@ -1652,7 +1648,7 @@ function buyFromBusinessCommand(command, params, client) {
 
 	let amount = 1;
 	if(areThereEnoughParams(params, 2, " ")) {
-		amount = toInteger(splitParams[1]) || 1;
+		amount = toInteger(getParam(params, " ", 2)) || 1;
 		if(amount <= 0) {
 			messagePlayerError(client, "The amount must be more than 0!");
 			return false;
@@ -1712,15 +1708,14 @@ function buyFromBusinessCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessItemSellPriceCommand(command, params, client) {
-	let splitParams = params.split(" ");
-	let businessId = getBusinessFromParams(splitParams[2]) || getPlayerBusiness(client);
+	let businessId = getBusinessFromParams(getParam(params, " ", 3)) || getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, getLocaleString(client, "InvalidBusiness"));
 		return false;
 	}
 
-	let itemSlot = toInteger(splitParams[0]) || 0;
+	let itemSlot = toInteger(getParam(params, " ", 1)) || 0;
 
 	if(typeof getBusinessData(businessId).floorItemCache[itemSlot-1] == "undefined") {
 		messagePlayerError(client, `Item slot ${itemSlot-1} doesn't exist!`);
@@ -1733,7 +1728,7 @@ function setBusinessItemSellPriceCommand(command, params, client) {
 	}
 
 	let oldPrice = getBusinessData(businessId).floorItemCache[itemSlot-1].buyPrice;
-	let newPrice = toInteger(splitParams[1]) || oldPrice;
+	let newPrice = toInteger(getParam(params, " ", 2)) || oldPrice;
 	if(newPrice < 0) {
 		messagePlayerError(client, "The price can't be negative!");
 		return false;
@@ -1747,15 +1742,14 @@ function setBusinessItemSellPriceCommand(command, params, client) {
 // ===========================================================================
 
 function storeItemInBusinessStorageCommand(command, params, client) {
-	let splitParams = params.split(" ");
-	let businessId = getBusinessFromParams(splitParams[2]) || getPlayerBusiness(client);
+	let businessId = getBusinessFromParams(getParam(params, " ", 3)) || getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, getLocaleString(client, "InvalidBusiness"));
 		return false;
 	}
 
-	let itemSlot = toInteger(splitParams[0]) || 0;
+	let itemSlot = toInteger(getParam(params, " ", 1)) || 0;
 
 	if(typeof getBusinessData(businessId).floorItemCache[itemSlot-1] == "undefined") {
 		messagePlayerError(client, `Item slot ${itemSlot} doesn't exist!`);
@@ -1783,7 +1777,6 @@ function storeItemInBusinessStorageCommand(command, params, client) {
 // ===========================================================================
 
 function stockItemOnBusinessFloorCommand(command, params, client) {
-	let splitParams = params.split(" ");
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -1791,7 +1784,7 @@ function stockItemOnBusinessFloorCommand(command, params, client) {
 		return false;
 	}
 
-	let itemSlot = toInteger(splitParams[0]) || 0;
+	let itemSlot = toInteger(getParam(params, " ", 1)) || 0;
 
 	if(typeof getBusinessData(businessId).storageItemCache[itemSlot-1] == "undefined") {
 		messagePlayerError(client, `Item slot ${itemSlot} doesn't exist!`);

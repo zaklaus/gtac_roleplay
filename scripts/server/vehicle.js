@@ -464,9 +464,8 @@ function vehicleAdminColourCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let colour1 = toInteger(splitParams[0]) || 0;
-	let colour2 = toInteger(splitParams[1]) || 0;
+	let colour1 = toInteger(getParam(params, " ", 1)) || 0;
+	let colour2 = toInteger(getParam(params, " ", 2)) || 0;
 
 	takePlayerCash(client, getGlobalConfig().resprayVehicleCost);
 	updatePlayerCash(client);
@@ -542,7 +541,6 @@ function vehicleAdminLiveryCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
 	let livery = toInteger(params) || 3;
 
 	takePlayerCash(client, getGlobalConfig().resprayVehicleCost);

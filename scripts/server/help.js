@@ -55,7 +55,7 @@ function helpCommand(command, params, client) {
 
     let splitParams = params.split(" ");
 
-    switch(toLowerCase(splitParams[0])) {
+    switch(toLowerCase(getParam(params, " ", 1))) {
         case "account":
             showAccountHelpMessage(client);
             break;
@@ -127,7 +127,7 @@ function helpCommand(command, params, client) {
 
         case "command":
         case "cmd":
-            showCommandHelpMessage(client, splitParams[1]);
+            showCommandHelpMessage(client, getParam(params, " ", 2));
             break;
 
         case "clan":

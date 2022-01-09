@@ -133,7 +133,6 @@ function deleteGroundItemObject(itemId) {
 // ===========================================================================
 
 function createGroundItemCommand(command, params, client) {
-	let splitParams = params.split(" ");
 	let itemType = getItemTypeFromParams(splitParams.slice(0, -1).join(" "));
 	let value = splitParams.slice(-1) || 1;
 
@@ -155,7 +154,6 @@ function createGroundItemCommand(command, params, client) {
 // ===========================================================================
 
 function createItemCommand(command, params, client) {
-	let splitParams = params.split(" ");
 	let itemType = getItemTypeFromParams(splitParams.slice(0, -1).join(" "));
 	let value = splitParams.slice(-1) || 1;
 
@@ -476,7 +474,6 @@ function setItemTypeDropModelCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
 	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
 	let modelId = splitParams[splitParams.length-1];
 
@@ -497,7 +494,6 @@ function setItemTypeOrderPriceCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
 	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
 	let orderPrice = splitParams[splitParams.length-1];
 
@@ -518,7 +514,6 @@ function setItemTypeRiskMultiplierCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
 	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
 	let riskMultiplier = splitParams[splitParams.length-1];
 
@@ -558,7 +553,6 @@ function setItemTypeUseTypeCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
 	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
 	let useType = splitParams[splitParams.length-1];
 
@@ -579,7 +573,6 @@ function setItemTypeUseValueCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
 	let itemTypeIndex = getItemTypeFromParams(splitParams.slice(0,-1).join(" "));
 	let useValue = splitParams[splitParams.length-1];
 
@@ -1736,9 +1729,8 @@ function deleteItemInPlayerInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let hotBarSlot = splitParams[1];
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let hotBarSlot = getParam(params, " ", 2);
 
 	if(!targetClient) {
 		messagePlayerError(client, `Player not found!`);
@@ -1778,9 +1770,8 @@ function deleteAllItemsInPlayerInventoryCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let hotBarSlot = splitParams[1];
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let hotBarSlot = getParam(params, " ", 2);
 
 	if(!targetClient) {
 		messagePlayerError(client, `Player not found!`);

@@ -46,8 +46,7 @@ function setClientStaffTitleCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let staffTitle = splitParams.slice(1).join(" ");
 
     if(!targetClient) {
@@ -383,14 +382,14 @@ function gotoJobLocationCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 
-	let jobId = getJobFromParams(splitParams[0]) || getClosestJobLocation(getPlayerPosition(client)).job;
+	let jobId = getJobFromParams(getParam(params, " ", 1)) || getClosestJobLocation(getPlayerPosition(client)).job;
 
 	if(!getJobData(jobId)) {
 		messagePlayerError(client, `That job does not exist!`);
 		return false;
 	}
 
-	let jobLocationId = splitParams[1] || 0;
+	let jobLocationId = getParam(params, " ", 2) || 0;
 
 	if(typeof getJobData(jobId).locations[jobLocationId] == "undefined") {
 		messagePlayerError(client, `That location ID does not exist!`);
@@ -427,12 +426,11 @@ function gotoPositionCommand(command, params, client) {
 	}
 
 	params = params.replace(",", "");
-	let splitParams = params.split(" ");
-	let x = splitParams[0];
-	let y = splitParams[1];
-	let z = splitParams[2];
-	let int = splitParams[3];
-	let vw = splitParams[4];
+	let x = getParam(params, " ", 1);
+	let y = getParam(params, " ", 2);
+	let z = getParam(params, " ", 3);
+	let int = getParam(params, " ", 4);
+	let vw = getParam(params, " ", 5);
 
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	setPlayerInterior(client, toInteger(int));
@@ -541,8 +539,7 @@ function playerInteriorCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	if(!targetClient) {
 		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
@@ -553,7 +550,7 @@ function playerInteriorCommand(command, params, client) {
 		return false;
 	}
 
-	let interiorId = splitParams[1];
+	let interiorId = getParam(params, " ", 2);
 	setPlayerInterior(targetClient, Number(interiorId));
 	messageAdmins(`${client.name} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s interior to {ALTCOLOUR}${interiorId}`);
 }
@@ -566,8 +563,7 @@ function playerVirtualWorldCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	if(!targetClient) {
 		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
@@ -578,7 +574,7 @@ function playerVirtualWorldCommand(command, params, client) {
 		return false;
 	}
 
-	let dimensionId = splitParams[1];
+	let dimensionId = getParam(params, " ", 2);
 	setPlayerDimension(targetClient, Number(dimensionId));
 	messageAdmins(`${client.name} {MAINCOLOUR}set {ALTCOLOUR}${getPlayerName(targetClient)}'s {MAINCOLOUR}virtual world to {ALTCOLOUR}${dimensionId}`);
 }
@@ -670,8 +666,8 @@ function addStaffFlagCommand(command, params, client) {
 	}
 
 	let splitParams = params.split("");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "None";
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let flagName = getParam(params, " ", 2) || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -704,8 +700,8 @@ function takeStaffFlagCommand(command, params, client) {
 	}
 
 	let splitParams = params.split("");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "None";
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let flagName = getParam(params, " ", 2) || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -738,7 +734,7 @@ function clearStaffFlagsCommand(command, params, client) {
 	}
 
 	let splitParams = params.split("");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -778,7 +774,7 @@ function getStaffFlagsCommand(command, params, client) {
 	}
 
 	let splitParams = params.split("");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -821,8 +817,8 @@ function allStaffFlagsCommand(command, params, client) {
 	}
 
 	let splitParams = params.split("");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let flagName = splitParams[1] || "None";
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let flagName = getParam(params, " ", 2) || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -840,9 +836,8 @@ function givePlayerMoneyCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let amount = toInteger(splitParams[1]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let amount = toInteger(getParam(params, " ", 2));
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -864,9 +859,8 @@ function forcePlayerAccentCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let newAccent = splitParams[1] || "None";
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let newAccent = getParam(params, " ", 2) || "None";
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -898,8 +892,7 @@ function forceCharacterNameChangeCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -925,10 +918,9 @@ function forceCharacterNameCommand(command, params, client) {
 	//	return false;
 	//}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let firstName = splitParams[1];
-	let lastName = splitParams[2];
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let firstName = getParam(params, " ", 2);
+	let lastName = getParam(params, " ", 3);
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");
@@ -961,8 +953,7 @@ function forcePlayerSkinCommand(command, params, client) {
 	//	return false;
 	//}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let skinIndex = getSkinModelIndexFromParams(splitParams.slice(1).join(" "));
 
     if(!targetClient) {
@@ -989,9 +980,8 @@ function forcePlayerWantedLevelCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let wantedLevel = splitParams[1];
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let wantedLevel = getParam(params, " ", 2);
 
     if(!targetClient) {
         messagePlayerError(client, "That player is not connected!");

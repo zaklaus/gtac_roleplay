@@ -59,8 +59,7 @@ function setNewCharacterMoneyCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let amount = toInteger(splitParams[0]) || 1000;
+let amount = toInteger(getParam(params, " ", 1)) || 1000;
 
 	getServerConfig().newCharacter.cash = amount;
 	getServerConfig().needsSaved = true;

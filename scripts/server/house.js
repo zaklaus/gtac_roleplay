@@ -110,7 +110,7 @@ function lockUnlockHouseCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError("House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -143,7 +143,7 @@ function lockUnlockHouseCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError("House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -172,7 +172,7 @@ function setHouseDescriptionCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError("House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -208,12 +208,12 @@ function setHouseOwnerCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!newHouseOwner) {
-		messagePlayerError("Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError("House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -246,7 +246,7 @@ function setHouseClanCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError("House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -286,7 +286,7 @@ function setHouseClanCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError("House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -345,7 +345,7 @@ function setHousePickupCommand(command, params, client) {
 		} else {
 			if(isNull(getGameConfig().pickupModels[getServerGame()][typeParam])) {
 				messagePlayerError(client, "Invalid house type! Use a house type name or a pickup model ID or 'none'");
-				messagePlayerInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`)
+				messagePlayerInfo(client, `Pickup Types: {ALTCOLOUR}${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`)
 				return false;
 			}
 
@@ -360,7 +360,7 @@ function setHousePickupCommand(command, params, client) {
 
 	getHouseData(houseId).needsSaved = true;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]pickup display to [#AAAAAA]${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${client.name} {MAINCOLOUR}set house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}pickup display to {ALTCOLOUR}${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -375,8 +375,7 @@ function setHousePickupCommand(command, params, client) {
  *
  */
 function setHouseInteriorTypeCommand(command, params, client) {
-	let splitParams = params.split(" ");
-	let typeParam = splitParams[0] || "None";
+	let typeParam = getParam(params, " ", 1) || "None";
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
@@ -400,7 +399,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 			let interiorTypesList = Object.keys(getGameConfig().interiorTemplates[getServerGame()]);
 			let chunkedList = splitArrayIntoChunks(interiorTypesList, 10);
 
-			messagePlayerNormal(client, `{clanOrange}== {jobYellow}Interior Types {clanOrange}=======================`);
+			messagePlayerNormal(client, makeChatBoxSectionHeader("InteriorTypes"));
 			for(let i in chunkedList) {
 				messagePlayerInfo(client, chunkedList[i].join(", "));
 			}
@@ -420,7 +419,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 
 	getHouseData(houseId).needsSaved = true;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]interior type to [#AAAAAA]${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${client.name} {MAINCOLOUR}set house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}interior type to {ALTCOLOUR}${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -449,7 +448,7 @@ function setHouseBlipCommand(command, params, client) {
 		} else {
 			if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
 				messagePlayerError(client, "Invalid house type! Use a house type name or a blip image ID");
-				messagePlayerInfo(client, `Pickup Types: [#AAAAAA]${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
+				messagePlayerInfo(client, `Pickup Types: {ALTCOLOUR}${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
 				return false;
 			}
 
@@ -466,7 +465,7 @@ function setHouseBlipCommand(command, params, client) {
 	resetHouseBlips(houseId);
 	getHouseData(houseId).needsSaved = true;
 
-	messageAdmins(`[#AAAAAA]${client.name} [#FFFFFF]set house [#11CC11]${getHouseData(houseId).description} [#FFFFFF]blip display to [#AAAAAA]${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${client.name} {MAINCOLOUR}set house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}blip display to {ALTCOLOUR}${toLowerCase(typeParam)}`);
 }
 
 // ===========================================================================
@@ -560,7 +559,7 @@ function deleteHouseCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError("House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -1031,7 +1030,7 @@ function setHouseBuyPriceCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 
-	let amount = toInteger(splitParams[0]) || 0;
+	let amount = toInteger(getParam(params, " ", 1)) || 0;
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
@@ -1059,7 +1058,7 @@ function setHouseRentPriceCommand(command, params, client) {
 
 	let splitParams = params.split(" ");
 
-	let amount = toInteger(splitParams[0]) || 0;
+	let amount = toInteger(getParam(params, " ", 1)) || 0;
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {

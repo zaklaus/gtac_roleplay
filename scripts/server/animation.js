@@ -20,8 +20,7 @@ function playPlayerAnimationCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let animationSlot = getAnimationFromParams(splitParams[0]);
+let animationSlot = getAnimationFromParams(getParam(params, " ", 1));
     let animationPositionOffset = 1;
 
 	if(!animationSlot) {

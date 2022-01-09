@@ -19,8 +19,8 @@ function initKeyBindScript() {
 function addKeyBindCommand(command, params, client) {
     let splitParams = params.split(" ");
 
-    let keyId = getKeyIdFromParams(splitParams[0]);
-    let tempCommand = splitParams[1];
+    let keyId = getKeyIdFromParams(getParam(params, " ", 1));
+    let tempCommand = getParam(params, " ", 2);
     let tempParams = (splitParams.length > 2) ? splitParams.slice(2).join(" ") : "";
 
     if(!keyId) {
@@ -49,7 +49,7 @@ function addKeyBindCommand(command, params, client) {
 function removeKeyBindCommand(command, params, client) {
     let splitParams = params.split(" ");
 
-    let keyId = getKeyIdFromParams(splitParams[0]);
+    let keyId = getKeyIdFromParams(getParam(params, " ", 1));
 
     if(!keyId) {
         messagePlayerError(client, "The key ID or name you input is invalid!");
@@ -210,7 +210,7 @@ function showKeyBindListCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(keybindList, 6);
 
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Your Key Binds {clanOrange}===========================`);
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderKeyBindsList")));
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));

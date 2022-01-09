@@ -230,9 +230,8 @@ function changeAccountPasswordCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let oldPassword = splitParams[0];
-	let newPassword = splitParams[1];
+	let oldPassword = getParam(params, " ", 1);
+	let newPassword = getParam(params, " ", 2);
 
 	if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), oldPassword))) {
 		messagePlayerError(client, `The old password is invalid!`);
@@ -282,8 +281,7 @@ function setAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let emailAddress = splitParams[0];
+	let emailAddress = getParam(params, " ", 1);
 
 	if(!isValidEmailAddress(emailAddress)) {
 		messagePlayerError(client, `The email '${emailAddress} is not valid!`);
@@ -320,8 +318,7 @@ function verifyAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let verificationCode = splitParams[0];
+	let verificationCode = getParam(params, " ", 1);
 
 	if(isAccountEmailVerified(getPlayerData(client).accountData)) {
 		messagePlayerError(client, `You already verified your email!`);
@@ -353,8 +350,7 @@ function resetAccountPasswordCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let verificationCode = splitParams[0] || "";
+	let verificationCode = getParam(params, " ", 1) || "";
 
 	if(!isAccountEmailVerified(getPlayerData(client).accountData)) {
 		messagePlayerError(client, `Your email is not verified. Your password will not be reset!`);
@@ -386,8 +382,7 @@ function setAccountDiscordCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let discordName = splitParams[0];
+	let discordName = getParam(params, " ", 1);
 
 	if(!isValidEmailAddress(emailAddress)) {
 		messagePlayerError(client, `The discord '${discordName} is not valid!`);

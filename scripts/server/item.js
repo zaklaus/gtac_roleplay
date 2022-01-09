@@ -218,7 +218,7 @@ function useItemCommand(command, params, client) {
 	}
 
 	if(getItemTypeData(getItemData(itemId).itemTypeIndex).useAnimationIndex != false) {
-		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).useAnimationIndex, 0.0);
+		forcePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).useAnimationIndex, 0.0);
 	}
 
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_USE;
@@ -291,7 +291,7 @@ function pickupItemCommand(command, params, client) {
 	}
 
 	if(getItemTypeData(getItemData(itemId).itemTypeIndex).dropAnimationIndex != false) {
-		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).pickupAnimationIndex, 0.0);
+		forcePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).pickupAnimationIndex, 0.0);
 	}
 
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_PICKUP;
@@ -352,7 +352,7 @@ function dropItemCommand(command, params, client) {
 	}
 
 	if(getItemTypeData(getItemData(itemId).itemTypeIndex).dropAnimationIndex != false) {
-		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).dropAnimationIndex, 0.0);
+		forcePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).dropAnimationIndex, 0.0);
 	}
 
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_DROP;
@@ -399,7 +399,7 @@ function putItemCommand(command, params, client) {
 	}
 
 	if(getItemTypeData(getItemData(itemId).itemTypeIndex).putAnimationIndex != false) {
-		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).putAnimationIndex, 0.0);
+		forcePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).putAnimationIndex, 0.0);
 	}
 
 	getPlayerData(client).itemActionItem = hotBarSlot;
@@ -446,7 +446,7 @@ function takeItemCommand(command, params, client) {
 	//}
 
 	if(getItemTypeData(getItemData(itemId).itemTypeIndex).takeAnimationIndex != false) {
-		makePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).takeAnimationIndex, 0.0);
+		forcePlayerPlayAnimation(client, getItemTypeData(getItemData(itemId).itemTypeIndex).takeAnimationIndex, 0.0);
 	}
 
 	getPlayerData(client).itemActionItem = itemId;
@@ -481,7 +481,7 @@ function setItemTypeDropModelCommand(command, params, client) {
 	let modelId = splitParams[splitParams.length-1];
 
 	if(!getItemTypeData(itemTypeIndex)) {
-		messagePlayerError(client, `Invalid item type`);
+		messagePlayerError(client, getLocaleString(client, "InvalidItemType"));
 		return false;
 	}
 
@@ -502,7 +502,7 @@ function setItemTypeOrderPriceCommand(command, params, client) {
 	let orderPrice = splitParams[splitParams.length-1];
 
 	if(!getItemTypeData(itemTypeIndex)) {
-		messagePlayerError(client, `Invalid item type`);
+		messagePlayerError(client, getLocaleString(client, "InvalidItemType"));
 		return false;
 	}
 
@@ -523,7 +523,7 @@ function setItemTypeRiskMultiplierCommand(command, params, client) {
 	let riskMultiplier = splitParams[splitParams.length-1];
 
 	if(!getItemTypeData(itemTypeIndex)) {
-		messagePlayerError(client, `Invalid item type`);
+		messagePlayerError(client, getLocaleString(client, "InvalidItemType"));
 		return false;
 	}
 
@@ -542,7 +542,7 @@ function toggleItemTypeEnabledCommand(command, params, client) {
 	let itemTypeIndex = getItemTypeFromParams(params);
 
 	if(!getItemTypeData(itemTypeIndex)) {
-		messagePlayerError(client, `Invalid item type`);
+		messagePlayerError(client, getLocaleString(client, "InvalidItemType"));
 		return false;
 	}
 
@@ -563,7 +563,7 @@ function setItemTypeUseTypeCommand(command, params, client) {
 	let useType = splitParams[splitParams.length-1];
 
 	if(!getItemTypeData(itemTypeIndex)) {
-		messagePlayerError(client, `Invalid item type`);
+		messagePlayerError(client, getLocaleString(client, "InvalidItemType"));
 		return false;
 	}
 
@@ -584,7 +584,7 @@ function setItemTypeUseValueCommand(command, params, client) {
 	let useValue = splitParams[splitParams.length-1];
 
 	if(!getItemTypeData(itemTypeIndex)) {
-		messagePlayerError(client, `Invalid item type`);
+		messagePlayerError(client, getLocaleString(client, "InvalidItemType"));
 		return false;
 	}
 
@@ -1372,7 +1372,7 @@ function listBusinessStorageInventoryCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, "Business not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidBusiness"));
 		return false;
 	}
 
@@ -1390,7 +1390,7 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
 	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, "Business not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidBusiness"));
 		return false;
 	}
 
@@ -1408,7 +1408,7 @@ function listHouseInventoryCommand(command, params, client) {
 	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -1851,6 +1851,7 @@ function getOrderPriceForItemType(itemType) {
 function clearPlayerItemActionState(client) {
 	getPlayerData(client).itemActionState = VRR_ITEM_ACTION_NONE;
 	getPlayerData(client).itemActionItem = -1;
+	makePlayerStopAnimation(client);
 }
 
 // ===========================================================================

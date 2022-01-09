@@ -18,7 +18,6 @@ let serverData = {
 	clients: new Array(128),
 	businesses: [],
 	houses: [],
-	factions: [],
 	commands: {},
 	groundItemCache: [],
 	groundPlantCache: [],
@@ -30,31 +29,6 @@ let serverData = {
 		blackListedGameScripts: [],
 	},
 	localeStrings: {},
-	jobRankNames: [
-		[
-			"Police Officer I",
-			"Detective",
-			"Sergeant",
-			"Lieutenant",
-			"Captain",
-			"Chief of Police",
-		],
-		[
-			"Paramedic",
-			"Senior Paramedic",
-			"Lieutenant",
-			"Lieutenant",
-			"Captain",
-			"Chief of Department",
-		],
-		[
-			"Firefighter",
-			"Senior Firefighter",
-			"Fire Marshal",
-			"Captain",
-			"Chief of Department",
-		]
-	]
 };
 
 // ===========================================================================
@@ -65,11 +39,6 @@ let allowedSkins = getAllowedSkins(getGame());
 // ===========================================================================
 
 function initServerData() {
-	// Pre-allocate translation cache language slots
-	//getServerData().translation.cache = new Array(getServerData().translation.languages.length);
-	//let translationCacheFrom = new Array(getServerData().translation.languages.length);
-	//translationCacheFrom.fill([]);
-	//getServerData().translation.cache.fill(translationCacheFrom);
 }
 
 // ===========================================================================

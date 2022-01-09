@@ -51,9 +51,6 @@ let globalConfig = {
 	geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
 	geoIPCityDatabaseFilePath: "geoip-city.mmdb",
 	randomTipInterval: 600000,
-	locales: [
-		["English", "english"],
-	],
 	economy: {
 		passiveIncomePerPayDay: 1000,
 		applyTax: true,
@@ -81,6 +78,7 @@ let globalConfig = {
 		VRR_ITEM_USETYPE_VEHTIRE,
 	],
 	vehicleInactiveRespawnDelay: 1800000, // 20 minutes
+	chatSectionHeaderLength: 96,
 };
 
 // ===========================================================================
@@ -92,20 +90,20 @@ function loadGameConfig() {
 // ===========================================================================
 
 function loadGlobalConfig() {
-	//let roleplayConfig = JSON.parse(loadTextFile(`config/roleplay.json`));
-	//if(roleplayConfig != null) {
-	//	globalConfig = roleplayConfig;
-	//}
+	let localeConfig = JSON.parse(loadTextFile(`config/locale.json`));
+	if(localeConfig != null) {
+		globalConfig.locales = localeConfig;
+	}
 
-	//let localeConfig = JSON.parse(loadTextFile(`config/locale.json`));
-	//if(localeConfig != null) {
-	//	globalConfig.locales = localeConfig;
-	//}
+	let economyConfig = JSON.parse(loadTextFile(`config/economy.json`));
+	if(economyConfig != null) {
+		globalConfig.economy = economyConfig;
+	}
 
-	//let economyConfig = JSON.parse(loadTextFile(`config/economy.json`));
-	//if(economyConfig != null) {
-	//	globalConfig.economy = economyConfig;
-	//}
+	let accentsConfig = JSON.parse(loadTextFile(`config/accents.json`));
+	if(accentsConfig != null) {
+		globalConfig.accents = accentsConfig;
+	}
 
 	//getGlobalConfig().weaponEquippableTypes = [
 	//	VRR_ITEM_USETYPE_WEAPON,

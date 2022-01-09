@@ -592,18 +592,6 @@ function canClientUseGuns(client) {
 
 // ===========================================================================
 
-function intToBool(intVal) {
-	return (intVal == 1) ? true : false;
-}
-
-// ===========================================================================
-
-function boolToInt(boolVal) {
-	return (boolVal) ? 1 : 0;
-}
-
-// ===========================================================================
-
 function sendAllBlips(client) {
 	sendAllPoliceStationBlips(client);
 	sendAllFireStationBlips(client);
@@ -1395,7 +1383,9 @@ function isConsole(client) {
 // ===========================================================================
 
 function updateConnectionLogOnQuit(client, quitReasonId) {
-	quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=NOW(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${getPlayerData(client).connectionId}`);
+	if(getPlayerData(client) != false) {
+		quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=NOW(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${getPlayerData(client).connectionId}`);
+	}
 }
 
 // ===========================================================================
@@ -1540,3 +1530,13 @@ function clearTemporaryPeds() {
 		}
 	}
 }
+
+// ===========================================================================
+
+function makeChatSectionHeader(name) {
+	let resultString = `== ${name} `;
+	let endFiller = fillStringWithCharacter("=", getGlobalConfig().chatSectionHeaderLength-resultString.length);
+	return `${resultString} ${endFiller}`;
+}
+
+// ===========================================================================

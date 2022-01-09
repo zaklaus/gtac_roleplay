@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES6",
+    "target": "es6",
     "moduleResolution": "classic"
   },
   "include": [
-      "./*.js",
-      "../shared/*.js"
+      "*.js",
+      "gui/*.js",
+      "native/*.js",
+      "../shared/*.js",
+      "../third-party/mexui/*"
   ]
 }

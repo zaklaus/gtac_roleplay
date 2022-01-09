@@ -67,7 +67,7 @@ const VRR_ANIMTYPE_SHARED = 3;                  // Forces this animation to play
 const VRR_ANIMTYPE_SPECIALACTION = 4;           // This animtype uses a special action (only in SA)
 const VRR_ANIMTYPE_SURRENDER = 5;               // This animtype is used to surrender (like handsup or cower)
 const VRR_ANIMTYPE_FORCED = 6;                  // This animtype is forced (can't use stopanim to get out of it)
-const VRR_ANIMTYPE_FREEZE = 6;                  // This animtype is forced (can't use stopanim to get out of it)
+const VRR_ANIMTYPE_FREEZE = 7;                  // This animtype is forced (can't use stopanim to get out of it)
 
 // Animation Move Types
 const VRR_ANIMMOVE_NONE = 0;

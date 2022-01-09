@@ -197,7 +197,7 @@ function messagePlayerAdminChat(client, adminChattingClient, messageText) {
 
 function messagePlayerNewbieTip(client, message) {
     if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("NoActionTips"))) {
-        messagePlayerNormal(client, `💡 TIP: ${message}`);
+        messagePlayerNormal(client, `💡 ${message}`);
     }
 }
 
@@ -206,7 +206,7 @@ function messagePlayerNewbieTip(client, message) {
 function messagePlayerTimedRandomTip(client, message) {
     if(isPlayerLoggedIn(client) && isPlayerSpawned(client)) {
         if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("NoRandomTips"))) {
-            messagePlayerNormal(client, `💡 TIP: ${message}`);
+            messagePlayerNormal(client, `💡 ${message}`);
         }
     }
 }

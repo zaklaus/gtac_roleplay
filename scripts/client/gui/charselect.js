@@ -28,17 +28,19 @@ function initCharacterSelectGUI() {
 		main: {
 			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 		},
-		title: {
-			textSize: 0.0,
-			textColour: toColour(0, 0, 0, 0),
-		},
-		icon: {
-			textSize: 0.0,
-			textColour: toColour(0, 0, 0, 0),
-		},
+        title: {
+            textSize: 0.0,
+            textColour: toColour(0, 0, 0, 0),
+            backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+        },
+        icon: {
+            textSize: 0.0,
+            textColour: toColour(0, 0, 0, 0),
+            backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+        }
 	});
 	characterSelect.window.titleBarIconSize = toVector2(0,0);
-	characterSelect.window.titleBarHeight = 0;
+	//characterSelect.window.titleBarHeight = 0;
 
 	characterSelect.nameText = characterSelect.window.text(5, 40, 200, 25, 'Lastname, Firstname', {
 		main: {
@@ -175,21 +177,21 @@ function showNewCharacter() {
 
 function selectNextCharacter() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Requesting next character info from server for character select window`);
-	triggerNetworkEvent("vrr.nextCharacter");
+	sendNetworkEventToServer("vrr.nextCharacter");
 }
 
 // ===========================================================================
 
 function selectPreviousCharacter() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Requesting previous character info from server for character select window`);
-	triggerNetworkEvent("vrr.previousCharacter");
+	sendNetworkEventToServer("vrr.previousCharacter");
 }
 
 // ===========================================================================
 
 function selectThisCharacter() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Tell server the current shown character was selected in character select window`);
-	triggerNetworkEvent("vrr.selectCharacter");
+	sendNetworkEventToServer("vrr.selectCharacter");
 }
 
 // ===========================================================================

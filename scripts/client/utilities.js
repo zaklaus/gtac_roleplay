@@ -262,10 +262,10 @@ function runClientCode(code, returnTo) {
 	try {
 		returnValue = eval("(" + code + ")");
 	} catch(error) {
-		triggerNetworkEvent("vrr.runCodeFail", returnTo, code);
+		sendNetworkEventToServer("vrr.runCodeFail", returnTo, code);
 		return false;
     }
-    triggerNetworkEvent("vrr.runCodeSuccess", returnTo, code, returnValue);
+    sendNetworkEventToServer("vrr.runCodeSuccess", returnTo, code, returnValue);
 }
 
 // ===========================================================================
@@ -732,7 +732,7 @@ function processNearbyPickups() {
                 //if(pickups[i].interior == localPlayer.interior && pickups[i].dimension == localPlayer.dimension) {
                     if(currentPickup != pickups[i]) {
                         currentPickup = pickups[i];
-                        triggerNetworkEvent("vrr.pickup", pickups[i].id);
+                        sendNetworkEventToServer("vrr.pickup", pickups[i].id);
                     }
                 //}
             }
@@ -863,17 +863,17 @@ function processVehiclePurchasing() {
     if(vehiclePurchaseState == VRR_VEHBUYSTATE_TESTDRIVE) {
         if(inVehicle == false) {
             vehiclePurchaseState = VRR_VEHBUYSTATE_EXITEDVEH;
-            triggerNetworkEvent("vrr.vehBuyState", VRR_VEHBUYSTATE_EXITEDVEH);
+            sendNetworkEventToServer("vrr.vehBuyState", VRR_VEHBUYSTATE_EXITEDVEH);
             return false;
         } else {
             if(vehiclePurchasing.id == inVehicle) {
                 if(getDistance(inVehicle.position, vehiclePurchasePosition) >= 25) {
                     vehiclePurchaseState = VRR_VEHBUYSTATE_FARENOUGH;
-                    triggerNetworkEvent("vrr.vehBuyState", VRR_VEHBUYSTATE_FARENOUGH);
+                    sendNetworkEventToServer("vrr.vehBuyState", VRR_VEHBUYSTATE_FARENOUGH);
                 }
             } else {
                 vehiclePurchaseState = VRR_VEHBUYSTATE_WRONGVEH;
-                triggerNetworkEvent("vrr.vehBuyState", VRR_VEHBUYSTATE_WRONGVEH);
+                sendNetworkEventToServer("vrr.vehBuyState", VRR_VEHBUYSTATE_WRONGVEH);
             }
         }
     }

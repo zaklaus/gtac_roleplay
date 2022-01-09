@@ -129,7 +129,7 @@ function twoFactorAuthSuccess() {
 
 function checkTwoFactorAuth() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking two-factor authentication with server ...`);
-	triggerNetworkEvent("vrr.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
+	sendNetworkEventToServer("vrr.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
 }
 
 // ===========================================================================

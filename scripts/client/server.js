@@ -101,20 +101,20 @@ function addAllNetworkHandlers() {
 // ===========================================================================
 
 function sendResourceReadySignalToServer() {
-    triggerNetworkEvent("vrr.clientReady");
+    sendNetworkEventToServer("vrr.clientReady");
 }
 
 // ===========================================================================
 
 function sendResourceStartedSignalToServer() {
-    triggerNetworkEvent("vrr.clientStarted");
+    sendNetworkEventToServer("vrr.clientStarted");
 }
 
 // ===========================================================================
 
 function sendResourceStoppedSignalToServer() {
     if(isConnected) {
-        triggerNetworkEvent("vrr.clientStopped");
+        sendNetworkEventToServer("vrr.clientStopped");
     }
 }
 
@@ -153,19 +153,19 @@ function onServerSpawnedPlayer(state) {
 // ===========================================================================
 
 function tellServerPlayerUsedKeyBind(key) {
-    triggerNetworkEvent("vrr.useKeyBind", key);
+    sendNetworkEventToServer("vrr.useKeyBind", key);
 }
 
 // ===========================================================================
 
 function tellServerPlayerArrivedAtJobRouteStop() {
-    triggerNetworkEvent("vrr.arrivedAtJobRouteStop");
+    sendNetworkEventToServer("vrr.arrivedAtJobRouteStop");
 }
 
 // ===========================================================================
 
 function tellServerItemActionDelayComplete() {
-    triggerNetworkEvent("vrr.itemActionDelayComplete");
+    sendNetworkEventToServer("vrr.itemActionDelayComplete");
 }
 
 // ===========================================================================
@@ -175,13 +175,13 @@ function sendServerClientInfo() {
     if(typeof CLIENT_VERSION_MAJOR != "undefined") {
         clientVersion = `${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_PATCH}.${CLIENT_VERSION_BUILD}`;
     }
-    triggerNetworkEvent("vrr.clientInfo", clientVersion, game.width, game.height);
+    sendNetworkEventToServer("vrr.clientInfo", clientVersion, game.width, game.height);
 }
 
 // ===========================================================================
 
 function sendServerNewAFKStatus(state) {
-    triggerNetworkEvent("vrr.afk", state);
+    sendNetworkEventToServer("vrr.afk", state);
 }
 
 // ===========================================================================

@@ -85,7 +85,7 @@ function initGUI() {
 	guiReady = true;
 
 	logToConsole(LOG_DEBUG, `[VRR.GUI] All GUI created successfully!`);
-	triggerNetworkEvent("vrr.guiReady", true);
+	sendNetworkEventToServer("vrr.guiReady", true);
 };
 
 // ===========================================================================
@@ -254,6 +254,13 @@ addNetworkHandler("vrr.changePassword", function() {
 
 // ===========================================================================
 
+addNetworkHandler("vrr.showResetPasswordCodeInput", function() {
+	logToConsole(LOG_DEBUG, `[VRR.GUI] Received signal to input reset password code from server`);
+	resetPasswordCodeInputGUI();
+});
+
+// ===========================================================================
+
 addNetworkHandler("vrr.guiColour", function(red1, green1, blue1, red2, green2, blue2, red3, green3, blue3) {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Received new GUI colours from server: ${red1}, ${green1}, ${blue1} / ${red2}, ${green2}, ${blue2} / ${red3}, ${green3}, ${blue3}`);
 	primaryColour = [red1, green1, blue1];
@@ -269,7 +276,7 @@ addNetworkHandler("vrr.guiColour", function(red1, green1, blue1, red2, green2, b
 addNetworkHandler("vrr.guiInit", function() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Initializing MexUI app`);
 	//initGUI();
-	triggerNetworkEvent("vrr.guiReady", true);
+	sendNetworkEventToServer("vrr.guiReady", true);
 });
 
 // ===========================================================================
@@ -299,6 +306,14 @@ function processGUIKeyPress(keyCode) {
 		if(guiRightKey != false) {
 			guiRightKey();
 		}
+	}
+}
+
+// ===========================================================================
+
+function processToggleGUIKeyPress(keyCode) {
+	if(keyCode == disableGUIKey) {
+		sendNetworkEventToServer("vrr.toggleGUI");
 	}
 }
 

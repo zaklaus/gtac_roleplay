@@ -64,11 +64,11 @@ function processSkinSelectKeyPress(keyCode) {
             skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
             localPlayer.skin = allowedSkins[skinSelectorIndex][0];
         } else if(keyCode == SDLK_RETURN) {
-            triggerNetworkEvent("vrr.skinSelected", skinSelectorIndex);
+            sendNetworkEventToServer("vrr.skinSelected", skinSelectorIndex);
             toggleSkinSelect(false);
             return true;
         } else if(keyCode == SDLK_BACKSPACE) {
-            triggerNetworkEvent("vrr.skinSelected", -1);
+            sendNetworkEventToServer("vrr.skinSelected", -1);
             toggleSkinSelect(false);
             return true;
         }

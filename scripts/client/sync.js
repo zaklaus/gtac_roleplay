@@ -10,13 +10,13 @@
 function processSync(event, deltaTime) {
     if(localPlayer != null) {
         if(!areServerElementsSupported()) {
-            triggerNetworkEvent("vrr.player.position", localPlayer.position);
-            triggerNetworkEvent("vrr.player.heading", localPlayer.heading);
+            sendNetworkEventToServer("vrr.player.position", localPlayer.position);
+            sendNetworkEventToServer("vrr.player.heading", localPlayer.heading);
         }
 
         //if(game.game == VRR_GAME_GTA_SA) {
         //    let lookAtPos = getLocalPlayerLookAtPosition();
-        //    triggerNetworkEvent("vrr.player.lookat", lookAtPos);
+        //    sendNetworkEventToServer("vrr.player.lookat", lookAtPos);
         //    setEntityData(localPlayer, "vrr.headLook", lookAtPos);
         //    let peds = getPeds();
         //    for(let i in peds) {
@@ -31,7 +31,7 @@ function processSync(event, deltaTime) {
                 logToConsole(LOG_DEBUG, `Local player died`);
                 localPlayer.clearWeapons();
                 calledDeathEvent = true;
-                triggerNetworkEvent("vrr.playerDeath");
+                sendNetworkEventToServer("vrr.playerDeath");
             }
         }
 

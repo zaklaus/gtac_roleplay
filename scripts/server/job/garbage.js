@@ -109,7 +109,7 @@ function showNextGarbageStop(client) {
 // ===========================================================================
 
 function showCurrentGarbageStop(client) {
-    triggerNetworkEvent("vrr.showGarbageStop", client, getGarbageRouteStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop), getColourByName("garbageDriverGreen"));
+    sendNetworkEventToPlayer("vrr.showGarbageStop", client, getGarbageRouteStopPosition(getPlayerIsland(client), getPlayerData(client).jobRoute, getPlayerData(client).jobRouteStop), getColourByName("garbageDriverGreen"));
 }
 
 // ===========================================================================

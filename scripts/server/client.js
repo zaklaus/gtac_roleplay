@@ -24,6 +24,7 @@ function addAllNetworkHandlers() {
     // GUI
     addNetworkHandler("vrr.promptAnswerNo", playerPromptAnswerNo);
     addNetworkHandler("vrr.promptAnswerYes", playerPromptAnswerYes);
+    addNetworkHandler("vrr.toggleGUI", playerToggledGUI);
 
     // AFK
     addNetworkHandler("vrr.afk", playerChangeAFKState);
@@ -79,7 +80,7 @@ function addAllNetworkHandlers() {
 
 function updatePlayerNameTag(client) {
     //logToConsole(LOG_DEBUG, `[VRR.Client] Sending ${getPlayerDisplayForConsole(client)}'s updated nametag to all players`);
-	triggerNetworkEvent("vrr.nametag", null, getPlayerName(client), getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
+	sendNetworkEventToPlayer("vrr.nametag", null, getPlayerName(client), getPlayerNameForNameTag(client), getPlayerColour(client), false, client.ping);
 }
 
 // ===========================================================================
@@ -96,7 +97,7 @@ function updateAllPlayerNameTags() {
 
 function updatePlayerPing(client) {
     //logToConsole(LOG_DEBUG, `[VRR.Client] Sending ${getPlayerDisplayForConsole(client)}'s ping to all players`);
-	triggerNetworkEvent("vrr.ping", null, getPlayerName(client), client.ping);
+	sendNetworkEventToPlayer("vrr.ping", null, getPlayerName(client), client.ping);
 }
 
 // ===========================================================================
@@ -137,7 +138,7 @@ function playerClientStopped(client) {
 
 function showGameMessage(client, text, colour, duration) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Showing game message to ${getPlayerDisplayForConsole(client)} (${text}) for ${duration} milliseconds`);
-    triggerNetworkEvent("vrr.smallGameMessage", client, text, colour, duration);
+    sendNetworkEventToPlayer("vrr.smallGameMessage", client, text, colour, duration);
 }
 
 // ===========================================================================
@@ -148,7 +149,7 @@ function enableCityAmbienceForPlayer(client, clearElements = false) {
     //}
 
     //logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
-    //triggerNetworkEvent("vrr.ambience", client, true);
+    //sendNetworkEventToPlayer("vrr.ambience", client, true);
 }
 
 // ===========================================================================
@@ -159,14 +160,14 @@ function disableCityAmbienceForPlayer(client, clearElements = false) {
     //}
 
     //logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s city ambience to ${toUpperCase(getOnOffFromBool(false))}`);
-    //triggerNetworkEvent("vrr.ambience", client, false, clearElements);
+    //sendNetworkEventToPlayer("vrr.ambience", client, false, clearElements);
 }
 
 // ===========================================================================
 
 function clearPlayerOwnedPeds(client) {
 	logToConsole(LOG_DEBUG, `[VRR.Client] Clearing peds owned by ${getPlayerDisplayForConsole(client)}`);
-	triggerNetworkEvent("vrr.clearPeds", client);
+	sendNetworkEventToPlayer("vrr.clearPeds", client);
 }
 
 // ===========================================================================
@@ -174,41 +175,41 @@ function clearPlayerOwnedPeds(client) {
 function updatePlayerSpawnedState(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s spawned state ${toUpperCase(getOnOffFromBool(state))}`);
     getPlayerData(client).spawned = true;
-    triggerNetworkEvent("vrr.spawned", client, state);
+    sendNetworkEventToPlayer("vrr.spawned", client, state);
 }
 
 // ===========================================================================
 
 function setPlayerControlState(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s control state ${toUpperCase(getOnOffFromBool(state))}`);
-    triggerNetworkEvent("vrr.control", client, state, !state);
+    sendNetworkEventToPlayer("vrr.control", client, state, !state);
 }
 
 // ===========================================================================
 
 function updatePlayerShowLogoState(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s logo state ${toUpperCase(getOnOffFromBool(state))}`);
-    triggerNetworkEvent("vrr.logo", client, state);
+    sendNetworkEventToPlayer("vrr.logo", client, state);
 }
 
 // ===========================================================================
 
 function restorePlayerCamera(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Restoring ${getPlayerDisplayForConsole(client)}'s camera`);
-    triggerNetworkEvent("vrr.restoreCamera", client);
+    sendNetworkEventToPlayer("vrr.restoreCamera", client);
 }
 
 // ===========================================================================
 
 function setPlayer2DRendering(client, hudState = false, labelState = false, smallGameMessageState = false, scoreboardState = false, hotBarState = false, itemActionDelayState = false) {
-	triggerNetworkEvent("vrr.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState);
+	sendNetworkEventToPlayer("vrr.set2DRendering", client, hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState);
 }
 
 // ===========================================================================
 
 function syncPlayerProperties(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to sync ${getPlayerDisplayForConsole(client)}'s player ped properties`);
-    triggerNetworkEvent("vrr.player.sync", null, client.player);
+    sendNetworkEventToPlayer("vrr.player.sync", null, client.player);
 }
 
 // ===========================================================================
@@ -216,7 +217,7 @@ function syncPlayerProperties(client) {
 function updatePlayerSnowState(client) {
     if(isSnowSupported(getServerGame())) {
         logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s snow state (Falling: ${toUpperCase(getOnOffFromBool(getServerConfig().fallingSnow))}, Ground: ${toUpperCase(getOnOffFromBool(getServerConfig().groundSnow))})`);
-        triggerNetworkEvent("vrr.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
+        sendNetworkEventToPlayer("vrr.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
     }
 }
 
@@ -226,7 +227,7 @@ function sendExcludedModelsForGroundSnowToPlayer(client) {
     if(getGameConfig().excludedGroundSnowModels[getServerGame()].length > 0) {
         for(let i in getGameConfig().excludedGroundSnowModels[getServerGame()]) {
             logToConsole(LOG_DEBUG, `[VRR.Misc] Sending excluded model ${i} for ground snow to ${getPlayerName(client)}`);
-            triggerNetworkEvent("vrr.excludeGroundSnow", client, getGameConfig().excludedGroundSnowModels[getServerGame()][i]);
+            sendNetworkEventToPlayer("vrr.excludeGroundSnow", client, getGameConfig().excludedGroundSnowModels[getServerGame()][i]);
         }
     }
 }
@@ -237,7 +238,7 @@ function sendRemovedWorldObjectsToPlayer(client) {
     if(getGameConfig().removedWorldObjects[getServerGame()].length > 0) {
         for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i][0]}) to ${getPlayerName(client)}`);
-            triggerNetworkEvent("vrr.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i][0], getGameConfig().removedWorldObjects[getServerGame()][i][1], getGameConfig().removedWorldObjects[getServerGame()][i][2]);
+            sendNetworkEventToPlayer("vrr.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i][0], getGameConfig().removedWorldObjects[getServerGame()][i][1], getGameConfig().removedWorldObjects[getServerGame()][i][2]);
         }
     }
 	return true;
@@ -263,21 +264,21 @@ function updatePlayerHotBar(client) {
         }
         tempHotBarItems.push([i, itemExists, itemImage, itemValue]);
     }
-    triggerNetworkEvent("vrr.hotbar", client, getPlayerData(client).activeHotBarSlot, tempHotBarItems);
+    sendNetworkEventToPlayer("vrr.hotbar", client, getPlayerData(client).activeHotBarSlot, tempHotBarItems);
 }
 
 // ===========================================================================
 
 function setPlayerWeaponDamageEnabled(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending weapon damage state for ${getPlayerDisplayForConsole(client)} to all players`);
-    triggerNetworkEvent("vrr.weaponDamageEnabled", null, getPlayerName(client), state);
+    sendNetworkEventToPlayer("vrr.weaponDamageEnabled", null, getPlayerName(client), state);
 }
 
 // ===========================================================================
 
 function setPlayerWeaponDamageEvent(client, eventType) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending weapon damage event (${eventType}) for ${getPlayerDisplayForConsole(client)} to all players`);
-    triggerNetworkEvent("vrr.weaponDamageEvent", null, getPlayerName(client), eventType);
+    sendNetworkEventToPlayer("vrr.weaponDamageEvent", null, getPlayerName(client), eventType);
     getPlayerData(client).weaponDamageEvent = eventType;
 }
 
@@ -285,258 +286,272 @@ function setPlayerWeaponDamageEvent(client, eventType) {
 
 function sendJobRouteStopToPlayer(client, position, colour) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending job route stop data to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.showJobRouteStop", client, position, colour);
+    sendNetworkEventToPlayer("vrr.showJobRouteStop", client, position, colour);
 }
 
 // ===========================================================================
 
 function showPlayerChangePasswordGUI(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending change password GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.changePassword", client);
+    sendNetworkEventToPlayer("vrr.changePassword", client);
 }
 
 // ===========================================================================
 
 function showPlayerLoginSuccessGUI(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending login success GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.loginSuccess", client);
+    sendNetworkEventToPlayer("vrr.loginSuccess", client);
 }
 
 // ===========================================================================
 
 function showPlayerLoginFailedGUI(client, errorMessage) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending login failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.loginFailed", client, errorMessage);
+    sendNetworkEventToPlayer("vrr.loginFailed", client, errorMessage);
 }
 
 // ===========================================================================
 
 function showPlayerRegistrationSuccessGUI(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending registration success GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.registrationSuccess", client);
+    sendNetworkEventToPlayer("vrr.registrationSuccess", client);
 }
 
 // ===========================================================================
 
 function showPlayerRegistrationFailedGUI(client, errorMessage) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending registration failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.registrationFailed", client, errorMessage);
+    sendNetworkEventToPlayer("vrr.registrationFailed", client, errorMessage);
 }
 
 // ===========================================================================
 
 function sendPlayerGUIColours(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending GUI colours to ${getPlayerDisplayForConsole(client)}`);
-	triggerNetworkEvent("vrr.guiColour", client, getServerConfig().guiColourPrimary[0], getServerConfig().guiColourPrimary[1], getServerConfig().guiColourPrimary[2], getServerConfig().guiColourSecondary[0], getServerConfig().guiColourSecondary[1], getServerConfig().guiColourSecondary[2], getServerConfig().guiTextColourPrimary[0], getServerConfig().guiTextColourPrimary[1], getServerConfig().guiTextColourPrimary[2]);
+	sendNetworkEventToPlayer("vrr.guiColour", client, getServerConfig().guiColourPrimary[0], getServerConfig().guiColourPrimary[1], getServerConfig().guiColourPrimary[2], getServerConfig().guiColourSecondary[0], getServerConfig().guiColourSecondary[1], getServerConfig().guiColourSecondary[2], getServerConfig().guiTextColourPrimary[0], getServerConfig().guiTextColourPrimary[1], getServerConfig().guiTextColourPrimary[2]);
 }
 
 // ===========================================================================
 
 function sendPlayerGUIInit(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending GUI init signal to ${getPlayerDisplayForConsole(client)}`);
-	triggerNetworkEvent("vrr.guiInit", client);
+	sendNetworkEventToPlayer("vrr.guiInit", client);
 }
 
 // ===========================================================================
 
 function showPlayerLoginGUI(client, errorMessage = "") {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show login GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.showLogin", client);
+    sendNetworkEventToPlayer("vrr.showLogin", client);
 }
 
 // ===========================================================================
 
 function showPlayerRegistrationGUI(client, errorMessage = "") {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show registration GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.showRegistration", client);
+    sendNetworkEventToPlayer("vrr.showRegistration", client);
 }
 
 // ===========================================================================
 
 function showPlayerNewCharacterGUI(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show new character GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.showNewCharacter", client);
+    sendNetworkEventToPlayer("vrr.showNewCharacter", client);
+}
+
+// ===========================================================================
+
+function showPlayerChangePasswordGUI(client, errorMessage = "") {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending show change password GUI signal to ${getPlayerDisplayForConsole(client)}`);
+    sendNetworkEventToPlayer("vrr.showChangePassword", client);
+}
+
+// ===========================================================================
+
+function showPlayerResetPasswordCodeInputGUI(client) {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending show reset password GUI signal to ${getPlayerDisplayForConsole(client)}`);
+    sendNetworkEventToPlayer("vrr.showResetPasswordCodeInput", client);
 }
 
 // ===========================================================================
 
 function showPlayerCharacterSelectGUI(client, firstName, lastName, cash, clan, lastPlayed, skin) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending character select GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.showCharacterSelect", client, firstName, lastName, cash, clan, lastPlayed, skin);
+    sendNetworkEventToPlayer("vrr.showCharacterSelect", client, firstName, lastName, cash, clan, lastPlayed, skin);
 }
 
 // ===========================================================================
 
 function updatePlayerCharacterSelectGUI(client, firstName, lastName, cash, clan, lastPlayed, skin) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending update character select GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.switchCharacterSelect", client, firstName, lastName, cash, clan, lastPlayed, skin);
+    sendNetworkEventToPlayer("vrr.switchCharacterSelect", client, firstName, lastName, cash, clan, lastPlayed, skin);
 }
 
 // ===========================================================================
 
 function showPlayerCharacterSelectSuccessGUI(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending character select success GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.characterSelectSuccess", client);
+    sendNetworkEventToPlayer("vrr.characterSelectSuccess", client);
 }
 
 // ===========================================================================
 
 function showPlayerCharacterSelectFailedGUI(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending character select failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.characterSelectFailed", client);
+    sendNetworkEventToPlayer("vrr.characterSelectFailed", client);
 }
 
 // ===========================================================================
 
 function showPlayerPromptGUI(client, promptMessage, promptTitle) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show prompt GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${promptTitle}, Message: ${promptMessage})`);
-    triggerNetworkEvent("vrr.showPrompt", client, promptMessage, promptTitle);
+    sendNetworkEventToPlayer("vrr.showPrompt", client, promptMessage, promptTitle);
 }
 
 // ===========================================================================
 
 function showPlayerInfoGUI(client, infoMessage, infoTitle) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show info GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${infoTitle}, Message: ${infoMessage})`);
-    triggerNetworkEvent("vrr.showInfo", client, infoMessage, infoTitle);
+    sendNetworkEventToPlayer("vrr.showInfo", client, infoMessage, infoTitle);
 }
 
 // ===========================================================================
 
 function showPlayerErrorGUI(client, errorMessage, errorTitle) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show error GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${errorTitle}, Message: ${errorMessage})`);
-    triggerNetworkEvent("vrr.showInfo", client, errorMessage, errorTitle);
+    sendNetworkEventToPlayer("vrr.showInfo", client, errorMessage, errorTitle);
 }
 
 // ===========================================================================
 
 function sendRunCodeToClient(client, code, returnTo) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending runcode to ${getPlayerDisplayForConsole(client)} (returnTo: ${getPlayerDisplayForConsole(getClientFromIndex(returnTo))}, Code: ${code})`);
-    triggerNetworkEvent("vrr.runCode", client, code, returnTo);
+    sendNetworkEventToPlayer("vrr.runCode", client, code, returnTo);
 }
 
 // ===========================================================================
 
 function sendPlayerWorkingState(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending working state (${toUpperCase(getYesNoFromBool(state))}) to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.working", client, state);
+    sendNetworkEventToPlayer("vrr.working", client, state);
 }
 
 // ===========================================================================
 
 function sendPlayerJobType(client, jobType) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending job type (${jobType}) to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.jobType", client, jobType);
+    sendNetworkEventToPlayer("vrr.jobType", client, jobType);
 }
 
 // ===========================================================================
 
 function sendPlayerStopJobRoute(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to abort job route to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.stopJobRoute", client);
+    sendNetworkEventToPlayer("vrr.stopJobRoute", client);
 }
 
 // ===========================================================================
 
 function sendPlayerMouseCameraToggle(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to toggle mouse camera ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.mouseCamera", client);
+    sendNetworkEventToPlayer("vrr.mouseCamera", client);
 }
 
 // ===========================================================================
 
 function setPlayerMouseCameraState(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to toggle mouse camera ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.mouseCameraForce", client, state);
+    sendNetworkEventToPlayer("vrr.mouseCameraForce", client, state);
 }
 
 // ===========================================================================
 
 function sendPlayerMouseCursorToggle(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to toggle mouse cursor ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.mouseCursor", client);
+    sendNetworkEventToPlayer("vrr.mouseCursor", client);
 }
 
 // ===========================================================================
 
 function sendAddAccountKeyBindToClient(client, key, keyState) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending added keybind to ${getPlayerDisplayForConsole(client)} (Key: ${toUpperCase(getKeyNameFromId(key))}, State: ${(keyState) ? "down" : "up"})`);
-    triggerNetworkEvent("vrr.addKeyBind", client, toInteger(key), (keyState) ? KEYSTATE_DOWN : KEYSTATE_UP);
+    sendNetworkEventToPlayer("vrr.addKeyBind", client, toInteger(key), (keyState) ? KEYSTATE_DOWN : KEYSTATE_UP);
 }
 
 // ===========================================================================
 
 function sendClearKeyBindsToClient(client, key, keyState) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending added keybind to ${getPlayerDisplayForConsole(client)} (Key: ${toUpperCase(getKeyNameFromId(key))}, State: ${(keyState) ? "down" : "up"})`);
-    triggerNetworkEvent("vrr.clearKeyBinds", client);
+    sendNetworkEventToPlayer("vrr.clearKeyBinds", client);
 }
 
 // ===========================================================================
 
 function sendRemoveAccountKeyBindToClient(client, key) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending deleted keybind to ${getPlayerDisplayForConsole(client)} (Key: ${toUpperCase(getKeyNameFromId(key))})`);
-    triggerNetworkEvent("vrr.delKeyBind", client, toInteger(key));
+    sendNetworkEventToPlayer("vrr.delKeyBind", client, toInteger(key));
 }
 
 // ===========================================================================
 
 function sendPlayerSetPosition(client, position) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending set position signal to ${getPlayerDisplayForConsole(client)} (Position: ${position.x}, ${position.y}, ${position.z})`);
-    triggerNetworkEvent("vrr.position", client, position);
+    sendNetworkEventToPlayer("vrr.position", client, position);
 }
 
 // ===========================================================================
 
 function sendPlayerSetHeading(client, heading) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending set heading signal to ${getPlayerDisplayForConsole(client)} (Heading: ${heading})`);
-    triggerNetworkEvent("vrr.heading", client, heading);
+    sendNetworkEventToPlayer("vrr.heading", client, heading);
 }
 
 // ===========================================================================
 
 function sendPlayerSetInterior(client, interior) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending set interior signal to ${getPlayerDisplayForConsole(client)} (Interior: ${interior})`);
-    triggerNetworkEvent("vrr.interior", client, interior);
+    sendNetworkEventToPlayer("vrr.interior", client, interior);
 }
 
 // ===========================================================================
 
 function sendPlayerFrozenState(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending set frozen signal to ${getPlayerDisplayForConsole(client)} (State: ${toUpperCase(getYesNoFromBool(state))})`);
-    triggerNetworkEvent("vrr.frozen", client, state);
+    sendNetworkEventToPlayer("vrr.frozen", client, state);
 }
 
 // ===========================================================================
 
 function givePlayerWeapon(client, weaponId, ammo, active = true) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to give weapon (Weapon: ${weaponId}, Ammo: ${ammo})`);
-    triggerNetworkEvent("vrr.giveWeapon", client, weaponId, ammo, active);
+    sendNetworkEventToPlayer("vrr.giveWeapon", client, weaponId, ammo, active);
 }
 
 // ===========================================================================
 
 function clearPlayerWeapons(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to clear weapons`);
-    triggerNetworkEvent("vrr.clearWeapons", client);
+    sendNetworkEventToPlayer("vrr.clearWeapons", client);
 }
 
 // ===========================================================================
 
 function showPlayerNewCharacterFailedGUI(client, errorMessage) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending new character failed GUI signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.newCharacterFailed", client, errorMessage);
+    sendNetworkEventToPlayer("vrr.newCharacterFailed", client, errorMessage);
 }
 
 // ===========================================================================
 
 function sendPlayerRemoveFromVehicle(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending remove from vehicle signal to ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.removeFromVehicle", client);
+    sendNetworkEventToPlayer("vrr.removeFromVehicle", client);
 }
 
 // ===========================================================================
 
 function sendChatBoxMessageToPlayer(client, message, colour) {
-    triggerNetworkEvent("vrr.m", client, message, colour)
+    sendNetworkEventToPlayer("vrr.m", client, message, colour)
     //messageClient(message, client, colour);
 }
 
@@ -547,7 +562,7 @@ function showPlayerItemTakeDelay(client, itemId) {
         let delay = getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay;
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-            triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
+            sendNetworkEventToPlayer("vrr.showItemActionDelay", client, delay);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item TAKE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
             playerItemActionDelayComplete(client);
@@ -562,7 +577,7 @@ function showPlayerItemUseDelay(client, itemSlot) {
         let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).useDelay;
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-            triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
+            sendNetworkEventToPlayer("vrr.showItemActionDelay", client, delay);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item USE delay to ${getPlayerDisplayForConsole(client)} (instant)`);
             playerItemActionDelayComplete(client);
@@ -577,7 +592,7 @@ function showPlayerItemDropDelay(client, itemSlot) {
         let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).dropDelay;
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-            triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
+            sendNetworkEventToPlayer("vrr.showItemActionDelay", client, delay);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item DROP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
             playerItemActionDelayComplete(client);
@@ -592,7 +607,7 @@ function showPlayerItemPickupDelay(client, itemId) {
         let delay = getItemTypeData(getItemData(itemId).itemTypeIndex).pickupDelay;
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-            triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
+            sendNetworkEventToPlayer("vrr.showItemActionDelay", client, delay);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item PICKUP delay to ${getPlayerDisplayForConsole(client)} (instant)`);
             playerItemActionDelayComplete(client);
@@ -607,7 +622,7 @@ function showPlayerItemPutDelay(client, itemSlot) {
         let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).putDelay;
         if(delay > 0) {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-            triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
+            sendNetworkEventToPlayer("vrr.showItemActionDelay", client, delay);
         } else {
             logToConsole(LOG_DEBUG, `[VRR.Client] Showing item PUT delay to ${getPlayerDisplayForConsole(client)} (instant)`);
             playerItemActionDelayComplete(client);
@@ -623,7 +638,7 @@ function showPlayerItemSwitchDelay(client, itemSlot) {
             let delay = getItemTypeData(getItemData(getPlayerData(client).hotBarItems[itemSlot]).itemTypeIndex).switchDelay;
             if(delay > 0) {
                 logToConsole(LOG_DEBUG, `[VRR.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (${delay} milliseconds)`);
-                triggerNetworkEvent("vrr.showItemActionDelay", client, delay);
+                sendNetworkEventToPlayer("vrr.showItemActionDelay", client, delay);
             } else{
                 logToConsole(LOG_DEBUG, `[VRR.Client] Showing item switch delay to ${getPlayerDisplayForConsole(client)} (instant)`);
                 playerItemActionDelayComplete(client);
@@ -642,14 +657,14 @@ function showPlayerItemSwitchDelay(client, itemSlot) {
 
 function sendPlayerDrunkEffect(client, amount, duration) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Setting drunk effect for ${getPlayerDisplayForConsole(client)} to ${amount} for ${duration} milliseconds`);
-    triggerNetworkEvent("vrr.drunkEffect", client, amount, duration);
+    sendNetworkEventToPlayer("vrr.drunkEffect", client, amount, duration);
 }
 
 // ===========================================================================
 
 function sendPlayerClearPedState(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Clearing ped state for ${getPlayerDisplayForConsole(client)}`);
-    triggerNetworkEvent("vrr.clearPedState", client);
+    sendNetworkEventToPlayer("vrr.clearPedState", client);
 }
 
 // ===========================================================================
@@ -707,13 +722,13 @@ function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, he
 // ===========================================================================
 
 function setPlayerCameraLookAt(client, cameraPosition, lookAtPosition) {
-	triggerNetworkEvent("vrr.cameraLookAt", client, cameraPosition, lookAtPosition);
+	sendNetworkEventToPlayer("vrr.cameraLookAt", client, cameraPosition, lookAtPosition);
 }
 
 // ===========================================================================
 
 function sendTimeMinuteDurationToPlayer(client, minuteDuration) {
-	triggerNetworkEvent("vrr.minuteDuration", client, minuteDuration);
+	sendNetworkEventToPlayer("vrr.minuteDuration", client, minuteDuration);
 }
 
 // ===========================================================================
@@ -744,13 +759,13 @@ function forcePlayerIntoSkinSelect(client) {
         setPlayerDimension(client, client.index+500);
     }
 
-    triggerNetworkEvent("vrr.skinSelect", client, true);
+    sendNetworkEventToPlayer("vrr.skinSelect", client, true);
 }
 
 // ===========================================================================
 
 function updatePlayerCash(client) {
-	triggerNetworkEvent("vrr.money", client, getPlayerCurrentSubAccount(client).cash);
+	sendNetworkEventToPlayer("vrr.money", client, getPlayerCurrentSubAccount(client).cash);
 }
 
 // ===========================================================================
@@ -768,7 +783,7 @@ function sendAllPoliceStationBlips(client) {
 				getColourByName("policeBlue"),
 			]);
 		}
-		triggerNetworkEvent("vrr.blips", client, tempBlips);
+		sendNetworkEventToPlayer("vrr.blips", client, tempBlips);
 	}
 }
 
@@ -787,7 +802,7 @@ function sendAllFireStationBlips(client) {
 				getColourByName("firefighterRed"),
 			]);
 		}
-		triggerNetworkEvent("vrr.blips", client, tempBlips);
+		sendNetworkEventToPlayer("vrr.blips", client, tempBlips);
 	}
 }
 
@@ -806,7 +821,7 @@ function sendAllHospitalBlips(client) {
 				getColourByName("medicPink"),
 			]);
 		}
-		triggerNetworkEvent("vrr.blips", client, tempBlips);
+		sendNetworkEventToPlayer("vrr.blips", client, tempBlips);
 	}
 }
 
@@ -825,7 +840,7 @@ function sendAllAmmunationBlips(client) {
 				0
 			]);
 		}
-		triggerNetworkEvent("vrr.blips", client, tempBlips);
+		sendNetworkEventToPlayer("vrr.blips", client, tempBlips);
 	}
 }
 
@@ -844,7 +859,7 @@ function sendAllPayAndSprayBlips(client) {
 				0
 			]);
 		}
-		triggerNetworkEvent("vrr.blips", client, tempBlips);
+		sendNetworkEventToPlayer("vrr.blips", client, tempBlips);
 	}
 }
 
@@ -863,27 +878,27 @@ function sendAllFuelStationBlips(client) {
 				getColourByName("burntOrange"),
 			]);
 		}
-		triggerNetworkEvent("vrr.blips", client, tempBlips);
+		sendNetworkEventToPlayer("vrr.blips", client, tempBlips);
 	}
 }
 
 // ===========================================================================
 
 function sendPlayerSetHealth(client, health) {
-    triggerNetworkEvent("vrr.health", client, health);
+    sendNetworkEventToPlayer("vrr.health", client, health);
 }
 
 
 // ===========================================================================
 
 function sendPlayerSetArmour(client, armour) {
-    triggerNetworkEvent("vrr.armour", client, armour);
+    sendNetworkEventToPlayer("vrr.armour", client, armour);
 }
 
 // ===========================================================================
 
 function playerFinishedSkinSelection(client, allowedSkinIndex) {
-    triggerNetworkEvent("vrr.skinSelect", client, false);
+    sendNetworkEventToPlayer("vrr.skinSelect", client, false);
     if(allowedSkinIndex == -1) {
         messagePlayerAlert(client, "You canceled the skin change.");
         restorePlayerCamera(client);
@@ -934,28 +949,28 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
 // ===========================================================================
 
 function sendPlayerChatScrollLines(client, amount) {
-    triggerNetworkEvent("vrr.chatScrollLines", client, amount);
+    sendNetworkEventToPlayer("vrr.chatScrollLines", client, amount);
 }
 
 // ===========================================================================
 
 function playRadioStreamForPlayer(client, streamURL, loop = true, volume = 0, element = false) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Forcing ${getPlayerDisplayForConsole(client)} to stream ${streamURL}`);
-    triggerNetworkEvent("vrr.radioStream", client, streamURL, loop, volume, element);
+    sendNetworkEventToPlayer("vrr.radioStream", client, streamURL, loop, volume, element);
 }
 
 // ===========================================================================
 
 function playAudioFileForPlayer(client, audioName, loop = true, volume = 0, element = false) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Forcing ${getPlayerDisplayForConsole(client)} to play audio ${audioName}`);
-    triggerNetworkEvent("vrr.audioFileStream", client, audioName, loop, volume);
+    sendNetworkEventToPlayer("vrr.audioFileStream", client, audioName, loop, volume);
 }
 
 // ===========================================================================
 
 function stopRadioStreamForPlayer(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Forcing ${getPlayerDisplayForConsole(client)} to stop their radio stream`);
-    triggerNetworkEvent("vrr.stopRadioStream", client);
+    sendNetworkEventToPlayer("vrr.stopRadioStream", client);
 }
 
 // ===========================================================================
@@ -963,20 +978,20 @@ function stopRadioStreamForPlayer(client) {
 function setPlayerStreamingRadioVolume(client, volumeLevel, elementId = false) {
     getPlayerData(client).accountData.streamingRadioVolume = volumeLevel;
     getPlayerData(client).streamingRadioElement = elementId;
-    triggerNetworkEvent("vrr.radioVolume", client, volumeLevel, elementId);
+    sendNetworkEventToPlayer("vrr.radioVolume", client, volumeLevel, elementId);
 }
 
 // ===========================================================================
 
 function setVehicleLightsState(vehicle, state) {
 	setEntityData(vehicle, "vrr.lights", getVehicleData(vehicle).lights);
-    triggerNetworkEvent("vrr.veh.lights", null, vehicle.id, state);
+    sendNetworkEventToPlayer("vrr.veh.lights", null, vehicle.id, state);
 }
 
 // ===========================================================================
 
 function sendPlayerEnterPropertyKey(client, key) {
-    triggerNetworkEvent("vrr.enterPropertyKey", client, key);
+    sendNetworkEventToPlayer("vrr.enterPropertyKey", client, key);
 }
 
 // ===========================================================================
@@ -1011,13 +1026,13 @@ function makePedPlayAnimation(ped, animationSlot, positionOffset) {
                 break;
         }
     //}
-    triggerNetworkEvent("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4], animationData[5], positionOffset, freezePlayer);
+    sendNetworkEventToPlayer("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4], animationData[5], positionOffset, freezePlayer);
 }
 
 // ===========================================================================
 
 function makePedStopAnimation(ped) {
-    triggerNetworkEvent("vrr.pedStopAnim", null, ped.id);
+    sendNetworkEventToPlayer("vrr.pedStopAnim", null, ped.id);
 }
 
 // ===========================================================================
@@ -1025,13 +1040,13 @@ function makePedStopAnimation(ped) {
 function forcePedAnimation(ped, animationSlot) {
     let animationData = getAnimationData(animationSlot);
 
-    triggerNetworkEvent("vrr.forcePedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4]);
+    sendNetworkEventToPlayer("vrr.forcePedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4]);
 }
 
 // ===========================================================================
 
 function hideAllPlayerGUI(client) {
-    triggerNetworkEvent("vrr.hideAllGUI", client);
+    sendNetworkEventToPlayer("vrr.hideAllGUI", client);
 }
 
 // ===========================================================================
@@ -1045,44 +1060,44 @@ function setPlayerHeadLookPosition(client, position) {
 // ===========================================================================
 
 function sendPlayerGameScriptState(client, scriptName, state) {
-    triggerNetworkEvent("vrr.gameScript", client, scriptName, state);
+    sendNetworkEventToPlayer("vrr.gameScript", client, scriptName, state);
 }
 
 // ===========================================================================
 
 function requestClientInfo(client) {
-    triggerNetworkEvent("vrr.clientInfo", client);
+    sendNetworkEventToPlayer("vrr.clientInfo", client);
 }
 
 // ===========================================================================
 
 function updateInteriorLightsForPlayer(client, state) {
-    triggerNetworkEvent("vrr.interiorLights", client, state);
+    sendNetworkEventToPlayer("vrr.interiorLights", client, state);
 }
 
 // ===========================================================================
 
 function forcePlayerToSyncElementProperties(client, element) {
-    triggerNetworkEvent("vrr.syncElement", client, element.id);
+    sendNetworkEventToPlayer("vrr.syncElement", client, element.id);
 }
 
 // ===========================================================================
 
 function sendPlayerPedPartsAndProps(client) {
-    triggerNetworkEvent("vrr.ped")
+    sendNetworkEventToPlayer("vrr.ped")
 }
 
 // ===========================================================================
 
 function setPlayerVanillaRadioStation(client, radioStationId) {
-    triggerNetworkEvent("vrr.vanillaRadio", client, radioStationId);
+    sendNetworkEventToPlayer("vrr.vanillaRadio", client, radioStationId);
     return true;
 }
 
 // ===========================================================================
 
 function forcePlayerWantedLevel(client, wantedLevel) {
-    triggerNetworkEvent("vrr.wantedLevel", client, wantedLevel);
+    sendNetworkEventToPlayer("vrr.wantedLevel", client, wantedLevel);
     return true;
 }
 

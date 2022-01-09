@@ -74,3 +74,34 @@ function initListGUI() {
 }
 
 // ===========================================================================
+
+function showListGUI() {
+	closeAllWindows();
+	logToConsole(LOG_DEBUG, `[VRR.GUI] Showing login window`);
+	setChatWindowEnabled(false);
+	mexui.setInput(true);
+	listDialog.window.shown = true;
+	guiSubmitKey = checkListDialogSelection;
+	guiUpKey = selectPreviousListItem;
+	guiDownKey = selectNextListItem;
+}
+
+// ===========================================================================
+
+function checkListDialogSelection() {
+
+}
+
+// ===========================================================================
+
+function selectPreviousListItem() {
+
+}
+
+// ===========================================================================
+
+function selectNextListItem() {
+
+}
+
+// ===========================================================================

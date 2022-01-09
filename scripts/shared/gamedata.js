@@ -3177,7 +3177,7 @@ let gameData = {
             ["sitright", 0, 111, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_RIGHT],
             ["sitforward", 0, 111, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_FORWARD],
             ["sitarmright", 0, 120, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_BACK],
-            ["tazed", 0, 13, VRR_ANIMTYPE_FREEZE, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
+            ["tazed", 0, 13, VRR_ANIMTYPE_FORCED, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 		],
 		[ // GTA VC
 			["walk", 0, 0, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],

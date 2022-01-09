@@ -113,3 +113,15 @@ function playerPromptAnswerNoCommand(command, params, client) {
 }
 
 // ===========================================================================
+
+function playerToggledGUI(client) {
+    toggleAccountGUICommand("gui", "", client);
+}
+
+// ===========================================================================
+
+function showPlayerChangePasswordGUI(client) {
+    sendNetworkEventToPlayer("vrr.changePassword", client);
+}
+
+// ===========================================================================

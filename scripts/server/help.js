@@ -190,7 +190,7 @@ function helpCommand(command, params, client) {
 // ===========================================================================
 
 function showMainHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Help {clanOrange}=================================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use /help <category> for commands and info. Example: {ALTCOLOUR}/help vehicle`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Help Categories: [#A9A9A9]account, command, vehicle, job, chat, rules, website, anim`);
     messagePlayerNormal(client, `{clanOrange}• [#A9A9A9]ammunation, skins, mechanic, dealership, discord, colours, keys`);
@@ -199,7 +199,7 @@ function showMainHelpMessage(client) {
 // ===========================================================================
 
 function showAccountHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Account Help {clanOrange}=============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderAccountHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Do not share your password with anybody else.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/changepass{MAINCOLOUR} to change your password.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Some settings you can use: {ALTCOLOUR}/gui, /logo, /iplogin, /autolastchar, /2fa, /loginalert`);
@@ -208,7 +208,7 @@ function showAccountHelpMessage(client) {
 // ===========================================================================
 
 function showVehicleHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Vehicle Help {clanOrange}=============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderVehicleHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit dealerships to buy new vehicles (Use {ALTCOLOUR}/help dealership {MAINCOLOUR}for more info.)`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Some commands: {ALTCOLOUR}/lock, /engine, /lights, /trunk, /rentveh, /buyveh, /rentprice, /buyprice`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your personal vehicles will save wherever you or somebody else leaves them!`);
@@ -219,7 +219,7 @@ function showVehicleHelpMessage(client) {
 // ===========================================================================
 
 function showVehicleDealershipHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Vehicle Dealerships {clanOrange}======================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderVehicleDealershipHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit a vehicle dealer to buy new vehicles. Use {ALTCOLOUR}/gps {MAINCOLOUR}to find one.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}At the dealer, simply enter a car you want to buy, and the price will be shown to you`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}If you want to buy the vehicle and have enough money, use {ALTCOLOUR}/buyveh {MAINCOLOUR}and you will be given keys`);
@@ -229,7 +229,7 @@ function showVehicleDealershipHelpMessage(client) {
 // ===========================================================================
 
 function showJobHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Job Help {clanOrange}=================================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderJobHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit job locations get a job and earn money. Look for yellow spots on the map`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}At a job location, use {ALTCOLOUR}/takejob {MAINCOLOUR}to get the job. Use {ALTCOLOUR}/quitjob {MAINCOLOUR}to quit your job`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/startwork {MAINCOLOUR}to begin working. You can also get a job {ALTCOLOUR}/uniform and {ALTCOLOUR}/equipment`);
@@ -240,7 +240,7 @@ function showJobHelpMessage(client) {
 // ===========================================================================
 
 function showChatHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Chat Help {clanOrange}================================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderChatHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}There are two main types of chat: out-of-character (OOC) and in-character (IC)`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Mixing these two types is not proper roleplay. See {ALTCOLOUR}/rules {MAINCOLOUR}for info.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Some chat commands: {ALTCOLOUR}/dm /whisper /talk /shout /me.`);
@@ -250,7 +250,7 @@ function showChatHelpMessage(client) {
 // ===========================================================================
 
 function showRulesHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Server Rules {clanOrange}=============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderServerRulesList")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Unrealistic actions (powergaming) are not allowed. You aren't superman.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}No terrorist or terrorism roleplay is allowed.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Always follow instructions given by moderators and admins.`);
@@ -261,21 +261,21 @@ function showRulesHelpMessage(client) {
 // ===========================================================================
 
 function showWebsiteHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Website {clanOrange}=============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderWebsiteInfo")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${server.getRule("Website")}`);
 }
 
 // ===========================================================================
 
 function showDiscordHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Discord {clanOrange}=============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderDiscordInfo")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${server.getRule("Website")}`);
 }
 
 // ===========================================================================
 
 function showAnimationHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Animations {clanOrange}===============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderAnimationHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Animations allow you to enhance roleplay with visual actions`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/an {MAINCOLOUR}or {ALTCOLOUR}/anim {MAINCOLOUR}with a name to use an animation.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}To see a list of animations, use {ALTCOLOUR}/animlist`);
@@ -284,7 +284,7 @@ function showAnimationHelpMessage(client) {
 // ===========================================================================
 
 function showAmmunationHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Ammunation {clanOrange}===============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderAmmunationHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit an ammunation to buy weapons. Use {ALTCOLOUR}/gps {MAINCOLOUR}to find one.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Buying a weapon requires a weapon license.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Weapon licenses are managed by the police department. Apply there to get one.`);
@@ -294,7 +294,7 @@ function showAmmunationHelpMessage(client) {
 // ===========================================================================
 
 function showClothesHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clothes {clanOrange}==================================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderSkinHelp")));
     //messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}To change your skin, use {ALTCOLOUR}/gps {MAINCOLOUR}to find a clothing store`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}At a clothing store, use {ALTCOLOUR}/buy {MAINCOLOUR} to purchase clothes`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}When you have a clothing item, equip and use it like any other item to show the skin selection (check {ALTCOLOUR}/help items {MAINCOLOUR}to learn how to use items)`);
@@ -304,7 +304,7 @@ function showClothesHelpMessage(client) {
 // ===========================================================================
 
 function showBindKeysHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Bindable Keys {clanOrange}============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderBindableKeysHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}You can set your own keys binds. Use {ALTCOLOUR}/keybinds {MAINCOLOUR}to see your binded keys.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/bindkey {MAINCOLOUR}to add a new keybind and /unbindkey to remove one.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Default keys are: [#0066FF]K {MAINCOLOUR}for vehicle engine, [#0066FF]L {MAINCOLOUR}for lights, and [#0066FF]J {MAINCOLOUR}for lock/unlock`);
@@ -317,17 +317,17 @@ function showBindKeysHelpMessage(client) {
 // ===========================================================================
 
 function showBusinessHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Business {clanOrange}=================================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderBusinessHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use /buy to purchase items or /bizitems to see a list of what's for sale at any business`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Businesses are shown with blue names above the icon at their entrance.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Business owner commands: {ALTCOLOUR}/bizorder, /biz`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Business owner commands: {ALTCOLOUR}/bizorder, /bizlock, /bizlights, /radiostation, /bizitemprice, /bizbuyprice, /bizfee, /biztill, /bizwithdraw, /bizdeposit`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}A new car for sale will appear when you drive away from the dealer.`);
 }
 
 // ===========================================================================
 
 function showClanHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Clan {clanOrange}================================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderClanHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Ask an admin to create a clan (Similar to factions/groups/families)`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Clan owners have full control over their clan once it's created`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Clan commands: {ALTCOLOUR}/clan, /clanmotd, /clanname, /clanowner, /clanhouse, /clanbiz, /claninvite, /clanuninvite, /clansetrank`);
@@ -337,8 +337,8 @@ function showClanHelpMessage(client) {
 // ===========================================================================
 
 function showRadioHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Radio {clanOrange}===============================`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostations {MAINCOLOUR}to set the station for your vehicle, house, or business`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderRadioHelp")));
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostation {MAINCOLOUR}to set the station for your vehicle, house, or business`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostations {MAINCOLOUR}to see a list of stations`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}You can change your radio streaming volume using {ALTCOLOUR}/radiovolume {MAINCOLOUR}with 0-100 as the percent.`);
 }
@@ -346,7 +346,7 @@ function showRadioHelpMessage(client) {
 // ===========================================================================
 
 function showWealthAndTaxHelpMessage(client) {
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Wealth and Tax {clanOrange}===========================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderWealthAndTax")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your taxes on payday are ${100*getGlobalConfig().economy.incomeTaxRate}% of your calculated wealth.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your calculated wealth is a total sum based on how many vehicles, houses, and businesses you have.`);
 	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Each vehicle is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle}, {MAINCOLOUR}each house is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerHouse}, {MAINCOLOUR}and each business is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness}`);
@@ -371,7 +371,7 @@ function showCommandHelpMessage(client, commandName) {
     let command = getCommandData(commandName);
     let aliases = getCommandAliasesNames(command);
 
-    messagePlayerInfo(client, `{clanOrange}== {jobYellow}Command Info {clanOrange}=============================`);
+    messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderCommandInfo", commandName)));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Description: ${command.description}`);
 
     if(aliases.length > 0) {

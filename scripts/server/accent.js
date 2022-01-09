@@ -59,9 +59,9 @@ function setAccentCommand(command, params, client) {
 // ===========================================================================
 
 function listAccentsCommand(command, params, client) {
-	let stationList = getGlobalConfig().accents;
+	let accentList = getGlobalConfig().accents;
 
-	let chunkedList = splitArrayIntoChunks(stationList, 8);
+	let chunkedList = splitArrayIntoChunks(accentList, 8);
 
 	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Accents {clanOrange}==================================`);
 

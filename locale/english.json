@@ -92,6 +92,7 @@
     "HeaderCommandInfo": "Command Information ({1})",
     "HeaderRadioHelp": "Radio Help",
     "HeaderRadioStationsList": "Radio Stations",
+    "HeaderKeyBindsList": "Key Binds List",
     "RadioVolumeChanged": "{1} You changed your streaming radio volume to {2}%",
     "VolumeLevelNotNumber": "The volume level must a number",
     "RadioStationLocationInvalid": "You must be in a vehicle, house, or business or have a personal device to change the station!",
@@ -99,5 +100,7 @@
     "ActionHouseRadioStationChange": "changes the house radio station to {1} ({2})",
     "ActionVehicleRadioStationChange": "changes the vehicle radio station to {1} ({2})",
     "ActionItemRadioStationChange": "changes the {1}'s station to {2} ({3})",
-    "RandomVehicleCommandsDisabled": "This is a random traffic vehicle and commands can't be used for it."
+    "RandomVehicleCommandsDisabled": "This is a random traffic vehicle and commands can't be used for it.",
+    "HouseDoorLock": "House {1} {2}!",
+    "BusinessDoorLock": "Business {1} {2}!"
 }

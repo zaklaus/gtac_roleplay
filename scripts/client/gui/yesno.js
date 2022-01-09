@@ -48,7 +48,7 @@ function initYesNoDialogGUI() {
         },
     });
 
-    yesNoDialog.yesButton = yesNoDialog.window.button(5, 105, 197, 30, 'YES', {
+    yesNoDialog.yesButton = yesNoDialog.window.button(5, 100, 197, 25, 'YES', {
         main: {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
@@ -61,7 +61,7 @@ function initYesNoDialogGUI() {
         },
     }, yesNoDialogAnswerYes);
 
-    yesNoDialog.noButton = yesNoDialog.window.button(207, 105, 197, 30, 'NO', {
+    yesNoDialog.noButton = yesNoDialog.window.button(202, 105, 197, 25, 'NO', {
         main: {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
@@ -90,7 +90,7 @@ function showYesNoPromptGUI(promptMessage, promptTitle) {
 
 function yesNoDialogAnswerNo() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Responding with answer NO to server prompt`);
-	triggerNetworkEvent("vrr.promptAnswerNo");
+	sendNetworkEventToServer("vrr.promptAnswerNo");
 	closeAllWindows();
 }
 
@@ -98,7 +98,7 @@ function yesNoDialogAnswerNo() {
 
 function yesNoDialogAnswerYes() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Responding with answer YES to server prompt`);
-	triggerNetworkEvent("vrr.promptAnswerYes");
+	sendNetworkEventToServer("vrr.promptAnswerYes");
 	closeAllWindows();
 }
 

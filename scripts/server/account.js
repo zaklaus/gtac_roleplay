@@ -945,14 +945,15 @@ function checkAccountResetPasswordRequest(client, inputText) {
 			return false;
 		}
 
-		let passwordResetCode = generateEmailVerificationCode();
+		let passwordResetCode = toUpperCase(generateEmailVerificationCode());
 		getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_CODEINPUT;
 		getPlayerData(client).passwordResetCode = passwordResetCode;
-		sendPasswordResetEmail(getPlayerData(client).accountData.emailAddress, passwordResetCode);
+		sendPasswordResetEmail(client, passwordResetCode);
+		showPlayerResetPasswordCodeInputGUI(client);
 	} else if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_CODEINPUT) {
-		if(getPlayerData(client).passwordResetCode == inputText) {
+		if(getPlayerData(client).passwordResetCode == toUpperCase(inputText)) {
 			getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_SETPASS;
-			showChangePasswordGUI(client);
+			showPlayerChangePasswordGUI(client);
 		} else {
 			getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
 			client.disconnect();
@@ -964,7 +965,7 @@ function checkAccountResetPasswordRequest(client, inputText) {
 
 // ===========================================================================
 
-function checkAccountChangePassword(client, oldPassword, newPassword, confirmNewPassword) {
+function checkAccountChangePassword(client, newPassword, confirmNewPassword) {
 	if(!isPlayerLoggedIn(client)) {
 		if(getPlayerData(client).passwordResetState != VRR_RESETPASS_STATE_SETPASS) {
 			//getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
@@ -973,24 +974,29 @@ function checkAccountChangePassword(client, oldPassword, newPassword, confirmNew
 		}
 	}
 
-	if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), oldPassword))) {
-		messagePlayerError(client, `The old password is incorrect!`);
-		return false;
-	}
+	//if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), oldPassword))) {
+	//	messagePlayerError(client, `The old password is incorrect!`);
+	//	return false;
+	//}
 
 	if(!doesPasswordMeetRequirements(newPassword)) {
-		messagePlayerError(client, `The new password must meet the requirements!`);
-		messagePlayerInfo(client, `Passwords must have at least one capital letter, one lowercase letter, and one number!`);
+		let passwordRequirementsString = `${needsCapitals}, ${needsNumbers}, ${needsSymbols}`;
+		let needsCapitals = getLocaleString(client, "PasswordNeedsCapitals", "1");
+		let needsNumbers = getLocaleString(client, "PasswordNeedsNumbers", "1");
+		let needsSymbols = getLocaleString(client, "PasswordNeedsSymbols", "1");
+
+		messagePlayerError(client, getLocaleString(client, "AccountPasswordNeedsImproved"));
+		messagePlayerInfo(client, getLocaleString(client, "PasswordNeedsBase", passwordRequirementsString));
 		return false;
 	}
 
 	if(newPassword != confirmNewPassword) {
-		messagePlayerError(client, `The new password and confirm new password aren't the same!`);
+		messagePlayerError(client, getLocaleString(client, "PasswordsDontMatch"));
 		return false;
 	}
 
 	getPlayerData(client).accountData.password = hashAccountPassword(getPlayerData(client).accountData.name, params);
-	messagePlayerSuccess(client, `Your password has been changed!`);
+	messagePlayerSuccess(client, getLocaleString(client, "PasswordChanged"));
 
 	if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_SETPASS) {
 		getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
@@ -1079,12 +1085,10 @@ function initClient(client) {
 			let sessionId = saveConnectionToDatabase(client);
 			getServerData().clients[client.index].session = sessionId;
 			getServerData().clients[client.index].connectTime = Math.ceil(sdl.ticks);
-			getServerData().clients[client.index].keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
-			sendAccountKeyBindsToClient(client);
 
 			if(tempAccountData != false) {
 				if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {
-					messagePlayerAlert(client, "You have been automatically logged in via IP!");
+					messagePlayerAlert(client, getLocaleString(client, "AutoLoggedInIP"));
 					loginSuccess(client);
 				} else {
 					if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
@@ -1092,7 +1096,7 @@ function initClient(client) {
 						showPlayerLoginGUI(client);
 					} else {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
-						messagePlayerNormal(client, `Welcome back to ${getServerName()}, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
+						messagePlayerNormal(client, getLocaleString(client, "WelcomeBack", getServerName(), getPlayerName(client)), getColourByName("softGreen"));
 					}
 					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 				}
@@ -1102,10 +1106,13 @@ function initClient(client) {
 					showPlayerRegistrationGUI(client);
 				} else {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
-					messagePlayerNormal(client, `Welcome to ${getServerName()}, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
+					messagePlayerNormal(client, getLocaleString(client, "WelcomeNewPlayer", getServerName(), getPlayerName(client)), getColourByName("softGreen"));
 				}
 				playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 			}
+
+			getServerData().clients[client.index].keyBinds = loadAccountKeybindsFromDatabase(getServerData().clients[client.index].accountData.databaseId);
+			sendAccountKeyBindsToClient(client);
 		}
 	}, 2500);
 }
@@ -1152,7 +1159,7 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 		tempAccountKeybinds.push(tempKeyBindData);
 	}
 
-	if(accountDatabaseID != 0) {
+	if(accountDatabaseID != 0 && typeof accountDatabaseId != "undefined") {
 		if(dbConnection) {
 			dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID} AND acct_hotkey_server = ${getServerId()}`);
 			if(dbQuery) {

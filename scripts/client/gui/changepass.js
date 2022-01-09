@@ -13,7 +13,6 @@ let passwordChange = {
 	messageLabel: null,
 	passwordInput: null,
 	confirmPasswordInput: null,
-	verificationCodeInput: null,
 	submitButton: null,
 };
 
@@ -40,13 +39,13 @@ function initChangePasswordGUI() {
 	passwordChange.window.titleBarIconSize = toVector2(0,0);
 	passwordChange.window.titleBarHeight = 0;
 
-	passwordChange.window.image(115, 10, 65, 65, mainLogoPath, {
+	passwordChange.window.image(85, -10, 140, 140, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},
 	});
 
-	passwordChange.messageLabel = passwordChange.window.text(20, 75, 260, 20, 'Check your email for a verification code!', {
+	passwordChange.messageLabel = passwordChange.window.text(20, 75, 260, 20, 'Enter a new password', {
 		main: {
 			textSize: 10.0,
 			textAlign: 0.5,
@@ -58,7 +57,7 @@ function initChangePasswordGUI() {
 		},
 	});
 
-	passwordChange.passwordInput = passwordChange.window.textInput(20, 100, 260, 25, '', {
+	passwordChange.passwordInput = passwordChange.window.textInput(20, 130, 260, 25, '', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 255),
@@ -78,7 +77,7 @@ function initChangePasswordGUI() {
 	passwordChange.passwordInput.masked = true;
 	passwordChange.passwordInput.placeholder = "Password";
 
-	passwordChange.confirmPasswordInput = passwordChange.window.textInput(20, 130, 260, 25, '', {
+	passwordChange.confirmPasswordInput = passwordChange.window.textInput(20, 160, 260, 25, '', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 255),
@@ -97,25 +96,6 @@ function initChangePasswordGUI() {
 	});
 	passwordChange.confirmPasswordInput.masked = true;
 	passwordChange.confirmPasswordInput.placeholder = "Confirm password";
-
-	passwordChange.verificationCodeInput = passwordChange.window.textInput(20, 160, 260, 25, '', {
-		main: {
-			backgroundColour: toColour(0, 0, 0, 120),
-			textColour: toColour(200, 200, 200, 255),
-			textSize: 10.0,
-			textFont: robotoFont,
-		},
-		caret: {
-			lineColour: toColour(255, 255, 255, 255),
-		},
-		placeholder: {
-			backgroundColour: toColour(0, 0, 0, 120),
-			textColour: toColour(200, 200, 200, 200),
-			textSize: 10.0,
-			textFont: robotoFont,
-		}
-	});
-	passwordChange.verificationCodeInput.placeholder = "Verification Code (From Email)";
 
 	passwordChange.submitButton = passwordChange.window.button(20, 195, 260, 30, 'CHANGE PASSWORD', {
 		main: {
@@ -147,7 +127,7 @@ function passwordChangeFailed(errorMessage) {
 
 function checkChangePassword() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking password change with server ...`);
-	triggerNetworkEvent("vrr.checkChangePassword", passwordChange.passwordInput.lines[0], passwordChange.confirmPasswordInput.lines[0], passwordChange.verificationCodeInput.lines[0]);
+	sendNetworkEventToServer("vrr.checkChangePassword", passwordChange.passwordInput.lines[0], passwordChange.confirmPasswordInput.lines[0]);
 }
 
 // ===========================================================================

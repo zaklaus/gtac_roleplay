@@ -866,3 +866,15 @@ function splitArrayIntoChunks(originalArray, perChunk) {
 }
 
 // ===========================================================================
+
+function intToBool(intVal) {
+	return (intVal == 1) ? true : false;
+}
+
+// ===========================================================================
+
+function boolToInt(boolVal) {
+	return (boolVal) ? 1 : 0;
+}
+
+// ===========================================================================

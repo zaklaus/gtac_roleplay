@@ -26,17 +26,19 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
             transitionTime: 500,
         },
-		title: {
-			textSize: 0.0,
-			textColour: toColour(0, 0, 0, 0),
-		},
-		icon: {
-			textSize: 0.0,
-			textColour: toColour(0, 0, 0, 0),
-		},
+        title: {
+            textSize: 0.0,
+            textColour: toColour(0, 0, 0, 0),
+            backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+        },
+        icon: {
+            textSize: 0.0,
+            textColour: toColour(0, 0, 0, 0),
+            backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
+        }
     });
     newCharacter.window.titleBarIconSize = toVector2(0,0);
-    newCharacter.window.titleBarHeight = 0;
+    //newCharacter.window.titleBarHeight = 0;
 
     newCharacter.mainLogoImage = newCharacter.window.image(115, 10, 65, 65, mainLogoPath, {
         focused: {
@@ -141,7 +143,7 @@ function checkNewCharacter() {
 		return false;
 	}
 
-	triggerNetworkEvent("vrr.checkNewCharacter",
+	sendNetworkEventToServer("vrr.checkNewCharacter",
 		newCharacter.firstNameInput.lines[0],
 		newCharacter.lastNameInput.lines[0],
 	);

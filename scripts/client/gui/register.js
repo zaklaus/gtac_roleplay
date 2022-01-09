@@ -21,7 +21,7 @@ let register = {
 
 function initRegisterGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating register GUI ...`);
-	register.window = mexui.window(game.width/2-130, game.height/2-125, 300, 250, 'Register', {
+	register.window = mexui.window(game.width/2-150, game.height/2-150, 300, 300, 'Register', {
 		main: {
 			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 			transitionTime: 500,
@@ -40,13 +40,13 @@ function initRegisterGUI() {
 	register.window.titleBarIconSize = toVector2(0,0);
 	register.window.titleBarHeight = 0;
 
-	register.window.image(115, 10, 65, 65, mainLogoPath, {
+	register.window.image(85, -10, 140, 140, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},
 	});
 
-	register.messageLabel = register.window.text(20, 75, 260, 20, 'Create an account', {
+	register.messageLabel = register.window.text(20, 125, 260, 20, 'Create an account', {
 		main: {
 			textSize: 10.0,
 			textAlign: 0.5,
@@ -58,7 +58,7 @@ function initRegisterGUI() {
 		},
 	});
 
-	register.passwordInput = register.window.textInput(20, 100, 260, 25, '', {
+	register.passwordInput = register.window.textInput(20, 150, 260, 25, '', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 255),
@@ -78,7 +78,7 @@ function initRegisterGUI() {
 	register.passwordInput.masked = true;
 	register.passwordInput.placeholder = "Password";
 
-	register.confirmPasswordInput = register.window.textInput(20, 130, 260, 25, '', {
+	register.confirmPasswordInput = register.window.textInput(20, 180, 260, 25, '', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 255),
@@ -98,7 +98,7 @@ function initRegisterGUI() {
 	register.confirmPasswordInput.masked = true;
 	register.confirmPasswordInput.placeholder = "Confirm password";
 
-	register.emailInput = register.window.textInput(20, 160, 260, 25, '', {
+	register.emailInput = register.window.textInput(20, 210, 260, 25, '', {
 		main: {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 255),
@@ -117,7 +117,7 @@ function initRegisterGUI() {
 	});
 	register.emailInput.placeholder = "Email";
 
-	register.registerButton = register.window.button(20, 195, 260, 30, 'CREATE ACCOUNT', {
+	register.registerButton = register.window.button(20, 245, 260, 30, 'CREATE ACCOUNT', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(255, 255, 255, 255),
@@ -147,7 +147,7 @@ function registrationFailed(errorMessage) {
 
 function checkRegistration() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking registration with server ...`);
-	triggerNetworkEvent("vrr.checkRegistration", register.passwordInput.lines[0], register.confirmPasswordInput.lines[0], register.emailInput.lines[0]);
+	sendNetworkEventToServer("vrr.checkRegistration", register.passwordInput.lines[0], register.confirmPasswordInput.lines[0], register.emailInput.lines[0]);
 }
 
 // ===========================================================================
@@ -160,7 +160,7 @@ function showRegistrationGUI() {
 	register.window.shown = true;
 	mexui.focusedControl = register.passwordInput;
 	guiSubmitKey = checkRegistration;
-	showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
+	//showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
 }
 
 // ===========================================================================

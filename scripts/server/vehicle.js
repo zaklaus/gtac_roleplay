@@ -260,7 +260,7 @@ function vehicleLockCommand(command, params, client) {
 	}
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -297,7 +297,7 @@ function vehicleTrunkCommand(command, params, client) {
 	}
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -324,7 +324,7 @@ function vehicleLightsCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -410,7 +410,7 @@ function vehicleSirenCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -448,7 +448,7 @@ function vehicleAdminColourCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -491,7 +491,7 @@ function vehicleAdminRepairCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -526,7 +526,7 @@ function vehicleAdminLiveryCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -567,7 +567,7 @@ function buyVehicleCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -602,7 +602,7 @@ function rentVehicleCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -648,7 +648,7 @@ function rentVehicleCommand(command, params, client) {
 // ===========================================================================
 
 function enterVehicleAsPassengerCommand(command, params, client) {
-	triggerNetworkEvent("vrr.passenger", client);
+	sendNetworkEventToPlayer("vrr.passenger", client);
 }
 
 // ===========================================================================
@@ -791,7 +791,7 @@ function setVehicleRankCommand(command, params, client) {
 	if(getVehicleData(vehicle).ownerType == VRR_VEHOWNER_CLAN) {
 		rankId = getClanRankFromParams(getVehicleData(vehicle).ownerId, params);
 		if(!getClanRankData(getVehicleData(vehicle).ownerId, rankId)) {
-			messagePlayerError(client, "Clan rank not found!");
+			messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 			return false;
 		}
 		getVehicleData(vehicle).rank = getClanRankData(getVehicleData(vehicle).ownerId, rankId).databaseId;

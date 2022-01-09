@@ -544,7 +544,7 @@ function playerInteriorCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(splitParams[0]);
 	if(!targetClient) {
-		messagePlayerError(client, "Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
@@ -569,7 +569,7 @@ function playerVirtualWorldCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(splitParams[0]);
 	if(!targetClient) {
-		messagePlayerError(client, "Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 

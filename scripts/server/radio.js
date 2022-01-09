@@ -48,16 +48,16 @@ function playStreamingRadioCommand(command, params, client) {
 		return false;
 	}
 
-	let radioStationId = params;
+	let radioStationId = getRadioStationFromParams(params);
 
 	if(radioStationId != 0 && typeof getServerData().radioStations[radioStationId-1] == "undefined") {
-		messagePlayerError(client, "That radio station ID does not exist!");
+		messagePlayerError(client, getLocaleString(client, "InvalidRadioStation"));
 		return false;
 	}
 
 	if(isPlayerInAnyVehicle(client)) {
 		if(!getVehicleData(getPlayerVehicle(client))) {
-			messagePlayerError(client, "This is a random traffic vehicle and commands can't be used for it.");
+			messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 			return false;
 		}
 
@@ -77,7 +77,7 @@ function playStreamingRadioCommand(command, params, client) {
 
 		getVehicleData(getPlayerVehicle(client)).streamingRadioStation = radioStationId-1;
 		getPlayerData(client).streamingRadioStation = radioStationId-1;
-		meActionToNearbyPlayers(client, `changes their vehicle's radio station to ${getRadioStationData(radioStationId-1).name} (${getRadioStationData(radioStationId-1).genre})`);
+		meActionToNearbyPlayers(client, getLocaleString(client, "ActionVehicleRadioStationChange", getRadioStationData(radioStationId-1).name, getRadioStationData(radioStationId-1).genre));
 
 		let clients = getClients();
 		for(let i in clients) {
@@ -103,7 +103,7 @@ function playStreamingRadioCommand(command, params, client) {
 			} else {
 				getHouseData(houseId).streamingRadioStation = radioStationId-1;
 				getPlayerData(client).streamingRadioStation = radioStationId-1;
-				meActionToNearbyPlayers(client, `changes their house radio station to ${getRadioStationData(radioStationId-1).name} (${getRadioStationData(radioStationId-1).genre})`);
+				meActionToNearbyPlayers(client, getLocaleString(client, "ActionHouseRadioStationChange", getRadioStationData(radioStationId-1).name, getRadioStationData(radioStationId-1).genre));
 
 				let clients = getClients();
 				for(let i in clients) {
@@ -129,7 +129,7 @@ function playStreamingRadioCommand(command, params, client) {
 			} else {
 				getBusinessData(businessId).streamingRadioStation = radioStationId-1;
 				getPlayerData(client).streamingRadioStation = radioStationId-1;
-				meActionToNearbyPlayers(client, `changes the business radio station to ${getRadioStationData(radioStationId-1).name} (${getRadioStationData(radioStationId-1).genre})`);
+				meActionToNearbyPlayers(client, getLocaleString(client, "ActionBusinessRadioStationChange", getRadioStationData(radioStationId-1).name, getRadioStationData(radioStationId-1).genre));
 
 				let clients = getClients();
 				for(let i in clients) {
@@ -140,7 +140,7 @@ function playStreamingRadioCommand(command, params, client) {
 				}
 			}
 		} else {
-			messagePlayerError(client, "You need to be in a vehicle, business, or house to set it's radio station!");
+			messagePlayerError(client, getLocaleString(client, "RadioStationLocationInvalid"));
 			return false;
 		}
 	}
@@ -157,7 +157,7 @@ function setStreamingRadioVolumeCommand(command, params, client) {
 	let volumeLevel = params;
 
 	if(isNaN(volumeLevel)) {
-		messagePlayerError(client, "Volume level must a number");
+		messagePlayerError(client, getLocaleString(client, "RadioVolumeNotNumber"));
 		return false;
 	}
 
@@ -165,16 +165,16 @@ function setStreamingRadioVolumeCommand(command, params, client) {
 	getPlayerData(client).accountData.streamingRadioVolume = toInteger(volumeLevel);
 	let volumeEmoji = '';
 	if(volumeLevel >= 60) {
-		volumeEmoji = '🔊 ';
+		volumeEmoji = '🔊';
 	} else if(volumeLevel >= 30 && volumeLevel < 60) {
-		volumeEmoji = '🔉 ';
+		volumeEmoji = '🔉';
 	} else if(volumeLevel > 0 && volumeLevel < 30) {
-		volumeEmoji = '🔈 ';
+		volumeEmoji = '🔈';
 	} else if(volumeLevel <= 0) {
-		volumeEmoji = '🔇 ';
+		volumeEmoji = '🔇';
 	}
 
-	messagePlayerSuccess(client, `${volumeEmoji}You set your streaming radio volume to ${volumeLevel}%`);
+	messagePlayerSuccess(client, getLocaleString(client, "RadioVolumeChanged", volumeEmoji, volumeLevel));
 }
 
 // ===========================================================================
@@ -193,7 +193,7 @@ function showRadioStationListCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(stationList, 4);
 
-	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Radio Stations {clanOrange}===========================`);
+	messagePlayerNormal(client, makeChatSectionHeader(getLocaleString(client, "HeaderRadioStationsList")));
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));

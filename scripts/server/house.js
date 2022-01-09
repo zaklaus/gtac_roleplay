@@ -253,7 +253,7 @@ function setHouseClanCommand(command, params, client) {
 	let clanId = getPlayerClan(params);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -293,14 +293,14 @@ function setHouseClanCommand(command, params, client) {
 	let clanId = getPlayerClan(params);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
 	let clanRankId = getClanRankFromParams(clanId, params);
 
 	if(!getClanRankData(clanId, clanRankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -335,7 +335,7 @@ function setHousePickupCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -380,7 +380,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -439,7 +439,7 @@ function setHouseBlipCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -990,7 +990,7 @@ function getHouseInfoCommand(command, params, client) {
 	}
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -1035,7 +1035,7 @@ function setHouseBuyPriceCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -1063,7 +1063,7 @@ function setHouseRentPriceCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -1083,7 +1083,7 @@ function buyHouseCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "House not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 

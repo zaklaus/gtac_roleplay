@@ -163,7 +163,7 @@ function listClanRanksCommand(command, params, client) {
 	}
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -207,7 +207,7 @@ function deleteClanCommand(command, params, client) {
 	let clanId = getClanFromParams(params);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -233,12 +233,12 @@ function setClanOwnerCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[1]);
 
 	if(!targetClient) {
-		messagePlayerError(client, "Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -265,7 +265,7 @@ function setClanTagCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -290,7 +290,7 @@ function setClanNameCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -315,7 +315,7 @@ function createClanRankCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -345,7 +345,7 @@ function deleteClanRankCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -353,7 +353,7 @@ function deleteClanRankCommand(command, params, client) {
 	let tempRankName = getClanRankData(clanId, rankId);
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -379,7 +379,7 @@ function setClanMemberTagCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[0]);
 
 	if(!targetClient) {
-		messagePlayerError(client, "Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
@@ -425,7 +425,7 @@ function setClanRankTagCommand(command, params, client) {
 	let newTag = splitParams[splitParams.length-1];
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -456,7 +456,7 @@ function setClanRankLevelCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -464,7 +464,7 @@ function setClanRankLevelCommand(command, params, client) {
 	let newLevel = splitParams[splitParams.length-1];
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -504,7 +504,7 @@ function addClanMemberFlagCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -512,7 +512,7 @@ function addClanMemberFlagCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[0]);
 
 	if(!targetClient) {
-		messagePlayerError(client, "Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
@@ -556,7 +556,7 @@ function removeClanMemberFlagCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -564,7 +564,7 @@ function removeClanMemberFlagCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[0]);
 
 	if(!targetClient) {
-		messagePlayerError(client, "Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
@@ -608,7 +608,7 @@ function addClanRankFlagCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -616,7 +616,7 @@ function addClanRankFlagCommand(command, params, client) {
 	let rankId = getClanRankFromParams(clanId, splitParams[0]);
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -647,7 +647,7 @@ function removeClanRankFlagCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -655,7 +655,7 @@ function removeClanRankFlagCommand(command, params, client) {
 	let rankId = getClanRankFromParams(clanId, splitParams[0]);
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -686,7 +686,7 @@ function showClanRankFlagsCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -694,7 +694,7 @@ function showClanRankFlagsCommand(command, params, client) {
 	let rankId = getClanRankFromParams(clanId, splitParams[0]);
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -734,7 +734,7 @@ function setClanMemberTitleCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -742,7 +742,7 @@ function setClanMemberTitleCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[0]);
 
 	if(!targetClient) {
-		messagePlayerError(client, "Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
@@ -781,7 +781,7 @@ function setClanRankTitleCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -789,7 +789,7 @@ function setClanRankTitleCommand(command, params, client) {
 	let rankId = getClanRankFromParams(clanId, splitParams[0]);
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -814,7 +814,7 @@ function setClanMemberRankCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -823,12 +823,12 @@ function setClanMemberRankCommand(command, params, client) {
 	let rankId = getClanRankFromParams(clanId, splitParams[1]);
 
 	if(!targetClient) {
-		messagePlayerError(client, "Player not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 
@@ -1189,7 +1189,7 @@ function showClanFlagListCommand(command, params, client) {
 	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
-		messagePlayerError(client, "Clan not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
 		return false;
 	}
 
@@ -1197,7 +1197,7 @@ function showClanFlagListCommand(command, params, client) {
 	let rankId = getClanRankFromParams(clanId, splitParams[0]);
 
 	if(!getClanRankData(clanId, rankId)) {
-		messagePlayerError(client, "Clan rank not found!");
+		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
 		return false;
 	}
 

@@ -191,18 +191,18 @@ function enterExitPropertyCommand(command, params, client) {
 	if(isEntrance) {
 		if(getDistance(closestProperty.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
 			if(closestProperty.locked) {
-				meActionToNearbyPlayers(client, `tries to open the ${(isBusiness) ? "business" : "house"} door but fails because it's locked`);
+				meActionToNearbyPlayers(client, getLocaleString(client, "EnterExitPropertyDoorLocked", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 				return false;
 			}
 
 			if(!closestProperty.hasInterior) {
-				messagePlayerAlert(client, `This ${(isBusiness) ? "business" : "house"} does not have an interior, but you can still use commands at the door icon.`);
+				messagePlayerAlert(client, getLocaleString(client, "PropertyNoInterior", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 				return false;
 			}
 
 			clearPlayerStateToEnterExitProperty(client);
 			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
-			meActionToNearbyPlayers(client, `opens the door and enters the ${(isBusiness) ? "business" : "house"}`);
+			meActionToNearbyPlayers(client, getLocaleString(client, "EntersProperty", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 
 			if(isFadeCameraSupported()) {
 				fadeCamera(client, false, 1.0);
@@ -232,12 +232,12 @@ function enterExitPropertyCommand(command, params, client) {
 	} else {
 		if(getDistance(closestProperty.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
 			if(closestProperty.locked) {
-				meActionToNearbyPlayers(client, `tries to open the ${(isBusiness) ? "business" : "house"} door but fails because it's locked`);
+				meActionToNearbyPlayers(client, getLocaleString(client, "EnterExitPropertyDoorLocked", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 				return false;
 			}
 			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
 			clearPlayerStateToEnterExitProperty(client)
-			meActionToNearbyPlayers(client, `opens the door and exits the ${(isBusiness) ? "business" : "house"}`);
+			meActionToNearbyPlayers(client, getLocaleString(client, "ExitsProperty", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 
 			if(isFadeCameraSupported()) {
 				fadeCamera(client, false, 1.0);
@@ -276,7 +276,7 @@ function getPlayerInfoCommand(command, params, client) {
 			targetClient = getPlayerFromParams(params);
 
 			if(!getPlayerData(targetClient)) {
-				messagePlayerError(client, "Player not found!");
+				messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 				return false;
 			}
 		}
@@ -394,6 +394,7 @@ function gpsCommand(command, params, client) {
 		case "skin":
 		case "skins":
 		case "clothes":
+		case "player":
 			useType = VRR_ITEM_USETYPE_SKIN;
 			break;
 
@@ -402,6 +403,7 @@ function gpsCommand(command, params, client) {
 		case "weapon":
 		case "weapons":
 		case "wep":
+		case "weps":
 			useType = VRR_ITEM_USETYPE_WEAPON;
 			break;
 
@@ -414,10 +416,23 @@ function gpsCommand(command, params, client) {
 			useType = VRR_ITEM_USETYPE_DRINK;
 			break;
 
+		case "alcohol":
+		case "booze":
+		case "bar":
+			useType = VRR_ITEM_USETYPE_ALCOHOL;
+			break;
+
 		case "repair":
+		case "carrepair":
+		case "vehrepair":
+		case "spray":
+		case "fix":
 			useType = VRR_ITEM_USETYPE_VEHREPAIR;
 			break;
 
+		case "vehiclecolour":
+		case "vehcolour":
+		case "carcolour":
 		case "colour":
 			useType = VRR_ITEM_USETYPE_VEHCOLOUR;
 			break;
@@ -432,12 +447,12 @@ function gpsCommand(command, params, client) {
 
 	let businessId = getClosestBusinessWithBuyableItemOfUseType(useType);
 	if(!businessId) {
-		messagePlayerError(client, `There is no business with that item available`);
+		messagePlayerError(client, getLocaleString(client, "NoBusinessWithItemType"));
 		return false;
 	}
 
 	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, `There is no business with that item available`);
+		messagePlayerError(client, getLocaleString(client, "NoBusinessWithItemType"));
 		return false;
 	}
 

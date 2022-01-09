@@ -19,61 +19,61 @@ function addAllNetworkHandlers() {
     logToConsole(LOG_DEBUG, "[VRR.Client]: Adding network handlers ...");
 
     // KeyBind
-    addNetworkHandler("vrr.useKeyBind", playerUsedKeyBind);
+    addNetworkEventHandler("vrr.useKeyBind", playerUsedKeyBind);
 
     // GUI
-    addNetworkHandler("vrr.promptAnswerNo", playerPromptAnswerNo);
-    addNetworkHandler("vrr.promptAnswerYes", playerPromptAnswerYes);
-    addNetworkHandler("vrr.toggleGUI", playerToggledGUI);
+    addNetworkEventHandler("vrr.promptAnswerNo", playerPromptAnswerNo);
+    addNetworkEventHandler("vrr.promptAnswerYes", playerPromptAnswerYes);
+    addNetworkEventHandler("vrr.toggleGUI", playerToggledGUI);
 
     // AFK
-    addNetworkHandler("vrr.afk", playerChangeAFKState);
+    addNetworkEventHandler("vrr.afk", playerChangeAFKState);
 
     // Event
-    addNetworkHandler("vrr.pickup", onPlayerNearPickup);
-    addNetworkHandler("vrr.enteredSphere", onPlayerEnteredSphere);
-    addNetworkHandler("vrr.exitedSphere", onPlayerExitedSphere);
-    addNetworkHandler("vrr.playerDeath", onPlayerDeath);
-    addNetworkHandler("vrr.onPlayerEnterVehicle", onPlayerEnteredVehicle);
-    addNetworkHandler("vrr.onPlayerExitVehicle", onPlayerExitedVehicle);
+    addNetworkEventHandler("vrr.pickup", onPlayerNearPickup);
+    addNetworkEventHandler("vrr.enteredSphere", onPlayerEnteredSphere);
+    addNetworkEventHandler("vrr.exitedSphere", onPlayerExitedSphere);
+    addNetworkEventHandler("vrr.playerDeath", onPlayerDeath);
+    addNetworkEventHandler("vrr.onPlayerEnterVehicle", onPlayerEnteredVehicle);
+    addNetworkEventHandler("vrr.onPlayerExitVehicle", onPlayerExitedVehicle);
 
     // Job
-    addNetworkHandler("vrr.arrivedAtJobRouteStop", playerArrivedAtJobRouteStop);
+    addNetworkEventHandler("vrr.arrivedAtJobRouteStop", playerArrivedAtJobRouteStop);
 
     // Client
-    addNetworkHandler("vrr.clientReady", playerClientReady);
-    addNetworkHandler("vrr.guiReady", playerGUIReady);
-    addNetworkHandler("vrr.clientStarted", playerClientStarted);
-    addNetworkHandler("vrr.clientStopped", playerClientStopped);
+    addNetworkEventHandler("vrr.clientReady", playerClientReady);
+    addNetworkEventHandler("vrr.guiReady", playerGUIReady);
+    addNetworkEventHandler("vrr.clientStarted", playerClientStarted);
+    addNetworkEventHandler("vrr.clientStopped", playerClientStopped);
 
     // Account
-    addNetworkHandler("vrr.checkLogin", checkLogin);
-    addNetworkHandler("vrr.checkRegistration", checkRegistration);
-    addNetworkHandler("vrr.checkResetPassword", checkAccountResetPasswordRequest);
-    addNetworkHandler("vrr.checkChangePassword", checkAccountChangePassword);
+    addNetworkEventHandler("vrr.checkLogin", checkLogin);
+    addNetworkEventHandler("vrr.checkRegistration", checkRegistration);
+    addNetworkEventHandler("vrr.checkResetPassword", checkAccountResetPasswordRequest);
+    addNetworkEventHandler("vrr.checkChangePassword", checkAccountChangePassword);
 
     // Developer
-    addNetworkHandler("vrr.runCodeSuccess", clientRunCodeSuccess);
-    addNetworkHandler("vrr.runCodeFail", clientRunCodeFail);
+    addNetworkEventHandler("vrr.runCodeSuccess", clientRunCodeSuccess);
+    addNetworkEventHandler("vrr.runCodeFail", clientRunCodeFail);
 
     // SubAccount
-    addNetworkHandler("vrr.checkNewCharacter", checkNewCharacter);
-    addNetworkHandler("vrr.nextCharacter", checkNextCharacter);
-    addNetworkHandler("vrr.previousCharacter", checkPreviousCharacter);
-    addNetworkHandler("vrr.selectCharacter", selectCharacter);
+    addNetworkEventHandler("vrr.checkNewCharacter", checkNewCharacter);
+    addNetworkEventHandler("vrr.nextCharacter", checkNextCharacter);
+    addNetworkEventHandler("vrr.previousCharacter", checkPreviousCharacter);
+    addNetworkEventHandler("vrr.selectCharacter", selectCharacter);
 
     // Item
-    addNetworkHandler("vrr.itemActionDelayComplete", playerItemActionDelayComplete);
+    addNetworkEventHandler("vrr.itemActionDelayComplete", playerItemActionDelayComplete);
 
-    addNetworkHandler("vrr.weaponDamage", playerDamagedByPlayer);
+    addNetworkEventHandler("vrr.weaponDamage", playerDamagedByPlayer);
 
-    addNetworkHandler("vrr.player.position", updatePositionInPlayerData);
-    addNetworkHandler("vrr.player.heading", updateHeadingInPlayerData);
-    addNetworkHandler("vrr.player.lookat", setPlayerHeadLookPosition);
+    addNetworkEventHandler("vrr.player.position", updatePositionInPlayerData);
+    addNetworkEventHandler("vrr.player.heading", updateHeadingInPlayerData);
+    addNetworkEventHandler("vrr.player.lookat", setPlayerHeadLookPosition);
 
-    addNetworkHandler("vrr.skinSelected", playerFinishedSkinSelection);
+    addNetworkEventHandler("vrr.skinSelected", playerFinishedSkinSelection);
 
-    addNetworkHandler("vrr.clientInfo", updateConnectionLogOnClientInfoReceive);
+    addNetworkEventHandler("vrr.clientInfo", updateConnectionLogOnClientInfoReceive);
 }
 
 // ===========================================================================

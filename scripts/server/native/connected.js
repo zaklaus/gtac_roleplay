@@ -893,3 +893,9 @@ function sendNetworkEventToPlayer(networkEvent, client, ...args) {
 }
 
 // ===========================================================================
+
+function addNetworkEventHandler(eventName, handlerFunction) {
+    addNetworkHandler(eventName, handlerFunction);
+}
+
+// ===========================================================================

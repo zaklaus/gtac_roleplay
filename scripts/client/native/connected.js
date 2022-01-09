@@ -57,8 +57,8 @@ function createGameVehicle(modelIndex, position, heading) {
 
 // ===========================================================================
 
-function addNetworkEventHandler(eventName, ...args) {
-    addNetworkHandler.apply(null, eventName, args);
+function addNetworkEventHandler(eventName, handlerFunction) {
+    addNetworkHandler(eventName, handlerFunction);
 }
 
 // ===========================================================================

@@ -517,7 +517,7 @@ function lockUnlockBusinessCommand(command, params, client) {
 	setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.locked", getBusinessData(businessId).locked, true);
 
 	getBusinessData(businessId).needsSaved = true;
-	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}${getLockedUnlockedTextFromBool((getBusinessData(businessId).locked))}!`);
+	messagePlayerSuccess(client, `${getLockedUnlockedEmojiFromBool((getBusinessData(businessId).locked))} Business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}${getLockedUnlockedFromBool((getBusinessData(businessId).locked))}!`);
 }
 
 // ===========================================================================
@@ -2122,6 +2122,23 @@ function deleteBusinessBlips(business) {
 function deleteBusinessPickups(business) {
 	deleteBusinessExitPickup(business);
 	deleteBusinessEntrancePickup(business);
+}
+
+// ===========================================================================
+
+function getBusinessFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().businesses) {
+			if(toLowerCase(getServerData().businesses[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getServerData().businesses[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+	return false;
 }
 
 // ===========================================================================

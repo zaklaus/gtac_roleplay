@@ -1216,3 +1216,41 @@ function showClanFlagListCommand(command, params, client) {
 	}
 }
 */
+
+function getClanFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().clans) {
+			if(toLowerCase(getServerData().clans[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getServerData().clans[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getClanRankFromParams(clanId, params) {
+	if(isNaN(params)) {
+		for(let i in getClanData(clanId).ranks) {
+			if((toLowerCase(getClanData(clanId).ranks[i].name).indexOf(toLowerCase(params)) != -1)) {
+				return i;
+			}
+		}
+	} else {
+		for(let i in getClanData(clanId).ranks) {
+			if(getClanData(clanId).ranks[i].level == toInteger(params)) {
+				return i;
+			}
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================

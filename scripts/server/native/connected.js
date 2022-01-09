@@ -899,3 +899,68 @@ function addNetworkEventHandler(eventName, handlerFunction) {
 }
 
 // ===========================================================================
+
+function getElementId(element) {
+	return element.id;
+}
+
+// ===========================================================================
+
+function getClientFromIndex(index) {
+	let clients = getClients();
+	for(let i in clients) {
+		if(clients[i].index == index) {
+			return clients[i];
+		}
+	}
+}
+
+// ===========================================================================
+
+function getClientsInRange(position, distance) {
+	return getPlayersInRange(position, distance);
+}
+
+// ===========================================================================
+
+function getCiviliansInRange(position, distance) {
+	return getElementsByTypeInRange(ELEMENT_PED, position, distance).filter(x => !x.isType(ELEMENT_PLAYER));
+}
+
+// ===========================================================================
+
+function getPlayersInRange(position, distance) {
+	return getClients().filter(x => getDistance(position, getPlayerPosition(x)) <= distance);
+}
+
+// ===========================================================================
+
+function getElementsByTypeInRange(elementType, position, distance) {
+	return getElementsByType(elementType).filter(x => getDistance(position, getElementPosition(x)) <= distance);
+}
+
+// ===========================================================================
+
+function getClosestCivilian(position) {
+	return getClosestElementByType(ELEMENT_PED, position).filter(ped => !ped.isType(ELEMENT_PLAYER));
+}
+
+// ===========================================================================
+
+function getVehiclesInRange(position, range) {
+	return getElementsByTypeInRange(ELEMENT_VEHICLE, position, range);
+}
+
+// ===========================================================================
+
+function getClosestVehicle(position) {
+	return getClosestElementByType(ELEMENT_VEHICLE, position);
+}
+
+// ===========================================================================
+
+function getClosestElementByType(elementType, position) {
+	return getElementsByType(elementType).reduce((i, j) => (getDistance(position, getElementPosition(i)) <= getDistance(position, getElementPosition(j))) ? i : j);
+}
+
+// ===========================================================================

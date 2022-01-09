@@ -127,6 +127,49 @@ let bindableKeys = {
 
 // ===========================================================================
 
+let weekDays = [
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday"
+];
+
+// ===========================================================================
+
+let months = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December"
+];
+
+// ===========================================================================
+
+let cardinalDirections = [
+	"North",
+	"Northeast",
+	"East",
+	"Southeast",
+	"South",
+	"Southwest",
+	"West",
+	"Northwest",
+	"Unknown"
+];
+
+// ===========================================================================
+
 function makeLargeNumberReadable(num) {
 	return new Number(num).toLocaleString("en-US");
 }
@@ -875,6 +918,427 @@ function intToBool(intVal) {
 
 function boolToInt(boolVal) {
 	return (boolVal) ? 1 : 0;
+}
+
+// ===========================================================================
+
+function fixAngle(angle) {
+	angle = radToDeg(angle);
+	if(angle < 0)
+	{
+		angle = Math.abs(angle);
+		angle = ((180-angle+1)+180);
+	}
+	return degToRad(angle);
+}
+
+// ===========================================================================
+
+function addPositiveNegativeSymbol(value) {
+	return (value >= 0) ? `+${value}` : `${value}`;
+}
+
+// ===========================================================================
+
+function arrayBufferToString(arrayBuffer) {
+	return String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
+}
+
+// ===========================================================================
+
+function vec3ToVec2(pos) {
+	return toVector2(pos[0], pos[1]);
+}
+
+// ===========================================================================
+
+function vec2ToVec3(pos, z) {
+	return toVector3(pos[0], pos[1], z);
+}
+
+// ===========================================================================
+
+function degToRad(deg) {
+	return deg * Math.PI / 180;
+}
+
+// ===========================================================================
+
+function radToDeg(rad) {
+	return rad * 180 / Math.PI;
+}
+
+// ===========================================================================
+
+function getHeadingFromPosToPos(pos1, pos2) {
+	let x = pos2.x-pos1.x;
+	let y = pos2.y-pos1.y;
+	let rad = Math.atan2(y, x);
+	let deg = radToDeg(rad);
+	deg -= 90;
+	deg = deg % 360;
+	return degToRad(deg);
+}
+
+// ===========================================================================
+
+function getAngleInCircleFromCenter(center, total, current) {
+	let gap = 360 / total;
+	let deg = Math.floor(gap*current);
+
+	if(deg <= 0) {
+		deg = 1;
+	} else {
+		if(deg >= 360) {
+			deg = 359;
+		}
+	}
+
+	return degToRad(deg);
+}
+
+// ===========================================================================
+
+function getArrayOfElementId(elements) {
+	let tempArray = [];
+	for(let i in elements) {
+		tempArray.push(elements[i].id);
+	}
+
+	return tempArray;
+}
+
+// ===========================================================================
+
+function getCurrentUnixTimestamp() {
+	return new Date().getTime()/1000;
+}
+
+// ===========================================================================
+
+function msToTime(duration) {
+	let milliseconds = Math.floor(toInteger((duration % 1000) / 100));
+	let seconds = Math.floor(toInteger((duration / 1000) % 60));
+	let minutes = Math.floor(toInteger((duration / (1000 * 60)) % 60));
+	let hours = Math.floor(toInteger((duration / (1000 * 60 * 60)) % 24));
+	let days = Math.floor(toInteger((duration / (1000 * 60 * 60 * 24)) % 365));
+
+	//hours = (hours < 10) ? "0" + hours : hours;
+	//minutes = (minutes < 10) ? "0" + minutes : minutes;
+	//seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+	if (days !== 0) {
+		return `${days} days, ${hours} hours, ${minutes} minutes`;
+	} else {
+		return `${hours} hours, ${minutes} minutes`;
+	}
+}
+
+// ===========================================================================
+
+function generateRandomString(length, characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") {
+	var result           = '';
+	var charactersLength = characters.length;
+	for ( var i = 0; i < length; i++ ) {
+	   result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+}
+
+// ===========================================================================
+
+function doesWordStartWithVowel(word) {
+	switch(word.substr(0,1).toLowerCase()) {
+		case "a":
+		case "e":
+		case "i":
+		case "o":
+		case "u":
+			return true;
+
+		default:
+			return false;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getProperDeterminerForName(word) {
+	switch(word.substr(0,1).toLowerCase()) {
+		case "a":
+		case "e":
+		case "i":
+		case "o":
+			return "an";
+
+		default:
+			return "a";
+	}
+}
+
+// ===========================================================================
+
+function getPluralForm(name) {
+	return name;
+}
+
+// ===========================================================================
+
+function removeHexColoursFromString(str) {
+	let matchRegex = /#([a-f0-9]{3}|[a-f0-9]{4}(?:[a-f0-9]{2}){0,2})\b/gi;
+	let matchedHexes = str.match(matchRegex);
+	for(let i in matchHex) {
+		str.replace(matchedHexes, `{${i}}`);
+	}
+
+	return [str, matchedHexes];
+}
+
+// ===========================================================================
+
+async function waitUntil(condition) {
+    return new Promise((resolve) => {
+        let interval = setInterval(() => {
+            if (!condition()) {
+                return
+            }
+
+            clearInterval(interval);
+            resolve();
+        }, 1);
+    });
+}
+
+// ===========================================================================
+
+function getGameLocationFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getGameData().locations[getServerGame()]) {
+			if(toLowerCase(getGameData().locations[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getGameData().locations[getServerGame()][params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+	return false;
+}
+
+// ===========================================================================
+
+function getYesNoFromBool(boolVal) {
+	return (boolVal) ? "Yes" : "No";
+}
+
+// ===========================================================================
+
+function getOnOffFromBool(boolVal) {
+	return (boolVal) ? "On" : "Off";
+}
+
+// ===========================================================================
+
+function getEnabledDisabledFromBool(boolVal) {
+	return (boolVal) ? "Enabled" : "Disabled";
+}
+
+// ===========================================================================
+
+function getLockedUnlockedFromBool(boolVal) {
+	return (boolVal) ? "Locked" : "Unlocked";
+}
+
+// ===========================================================================
+
+function getOpenedClosedFromBool(boolVal) {
+	return (boolVal) ? "Opened" : "Closed";
+}
+
+// ===========================================================================
+
+function breakText(text, maxLength) {
+	let lines = [];
+	let j = Math.floor(text.length / maxLength);
+
+	for(let i = 0; i < j; i++) {
+		lines.push(text.substr(i*maxLength,maxLength));
+	}
+
+	let line = text.substr(j*maxLength, text.length % maxLength);
+	if(line.length > 0) {
+		lines.push(line);
+	}
+
+	return lines;
+}
+
+// ===========================================================================
+
+function getSpeedFromVelocity(vel) {
+	return Math.sqrt(vel.x*vel.x + vel.y*vel.y + vel.z*vel.z);
+}
+
+// ===========================================================================
+
+function getCardinalDirection(pos1, pos2) {
+	let a = pos1.x - pos2.x;
+	let b = pos1.y - pos2.y;
+	let c = pos1.z - pos2.z;
+
+	let x = Math.abs(a);
+	let y = Math.abs(b);
+	let z = Math.abs(c);
+
+	let no = 0;
+	let ne = 1;
+	let ea = 2;
+	let se = 3;
+	let so = 4;
+	let sw = 5;
+	let we = 6;
+	let nw = 7;
+	let na = 8;
+
+	if(b < 0 && a < 0){
+		if(x < (y/2)){
+			return no;
+		} else if(y < (x/2)){
+			return ea;
+		} else {
+			return ne;
+		}
+	} else if(b < 0 && a >= 0){
+		if(x < (y/2)){
+			return no;
+		} else if(y < (x/2)){
+			return we;
+		} else {
+			return nw;
+		}
+	} else if(b >= 0 && a >= 0){
+		if(x < (y/2)){
+			return so;
+		} else if(y < (x/2)){
+			return we;
+		} else {
+			return sw;
+		}
+	} else if(b >= 0 && a < 0){
+		if(x < (y/2)){
+			return so;
+		} else if(y < (x/2)){
+			return ea;
+		} else {
+			return se;
+		}
+	} else {
+		return na;
+	}
+	return na;
+}
+
+// ===========================================================================
+
+function getTimeDifferenceDisplay(timeStamp2, timeStamp1) {
+	timeStamp1 = timeStamp1 * 1000;
+	timeStamp2 = timeStamp2 * 1000;
+    if(isNaN(timeStamp1) || isNaN(timeStamp2)) {
+        return "Unknown";
+    }
+
+	let millisecondDiff = timeStamp2 - timeStamp1;
+
+    let days = Math.floor(millisecondDiff / 1000 / 60 / (60 * 24));
+    let diffDate = new Date(millisecondDiff);
+
+    return `${days} days, ${diffDate.getHours()} hours, ${diffDate.getMinutes()} minutes`;
+}
+
+// ===========================================================================
+
+function doesWordStartWithVowel(word) {
+	switch(toLowerCase(word.substr(0,1))) {
+		case "a":
+		case "e":
+		case "i":
+		case "o":
+		case "u":
+			return true;
+
+		default:
+			return false;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function replaceEmojiIntoString(message) {
+	for(let i in emojiReplaceString) {
+		message = message.replace(emojiReplaceString[i][0], emojiReplaceString[i][1]);
+	}
+	return message;
+}
+
+// ===========================================================================
+
+function makeReadableTime(hour, minute) {
+	let hourStr = toString(hour);
+	let minuteStr = toString(minute);
+	let meridianStr = "AM";
+
+	if(hour < 10) {
+		hourStr = "0" + toString(hour);
+		meridianStr = "AM";
+	}
+
+	if(hour > 11) {
+		let actualHour = hour-12;
+		if(actualHour < 10) {
+			hourStr = "0" + toString(hour-12);
+		} else {
+			hourStr = toString(hour-12);
+		}
+		meridianStr = "PM";
+	}
+
+	if(minute < 10) {
+		minuteStr = "0" + toString(minute);
+	}
+
+	return hourStr + ":" + minuteStr + " " + meridianStr;
+}
+
+// ===========================================================================
+
+function getCardinalDirectionName(cardinalDirectionId) {
+	let cardinalDirections = ["North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest", "Unknown" ];
+	return cardinalDirections[cardinalDirectionId];
+}
+
+// ===========================================================================
+
+function getWeekDayName(weekdayId) {
+	let weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
+	return weekdayNames[weekdayId];
+}
+
+// ===========================================================================
+
+function getMonthName(monthId) {
+	let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	return monthNames[monthId];
+}
+
+// ===========================================================================
+
+function getLockedUnlockedEmojiFromBool(boolVal) {
+	return (boolVal) ? "🔒" : "🔓";
 }
 
 // ===========================================================================

@@ -71,3 +71,21 @@ function listAccentsCommand(command, params, client) {
 }
 
 // ===========================================================================
+
+function getAccentFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getGlobalConfig().accents) {
+			if(toLowerCase(getGlobalConfig().accents[i]).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getGlobalConfig().accents[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================

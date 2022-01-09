@@ -766,3 +766,45 @@ function getCommandAliasesNames(command) {
 }
 
 // ===========================================================================
+
+function areParamsEmpty(params) {
+	if(!params || params == "" || params.length == 0 || typeof params == "undefined") {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getParamsCount(params, delimiter = " ") {
+	return params.split(delimiter).length;
+}
+
+// ===========================================================================
+
+function areThereEnoughParams(params, requiredAmount, delimiter = " ") {
+	return (params.split(delimiter).length >= requiredAmount);
+}
+
+// ===========================================================================
+
+function getParam(params, delimiter, index) {
+	return params.split(delimiter)[index];
+}
+
+// ===========================================================================
+
+function getCommandFromParams(params) {
+	for(let i in serverCommands) {
+		for(let j in serverCommands[i]) {
+			if(toLowerCase(serverCommands[i][j].command).indexOf(toLowerCase(params)) != -1) {
+				return serverCommands[i][j];
+			}
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================

@@ -2084,3 +2084,43 @@ function setAllJobIndexes() {
 		}
 	}
 }
+
+// ===========================================================================
+
+function getJobFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().jobs) {
+			if(toLowerCase(getServerData().jobs[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getServerData().jobs[params] != "undefined") {
+			return params;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getClosestJobLocation(position) {
+	let closestJobLocation = false;
+	for(let i in getServerData().jobs) {
+		for(let j in getServerData().jobs[i].locations) {
+			if(!closestJobLocation || getServerData().jobs[i].locations[j].position.distance(position) < closestJobLocation.position.distance(position)) {
+				closestJobLocation = getServerData().jobs[i].locations[j];
+			}
+		}
+	}
+	return closestJobLocation;
+}
+
+// ===========================================================================
+
+function getJobPointsInRange(position, distance) {
+	return getServerData().jobs[getServerGame()].filter(x => x.position.distance(position) <= distance);
+}
+
+// ===========================================================================

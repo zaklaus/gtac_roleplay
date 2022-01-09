@@ -1497,3 +1497,9 @@ function getClosestTaxi(position) {
 }
 
 // ===========================================================================
+
+function getVehicleTrunkPosition(vehicle) {
+	return getPosBehindPos(getVehiclePosition(vehicle), getVehicleHeading(vehicle), getGlobalConfig().vehicleTrunkRearDistance);
+}
+
+// ===========================================================================

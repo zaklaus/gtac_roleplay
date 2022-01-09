@@ -2021,3 +2021,22 @@ function createGroundPlant(itemId) {
 	groundItemCache.push(itemId);
 
 }
+
+// ===========================================================================
+
+function getItemTypeFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().itemTypes) {
+			if(toLowerCase(getServerData().itemTypes[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getServerData().itemTypes[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+	return false;
+}
+
+// ===========================================================================

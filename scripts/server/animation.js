@@ -75,7 +75,7 @@ function showAnimationListCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(animList, 10);
 
-	messagePlayerInfo(client, makeChatSectionHeader(getLocaleString(client, "HeaderAnimationsList")));
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderAnimationsList")));
 
 	for(let i in chunkedList) {
 		messagePlayerNormal(client, chunkedList[i].join(", "));
@@ -136,6 +136,24 @@ function makePlayerStopAnimation(client) {
 	getPlayerData(client).currentAnimationPositionReturnTo = false;
     getPlayerData(client).animationStart = 0;
 	getPlayerData(client).animationForced = false;
+}
+
+// ===========================================================================
+
+function getAnimationFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getGameData().animations[getServerGame()]) {
+			if(toLowerCase(getGameData().animations[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getGameData().animations[getServerGame()][params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+
+	return false;
 }
 
 // ===========================================================================

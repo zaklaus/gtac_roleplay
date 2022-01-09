@@ -125,7 +125,7 @@ function lockUnlockHouseCommand(command, params, client) {
 	setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.locked", getHouseData(houseId).locked, true);
 	getHouseData(houseId).needsSaved = true;
 
-	messagePlayerSuccess(client, `House {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}${getLockedUnlockedTextFromBool((getHouseData(houseId).locked))}!`);
+	messagePlayerSuccess(client, `House {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}${getLockedUnlockedFromBool((getHouseData(houseId).locked))}!`);
 }
 
 // ===========================================================================
@@ -1377,6 +1377,23 @@ function canPlayerManageHouse(client, houseId) {
 		}
 	}
 
+	return false;
+}
+
+// ===========================================================================
+
+function getHouseFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().houses) {
+			if(toLowerCase(getServerData().houses[i].description).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getServerData().houses[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
 	return false;
 }
 

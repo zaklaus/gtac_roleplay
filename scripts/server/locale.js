@@ -69,3 +69,18 @@ function getLocaleStrings() {
 }
 
 // ===========================================================================
+
+function getLocaleNameFromParams(params) {
+	let locales = getLocales();
+	if(isNaN(params)) {
+		for(let i in locales) {
+			if(toLowerCase(i).indexOf(toLowerCase(params)) != -1) {
+				return locales[i];
+			}
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================

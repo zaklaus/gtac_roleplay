@@ -212,3 +212,31 @@ function messagePlayerTimedRandomTip(client, message) {
 }
 
 // ===========================================================================
+
+function makeChatBoxSectionHeader(name) {
+	let resultString = `== ${name} `;
+	let endFiller = fillStringWithCharacter("=", getGlobalConfig().chatSectionHeaderLength-resultString.length);
+	return `${resultString} ${endFiller}`;
+}
+
+// ===========================================================================
+
+function clearChatBox(client) {
+	//game.messages.clear();
+	for(let i = 0; i <= 20; i++) {
+		messageClient(" ", client, COLOUR_WHITE);
+	}
+}
+
+// ===========================================================================
+
+function replaceEmojiIntoString(message) {
+	for(let i in emojiReplaceString) {
+		while(message.indexOf(emojiReplaceString[i][0]) != -1) {
+			message = message.replace(emojiReplaceString[i][0], emojiReplaceString[i][1]);
+		}
+	}
+	return message;
+}
+
+// ===========================================================================

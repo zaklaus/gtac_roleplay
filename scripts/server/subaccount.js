@@ -122,8 +122,6 @@ function saveSubAccountToDatabase(subAccountData) {
 			["sacct_rot_z", subAccountData.spawnHeading],
 			["sacct_int", subAccountData.interior],
 			["sacct_vw", subAccountData.dimension],
-			["sacct_inhouse", (subAccountData.inHouse != 0) ? getHouseData(subAccountData.inHouse).databaseId : 0],
-			["sacct_inbusiness", (subAccountData.inBusiness != 0) ? getBusinessData(subAccountData.inBusiness).databaseId : 0],
 			["sacct_health", subAccountData.health],
 			["sacct_armour", subAccountData.armour],
 			["sacct_accent", subAccountData.accent],

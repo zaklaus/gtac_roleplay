@@ -10,7 +10,7 @@
 function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loop, loopNoControl, freezeLastFrame, returnToOriginalPosition, freezePlayer) {
     logToConsole(LOG_DEBUG, `[VRR.Animation] Playing animation ${animGroup}/${animId} for ped ${pedId}`);
     if(getGame() < VRR_GAME_GTA_IV) {
-        if(animType == VRR_ANIMTYPE_NORMAL) {
+        if(animType == VRR_ANIMTYPE_NORMAL || animType == VRR_ANIMTYPE_SURRENDER) {
             if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
                 getElementFromId(pedId).clearAnimations();
             } else {
@@ -26,9 +26,6 @@ function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loo
         } else if(animType == VRR_ANIMTYPE_BLEND) {
             getElementFromId(pedId).position = getElementFromId(pedId).position;
             getElementFromId(pedId).blendAnimation(animGroup, animId, animSpeed);
-        } else if(animType == VRR_ANIMTYPE_MOVEADD) {
-            getElementFromId(pedId).position = getElementFromId(pedId).position;
-            getElementFromId(pedId).blendAnimation(animGroup, animId, animSpeed);
         }
     } else {
         natives.requestAnims(animGroup);
@@ -41,13 +38,14 @@ function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loo
 function forcePedAnimation(pedId, animGroup, animId, animType, animSpeed, loop, loopNoControl, freezeLastFrame, returnToOriginalPosition) {
     if(getGame() < VRR_GAME_GTA_IV) {
         forcedAnimation = [animGroup, animId];
-        setLocalPlayerControlState(false, false);
         getElementFromId(pedId).position = getElementFromId(pedId).position;
         getElementFromId(pedId).addAnimation(animGroup, animId);
 
-        inAnimation = true;
-        setLocalPlayerControlState(false, false);
-        localPlayer.collisionsEnabled = false;
+        if(getElementFromId(pedId) == localPlayer) {
+            inAnimation = true;
+            setLocalPlayerControlState(false, false);
+            localPlayer.collisionsEnabled = false;
+        }
     }
 }
 

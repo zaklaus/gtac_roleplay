@@ -215,9 +215,9 @@ function loadCommands() {
             commandData("saveall", saveAllServerDataCommand, "", getStaffFlagValue("Developer"), true, true),
             commandData("docmd", simulateCommandForPlayerCommand, "<player name/id> <command> [params]", getStaffFlagValue("Developer"), true, true),
             commandData("docmdall", simulateCommandForAllPlayersCommand, "<command> [params]", getStaffFlagValue("Developer"), true, true),
-            commandData("addloglvl", addServerLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
-            commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
-            commandData("loglvl", getServerLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
+            commandData("addloglvl", addLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
+            commandData("delloglvl", removeLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
+            commandData("loglvl", getLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
 
             commandData("nosave", togglePauseSavingToDatabaseCommand, "", getStaffFlagValue("Developer"), true, true),
             commandData("streamurlall", streamAudioURLToAllPlayersCommand, "<url> <volume>", getStaffFlagValue("Developer"), true, true),

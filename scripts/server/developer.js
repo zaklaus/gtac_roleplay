@@ -119,7 +119,7 @@ function pvd(params) {
 
 // ===========================================================================
 
-function addServerLogLevelCommand(command, params, client) {
+function addLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -150,6 +150,8 @@ function addServerLogLevelCommand(command, params, client) {
 			return;
 	}
 
+	sendPlayerLogLevel(null, logLevel);
+
 	messageAdminAction(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}enabled log level {ALTCOLOUR}${toLowerCase(params)}`);
 
 	return true;
@@ -157,7 +159,7 @@ function addServerLogLevelCommand(command, params, client) {
 
 // ===========================================================================
 
-function getServerLogLevelCommand(command, params, client) {
+function getLogLevelCommand(command, params, client) {
 	let logLevels = [];
 
 	if(hasBitFlag(logLevel, LOG_DEBUG)) {
@@ -187,7 +189,7 @@ function getServerLogLevelCommand(command, params, client) {
 
 // ===========================================================================
 
-function removeServerLogLevelCommand(command, params, client) {
+function removeLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -217,6 +219,8 @@ function removeServerLogLevelCommand(command, params, client) {
 		default:
 			return;
 	}
+
+	sendPlayerLogLevel(null, logLevel);
 
 	messageAdminAction(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}disabled log level {ALTCOLOUR}${toLowerCase(params)}`);
 
@@ -372,8 +376,8 @@ function testEmailCommand(command, params, client) {
 // ===========================================================================
 
 function restartGameModeCommand(command, params, client) {
-	messagePlayerNormal(null, `{clanOrange}The server game mode is restarting!`, getColourByName("orange"));
-	consoleCommand("refresh");
+	messagePlayerNormal(null, `The server game mode is restarting!`, getColourByName("orange"));
+	consoleCommand("/refresh");
 	thisResource.restart();
 	return true;
 }

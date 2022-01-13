@@ -137,7 +137,7 @@ function createGroundItemCommand(command, params, client) {
 	let value = splitParams.slice(-1) || 1;
 
 	if(!getItemTypeData(itemType)) {
-		messagePlayerError(client, `Item '${itemType}' not found`);
+		messagePlayerError(client, getLocaleString(client, "InvalidItemType"));
 		return false;
 	}
 
@@ -158,7 +158,7 @@ function createItemCommand(command, params, client) {
 	let value = splitParams.slice(-1) || 1;
 
 	if(!getItemTypeData(itemType)) {
-		messagePlayerError(client, `Item '${params}' not found`);
+		messagePlayerError(client, getLocaleString("InvalidItemType"));
 		return false;
 	}
 
@@ -194,24 +194,24 @@ function useItemCommand(command, params, client) {
 	let itemId = getPlayerData(client).hotBarItems[hotBarSlot];
 
 	if(!getItemData(itemId)) {
-		messagePlayerError(client, `The item you're trying to use is bugged. A bug report has been sent to the server developers.`);
+		messagePlayerError(client, getLocaleString(client, "UseItemBug"));
 		submitBugReport(client, `(AUTOMATED REPORT) Use Item: Getting item data for item ${itemId} in player hotbar slot ${hotBarSlot} (cache ${getPlayerData(client).hotBarItems[hotBarSlot]}) returned false.`);
 		return false;
 	}
 
 	if(!getItemTypeData(getItemData(itemId).itemTypeIndex)) {
-		messagePlayerError(client, `The item you're trying to use is bugged. A bug report has been sent to the server developers.`);
+		messagePlayerError(client, getLocaleString(client, "UseItemBug"));
 		submitBugReport(client, `(AUTOMATED REPORT) Use Item: Getting item type ${getItemData(itemId).itemType} data for item ${itemId}/${getItemData(itemId).databaseId} in player hotbar slot ${hotBarSlot} (cache ${getPlayerData(client).hotBarItems[hotBarSlot]}) returned false.`);
 		return false;
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
-		messagePlayerError(client, `Your hands are busy.`);
+		messagePlayerError(client, getLocaleString(client, "HandsBusy"));
 		return false;
 	}
 
 	if(getPlayerData(client).usingSkinSelect) {
-		messagePlayerError(client, `Your can't use an item while customizing your appearance`);
+		messagePlayerError(client, getLocaleString(client, "CantUseItemInSkinChange"));
 		return false;
 	}
 
@@ -279,12 +279,12 @@ function pickupItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
-		messagePlayerError(client, `Your hands are busy.`);
+		messagePlayerError(client, getLocaleString(client, "HandsBusy"));
 		return false;
 	}
 
 	if(getPlayerData(client).usingSkinSelect) {
-		messagePlayerError(client, `Your can't pick up an item while customizing your appearance`);
+		messagePlayerError(client, getLocaleString(client, "CantPickupItemInSkinChange"));
 		return false;
 	}
 
@@ -335,12 +335,12 @@ function dropItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
-		messagePlayerError(client, `Your hands are busy.`);
+		messagePlayerError(client, getLocaleString(client, "HandsBusy"));
 		return false;
 	}
 
 	if(getPlayerData(client).usingSkinSelect) {
-		messagePlayerError(client, `Your can't drop an item while customizing your appearance`);
+		messagePlayerError(client, getLocaleString(client, "CantDropItemInSkinChange"));
 		return false;
 	}
 
@@ -382,12 +382,12 @@ function putItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
-		messagePlayerError(client, `Your hands are busy.`);
+		messagePlayerError(client, getLocaleString(client, "HandsBusy"));
 		return false;
 	}
 
 	if(getPlayerData(client).usingSkinSelect) {
-		messagePlayerError(client, `Your can't store an item while customizing your appearance`);
+		messagePlayerError(client, getLocaleString(client, "CantPutItemInSkinChange"));
 		return false;
 	}
 
@@ -429,12 +429,12 @@ function takeItemCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
-		messagePlayerError(client, `Your hands are busy.`);
+		messagePlayerError(client, getLocaleString(client, "HandsBusy"));
 		return false;
 	}
 
 	if(getPlayerData(client).usingSkinSelect) {
-		messagePlayerError(client, `Your can't take an item while customizing your appearance`);
+		messagePlayerError(client, getLocaleString(client, "CantTakeItemInSkinChange"));
 		return false;
 	}
 
@@ -971,9 +971,11 @@ function playerPickupItem(client, itemId) {
 function playerTakeItem(client, itemId) {
 	let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
 	if(firstSlot == -1) {
-		messagePlayerError(client, "You don't have enough space to hold another item");
+		messagePlayerError(client, getLocaleString(client, "NoSpaceSelfInventory"));
 		return false;
 	}
+
+	let ownerId = getItemIdFromDatabaseId(getItemData(itemId).ownerId);
 
 	getItemData(itemId).ownerType = VRR_ITEM_OWNER_PLAYER;
 	getItemData(itemId).ownerId = getPlayerCurrentSubAccount(client).databaseId;
@@ -983,19 +985,27 @@ function playerTakeItem(client, itemId) {
 
 	switch(bestOwner[1]) {
 		case VRR_ITEM_OWNER_HOUSE:
-			meActionToNearbyPlayers(client, `takes ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} from the house`);
+			meActionToNearbyPlayers(client, getLocaleString(client, "TakeItemFromHouse", getItemName(itemId)));
 			break;
 
 		case VRR_ITEM_OWNER_BIZFLOOR:
-			meActionToNearbyPlayers(client, `takes ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} from the business`);
+			meActionToNearbyPlayers(client, getLocaleString(client, "TakeItemFromBusiness", getItemName(itemId)));
 			break;
 
 		case VRR_ITEM_OWNER_BIZSTORAGE:
-			meActionToNearbyPlayers(client, `takes ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} from the business storage room`);
+			meActionToNearbyPlayers(client, getLocaleString(client, "TakeItemFromBusinessStorage", getItemName(itemId)));
 			break;
 
 		case VRR_ITEM_OWNER_VEHTRUNK:
-			meActionToNearbyPlayers(client, `takes ${getProperDeterminerForName(getItemName(itemId))} ${getItemName(itemId)} from the trunk`);
+			meActionToNearbyPlayers(client, getLocaleString(client, "TakeItemFromVehicleTrunk", getItemName(itemId)));
+			break;
+
+		case VRR_ITEM_OWNER_VEHDASH:
+			meActionToNearbyPlayers(client, getLocaleString(client, "TakeItemFromVehicleDash", getItemName(itemId)));
+			break;
+
+		case VRR_ITEM_OWNER_ITEM:
+			meActionToNearbyPlayers(client, getLocaleString(client, "TakeItemFromItem", getItemName(itemId)), getItemName(ownerId));
 			break;
 	}
 }
@@ -1048,7 +1058,7 @@ function playerSwitchItem(client, newHotBarSlot) {
 					setPlayerWeaponDamageEnabled(client, true);
 					setPlayerWeaponDamageEvent(client, VRR_WEAPON_DAMAGE_EVENT_NORMAL);
 				} else {
-					messagePlayerError(client, `The ${getItemName(newHotBarItem)} in slot ${newHotBarSlot} has no ammo, and can't be equipped!`);
+					messagePlayerError(client, getLocaleString(client, "ItemUnequippableNoAmmo", getItemName(newHotBarItem), newHotBarSlot));
 					return false;
 				}
 			} else if(getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useType == VRR_ITEM_USETYPE_TAZER) {
@@ -1057,7 +1067,7 @@ function playerSwitchItem(client, newHotBarSlot) {
 					setPlayerWeaponDamageEnabled(client, false);
 					setPlayerWeaponDamageEvent(client, VRR_WEAPON_DAMAGE_EVENT_TAZER);
 				} else {
-					messagePlayerError(client, `The ${getItemName(newHotBarItem)} in slot ${newHotBarSlot} has no ammo, and can't be equipped!`);
+					messagePlayerError(client, getLocaleString(client, "ItemUnequippableNoAmmo", getItemName(newHotBarItem), newHotBarSlot));
 					return false;
 				}
 			}
@@ -1094,7 +1104,7 @@ function playerSwitchHotBarSlotCommand(command, params, client) {
 	let hotBarSlot = toInteger(params);
 
 	if(hotBarSlot < 0 || hotBarSlot > 9) {
-		messagePlayerError(client, "Use slot number between 1 and 9, or 0 for none!");
+		messagePlayerError(client, getLocaleString(client, "ItemSlotMustBeBetween", "1", "9"));
 		return false;
 	}
 
@@ -1111,12 +1121,12 @@ function playerSwitchHotBarSlotCommand(command, params, client) {
 	}
 
 	if(getPlayerData(client).itemActionState != VRR_ITEM_ACTION_NONE) {
-		messagePlayerError(client, `Your hands are busy.`);
+		messagePlayerError(client, getLocaleString(client, "HandsBusy"));
 		return false;
 	}
 
 	if(getPlayerData(client).usingSkinSelect) {
-		messagePlayerError(client, `Your can't switch items while customizing your appearance`);
+		messagePlayerError(client, getLocaleString(client, "CantSwitchItemInSkinChange"));
 		return false;
 	}
 
@@ -1606,12 +1616,24 @@ function restorePlayerJobLockerItems(client) {
 
 // ===========================================================================
 
+function getItemIndexFromDatabaseId(databaseId) {
+	for(let i in getServerData().items) {
+		if(getServerData().items[i].databaseId == databaseId) {
+			return i;
+		}
+	}
+	return false;
+}
+
+// ===========================================================================
+
 function getItemTypeIndexFromDatabaseId(databaseId) {
 	for(let i in getServerData().itemTypes) {
 		if(getServerData().itemTypes[i].databaseId == databaseId) {
 			return i;
 		}
 	}
+	return false;
 }
 
 // ===========================================================================
@@ -1733,17 +1755,17 @@ function deleteItemInPlayerInventoryCommand(command, params, client) {
 	let hotBarSlot = getParam(params, " ", 2);
 
 	if(!targetClient) {
-		messagePlayerError(client, `Player not found!`);
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
 	if(isNaN(hotBarSlot)) {
-		messagePlayerError(client, `The item slot must be a number!`);
+		messagePlayerError(client, getLocaleString(client, "ItemSlotNotNumber"));
 		return false;
 	}
 
 	if(toInteger(hotBarSlot) <= 0 || toInteger(hotBarSlot) > 9) {
-		messagePlayerError(client, `The item slot must be between 1 and 9!`);
+		messagePlayerError(client, getLocaleString(client, "ItemSlotMustBeBetween", "1", "9"));
 		return false;
 	}
 
@@ -1774,7 +1796,7 @@ function deleteAllItemsInPlayerInventoryCommand(command, params, client) {
 	let hotBarSlot = getParam(params, " ", 2);
 
 	if(!targetClient) {
-		messagePlayerError(client, `Player not found!`);
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
@@ -1866,7 +1888,7 @@ function showBusinessFloorInventoryToPlayer(client, businessId) {
 		}
 	}
 
-	messagePlayerNormal(client, `💲 {businessBlue}== Business Items =========================`);
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBusinessFloorItemList")));
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 	for(let i in chunkedList) {
 		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
@@ -1885,7 +1907,7 @@ function showBusinessStorageInventoryToPlayer(client, businessId) {
 		}
 	}
 
-	messagePlayerNormal(client, `🏢 {businessBlue}== Business Storage =======================`);
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBusinessStorageItemList")));
 
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 	for(let i in chunkedList) {
@@ -1905,7 +1927,7 @@ function showItemInventoryToPlayer(client, itemId) {
 		}
 	}
 
-	messagePlayerNormal(client, `📦 {ALTCOLOUR}== Items Inside ===========================`);
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderItemItemsList")));
 
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 	for(let i in chunkedList) {
@@ -1931,9 +1953,9 @@ function showPlayerInventoryToPlayer(client, targetClient) {
 	}
 
 	if(client == targetClient) {
-		messagePlayerNormal(client, `🎒 {ALTCOLOUR}== Your Inventory =========================`);
+		messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderSelfItemList")));
 	} else {
-		messagePlayerNormal(client, `🎒 {ALTCOLOUR}== ${getCharacterFullName(targetClient)}'s Inventory =========================`);
+		messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerItemList")));
 	}
 
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
@@ -1954,7 +1976,7 @@ function showHouseInventoryToPlayer(client, houseId) {
 		}
 	}
 
-	messagePlayerNormal(client, `🏠 {houseGreen}== House Items ============================`);
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderHouseItemList")));
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 
 	for(let i in chunkedList) {

@@ -83,4 +83,8 @@ function getLocaleNameFromParams(params) {
 	return false;
 }
 
+function getLocales() {
+    return getGlobalConfig().locales;
+}
+
 // ===========================================================================

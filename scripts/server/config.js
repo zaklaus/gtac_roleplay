@@ -129,6 +129,9 @@ function initConfigScript() {
 	gameConfig = loadGameConfig();
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port, getMultiplayerMod());
 	applyConfigToServer(serverConfig);
+
+	loadGlobalConfig();
+
 	logToConsole(LOG_INFO, "[VRR.Config]: Config script initialized!");
 }
 

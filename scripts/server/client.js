@@ -1126,3 +1126,9 @@ function setPlayerBuyingVehicleState(state, vehicle, position) {
 }
 
 // ===========================================================================
+
+function sendPlayerLogLevel(client, tempLogLevel = logLevel) {
+    sendNetworkEventToPlayer("vrr.logLevel", client, tempLogLevel);
+}
+
+// ===========================================================================

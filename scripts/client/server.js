@@ -96,6 +96,8 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.showRegistration", showRegistrationGUI);
     addNetworkEventHandler("vrr.showNewCharacter", showNewCharacterGUI);
     addNetworkEventHandler("vrr.showLogin", showLoginGUI);
+
+    addNetworkEventHandler("vrr.logLevel", setLogLevel);
 }
 
 // ===========================================================================
@@ -271,6 +273,12 @@ function setLocalPlayerArmour(armour) {
 
 function forceLocalPlayerWantedLevel(wantedLevel) {
     forceWantedLevel = toInteger(wantedLevel);
+}
+
+// ===========================================================================
+
+function setLogLevel(level) {
+    logLevel = level;
 }
 
 // ===========================================================================

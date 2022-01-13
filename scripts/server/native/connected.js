@@ -888,8 +888,10 @@ function createDatabaseUpdateQuery(tableName, data, whereClause) {
 
 // ===========================================================================
 
-function sendNetworkEventToPlayer(networkEvent, client, ...args) {
-    triggerNetworkEvent.apply(null, networkEvent, client, args);
+function sendNetworkEventToPlayer(eventName, client, ...args) {
+	let argsArray = [eventName, client];
+	argsArray = argsArray.concat(args);
+	triggerNetworkEvent.apply(null, argsArray);
 }
 
 // ===========================================================================

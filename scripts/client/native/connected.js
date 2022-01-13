@@ -64,7 +64,9 @@ function addNetworkEventHandler(eventName, handlerFunction) {
 // ===========================================================================
 
 function sendNetworkEventToServer(eventName, ...args) {
-    triggerNetworkEvent.apply(null, eventName, args);
+	let argsArray = [eventName];
+	argsArray = argsArray.concat(args);
+	triggerNetworkEvent.apply(null, argsArray);
 }
 
 // ===========================================================================

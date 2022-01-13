@@ -1607,6 +1607,7 @@ class NPCTriggerData {
 		this.npcId = 0;
 		this.index = 0;
 		this.npc = 0;
+		this.npcIndex = -1;
 		this.triggerType = 0;
 		this.conditions = [];
 		this.responses = [];
@@ -1624,6 +1625,7 @@ class NPCTriggerConditionData {
 		this.databaseId = 0;
 		this.triggerId = 0;
 		this.index = 0;
+		this.triggerIndex = 0;
 		this.conditionType = 0;
 		this.conditionValue = false;
 		this.matchType = false;
@@ -1643,6 +1645,7 @@ class NPCTriggerResponseData {
 		this.databaseId = 0;
 		this.triggerId = 0;
 		this.index = 0;
+		this.triggerIndex = 0;
 		this.responseType = 0;
 		this.responseValue = false;
 

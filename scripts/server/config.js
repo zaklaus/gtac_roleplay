@@ -51,18 +51,6 @@ let globalConfig = {
 	geoIPCountryDatabaseFilePath: "geoip-country.mmdb",
 	geoIPCityDatabaseFilePath: "geoip-city.mmdb",
 	randomTipInterval: 600000,
-	economy: {
-		passiveIncomePerPayDay: 1000,
-		applyTax: true,
-		applyUpkeep: true,
-		grossIncomeMultiplier: 1.0,
-		upKeepCosts: {
-			upKeepPerVehicle: 250,
-			upKeepPerHouse: 350,
-			upKeepPerBusiness: 600
-		},
-		incomeTaxRate: 0.7,
-	},
 	weaponEquippableTypes: [
 		VRR_ITEM_USETYPE_WEAPON,
 		VRR_ITEM_USETYPE_TAZER,
@@ -79,6 +67,9 @@ let globalConfig = {
 	],
 	vehicleInactiveRespawnDelay: 1800000, // 20 minutes
 	chatSectionHeaderLength: 96,
+	economy: {},
+	locales: [],
+	accents: [],
 };
 
 // ===========================================================================
@@ -90,36 +81,9 @@ function loadGameConfig() {
 // ===========================================================================
 
 function loadGlobalConfig() {
-	let localeConfig = JSON.parse(loadTextFile(`config/locale.json`));
-	if(localeConfig != null) {
-		globalConfig.locales = localeConfig;
-	}
-
-	let economyConfig = JSON.parse(loadTextFile(`config/economy.json`));
-	if(economyConfig != null) {
-		globalConfig.economy = economyConfig;
-	}
-
-	let accentsConfig = JSON.parse(loadTextFile(`config/accents.json`));
-	if(accentsConfig != null) {
-		globalConfig.accents = accentsConfig;
-	}
-
-	//getGlobalConfig().weaponEquippableTypes = [
-	//	VRR_ITEM_USETYPE_WEAPON,
-	//	VRR_ITEM_USETYPE_TAZER,
-	//	VRR_ITEM_USETYPE_EXTINGUISHER,
-	//	VRR_ITEM_USETYPE_SPRAYPAINT,
-	//	VRR_ITEM_USETYPE_PEPPERSPRAY,
-	//];
-
-	//getGlobalConfig().onFootOnlyItems = [
-	//	VRR_ITEM_USETYPE_VEHREPAIR,
-	//	VRR_ITEM_USETYPE_VEHCOLOUR,
-	//	VRR_ITEM_USETYPE_VEHUPGRADE_PART,
-	//	VRR_ITEM_USETYPE_VEHLIVERY,
-	//	VRR_ITEM_USETYPE_VEHTIRE,
-	//];
+	getGlobalConfig().economy = loadEconomyConfig();
+	getGlobalConfig().locales = loadLocaleConfig();
+	getGlobalConfig().accents = loadAccentConfig();
 }
 
 // ===========================================================================
@@ -743,6 +707,33 @@ function reloadDatabaseConfigurationCommand(command, params, client) {
 
 function getServerIntroMusicURL() {
 	return getServerConfig().introMusicURL;
+}
+
+// ===========================================================================
+
+function loadLocaleConfig() {
+	let localeConfig = JSON.parse(loadTextFile(`config/locale.json`));
+	if(localeConfig != null) {
+		return localeConfig;
+	}
+}
+
+// ===========================================================================
+
+function loadEconomyConfig() {
+	let economyConfig = JSON.parse(loadTextFile(`config/economy.json`));
+	if(economyConfig != null) {
+		return economyConfig;
+	}
+}
+
+// ===========================================================================
+
+function loadAccentConfig() {
+	let accentConfig = JSON.parse(loadTextFile(`config/accent.json`));
+	if(accentConfig != null) {
+		return accentConfig;
+	}
 }
 
 // ===========================================================================

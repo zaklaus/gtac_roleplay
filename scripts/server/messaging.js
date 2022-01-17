@@ -214,9 +214,9 @@ function messagePlayerTimedRandomTip(client, message) {
 // ===========================================================================
 
 function makeChatBoxSectionHeader(name) {
-	let resultString = `== ${name} `;
+	let resultString = `{clanOrange}== {jobYellow}${name} `;
 	let endFiller = fillStringWithCharacter("=", getGlobalConfig().chatSectionHeaderLength-resultString.length);
-	return `${resultString} ${endFiller}`;
+	return `${resultString} {clanOrange}${endFiller}`;
 }
 
 // ===========================================================================

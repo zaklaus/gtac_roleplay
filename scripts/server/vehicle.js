@@ -483,6 +483,7 @@ function vehicleAdminColourCommand(command, params, client) {
 
 function vehicleAdminRepairCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
+		logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} could not repair their vehicle. Reason: Not in a vehicle.`);
 		messagePlayerError(client, "You need to be in a vehicle!");
 		return false;
 	}
@@ -490,27 +491,29 @@ function vehicleAdminRepairCommand(command, params, client) {
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
+		logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} could not repair their ${getVehicleName(vehicle)} vehicle. Not a server vehicle.`);
 		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
 	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
+			logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} could not repair their ${getVehicleName(vehicle)} vehicle. Not at a mechanic shop.`);
 			messagePlayerError(client, "You need to be at a pay-n-spray!");
 			return false;
 		}
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getGlobalConfig().repairVehicleCost) {
+		logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} could not repair their ${getVehicleName(vehicle)} vehicle. Not enough cash (Has: $${getPlayerCurrentSubAccount(client).cash}, Needs: $${getGlobalConfig().repairVehicleCost})`);
 		messagePlayerError(client, `You don't have enough money to repair the vehicle (need $${makeLargeNumberReadable(getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash)} more!)`);
 		return false;
 	}
 
+	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} repaired their ${getVehicleName(vehicle)} vehicle`);
 	takePlayerCash(client, getGlobalConfig().repairVehicleCost);
 	repairVehicle(vehicle);
-
 	getVehicleData(vehicle).needsSaved = true;
-
 	meActionToNearbyPlayers(client, `repairs the ${getVehicleName(vehicle)}`);
 }
 

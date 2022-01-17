@@ -271,7 +271,7 @@ function showCharacterSelectCameraToPlayer(client) {
 
 // ===========================================================================
 
-function getClosestPlayer(position, exemptClient) {
+function getClosestPlayer(position, exemptPlayer) {
 	//let clients = getClients();
 	//let closest = 0;
 	//for(let i in clients) {
@@ -282,7 +282,7 @@ function getClosestPlayer(position, exemptClient) {
 	//	}
 	//}
 
-	return getElementsByType(ELEMENT_PLAYER).filter((fp) => fp != exemptClient).reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
+	return getElementsByType(ELEMENT_PLAYER).filter((fp) => fp != exemptPlayer).reduce((i, j) => ((i.position.distance(position) <= j.position.distance(position)) ? i : j));
 
 	//return clients[closest];
 }
@@ -474,6 +474,16 @@ function clearTemporaryPeds() {
 			}
 		}
 	}
+}
+
+// ===========================================================================
+
+function fillStringWithCharacter(character, amount) {
+	let tempString = "";
+	for(let i = 0; i <= amount; i++) {
+		tempString = tempString + toString(character);
+	}
+	return tempString;
 }
 
 // ===========================================================================

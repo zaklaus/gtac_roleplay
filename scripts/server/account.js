@@ -990,8 +990,10 @@ function checkAccountChangePassword(client, newPassword, confirmNewPassword) {
 		return false;
 	}
 
-	getPlayerData(client).accountData.password = hashAccountPassword(getPlayerData(client).accountData.name, params);
+	getPlayerData(client).accountData.password = hashAccountPassword(getPlayerData(client).accountData.name, newPassword);
 	messagePlayerSuccess(client, getLocaleString(client, "PasswordChanged"));
+	showPlayerLoginGUI(client);
+	getPlayerData(client).accountData.needsSaved = true;
 
 	if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_SETPASS) {
 		getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;

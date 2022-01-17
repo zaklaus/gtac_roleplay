@@ -192,10 +192,12 @@
         "Invalid Name",
         "Crashed"
     ],
-    "TakeItemFromHouse": "takes a {2} from the house",
-    "TakeItemFromBusinessStorage": "takes a {2} from the business storage",
-    "TakeItemFromBusiness": "takes a {2} from the business",
-    "TakeItemFromItem": "takes a {2} from the {3}",
-    "TakeItemFromVehicleTrunk": "takes a {2} from the trunk",
-    "TakeItemFromVehicleDash": "takes a {2} from the glove compartment"
+    "TakeItemFromHouse": "takes a {1} from the house",
+    "TakeItemFromBusinessStorage": "takes a {1} from the business storage",
+    "TakeItemFromBusiness": "takes a {1} from the business",
+    "TakeItemFromItem": "takes a {1} from the {2}",
+    "TakeItemFromVehicleTrunk": "takes a {1} from the trunk",
+    "TakeItemFromVehicleDash": "takes a {1} from the glove compartment",
+    "JobEquipmentInventoryKeyBindTip": "The job equipment is in your inventory. Press {1} to see them.",
+    "JobEquipmentInventoryCommandTip": "The job equipment is in your inventory. Use {1} to see them."
 }

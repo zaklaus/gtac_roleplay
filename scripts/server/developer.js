@@ -591,3 +591,18 @@ function resetAllServerAmbienceElementsCommand(command, params, client) {
 }
 
 // ===========================================================================
+
+function reloadEconomyConfigurationCommand(command, params, client) {
+	getGlobalConfig().economy = loadEconomyConfig();
+	messageAdmins(`${client.name} {MAINCOLOUR}has reloaded the economy settings`);
+}
+
+// ===========================================================================
+
+function reloadLocaleConfigurationCommand(command, params, client) {
+	getGlobalConfig().locales = loadLocaleConfig();
+	getServerData().localeStrings = loadAllLocaleStrings();
+	messageAdmins(`${client.name} {MAINCOLOUR}has reloaded the locale settings and texts`);
+}
+
+// ===========================================================================

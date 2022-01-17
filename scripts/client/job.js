@@ -82,5 +82,3 @@ function blinkJobRouteStopBlip(times, position, colour) {
         jobRouteStopBlip = game.createBlip(position, 0, 2, colour);
     }, 500*times+1);
 }
-
-// ===========================================================================

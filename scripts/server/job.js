@@ -558,7 +558,7 @@ function startWorking(client) {
 function getJobInfoCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 
-	messagePlayerInfo(client, `{jobYellow}[Job Info] {MAINCOLOUR}Name: {ALTCOLOUR}${getJobData(closestJobLocation.job).name}, {MAINCOLOUR}Enabled: {ALTCOLOUR}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).enabled))}, {MAINCOLOUR}Whitelisted: {ALTCOLOUR}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).whiteListEnabled))}, {MAINCOLOUR}Blacklisted: {ALTCOLOUR}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.job).blackListEnabled))}, {MAINCOLOUR}ID: {ALTCOLOUR}${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}`);
+	messagePlayerInfo(client, `{jobYellow}[Job Info] {MAINCOLOUR}Name: {ALTCOLOUR}${getJobData(closestJobLocation.jobIndex).name}, {MAINCOLOUR}Enabled: {ALTCOLOUR}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.jobIndex).enabled))}, {MAINCOLOUR}Whitelisted: {ALTCOLOUR}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.jobIndex).whiteListEnabled))}, {MAINCOLOUR}Blacklisted: {ALTCOLOUR}${getYesNoFromBool(intToBool(getJobData(closestJobLocation.jobIndex).blackListEnabled))}, {MAINCOLOUR}ID: {ALTCOLOUR}${getJobData(closestJobLocation.jobIndex).databaseId}/${closestJobLocation.jobIndex}`);
 }
 
 // ===========================================================================
@@ -566,7 +566,7 @@ function getJobInfoCommand(command, params, client) {
 function getJobLocationInfoCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 
-	messagePlayerInfo(client, `{jobYellow}[Job Location Info] {MAINCOLOUR}Job: {ALTCOLOUR}${getJobData(closestJobLocation.job).name} (${getJobData(closestJobLocation.job).id}/${closestJobLocation.job}), {MAINCOLOUR}Enabled: {ALTCOLOUR}${getYesNoFromBool(closestJobLocation.enabled)}, {MAINCOLOUR}Database ID: {ALTCOLOUR}${closestJobLocation.databaseId}`);
+	messagePlayerInfo(client, `{jobYellow}[Job Location Info] {MAINCOLOUR}Job: {ALTCOLOUR}${getJobData(closestJobLocation.jobIndex).name} (${getJobData(closestJobLocation.jobIndex).databaseId}/${closestJobLocation.jobIndex}), {MAINCOLOUR}Enabled: {ALTCOLOUR}${getYesNoFromBool(closestJobLocation.enabled)}, {MAINCOLOUR}Database ID: {ALTCOLOUR}${closestJobLocation.databaseId}`);
 }
 
 // ===========================================================================
@@ -610,7 +610,7 @@ function stopWorking(client) {
 
 	setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
 
-	let jobVehicle = getPlayerCurrentSubAccount(client).lastJobVehicle;
+	let jobVehicle = getPlayerData(client).lastJobVehicle;
 	if(jobVehicle) {
 		if(client.player.vehicle) {
 			removePlayerFromVehicle(client);
@@ -619,7 +619,7 @@ function stopWorking(client) {
 
 		respawnVehicle(jobVehicle);
 
-		getPlayerCurrentSubAccount(client).lastJobVehicle = false;
+		getPlayerData(client).lastJobVehicle = false;
 	}
 
 	setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
@@ -761,9 +761,9 @@ function jobEquipmentCommand(command, params, client) {
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 	let jobData = false;
 
-	if(closestJobLocation.position.distance(getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
+	if(getDistance(closestJobLocation.position, getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
 		let closestVehicle = getClosestVehicle(getPlayerPosition(client));
-		if(getDistance(getVehiclePosition(closestVehicle), getPlayerPosition(client)) < getGlobalConfig().startWorkingDistance) {
+		if(getDistance(getVehiclePosition(closestVehicle), getPlayerPosition(client)) > getGlobalConfig().startWorkingDistance) {
 			messagePlayerError(client, "You need to be near your job site or vehicle that belongs to your job!");
 			return false;
 		}
@@ -809,7 +809,7 @@ function jobEquipmentCommand(command, params, client) {
 	let equipmentId = toInteger(params) || 1;
 
 	if(equipmentId == 0) {
-		messagePlayerSuccess(client, "You put your equipment away");
+		meActionToNearbyPlayers(client, `puts their equipment into the locker`);
 		return true;
 	}
 
@@ -822,6 +822,11 @@ function jobEquipmentCommand(command, params, client) {
 	givePlayerJobEquipment(client, equipmentId-1);
 	//messagePlayerSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
 	meActionToNearbyPlayers(client, `grabs the ${jobData.equipment[equipmentId-1].name} equipment from the locker`);
+	if(doesPlayerHaveKeyBindForCommand(client, "inv")) {
+		messagePlayerTip(client, getLocaleString(client, "JobEquipmentInventoryKeyBindTip"), getKeyNameFromId(getPlayerKeyBindForCommand(client, "inv")));
+	} else {
+		messagePlayerTip(client, getLocaleString(client, "JobEquipmentInventoryCommandTip"), "/inv");
+	}
 }
 
 // ===========================================================================
@@ -1956,14 +1961,10 @@ function playerArrivedAtJobRouteStop(client) {
 
 function deleteJobItems(client) {
 	for(let i in getPlayerData(client).jobEquipmentCache) {
-		for(let j in getPlayerData(client).hotBarItems) {
-			if(getPlayerData(client).hotBarItems[j] == getPlayerData(client).jobEquipmentCache[i]) {
-				getPlayerData(client).hotBarItems[j] = -1;
-			}
-		}
 		deleteItem(getPlayerData(client).jobEquipmentCache[i]);
 	}
 
+	cachePlayerHotBarItems(client);
 	updatePlayerHotBar(client);
 }
 
@@ -2121,6 +2122,12 @@ function getClosestJobLocation(position) {
 
 function getJobPointsInRange(position, distance) {
 	return getServerData().jobs[getServerGame()].filter(x => x.position.distance(position) <= distance);
+}
+
+// ===========================================================================
+
+function respawnJobVehicle(client) {
+    respawnVehicle(getPlayerData(client).lastJobVehicle);
 }
 
 // ===========================================================================

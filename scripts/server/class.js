@@ -252,6 +252,7 @@ class ClientData {
 		this.keyBinds = [];
 		this.connectionId = 0;
 		this.incomingDamageMultiplier = 1;
+		this.weaponDamageEvent = VRR_WEAPON_DAMAGE_EVENT_NORMAL;
 
 		this.currentAnimation = -1;
 		this.currentAnimationPositionOffset = false;
@@ -261,6 +262,8 @@ class ClientData {
 
 		this.passwordResetState = VRR_RESETPASS_STATE_NONE;
 		this.passwordResetCode = "";
+
+		this.lastJobVehicle = null;
 	}
 };
 
@@ -428,7 +431,6 @@ class SubAccountData {
 		this.clanTitle = 0;
 		this.isWorking = false;
 		this.jobUniform = this.skin;
-		this.lastJobVehicle = null;
 		this.job = 0;
 		this.jobRank = 0;
 		this.weapons = [];

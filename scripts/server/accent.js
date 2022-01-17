@@ -89,3 +89,50 @@ function getAccentFromParams(params) {
 }
 
 // ===========================================================================
+
+function reloadAccentConfigurationCommand(command, params, client) {
+	getGlobalConfig().accents = loadAccentConfig();
+	messageAdmins(`${client.name} {MAINCOLOUR}has reloaded the accent list`);
+}
+
+// ===========================================================================
+
+function addAccentCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let newAccentName = params;
+
+	if(getAccentFromParams(newAccentName) != false) {
+		messagePlayerError(client, `That accent already exists!`)
+		return false;
+	}
+
+	getGlobalConfig().accents.push(newAccentName);
+	saveAccentConfig();
+	messageAdmins(`${client.name} {MAINCOLOUR}added a new accent: ${newAccentName}`);
+}
+
+// ===========================================================================
+
+function removeAccentCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let newAccentName = params;
+
+	if(!getAccentFromParams(newAccentName)) {
+		messagePlayerError(client, `That accent doesn't exist!`)
+		return false;
+	}
+
+	getGlobalConfig().accents.push(newAccentName);
+	saveAccentConfig();
+	messageAdmins(`${client.name} {MAINCOLOUR}added a new accent: ${newAccentName}`);
+}
+
+// ===========================================================================

@@ -133,6 +133,7 @@ function deleteGroundItemObject(itemId) {
 // ===========================================================================
 
 function createGroundItemCommand(command, params, client) {
+	let splitParams = params.split(" ");
 	let itemType = getItemTypeFromParams(splitParams.slice(0, -1).join(" "));
 	let value = splitParams.slice(-1) || 1;
 
@@ -154,6 +155,7 @@ function createGroundItemCommand(command, params, client) {
 // ===========================================================================
 
 function createItemCommand(command, params, client) {
+	let splitParams = params.split(" ");
 	let itemType = getItemTypeFromParams(splitParams.slice(0, -1).join(" "));
 	let value = splitParams.slice(-1) || 1;
 
@@ -661,7 +663,7 @@ function playerUseItem(client, hotBarSlot) {
 			break;
 
 		case VRR_ITEM_USETYPE_ROPE:
-			closestPlayer = getClosestPlayer(getPlayerPosition(client), client);
+			closestPlayer = getClosestPlayer(getPlayerPosition(client), client.player);
 
 			if(!getPlayerData(closestPlayer)) {
 				messagePlayerError(client, "There isn't anyone close enough to tie up!");

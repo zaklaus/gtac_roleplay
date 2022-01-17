@@ -708,7 +708,9 @@ function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, he
             break;
 
         case VRR_WEAPON_DAMAGE_EVENT_NORMAL:
-            getPlayerData(client).health = getPlayerData(client).health-(healthLoss*getPlayerData(client).incomingDamageMultiplier);
+            let reducedDamage = healthLoss*getPlayerData(client).incomingDamageMultiplier;
+            logToConsole(LOG_DEBUG, `[VRR.Client] ${getPlayerDisplayForConsole(client)}'s damager ${getPlayerDisplayForConsole(damagerEntity)} caused ${healthLoss} damage (damage reduction makes it ${reducedDamage})`);
+            getPlayerData(client).health = getPlayerData(client).health-reducedDamage;
             setPlayerHealth(client, getPlayerData(client).health);
             break;
 

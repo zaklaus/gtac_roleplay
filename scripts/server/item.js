@@ -826,8 +826,9 @@ function playerUseItem(client, hotBarSlot) {
 
 		case VRR_ITEM_USETYPE_SMOKEDRUG:
 			meActionToNearbyPlayers(client, `smokes some ${getItemName(itemIndex)}`);
-			if(getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > 25) {
-				getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-(getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue/100);
+			if(getPlayerData(client).incomingDamageMultiplier < 0.25) {
+				getPlayerData(client).incomingDamageMultiplier = 0.25;
 			}
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
@@ -835,8 +836,9 @@ function playerUseItem(client, hotBarSlot) {
 
 		case VRR_ITEM_USETYPE_SNORTDRUG:
 			meActionToNearbyPlayers(client, `snorts some ${getItemName(itemIndex)}`);
-			if(getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > 25) {
-				getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-(getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue/100);
+			if(getPlayerData(client).incomingDamageMultiplier < 0.25) {
+				getPlayerData(client).incomingDamageMultiplier = 0.25;
 			}
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);
@@ -844,8 +846,9 @@ function playerUseItem(client, hotBarSlot) {
 
 		case VRR_ITEM_USETYPE_INJECTDRUG:
 			meActionToNearbyPlayers(client, `shoots up some ${getItemName(itemIndex)}`);
-			if(getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue > 25) {
-				getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue;
+			getPlayerData(client).incomingDamageMultiplier = getPlayerData(client).incomingDamageMultiplier-(getItemTypeData(getItemData(itemIndex).itemTypeIndex).useValue/100);
+			if(getPlayerData(client).incomingDamageMultiplier < 0.25) {
+				getPlayerData(client).incomingDamageMultiplier = 0.25;
 			}
 			deleteItem(itemIndex);
 			switchPlayerActiveHotBarSlot(client, -1);

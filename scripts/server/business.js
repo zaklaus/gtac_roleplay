@@ -496,6 +496,27 @@ function setBusinessPublicCommand(command, params, client) {
 
 // ===========================================================================
 
+function removeBusinessOwnerCommand(command, params, client) {
+	let businessId = getPlayerBusiness(client);
+
+	if(!areParamsEmpty(params)) {
+		businessId = getBusinessFromParams(params);
+	}
+
+	if(!getBusinessData(businessId)) {
+		messagePlayerError(client, getLocaleString(client, "InvalidBusiness"));
+		return false;
+	}
+
+	getBusinessData(businessId).ownerType = VRR_BIZOWNER_NONE;
+	getBusinessData(businessId).ownerId = -1;
+
+	getBusinessData(businessId).needsSaved = true;
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}removed business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner`);
+}
+
+// ===========================================================================
+
 function lockUnlockBusinessCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -1060,12 +1081,12 @@ function buyBusinessCommand(command, params, client) {
 	}
 
 	if(getBusinessData(businessId).buyPrice <= 0) {
-		messagePlayerError(client, `Business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}is not for sale!`);
+		messagePlayerError(client, getLocaleString(client, "BusinessNotForSale"));
 		return false;
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getBusinessData(businessId).buyPrice) {
-		messagePlayerError(client, `You don't have enough money to buy business {businessBlue}${getBusinessData(businessId).name}!`);
+		messagePlayerError(client, getLocaleString(client, "BusinessPurchaseNotEnoughMoney"));
 		return false;
 	}
 
@@ -1456,8 +1477,8 @@ function exitBusiness(client) {
 	let businessId = getPlayerBusiness(client);
 	if(isPlayerSpawned(client)) {
 		setPlayerInterior(client, getServerData().businesses[businessId].entranceInterior);
-		setPlayerDimension(client, client, getServerData().businesses[businessId].entranceDimension);
-		setPlayerPosition(client, client, getServerData().businesses[businessId].entrancePosition);
+		setPlayerDimension(client, getServerData().businesses[businessId].entranceDimension);
+		setPlayerPosition(client, getServerData().businesses[businessId].entrancePosition);
 	}
 }
 

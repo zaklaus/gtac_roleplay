@@ -25,6 +25,7 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.promptAnswerNo", playerPromptAnswerNo);
     addNetworkEventHandler("vrr.promptAnswerYes", playerPromptAnswerYes);
     addNetworkEventHandler("vrr.toggleGUI", playerToggledGUI);
+    addNetworkEventHandler("vrr.2fa", checkPlayerTwoFactorAuthentication);
 
     // AFK
     addNetworkEventHandler("vrr.afk", playerChangeAFKState);
@@ -708,15 +709,13 @@ function playerDamagedByPlayer(client, damagerEntityName, weaponId, pedPiece, he
             break;
 
         case VRR_WEAPON_DAMAGE_EVENT_NORMAL:
-            let reducedDamage = healthLoss*getPlayerData(client).incomingDamageMultiplier;
-            logToConsole(LOG_DEBUG, `[VRR.Client] ${getPlayerDisplayForConsole(client)}'s damager ${getPlayerDisplayForConsole(damagerEntity)} caused ${healthLoss} damage (damage reduction makes it ${reducedDamage})`);
-            getPlayerData(client).health = getPlayerData(client).health-reducedDamage;
-            setPlayerHealth(client, getPlayerData(client).health);
+            logToConsole(LOG_DEBUG, `[VRR.Client] ${getPlayerDisplayForConsole(client)}'s damager ${getPlayerDisplayForConsole(damagerEntity)} caused ${healthLoss} damage (damage reduction makes it ${(healthLoss*getPlayerData(client).incomingDamageMultiplier)})`);
+            setPlayerHealth(client, getPlayerHealth(client)-(healthLoss*getPlayerData(client).incomingDamageMultiplier));
             break;
 
         default:
-            getPlayerData(client).health = getPlayerData(client).health-(healthLoss*getPlayerData(client).incomingDamageMultiplier);
-            setPlayerHealth(client, getPlayerData(client).health);
+            logToConsole(LOG_DEBUG, `[VRR.Client] ${getPlayerDisplayForConsole(client)}'s damager ${getPlayerDisplayForConsole(damagerEntity)} caused ${healthLoss} damage (damage reduction makes it ${(healthLoss*getPlayerData(client).incomingDamageMultiplier)})`);
+            setPlayerHealth(client, getPlayerHealth(client)-(healthLoss*getPlayerData(client).incomingDamageMultiplier));
             break;
     }
 }

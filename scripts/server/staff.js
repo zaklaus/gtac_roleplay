@@ -46,6 +46,7 @@ function setClientStaffTitleCommand(command, params, client) {
 		return false;
 	}
 
+	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let staffTitle = splitParams.slice(1).join(" ");
 
@@ -380,8 +381,6 @@ function gotoJobLocationCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-
 	let jobId = getJobFromParams(getParam(params, " ", 1)) || getClosestJobLocation(getPlayerPosition(client)).job;
 
 	if(!getJobData(jobId)) {
@@ -665,7 +664,6 @@ function addStaffFlagCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let flagName = getParam(params, " ", 2) || "None";
 
@@ -699,7 +697,6 @@ function takeStaffFlagCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let flagName = getParam(params, " ", 2) || "None";
 
@@ -733,7 +730,6 @@ function clearStaffFlagsCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
     if(!targetClient) {
@@ -773,7 +769,6 @@ function getStaffFlagsCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
     if(!targetClient) {
@@ -816,7 +811,6 @@ function allStaffFlagsCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let flagName = getParam(params, " ", 2) || "None";
 
@@ -953,6 +947,7 @@ function forcePlayerSkinCommand(command, params, client) {
 	//	return false;
 	//}
 
+	let splitParams = params.split("");
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let skinIndex = getSkinModelIndexFromParams(splitParams.slice(1).join(" "));
 

@@ -210,12 +210,13 @@ function getPlayerSkin(client) {
 function setPlayerHealth(client, health) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s health to ${health}`);
     sendPlayerSetHealth(client, health);
+	getServerData(client).health = health;
 }
 
 // ===========================================================================
 
 function getPlayerHealth(client) {
-    return client.player.health;
+    return getServerData(client).health;
 }
 
 // ===========================================================================
@@ -963,6 +964,30 @@ function getClosestVehicle(position) {
 
 function getClosestElementByType(elementType, position) {
 	return getElementsByType(elementType).reduce((i, j) => (getDistance(position, getElementPosition(i)) <= getDistance(position, getElementPosition(j))) ? i : j);
+}
+
+// ===========================================================================
+
+function getVehicleFirstEmptySeat(vehicle) {
+	for(let i = 0; i <= 4; i++) {
+		if(vehicle.getOccupant(i) == null) {
+			return i;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function isVehicleTrain(vehicle) {
+	if(getGame() == VRR_GAME_GTA_III) {
+		if(vehicle.modelIndex == 124) {
+			return true;
+		}
+	}
+
+	return false
 }
 
 // ===========================================================================

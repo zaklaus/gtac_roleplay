@@ -602,9 +602,6 @@ function forcePlayerIntoSwitchCharacterScreen(client) {
 	getPlayerCurrentSubAccount(client).health = getPlayerHealth(client);
 	getPlayerCurrentSubAccount(client).armour = getPlayerArmour(client);
 
-	getPlayerCurrentSubAccount(client).inHouse = (isPlayerInAnyHouse(client) ? getPlayerHouse(client) : 0);
-	getPlayerCurrentSubAccount(client).inBusiness = (isPlayerInAnyBusiness(client) ? getPlayerBusiness(client) : 0);
-
 	logToConsole(client, `Saving ${getPlayerDisplayForConsole(client)}'s subaccount (${getCharacterFullName(client)} [${getPlayerData(client).currentSubAccount}/${getPlayerCurrentSubAccount(client).databaseId}] to database`)
 	saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
 

@@ -264,6 +264,7 @@ class ClientData {
 		this.passwordResetCode = "";
 
 		this.lastJobVehicle = null;
+		this.health = 100;
 	}
 };
 

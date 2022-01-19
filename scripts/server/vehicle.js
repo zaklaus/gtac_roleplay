@@ -255,7 +255,7 @@ function vehicleLockCommand(command, params, client) {
 	let vehicle = getClosestVehicle(getPlayerPosition(client));
 
 	if(!getPlayerVehicle(client) && getDistance(getVehiclePosition(vehicle), getPlayerPosition(client)) > getGlobalConfig().vehicleLockDistance) {
-		messagePlayerError(client, "You need to be in or near a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInOrNearVehicle"));
 		return false;
 	}
 
@@ -267,12 +267,12 @@ function vehicleLockCommand(command, params, client) {
 	if(isPlayerInAnyVehicle(client)) {
 		vehicle = getPlayerVehicle(client);
 		if(!isPlayerInFrontVehicleSeat(client)) {
-			messagePlayerError(client, "You need to be in the front seat!");
+			messagePlayerError(client, getLocaleString(client, "MustBeInVehicleFrontSeat"));
 			return false;
 		}
 	} else {
 		if(!doesPlayerHaveVehicleKeys(client, vehicle)) {
-			messagePlayerError(client, "You don't have keys to this vehicle!");
+			messagePlayerError(client, getLocaleString(client, "DontHaveVehicleKey"));
 			return false;
 		}
 	}
@@ -292,7 +292,7 @@ function vehicleTrunkCommand(command, params, client) {
 
 	let behindPosition = getPosBehindPos(getVehiclePosition(vehicle), getVehicleHeading(vehicle), getGlobalConfig().vehicleTrunkDistance);
 	if(!getPlayerVehicle(client) && getDistance(behindPosition, getPlayerPosition(client)) > getGlobalConfig().vehicleTrunkDistance) {
-		messagePlayerError(client, "You need to be in or near a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInOrNearVehicle"));
 		return false;
 	}
 
@@ -302,7 +302,7 @@ function vehicleTrunkCommand(command, params, client) {
 	}
 
 	if(!doesPlayerHaveVehicleKeys(client, vehicle)) {
-		messagePlayerError(client, "You don't have keys to this vehicle!");
+		messagePlayerError(client, getLocaleString(client, "DontHaveVehicleKey"));
 		return false;
 	}
 
@@ -317,7 +317,7 @@ function vehicleTrunkCommand(command, params, client) {
 
 function vehicleLightsCommand(command, params, client) {
 	if(!getPlayerVehicle(client)) {
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
@@ -329,7 +329,7 @@ function vehicleLightsCommand(command, params, client) {
 	}
 
 	if(getPlayerVehicleSeat(client) > 1) {
-		messagePlayerError(client, "You need to be in the front seat!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInVehicleFrontSeat"));
 		return false;
 	}
 
@@ -344,14 +344,14 @@ function vehicleLightsCommand(command, params, client) {
 
 function deleteVehicleCommand(command, params, client) {
 	if(!getPlayerVehicle(client)) {
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
 	let vehicle = getPlayerVehicle(client);
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and can't be deleted.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -370,24 +370,24 @@ function deleteVehicleCommand(command, params, client) {
 
 function vehicleEngineCommand(command, params, client) {
 	if(!getPlayerVehicle(client)) {
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
 	if(getPlayerVehicleSeat(client) > 0) {
-		messagePlayerError(client, "You need to be the driver!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInVehicleDriverSeat"));
 		return false;
 	}
 
 	let vehicle = getPlayerVehicle(client);
 
 	if(!doesPlayerHaveVehicleKeys(client, vehicle)) {
-		messagePlayerError(client, "You don't have keys to this vehicle!");
+		messagePlayerError(client, getLocaleString(client, "DontHaveVehicleKey"));
 		return false;
 	}
 
 	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, "This is a random traffic vehicle and commands can't be used on it.");
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
 	}
 
@@ -403,7 +403,7 @@ function vehicleEngineCommand(command, params, client) {
 
 function vehicleSirenCommand(command, params, client) {
 	if(!getPlayerVehicle(client)) {
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
@@ -415,12 +415,12 @@ function vehicleSirenCommand(command, params, client) {
 	}
 
 	if(getPlayerVehicleSeat(client) > 1) {
-		messagePlayerError(client, "You need to be in the front seat!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInVehicleFrontSeat"));
 		return false;
 	}
 
 	if(!doesPlayerHaveVehicleKeys(client, vehicle)) {
-		messagePlayerError(client, "You don't have keys to this vehicle!");
+		messagePlayerError(client, getLocaleString(client, "DontHaveVehicleKey"));
 		return false;
 	}
 
@@ -441,7 +441,7 @@ function vehicleAdminColourCommand(command, params, client) {
 	}
 
 	if(!getPlayerVehicle(client)) {
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
@@ -449,18 +449,6 @@ function vehicleAdminColourCommand(command, params, client) {
 
 	if(!getVehicleData(vehicle)) {
 		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
-		return false;
-	}
-
-	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
-			messagePlayerError(client, "You need to be at a pay-n-spray!");
-			return false;
-		}
-	}
-
-	if(getPlayerCurrentSubAccount(client).cash < getGlobalConfig().resprayVehicleCost) {
-		messagePlayerError(client, `You don't have enough money to respray the vehicle (need $${makeLargeNumberReadable(getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash)} more!)`);
 		return false;
 	}
 
@@ -484,7 +472,7 @@ function vehicleAdminColourCommand(command, params, client) {
 function vehicleAdminRepairCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
 		logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} could not repair their vehicle. Reason: Not in a vehicle.`);
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
@@ -493,20 +481,6 @@ function vehicleAdminRepairCommand(command, params, client) {
 	if(!getVehicleData(vehicle)) {
 		logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} could not repair their ${getVehicleName(vehicle)} vehicle. Not a server vehicle.`);
 		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
-		return false;
-	}
-
-	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
-			logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} could not repair their ${getVehicleName(vehicle)} vehicle. Not at a mechanic shop.`);
-			messagePlayerError(client, "You need to be at a pay-n-spray!");
-			return false;
-		}
-	}
-
-	if(getPlayerCurrentSubAccount(client).cash < getGlobalConfig().repairVehicleCost) {
-		logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} could not repair their ${getVehicleName(vehicle)} vehicle. Not enough cash (Has: $${getPlayerCurrentSubAccount(client).cash}, Needs: $${getGlobalConfig().repairVehicleCost})`);
-		messagePlayerError(client, `You don't have enough money to repair the vehicle (need $${makeLargeNumberReadable(getGlobalConfig().resprayVehicleCost-getPlayerCurrentSubAccount(client).cash)} more!)`);
 		return false;
 	}
 
@@ -521,7 +495,7 @@ function vehicleAdminRepairCommand(command, params, client) {
 
 function vehicleAdminLiveryCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
@@ -530,13 +504,6 @@ function vehicleAdminLiveryCommand(command, params, client) {
 	if(!getVehicleData(vehicle)) {
 		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
 		return false;
-	}
-
-	if(!isAtPayAndSpray(getVehiclePosition(vehicle))) {
-		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageVehicles"))) {
-			messagePlayerError(client, "You need to be at a pay-n-spray!");
-			return false;
-		}
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getGlobalConfig().repairVehicleCost) {
@@ -561,7 +528,7 @@ function vehicleAdminLiveryCommand(command, params, client) {
 
 function buyVehicleCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
@@ -573,12 +540,12 @@ function buyVehicleCommand(command, params, client) {
 	}
 
 	if(getVehicleData(vehicle).buyPrice <= 0) {
-		messagePlayerError(client, `This ${getVehicleName(vehicle)} is not for sale!`);
+		messagePlayerError(client, getLocaleString(client, "VehicleNotForSale"));
 		return false;
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getVehicleData(vehicle).buyPrice) {
-		messagePlayerError(client, `You don't have enough money to buy this vehicle (need $${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice-getPlayerCurrentSubAccount(client).cash)} more!)`);
+		messagePlayerError(client, getLocaleString(client, "VehiclePurchaseNotEnoughMoney"));
 		return false;
 	}
 
@@ -589,14 +556,14 @@ function buyVehicleCommand(command, params, client) {
 	getVehicleData(vehicle).needsSaved = true;
 
 	meActionToNearbyPlayers(client, `receives a set of keys to test drive the ${getVehicleName(vehicle)} and starts the engine`);
-	messagePlayerInfo(client, `Drive the vehicle away from the dealership to buy it, or get out to cancel.`);
+	messagePlayerInfo(client, getLocaleString(client, "DealershipPurchaseTestDrive"));
 }
 
 // ===========================================================================
 
 function rentVehicleCommand(command, params, client) {
 	if(!isPlayerInAnyVehicle(client)) {
-		messagePlayerError(client, "You need to be in a vehicle!");
+		messagePlayerError(client, getLocaleString(client, "MustBeInAVehicle"));
 		return false;
 	}
 
@@ -608,7 +575,7 @@ function rentVehicleCommand(command, params, client) {
 	}
 
 	if(getVehicleData(vehicle).rentPrice <= 0) {
-		messagePlayerError(client, `This ${getVehicleName(vehicle)} is not for rent!`);
+		messagePlayerError(client, getLocaleString(client, "VehicleNotForRent"));
 		return false;
 	}
 
@@ -1377,7 +1344,7 @@ function checkVehicleBuying(client) {
 
 	if(!isPlayerInAnyVehicle(client)) {
 		if(getPlayerData(client).buyingVehicle != false) {
-			messagePlayerError(client, "You canceled the vehicle purchase by exiting the vehicle!");
+			messagePlayerError(client, getLocaleString(client, "DealershipPurchaseExitedVehicle"));
 			respawnVehicle(getPlayerData(client).buyingVehicle);
 			getPlayerData(client).buyingVehicle = false;
 		}
@@ -1386,7 +1353,7 @@ function checkVehicleBuying(client) {
 
 	if(getDistance(getVehiclePosition(getPlayerData(client).buyingVehicle), getVehicleData(getPlayerData(client).buyingVehicle).spawnPosition) > getGlobalConfig().buyVehicleDriveAwayDistance) {
 		if(getPlayerCurrentSubAccount(client).cash < getVehicleData(getPlayerData(client).buyingVehicle).buyPrice) {
-			messagePlayerError(client, "You don't have enough money to buy this vehicle!");
+			messagePlayerError(client, getLocaleString(client, "VehiclePurchaseNotEnoughMoney"));
 			respawnVehicle(getPlayerData(client).buyingVehicle);
 			getPlayerData(client).buyingVehicle = false;
 			return false;
@@ -1401,7 +1368,7 @@ function checkVehicleBuying(client) {
 		getVehicleData(getPlayerData(client).buyingVehicle).rentPrice = 0;
 		getVehicleData(getPlayerData(client).buyingVehicle).spawnLocked = false;
 		getPlayerData(client).buyingVehicle = false;
-		messagePlayerSuccess(client, "This vehicle is now yours! It will save wherever you leave it.");
+		messagePlayerSuccess(client, getLocaleString(client, "VehiclePurchaseComplete"));
 		return true;
 	}
 

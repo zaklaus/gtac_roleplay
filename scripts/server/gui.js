@@ -125,3 +125,9 @@ function showPlayerChangePasswordGUI(client) {
 }
 
 // ===========================================================================
+
+function showPlayerTwoFactorAuthenticationGUI(client) {
+    sendNetworkEventToPlayer("vrr.2fa", client);
+}
+
+// ===========================================================================

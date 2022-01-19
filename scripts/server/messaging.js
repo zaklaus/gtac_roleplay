@@ -230,13 +230,19 @@ function clearChatBox(client) {
 
 // ===========================================================================
 
-function replaceEmojiIntoString(message) {
+function replaceEmojiIntoString(messageString) {
 	for(let i in emojiReplaceString) {
-		while(message.indexOf(emojiReplaceString[i][0]) != -1) {
-			message = message.replace(emojiReplaceString[i][0], emojiReplaceString[i][1]);
+		while(messageString.indexOf(emojiReplaceString[i][0]) != -1) {
+			messageString = messageString.replace(emojiReplaceString[i][0], emojiReplaceString[i][1]);
 		}
 	}
-	return message;
+	return messageString;
+}
+
+// ===========================================================================
+
+function messagePlayerHelpContent(client, messageString) {
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${messageString}`);
 }
 
 // ===========================================================================

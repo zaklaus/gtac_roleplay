@@ -310,7 +310,6 @@ function showBindKeysHelpMessage(client) {
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Default keys are: [#0066FF]K {MAINCOLOUR}for vehicle engine, [#0066FF]L {MAINCOLOUR}for lights, and [#0066FF]J {MAINCOLOUR}for lock/unlock`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}[#0066FF]I {MAINCOLOUR}to see your items and [#0066FF]1-9 {MAINCOLOUR}to equip an item or [#0066FF]0 (zero) {MAINCOLOUR}to equip none.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}[#0066FF]U {MAINCOLOUR}to use or [#0066FF]O {MAINCOLOUR}to drop your current item, and [#0066FF]P {MAINCOLOUR}to pickup an item from the ground.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}[#0066FF]M {MAINCOLOUR}for mouse cam (free look)`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your keybinds will automatically be usable on all ${getServerName()} servers`);
 }
 
@@ -318,35 +317,35 @@ function showBindKeysHelpMessage(client) {
 
 function showBusinessHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBusinessHelp")));
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use /buy to purchase items or /bizitems to see a list of what's for sale at any business`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Businesses are shown with blue names above the icon at their entrance.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Business owner commands: {ALTCOLOUR}/bizorder, /bizlock, /bizlights, /radiostation, /bizitemprice, /bizbuyprice, /bizfee, /biztill, /bizwithdraw, /bizdeposit`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}A new car for sale will appear when you drive away from the dealer.`);
+    messagePlayerHelpContent(client, getLocaleString(client, "BusinessHelp")[0]);
+    messagePlayerHelpContent(client, getLocaleString(client, "BusinessHelp")[1]);
+    messagePlayerHelpContent(client, getLocaleString(client, "BusinessHelp")[2], `{ALTCOLOUR}/bizorder, /bizlock, /bizlights, /radiostation, /bizitemprice, /bizbuyprice, /bizfee, /biztill, /bizwithdraw, /bizdeposit`);
+    messagePlayerHelpContent(client, getLocaleString(client, "BusinessHelp")[3]);
 }
 
 // ===========================================================================
 
 function showClanHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderClanHelp")));
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Ask an admin to create a clan (Similar to factions/groups/families)`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Clan owners have full control over their clan once it's created`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Clan commands: {ALTCOLOUR}/clan, /clanmotd, /clanname, /clanowner, /clanhouse, /clanbiz, /claninvite, /clanuninvite, /clansetrank`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}{ALTCOLOUR}/clanranks, /clanflags, /clanaddrank, /clandelrank, /clanaddrankflag, /clandelrankflag, /clanaddmemberflag, /clandelmemberflag`);
+    messagePlayerHelpContent(client, getLocaleString(client, "ClanHelp")[0]);
+    messagePlayerHelpContent(client, getLocaleString(client, "ClanHelp")[1]);
+    messagePlayerHelpContent(client, getLocaleString(client, "ClanHelp")[2], `{ALTCOLOUR}/clan, /clanmotd, /clanname, /clanowner, /clanhouse, /clanbiz, /claninvite, /clanuninvite, /clansetrank`);
+    messagePlayerHelpContent(client, getLocaleString(client, "ClanHelp")[3], `{ALTCOLOUR}/clanranks, /clanflags, /clanaddrank, /clandelrank, /clanaddrankflag, /clandelrankflag, /clanaddmemberflag, /clandelmemberflag`);
 }
 
 // ===========================================================================
 
 function showRadioHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderRadioHelp")));
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostation {MAINCOLOUR}to set the station for your vehicle, house, or business`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/radiostations {MAINCOLOUR}to see a list of stations`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}You can change your radio streaming volume using {ALTCOLOUR}/radiovolume {MAINCOLOUR}with 0-100 as the percent.`);
+    messagePlayerHelpContent(client, getLocaleString(client, "RadioHelp")[0], `{ALTCOLOUR}/radiostation {MAINCOLOUR}`);
+    messagePlayerHelpContent(client, getLocaleString(client, "RadioHelp")[1], `{ALTCOLOUR}/radiostations {MAINCOLOUR}`);
+    messagePlayerHelpContent(client, getLocaleString(client, "RadioHelp")[2], `{ALTCOLOUR}/radiovolume {MAINCOLOUR}`);
 }
 
 // ===========================================================================
 
 function showWealthAndTaxHelpMessage(client) {
-    messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderWealthAndTax")));
+    messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderWealthandTaxHelp")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your taxes on payday are ${100*getGlobalConfig().economy.incomeTaxRate}% of your calculated wealth.`);
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your calculated wealth is a total sum based on how many vehicles, houses, and businesses you have.`);
 	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Each vehicle is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle}, {MAINCOLOUR}each house is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerHouse}, {MAINCOLOUR}and each business is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness}`);

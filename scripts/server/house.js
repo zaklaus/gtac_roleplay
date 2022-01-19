@@ -591,8 +591,11 @@ function deleteHouse(houseId, whoDeleted = 0) {
 		disconnectFromDatabase(dbConnection);
 	}
 
-	deleteAllHouseBlips(houseId);
-	deleteAllHousePickups(houseId);
+	deleteHouseEntrancePickup(houseId);
+	deleteHouseExitPickup(houseId);
+
+	deleteHouseEntranceBlip(houseId);
+	deleteHouseExitBlip(houseId);
 
 	removePlayersFromHouse(houseId);
 
@@ -1087,12 +1090,12 @@ function buyHouseCommand(command, params, client) {
 	}
 
 	if(getHouseData(houseId).buyPrice <= 0) {
-		messagePlayerError(client, `{houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}is not for sale!`);
+		messagePlayerError(client, getLocaleString(client, "HouseNotForSale"));
 		return false;
 	}
 
 	if(getPlayerCurrentSubAccount(client).cash < getHouseData(houseId).buyPrice) {
-		messagePlayerError(client, `You don't have enough money to buy house {houseGreen}${getHouseData(houseId).name}!`);
+		messagePlayerError(client, getLocaleString(client, "HousePurchaseNotEnoughMoney"));
 		return false;
 	}
 

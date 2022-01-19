@@ -101,3 +101,20 @@ function getClosestGate(position) {
 }
 
 // ===========================================================================
+
+function triggerGateCommand(command, params, client) {
+	let closestGate = getClosestGate(getPlayerPosition(client));
+
+	if(!getGateData(closestGate)) {
+		messagePlayerError(client, getLocaleString(client, "InvalidGate"));
+	}
+
+	if(!canPlayerUseGate(client, closestGate)) {
+		messagePlayerError(client, getLocaleString(client, "NoGateAccess"));
+		return false;
+	}
+
+	triggerGate(getGateData(closestGate).scriptName);
+}
+
+// ===========================================================================

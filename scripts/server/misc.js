@@ -457,6 +457,3 @@ function gpsCommand(command, params, client) {
 
 	blinkGenericGPSBlipForPlayer(client, getColourByType("businessBlue"), 10);
 }
-
-// ===========================================================================
-

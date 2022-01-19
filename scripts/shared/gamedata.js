@@ -18,6 +18,24 @@ let supportedFeatures = {
 
 // ===========================================================================
 
+let extraContentResource = [
+    "",
+    "connectedrp-gta3",
+    "connectedrp-gtavc",
+    "connectedrp-gtasa",
+    "connectedrp-gtaiv",
+    "connectedrp-gtaiv",
+    "",
+    "",
+    "",
+    "connectedrp-mafia1",
+    "connectedrp-mafia2",
+    "connectedrp-mafia3",
+    "connectedrp-mafia1de",
+];
+
+// ===========================================================================
+
 let gameData = {
     weaponNames: [
         ["Unknown"], // Game 0 is invalid (GTA 3 is the first game, and is ID 1)
@@ -3221,6 +3239,7 @@ let gameData = {
 			["sitleft", 0, 169, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_LEFT],
 			["sitforward", 0, 169, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_FORWARD],
 			["sitback", 0, 169, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_BACK],
+            ["tazed", 0, 13, VRR_ANIMTYPE_FORCED, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 		],
 		[ // GTA SA
 			["walk", 0, 0, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
@@ -3242,7 +3261,6 @@ let gameData = {
 			["backhandleft", 0, 104, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["knockback", 0, 105, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["idle1", 0, 135, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
-			["knockback", 0, 105, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["cower", 0, 141, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["handsup", 0, 142, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 			["fucku", 0, 144, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
@@ -3266,6 +3284,7 @@ let gameData = {
 			["sitleft", 0, 150, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_LEFT],
 			["sitforward", 0, 150, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_FORWARD],
 			["sitback", 0, 150, VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null, VRR_ANIMMOVE_BACK],
+            ["tazed", 0, 15, VRR_ANIMTYPE_FORCED, 0.0, null, null, null, null, VRR_ANIMMOVE_NONE],
 
 			/*
 			["talk", "PED", "IDLE_CHAT", VRR_ANIMTYPE_NORMAL, 0.0, null, null, null, null],

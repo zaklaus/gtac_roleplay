@@ -47,7 +47,7 @@ function initTwoFactorAuthenticationGUI() {
 		},
 	});
 
-	twoFactorAuth.codeLabel = twoFactorAuth.window.text(20, 135, 260, 20, 'Please enter the code from your authenticator app!', {
+	twoFactorAuth.codeLabel = twoFactorAuth.window.text(20, 135, 260, 20, 'Please enter the code sent to your email!', {
 		main: {
 			textSize: 10.0,
 			textAlign: 0.5,
@@ -129,7 +129,7 @@ function twoFactorAuthSuccess() {
 
 function checkTwoFactorAuth() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking two-factor authentication with server ...`);
-	sendNetworkEventToServer("vrr.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
+	sendNetworkEventToServer("vrr.2fa", twoFactorAuth.codeInput.lines[0]);
 }
 
 // ===========================================================================

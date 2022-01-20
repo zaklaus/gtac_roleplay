@@ -22,7 +22,7 @@ function kickClientCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -40,7 +40,7 @@ function kickClientCommand(command, params, client) {
 
 // ===========================================================================
 
-function setClientStaffTitleCommand(command, params, client) {
+function setStaffTitleCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -51,7 +51,7 @@ function setClientStaffTitleCommand(command, params, client) {
 	let staffTitle = splitParams.slice(1).join(" ");
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -79,7 +79,7 @@ function muteClientCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -106,7 +106,7 @@ function unMuteClientCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -132,7 +132,7 @@ function freezeClientCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -159,7 +159,7 @@ function unFreezeClientCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -186,7 +186,7 @@ function gotoPlayerCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -218,7 +218,7 @@ function getGeoIPInformationCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -291,7 +291,7 @@ function gotoBusinessCommand(command, params, client) {
 	let businessId = getBusinessFromParams(params)
 
 	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, "That business doesn't exist!");
+		messagePlayerError(client, getLocaleString(client, "InvalidBusiness"));
 		return false;
 	}
 
@@ -353,7 +353,7 @@ function gotoHouseCommand(command, params, client) {
 	let houseId = getHouseFromParams(params)
 
 	if(!getHouseData(houseId)) {
-		messagePlayerError(client, "That house doesn't exist!");
+		messagePlayerError(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -384,7 +384,7 @@ function gotoJobLocationCommand(command, params, client) {
 	let jobId = getJobFromParams(getParam(params, " ", 1)) || getClosestJobLocation(getPlayerPosition(client)).job;
 
 	if(!getJobData(jobId)) {
-		messagePlayerError(client, `That job does not exist!`);
+		messagePlayerError(client, getLocaleString(client, "InvalidJob"));
 		return false;
 	}
 
@@ -588,7 +588,7 @@ function getPlayerCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -628,7 +628,7 @@ function returnPlayerCommand(command, params, client) {
 
     let targetClient = getPlayerFromParams(params);
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -668,12 +668,12 @@ function addStaffFlagCommand(command, params, client) {
 	let flagName = getParam(params, " ", 2) || "None";
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
 	if(getStaffFlagValue(flagName) == false) {
-		messagePlayerError(client, "That staff flag doesn't exist!");
+		messagePlayerError(client, getLocaleString(client, "InvalidStaffFlag"));
         return false;
 	}
 
@@ -701,7 +701,7 @@ function takeStaffFlagCommand(command, params, client) {
 	let flagName = getParam(params, " ", 2) || "None";
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -733,7 +733,7 @@ function clearStaffFlagsCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
     }
 
@@ -772,7 +772,7 @@ function getStaffFlagsCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -796,7 +796,7 @@ function getStaffFlagsCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(flagList, 8);
 
-	messagePlayeNormal(client, `{clanOrange}== {jobYellow}Staff Flags (${targetClient.name}) {clanOrange}=========================`);
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerStaffFlagsList", getPlayerData(targetClient).accountData.name)));
 
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join("{MAINCOLOUR}, "));
@@ -815,11 +815,16 @@ function allStaffFlagsCommand(command, params, client) {
 	let flagName = getParam(params, " ", 2) || "None";
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
-	messagePlayerInfo(client, `{MAINCOLOUR}Staff flags: {ALTCOLOUR}${getServerBitFlagKeys().staffFlagKeys.join(getInlineChatColourByName("white"))}, {ALTCOLOUR}")}`);
+	let chunkedList = splitArrayIntoChunks(getServerBitFlagKeys().staffFlagKeys, 8);
+
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderStaffFlagsList")));
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join("{MAINCOLOUR}, "));
+	}
 }
 
 // ===========================================================================
@@ -834,7 +839,7 @@ function givePlayerMoneyCommand(command, params, client) {
 	let amount = toInteger(getParam(params, " ", 2));
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -857,7 +862,7 @@ function forcePlayerAccentCommand(command, params, client) {
 	let newAccent = getParam(params, " ", 2) || "None";
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -889,14 +894,14 @@ function forceCharacterNameChangeCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
 	getPlayerData(targetClient).changingCharacterName = true;
 
 	messageAdmins(`${client.name} {MAINCOLOUR}forced {ALTCOLOUR}${getPlayerName(targetClient)} (${getCharacterFullName(targetClient)}) {MAINCOLOUR}to change their character's name.`);
-	showPlayerNewCharacterFailedGUI(targetClient, "Non-RP name! Choose a new one:");
+	showPlayerNewCharacterFailedGUI(targetClient, getLocaleString(targetClient, "NonRPName"));
 }
 
 // ===========================================================================
@@ -917,7 +922,7 @@ function forceCharacterNameCommand(command, params, client) {
 	let lastName = getParam(params, " ", 3);
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -952,7 +957,7 @@ function forcePlayerSkinCommand(command, params, client) {
 	let skinIndex = getSkinModelIndexFromParams(splitParams.slice(1).join(" "));
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -979,7 +984,7 @@ function forcePlayerWantedLevelCommand(command, params, client) {
 	let wantedLevel = getParam(params, " ", 2);
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
@@ -999,13 +1004,13 @@ function getAllVehiclesOwnedByPlayerCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(params);
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
 	let vehicles = getAllVehiclesOwnedByPlayer(targetClient);
 
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Player Vehicles {clanOrange}==========================`);
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerVehiclesList", getPlayerData(targetClient).accountData.name)));
 	for(let i in vehicles) {
 		messagePlayerNormal(client, `🚗 {vehiclePurple}[Vehicle Info] {MAINCOLOUR}ID: {ALTCOLOUR}${vehicles[i].index}, {MAINCOLOUR}DatabaseID: {ALTCOLOUR}${vehicles[i].databaseId}, {MAINCOLOUR}Type: {ALTCOLOUR}${getVehicleName(vehicles[i].vehicle)}[${vehicles[i].model}], {MAINCOLOUR}BuyPrice: {ALTCOLOUR}${vehicles[i].buyPrice}, {MAINCOLOUR}RentPrice: {ALTCOLOUR}${vehicles[i].rentPrice}, {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(vehicles[i].locked)}, {MAINCOLOUR}Engine: {ALTCOLOUR}${getYesNoFromBool(vehicles[i].engine)}`);
 	}
@@ -1022,13 +1027,13 @@ function getAllBusinessesOwnedByPlayerCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(params);
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
 	let businesses = getAllBusinessesOwnedByPlayer(targetClient);
 
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Player Businesses {clanOrange}========================`);
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerBusinessesList", getPlayerData(targetClient).accountData.name)));
 	for(let i in businesses) {
 		messagePlayerNormal(client, `🏢 {businessBlue}[Business Info] {MAINCOLOUR}Name: {ALTCOLOUR}${businesses[i].name}, {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(intToBool(businesses[i].locked))}, {MAINCOLOUR}ID: {ALTCOLOUR}${businesses[i].index}/${businesses[i].databaseId}`);
 	}
@@ -1045,13 +1050,13 @@ function getAllHousesOwnedByPlayerCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(params);
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
 	let houses = getAllHousesOwnedByPlayer(targetClient);
 
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Player Houses {clanOrange}============================`);
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerHousesList", getPlayerData(targetClient).accountData.name)));
 	for(let i in houses) {
 		messagePlayerNormal(client, `🏠 {houseGreen}[House Info] {MAINCOLOUR}Description: {ALTCOLOUR}${houses[i].description}, {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(intToBool(houses[i].locked))}, {MAINCOLOUR}ID: {ALTCOLOUR}${houses[i].index}/${houses[i].databaseId}`);
 	}
@@ -1068,15 +1073,8 @@ function forceAccountPasswordResetCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(params);
 
     if(!targetClient) {
-        messagePlayerError(client, "That player is not connected!");
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
-	}
-
-	let houses = getAllHousesOwnedByPlayer(targetClient);
-
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Player Houses {clanOrange}============================`);
-	for(let i in houses) {
-		messagePlayerNormal(client, `🏠 {houseGreen}[House Info] {MAINCOLOUR}Description: {ALTCOLOUR}${houses[i].description}, {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(intToBool(houses[i].locked))}, {MAINCOLOUR}ID: {ALTCOLOUR}${houses[i].index}/${houses[i].databaseId}`);
 	}
 }
 

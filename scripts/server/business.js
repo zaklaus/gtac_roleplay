@@ -1506,6 +1506,10 @@ function getBusinessOwnerTypeText(ownerType) {
 
 // ===========================================================================
 
+/**
+ * @param {number} businessId - The data index of the business
+ * @return {BusinessData} The business's data (class instance)
+ */
 function getBusinessData(businessId) {
 	if(typeof getServerData().businesses[businessId] != null) {
 		return getServerData().businesses[businessId];

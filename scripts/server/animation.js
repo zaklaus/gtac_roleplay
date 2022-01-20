@@ -83,6 +83,10 @@ function showAnimationListCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * @param {number} animationSlot - The slot index of the animation
+ * @return {Array} The animation's data (array)
+ */
 function getAnimationData(animationSlot, gameId = getServerGame()) {
     return getGameData().animations[gameId][animationSlot];
 }

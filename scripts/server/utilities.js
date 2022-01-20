@@ -57,6 +57,10 @@ function getGameAreas(gameId) {
 
 // ===========================================================================
 
+/**
+ * @param {Client} client - The client
+ * @return {ClientData} The player/client's data (class instancee)
+ */
 function getPlayerData(client) {
 	if(client != null) {
 		return getServerData().clients[client.index];

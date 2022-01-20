@@ -887,6 +887,10 @@ function deleteClan(clanId) {
 
 // ===========================================================================
 
+/**
+ * @param {number} clanId - The data index of the clan
+ * @return {ClanData} The clan's data (class instance)
+ */
 function getClanData(clanId) {
 	if(typeof getServerData().clans[clanId] != null) {
 		return getServerData().clans[clanId];

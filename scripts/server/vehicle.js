@@ -189,6 +189,10 @@ function spawnAllVehicles() {
 
 // ===========================================================================
 
+/**
+ * @param {Vehicle} vehicle - The vehicle element
+ * @return {VehicleData} The vehicles's data (class instance)
+ */
 function getVehicleData(vehicle) {
 	if(isVehicleObject(vehicle)) {
 		let dataIndex = getEntityData(vehicle, "vrr.dataSlot");

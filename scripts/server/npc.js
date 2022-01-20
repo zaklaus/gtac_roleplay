@@ -8,13 +8,19 @@
 // ===========================================================================
 
 function initNPCScript() {
-	loadNPCsFromDatabase();
+	getServerData().npcs = loadNPCsFromDatabase();
 	setAllNPCDataIndexes();
+
+	spawnAllNPCs();
 }
 
 // ===========================================================================
 
-function getNPCData(ped) {
+/**
+ * @param {number} npcId - The data index of the NPC
+ * @return {NPCData} The NPC's data (class instancee)
+ */
+function getNPCData(npcId) {
     return ped.getData("vrr.dataIndex");
 }
 
@@ -187,7 +193,14 @@ function spawnNPC(npcIndex) {
 	let civilian = createGameCivilian(getNPCData(npcIndex).model, getNPCData(npcIndex).spawnPosition, getNPCData(npcIndex).spawnRotation);
 	if(civilian) {
 		civilian.setData("vrr.dataIndex", npcIndex);
+		getNPCData(npcIndex).ped = civilian;
 	}
 }
 
 // ===========================================================================
+
+function spawnAllNPCs() {
+	for(let i in getServerData().npcs) {
+		spawnNPC(npcIndex);
+	}
+}

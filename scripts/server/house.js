@@ -1116,6 +1116,10 @@ function isPlayerInAnyHouse(client) {
 
 // ===========================================================================
 
+/**
+ * @param {number} houseIndex - The data index of the house
+ * @return {HouseData} The house's data (class instance)
+ */
 function getHouseData(houseId) {
 	if(typeof getServerData().houses[houseId] != "undefined") {
 		return getServerData().houses[houseId];

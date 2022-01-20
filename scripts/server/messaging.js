@@ -230,7 +230,7 @@ function clearChatBox(client) {
 
 // ===========================================================================
 
-function replaceEmojiIntoString(messageString) {
+function replaceEmojiInString(messageString) {
 	for(let i in emojiReplaceString) {
 		while(messageString.indexOf(emojiReplaceString[i][0]) != -1) {
 			messageString = messageString.replace(emojiReplaceString[i][0], emojiReplaceString[i][1]);

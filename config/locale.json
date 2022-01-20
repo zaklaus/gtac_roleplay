@@ -1,3 +1,5 @@
 [
-    ["English", "english"]
+    ["English", "english", "en"],
+    ["Russian", "russian", "ru"],
+    ["Polish", "polish", "pl"]
 ]

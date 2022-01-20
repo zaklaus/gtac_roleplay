@@ -1,4 +1,5 @@
 {
+    "TranslationProvidedBy": "Vortrex",
     "LocaleEnglishName": "English",
     "LocaleNativeName": "English",
     "LocaleOffer": "This server is available in English. Use {1} to use it.",
@@ -31,13 +32,13 @@
     "ClanPlayerNotInSameClan": "That player is not in your clan",
     "ClanCantChangeRankLevel": "You can not change clan rank's level",
     "ClanCantChangeRankTag": "You can not change clan rank's tags",
-    "NameNotRegistered": "Your name is not registered! Use /register to make an account.",
+    "NameNotRegistered": "Your name is not registered! Use {1} to make an account.",
     "AutomaticLoginIPToggle": "Automatic login by IP is now {1}",
     "CouldNotRegisterAccount": "There was a problem creating your account. Please contact an admin.",
     "RandomTipsToggle": "Random tips are now {1}",
     "ActionTipsToggle": "Action tips are now {1}",
     "AutoSpawnLastCharToggle": "Automatic spawn as last used character is {1}",
-    "AccountGUISettingToggle": "⚙️ GUI is now {1}",
+    "AccountGUISettingToggle": "GUI is now {1}",
     "On": "On",
     "Off": "Off",
     "Yes": "Yes",
@@ -54,9 +55,9 @@
     "PasswordsDontMatch": "The new password and confirm new password aren't the same!",
     "PasswordChanged": "Your password has been changed!",
     "AutoLoggedInIP": "You have been automatically logged in by IP!",
-    "WelcomeBack": "Welcome back to {1}, {2}! Please /login to continue.",
-    "WelcomeNewPlayer": "Welcome to {1}, {2}! Please /register to play.",
-    "InvalidPlayer": "Job not found!",
+    "WelcomeBack": "Welcome back to {1}, {2}! Please {3} to continue.",
+    "WelcomeNewPlayer": "Welcome to {1}, {2}! Please {3} to play.",
+    "InvalidPlayer": "Player not found!",
     "InvalidBusiness": "Business not found!",
     "InvalidHouse": "House not found!",
     "InvalidVehicle": "Vehicle not found!",
@@ -177,10 +178,10 @@
         "Northwest"
     ],
     "NewPlayerReadyToPlay": [
-        "You have been given some cash. Use {ALTCOLOUR}/gps{MAINCOLOUR} to find places to buy items.",
+        "You have been given some cash. Use {1} to find places to buy items.",
         "If you need money, jobs are the yellow dots on the radar.",
         "For a car, visit the car dealership. You can also use a rental vehicle near spawn or take the train",
-        "Be sure to read the {ALTCOLOUR}/rules{MAINCOLOUR} and use {ALTCOLOUR}/help{MAINCOLOUR} for info."
+        "Be sure to read the {1} and use {2} for info."
     ],
     "YourCurrentVehicleDeleted": "The vehicle you were in was deleted.",
     "Distance": "Distance",
@@ -267,10 +268,10 @@
     ],
     "KeyBindHelp": [
         "You can set your own key binds. Use {1} to see your binded keys.",
-        "Use {1} to add a new keybind and /unbindkey to remove one.",
+        "Use {1} to add a new keybind and {2} to remove one.",
         "Default keys are: {1} for vehicle engine, {1} for lights, and {3} for lock/unlock",
-        "Press {1} to see your items and {2} to equip an item or {3} to equip none.",
-        "Press {1}U {MAINCOLOUR}to use the item you're holding, press {2} to drop it, or press {3}to pickup an item from the ground."
+        "Press {1} to see your items and {2} to equip an item or {3} to unequip all.",
+        "Press {1} to use the item you're holding, press {2} to drop it, or press {3}to pickup an item from the ground."
     ],
     "BusinessHelp": [
         "Use {1} to purchase items or {2} to see a list of what's for sale at any business",
@@ -315,13 +316,13 @@
     "VehiclePurchaseComplete": "This vehicle is now yours! It will save wherever you leave it.",
     "VehiclePurchaseNotEnoughMoney": "You don't have enough money to buy this vehicle!",
     "HousePurchaseNotEnoughMoney": "You don't have enough money to buy this house!",
-    "BusinessPurchaseNotEnoughMoney": "You don't have enough money to buy this house!",
+    "BusinessPurchaseNotEnoughMoney": "You don't have enough money to buy this business!",
     "Locales": {
         "English": "English",
         "Russian": "Russian",
         "Spanish": "Spanish",
         "German": "German",
         "Dutch": "Dutch",
-        "Ukrainian": "Ukrainian"
+        "Polish": "Polish"
     }
 }

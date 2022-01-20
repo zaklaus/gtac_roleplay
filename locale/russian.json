@@ -322,7 +322,12 @@
         "Russian": "Русский",
         "Spanish": "Испанский",
         "German": "Немецкий",
-        "Dutch": "Нидерландский",
-        "Ukrainian": "Украинский"
-    }
+        "Dutch": "Нидерландский"
+    },
+    "HeaderPlayerHousesList": "Player Houses ({1})",
+    "HeaderPlayerStaffFlagsList": "Player Staff Flags ({1})",
+    "HeaderStaffFlagsList": "Staff Flags",
+    "NonRPName": "Non-RP name! Choose a new one:",
+    "InvalidStaffFlag": "Staff flag not found!",
+    "InvalidClanFlag": "Clan flag not found!"
 }

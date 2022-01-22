@@ -226,3 +226,21 @@ function reloadAllRadioStationsCommand(command, params, client) {
 }
 
 // ===========================================================================
+
+function getRadioStationFromParams(params) {
+	if(isNaN(params)) {
+		for(let i in getServerData().radioStations) {
+			if(toLowerCase(getServerData().radioStations[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getServerData().radioStations[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================

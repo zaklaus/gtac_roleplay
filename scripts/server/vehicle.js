@@ -255,6 +255,27 @@ function createTemporaryVehicleCommand(command, params, client) {
 
 // ===========================================================================
 
+function getNearbyVehiclesCommand(command, params, client) {
+	let distance = getParam(params, " ", 1) || 10.0;
+
+	let nearbyVehicles = getElementsByTypeInRange(ELEMENT_VEHICLE, getPlayerPosition, distance);
+
+	if(nearbyVehicles.length == 0) {
+		messagePlayerAlert(client, getLocaleString(client, "NoVehiclesWithinRange", distance));
+		return false;
+	}
+
+	let vehiclesList = getServerData().radioStations.map(function(x) { return `{ALTCOLOUR}${getVehicleData(x).index}: {MAINCOLOUR}${getVehicleName(x)} {darkGrey}(${getDistance(getPlayerPosition(client), getVehiclePosition(x))} ${getLocaleString(client, "Meters")} ${getGroupedLocaleString(client, "CardinalDirections")[getCardinalDirection(getPlayerPosition(client), getVehiclePosition(x))]}})`; });
+	let chunkedList = splitArrayIntoChunks(vehiclesList, 4);
+
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderVehiclesInRangeList")));
+	for(let i in chunkedList) {
+		messagePlayerInfo(client, chunkedList[i].join(", "));
+	}
+}
+
+// ===========================================================================
+
 function vehicleLockCommand(command, params, client) {
 	let vehicle = getClosestVehicle(getPlayerPosition(client));
 

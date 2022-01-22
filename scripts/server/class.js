@@ -265,6 +265,7 @@ class ClientData {
 
 		this.lastJobVehicle = null;
 		this.health = 100;
+		this.locale = 0;
 	}
 };
 
@@ -299,6 +300,7 @@ class AccountData {
 		this.chatScrollLines = 1;
 
 		this.streamingRadioVolume = 20;
+		this.locale = 0;
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["acct_id"];
@@ -326,6 +328,7 @@ class AccountData {
 			this.twoFactorAuthVerificationCode = dbAssoc["acct_code_2fa"];
 			this.chatScrollLines = toInteger(dbAssoc["acct_svr_chat_scroll_lines"]);
 			this.streamingRadioVolume = toInteger(dbAssoc["acct_streaming_radio_volume"]);
+			this.locale = toInteger(dbAssoc["acct_locale"]);
 		}
 	}
 };
@@ -1096,6 +1099,7 @@ class JobData {
 		this.locations = [];
 		this.whiteList = [];
 		this.blackList = [];
+		this.routes = [];
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["job_id"];
@@ -1115,6 +1119,7 @@ class JobData {
 			this.locations = [];
 			this.whiteList = [];
 			this.blackList = [];
+			this.routes = [];
 		}
 	}
 };
@@ -1240,7 +1245,7 @@ class JobUniformData {
 class JobLocationData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
-		this.job = 0;
+		this.jobId = 0;
 		this.position = toVector3(0.0, 0.0, 0.0);
 		this.blip = false;
 		this.pickup = false;
@@ -1250,10 +1255,11 @@ class JobLocationData {
 		this.index = -1;
 		this.jobIndex = -1;
 		this.needsSaved = false;
+		this.routeCache = [];
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["job_loc_id"];
-			this.job = dbAssoc["job_loc_job"];
+			this.jobId = dbAssoc["job_loc_job"];
 			this.position = toVector3(dbAssoc["job_loc_pos_x"], dbAssoc["job_loc_pos_y"], dbAssoc["job_loc_pos_z"]);
 			this.blip = false;
 			this.pickup = false;
@@ -1707,20 +1713,27 @@ class JobRouteData {
 		this.databaseId = 0;
 		this.name = "";
 		this.jobId = 0;
+		this.locationId = 0;
 		this.enabled = false;
 		this.index = -1;
 		this.jobIndex = -1;
+		this.locationIndex = -1;
 		this.needsSaved = false;
 		this.pay = 0;
 		this.vehicleColour1 = toColour(255, 255, 255, 255);
 		this.vehicleColour2 = toColour(255, 255, 255, 255);
 		this.detail = 0;
+		this.startMessage = "";
+		this.finishMessage = "";
+		this.locationArriveMessage = "";
+		this.locationNextMessage = "";
 		this.locations = [];
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["job_route_id"]);
 			this.name = toString(dbAssoc["job_route_name"]);
 			this.jobId = toInteger(dbAssoc["job_route_job"]);
+			this.locationId = toInteger(dbAssoc["job_route_job_loc"]);
 			this.enabled = intToBool(toInteger(dbAssoc["job_route_enabled"]));
 			this.pay = toInteger(dbAssoc["job_route_pay"]);
 			this.startMessage = toString(dbAssoc["job_route_start_msg"]);
@@ -1728,6 +1741,10 @@ class JobRouteData {
 			this.colour1 = toColour(toInteger(dbAssoc["job_route_col1_r"]), toInteger(dbAssoc["job_route_col1_g"]), toInteger(dbAssoc["job_route_col1_b"]), 255);
 			this.colour2 = toColour(toInteger(dbAssoc["job_route_col2_r"]), toInteger(dbAssoc["job_route_col2_g"]), toInteger(dbAssoc["job_route_col2_b"]), 255);
 			this.detail = toInteger(dbAssoc["job_route_detail"]);
+			this.startMessage = toInteger(dbAssoc["job_route_start_msg"]);
+			this.finishMessage = toInteger(dbAssoc["job_route_finish_msg"]);
+			this.locationArriveMessage = toInteger(dbAssoc["job_route_loc_arrive_msg"]);
+			this.locationNextMessage = toInteger(dbAssoc["job_route_loc_next_msg"]);
 		}
 	}
 };

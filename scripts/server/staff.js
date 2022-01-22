@@ -282,6 +282,37 @@ function getVehicleCommand(command, params, client) {
 
 // ===========================================================================
 
+function warpIntoVehicleCommand(command, params, client) {
+	let vehicle = getClosestVehicle(getPlayerPosition(client));
+
+	if(areParamsEmpty(params)) {
+		if(!getPlayerVehicle(client) && getDistance(getVehiclePosition(vehicle), getPlayerPosition(client)) > getGlobalConfig().vehicleLockDistance) {
+			messagePlayerError(client, getLocaleString(client, "MustBeInOrNearVehicle"));
+			return false;
+		}
+	} else {
+		let vehicleIndex = getParam(params, " ", 1);
+		if(typeof getServerData().vehicles[vehicleIndex] == "undefined") {
+			messagePlayerError(client, getLocaleString(client, "InvaliVehicle"));
+			return false;
+		}
+
+		vehicle = getServerData().vehicles[vehicleIndex].vehicle;
+	}
+
+	if(!getVehicleData(vehicle)) {
+		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
+		return false;
+	}
+
+	let seatId = getParam(params, " ", 2) || 0;
+
+	warpPedIntoVehicle(getPlayerData(client).ped, vehicle, seatId);
+	messagePlayerSuccess(client, `You warped into a ${getVehicleName(vehicle)} (ID ${getVehicleData(vehicle).index}/${getVehicleData(vehicle).databaseId})`);
+}
+
+// ===========================================================================
+
 function gotoBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));

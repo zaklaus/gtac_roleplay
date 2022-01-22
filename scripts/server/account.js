@@ -616,6 +616,7 @@ function saveAccountToDatabase(accountData) {
 			["acct_code_verifyemail", accountData.emailVerificationCode],
 			["acct_streaming_radio_volume", accountData.streamingRadioVolume],
 			["acct_ip", accountData.ipAddress],
+			["acct_locale", accountData.locale],
 		];
 
 		let data2 = [
@@ -1121,7 +1122,7 @@ function initClient(client) {
 						showPlayerLoginGUI(client);
 					} else {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
-						messagePlayerNormal(client, getLocaleString(client, "WelcomeBack", getServerName(), getPlayerName(client)), getColourByName("softGreen"));
+						messagePlayerNormal(client, getLocaleString(client, "WelcomeBack", getServerName(), getPlayerName(client), "/login"),getColourByName("softGreen"));
 					}
 					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 				}
@@ -1131,7 +1132,7 @@ function initClient(client) {
 					showPlayerRegistrationGUI(client);
 				} else {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
-					messagePlayerNormal(client, getLocaleString(client, "WelcomeNewPlayer", getServerName(), getPlayerName(client)), getColourByName("softGreen"));
+					messagePlayerNormal(client, getLocaleString(client, "WelcomeNewPlayer", getServerName(), getPlayerName(client), "/register"), getColourByName("softGreen"));
 				}
 				playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 			}

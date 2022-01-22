@@ -325,10 +325,29 @@
         "Dutch": "Holender",
         "Polish": "Polski"
     },
+
+    "ADDED-21JAN2022": "DO NOT TRANSLATE. This string is just a comment to separate newly added translations.",
     "HeaderPlayerHousesList": "Player Houses ({1})",
     "HeaderPlayerStaffFlagsList": "Player Staff Flags ({1})",
     "HeaderStaffFlagsList": "Staff Flags",
     "NonRPName": "Non-RP name! Choose a new one:",
     "InvalidStaffFlag": "Staff flag not found!",
-    "InvalidClanFlag": "Clan flag not found!"
+    "InvalidClanFlag": "Clan flag not found!",
+    "InvalidLocale": "Language not found!",
+    "HeaderJobUniformList": "Job Uniforms ({1})",
+    "HeaderJobEquipmentList": "Job Equipment ({1})",
+    "InvalidJobUniform": "Job uniform not found!",
+    "InvalidJobEquipment": "Job equipment not found!",
+    "HeaderVehiclesInRangeList": "Vehicles within {1}",
+    "NoVehiclesWithInRange": "There are no vehicles within {1}",
+    "AmountNotNumber": "The amount must be a number!",
+    "NeedToBeWorking": "You need to be working! Use {1} at a job location or near a job vehicle.",
+    "NeedToBeOnJobRoute": "You need to be doing a job route! Use {1} in a job vehicle",
+    "CurrentJobRouteDeleted": "The job route you were on has been deleted by an admin",
+    "CurrentJobRouteVehicleColoursChanged": "Your job route's vehicle colours were changed by an admin",
+    "NotYourJob": "This is not your job!",
+    "JobPoints": "You can get a job by going the yellow points on the map.",
+    "QuitJobToTakeAnother": "If you want this job, use {1} to quit your current job.",
+    "NotAJobVehicle": "This is not a job vehicle!",
+    "NotYourJobVehicle": "This is not your job's vehicle!"
 }

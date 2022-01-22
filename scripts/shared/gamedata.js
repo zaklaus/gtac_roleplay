@@ -3413,6 +3413,7 @@ let gameData = {
 			clothes: 1361,
 			misc: 1361,
 			exit: 1361,
+            job: 1361,
 		},
 
 		{ // GTA Vice City
@@ -3431,6 +3432,7 @@ let gameData = {
 			clothes: 409,
 			misc: 406,
 			exit: 406,
+            job: 406,
 		},
 
 		{ // GTA San Andreas
@@ -3449,7 +3451,11 @@ let gameData = {
 			clothes: 1275,
 			misc: 1239,
 			exit: 1318,
-		}
+            job: 1239,
+		},
+        {
+            // GTA Underground
+        },
 	],
 	pickupTypes: [
 		{},

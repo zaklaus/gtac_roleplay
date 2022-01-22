@@ -239,6 +239,10 @@ function setElementPosition(elementId, position) {
         return false;
     }
 
+    if(!getElementFromId(elementId).isSyncer) {
+        return false;
+    }
+
     getElementFromId(elementId).position = position;
 }
 

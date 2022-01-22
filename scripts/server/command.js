@@ -252,7 +252,7 @@ function loadCommands() {
             commandData("skin", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
             commandData("skins", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
             commandData("clothes", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
-            commandData("setskin", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
+            //commandData("setskin", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
             commandData("changeskin", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
         ],
         house: [
@@ -338,8 +338,21 @@ function loadCommands() {
             commandData("stoproute", jobStopRouteCommand, "", getStaffFlagValue("None"), true, false),
 
             // Admin Job Stuff
+            commandData("addjob", createJobCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("addjobloc", createJobLocationCommand, "<job name/id>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("deljobloc", deleteJobLocationCommand, "", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("addjobroute", createJobRouteCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("addjobrouteloc", createJobRouteLocationCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("deljobroute", deleteJobRouteCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("deljobrouteloc", deleteJobRouteLocationCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutename", setJobRouteNameCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutepay", setJobRoutePayCommand, "<amount>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutestartmsg", setJobRouteStartMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutefinishmsg", setJobRouteFinishMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutearrivemsg", setJobRouteLocationArriveMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutenextmsg", setJobRouteLocationNextMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobrouteenabled", toggleJobRouteEnabledCommand, "", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutevehcolours", setJobRouteVehicleColoursCommand, "<colour 1> <colour 2>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobwhitelist", toggleJobWhiteListCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobblacklist", toggleJobBlackListCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobtoggle", toggleJobEnabledCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
@@ -357,7 +370,9 @@ function loadCommands() {
             commandData("unbindkey", removeKeyBindCommand, "<key id/name>", getStaffFlagValue("None"), true, false, "Removes an existing keybind from your account"),
             commandData("keybinds", showKeyBindListCommand, "", getStaffFlagValue("None"), true, false, "Shows a list of all your current keybinds"),
         ],
-        locale: [],
+        locale: [
+            commandData("lang", setLocaleCommand, "<language name>", getStaffFlagValue("None"), true, false, "Sets your language"),
+        ],
         messaging: [],
         misc: [
             commandData("pos", getPositionCommand, "", getStaffFlagValue("BasicModeration"), true, false, "Shows your current coordinates"),
@@ -386,6 +401,7 @@ function loadCommands() {
             commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a player."),
             commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports a player to you."),
             commandData("getveh", getVehicleCommand, "<vehicle id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports a vehicle to you."),
+            commandData("warpinveh", warpIntoVehicleCommand, "[vehicle id]", getStaffFlagValue("ManageVehicles"), true, false),
             commandData("returnplr", returnPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Returns a player to their previous position."),
             commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to specific coordinates with optional interior and dimension."),
             commandData("gotoveh", gotoVehicleCommand, "<vehicle id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a vehicle by ID."),
@@ -444,6 +460,7 @@ function loadCommands() {
             commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("ManageVehicles"), true, false),
             commandData("tempveh", createTemporaryVehicleCommand, "<model id/name>", getStaffFlagValue("ManageVehicles"), true, false),
             commandData("delveh", deleteVehicleCommand, "", getStaffFlagValue("ManageVehicles"), true, false),
+            commandData("nearveh", getNearbyVehiclesCommand, "", getStaffFlagValue("None"), true, false),
 
             commandData("oldveh", getLastVehicleInfoCommand, "", getStaffFlagValue("None"), true, false),
             commandData("lastveh", getLastVehicleInfoCommand, "", getStaffFlagValue("None"), true, false),

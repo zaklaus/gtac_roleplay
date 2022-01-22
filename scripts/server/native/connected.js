@@ -592,7 +592,7 @@ function getPlayerElement(client) {
 // ===========================================================================
 
 function setElementPosition(element, position) {
-	sendNetworkEventToPlayer("vrr.elementPosition", getClientFromSyncerId(element.syncer), element.id, position);
+	sendNetworkEventToPlayer("vrr.elementPosition", null, element.id, position);
 }
 
 // ===========================================================================
@@ -617,7 +617,7 @@ function setElementInterior(element, interior) {
 // ===========================================================================
 
 function setElementCollisionsEnabled(element, state) {
-	sendNetworkEventToPlayer("vrr.elementCollisions", getClientFromSyncerId(element.syncer), element.id, state);
+	sendNetworkEventToPlayer("vrr.elementCollisions", null, element.id, state);
 }
 
 // ===========================================================================
@@ -988,6 +988,12 @@ function isVehicleTrain(vehicle) {
 	}
 
 	return false
+}
+
+// ===========================================================================
+
+function warpPedIntoVehicle(ped, vehicle, seatId) {
+	ped.warpIntoVehicle(vehicle, seatId);
 }
 
 // ===========================================================================

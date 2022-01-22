@@ -228,7 +228,7 @@ function setClanOwnerCommand(command, params, client) {
 		return false;
 	}
 
-let clanId = getClanFromParams(getParam(params, " ", 1));
+	let clanId = getClanFromParams(getParam(params, " ", 1));
 	let targetClient = getPlayerFromParams(getParam(params, " ", 2));
 
 	if(!targetClient) {
@@ -318,7 +318,7 @@ function createClanRankCommand(command, params, client) {
 		return false;
 	}
 
-let rankId = toInteger(getParam(params, " ", 1));
+	let rankId = toInteger(getParam(params, " ", 1));
 	let rankName = getParam(params, " ", 2);
 
 	let rankIndex = createClanRank(clanId, rankId, rankName);
@@ -449,7 +449,7 @@ function setClanRankLevelCommand(command, params, client) {
 		return false;
 	}
 
-let clanId = getPlayerClan(client);
+	let clanId = getPlayerClan(client);
 
 	if(!getClanData(clanId)) {
 		messagePlayerError(client, getLocaleString(client, "InvalidClan"));
@@ -606,7 +606,7 @@ function addClanRankFlagCommand(command, params, client) {
 		return false;
 	}
 
-let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
+	let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
 
 	if(!getClanRankData(clanId, rankId)) {
 		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
@@ -644,7 +644,7 @@ function removeClanRankFlagCommand(command, params, client) {
 		return false;
 	}
 
-let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
+	let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
 
 	if(!getClanRankData(clanId, rankId)) {
 		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
@@ -682,7 +682,7 @@ function showClanRankFlagsCommand(command, params, client) {
 		return false;
 	}
 
-let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
+	let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
 
 	if(!getClanRankData(clanId, rankId)) {
 		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));
@@ -775,7 +775,7 @@ function setClanRankTitleCommand(command, params, client) {
 		return false;
 	}
 
-let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
+	let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
 
 	if(!getClanRankData(clanId, rankId)) {
 		messagePlayerError(client, getLocaleString(client, "ClanRankInvalid"));

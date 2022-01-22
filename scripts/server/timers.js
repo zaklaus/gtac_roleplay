@@ -75,6 +75,12 @@ function saveAllServerDataToDatabase() {
 	}
 
 	try {
+		saveAllJobsToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save jobs to database: ${error}`);
+	}
+
+	try {
 		saveServerConfigToDatabase();
 	} catch(error) {
 		logToConsole(LOG_ERROR, `Could not save server config to database: ${error}`);

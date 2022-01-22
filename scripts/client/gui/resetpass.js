@@ -53,7 +53,7 @@ function initResetPasswordGUI() {
 			textSize: 10.0,
 			textAlign: 0.5,
 			textColour: toColour(200, 200, 200, 255),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -66,7 +66,7 @@ function initResetPasswordGUI() {
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], textInputAlpha),
 			textColour: toColour(200, 200, 200, 255),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		caret: {
 			lineColour: toColour(255, 255, 255, 255),
@@ -74,7 +74,7 @@ function initResetPasswordGUI() {
 		placeholder: {
 			textColour: toColour(200, 200, 200, 150),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 255),
@@ -87,7 +87,7 @@ function initResetPasswordGUI() {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			textSize: 12.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -100,7 +100,7 @@ function initResetPasswordGUI() {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
 			textSize: 8.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -113,7 +113,7 @@ function initResetPasswordGUI() {
 			textSize: 8.0,
 			textAlign: 1.0,
 			textColour: toColour(200, 200, 200, 255),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),

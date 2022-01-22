@@ -41,7 +41,7 @@ function initListGUI() {
 			textSize: 10.0,
 			textAlign: 0.5,
 			textColour: toColour(255, 255, 255, 220),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),

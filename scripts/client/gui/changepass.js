@@ -50,7 +50,7 @@ function initChangePasswordGUI() {
 			textSize: 10.0,
 			textAlign: 0.5,
 			textColour: toColour(200, 200, 200, 255),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -62,7 +62,7 @@ function initChangePasswordGUI() {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 255),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		caret: {
 			lineColour: toColour(255, 255, 255, 255),
@@ -71,7 +71,7 @@ function initChangePasswordGUI() {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 200),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		}
 	});
 	passwordChange.passwordInput.masked = true;
@@ -82,7 +82,7 @@ function initChangePasswordGUI() {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 255),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		caret: {
 			lineColour: toColour(255, 255, 255, 255),
@@ -91,7 +91,7 @@ function initChangePasswordGUI() {
 			backgroundColour: toColour(0, 0, 0, 120),
 			textColour: toColour(200, 200, 200, 200),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		}
 	});
 	passwordChange.confirmPasswordInput.masked = true;
@@ -102,7 +102,7 @@ function initChangePasswordGUI() {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(255, 255, 255, 255),
 			textSize: 12.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {

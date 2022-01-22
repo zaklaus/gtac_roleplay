@@ -9,7 +9,7 @@
 
 var app = {};
 
-let robotoFont = "Roboto";
+let mainFont = "Arial"; // "Roboto"
 
 let mainLogoPath = (typeof gta == "undefined") ? "files/images/mafiac-logo.png" : "files/images/gtac-logo.png";
 

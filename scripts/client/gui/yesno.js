@@ -41,7 +41,7 @@ function initYesNoDialogGUI() {
             textSize: 10.0,
             textAlign: 0.5,
             textColour: toColour(255, 255, 255, 255),
-            textFont: robotoFont,
+            textFont: mainFont,
         },
         focused: {
             borderColour: toColour(0, 0, 0, 0),
@@ -53,7 +53,7 @@ function initYesNoDialogGUI() {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
             textAlign: 0.5,
         },
         focused: {
@@ -66,7 +66,7 @@ function initYesNoDialogGUI() {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
             textAlign: 0.5,
         },
         focused: {

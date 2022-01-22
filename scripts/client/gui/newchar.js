@@ -51,7 +51,7 @@ function initNewCharacterGUI() {
             textSize: 10.0,
             textAlign: 0.5,
             textColour: toColour(200, 200, 200, 255),
-            textFont: robotoFont,
+            textFont: mainFont,
         },
         focused: {
             borderColour: toColour(0, 0, 0, 0),
@@ -63,7 +63,7 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(200, 200, 200, 255),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
         },
         caret: {
             lineColour: toColour(255, 255, 255, 255),
@@ -72,7 +72,7 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(200, 200, 200, 200),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
         }
     });
     newCharacter.firstNameInput.placeholder = "First Name";
@@ -82,7 +82,7 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(200, 200, 200, 255),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
         },
         caret: {
             lineColour: toColour(255, 255, 255, 255),
@@ -91,7 +91,7 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(150, 150, 150, 200),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
         }
     });
     newCharacter.lastNameInput.placeholder = "Last Name";
@@ -100,8 +100,8 @@ function initNewCharacterGUI() {
         main: {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(255, 255, 255, 255),
-            textSize: 12.0,
-            textFont: robotoFont,
+            textSize: 10.0,
+            textFont: mainFont,
             textAlign: 0.5,
         },
         focused: {

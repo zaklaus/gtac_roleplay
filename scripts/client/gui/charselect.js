@@ -47,7 +47,7 @@ function initCharacterSelectGUI() {
 			textSize: 14.0,
 			textAlign: 0.0,
 			textColour: toColour(255, 255, 255, 220),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -59,7 +59,7 @@ function initCharacterSelectGUI() {
 			textSize: 9.0,
 			textAlign: 0.0,
 			textColour: toColour(255, 255, 255, 220),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -71,7 +71,7 @@ function initCharacterSelectGUI() {
 			textSize: 9.0,
 			textAlign: 0.0,
 			textColour: toColour(255, 255, 255, 220),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -83,7 +83,7 @@ function initCharacterSelectGUI() {
 			textSize: 9.0,
 			textAlign: 0.0,
 			textColour: toColour(255, 255, 255, 220),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -94,8 +94,8 @@ function initCharacterSelectGUI() {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
-			textSize: 12.0,
-			textFont: robotoFont,
+			textSize: 10.0,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -107,8 +107,8 @@ function initCharacterSelectGUI() {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
-			textSize: 12.0,
-			textFont: robotoFont,
+			textSize: 10.0,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -116,12 +116,12 @@ function initCharacterSelectGUI() {
 		}
 	}, showNewCharacter);
 
-	characterSelect.previousCharacterButton = characterSelect.window.button(5, 130, 75, 25, '< PREV', {
+	characterSelect.previousCharacterButton = characterSelect.window.button(5, 130, 75, 25, '←', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
-			textSize: 10.0,
-			textFont: robotoFont,
+			textSize: 13.0,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -129,12 +129,12 @@ function initCharacterSelectGUI() {
 		}
 	}, selectPreviousCharacter);
 
-	characterSelect.nextCharacterButton = characterSelect.window.button(350, 130, 75, 25, 'NEXT >', {
+	characterSelect.nextCharacterButton = characterSelect.window.button(350, 130, 75, 25, '→', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
-			textSize: 10.0,
-			textFont: robotoFont,
+			textSize: 13.0,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -204,7 +204,7 @@ function switchCharacterSelectGUI(firstName, lastName, cash, clan, lastPlayed, s
 	characterSelect.cashText.text = `Money: $${cash}`;
 	characterSelect.clanText.text = `Clan: ${clan}`;
 	characterSelect.lastPlayedText.text = `Last Played: ${lastPlayed}`;
-	characterSelect.skinImage = characterSelect.window.image(310, 32, 100, 90, "files/images/skins/none.png");
+	characterSelect.skinImage = (getGame() == GAME_GTA_III) ? characterSelect.window.image(310, 32, 100, 90, `files/images/skins/gta3/${getSkinImage(skinId)}.png`) : characterSelect.window.image(310, 32, 100, 90, "files/images/skins/none.png");
 	characterSelect.window.shown = true;
 	guiSubmitKey = selectThisCharacter;
 	guiLeftKey = selectPreviousCharacter;
@@ -216,6 +216,18 @@ function switchCharacterSelectGUI(firstName, lastName, cash, clan, lastPlayed, s
 function characterSelectSuccess() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Server reports character selection was successful`);
 	closeAllWindows();
+}
+
+// ===========================================================================
+
+function getSkinImage(skinId, gameId = getGame()) {
+	if(skinId < 10) {
+		return `Skin_00${skinId}.png`;
+	} else if(skinId > 10 && skinId < 100) {
+		return `Skin_0${skinId}.png`;
+	} else if(skinId > 100) {
+		return `Skin_${skinId}.png`;
+	}
 }
 
 // ===========================================================================

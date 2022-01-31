@@ -997,3 +997,9 @@ function warpPedIntoVehicle(ped, vehicle, seatId) {
 }
 
 // ===========================================================================
+
+function getPlayerPing(client) {
+	return client.ping
+}
+
+// ===========================================================================

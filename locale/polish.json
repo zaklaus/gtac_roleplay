@@ -348,5 +348,7 @@
     "HeaderPickupTypes": "Pickup Types",
     "HeaderBlipTypes": "Map Icon Types",
     "InvalidGPSLocation": "There are no locations with that name or type",
-    "HeaderBusinessList": "Businesses"
+    "HeaderBusinessList": "Businesses",
+    "VehicleForSale": "This {1} is buyable for {2}! Use {3} if you want to buy it",
+    "VehicleForRent": "This {1} is rentable for {2}! Use {3} if you want to rent it"
 }

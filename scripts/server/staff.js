@@ -210,7 +210,7 @@ function gotoPlayerCommand(command, params, client) {
 
 // ===========================================================================
 
-function getGeoIPInformationCommand(command, params, client) {
+function getPlayerGeoIPInformationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -227,6 +227,23 @@ function getGeoIPInformationCommand(command, params, client) {
 	let cityName = module.geoip.getCityName(getGlobalConfig().geoIPCityDatabaseFilePath, targetClient.ip);
 
 	messagePlayerInfo(client, `{ALTCOLOUR}${targetClient.name} {MAINCOLOUR}is from {ALTCOLOUR}${cityName}, ${subDivisionName}, ${countryName}`);
+}
+
+// ===========================================================================
+
+function getPlayerIPInformationCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let targetClient = getPlayerFromParams(params);
+    if(!targetClient) {
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+        return false;
+    }
+
+	messagePlayerInfo(client, `{ALTCOLOUR}${targetClient.name}'s{MAINCOLOUR} IP is ${targetClient.ip}`);
 }
 
 // ===========================================================================
@@ -300,9 +317,8 @@ function warpIntoVehicleCommand(command, params, client) {
 		vehicle = getServerData().vehicles[vehicleIndex].vehicle;
 	}
 
-	if(!getVehicleData(vehicle)) {
-		messagePlayerError(client, getLocaleString(client, "RandomVehicleCommandsDisabled"));
-		return false;
+	if(getVehicleData(vehicle)) {
+		getPlayerData(client).enteringVehicle = vehicle;
 	}
 
 	let seatId = getParam(params, " ", 2) || 0;
@@ -1106,6 +1122,30 @@ function forceAccountPasswordResetCommand(command, params, client) {
     if(!targetClient) {
         messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
+	}
+}
+
+// ===========================================================================
+
+function toggleSyncForElementsSpawnedByPlayer(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(params);
+
+    if(!targetClient) {
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+        return false;
+	}
+
+	if(!hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("DontSyncClientElements"))) {
+		getPlayerData(client).accountData.flags.moderation = addBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("DontSyncClientElements"));
+		messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}turned {softGreen}ON client element sync for {ALTCOLOUR}${getPlayerName(targetClient)}`);
+	} else {
+		getPlayerData(client).accountData.flags.moderation = removeBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("DontSyncClientElements"));
+		messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}turned {softRed}OFF client element sync for {ALTCOLOUR}${getPlayerName(targetClient)}`);
 	}
 }
 

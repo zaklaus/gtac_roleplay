@@ -308,11 +308,8 @@ function getPlayerInfoCommand(command, params, client) {
 // ===========================================================================
 
 function playerChangeAFKState(client, afkState) {
-    if(afkState) {
-        setEntityData(client, "vrr.afk", true, true);
-    } else {
-        client.removeData("vrr.afk");
-    }
+    getPlayerData(client).afk = afkState;
+	updateAllPlayerNameTags();
 }
 
 // ===========================================================================
@@ -365,14 +362,16 @@ function updateServerGameTime() {
 
 function listOnlineAdminsCommand(command, params, client) {
 	//== Admins ===================================
-	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Admins {clanOrange}===================================`);
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderAdminsList")));
 
 	let admins = [];
 	let clients = getClients();
 	for(let i in clients) {
 		if(getPlayerData(clients[i])) {
-			if(getPlayerData(clients[i]).accountData.flags.admin != 0) {
-				admins.push(`{ALTCOLOUR}[${getPlayerData(clients[i]).accountData.staffTitle}] {MAINCOLOUR}${getCharacterFullName(clients[i])}`);
+			if(typeof getPlayerData(clients[i]).accountData.flags.admin != "undefined") {
+				if(getPlayerData(clients[i]).accountData.flags.admin > 0 || getPlayerData(clients[i]).accountData.flags.admin == -1) {
+					admins.push(`{ALTCOLOUR}[${getPlayerData(clients[i]).accountData.staffTitle}] {MAINCOLOUR}${getCharacterFullName(clients[i])}`);
+				}
 			}
 		}
 	}
@@ -386,14 +385,34 @@ function listOnlineAdminsCommand(command, params, client) {
 // ===========================================================================
 
 function gpsCommand(command, params, client) {
-	//== Businesses ===================================
-	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Businesses {clanOrange}================================`);
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBusinessList")));
+
+	let locationType = VRR_GPS_TYPE_NONE;
+	let useType = VRR_ITEM_USETYPE_NONE;
+	let blipColour = "white";
 
 	switch(toLowerCase(params)) {
+		case "police":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_POLICE;
+			break;
+
+		case "hospital":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_HOSPITAL;
+			break;
+
+		case "job":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_JOB;
+			break;
+
 		case "skin":
 		case "skins":
 		case "clothes":
 		case "player":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_SKIN;
 			break;
 
@@ -403,21 +422,29 @@ function gpsCommand(command, params, client) {
 		case "weapons":
 		case "wep":
 		case "weps":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_WEAPON;
 			break;
 
 		case "food":
 		case "eat":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_FOOD;
 			break;
 
 		case "drink":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_DRINK;
 			break;
 
 		case "alcohol":
 		case "booze":
 		case "bar":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_ALCOHOL;
 			break;
 
@@ -426,6 +453,8 @@ function gpsCommand(command, params, client) {
 		case "vehrepair":
 		case "spray":
 		case "fix":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_VEHREPAIR;
 			break;
 
@@ -433,10 +462,14 @@ function gpsCommand(command, params, client) {
 		case "vehcolour":
 		case "carcolour":
 		case "colour":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_VEHCOLOUR;
 			break;
 
 		default: {
+			locationType = VRR_GPS_TYPE_BUSINESS;
+			blipColour = "businessBlue";
 			let itemTypeId = getItemTypeFromParams(params);
 			if(getItemTypeData(itemTypeId)) {
 				useType = getItemTypeData(itemTypeId).useType;
@@ -444,16 +477,23 @@ function gpsCommand(command, params, client) {
 		}
 	}
 
-	let businessId = getClosestBusinessWithBuyableItemOfUseType(useType);
-	if(!businessId) {
-		messagePlayerError(client, getLocaleString(client, "NoBusinessWithItemType"));
+	if(locationType == VRR_GPS_TYPE_NONE) {
+		messagePlayerError(client, getLocaleString(client, "InvalidGPSLocation"));
 		return false;
 	}
 
-	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, getLocaleString(client, "NoBusinessWithItemType"));
-		return false;
-	}
+	if(locationType == VRR_GPS_TYPE_BUSINESS) {
+		let businessId = getClosestBusinessWithBuyableItemOfUseType(useType);
+		if(!businessId) {
+			messagePlayerError(client, getLocaleString(client, "NoBusinessWithItemType"));
+			return false;
+		}
 
-	blinkGenericGPSBlipForPlayer(client, getColourByType("businessBlue"), 10);
+		if(!getBusinessData(businessId)) {
+			messagePlayerError(client, getLocaleString(client, "NoBusinessWithItemType"));
+			return false;
+		}
+
+		blinkGenericGPSBlipForPlayer(client, getColourByType(blipColour), 10);
+	}
 }

@@ -748,6 +748,7 @@ function createAccount(name, password, email = "") {
 			tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
 			tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
 			tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
+			tempAccountData.flags.admin = 0;
 			return tempAccountData;
 		}
 	}
@@ -845,7 +846,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 			showPlayerLoginGUI(client);
 		} else {
 			messagePlayerError(client, "Your name is already registered!");
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (already registered)`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (already registered)`);
 		}
 		return false;
 	}
@@ -855,7 +856,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 			showPlayerLoginSuccessGUI(client);
 		} else {
 			messagePlayerError(client, "You are already logged in!");
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (already logged in)`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (already logged in)`);
 		}
 		return false;
 	}
@@ -863,10 +864,10 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	if(areParamsEmpty(password)) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerRegistrationFailedGUI(client, "Password cannot be blank!");
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password is blank)`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password is blank)`);
 		} else {
 			messagePlayerError(client, "The password cannot be blank!");
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password is blank)`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password is blank)`);
 		}
 		return false;
 	}
@@ -874,7 +875,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(confirmPassword)) {
 			showPlayerRegistrationFailedGUI(client, "Password confirm cannot be blank!");
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password confirm is blank)`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password confirm is blank)`);
 			return false;
 		}
 	}
@@ -882,7 +883,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(emailAddress)) {
 			showPlayerRegistrationFailedGUI(client, "Email address cannot be blank!");
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (email address is blank)`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (email address is blank)`);
 			return false;
 		}
 	}
@@ -890,7 +891,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(password != confirmPassword) {
 			showPlayerRegistrationFailedGUI(client, "The passwords must match!");
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password and confirm don't match)`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password and confirm don't match)`);
 			return false;
 		}
 	}
@@ -899,7 +900,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			// Work on this later. Function should return true by default anyway for now.
 			showPlayerRegistrationFailedGUI(client, "Password doesn't meet requirements!");
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password doesn't meet requirements)`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password doesn't meet requirements)`);
 		} else {
 			messagePlayerError(client, "Password doesn't meet requirements!");
 		}
@@ -943,7 +944,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 			let emailVerificationCode = generateEmailVerificationCode();
 			setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
 			sendEmailVerificationEmail(client, emailVerificationCode);
-			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} was sent a registration email verification code`);
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} was sent a registration email verification code`);
 		}
 	} else {
 		messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
@@ -1074,9 +1075,6 @@ function savePlayerToDatabase(client) {
 				getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
 				getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
 			}
-
-			getPlayerCurrentSubAccount(client).inHouse = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : 0;
-			getPlayerCurrentSubAccount(client).inBusiness = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : 0;
 		}
 
 		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
@@ -1108,9 +1106,9 @@ function initClient(client) {
 
 			getServerData().clients[client.index] = new ClientData(client, tempAccountData, tempSubAccounts);
 
-			let sessionId = saveConnectionToDatabase(client);
-			getServerData().clients[client.index].session = sessionId;
-			getServerData().clients[client.index].connectTime = Math.ceil(sdl.ticks);
+			getServerData().clients[client.index].sessionId = saveConnectionToDatabase(client);
+			getServerData().clients[client.index].connectTime = getCurrentUnixTimestamp();
+			requestClientInfo(client);
 
 			if(tempAccountData != false) {
 				if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {
@@ -1151,10 +1149,9 @@ function saveConnectionToDatabase(client) {
 		let safeName = escapeDatabaseString(dbConnection, getPlayerName(client));
 		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (NOW(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', '${client.ip}')`;
 		queryDatabase(dbConnection, dbQueryString);
-		let connectionId = getDatabaseInsertId(dbConnection);
-		getPlayerData(client).connectionId = connectionId;
-		requestClientInfo(client);
+		return getDatabaseInsertId(dbConnection);
 	}
+	return 0;
 }
 
 // ===========================================================================

@@ -545,11 +545,6 @@ function streamAudioNameToAllPlayersCommand(command, params, client) {
 // ===========================================================================
 
 function fixAllServerBlipsCommand(command, params, client) {
-	if(areParamsEmpty(params)) {
-		messagePlayerSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
-
 	let blips = getElementsByType(ELEMENT_BLIP);
 	blips.forEach((blip) => {
 		deleteGameElement(blip);
@@ -563,11 +558,6 @@ function fixAllServerBlipsCommand(command, params, client) {
 // ===========================================================================
 
 function fixAllServerPickupsCommand(command, params, client) {
-	if(areParamsEmpty(params)) {
-		messagePlayerSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
-
 	let pickups = getElementsByType(ELEMENT_PICKUP);
 	pickups.forEach((pickup) => {
 		deleteGameElement(pickup);
@@ -581,11 +571,6 @@ function fixAllServerPickupsCommand(command, params, client) {
 // ===========================================================================
 
 function resetAllServerAmbienceElementsCommand(command, params, client) {
-	if(areParamsEmpty(params)) {
-		messagePlayerSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
-
 	clearTemporaryPeds();
 	cleartTemporaryVehicles();
 }
@@ -595,14 +580,6 @@ function resetAllServerAmbienceElementsCommand(command, params, client) {
 function reloadEconomyConfigurationCommand(command, params, client) {
 	getGlobalConfig().economy = loadEconomyConfig();
 	messageAdmins(`${client.name} {MAINCOLOUR}has reloaded the economy settings`);
-}
-
-// ===========================================================================
-
-function reloadLocaleConfigurationCommand(command, params, client) {
-	getGlobalConfig().locales = loadLocaleConfig();
-	getServerData().localeStrings = loadAllLocaleStrings();
-	messageAdmins(`${client.name} {MAINCOLOUR}has reloaded the locale settings and texts`);
 }
 
 // ===========================================================================

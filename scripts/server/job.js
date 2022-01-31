@@ -272,8 +272,8 @@ function createAllJobBlips() {
 	for(let i in getServerData().jobs) {
 		for(let j in getServerData().jobs[i].locations) {
 			getServerData().jobs[i].locations[j].blip = game.createBlip((getServerData().jobs[i].blipModel!=0) ? getServerData().jobs[i].blipModel : 0, getServerData().jobs[i].locations[j].position, 2, getColourByName("yellow"));
-			setElementStreamInDistance(getServerData().jobs[i].locations[j].blip, getGlobalConfig().jobBlipStreamInDistance);
-			setElementStreamOutDistance(getServerData().jobs[i].locations[j].blip, getGlobalConfig().jobBlipStreamOutDistance);
+			//setElementStreamInDistance(getServerData().jobs[i].locations[j].blip, getGlobalConfig().jobBlipStreamInDistance);
+			//setElementStreamOutDistance(getServerData().jobs[i].locations[j].blip, getGlobalConfig().jobBlipStreamOutDistance);
 			addToWorld(getServerData().jobs[i].locations[j].blip);
 			logToConsole(LOG_DEBUG, `[VRR.Job] Job '${getServerData().jobs[i].name}' location blip ${j} spawned!`);
 		}
@@ -295,13 +295,13 @@ function createAllJobPickups() {
 			for(let j in getServerData().jobs[i].locations) {
 				pickupCount++;
 				getServerData().jobs[i].locations[j].pickup = game.createPickup(getServerData().jobs[i].pickupModel, getServerData().jobs[i].locations[j].position);
-				getServerData().jobs[i].locations[j].pickup.onAllDimensions = false;
 				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.owner.type", VRR_PICKUP_JOB, false);
 				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.owner.id", j, false);
 				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.label.type", VRR_LABEL_JOB, true);
 				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.label.name", getServerData().jobs[i].name, true);
 				setEntityData(getServerData().jobs[i].locations[j].pickup, "vrr.label.jobType", getServerData().jobs[i].databaseId, true);
-				getServerData().jobs[i].locations[j].pickup.dimension = getServerData().jobs[i].locations[j].dimension;
+				setElementOnAllDimensions(getServerData().jobs[i].locations[j].pickup, false);
+				setElementDimension(getServerData().jobs[i].locations[j].pickup, getServerData().jobs[i].locations[j].dimension);
 				addToWorld(getServerData().jobs[i].locations[j].pickup);
 
 				logToConsole(LOG_DEBUG, `[VRR.Job] Job '${getServerData().jobs[i].name}' location pickup ${j} spawned!`);
@@ -842,9 +842,9 @@ function jobEquipmentCommand(command, params, client) {
 	//messagePlayerSuccess(client, `You have been given the ${equipments[equipmentId-1].name} equipment`);
 	meActionToNearbyPlayers(client, `grabs the ${jobData.equipment[equipmentId-1].name} equipment from the locker`);
 	if(doesPlayerHaveKeyBindForCommand(client, "inv")) {
-		messagePlayerTip(client, getLocaleString(client, "JobEquipmentInventoryKeyBindTip"), getKeyNameFromId(getPlayerKeyBindForCommand(client, "inv").key));
+		messagePlayerTip(client, getLocaleString(client, "JobEquipmentInventoryKeyBindTip", toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "inv").key))));
 	} else {
-		messagePlayerTip(client, getLocaleString(client, "JobEquipmentInventoryCommandTip"), "/inv");
+		messagePlayerTip(client, getLocaleString(client, "JobEquipmentInventoryCommandTip", "/inv"));
 	}
 }
 
@@ -895,6 +895,10 @@ function doesPlayerHaveJobType(client, jobType) {
 
 // ===========================================================================
 
+/**
+ * @param {number} jobIndex - The data index of the job
+ * @return {JobData} The job's data (class instance)
+ */
 function getJobData(jobId) {
 	if(typeof getServerData().jobs[jobId] != "undefined") {
 		return getServerData().jobs[jobId];
@@ -1025,6 +1029,122 @@ function toggleJobEnabledCommand(command, params, client) {
 
 	getJobData(jobId).enabled = !getJobData(jobId).enabled;
 	messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}${getEnabledDisabledFromBool(getJobData(jobId).enabled)}{MAINCOLOUR} the {jobYellow}${getJobData(jobId).name} {MAINCOLOUR}job`);
+}
+
+// ===========================================================================
+
+function setJobColourCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(!areThereEnoughParams(params, 4, " ")) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let jobId = getJobFromParams(getParam(params, " ", 1)) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
+	let red = getParam(params, " ", 2) || 255;
+	let green = getParam(params, " ", 3) || 255;
+	let blue = getParam(params, " ", 4) || 255;
+
+	getJobData(jobId).colour = toColour(toInteger(red), toInteger(green), toInteger(blue), 255);
+	getJobData(jobId).needsSaved = true;
+	messageAdmins(`${getPlayerName(client)}{MAINCOLOUR} set job {jobYellow}${getJobData(jobId).name}'s{MAINCOLOUR} colour to ${red}, ${green}, ${blue}`);
+
+	// Force nametag update in case somebody is using this job
+	updateAllPlayerNameTags();
+}
+
+// ===========================================================================
+
+function setJobBlipCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(!areThereEnoughParams(params, 4, " ")) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let jobId = getJobFromParams(getParam(params, " ", 1)) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
+	let blipParam = getParam(params, " ", 2);
+
+	let blipId = getJobData(jobId).blipModel;
+	let blipString = "unchanged";
+
+	if(isNaN(blipParam)) {
+		if(toLowerCase(blipParam) == "none") {
+			blipId = -1;
+		} else {
+			let blipTypes = Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ");
+			let chunkedList = splitArrayIntoChunks(blipTypes, 10);
+
+			messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBlipTypes")));
+			for(let i in chunkedList) {
+				messagePlayerInfo(client, chunkedList[i].join(", "));
+			}
+
+			blipId = getGameConfig().blipSprites[getServerGame()][blipParam];
+			blipString = toString(blipParam);
+		}
+	} else {
+		blipId = toInteger(blipParam);
+		blipString = toString(blipId);
+	}
+
+	getJobData(jobId).blipModel = blipId;
+	getJobData(jobId).needsSaved = true;
+	messageAdmins(`${getPlayerName(client)}{MAINCOLOUR} set job {jobYellow}${getJobData(jobId).name}'s{MAINCOLOUR} blip model to ${blipString}`);
+	resetAllJobBlips();
+}
+
+// ===========================================================================
+
+function setJobPickupCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(!areThereEnoughParams(params, 4, " ")) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let jobId = getJobFromParams(getParam(params, " ", 1)) || getClosestJobLocation(getPlayerPosition(client)).jobIndex;
+	let pickupParam = getParam(params, " ", 2);
+
+	let pickupId = getJobData(jobId).pickupModel;
+	let pickupString = "unchanged";
+
+	if(isNaN(pickupParam)) {
+		if(toLowerCase(pickupParam) == "none") {
+			pickupId = -1;
+		} else {
+			let pickupTypes = Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ");
+			let chunkedList = splitArrayIntoChunks(pickupTypes, 10);
+
+			messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPickupTypes")));
+			for(let i in chunkedList) {
+				messagePlayerInfo(client, chunkedList[i].join(", "));
+			}
+
+			pickupId = getGameConfig().pickupModels[getServerGame()][pickupParam];
+			pickupString = toString(pickupParam);
+		}
+	} else {
+		pickupId = toInteger(pickupParam);
+		pickupString = toString(pickupId);
+	}
+
+	getJobData(jobId).pickupModel = pickupId;
+	getJobData(jobId).needsSaved = true;
+	messageAdmins(`${getPlayerName(client)}{MAINCOLOUR} set job {jobYellow}${getJobData(jobId).name}'s{MAINCOLOUR} pickup to ${pickupString}`);
+	resetAllJobPickups();
 }
 
 // ===========================================================================
@@ -2090,14 +2210,17 @@ function createJobLocationPickup(jobId, locationId) {
 	}
 
 	if(getJobData(jobId).pickupModel != -1) {
-		let pickupModelId = getGameConfig().pickupModels[getServerGame()].job;
+		let pickupModelId = getGameConfig().pickupModels[getServerGame()].Job;
 
 		if(getJobData(jobId).pickupModel != 0) {
 			pickupModelId = getJobData(jobId).pickupModel;
 		}
 
+		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating pickup for location ${locationId} of the ${getServerData().jobs[jobId].name} job`);
+
 		getJobData(jobId).locations[locationId].pickup = createGamePickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
 		setElementDimension(getJobData(jobId).locations[locationId].pickup, getJobData(jobId).locations[locationId].dimension);
+		setElementOnAllDimensions(getJobData(jobId).locations[locationId].pickup, false);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.owner.type", VRR_PICKUP_JOB, false);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.owner.id", locationId, false);
 		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.label.type", VRR_LABEL_JOB, true);
@@ -2115,17 +2238,17 @@ function createJobLocationBlip(jobId, locationId) {
 	}
 
 	if(getJobData(jobId).blipModel != -1) {
-		let blipModelId = getGameConfig().blipSprites[getServerGame()].job;
+		let blipModelId = getGameConfig().blipSprites[getServerGame()].Job;
 
 		if(getJobData(jobId).blipModel != 0) {
 			blipModelId = getJobData(jobId).blipModel;
 		}
 
 		getJobData(jobId).locations[locationId].blip = game.createBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
-		setElementStreamInDistance(getServerData().jobs[i].locations[j].blip, 30);
-		setElementStreamOutDistance(getServerData().jobs[i].locations[j].blip, 40);
-		//getJobData(jobId).locations[locationId].blip.onAllDimensions = false;
-		getJobData(jobId).locations[locationId].blip.dimension = getJobData(jobId).locations[locationId].dimension;
+		//setElementStreamInDistance(getServerData().jobs[i].locations[j].blip, 30);
+		//setElementStreamOutDistance(getServerData().jobs[i].locations[j].blip, 40);
+		setElementOnAllDimensions(getJobData(jobId).locations[locationId].blip, false);
+		setElementDimension(getJobData(jobId).locations[locationId].blip, getJobData(jobId).locations[locationId].dimension);
 		addToWorld(getJobData(jobId).locations[locationId].blip);
 	}
 }
@@ -2341,6 +2464,13 @@ function createJobRoute(routeName, closestJobLocation) {
 	tempJobRouteData.locationId = closestJobLocation.databaseId;
 	tempJobRouteData.enabled = true;
 	tempJobRouteData.needsSaved = true;
+	tempJobRouteData.vehicleColour1 = 1;
+	tempJobRouteData.vehicleColour2 = 1;
+	tempJobRouteData.pay = 500;
+	tempJobRouteData.startMessage = `You are now on route {ALTCOLOUR}${name}{MAINCOLOUR} for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} job!`;
+	tempJobRouteData.finishMessage = `You have finished route {ALTCOLOUR}${name}{MAINCOLOUR} for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} job, and will receive $${tempJobRouteData.pay} next payday!`;
+	tempJobRouteData.locationArriveMessage = `You arrived at a point in job route {ALTCOLOUR}${name}{MAINCOLOUR}.`;
+	tempJobRouteData.locationNextMessage = `Drive to the next point on the route (looking for the blinking dot on the map).`;
 
 	getJobData(closestJobLocation.jobIndex).routes.push(tempJobRouteData);
 	setAllJobDataIndexes();
@@ -2468,6 +2598,10 @@ function getJobFromParams(params) {
 
 // ===========================================================================
 
+/**
+ * @param {Vector3} position - The position to get the closest job location for
+ * @return {JobLocationData} The job location's data (class instance)
+ */
 function getClosestJobLocation(position) {
 	let closestJobLocation = false;
 	for(let i in getServerData().jobs) {
@@ -2482,6 +2616,10 @@ function getClosestJobLocation(position) {
 
 // ===========================================================================
 
+/**
+ * @param {Vector3} position - The position to get the closest job route location for
+ * @return {JobRouteLocationData} The job route location's data (class instance)
+ */
 function getClosestJobRouteLocation(position) {
 	let closestJobRouteLocation = false;
 	for(let i in getServerData().jobs) {
@@ -2523,6 +2661,11 @@ function getRandomJobRoute(closestJobLocation) {
 
 // ===========================================================================
 
+/**
+ * @param {number} jobIndex - The data index of the job
+ * @param {number} routeIndex - The data index of the job route
+ * @return {JobRouteData} The jobroutes's data (class instance)
+ */
 function getJobRouteData(jobId, routeId) {
 	return getServerData().jobs[jobId].routes[routeId];
 }

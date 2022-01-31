@@ -74,6 +74,13 @@ function onElementStreamIn(event, element, client) {
     //if(getPlayerDimension(client) != getElementDimension(element)) {
     //    event.preventDefault();
     //}
+
+    if(getPlayerData(getClientFromIndex(element.owner)) != false    ) {
+        if(hasBitFlag(getPlayerData(getClientFromIndex(element.owner)).accountData.flags.moderation, getModerationFlagValue("DontSyncClientElements"))) {
+            event.preventDefault();
+            destroyGameElement(element);
+        }
+    }
 }
 
 // ===========================================================================
@@ -103,7 +110,7 @@ function onPlayerQuit(event, client, quitReasonId) {
 
 // ===========================================================================
 
-function onPlayerChat(event, client, messageText) {
+async function onPlayerChat(event, client, messageText) {
     event.preventDefault();
 
     if(!getPlayerData(client)) {
@@ -127,7 +134,18 @@ function onPlayerChat(event, client, messageText) {
     }
 
     messageText = messageText.substring(0, 128);
-    messagePlayerNormal(null, replaceColoursInMessage(`{MAINCOLOUR}💬 [${hexFromToColour(getPlayerColour(client))}]${getCharacterFullName(client)}: {MAINCOLOUR}${messageText}`), getPlayerColour(client));
+
+    /*
+    let clients = getClients();
+	for(let i in clients) {
+		let translatedText;
+		translatedText = await translateMessage(messageText, getPlayerData(client).locale, getPlayerData(clients[i]).locale);
+
+		let original = (getPlayerData(client).locale == getPlayerData(clients[i]).locale) ? `` : ` {ALTCOLOUR}(${messageText})`;
+		messagePlayerNormal(clients[i], `💬 ${getCharacterFullName(client)}: [#FFFFFF]${translatedText}${original}`, clients[i], getColourByName("mediumGrey"));
+	}
+    */
+    messagePlayerNormal(null, `💬 ${getCharacterFullName(client)}: ${messageText}`);
     messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
 }
 
@@ -160,10 +178,6 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
             return false;
         }
 
-        if(seat == 0) {
-            vehicle.engine = getVehicleData(vehicle).engine;
-        }
-
         if(getVehicleData(vehicle).locked) {
             if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                 if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "lock")) {
@@ -174,7 +188,13 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
             } else {
                 messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked and you don't have the keys to unlock it`);
             }
+
+            getPlayerData(client).enteringVehicle = null;
+            makePlayerStopAnimation(client);
+            return false;
         }
+
+        getPlayerData(client).enteringVehicle = vehicle;
     }
 }
 
@@ -279,10 +299,17 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             return false;
         }
 
+        if(getPlayerData(client).enteringVehicle == null || getPlayerData(client).enteringVehicle != vehicle) {
+            messagePlayerError(client, "You can't enter this vehicle!");
+            removePlayerFromVehicle(client);
+            messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}tried to warp into a locked vehicle`);
+            return false;
+        }
+
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
         getPlayerData(client).lastVehicle = vehicle;
-        getVehicleData(vehicle).respawnTime = getCurrentUnixTimestamp() + getGlobalConfig().vehicleInactiveRespawnDelay;
+        getVehicleData(vehicle).lastActiveTime = getCurrentUnixTimestamp();
 
         if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
             vehicle.engine = getVehicleData(vehicle).engine;
@@ -392,7 +419,7 @@ function onPlayerExitedVehicle(client, vehicle) {
         }
     }
 
-    getVehicleData(vehicle).respawnTime = getCurrentUnixTimestamp() + getGlobalConfig().vehicleInactiveRespawnDelay;
+    getVehicleData(vehicle).lastActiveTime = getCurrentUnixTimestamp();
 
     logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 }
@@ -420,6 +447,8 @@ function onPlayerDeath(client, position) {
                     fadeCamera(client, true, 1.0);
                 }
                 updatePlayerSpawnedState(client, true);
+                makePlayerStopAnimation(client);
+                setPlayerControlState(client, true);
 			} else {
                 let closestHospital = getClosestHospital(getPlayerPosition(client));
                 client.despawnPlayer();
@@ -431,6 +460,8 @@ function onPlayerDeath(client, position) {
                     fadeCamera(client, true, 1.0);
                 }
                 updatePlayerSpawnedState(client, true);
+                makePlayerStopAnimation(client);
+                setPlayerControlState(client, true);
 			}
 		}, 2000);
 	}, 1000);

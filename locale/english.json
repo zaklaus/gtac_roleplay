@@ -7,13 +7,7 @@
     "LocaleChanged2": "The server will now display messages in {1}",
     "LocaleChangedNote": "This does not change messages from other players",
     "AccentsListHeader": "Accents",
-    "HelpListHeader": "Help Categories",
-    "HelpSkinHeader": "Skin Help",
-    "HelpVehicleHeader": "Vehicle Help",
-    "HelpBusinessHeader": "Business Help",
-    "HelpHouseHeader": "House Help",
-    "HelpRadioHeader": "Radio Help",
-    "HelpAnimationHeader": "Animation Help",
+    "HeaderHelpMainList": "Help Categories",
     "AccentNotFound": "Accent not found",
     "AccentSet": "You set your accent to {1}",
     "AnimationNotFound": "That animation doesn't exist",
@@ -76,7 +70,7 @@
     "HeaderKeyBinds": "Key Binds",
     "HeaderAccountHelp": "Account Help",
     "HeaderVehicleHelp": "Vehicle Help",
-    "HeaderVehicleDealerships": "Vehicle Dealership Help",
+    "HeaderVehicleDealershipHelp": "Vehicle Dealership Help",
     "HeaderJobHelp": "Job Help",
     "HeaderChatHelp": "Chat Help",
     "HeaderServerRules": "Server Rules",
@@ -271,7 +265,7 @@
         "Use {1} to add a new keybind and {2} to remove one.",
         "Default keys are: {1} for vehicle engine, {1} for lights, and {3} for lock/unlock",
         "Press {1} to see your items and {2} to equip an item or {3} to unequip all.",
-        "Press {1} to use the item you're holding, press {2} to drop it, or press {3}to pickup an item from the ground."
+        "Press {1} to use the item you're holding, press {2} to drop it, or press {3} to pickup an item from the ground."
     ],
     "BusinessHelp": [
         "Use {1} to purchase items or {2} to see a list of what's for sale at any business",
@@ -349,5 +343,10 @@
     "JobPoints": "You can get a job by going the yellow points on the map.",
     "QuitJobToTakeAnother": "If you want this job, use {1} to quit your current job.",
     "NotAJobVehicle": "This is not a job vehicle!",
-    "NotYourJobVehicle": "This is not your job's vehicle!"
+    "NotYourJobVehicle": "This is not your job's vehicle!",
+    "JobRouteDisabled": "The job route you were on has been disabled by an admin",
+    "HeaderPickupTypes": "Pickup Types",
+    "HeaderBlipTypes": "Map Icon Types",
+    "InvalidGPSLocation": "There are no locations with that name or type",
+    "HeaderBusinessList": "Businesses"
 }

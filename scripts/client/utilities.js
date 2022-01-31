@@ -872,7 +872,7 @@ function processVehiclePurchasing() {
             sendNetworkEventToServer("vrr.vehBuyState", VRR_VEHBUYSTATE_EXITEDVEH);
             return false;
         } else {
-            if(vehiclePurchasing.id == inVehicle) {
+            if(vehiclePurchasing == inVehicle) {
                 if(getDistance(inVehicle.position, vehiclePurchasePosition) >= 25) {
                     vehiclePurchaseState = VRR_VEHBUYSTATE_FARENOUGH;
                     sendNetworkEventToServer("vrr.vehBuyState", VRR_VEHBUYSTATE_FARENOUGH);
@@ -887,10 +887,16 @@ function processVehiclePurchasing() {
 
 // ===========================================================================
 
-function setVehiclePurchaseState(state, vehicle, position) {
+function setVehiclePurchaseState(state, vehicleId, position) {
     vehiclePurchaseState = state;
+
+    if(vehicleId != null) {
+        vehiclePurchasing = getElementFromId(vehicleId);
+    } else {
+        vehiclePurchasing = null;
+    }
+
     vehiclePurchasePosition = position;
-    vehiclePurchasing = vehicle;
 }
 
 // ===========================================================================

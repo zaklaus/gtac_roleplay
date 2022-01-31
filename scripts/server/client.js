@@ -65,16 +65,15 @@ function addAllNetworkHandlers() {
 
     // Item
     addNetworkEventHandler("vrr.itemActionDelayComplete", playerItemActionDelayComplete);
-
     addNetworkEventHandler("vrr.weaponDamage", playerDamagedByPlayer);
 
+    // Misc
     addNetworkEventHandler("vrr.player.position", updatePositionInPlayerData);
     addNetworkEventHandler("vrr.player.heading", updateHeadingInPlayerData);
     addNetworkEventHandler("vrr.player.lookat", setPlayerHeadLookPosition);
-
     addNetworkEventHandler("vrr.skinSelected", playerFinishedSkinSelection);
-
     addNetworkEventHandler("vrr.clientInfo", updateConnectionLogOnClientInfoReceive);
+    addNetworkEventHandler("vrr.vehBuyState", receiveVehiclePurchaseStateUpdateFromClient);
 }
 
 // ===========================================================================
@@ -1122,8 +1121,18 @@ function updateAllInteriorVehiclesForPlayer(client, interior, dimension) {
 
 // ===========================================================================
 
-function setPlayerBuyingVehicleState(state, vehicle, position) {
+function setPlayerBuyingVehicleState(client, state, vehicleId, position) {
+    if(getGlobalConfig().useServerSideVehiclePurchaseCheck == false) {
+        sendNetworkEventToPlayer("vrr.vehBuyState", client, state, vehicleId, position);
+    }
+}
 
+// ==========================================================================
+
+function receiveVehiclePurchaseStateUpdateFromClient(client, state) {
+    if(getGlobalConfig().useServerSideVehiclePurchaseCheck == false) {
+        checkVehicleBuying(client);
+    }
 }
 
 // ===========================================================================
@@ -1132,4 +1141,4 @@ function sendPlayerLogLevel(client, tempLogLevel = logLevel) {
     sendNetworkEventToPlayer("vrr.logLevel", client, tempLogLevel);
 }
 
-// ===========================================================================
+// ==========================================================================

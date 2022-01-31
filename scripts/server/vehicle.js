@@ -580,7 +580,7 @@ function buyVehicleCommand(command, params, client) {
 	vehicle.engine = true;
 
 	getVehicleData(vehicle).needsSaved = true;
-
+	setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_TESTDRIVE, vehicle.id, getVehiclePosition(vehicle));
 	meActionToNearbyPlayers(client, `receives a set of keys to test drive the ${getVehicleName(vehicle)} and starts the engine`);
 	messagePlayerInfo(client, getLocaleString(client, "DealershipPurchaseTestDrive"));
 }
@@ -1354,18 +1354,22 @@ function createPermanentVehicle(modelIndex, position, heading, interior = 0, dim
 
 function checkVehicleBuying(client) {
 	if(!isPlayerLoggedIn(client)) {
+		setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_NONE, null, null);
 		return false;
 	}
 
 	if(!isPlayerSpawned(client)) {
+		setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_NONE, null, null);
 		return false;
 	}
 
 	if(!getPlayerData(client)) {
+		setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_NONE, null, null);
 		return false;
 	}
 
 	if(!getPlayerData(client).buyingVehicle) {
+		setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_NONE, null, null);
 		return false;
 	}
 
@@ -1374,6 +1378,7 @@ function checkVehicleBuying(client) {
 			messagePlayerError(client, getLocaleString(client, "DealershipPurchaseExitedVehicle"));
 			respawnVehicle(getPlayerData(client).buyingVehicle);
 			getPlayerData(client).buyingVehicle = false;
+			setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_NONE, null, null);
 		}
 		return false;
 	}
@@ -1383,6 +1388,7 @@ function checkVehicleBuying(client) {
 			messagePlayerError(client, getLocaleString(client, "VehiclePurchaseNotEnoughMoney"));
 			respawnVehicle(getPlayerData(client).buyingVehicle);
 			getPlayerData(client).buyingVehicle = false;
+			setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_NONE, null, null);
 			return false;
 		}
 
@@ -1396,6 +1402,7 @@ function checkVehicleBuying(client) {
 		getVehicleData(getPlayerData(client).buyingVehicle).spawnLocked = false;
 		getPlayerData(client).buyingVehicle = false;
 		messagePlayerSuccess(client, getLocaleString(client, "VehiclePurchaseComplete"));
+		setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_NONE, null, null);
 		return true;
 	}
 

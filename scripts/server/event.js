@@ -157,9 +157,11 @@ function onProcess(event, deltaTime) {
     //checkPlayerPedState();
     //checkVehicleBurning();
 
-    getClients().forEach((client) => {
-        checkVehicleBuying(client);
-    });
+    if(getGlobalConfig().useServerSideVehiclePurchaseCheck == true) {
+        getClients().forEach((client) => {
+            checkVehicleBuying(client);
+        });
+    }
 }
 
 // ===========================================================================
@@ -299,12 +301,12 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             return false;
         }
 
-        if(getPlayerData(client).enteringVehicle == null || getPlayerData(client).enteringVehicle != vehicle) {
-            messagePlayerError(client, "You can't enter this vehicle!");
-            removePlayerFromVehicle(client);
-            messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}tried to warp into a locked vehicle`);
-            return false;
-        }
+        //if(getPlayerData(client).enteringVehicle == null || getPlayerData(client).enteringVehicle != vehicle) {
+        //    messagePlayerError(client, "You can't enter this vehicle!");
+        //    removePlayerFromVehicle(client);
+        //    messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}tried to warp into a locked vehicle`);
+        //    return false;
+        //}
 
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
@@ -315,13 +317,11 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             vehicle.engine = getVehicleData(vehicle).engine;
 
             if(getVehicleData(vehicle).buyPrice > 0) {
-                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice)}`);
-                messagePlayerTip(client, `Use /vehbuy if you want to buy it.`);
+                messagePlayerAlert(client, getLocaleString(client, "VehicleForSale", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice)}{MAINCOLOUR}`, `{ALTCOLOUR}/vehbuy{MAINCOLOUR}`));
                 resetVehiclePosition(vehicle);
             } else if(getVehicleData(vehicle).rentPrice > 0) {
                 if(getVehicleData(vehicle).rentedBy != client) {
-                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute`);
-                    messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
+                    messagePlayerAlert(client, getLocaleString(client, "VehicleForRent", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)}`, `{ALTCOLOUR}/vehrent{MAINCOLOUR}`));
                     resetVehiclePosition(vehicle);
                 } else {
                     messagePlayerAlert(client, `You are renting this ${getVehicleName(vehicle)} for {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute. {MAINCOLOUR}Use {ALTCOLOUR}/stoprent {MAINCOLOUR}if you want to stop renting it.`);
@@ -359,15 +359,17 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             }
 
             if(!getVehicleData(vehicle).engine) {
-                if(doesPlayerHaveVehicleKeys(client, vehicle)) {
-                    if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                        messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} {MAINCOLOUR}to start it.`);
+                if(getVehicleData(vehicle).buyPrice == 0 && getVehicleData(vehicle).rentPrice == 0) {
+                    if(doesPlayerHaveVehicleKeys(client, vehicle)) {
+                        if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
+                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} {MAINCOLOUR}to start it.`);
+                        } else {
+                            messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
+                        }
                     } else {
-                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
-                    }
-                } else {
-                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
+                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
 
+                    }
                 }
                 resetVehiclePosition(vehicle);
             }

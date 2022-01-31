@@ -70,6 +70,7 @@ let globalConfig = {
 	economy: {},
 	locales: [],
 	accents: [],
+	useServerSideVehiclePurchaseCheck: false,
 };
 
 // ===========================================================================

@@ -65,14 +65,14 @@ function createHouseCommand(command, params, client) {
 	let entranceLocation = new HouseLocationData(false);
 	entranceLocation.entrancePosition = getPlayerPosition(client);
 	entranceLocation.entranceRotation = 0.0;
-	entranceLocation.entrancePickupModel = getGameConfig().pickupModels[getServerGame()].house;
-	entranceLocation.entranceBlipModel = getGameConfig().blipSprites[getServerGame()].house;
+	entranceLocation.entrancePickupModel = getGameConfig().pickupModels[getServerGame()].House;
+	entranceLocation.entranceBlipModel = getGameConfig().blipSprites[getServerGame()].House;
 	entranceLocation.entranceInterior = 0;
 	entranceLocation.entranceDimension = 0;
 
 	entranceLocation.exitPosition = toVector3(0.0, 0.0, 0.0);
 	entranceLocation.exitRotation = 0.0;
-	entranceLocation.exitPickupModel = getGameConfig().pickupModels[getServerGame()].exit;
+	entranceLocation.exitPickupModel = getGameConfig().pickupModels[getServerGame()].Exit;
 	entranceLocation.exitBlipModel = -1;
 	entranceLocation.exitInterior = 0;
 	entranceLocation.exitDimension = 0;
@@ -344,8 +344,14 @@ function setHousePickupCommand(command, params, client) {
 			getHouseData(houseId).entrancePickupModel = -1;
 		} else {
 			if(isNull(getGameConfig().pickupModels[getServerGame()][typeParam])) {
-				messagePlayerError(client, "Invalid house type! Use a house type name or a pickup model ID or 'none'");
-				messagePlayerInfo(client, `Pickup Types: {ALTCOLOUR}${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`)
+				messagePlayerError(client, "Invalid pickup type! Use a pickup type name or a model ID");
+				let pickupTypes = Object.keys(getGameConfig().pickupModels[getServerGame()]);
+				let chunkedList = splitArrayIntoChunks(pickupTypes, 10);
+
+				messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPickupTypes")));
+				for(let i in chunkedList) {
+					messagePlayerInfo(client, chunkedList[i].join(", "));
+				}
 				return false;
 			}
 
@@ -389,6 +395,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 		if(toLowerCase(typeParam) == "None") {
 			tempHouseLocation.exitPosition = toVector3(0.0, 0.0, 0.0);
 			tempHouseLocation.exitInterior = -1;
+			getHouseData(houseId).exitPickupModel = -1;
 			getHouseData(houseId).hasInterior = false;
 			messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}removed house {houseGreen}${getHouseData(houseId).description} {MAINCOLOUR}interior`);
 			return false;
@@ -409,6 +416,7 @@ function setHouseInteriorTypeCommand(command, params, client) {
 		getHouseData(houseId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam][0];
 		getHouseData(houseId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam][1];
 		getHouseData(houseId).exitDimension = getHouseData(houseId).databaseId+getGlobalConfig().houseDimensionStart;
+		getHouseData(houseId).exitPickupModel = getGameConfig().pickupModels[getServerGame()].Exit;
 		getHouseData(houseId).hasInterior = true;
 	}
 
@@ -447,8 +455,13 @@ function setHouseBlipCommand(command, params, client) {
 			getHouseData(houseId).entranceBlipModel = -1;
 		} else {
 			if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
-				messagePlayerError(client, "Invalid house type! Use a house type name or a blip image ID");
-				messagePlayerInfo(client, `Pickup Types: {ALTCOLOUR}${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
+				let blipTypes = Object.keys(getGameConfig().blipSprites[getServerGame()]);
+				let chunkedList = splitArrayIntoChunks(blipTypes, 10);
+
+				messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBlipTypes")));
+				for(let i in chunkedList) {
+					messagePlayerInfo(client, chunkedList[i].join(", "));
+				}
 				return false;
 			}
 
@@ -854,7 +867,7 @@ function createHouseEntrancePickup(houseId) {
 	}
 
 	if(getHouseData(houseId).entrancePickupModel != -1) {
-		let pickupModelId = getGameConfig().pickupModels[getServerGame()].house;
+		let pickupModelId = getGameConfig().pickupModels[getServerGame()].House;
 
 		if(getServerData().houses[houseId].entrancePickupModel != 0) {
 			pickupModelId = getHouseData(houseId).entrancePickupModel;
@@ -890,7 +903,7 @@ function createHouseEntranceBlip(houseId) {
 	}
 
 	if(getHouseData(houseId).entranceBlipModel != -1) {
-		let blipModelId = getGameConfig().blipSprites[getServerGame()].house;
+		let blipModelId = getGameConfig().blipSprites[getServerGame()].House;
 
 		if(getServerData().houses[houseId].entranceBlipModel != 0) {
 			blipModelId = getHouseData(houseId).entranceBlipModel;
@@ -916,7 +929,7 @@ function createHouseExitPickup(houseId) {
 
 	if(getHouseData(houseId).hasInterior) {
 		if(getHouseData(houseId).exitPickupModel != -1) {
-			let pickupModelId = getGameConfig().pickupModels[getServerGame()].exit;
+			let pickupModelId = getGameConfig().pickupModels[getServerGame()].Exit;
 
 			if(getServerData().houses[houseId].exitPickupModel != 0) {
 				pickupModelId = getHouseData(houseId).exitPickupModel;
@@ -942,7 +955,7 @@ function createHouseExitBlip(houseId) {
 
 	if(getHouseData(houseId).hasInterior) {
 		if(getHouseData(houseId).exitBlipModel != -1) {
-			let blipModelId = getGameConfig().blipSprites[getServerGame()].house;
+			let blipModelId = getGameConfig().blipSprites[getServerGame()].House;
 
 			if(getServerData().houses[houseId].exitBlipModel != 0) {
 				blipModelId = getHouseData(houseId).exitBlipModel;

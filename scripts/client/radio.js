@@ -22,7 +22,9 @@ function playStreamingRadio(url, loop, volume, element = false) {
 // ===========================================================================
 
 function stopStreamingRadio() {
-    streamingRadio.stop();
+    if(streamingRadio != null) {
+        streamingRadio.stop();
+    }
     streamingRadio = null;
 }
 

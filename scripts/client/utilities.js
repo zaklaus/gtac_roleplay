@@ -550,10 +550,12 @@ function processWantedLevelReset() {
 // ===========================================================================
 
 function processLocalPlayerVehicleControlState() {
-    let position = getLocalPlayerPosition();
-
     if(areServerElementsSupported()) {
         if(inVehicle && localPlayer.vehicle != null) {
+            if(getEntityData(localPlayer.vehicle, "vrr.engine") == false) {
+                localPlayer.vehicle.engine = false;
+            }
+
             if(!localPlayer.vehicle.engine) {
                 if(typeof localPlayer.vehicle.velocity != "undefined") {
                     localPlayer.vehicle.velocity = toVector3(0.0, 0.0, 0.0);
@@ -747,14 +749,18 @@ function setUpInitialGame() {
         game.SET_PLAYER_NEVER_GETS_TIRED(game.GET_PLAYER_ID(), 0);
         game.setGameStat(STAT_PROGRESSMADE, 9999);
         game.setGameStat(STAT_TOTALPROGRESSINGAME, 9999);
+        game.SET_CAR_DENSITY_MULTIPLIER(3.0);
+        game.SET_PED_DENSITY_MULTIPLIER(3.0);
         game.onMission = true;
         return true;
     }
 
     if(getGame() == VRR_GAME_GTA_VC) {
         game.SET_PLAYER_NEVER_GETS_TIRED(game.GET_PLAYER_ID(), 0);
-        game.setGameStat(STAT_PROGRESSMADE, 0);
-        game.setGameStat(STAT_TOTALPROGRESSINGAME, 0);
+        game.setGameStat(STAT_PROGRESSMADE, 9999);
+        game.setGameStat(STAT_TOTALPROGRESSINGAME, 9999);
+        game.SET_CAR_DENSITY_MULTIPLIER(3.0);
+        game.SET_PED_DENSITY_MULTIPLIER(3.0);
 
         game.REQUEST_ANIMATION("bikev");
         game.REQUEST_ANIMATION("bikeh");

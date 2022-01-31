@@ -11,19 +11,13 @@ function initBusinessScript() {
 	logToConsole(LOG_INFO, "[VRR.Business]: Initializing business script ...");
 	getServerData().businesses = loadBusinessesFromDatabase();
 
-	cacheAllBusinessItems();
 
-	if(getServerConfig().createBusinessPickups) {
 
-	}
-
-	if(getServerConfig().createBusinessBlips) {
-
-	}
 	createAllBusinessPickups();
 	createAllBusinessBlips();
 
 	setAllBusinessIndexes();
+	cacheAllBusinessItems();
 
 	logToConsole(LOG_INFO, "[VRR.Business]: Business script initialized successfully!");
 	return true;
@@ -143,7 +137,7 @@ function loadBusinessGameScriptsFromDatabase(businessId) {
 // ===========================================================================
 
 function createBusinessCommand(command, params, client) {
-	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].business, getGameConfig().blipSprites[getServerGame()].business, getPlayerInterior(client), getPlayerDimension(client));
+	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].Business, getGameConfig().blipSprites[getServerGame()].Business, getPlayerInterior(client), getPlayerDimension(client));
 	tempBusinessData.needsSaved = true;
 	let businessId = getServerData().businesses.push(tempBusinessData);
 	setAllBusinessIndexes();
@@ -681,8 +675,14 @@ function setBusinessPickupCommand(command, params, client) {
 
 	if(isNaN(typeParam)) {
 		if(isNull(getGameConfig().pickupModels[getServerGame()][typeParam])) {
-			messagePlayerError(client, "Invalid business type! Use a business type name or a pickup model ID");
-			messagePlayerInfo(client, `Pickup Types: {ALTCOLOUR}${Object.keys(getGameConfig().pickupModels[getServerGame()]).join(", ")}`)
+			messagePlayerError(client, "Invalid pickup type! Use a pickup type name or a model ID");
+			let pickupTypes = Object.keys(getGameConfig().pickupModels[getServerGame()]);
+			let chunkedList = splitArrayIntoChunks(pickupTypes, 10);
+
+			messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPickupTypes")));
+			for(let i in chunkedList) {
+				messagePlayerInfo(client, chunkedList[i].join(", "));
+			}
 			return false;
 		}
 
@@ -725,7 +725,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			let interiorTypesList = Object.keys(getGameConfig().interiorTemplates[getServerGame()]);
 			let chunkedList = splitArrayIntoChunks(interiorTypesList, 10);
 
-			messagePlayerNormal(client, `{clanOrange}== {jobYellow}Interior Types {clanOrange}=======================`);
+			messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderInteriorTypes")));
 			for(let i in chunkedList) {
 				messagePlayerInfo(client, chunkedList[i].join(", "));
 			}
@@ -735,7 +735,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 		getBusinessData(businessId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam][0];
 		getBusinessData(businessId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam][1];
 		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
-		getBusinessData(businessId).exitPickupModel = getGameConfig().pickupModels[getServerGame()].exit;
+		getBusinessData(businessId).exitPickupModel = getGameConfig().pickupModels[getServerGame()].Exit;
 		getBusinessData(businessId).hasInterior = true;
 	}
 
@@ -767,7 +767,14 @@ function setBusinessBlipCommand(command, params, client) {
 	if(isNaN(typeParam)) {
 		if(isNull(getGameConfig().blipSprites[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid business type! Use a business type name or a blip image ID");
-			messagePlayerInfo(client, `Blip Types: {ALTCOLOUR}${Object.keys(getGameConfig().blipSprites[getServerGame()]).join(", ")}`)
+
+			let blipTypes = Object.keys(getGameConfig().blipSprites[getServerGame()]);
+			let chunkedList = splitArrayIntoChunks(blipTypes, 10);
+
+			messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBlipTypes")));
+			for(let i in chunkedList) {
+				messagePlayerInfo(client, chunkedList[i].join(", "));
+			}
 			return false;
 		}
 
@@ -796,11 +803,19 @@ function giveDefaultItemsToBusinessCommand(command, params, client) {
 	}
 
 	if(!isNaN(typeParam)) {
+		messagePlayerError(client, getLocaleString(client, "InvalidBusiness"));
+		return false;
 	}
 
 	if(isNull(getGameConfig().defaultBusinessItems[getServerGame()][typeParam])) {
 		messagePlayerError(client, "Invalid business items type! Use a business items type name");
-		messagePlayerInfo(client, `Blip Types: {ALTCOLOUR}${Object.keys(getGameConfig().defaultBusinessItems[getServerGame()]).join(", ")}`)
+		let businessItemTypes = Object.keys(getGameConfig().defaultBusinessItems[getServerGame()]);
+		let chunkedList = splitArrayIntoChunks(businessItemTypes, 10);
+
+		messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderDefaultBusinessItemTypes")));
+		for(let i in chunkedList) {
+			messagePlayerInfo(client, chunkedList[i].join(", "));
+		}
 		return false;
 	}
 
@@ -1332,11 +1347,13 @@ function createBusinessEntrancePickup(businessId) {
 	}
 
 	if(getBusinessData(businessId).entrancePickupModel != -1) {
-		let pickupModelId = getGameConfig().pickupModels[getServerGame()].business;
+		let pickupModelId = getGameConfig().pickupModels[getServerGame()].Business;
 
 		if(getServerData().businesses[businessId].entrancePickupModel != 0) {
 			pickupModelId = getBusinessData(businessId).entrancePickupModel;
 		}
+
+		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating entrance pickup for business ${getBusinessData(businessId).name} (model ${pickupModelId})`);
 
 		getBusinessData(businessId).entrancePickup = createGamePickup(pickupModelId, getBusinessData(businessId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].business);
 		setElementOnAllDimensions(getBusinessData(businessId).entrancePickup, false);
@@ -1354,11 +1371,13 @@ function createBusinessEntranceBlip(businessId) {
 	}
 
 	if(getBusinessData(businessId).entranceBlipModel != -1) {
-		let blipModelId = getGameConfig().blipSprites[getServerGame()].business;
+		let blipModelId = getGameConfig().blipSprites[getServerGame()].Business;
 
 		if(getServerData().businesses[businessId].entranceBlipModel != 0) {
 			blipModelId = getBusinessData(businessId).entranceBlipModel;
 		}
+
+		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating entrance blip for business ${getBusinessData(businessId).name} (model ${blipModelId})`);
 
 		getBusinessData(businessId).entranceBlip = createGameBlip(getBusinessData(businessId).entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
 		setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
@@ -1381,11 +1400,13 @@ function createBusinessExitPickup(businessId) {
 
 	if(getBusinessData(businessId).hasInterior) {
 		if(getBusinessData(businessId).exitPickupModel != -1) {
-			let pickupModelId = getGameConfig().pickupModels[getServerGame()].exit;
+			let pickupModelId = getGameConfig().pickupModels[getServerGame()].Exit;
 
 			if(getServerData().businesses[businessId].exitPickupModel != 0) {
 				pickupModelId = getBusinessData(businessId).exitPickupModel;
 			}
+
+			logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating exit pickup for business ${getBusinessData(businessId).name} (model ${pickupModelId})`);
 
 			getBusinessData(businessId).exitPickup = createGamePickup(pickupModelId, getBusinessData(businessId).exitPosition, getGameConfig().pickupTypes[getServerGame()].business);
 			setElementDimension(getBusinessData(businessId).exitPickup, getBusinessData(businessId).exitDimension);
@@ -1408,11 +1429,13 @@ function createBusinessExitBlip(businessId) {
 
 	if(getBusinessData(businessId).hasInterior) {
 		if(getBusinessData(businessId).exitBlipModel != -1) {
-			let blipModelId = getGameConfig().blipSprites[getServerGame()].business;
+			let blipModelId = getGameConfig().blipSprites[getServerGame()].Business;
 
 			if(getServerData().businesses[businessId].exitBlipModel != 0) {
 				blipModelId = getBusinessData(businessId).exitBlipModel;
 			}
+
+			logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating exit blip for business ${getBusinessData(businessId).name} (model ${blipModelId})`);
 
 			getBusinessData(businessId).exitBlip = createGameBlip(getBusinessData(businessId).exitPosition, blipModelId, 1, getColourByName("businessBlue"));
 			setElementDimension(getBusinessData(businessId).exitBlip, getBusinessData(businessId).entranceDimension);
@@ -1585,6 +1608,8 @@ function reloadAllBusinessesCommand(command, params, client) {
 	getServerData().businesses = loadBusinessesFromDatabase();
 	createAllBusinessPickups();
 	createAllBusinessBlips();
+	setAllBusinessIndexes();
+	cacheAllBusinessItems();
 
 	messageAdminAction(`All businesses have been reloaded by an admin!`);
 }

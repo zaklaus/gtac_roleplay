@@ -29,6 +29,8 @@ let serverData = {
 		blackListedGameScripts: [],
 	},
 	localeStrings: {},
+	cachedTranslations: [],
+	cachedTranslationFrom: [],
 };
 
 // ===========================================================================

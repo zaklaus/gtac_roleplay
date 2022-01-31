@@ -418,6 +418,7 @@ function vehicleEngineCommand(command, params, client) {
 
 	getVehicleData(vehicle).engine = !getVehicleData(vehicle).engine;
 	vehicle.engine = getVehicleData(vehicle).engine;
+	setEntityData(vehicle, "vrr.engine", getVehicleData(vehicle).engine, true);
 
 	getVehicleData(vehicle).needsSaved = true;
 
@@ -1204,13 +1205,14 @@ function spawnVehicle(vehicleData) {
 		logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Setting vehicle ${vehicle.id}'s lock state to ${toUpperCase(getOnOffFromBool(getVehicleLocked(vehicle)))}`);
 	}
 
-	setElementDimension(vehicle.dimension, vehicleData.dimension);
+	setElementDimension(vehicle, vehicleData.dimension);
 
 	vehicleData.vehicle = vehicle;
 
 	setEntityData(vehicle, "vrr.livery", vehicleData.livery, true);
 	setEntityData(vehicle, "vrr.upgrades", vehicleData.extras, true);
 	setEntityData(vehicle, "vrr.interior", vehicleData.interior, true);
+	setEntityData(vehicle, "vrr.engine", vehicleData.engine, true);
 	forcePlayerToSyncElementProperties(null, vehicle);
 
 	return vehicle;

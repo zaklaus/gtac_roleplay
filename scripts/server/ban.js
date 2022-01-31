@@ -39,7 +39,7 @@ function accountBanCommand(command, params, client) {
 
     logToConsole(LOG_WARN, `[VRR.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) account was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
 
-	messageAdminAction(`${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name}) has been account banned.`);
+	messageAdminAction(`{ALTCOLOUR}${getPlayerData(targetClient).currentSubAccountData.name} {MAINCOLOUR}has been account banned.`);
 	banAccount(getPlayerData(targetClient).accountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
 	disconnectPlayer(client);
 }
@@ -69,7 +69,7 @@ function subAccountBanCommand(command, params, client, fromDiscord) {
 
     logToConsole(LOG_WARN, `[VRR.Ban]: ${getPlayerDisplayForConsole(targetClient)} (${getPlayerData(targetClient).accountData.name})'s subaccount was banned by ${getPlayerDisplayForConsole(client)}. Reason: ${reason}`);
 
-	messageAdminAction(`${getPlayerData(targetClient).currentSubAccountData.name} has been character banned.`);
+	messageAdminAction(`{ALTCOLOUR}${getPlayerData(targetClient).currentSubAccountData.name} {MAINCOLOUR}has been character banned.`);
     banSubAccount(getPlayerData(targetClient).currentSubAccountData.databaseId, getPlayerData(client).accountData.databaseId, reason);
 
     disconnectPlayer(client);
@@ -98,7 +98,7 @@ function ipBanCommand(command, params, client, fromDiscord) {
 		return false;
     }
 
-    messageAdminAction(`${targetgetPlayerName(client)} has been IP banned.`);
+    messageAdminAction(`{ALTCOLOUR}${getPlayerData(targetClient).currentSubAccountData.name} {MAINCOLOUR}has been IP banned.`);
     banIPAddress(targetClient.ip, getPlayerData(client).accountData.databaseId, reason);
 
     server.banIP(targetClient.ip);
@@ -129,7 +129,7 @@ function subNetBanCommand(command, params, client, fromDiscord) {
 		return false;
     }
 
-	messageAdminAction(`${targetgetPlayerName(client)} has been banned from the server (subnet ban).`);
+	messageAdminAction(`{ALTCOLOUR}${getPlayerData(targetClient).currentSubAccountData.name} {MAINCOLOUR}has been subnet banned`);
 	banSubNet(targetClient.ip, getSubNet(targetClient.ip, octetAmount), getPlayerData(client).accountData.databaseId, reason);
 
     server.banIP(targetClient.ip);

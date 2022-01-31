@@ -845,7 +845,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginGUI(client);
 		} else {
-			messagePlayerError(client, "Your name is already registered!");
+			messagePlayerError(client, getLocaleString(client, "AlreadyRegistered"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (already registered)`);
 		}
 		return false;
@@ -855,7 +855,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginSuccessGUI(client);
 		} else {
-			messagePlayerError(client, "You are already logged in!");
+			messagePlayerError(client, getLocaleString(client, "AlreadyLoggedIn"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (already logged in)`);
 		}
 		return false;
@@ -863,7 +863,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	if(areParamsEmpty(password)) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerRegistrationFailedGUI(client, "Password cannot be blank!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPassword"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password is blank)`);
 		} else {
 			messagePlayerError(client, "The password cannot be blank!");
@@ -874,7 +874,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(confirmPassword)) {
-			showPlayerRegistrationFailedGUI(client, "Password confirm cannot be blank!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPasswordConfirm"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password confirm is blank)`);
 			return false;
 		}
@@ -882,7 +882,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(emailAddress)) {
-			showPlayerRegistrationFailedGUI(client, "Email address cannot be blank!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoEmail"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (email address is blank)`);
 			return false;
 		}

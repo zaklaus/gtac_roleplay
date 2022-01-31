@@ -17,11 +17,14 @@ function initNPCScript() {
 // ===========================================================================
 
 /**
- * @param {number} npcId - The data index of the NPC
+ * @param {Ped} ped - The data index of the NPC
  * @return {NPCData} The NPC's data (class instancee)
  */
-function getNPCData(npcId) {
-    return ped.getData("vrr.dataIndex");
+function getNPCData(ped) {
+	if(ped.getData("vrr.dataIndex")) {
+		return ped.getData("vrr.dataIndex");
+	}
+    return false;
 }
 
 // ===========================================================================

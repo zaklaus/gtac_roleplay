@@ -178,6 +178,7 @@ class ClientData {
 		this.connectTime = 0;
 		this.clientVersion = "0.0.0";
 		this.loginAttemptsRemaining = 3;
+		this.afk = false;
 
 		this.jobRoute = false;
 		this.jobRouteStop = false;
@@ -250,7 +251,7 @@ class ClientData {
 		this.currentPickup = false;
 		this.usingSkinSelect = false;
 		this.keyBinds = [];
-		this.connectionId = 0;
+		this.sessionId = 0;
 		this.incomingDamageMultiplier = 1;
 		this.weaponDamageEvent = VRR_WEAPON_DAMAGE_EVENT_NORMAL;
 
@@ -266,6 +267,8 @@ class ClientData {
 		this.lastJobVehicle = null;
 		this.health = 100;
 		this.locale = 0;
+
+		this.enteringVehicle = null;
 	}
 };
 
@@ -958,7 +961,7 @@ class VehicleData {
 		this.interior = 0;
 		this.dimension = 0;
 
-		this.respawnTime = 0;
+		this.lastActiveTime = false;
 
 		if(dbAssoc) {
 			// General Info

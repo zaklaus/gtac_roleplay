@@ -82,7 +82,7 @@ function loadGameConfig() {
 
 function loadGlobalConfig() {
 	getGlobalConfig().economy = loadEconomyConfig();
-	getGlobalConfig().locales = loadLocaleConfig();
+	getGlobalConfig().locale = loadLocaleConfig();
 	getGlobalConfig().accents = loadAccentConfig();
 }
 

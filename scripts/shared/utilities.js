@@ -1344,3 +1344,19 @@ function getLockedUnlockedEmojiFromBool(boolVal) {
 }
 
 // ===========================================================================
+
+String.prototype.format = function() {
+	let a = this;
+	for(let i in arguments) {
+		a = a.replace("{" + String(i) + "}", arguments[i]);
+	}
+	return a;
+}
+
+// ===========================================================================
+
+function ArrayBufferToString(buffer) {
+	return String.fromCharCode.apply(null, new Uint8Array(buffer));
+}
+
+// ===========================================================================

@@ -104,13 +104,6 @@ function helpCommand(command, params, client) {
             showAnimationHelpMessage(client);
             break;
 
-        case "ammunation":
-        case "ammu":
-        case "gun":
-        case "guns":
-            showAmmunationHelpMessage(client);
-            break;
-
         case "skin":
         case "skins":
         case "clothes":
@@ -120,6 +113,7 @@ function helpCommand(command, params, client) {
         case "key":
         case "keys":
         case "keybinds":
+        case "keybind":
         case "bindkey":
         case "bindkeys":
             showBindKeysHelpMessage(client);
@@ -190,10 +184,10 @@ function helpCommand(command, params, client) {
 // ===========================================================================
 
 function showMainHelpMessage(client) {
-    messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderHelp")));
+    messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderHelpMainList")));
     messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use /help <category> for commands and info. Example: {ALTCOLOUR}/help vehicle`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Help Categories: [#A9A9A9]account, command, vehicle, job, chat, rules, website, anim`);
-    messagePlayerNormal(client, `{clanOrange}• [#A9A9A9]ammunation, skins, mechanic, dealership, discord, colours, keys`);
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Help Categories: [#A9A9A9]account, command, vehicle, job, chat, rules, website, animation`);
+    messagePlayerNormal(client, `{clanOrange}• [#A9A9A9]skin, mechanic, dealership, discord, colour, keybind`);
 }
 
 // ===========================================================================
@@ -251,11 +245,11 @@ function showChatHelpMessage(client) {
 
 function showRulesHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderServerRulesList")));
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Unrealistic actions (powergaming) are not allowed. You aren't superman.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}No terrorist or terrorism roleplay is allowed.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Always follow instructions given by moderators and admins.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Do not mix the chats (metagaming). You can't use info in IC that was received OOC`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Keep English in main chats. If you aren't good at English, use {ALTCOLOUR}/help language`);
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "RulesHelp", 0));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "RulesHelp", 1));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "RulesHelp", 2));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "RulesHelp", 3));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "RulesHelp", 4), `{ALTCOLOUR}/help language {MAINCOLOUR}`);
 }
 
 // ===========================================================================
@@ -276,70 +270,58 @@ function showDiscordHelpMessage(client) {
 
 function showAnimationHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderAnimationHelp")));
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Animations allow you to enhance roleplay with visual actions`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/an {MAINCOLOUR}or {ALTCOLOUR}/anim {MAINCOLOUR}with a name to use an animation.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}To see a list of animations, use {ALTCOLOUR}/animlist`);
-}
-
-// ===========================================================================
-
-function showAmmunationHelpMessage(client) {
-    messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderAmmunationHelp")));
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit an ammunation to buy weapons. Use {ALTCOLOUR}/gps {MAINCOLOUR}to find one.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Buying a weapon requires a weapon license.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Weapon licenses are managed by the police department. Apply there to get one.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Weapons can also be purchased illegally from weapon dealers and clans.`);
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "AnimationHelp", 0, `{ALTCOLOUR}/buy {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "AnimationHelp", 1, `{ALTCOLOUR}/an {MAINCOLOUR}`, `{ALTCOLOUR}/anim {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "AnimationHelp", 2, `{ALTCOLOUR}/animlist {MAINCOLOUR}`));
 }
 
 // ===========================================================================
 
 function showClothesHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderSkinHelp")));
-    //messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}To change your skin, use {ALTCOLOUR}/gps {MAINCOLOUR}to find a clothing store`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}At a clothing store, use {ALTCOLOUR}/buy {MAINCOLOUR} to purchase clothes`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}When you have a clothing item, equip and use it like any other item to show the skin selection (check {ALTCOLOUR}/help items {MAINCOLOUR}to learn how to use items)`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Some skins are restricted to jobs, clans, or for other reasons.`);
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "SkinHelp", 0, `{ALTCOLOUR}/buy {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "SkinHelp", 1, `{ALTCOLOUR}/help items {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "SkinHelp", 2));
 }
 
 // ===========================================================================
 
 function showBindKeysHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBindableKeysHelp")));
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}You can set your own keys binds. Use {ALTCOLOUR}/keybinds {MAINCOLOUR}to see your binded keys.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/bindkey {MAINCOLOUR}to add a new keybind and /unbindkey to remove one.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Default keys are: [#0066FF]K {MAINCOLOUR}for vehicle engine, [#0066FF]L {MAINCOLOUR}for lights, and [#0066FF]J {MAINCOLOUR}for lock/unlock`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}[#0066FF]I {MAINCOLOUR}to see your items and [#0066FF]1-9 {MAINCOLOUR}to equip an item or [#0066FF]0 (zero) {MAINCOLOUR}to equip none.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}[#0066FF]U {MAINCOLOUR}to use or [#0066FF]O {MAINCOLOUR}to drop your current item, and [#0066FF]P {MAINCOLOUR}to pickup an item from the ground.`);
-    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your keybinds will automatically be usable on all ${getServerName()} servers`);
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 0, `{ALTCOLOUR}/keybinds {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 1, `{ALTCOLOUR}/bindkey {MAINCOLOUR}`, `{ALTCOLOUR}/unbindkey {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 2, `{ALTCOLOUR}K {MAINCOLOUR}`, `{ALTCOLOUR}L {MAINCOLOUR}`, `{ALTCOLOUR}J {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 3, `{ALTCOLOUR}I {MAINCOLOUR}`, `{ALTCOLOUR}1-9 {MAINCOLOUR}`, `{ALTCOLOUR}0 {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 4, `{ALTCOLOUR}U {MAINCOLOUR}`, `{ALTCOLOUR}O {MAINCOLOUR}`, `{ALTCOLOUR}P {MAINCOLOUR}`));
 }
 
 // ===========================================================================
 
 function showBusinessHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBusinessHelp")));
-    messagePlayerHelpContent(client, getLocaleString(client, "BusinessHelp")[0]);
-    messagePlayerHelpContent(client, getLocaleString(client, "BusinessHelp")[1]);
-    messagePlayerHelpContent(client, getLocaleString(client, "BusinessHelp")[2], `{ALTCOLOUR}/bizorder, /bizlock, /bizlights, /radiostation, /bizitemprice, /bizbuyprice, /bizfee, /biztill, /bizwithdraw, /bizdeposit`);
-    messagePlayerHelpContent(client, getLocaleString(client, "BusinessHelp")[3]);
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "BusinessHelp", 0));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "BusinessHelp", 1));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "BusinessHelp", 2, `{ALTCOLOUR}/bizorder, /bizlock, /bizlights, /radiostation, /bizitemprice, /bizbuyprice, /bizfee, /biztill, /bizwithdraw, /bizdeposit`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "BusinessHelp", 3));
 }
 
 // ===========================================================================
 
 function showClanHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderClanHelp")));
-    messagePlayerHelpContent(client, getLocaleString(client, "ClanHelp")[0]);
-    messagePlayerHelpContent(client, getLocaleString(client, "ClanHelp")[1]);
-    messagePlayerHelpContent(client, getLocaleString(client, "ClanHelp")[2], `{ALTCOLOUR}/clan, /clanmotd, /clanname, /clanowner, /clanhouse, /clanbiz, /claninvite, /clanuninvite, /clansetrank`);
-    messagePlayerHelpContent(client, getLocaleString(client, "ClanHelp")[3], `{ALTCOLOUR}/clanranks, /clanflags, /clanaddrank, /clandelrank, /clanaddrankflag, /clandelrankflag, /clanaddmemberflag, /clandelmemberflag`);
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "ClanHelp", 0));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "ClanHelp", 1));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "ClanHelp", 2, `{ALTCOLOUR}/clan, /clanmotd, /clanname, /clanowner, /clanhouse, /clanbiz, /claninvite, /clanuninvite, /clansetrank`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "ClanHelp", 3, `{ALTCOLOUR}/clanranks, /clanflags, /clanaddrank, /clandelrank, /clanaddrankflag, /clandelrankflag, /clanaddmemberflag, /clandelmemberflag`));
 }
 
 // ===========================================================================
 
 function showRadioHelpMessage(client) {
     messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderRadioHelp")));
-    messagePlayerHelpContent(client, getLocaleString(client, "RadioHelp")[0], `{ALTCOLOUR}/radiostation {MAINCOLOUR}`);
-    messagePlayerHelpContent(client, getLocaleString(client, "RadioHelp")[1], `{ALTCOLOUR}/radiostations {MAINCOLOUR}`);
-    messagePlayerHelpContent(client, getLocaleString(client, "RadioHelp")[2], `{ALTCOLOUR}/radiovolume {MAINCOLOUR}`);
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "RadioHelp", 0, `{ALTCOLOUR}/radiostation {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "RadioHelp", 1, `{ALTCOLOUR}/radiostations {MAINCOLOUR}`));
+    messagePlayerHelpContent(client, getGroupedLocaleString(client, "RadioHelp", 2, `{ALTCOLOUR}/radiovolume {MAINCOLOUR}`));
 }
 
 // ===========================================================================

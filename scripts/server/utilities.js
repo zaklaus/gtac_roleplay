@@ -361,14 +361,14 @@ function isConsole(client) {
 
 function updateConnectionLogOnQuit(client, quitReasonId) {
 	if(getPlayerData(client) != false) {
-		quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=NOW(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${getPlayerData(client).connectionId}`);
+		quickDatabaseQuery(`UPDATE conn_main SET conn_when_disconnect=NOW(), conn_how_disconnect=${quitReasonId} WHERE conn_id = ${getPlayerData(client).sessionId}`);
 	}
 }
 
 // ===========================================================================
 
 function updateConnectionLogOnAuth(client, authId) {
-	quickDatabaseQuery(`UPDATE conn_main SET conn_auth=${authId} WHERE conn_id = ${getPlayerData(client).connectionId}`);
+	quickDatabaseQuery(`UPDATE conn_main SET conn_auth=${authId} WHERE conn_id = ${getPlayerData(client).sessionId}`);
 }
 
 // ===========================================================================
@@ -379,7 +379,7 @@ function updateConnectionLogOnClientInfoReceive(client, clientVersion, screenWid
 		let safeClientVersion = escapeDatabaseString(dbConnection, clientVersion);
 		let safeScreenWidth = escapeDatabaseString(dbConnection, toString(screenWidth));
 		let safeScreenHeight = escapeDatabaseString(dbConnection, toString(screenHeight));
-    	quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${getPlayerData(client).connectionId}`);
+    	quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${getPlayerData(client).sessionId}`);
 	}
 }
 
@@ -453,12 +453,12 @@ async function triggerWebHook(webHookURL, payloadData) {
 function clearTemporaryVehicles() {
 	let vehicles = getElementsByType(ELEMENT_VEHICLE);
 	for(let i in vehicles) {
-		if(vehicles[i].owner == -1) {
-			if(!getVehicleData(vehicles[i])) {
-				if(isVehicleUnoccupied(vehicles[i])) {
-					destroyElement(vehicles[i]);
-				}
+		if(!getVehicleData(vehicles[i])) {
+			let occupants = vehicles[i].getOccupants();
+			for(let j in occupants) {
+				destroyGameElement(occupants[j]);
 			}
+			destroyGameElement(vehicles[i]);
 		}
 	}
 }

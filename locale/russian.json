@@ -349,5 +349,14 @@
     "InvalidGPSLocation": "There are no locations with that name or type",
     "HeaderBusinessList": "Businesses",
     "VehicleForSale": "This {1} is buyable for {2}! Use {3} if you want to buy it",
-    "VehicleForRent": "This {1} is rentable for {2}! Use {3} if you want to rent it"
+    "VehicleForRent": "This {1} is rentable for {2}! Use {3} if you want to rent it",
+
+    "ADDED-31JAN2022": "DO NOT TRANSLATE. This string is just a comment to separate newly added translations.",
+    "LoginFailedInvalidPassword": "Invalid password! {1} attempts remaining",
+    "LoginFailedNoPassword": "You must enter a password! ! {1} attempts remaining",
+    "RegistrationFailedNoPassword": "You must enter a password!",
+    "RegistrationFailedNoPasswordConfirm": "You must confirm the password!",
+    "RegistrationFailedNoEmail": "You must enter an email!",
+    "AccountNameAlreadyRegistered": "Your name is already registered!",
+    "AlreadyLoggedIn": "You are already logged in!"
 }

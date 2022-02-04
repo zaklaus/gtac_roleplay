@@ -26,6 +26,10 @@ function bindAccountKey(key, keyState) {
     logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Binded key ${toUpperCase(getKeyNameFromId(key))} (${key})`);
     keyBinds.push(toInteger(key));
     bindKey(toInteger(key), keyState, function(event) {
+        if(isAnyGUIActive()) {
+            return false;
+        }
+
         if(hasKeyBindDelayElapsed()) {
             if(canLocalPlayerUseKeyBinds()) {
                 logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Using keybind for key ${toUpperCase(getKeyNameFromId(key))} (${key})`);

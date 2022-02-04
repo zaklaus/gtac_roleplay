@@ -170,36 +170,30 @@ function toggleAccountServerLogoCommand(command, params, client) {
 
 // ===========================================================================
 
-// UNFINISHED!
-// TO-DO: Make GUI, add command to generate code to add to auth app and command to input code returned by auth app
 function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("TwoStepAuth");
 
 	if(getEmailConfig().enabled) {
 		if(getPlayerData(client).accountData.emailAddress == "") {
-			messagePlayerError(client, `You need to add your email to your account to use two-factor authentication.`);
-			messagePlayerTip(client, `{MAINCOLOUR}Use {ALTCOLOUR}/setemail {MAINCOLOUR}to add your email.`);
+			messagePlayerError(client, getLocaleString(client, "NeedEmailFor2FA"));
+			messagePlayerTip(client, getLocaleString(client, "SetEmailHelpTip", `{ALTCOLOUR}/setemail{MAINCOLOUR}`));
 			return false;
 		}
 
 		if(!isAccountEmailVerified(getPlayerData(client).accountData)) {
-			messagePlayerError(client, `You need to verify your email to your account to use two-factor authentication.`);
-			messagePlayerTip(client, `{MAINCOLOUR}Use {ALTCOLOUR}/verifyemail {MAINCOLOUR}to verify your email.`);
+			messagePlayerError(client, getLocaleString(client, "NeedEmailVerifiedFor2FA"));
+			messagePlayerTip(client, getLocaleString(client, "VerifyEmailHelpTip", `{ALTCOLOUR}/verifyemail{MAINCOLOUR}`));
 			return false;
 		}
-	} else {
-		messagePlayerError(client, `This server does not have email enabled, so two-factor authentication is unavailable`);
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `{MAINCOLOUR}You have turned ${getBoolRedGreenInlineColour(false)}ON {MAINCOLOUR} two factor authentication!{ALTCOLOUR}${addtoAuthenticatorCode}`);
-		messagePlayerAlert(client, `You will be required to enter a code sent to your email every time you log in.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF {MAINCOLOUR}two-factor authentication for login.`);
-		messagePlayerAlert(client, `You won't be required to enter a code sent to your email every time you log in!`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
 	return true;
@@ -890,7 +884,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(password != confirmPassword) {
-			showPlayerRegistrationFailedGUI(client, "The passwords must match!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedPasswordMismatch"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password and confirm don't match)`);
 			return false;
 		}
@@ -899,7 +893,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	if(!doesPasswordMeetRequirements(password)) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 			// Work on this later. Function should return true by default anyway for now.
-			showPlayerRegistrationFailedGUI(client, "Password doesn't meet requirements!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPasswordWeak"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password doesn't meet requirements)`);
 		} else {
 			messagePlayerError(client, "Password doesn't meet requirements!");
@@ -909,7 +903,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		if(!isValidEmailAddress(emailAddress)) {
-			showPlayerRegistrationFailedGUI(client, "You must put a valid email!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedInvalidEmail"));
 			return false
 		}
 	}
@@ -917,9 +911,9 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	let accountData = createAccount(getPlayerName(client), password, emailAddress);
 	if(!accountData) {
 		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerRegistrationFailedGUI(client, "Your account could not be created!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedCreateError"));
 		} else {
-			messagePlayerAlert(client, "Your account could not be created!");
+			messagePlayerAlert(client, getLocaleString(client, "RegistrationFailedCreateError"));
 		}
 
 		messagePlayerAlert(client, `${getServerName()} staff have been notified of the problem and will fix it shortly.`);
@@ -929,15 +923,15 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	getPlayerData(client).accountData = accountData;
 	getPlayerData(client).loggedIn = true;
 
-	messagePlayerSuccess(client, "Your account has been created!");
+	messagePlayerSuccess(client, getLocaleString(client, "RegistrationSuccess"));
 	if(checkForSMTPModule() && getEmailConfig().enabled) {
-		messagePlayerAlert(client, "Don't forget to verify your email! A verification code has been sent to you");
+		messagePlayerAlert(client, getLocaleString(client, "RegistrationEmailVerifyReminder"));
     }
-	messagePlayerAlert(client, "To play on the server, you will need to make a character.");
+	messagePlayerAlert(client, getLocaleString(client, "RegistrationCreateCharReminder"));
 
 	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
 		showPlayerRegistrationSuccessGUI(client);
-		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
+		showPlayerPromptGUI(client, getLocaleString(client, "NoCharactersMessage"), getLocaleString(client, "NoCharactersWindowTitle"), getLocaleString(client, "Yes"), getLocaleString(client, "No"));
 		getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
 
 		if(checkForSMTPModule() && getEmailConfig().enabled) {
@@ -947,7 +941,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} was sent a registration email verification code`);
 		}
 	} else {
-		messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
+		messagePlayerAlert(client, getLocaleString(client, "NoCharactersChatMessage"));
 	}
 };
 

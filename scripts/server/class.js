@@ -910,10 +910,6 @@ class VehicleData {
 		this.colour2IsRGBA = 0;
 		this.colour3IsRGBA = 0;
 		this.colour4IsRGBA = 0;
-		this.colour1RGBA = toColour(255, 255, 255, 255);
-		this.colour2RGBA = toColour(255, 255, 255, 255);
-		this.colour3RGBA = toColour(255, 255, 255, 255);
-		this.colour4RGBA = toColour(255, 255, 255, 255);
 		this.colour1 = (vehicle) ? vehicle.colour1 : 1;
 		this.colour2 = (vehicle) ? vehicle.colour2 : 1;
 		this.colour3 = (vehicle) ? vehicle.colour3 : 1;
@@ -985,10 +981,6 @@ class VehicleData {
 			this.colour2IsRGBA = intToBool(toInteger(dbAssoc["veh_col2_isrgba"]));
 			this.colour3IsRGBA = intToBool(toInteger(dbAssoc["veh_col3_isrgba"]));
 			this.colour4IsRGBA = intToBool(toInteger(dbAssoc["veh_col4_isrgba"]));
-			this.colour1RGBA = toColour(toInteger(dbAssoc["veh_col1_r"]), toInteger(dbAssoc["veh_col1_g"]), toInteger(dbAssoc["veh_col1_b"]), toInteger(dbAssoc["veh_col1_a"]));
-			this.colour2RGBA = toColour(toInteger(dbAssoc["veh_col2_r"]), toInteger(dbAssoc["veh_col2_g"]), toInteger(dbAssoc["veh_col2_b"]), toInteger(dbAssoc["veh_col2_a"]));
-			this.colour3RGBA = toColour(toInteger(dbAssoc["veh_col3_r"]), toInteger(dbAssoc["veh_col3_g"]), toInteger(dbAssoc["veh_col3_b"]), toInteger(dbAssoc["veh_col3_a"]));
-			this.colour4RGBA = toColour(toInteger(dbAssoc["veh_col4_r"]), toInteger(dbAssoc["veh_col4_g"]), toInteger(dbAssoc["veh_col4_b"]), toInteger(dbAssoc["veh_col4_a"]));
 			this.colour1 = toInteger(dbAssoc["veh_col1"]);
 			this.colour2 = toInteger(dbAssoc["veh_col2"]);
 			this.colour3 = toInteger(dbAssoc["veh_col3"]);

@@ -358,5 +358,18 @@
     "RegistrationFailedNoPasswordConfirm": "You must confirm the password!",
     "RegistrationFailedNoEmail": "You must enter an email!",
     "AccountNameAlreadyRegistered": "Your name is already registered!",
-    "AlreadyLoggedIn": "You are already logged in!"
+    "AlreadyLoggedIn": "You are already logged in!",
+    "RegistrationFailedInvalidEmail": "That email is invalid!",
+    "RegistrationFailedPasswordMismatch": "The passwords don't match!",
+    "RegistrationFailedCreateError": "Your account couldn't be created!",
+    "RegistrationSuccess": "Your account has been created!",
+    "RegistrationEmailVerifyReminder": "Don't forget to verify your email! A verification code has been sent to you.",
+    "RegistrationCreateCharReminder": "To play on the server, you will need to make a character.",
+    "NoCharactersGUIMessage": "You have no characters. Would you like to make one?",
+    "NoCharactersGUIWindowTitle": "No characters",
+    "NoCharactersChatMessage": "You have no characters. Use {1} to make one.",
+    "NeedEmailFor2FA": "You need to add your email to your account to use two-factor authentication.",
+    "NeedEmailVerifiedFor2FA": "You need to verify your email to use two-factor authentication.",
+    "SetEmailHelpTip": "Use {1} to set your email.",
+    "VerifyEmailHelpTip": "Use {1} to verify your email."
 }

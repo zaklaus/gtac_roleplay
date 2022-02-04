@@ -90,48 +90,27 @@ function saveVehicleToDatabase(vehicleDataId) {
 			}
 		}
 
-		let colour1RGBA = rgbaArrayFromToColour(tempVehicleData.colour1RGBA);
-		let colour2RGBA = rgbaArrayFromToColour(tempVehicleData.colour2RGBA);
-		let colour3RGBA = rgbaArrayFromToColour(tempVehicleData.colour3RGBA);
-		let colour4RGBA = rgbaArrayFromToColour(tempVehicleData.colour4RGBA);
-
 		let data = [
 			["veh_server", getServerId()],
-			["veh_model", tempVehicleData.model],
-			["veh_owner_type", tempVehicleData.ownerType],
-			["veh_owner_id", tempVehicleData.ownerId],
+			["veh_model", toInteger(tempVehicleData.model)],
+			["veh_owner_type", toInteger(tempVehicleData.ownerType)],
+			["veh_owner_id", toInteger(tempVehicleData.ownerId)],
 			["veh_locked", boolToInt(tempVehicleData.locked)],
 			["veh_spawn_lock", boolToInt(tempVehicleData.spawnLocked)],
-			["veh_buy_price", tempVehicleData.buyPrice],
-			["veh_rent_price", tempVehicleData.rentPrice],
-			["veh_pos_x", tempVehicleData.spawnPosition.x],
-			["veh_pos_y", tempVehicleData.spawnPosition.y],
-			["veh_pos_z", tempVehicleData.spawnPosition.z],
-			["veh_rot_z", tempVehicleData.spawnRotation],
-			["veh_col1", tempVehicleData.colour1],
-			["veh_col2", tempVehicleData.colour2],
-			["veh_col3", tempVehicleData.colour3],
-			["veh_col4", tempVehicleData.colour4],
-			["veh_col1_isrgb", tempVehicleData.colour1IsRGBA],
-			["veh_col2_isrgb", tempVehicleData.colour2IsRGBA],
-			["veh_col3_isrgb", tempVehicleData.colour3IsRGBA],
-			["veh_col4_isrgb", tempVehicleData.colour4IsRGBA],
-			["veh_col1_r", colour1RGBA[0]],
-			["veh_col1_g", colour1RGBA[1]],
-			["veh_col1_b", colour1RGBA[2]],
-			["veh_col1_a", colour1RGBA[3]],
-			["veh_col2_r", colour2RGBA[0]],
-			["veh_col2_g", colour2RGBA[1]],
-			["veh_col2_b", colour2RGBA[2]],
-			["veh_col2_a", colour2RGBA[3]],
-			["veh_col3_r", colour3RGBA[0]],
-			["veh_col3_g", colour3RGBA[1]],
-			["veh_col3_b", colour3RGBA[2]],
-			["veh_col3_a", colour3RGBA[3]],
-			["veh_col4_r", colour4RGBA[0]],
-			["veh_col4_g", colour4RGBA[1]],
-			["veh_col4_b", colour4RGBA[2]],
-			["veh_col4_a", colour4RGBA[3]],
+			["veh_buy_price", toInteger(tempVehicleData.buyPrice)],
+			["veh_rent_price", toInteger(tempVehicleData.rentPrice)],
+			["veh_pos_x", toFloat(tempVehicleData.spawnPosition.x)],
+			["veh_pos_y", toFloat(tempVehicleData.spawnPosition.y)],
+			["veh_pos_z", toFloat(tempVehicleData.spawnPosition.z)],
+			["veh_rot_z", toFloat(tempVehicleData.spawnRotation)],
+			["veh_col1", toInteger(tempVehicleData.colour1)],
+			["veh_col2", toInteger(tempVehicleData.colour2)],
+			["veh_col3", toInteger(tempVehicleData.colour3)],
+			["veh_col4", toInteger(tempVehicleData.colour4)],
+			["veh_col1_isrgb", boolToInt(tempVehicleData.colour1IsRGBA)],
+			["veh_col2_isrgb", boolToInt(tempVehicleData.colour2IsRGBA)],
+			["veh_col3_isrgb", boolToInt(tempVehicleData.colour3IsRGBA)],
+			["veh_col4_isrgb", boolToInt(tempVehicleData.colour4IsRGBA)],
 			["veh_extra1", tempVehicleData.extras[0]],
 			["veh_extra2", tempVehicleData.extras[1]],
 			["veh_extra3", tempVehicleData.extras[2]],
@@ -151,8 +130,9 @@ function saveVehicleToDatabase(vehicleDataId) {
 			["veh_damage_engine", toInteger(tempVehicleData.engineDamage)],
 			["veh_damage_visual", toInteger(tempVehicleData.visualDamage)],
 			["veh_dirt_level", toInteger(tempVehicleData.dirtLevel)],
-			["veh_int", tempVehicleData.interior],
-			["veh_vw", tempVehicleData.dimension],
+			["veh_int", toInteger(tempVehicleData.interior)],
+			["veh_vw", toInteger(tempVehicleData.dimension)],
+			["veh_livery", toInteger(tempVehicleData.livery)],
 		];
 
 		let dbQuery = null;
@@ -1209,12 +1189,15 @@ function spawnVehicle(vehicleData) {
 
 	vehicleData.vehicle = vehicle;
 
+	setVehicleHealth(vehicle, 1000);
+	repairVehicle(vehicle);
+
 	setEntityData(vehicle, "vrr.livery", vehicleData.livery, true);
 	setEntityData(vehicle, "vrr.upgrades", vehicleData.extras, true);
 	setEntityData(vehicle, "vrr.interior", vehicleData.interior, true);
 	setEntityData(vehicle, "vrr.engine", vehicleData.engine, true);
-	forcePlayerToSyncElementProperties(null, vehicle);
 
+	forcePlayerToSyncElementProperties(null, vehicle);
 	return vehicle;
 }
 

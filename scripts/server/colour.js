@@ -168,7 +168,7 @@ function getPlayerColour(client) {
  *
  */
 function getBoolRedGreenInlineColour(boolValue) {
-	return (!boolValue) ? "[#CD3C3C]" : "[#32CD32]";
+	return (!boolValue) ? "{softRed}" : "{softGreen}";
 }
 
 // ===========================================================================

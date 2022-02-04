@@ -29,18 +29,18 @@ function initCharacterSelectGUI() {
 			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 		},
         title: {
-            textSize: 0.0,
+            textSize: 12.0,
             textColour: toColour(0, 0, 0, 0),
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
         },
         icon: {
-            textSize: 0.0,
+            textSize: 12.0,
             textColour: toColour(0, 0, 0, 0),
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], windowTitleAlpha),
         }
 	});
 	characterSelect.window.titleBarIconSize = toVector2(0,0);
-	//characterSelect.window.titleBarHeight = 0;
+	characterSelect.window.titleBarHeight = 0;
 
 	characterSelect.nameText = characterSelect.window.text(5, 40, 200, 25, 'Lastname, Firstname', {
 		main: {
@@ -116,11 +116,11 @@ function initCharacterSelectGUI() {
 		}
 	}, showNewCharacter);
 
-	characterSelect.previousCharacterButton = characterSelect.window.button(5, 130, 75, 25, '←', {
+	characterSelect.previousCharacterButton = characterSelect.window.button(5, 130, 75, 25, 'PREV', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
-			textSize: 13.0,
+			textSize: 10.0,
 			textFont: mainFont,
 			textAlign: 0.5,
 		},
@@ -129,11 +129,11 @@ function initCharacterSelectGUI() {
 		}
 	}, selectPreviousCharacter);
 
-	characterSelect.nextCharacterButton = characterSelect.window.button(350, 130, 75, 25, '→', {
+	characterSelect.nextCharacterButton = characterSelect.window.button(350, 130, 75, 25, 'NEXT', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
-			textSize: 13.0,
+			textSize: 10.0,
 			textFont: mainFont,
 			textAlign: 0.5,
 		},
@@ -204,7 +204,12 @@ function switchCharacterSelectGUI(firstName, lastName, cash, clan, lastPlayed, s
 	characterSelect.cashText.text = `Money: $${cash}`;
 	characterSelect.clanText.text = `Clan: ${clan}`;
 	characterSelect.lastPlayedText.text = `Last Played: ${lastPlayed}`;
-	characterSelect.skinImage = (getGame() == GAME_GTA_III) ? characterSelect.window.image(310, 32, 100, 90, `files/images/skins/gta3/${getSkinImage(skinId)}.png`) : characterSelect.window.image(310, 32, 100, 90, "files/images/skins/none.png");
+
+	if(characterSelect.skinImage != null) {
+		characterSelect.skinImage.remove();
+	}
+	characterSelect.skinImage = (getGame() == VRR_GAME_GTA_III) ? characterSelect.window.image(310, 32, 100, 90, `files/images/skins/gta3/${getSkinImage(skinId)}.png`) : characterSelect.window.image(310, 32, 100, 90, "files/images/skins/none.png");
+
 	characterSelect.window.shown = true;
 	guiSubmitKey = selectThisCharacter;
 	guiLeftKey = selectPreviousCharacter;

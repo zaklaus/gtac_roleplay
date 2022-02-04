@@ -731,7 +731,7 @@ function loadEconomyConfig() {
 // ===========================================================================
 
 function loadAccentConfig() {
-	let accentConfig = JSON.parse(loadTextFile(`config/accent.json`));
+	let accentConfig = JSON.parse(loadTextFile(`config/accents.json`));
 	if(accentConfig != null) {
 		return accentConfig;
 	}

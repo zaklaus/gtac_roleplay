@@ -2244,7 +2244,7 @@ function createJobLocationBlip(jobId, locationId) {
 			blipModelId = getJobData(jobId).blipModel;
 		}
 
-		getJobData(jobId).locations[locationId].blip = game.createBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
+		getJobData(jobId).locations[locationId].blip = createGameBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
 		//setElementStreamInDistance(getServerData().jobs[i].locations[j].blip, 30);
 		//setElementStreamOutDistance(getServerData().jobs[i].locations[j].blip, 40);
 		setElementOnAllDimensions(getJobData(jobId).locations[locationId].blip, false);
@@ -2408,6 +2408,11 @@ function deleteJobPickups(jobId) {
 // ===========================================================================
 
 function createJobRouteCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	let jobId = getPlayerJob(client);
 	let closestJobLocation = getClosestJobLocation(getPlayerPosition(client));
 
@@ -2429,6 +2434,11 @@ function createJobRouteCommand(command, params, client) {
 // ===========================================================================
 
 function createJobRouteLocationCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
 	let jobId = getPlayerJob(client);
 
 	if(!getJobData(jobId)) {
@@ -2467,9 +2477,9 @@ function createJobRoute(routeName, closestJobLocation) {
 	tempJobRouteData.vehicleColour1 = 1;
 	tempJobRouteData.vehicleColour2 = 1;
 	tempJobRouteData.pay = 500;
-	tempJobRouteData.startMessage = `You are now on route {ALTCOLOUR}${name}{MAINCOLOUR} for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} job!`;
-	tempJobRouteData.finishMessage = `You have finished route {ALTCOLOUR}${name}{MAINCOLOUR} for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} job, and will receive $${tempJobRouteData.pay} next payday!`;
-	tempJobRouteData.locationArriveMessage = `You arrived at a point in job route {ALTCOLOUR}${name}{MAINCOLOUR}.`;
+	tempJobRouteData.startMessage = `You are now on route {ALTCOLOUR}${routeName}{MAINCOLOUR} for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} job!`;
+	tempJobRouteData.finishMessage = `You have finished route {ALTCOLOUR}${routeName}{MAINCOLOUR} for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} job, and will receive $${tempJobRouteData.pay} next payday!`;
+	tempJobRouteData.locationArriveMessage = `You arrived at a point in job route {ALTCOLOUR}${routeName}{MAINCOLOUR}.`;
 	tempJobRouteData.locationNextMessage = `Drive to the next point on the route (looking for the blinking dot on the map).`;
 
 	getJobData(closestJobLocation.jobIndex).routes.push(tempJobRouteData);

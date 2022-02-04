@@ -403,23 +403,23 @@ function showPlayerCharacterSelectFailedGUI(client) {
 
 // ===========================================================================
 
-function showPlayerPromptGUI(client, promptMessage, promptTitle) {
+function showPlayerPromptGUI(client, promptMessage, promptTitle, yesButtonText, noButtonText) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show prompt GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${promptTitle}, Message: ${promptMessage})`);
-    sendNetworkEventToPlayer("vrr.showPrompt", client, promptMessage, promptTitle);
+    sendNetworkEventToPlayer("vrr.showPrompt", client, promptMessage, promptTitle, yesButtonText, noButtonText);
 }
 
 // ===========================================================================
 
 function showPlayerInfoGUI(client, infoMessage, infoTitle) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show info GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${infoTitle}, Message: ${infoMessage})`);
-    sendNetworkEventToPlayer("vrr.showInfo", client, infoMessage, infoTitle);
+    sendNetworkEventToPlayer("vrr.showInfo", client, infoMessage, infoTitle, buttonText);
 }
 
 // ===========================================================================
 
 function showPlayerErrorGUI(client, errorMessage, errorTitle) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show error GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${errorTitle}, Message: ${errorMessage})`);
-    sendNetworkEventToPlayer("vrr.showInfo", client, errorMessage, errorTitle);
+    sendNetworkEventToPlayer("vrr.showInfo", client, errorMessage, errorTitle, buttonText);
 }
 
 // ===========================================================================
@@ -937,6 +937,7 @@ function playerFinishedSkinSelection(client, allowedSkinIndex) {
         }
 
         restorePlayerCamera(client);
+        setPlayerControlState(client, true);
 
         deleteItem(getPlayerData(client).itemActionItem);
         switchPlayerActiveHotBarSlot(client, -1);

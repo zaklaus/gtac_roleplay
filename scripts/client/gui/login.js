@@ -42,7 +42,7 @@ function initLoginGUI() {
 	login.window.titleBarIconSize = toVector2(0,0);
 	login.window.titleBarHeight = 0;
 
-	login.logoImage = login.window.image(85, -10, 140, 140, mainLogoPath, {
+	login.logoImage = login.window.image(5, 20, 290, 80, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},

@@ -21,7 +21,7 @@ let newCharacter = {
 
 function initNewCharacterGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating new character GUI ...`);
-    newCharacter.window = mexui.window(game.width/2-130, game.height/2-100, 300, 200, 'Character Name', {
+    newCharacter.window = mexui.window(game.width/2-130, game.height/2-100, 300, 200, 'New Character', {
         main: {
             backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
             transitionTime: 500,
@@ -38,9 +38,9 @@ function initNewCharacterGUI() {
         }
     });
     newCharacter.window.titleBarIconSize = toVector2(0,0);
-    //newCharacter.window.titleBarHeight = 0;
+    newCharacter.window.titleBarHeight = 0;
 
-    newCharacter.mainLogoImage = newCharacter.window.image(115, 10, 65, 65, mainLogoPath, {
+    newCharacter.mainLogoImage = newCharacter.window.image(5, 20, 290, 80, mainLogoPath, {
         focused: {
             borderColour: toColour(0, 0, 0, 0),
         },

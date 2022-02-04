@@ -42,7 +42,7 @@ function initResetPasswordGUI() {
 	resetPassword.window.titleBarIconSize = toVector2(0,0);
 	resetPassword.window.titleBarHeight = 0;
 
-	resetPassword.logoImage = resetPassword.window.image(85, -10, 140, 140, mainLogoPath, {
+	resetPassword.logoImage = resetPassword.window.image(5, 20, 290, 80, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},

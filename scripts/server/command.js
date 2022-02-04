@@ -196,6 +196,8 @@ function loadCommands() {
             commandData("reloadcfg", reloadServerConfigurationCommand, "", getStaffFlagValue("ManageServer"), true, true, "Loads and applies the server configuration"),
             commandData("reloademailcfg", reloadEmailConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the email configuration"),
             commandData("reloaddbcfg", reloadDatabaseConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the database configuration"),
+            commandData("reloadlocalecfg", reloadLocaleConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the locale configuration and texts"),
+            commandData("reloadaccentcfg", reloadAccentConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the accent configuration and texts"),
 
             commandData("setbizblips", toggleServerBusinessBlipsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all business blips on/off"),
             commandData("sethouseblips", toggleServerHouseBlipsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all house blips on/off"),

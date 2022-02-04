@@ -1360,3 +1360,38 @@ function ArrayBufferToString(buffer) {
 }
 
 // ===========================================================================
+
+function getElementTypeName(typeId) {
+	switch(typeId) {
+		case ELEMENT_VEHICLE:
+			return "Vehicle";
+
+		case ELEMENT_OBJECT:
+			return "Object";
+
+		case ELEMENT_PED:
+			return "Ped";
+
+		case ELEMENT_PLAYER:
+			return "Player Ped";
+
+		case ELEMENT_PICKUP:
+			return "Pickup";
+
+		case ELEMENT_BLIP:
+			return "Blip";
+
+		case ELEMENT_MARKER:
+			return "Marker";
+
+		case ELEMENT_BUILDING:
+			return "Building";
+
+		default:
+			return "Unknown"
+	}
+
+	return "Unknown";
+}
+
+// ===========================================================================

@@ -1244,57 +1244,74 @@ function cachePlayerHotBarItems(client) {
 // ===========================================================================
 
 function deleteItem(itemId) {
+	let owner = -1;
+	let ownerTypeString = "Unknown";
 	switch(getItemData(itemId).ownerType) {
 		case VRR_ITEM_OWNER_GROUND:
+			ownerTypeString = "Ground/Dropped";
 			deleteGroundItemObject(itemId);
 			getServerData().groundItemCache.splice(getServerData().groundItemCache.indexOf(itemId), 1);
 			break;
 
 		case VRR_ITEM_OWNER_PLAYER:
-			if(getPlayerFromCharacterId(getItemData(itemId).ownerId)) {
-				switchPlayerActiveHotBarSlot(getPlayerFromCharacterId(getItemData(itemId).ownerId), -1);
-				getPlayerData(getPlayerFromCharacterId(getItemData(itemId).ownerId)).hotBarItems[getPlayerData(getPlayerFromCharacterId(getItemData(itemId).ownerId)).hotBarItems.indexOf(itemId)] = -1;
-				updatePlayerHotBar(getPlayerFromCharacterId(getItemData(itemId).ownerId));
+			ownerTypeString = "Player";
+			owner = getPlayerFromCharacterId(getItemData(itemId).ownerId);
+			if(getPlayerData(owner) != false) {
+				switchPlayerActiveHotBarSlot(getPlayerData(owner), -1);
+				getPlayerData(owner).hotBarItems[getPlayerData(owner).hotBarItems.indexOf(itemId)] = -1;
+				updatePlayerHotBar(getPlayerData(owner));
 			}
 			break;
 
 		case VRR_ITEM_OWNER_JOBLOCKER:
-			if(getPlayerFromCharacterId(getItemData(itemId).ownerId)) {
-				getPlayerData(getPlayerFromCharacterId(getItemData(itemId).ownerId)).jobLockerCache.splice(getPlayerData(getPlayerFromCharacterId(getItemData(itemId).ownerId)).jobLockerCache.indexOf(itemId), 1);
+			ownerTypeString = "Job Locker";
+			owner = getPlayerFromCharacterId(getItemData(itemId).ownerId);
+			if(getPlayerData(owner) != false) {
+				getPlayerData(owner).jobLockerCache.splice(getPlayerData(owner).jobLockerCache.indexOf(itemId), 1);
 			}
 			break;
 
 		case VRR_ITEM_OWNER_LOCKER:
-			if(getPlayerFromCharacterId(getItemData(itemId).ownerId)) {
-				getPlayerData(getPlayerFromCharacterId(getItemData(itemId).ownerId)).lockerCache.splice(getPlayerData(getPlayerFromCharacterId(getItemData(itemId).ownerId)).lockerCache.indexOf(itemId), 1);
+			ownerTypeString = "Locker";
+			owner = getPlayerFromCharacterId(getItemData(itemId).ownerId);
+			if(getPlayerData(owner) != false) {
+				getPlayerData(owner).lockerCache.splice(getPlayerData(owner).lockerCache.indexOf(itemId), 1);
 			}
 			break;
 
 		case VRR_ITEM_OWNER_VEHTRUNK:
-			if(getVehicleDataIndex(getItemData(itemId).ownerId)) {
-				getVehicleDataIndex(getItemData(itemId).ownerId).trunkItemCache.splice(getVehicleDataIndex(getItemData(itemId).ownerId).trunkItemCache.indexOf(itemId), 1);
+			ownerTypeString = "Vehicle Trunk";
+			owner = getVehicleFromDatabaseId(getItemData(itemId).ownerId)
+			if(getVehicleData(owner) != false) {
+				getVehicleDataIndex(getItemData(itemId).ownerId).trunkItemCache.splice(getVehicleData(owner).trunkItemCache.indexOf(itemId), 1);
 			}
 			break;
 
 		case VRR_ITEM_OWNER_BIZFLOOR:
-			if(getBusinessDataIndex(getItemData(itemId).ownerId)) {
-				getBusinessDataIndex(getItemData(itemId).ownerId).floorItemCache.splice(getBusinessDataIndex(getItemData(itemId).ownerId).floorItemCache.indexOf(itemId), 1);
+			ownerTypeString = "Business Floor";
+			owner = getBusinessIdFromDatabaseId(getItemData(itemId).ownerId);
+			if(getBusinessData(owner) != false) {
+				getBusinessData(owner).floorItemCache.splice(getBusinessData(owner).floorItemCache.indexOf(itemId), 1);
 			}
 			break;
 
 		case VRR_ITEM_OWNER_BIZSTORAGE:
-			if(getBusinessDataIndex(getItemData(itemId).ownerId)) {
-				getBusinessDataIndex(getItemData(itemId).ownerId).storageItemCache.splice(getBusinessDataIndex(getItemData(itemId).ownerId).storageItemCache.indexOf(itemId), 1);
+			ownerTypeString = "Business Storage";
+			owner = getBusinessIdFromDatabaseId(getItemData(itemId).ownerId);
+			if(getBusinessData(owner) != false) {
+				getBusinessData(owner).storageItemCache.splice(getBusinessData(owner).storageItemCache.indexOf(itemId), 1);
 			}
 			break;
 
 		case VRR_ITEM_OWNER_HOUSE:
-			if(getHouseDataIndex(getItemData(itemId).ownerId)) {
-				getHouseDataIndex(getItemData(itemId).ownerId).itemCache.splice(getHouseDataIndex(getItemData(itemId).ownerId).itemCache.indexOf(itemId), 1);
+			ownerTypeString = "House";
+			owner = getHouseIdFromDatabaseId(getItemData(itemId).ownerId);
+			if(getHouseData(owner) != false) {
+				getHouseData(owner).itemCache.splice(getHouseData(owner).itemCache.indexOf(itemId), 1);
 			}
 			break;
-
 	}
+	logToConsole(LOG_DEBUG, `Deleted item ${itemId} (DBID: ${getItemData(itemId).databaseId}, Owner Type: ${ownerTypeString}, Owner ID: ${getItemData(itemId).ownerId})`);
 
 	if(getItemData(itemId).databaseId > 0) {
 		quickDatabaseQuery(`DELETE FROM item_main WHERE item_id = ${getItemData(itemId).databaseId}`);
@@ -1896,7 +1913,7 @@ function showBusinessFloorInventoryToPlayer(client, businessId) {
 	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBusinessFloorItemList")));
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 	for(let i in chunkedList) {
-		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR} • `), COLOUR_WHITE);
 	}
 }
 
@@ -1916,7 +1933,7 @@ function showBusinessStorageInventoryToPlayer(client, businessId) {
 
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 	for(let i in chunkedList) {
-		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR} • `), COLOUR_WHITE);
 	}
 }
 
@@ -1936,7 +1953,7 @@ function showItemInventoryToPlayer(client, itemId) {
 
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 	for(let i in chunkedList) {
-		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR} • `), COLOUR_WHITE);
 	}
 }
 
@@ -1965,7 +1982,7 @@ function showPlayerInventoryToPlayer(client, targetClient) {
 
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 	for(let i in chunkedList) {
-		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR} • `), COLOUR_WHITE);
 	}
 }
 
@@ -1985,7 +2002,7 @@ function showHouseInventoryToPlayer(client, houseId) {
 	let chunkedList = splitArrayIntoChunks(itemDisplay, 5);
 
 	for(let i in chunkedList) {
-		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR}, `), COLOUR_WHITE);
+		messagePlayerNormal(client, chunkedList[i].join(`{MAINCOLOUR} • `), COLOUR_WHITE);
 	}
 }
 

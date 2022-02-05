@@ -754,8 +754,6 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 // ===========================================================================
 
 function setBusinessBlipCommand(command, params, client) {
-	let splitParams = params.split(" ");
-
 	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
 
@@ -792,8 +790,6 @@ function setBusinessBlipCommand(command, params, client) {
 // ===========================================================================
 
 function giveDefaultItemsToBusinessCommand(command, params, client) {
-	let splitParams = params.split(" ");
-
 	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
 
@@ -851,8 +847,6 @@ function setBusinessEntranceLabelToDealershipCommand(command, params, client) {
 // ===========================================================================
 
 function deleteBusinessFloorItemsCommand(command, params, client) {
-	let splitParams = params.split(" ");
-
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -860,8 +854,9 @@ function deleteBusinessFloorItemsCommand(command, params, client) {
 		return false;
 	}
 
-	for(let i in getBusinessData(businessId).floorItemCache) {
-		deleteItem(getBusinessData(businessId).floorItemCache);
+	let tempCache = getBusinessData(businessId).floorItemCache;
+	for(let i in tempCache) {
+		deleteItem(tempCache[i]);
 	}
 
 	cacheBusinessItems(businessId);
@@ -872,8 +867,6 @@ function deleteBusinessFloorItemsCommand(command, params, client) {
 // ===========================================================================
 
 function deleteBusinessStorageItemsCommand(command, params, client) {
-	let splitParams = params.split(" ");
-
 	let businessId = getPlayerBusiness(client);
 
 	if(!getBusinessData(businessId)) {
@@ -881,8 +874,9 @@ function deleteBusinessStorageItemsCommand(command, params, client) {
 		return false;
 	}
 
-	for(let i in getBusinessData(businessId).storageItemCache) {
-		deleteItem(getBusinessData(businessId).storageItemCache);
+	let tempCache = getBusinessData(businessId).storageItemCache;
+	for(let i in tempCache) {
+		deleteItem(tempCache[i]);
 	}
 
 	cacheBusinessItems(businessId);
@@ -897,8 +891,6 @@ function withdrawFromBusinessCommand(command, params, client) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
-
-	let splitParams = params.split(" ");
 
 	let amount = toInteger(getParam(params, " ", 1)) || 0;
 	let businessId = getPlayerBusiness(client);
@@ -934,8 +926,6 @@ function setBusinessBuyPriceCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-
 	let amount = toInteger(getParam(params, " ", 1)) || 0;
 	let businessId = getPlayerBusiness(client);
 
@@ -968,8 +958,6 @@ function depositIntoBusinessCommand(command, params, client) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
 	}
-
-	let splitParams = params.split(" ");
 
 	let amount = toInteger(getParam(params, " ", 1)) || 0;
 	let businessId = getPlayerBusiness(client);
@@ -1011,6 +999,7 @@ function orderItemForBusinessCommand(command, params, client) {
 		return false;
 	}
 
+	let splitParams = params.split(" ");
 	let itemType = getItemTypeFromParams(splitParams.slice(0,-2).join(" "));
 
 	if(!getItemTypeData(itemType)) {
@@ -1661,8 +1650,6 @@ function buyFromBusinessCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-
 	if(!getBusinessData(businessId)) {
 		messagePlayerError(client, getLocaleString(client, "InvalidBusiness"));
 		return false;
@@ -1717,9 +1704,7 @@ function buyFromBusinessCommand(command, params, client) {
 	}
 
 	let totalCost = getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).buyPrice*amount;
-	let individualCost = getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).buyPrice;
 	let itemName = getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).itemTypeIndex).name;
-	let priceEach = (amount > 1) ? `($${individualCost} each)` : ``;
 
 	if(getPlayerCurrentSubAccount(client).cash < totalCost) {
 		messagePlayerError(client, `You don't have enough money! You need {ALTCOLOUR}${getBusinessData(businessId).floorItemCache[itemSlot-1].buyPrice*amount-getPlayerCurrentSubAccount(client).cash} {MAINCOLOUR}more!`);
@@ -1896,8 +1881,8 @@ function cacheAllBusinessItems() {
 // ===========================================================================
 
 function cacheBusinessItems(businessId) {
-	getBusinessData(businessId).floorItemCache = [];
-	getBusinessData(businessId).storageItemCache = [];
+	getBusinessData(businessId).floorItemCache.splice(0, getBusinessData(businessId).floorItemCache.length);
+	getBusinessData(businessId).storageItemCache.splice(0, getBusinessData(businessId).storageItemCache.length);
 
 	logToConsole(LOG_VERBOSE, `[VRR.Business] Caching business items for business ${businessId} (${getBusinessData(businessId).name}) ...`);
 	for(let i in getServerData().items) {

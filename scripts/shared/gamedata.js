@@ -3528,17 +3528,17 @@ let gameData = {
 
 		},
 		{ // GTA III
-			clothingStore: [
+			ClothingStore: [
 				["Outfit", 500, 2]
 			],
-			legalGunStore: [
+			LegalGunStore: [
                 ["Baseball Bat", 500, 2],
 				["Colt 45", 500, 2],
 				["Shotgun", 500, 2],
                 ["Colt 45 Ammo", 500, 2],
                 ["Shotgun Ammo", 500, 2],
 			],
-			illegalGunStore: [
+			IllegalGunStore: [
 				["Uzi", 500, 2],
 				["AK-47", 500, 2],
 				["M16", 500, 2],
@@ -3548,7 +3548,7 @@ let gameData = {
                 ["M16 Ammo", 500, 2],
                 ["Shotgun Ammo", 500, 2],
 			],
-			gasStation: [
+			GasStation: [
 				["Bottle of Soda", 500, 2],
 				["Can of Soda", 500, 2],
 				["Slice of Pizza", 500, 2],
@@ -3556,14 +3556,14 @@ let gameData = {
 				["Can of Beer", 500, 2],
                 ["Pack of Smokes", 500, 2],
 			],
-			electronicsStore: [
+			ElectronicsStore: [
 				["Phone", 500, 2],
 				["Walkie Talkie", 500, 2],
 				["Megaphone", 500, 2],
 				["Tazer", 500, 2],
 				["Camera", 500, 2],
 			],
-			bar: [
+			Bar: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -3574,7 +3574,7 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			club: [
+			Club: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -3585,14 +3585,14 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			chicken: [
+			Chicken: [
 				["Bucket of Chicken", 500, 2],
 				["Chicken Tenders Meal", 500, 2],
 				["Large Fries", 500, 2],
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			burger: [
+			Burger: [
 				["Bacon Cheeseburger", 500, 2],
 				["Double Cheeseburger", 500, 2],
 				["Big Boy Burger", 500, 2],
@@ -3600,7 +3600,7 @@ let gameData = {
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			chinese: [
+			Chinese: [
 				["Egg Roll", 500, 2],
 				["Lo Mein", 500, 2],
 				["Fried Rice", 500, 2],
@@ -3610,7 +3610,7 @@ let gameData = {
 				["Egg Foo Young", 500, 2],
 				["Sesame Chicken", 500, 2],
 			],
-			italian: [
+			Italian: [
 				["Bottle of Wine", 500, 2],
 				["Glass of Wine", 500, 2],
 				["Arancini", 500, 2],
@@ -3623,7 +3623,7 @@ let gameData = {
 				["Chicken Salad", 500, 2],
 				["Caesar Salad", 500, 2],
 			],
-			mexican: [
+			Mexican: [
 				["Crunchy Taco", 500, 2],
 				["Beaf and Bean Burrito", 500, 2],
 				["Burrito Supreme", 500, 2],
@@ -3631,7 +3631,7 @@ let gameData = {
 				["Nacho Supreme", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			pizza: [
+			Pizza: [
 				["Large Pizza", 500, 2],
 				["Medium Pizza", 500, 2],
 				["Small Pizza", 500, 2],
@@ -3639,7 +3639,7 @@ let gameData = {
 				["Hot Wings", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			coffeeDonutShop: [
+			CoffeeDonutShop: [
 				["Glazed Donut", 500, 2],
 				["Frosted Donut", 500, 2],
 				["Jelly Donut", 500, 2],
@@ -3651,17 +3651,17 @@ let gameData = {
 				["Large Coffee", 500, 2],
 				["Small Coffee", 500, 2],
 			],
-			vehicleRepairShop: [
+			VehicleRepairShop: [
 				["Vehicle Repair Kit", 500, 2],
 				["Vehicle Primary Colour Kit", 500, 2],
 				["Vehicle Secondary Colour Kit", 500, 2],
             ],
 		},
 		{ // GTA VC
-			clothingStore: [
+			ClothingStore: [
 				["Outfit", 500, 2]
 			],
-			legalGunStore: [
+			LegalGunStore: [
                 ["Baseball Bat", 500, 2],
 				["Brass Knuckles", 500, 2],
 				["Colt .45", 500, 2],
@@ -3673,7 +3673,7 @@ let gameData = {
 				["Shotgun Ammo", 500, 2],
 				["Stubby Shotgun Ammo", 500, 2],
 			],
-			illegalGunStore: [
+			IllegalGunStore: [
 				["Uzi", 500, 2],
 				["MP5", 500, 2],
 				["Tec-9", 500, 2],
@@ -3691,21 +3691,21 @@ let gameData = {
 				["Sniper Rifle Ammo", 500, 2],
 				["Laser Sniper Ammo", 500, 2],
 			],
-			gasStation: [
+			GasStation: [
 				["Bottle of Soda", 500, 2],
 				["Can of Soda", 500, 2],
 				["Slice of Pizza", 500, 2],
 				["Bottle of Water", 500, 2],
 				["Can of Beer", 500, 2]
 			],
-			electronicsStore: [
+			ElectronicsStore: [
 				["Phone", 500, 2],
 				["Walkie Talkie", 500, 2],
 				["Megaphone", 500, 2],
 				["Tazer", 500, 2],
 				["Camera", 500, 2]
 			],
-			bar: [
+			Bar: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -3716,7 +3716,7 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			club: [
+			Club: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -3727,14 +3727,14 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			chicken: [
+			Chicken: [
 				["Bucket of Chicken", 500, 2],
 				["Chicken Tenders Meal", 500, 2],
 				["Large Fries", 500, 2],
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			burger: [
+			Burger: [
 				["Bacon Cheeseburger", 500, 2],
 				["Double Cheeseburger", 500, 2],
 				["Big Boy Burger", 500, 2],
@@ -3742,7 +3742,7 @@ let gameData = {
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			chinese: [
+			Chinese: [
 				["Egg Roll", 500, 2],
 				["Lo Mein", 500, 2],
 				["Fried Rice", 500, 2],
@@ -3752,7 +3752,7 @@ let gameData = {
 				["Egg Foo Young", 500, 2],
 				["Sesame Chicken", 500, 2],
 			],
-			italian: [
+			Italian: [
 				["Bottle of Wine", 500, 2],
 				["Glass of Wine", 500, 2],
 				["Arancini", 500, 2],
@@ -3765,7 +3765,7 @@ let gameData = {
 				["Chicken Salad", 500, 2],
 				["Caesar Salad", 500, 2],
 			],
-			mexican: [
+			Mexican: [
 				["Crunchy Taco", 500, 2],
 				["Beaf and Bean Burrito", 500, 2],
 				["Burrito Supreme", 500, 2],
@@ -3773,7 +3773,7 @@ let gameData = {
 				["Nacho Supreme", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			pizza: [
+			Pizza: [
 				["Large Pizza", 500, 2],
 				["Medium Pizza", 500, 2],
 				["Small Pizza", 500, 2],
@@ -3781,7 +3781,7 @@ let gameData = {
 				["Hot Wings", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			coffeeDonutShop: [
+			CoffeeDonutShop: [
 				["Glazed Donut", 500, 2],
 				["Frosted Donut", 500, 2],
 				["Jelly Donut", 500, 2],
@@ -3793,17 +3793,17 @@ let gameData = {
 				["Large Coffee", 500, 2],
 				["Small Coffee", 500, 2],
 			],
-			vehicleRepairShop: [
+			VehicleRepairShop: [
 				["Vehicle Repair Kit", 500, 2],
 				["Vehicle Primary Colour Kit", 500, 2],
 				["Vehicle Secondary Colour Kit", 500, 2],
             ],
 		},
 		{ // GTA SA
-			clothingStore: [
+			ClothingStore: [
 				["Outfit", 500, 2]
 			],
-			legalGunStore: [
+			LegalGunStore: [
 				["Baseball Bat", 500, 2],
 				["Pepper Spray", 500, 2],
 				["Brass Knuckles", 500, 2],
@@ -3816,7 +3816,7 @@ let gameData = {
 				["Shotgun Ammo", 500, 2],
 				["Country Rifle Ammo", 500, 2],
 			],
-			illegalGunStore: [
+			IllegalGunStore: [
 				["Micro SMG/Uzi", 500, 2],
 				["MP5", 500, 2],
 				["Tec-9", 500, 2],
@@ -3832,7 +3832,7 @@ let gameData = {
 				["Combat Shotgun Ammo", 500, 2],
 				["Sniper Rifle Ammo", 500, 2],
 			],
-			sexShop: [
+			SexShop: [
 				["Purple Dildo", 500, 2],
 				["Dildo", 500, 2],
 				["Vibrator", 500, 2],
@@ -3841,7 +3841,7 @@ let gameData = {
                 ["Cane", 500, 2],
                 ["Pool Cue", 500, 2],
 			],
-			gasStation: [
+			GasStation: [
 				["Bottle of Soda", 500, 2],
 				["Can of Soda", 500, 2],
 				["Slice of Pizza", 500, 2],
@@ -3850,14 +3850,14 @@ let gameData = {
                 ["Cane", 500, 2],
                 ["Pool Cue", 500, 2],
 			],
-			electronicsStore: [
+			ElectronicsStore: [
 				["Phone", 500, 2],
 				["Walkie Talkie", 500, 2],
 				["Megaphone", 500, 2],
 				["Tazer", 500, 2],
 				["Camera", 500, 2]
 			],
-			bar: [
+			Bar: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -3868,7 +3868,7 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			club: [
+			Club: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -3879,14 +3879,14 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			chicken: [
+			Chicken: [
 				["Bucket of Chicken", 500, 2],
 				["Chicken Tenders Meal", 500, 2],
 				["Large Fries", 500, 2],
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			burger: [
+			Burger: [
 				["Bacon Cheeseburger", 500, 2],
 				["Double Cheeseburger", 500, 2],
 				["Big Boy Burger", 500, 2],
@@ -3894,7 +3894,7 @@ let gameData = {
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			chinese: [
+			Chinese: [
 				["Egg Roll", 500, 2],
 				["Lo Mein", 500, 2],
 				["Fried Rice", 500, 2],
@@ -3904,7 +3904,7 @@ let gameData = {
 				["Egg Foo Young", 500, 2],
 				["Sesame Chicken", 500, 2],
 			],
-			italian: [
+			Italian: [
 				["Bottle of Wine", 500, 2],
 				["Glass of Wine", 500, 2],
 				["Arancini", 500, 2],
@@ -3917,7 +3917,7 @@ let gameData = {
 				["Chicken Salad", 500, 2],
 				["Caesar Salad", 500, 2],
 			],
-			mexican: [
+			Mexican: [
 				["Crunchy Taco", 500, 2],
 				["Beaf and Bean Burrito", 500, 2],
 				["Burrito Supreme", 500, 2],
@@ -3925,7 +3925,7 @@ let gameData = {
 				["Nacho Supreme", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			pizza: [
+			Pizza: [
 				["Large Pizza", 500, 2],
 				["Medium Pizza", 500, 2],
 				["Small Pizza", 500, 2],
@@ -3933,7 +3933,7 @@ let gameData = {
 				["Hot Wings", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			coffeeDonutShop: [
+			CoffeeDonutShop: [
 				["Glazed Donut", 500, 2],
 				["Frosted Donut", 500, 2],
 				["Jelly Donut", 500, 2],
@@ -3946,12 +3946,12 @@ let gameData = {
 				["Large Coffee", 500, 2],
 				["Small Coffee", 500, 2],
 			],
-			vehicleRepairShop: [
+			VehicleRepairShop: [
 				["Vehicle Repair Kit", 500, 2],
 				["Vehicle Primary Colour Kit", 500, 2],
 				["Vehicle Secondary Colour Kit", 500, 2],
             ],
-            vehicleModShop: [
+            VehicleModShop: [
                 ["Vehicle Primary Colour Kit", 500, 2],
 				["Vehicle Secondary Colour Kit", 500, 2],
                 ["Decal Kit", 500, 2],
@@ -3972,7 +3972,7 @@ let gameData = {
 			clothingStore: [
 				["Outfit", 500, 2]
 			],
-			legalGunStore: [
+			LegalGunStore: [
                 ["Baseball Bat", 500, 2],
                 ["Knife", 500, 2],
                 ["Glock 9mm", 500, 2],
@@ -3982,7 +3982,7 @@ let gameData = {
                 ["Desert Eagle Ammo", 500, 2],
                 ["Stubby Shotgun Ammo", 500, 2],
 			],
-			illegalGunStore: [
+			IllegalGunStore: [
 				["MP5", 500, 2],
 				["Micro Uzi", 500, 2],
 				["AK-47", 500, 2],
@@ -3996,28 +3996,21 @@ let gameData = {
 				["Beretta Shotgun Ammo", 500, 2],
 				["Sniper Rifle Ammo", 500, 2],
 			],
-			sexShop: [
-				["Purple Dildo", 500, 2],
-				["Dildo", 500, 2],
-				["Vibrator", 500, 2],
-				["Silver Vibrator", 500, 2],
-				["Flowers", 500, 2]
-			],
-			gasStation: [
+			GasStation: [
 				["Bottle of Soda", 500, 2],
 				["Can of Soda", 500, 2],
 				["Slice of Pizza", 500, 2],
 				["Bottle of Water", 500, 2],
 				["Can of Beer", 500, 2]
 			],
-			electronicsStore: [
+			ElectronicsStore: [
 				["Phone", 500, 2],
 				["Walkie Talkie", 500, 2],
 				["Megaphone", 500, 2],
 				["Tazer", 500, 2],
 				["Camera", 500, 2]
 			],
-			bar: [
+			Bar: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -4028,7 +4021,7 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			club: [
+			Club: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -4039,14 +4032,14 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			chicken: [
+			Chicken: [
 				["Bucket of Chicken", 500, 2],
 				["Chicken Tenders Meal", 500, 2],
 				["Large Fries", 500, 2],
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			burger: [
+			Burger: [
 				["Bacon Cheeseburger", 500, 2],
 				["Double Cheeseburger", 500, 2],
 				["Big Boy Burger", 500, 2],
@@ -4054,7 +4047,7 @@ let gameData = {
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			chinese: [
+			Chinese: [
 				["Egg Roll", 500, 2],
 				["Lo Mein", 500, 2],
 				["Fried Rice", 500, 2],
@@ -4064,7 +4057,7 @@ let gameData = {
 				["Egg Foo Young", 500, 2],
 				["Sesame Chicken", 500, 2],
 			],
-			italian: [
+			Italian: [
 				["Bottle of Wine", 500, 2],
 				["Glass of Wine", 500, 2],
 				["Arancini", 500, 2],
@@ -4077,7 +4070,7 @@ let gameData = {
 				["Chicken Salad", 500, 2],
 				["Caesar Salad", 500, 2],
 			],
-			mexican: [
+			Mexican: [
 				["Crunchy Taco", 500, 2],
 				["Beaf and Bean Burrito", 500, 2],
 				["Burrito Supreme", 500, 2],
@@ -4085,7 +4078,7 @@ let gameData = {
 				["Nacho Supreme", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			pizza: [
+			Pizza: [
 				["Large Pizza", 500, 2],
 				["Medium Pizza", 500, 2],
 				["Small Pizza", 500, 2],
@@ -4093,7 +4086,7 @@ let gameData = {
 				["Hot Wings", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			coffeeDonutShop: [
+			CoffeeDonutShop: [
 				["Glazed Donut", 500, 2],
 				["Frosted Donut", 500, 2],
 				["Jelly Donut", 500, 2],
@@ -4106,14 +4099,11 @@ let gameData = {
 				["Large Coffee", 500, 2],
 				["Small Coffee", 500, 2],
 			],
-			vehicleRepairShop: [
+			VehicleRepairShop: [
 				["Vehicle Repair Kit", 500, 2],
 				["Vehicle Decal Kit", 500, 2],
 				["Vehicle Primary Colour Kit", 500, 2],
 				["Vehicle Secondary Colour Kit", 500, 2],
-				//["Vehicle NOS Kit", 500, 2],
-				//["Vehicle Hydraulics Kit", 500, 2],
-				//["Vehicle Body Part Kit", 500, 2],
 			],
 		},
         {}, // GTA IV EFLC
@@ -4121,10 +4111,10 @@ let gameData = {
         {}, // INVALID
         {}, // INVALID
         { // Mafia 1
-			clothingStore: [
+			ClothingStore: [
 				["Outfit", 500, 2]
 			],
-			legalGunStore: [
+			LegalGunStore: [
                 ["Baseball Bat", 500, 2],
                 ["Knuckleduster", 500, 2],
                 ["Knife", 500, 2],
@@ -4139,30 +4129,30 @@ let gameData = {
                 ["Shotgun Ammo", 500, 2],
                 ["Sawed-off Shotgun Ammo", 500, 2],
 			],
-			illegalGunStore: [
+			IllegalGunStore: [
 			],
-			sexShop: [
+			SexShop: [
 				["Purple Dildo", 500, 2],
 				["Dildo", 500, 2],
 				["Vibrator", 500, 2],
 				["Silver Vibrator", 500, 2],
 				["Flowers", 500, 2]
 			],
-			gasStation: [
+			GasStation: [
 				["Bottle of Soda", 500, 2],
 				["Can of Soda", 500, 2],
 				["Slice of Pizza", 500, 2],
 				["Bottle of Water", 500, 2],
 				["Can of Beer", 500, 2]
 			],
-			electronicsStore: [
+			ElectronicsStore: [
 				["Phone", 500, 2],
 				["Walkie Talkie", 500, 2],
 				["Megaphone", 500, 2],
 				["Tazer", 500, 2],
 				["Camera", 500, 2]
 			],
-			bar: [
+			Bar: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -4173,7 +4163,7 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			club: [
+			Club: [
 				["Bottle of Vodka", 500, 2],
 				["Bottle of Whiskey", 500, 2],
 				["Bottle of Soda", 500, 2],
@@ -4184,14 +4174,14 @@ let gameData = {
 				["Shot of Whiskey", 500, 2],
 				["Glass of Wine", 500, 2],
 			],
-			chicken: [
+			Chicken: [
 				["Bucket of Chicken", 500, 2],
 				["Chicken Tenders Meal", 500, 2],
 				["Large Fries", 500, 2],
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			burger: [
+			Burger: [
 				["Bacon Cheeseburger", 500, 2],
 				["Double Cheeseburger", 500, 2],
 				["Big Boy Burger", 500, 2],
@@ -4199,7 +4189,7 @@ let gameData = {
 				["Small Fries", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			chinese: [
+			Chinese: [
 				["Egg Roll", 500, 2],
 				["Lo Mein", 500, 2],
 				["Fried Rice", 500, 2],
@@ -4209,7 +4199,7 @@ let gameData = {
 				["Egg Foo Young", 500, 2],
 				["Sesame Chicken", 500, 2],
 			],
-			italian: [
+			Italian: [
 				["Bottle of Wine", 500, 2],
 				["Glass of Wine", 500, 2],
 				["Arancini", 500, 2],
@@ -4222,7 +4212,7 @@ let gameData = {
 				["Chicken Salad", 500, 2],
 				["Caesar Salad", 500, 2],
 			],
-			mexican: [
+			Mexican: [
 				["Crunchy Taco", 500, 2],
 				["Beaf and Bean Burrito", 500, 2],
 				["Burrito Supreme", 500, 2],
@@ -4230,7 +4220,7 @@ let gameData = {
 				["Nacho Supreme", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			pizza: [
+			Pizza: [
 				["Large Pizza", 500, 2],
 				["Medium Pizza", 500, 2],
 				["Small Pizza", 500, 2],
@@ -4238,7 +4228,7 @@ let gameData = {
 				["Hot Wings", 500, 2],
 				["Bottle of Soda", 500, 2],
 			],
-			coffeeDonutShop: [
+			CoffeeDonutShop: [
 				["Glazed Donut", 500, 2],
 				["Frosted Donut", 500, 2],
 				["Jelly Donut", 500, 2],
@@ -4251,7 +4241,7 @@ let gameData = {
 				["Large Coffee", 500, 2],
 				["Small Coffee", 500, 2],
 			],
-			vehicleRepairShop: [
+			VehicleRepairShop: [
 				["Vehicle Repair Kit", 500, 2],
 			],
 		}

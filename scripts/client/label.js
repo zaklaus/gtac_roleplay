@@ -127,7 +127,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
                 break;
 
             case VRR_PROPLABEL_INFO_BUYBIZ:
-                infoText = `Use /bizbuy to buy this business`;
+                infoText = `Use /buy to purchase items`;
                 break;
 
             //case VRR_PROPLABEL_INFO_RENTBIZ:

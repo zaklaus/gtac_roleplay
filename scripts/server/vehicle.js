@@ -1152,12 +1152,14 @@ function respawnVehicle(vehicle) {
 function spawnVehicle(vehicleData) {
 	logToConsole(LOG_DEBUG, `[VRR.Vehicle]: Spawning ${getVehicleNameFromModel(vehicleData.model)} at ${vehicleData.spawnPosition.x}, ${vehicleData.spawnPosition.y}, ${vehicleData.spawnPosition.z} with heading ${vehicleData.spawnRotation}`);
 	let vehicle = createGameVehicle(vehicleData.model, vehicleData.spawnPosition, vehicleData.spawnRotation);
-	setVehicleHeading(vehicle, vehicleData.spawnRotation)
-	addToWorld(vehicle);
 
 	if(!vehicle) {
 		return false;
 	}
+
+	setVehicleHeading(vehicle, vehicleData.spawnRotation)
+	addToWorld(vehicle);
+	vehicleData.vehicle = vehicle;
 
 	if(isGameFeatureSupported("vehicleColours")) {
 		if(vehicleData.colour1IsRGBA && vehicleData.colour2IsRGBA) {
@@ -1187,9 +1189,7 @@ function spawnVehicle(vehicleData) {
 
 	setElementDimension(vehicle, vehicleData.dimension);
 
-	vehicleData.vehicle = vehicle;
-
-	setVehicleHealth(vehicle, 1000);
+	//setVehicleHealth(vehicle, 1000);
 	repairVehicle(vehicle);
 
 	setEntityData(vehicle, "vrr.livery", vehicleData.livery, true);

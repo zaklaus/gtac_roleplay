@@ -371,5 +371,11 @@
     "NeedEmailFor2FA": "You need to add your email to your account to use two-factor authentication.",
     "NeedEmailVerifiedFor2FA": "You need to verify your email to use two-factor authentication.",
     "SetEmailHelpTip": "Use {1} to set your email.",
-    "VerifyEmailHelpTip": "Use {1} to verify your email."
+    "VerifyEmailHelpTip": "Use {1} to verify your email.",
+
+    "NearbyRadio": "Nearby radio",
+    "FromRadio": "From radio",
+    "ToRadio": "To radio",
+    "NeedToEnterPropertyCommand": "You need to enter the {1} first! Use {2} to enter and exit",
+    "NeedToEnterPropertyKeyPress": "You need to enter the {1} first! Press {2} to enter and exit"
 }

@@ -163,8 +163,103 @@ function saveAllNPCsToDatabase() {
 
 // ===========================================================================
 
-function saveNPCToDatabase() {
+function saveNPCToDatabase(npc) {
+	if(getNPCData(vehicleDataId) == null) {
+		// Invalid vehicle data
+		return false;
+	}
 
+	let tempVehicleData = getServerData().vehicles[vehicleDataId];
+
+	if(tempVehicleData.databaseId == -1) {
+		// Temp vehicle, no need to save
+		return false;
+	}
+
+	if(!tempVehicleData.needsSaved) {
+		// Vehicle hasn't changed. No need to save.
+		return false;
+	}
+
+	logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Saving vehicle ${tempVehicleData.databaseId} to database ...`);
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		if(tempVehicleData.vehicle != false) {
+			if(!tempVehicleData.spawnLocked) {
+				if(areServerElementsSupported()) {
+					tempVehicleData.spawnPosition = tempVehicleData.vehicle.position;
+					tempVehicleData.spawnRotation = tempVehicleData.vehicle.heading;
+				} else {
+					tempVehicleData.spawnPosition = tempVehicleData.syncPosition;
+					tempVehicleData.spawnRotation = tempVehicleData.syncHeading;
+				}
+			}
+		}
+
+		let data = [
+			["veh_server", getServerId()],
+			["veh_model", toInteger(tempVehicleData.model)],
+			["veh_owner_type", toInteger(tempVehicleData.ownerType)],
+			["veh_owner_id", toInteger(tempVehicleData.ownerId)],
+			["veh_locked", boolToInt(tempVehicleData.locked)],
+			["veh_spawn_lock", boolToInt(tempVehicleData.spawnLocked)],
+			["veh_buy_price", toInteger(tempVehicleData.buyPrice)],
+			["veh_rent_price", toInteger(tempVehicleData.rentPrice)],
+			["veh_pos_x", toFloat(tempVehicleData.spawnPosition.x)],
+			["veh_pos_y", toFloat(tempVehicleData.spawnPosition.y)],
+			["veh_pos_z", toFloat(tempVehicleData.spawnPosition.z)],
+			["veh_rot_z", toFloat(tempVehicleData.spawnRotation)],
+			["veh_col1", toInteger(tempVehicleData.colour1)],
+			["veh_col2", toInteger(tempVehicleData.colour2)],
+			["veh_col3", toInteger(tempVehicleData.colour3)],
+			["veh_col4", toInteger(tempVehicleData.colour4)],
+			["veh_col1_isrgb", boolToInt(tempVehicleData.colour1IsRGBA)],
+			["veh_col2_isrgb", boolToInt(tempVehicleData.colour2IsRGBA)],
+			["veh_col3_isrgb", boolToInt(tempVehicleData.colour3IsRGBA)],
+			["veh_col4_isrgb", boolToInt(tempVehicleData.colour4IsRGBA)],
+			["veh_extra1", tempVehicleData.extras[0]],
+			["veh_extra2", tempVehicleData.extras[1]],
+			["veh_extra3", tempVehicleData.extras[2]],
+			["veh_extra4", tempVehicleData.extras[3]],
+			["veh_extra5", tempVehicleData.extras[4]],
+			["veh_extra6", tempVehicleData.extras[5]],
+			["veh_extra7", tempVehicleData.extras[6]],
+			["veh_extra8", tempVehicleData.extras[7]],
+			["veh_extra9", tempVehicleData.extras[8]],
+			["veh_extra10", tempVehicleData.extras[9]],
+			["veh_extra11", tempVehicleData.extras[10]],
+			["veh_extra12", tempVehicleData.extras[11]],
+			["veh_extra13", tempVehicleData.extras[12]],
+			["veh_engine", intToBool(tempVehicleData.engine)],
+			["veh_lights", intToBool(tempVehicleData.lights)],
+			["veh_health", toInteger(tempVehicleData.health)],
+			["veh_damage_engine", toInteger(tempVehicleData.engineDamage)],
+			["veh_damage_visual", toInteger(tempVehicleData.visualDamage)],
+			["veh_dirt_level", toInteger(tempVehicleData.dirtLevel)],
+			["veh_int", toInteger(tempVehicleData.interior)],
+			["veh_vw", toInteger(tempVehicleData.dimension)],
+			["veh_livery", toInteger(tempVehicleData.livery)],
+		];
+
+		let dbQuery = null;
+		if(tempVehicleData.databaseId == 0) {
+			let queryString = createDatabaseInsertQuery("veh_main", data);
+			dbQuery = queryDatabase(dbConnection, queryString);
+			getServerData().vehicles[vehicleDataId].databaseId = getDatabaseInsertId(dbConnection);
+			getServerData().vehicles[vehicleDataId].needsSaved = false;
+		} else {
+			let queryString = createDatabaseUpdateQuery("veh_main", data, `veh_id=${tempVehicleData.databaseId}`);
+			dbQuery = queryDatabase(dbConnection, queryString);
+			getServerData().vehicles[vehicleDataId].needsSaved = false;
+		}
+
+		freeDatabaseQuery(dbQuery);
+		disconnectFromDatabase(dbConnection);
+		return true;
+	}
+	logToConsole(LOG_VERBOSE, `[VRR.Vehicle]: Saved vehicle ${vehicleDataId} to database!`);
+
+	return false;
 }
 
 // ===========================================================================

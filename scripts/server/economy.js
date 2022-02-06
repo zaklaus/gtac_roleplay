@@ -30,8 +30,10 @@ function playerPayDay(client) {
 	let wealth = calculateWealth(client);
 	let grossIncome = getPlayerData(client).payDayAmount;
 
-	// Public Beta Bonus
+    // Passive income
 	grossIncome = grossIncome + getGlobalConfig().economy.passiveIncomePerPayDay;
+
+    // Payday bonus
 	grossIncome = grossIncome*getGlobalConfig().economy.grossIncomeMultiplier;
 
 	let incomeTaxAmount = calculateIncomeTax(wealth);
@@ -106,6 +108,26 @@ function forcePlayerPayDayCommand(command, params, client) {
 
 	messageAdmins(`${client.name} gave ${targetClient.name} an instant payday`);
 	playerPayDay(targetClient);
+}
+
+// ===========================================================================
+
+function setPayDayBonusMultiplier(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let newMultiplier = params;
+
+    if(isNaN(newMultiplier)) {
+        messagePlayerError(client, getLocaleString(client, "AmountNotNumber"));
+        return false;
+    }
+
+    getGlobalConfig().economy.grossIncomeMultiplier = newMultiplier;
+
+	messageAdminAction(`${client.name} set payday bonus to ${newMultiplier*100}%`);
 }
 
 // ===========================================================================

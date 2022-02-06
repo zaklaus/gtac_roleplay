@@ -948,6 +948,10 @@ function saveClanToDatabase(clanId) {
 		return false;
 	}
 
+    if(!tempClanData.needsSaved) {
+        return false;
+    }
+
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		if(tempClanData.needsSaved) {
@@ -990,40 +994,41 @@ function saveClanToDatabase(clanId) {
 function saveClanRankToDatabase(clanId, rankId) {
 	let tempClanRankData = getClanRankData(clanId, rankId);
 
+    if(!tempClanRankData.needsSaved) {
+        return false;
+    }
+
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
-		if(tempClanRankData.needsSaved) {
-			let safeName = escapeDatabaseString(dbConnection, tempClanRankData.name);
-			let safeTag = escapeDatabaseString(dbConnection, tempClanRankData.customTag);
-			//let safeTitle = escapeDatabaseString(dbConnection, tempClanRankData.name);
+        let safeName = escapeDatabaseString(dbConnection, tempClanRankData.name);
+        let safeTag = escapeDatabaseString(dbConnection, tempClanRankData.customTag);
+        //let safeTitle = escapeDatabaseString(dbConnection, tempClanRankData.name);
 
-			let data = [
-				["clan_rank_name", safeName],
-				["clan_rank_clan", tempClanRankData.clan],
-				["clan_rank_custom_tag", safeTag],
-				//["clan_rank_title", safeTitle],
-				["clan_rank_flags", tempClanRankData.flags],
-				["clan_rank_level", tempClanRankData.level],
-				["clan_rank_enabled", boolToInt(tempClanRankData.enabled)],
-			];
+        let data = [
+            ["clan_rank_name", safeName],
+            ["clan_rank_clan", tempClanRankData.clan],
+            ["clan_rank_custom_tag", safeTag],
+            //["clan_rank_title", safeTitle],
+            ["clan_rank_flags", tempClanRankData.flags],
+            ["clan_rank_level", tempClanRankData.level],
+            ["clan_rank_enabled", boolToInt(tempClanRankData.enabled)],
+        ];
 
-			let dbQuery = null;
-			if(tempClanRankData.databaseId == 0) {
-				let queryString = createDatabaseInsertQuery("clan_rank", data);
-				dbQuery = queryDatabase(dbConnection, queryString);
-				getClanRankData(clanId, rankId).databaseId = getDatabaseInsertId(dbConnection);
-				getClanRankData(clanId, rankId).needsSaved = false;
-			} else {
-				let queryString = createDatabaseUpdateQuery("clan_rank", data, `clan_rank_id=${tempClanRankData.databaseId} LIMIT 1`);
-				dbQuery = queryDatabase(dbConnection, queryString);
-				getClanRankData(clanId, rankId).needsSaved = false;
-			}
+        let dbQuery = null;
+        if(tempClanRankData.databaseId == 0) {
+            let queryString = createDatabaseInsertQuery("clan_rank", data);
+            dbQuery = queryDatabase(dbConnection, queryString);
+            getClanRankData(clanId, rankId).databaseId = getDatabaseInsertId(dbConnection);
+            getClanRankData(clanId, rankId).needsSaved = false;
+        } else {
+            let queryString = createDatabaseUpdateQuery("clan_rank", data, `clan_rank_id=${tempClanRankData.databaseId} LIMIT 1`);
+            dbQuery = queryDatabase(dbConnection, queryString);
+            getClanRankData(clanId, rankId).needsSaved = false;
+        }
 
-			freeDatabaseQuery(dbQuery);
-			disconnectFromDatabase(dbConnection);
-			return true;
-		}
-
+        freeDatabaseQuery(dbQuery);
+        disconnectFromDatabase(dbConnection);
+        return true;
 	}
 
 	return false;

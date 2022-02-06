@@ -4,6 +4,7 @@
     "locales": [
         ["English", "english", "en"],
         ["Russian", "russian", "ru"],
-        ["Polish", "polish", "pl"]
+        ["Polish", "polish", "pl"],
+        ["Spanish", "spanish", "es"]
     ]
 }

@@ -1244,7 +1244,12 @@ function saveAllBusinessesToDatabase() {
 // ===========================================================================
 
 function saveBusinessToDatabase(businessId) {
-	let tempBusinessData = getServerData().businesses[businessId]
+	let tempBusinessData = getServerData().businesses[businessId];
+
+    if(!tempBusinessData.needsSaved) {
+        return false;
+    }
+
 	logToConsole(LOG_DEBUG, `[VRR.Business]: Saving business '${tempBusinessData.name}' to database ...`);
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
@@ -1663,9 +1668,9 @@ function buyFromBusinessCommand(command, params, client) {
 	if(getBusinessData(businessId).hasInterior) {
 		if(!getPlayerBusiness(client)) {
 			if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
-				messagePlayerTip(client, `You need to enter the business first! Press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "enter")).key)} {MAINCOLOUR}to enter and exit a business`);
+				messagePlayerTip(client, getLocaleString(client, "NeedToEnterPropertyKeyPress", "business", `{ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "enter")).key)}{MAINCOLOUR}`));
 			} else {
-				messagePlayerNormal(client, `You need to enter the business first! Use /enter to enter and exit a business`);
+				messagePlayerNormal(client, getLocaleString(client, "NeedToEnterBusinessCommand", "business", "{ALTCOLOUR}/enter{MAINCOLOUR}"));
 			}
 			return false;
 		}
@@ -1687,7 +1692,7 @@ function buyFromBusinessCommand(command, params, client) {
 	if(areThereEnoughParams(params, 2, " ")) {
 		amount = toInteger(getParam(params, " ", 2)) || 1;
 		if(amount <= 0) {
-			messagePlayerError(client, "The amount must be more than 0!");
+			messagePlayerError(client, getLocaleString(client, "AmountMustBeMoreThan", "0"));
 			return false;
 		}
 	}
@@ -1699,7 +1704,7 @@ function buyFromBusinessCommand(command, params, client) {
 
 	let firstSlot = getPlayerFirstEmptyHotBarSlot(client);
 	if(firstSlot == -1) {
-		messagePlayerError(client, `You don't have any space to carry this (full inventory)!`);
+		messagePlayerError(client, messagePlayerError(client, getLocaleString(client, "InventoryFullCantCarry")));
 		return false;
 	}
 
@@ -1707,7 +1712,7 @@ function buyFromBusinessCommand(command, params, client) {
 	let itemName = getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).itemTypeIndex).name;
 
 	if(getPlayerCurrentSubAccount(client).cash < totalCost) {
-		messagePlayerError(client, `You don't have enough money! You need {ALTCOLOUR}${getBusinessData(businessId).floorItemCache[itemSlot-1].buyPrice*amount-getPlayerCurrentSubAccount(client).cash} {MAINCOLOUR}more!`);
+		messagePlayerError(client, getLocaleString(client, "NotEnoughCashNeedAmountMore", `{ALTCOLOUR}${getBusinessData(businessId).floorItemCache[itemSlot-1].buyPrice*amount-getPlayerCurrentSubAccount(client).cash}{MAINCOLOUR}`));
 		return false;
 	}
 
@@ -1722,9 +1727,9 @@ function buyFromBusinessCommand(command, params, client) {
 	}
 
 	let useType = getItemTypeData(getItemData(getBusinessData(businessId).floorItemCache[itemSlot-1]).itemTypeIndex).useType;
-	if(useType == VRR_ITEM_USETYPE_WEAPON || VRR_ITEM_USETYPE_TAZER) {
+	if(useType == VRR_ITEM_USETYPE_WEAPON || VRR_ITEM_USETYPE_TAZER || useType == VRR_ITEM_USETYPE_AMMO_CLIP) {
 		if(isPlayerWeaponBanned(client) && !isPlayerExemptFromAntiCheat(client)) {
-			messagePlayerError(client, `You are not allowed to buy weapons`);
+			messagePlayerError(client, getLocaleString(client, "WeaponBanned"));
 			return false;
 		}
 	}
@@ -1734,9 +1739,9 @@ function buyFromBusinessCommand(command, params, client) {
 
 	if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand("inv")) {
 		let keyData = getPlayerKeyBindForCommand("inv");
-		messagePlayerNewbieTip(client, `Press ${getKeyNameFromId(keyData.key)} to see your items.`);
+		messagePlayerNewbieTip(client, getLocaleString(client, "ViewInventoryKeyPressTip"), `{ALTCOLOUR}${getKeyNameFromId(keyData.key)}{MAINCOLOUR}`);
 	} else {
-		messagePlayerNewbieTip(client, `Use /inv to see your items.`);
+		messagePlayerNewbieTip(client, getLocaleString(client, "ViewInventoryKeyPressTip"), `{ALTCOLOUR}/inv{MAINCOLOUR}`);
 	}
 }
 

@@ -981,7 +981,7 @@ function forceCharacterNameCommand(command, params, client) {
 	getPlayerCurrentSubAccount(targetClient).firstName = firstName;
 	getPlayerCurrentSubAccount(targetClient).lastName = lastName;
 
-	messageAdmins(`${client.name} {MAINCOLOUR}forced {ALTCOLOUR}${getPlayerName(targetClient)}'s {MAINCOLOUR}current character name from {ALTCOLOUR}${oldName} {MAINCOLOUR}to {ALTCOLOUR}${newName}`);
+	messageAdmins(`${client.name} {MAINCOLOUR}forced {ALTCOLOUR}${getPlayerName(targetClient)}'s{MAINCOLOUR} current character name from {ALTCOLOUR}${oldName}{MAINCOLOUR} to {ALTCOLOUR}${newName}`);
 
 	updateAllPlayerNameTags();
 }

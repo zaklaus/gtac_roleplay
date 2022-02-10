@@ -382,5 +382,6 @@
     "InventoryFullCantCarry": "You don't have any space to carry this (full inventory)!",
     "NotEnoughCashNeedAmountMore": "You don't have enough money! You need {1} more!",
     "AmountMustBeMoreThan": "The amount must be more than {1}!",
-    "WeaponBanned": "You are not allowed to buy or use weapons!"
+    "WeaponBanned": "You are not allowed to buy or use weapons!",
+    "TimeNotNumber": "The time must be a number"
 }

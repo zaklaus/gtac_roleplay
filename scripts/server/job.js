@@ -14,7 +14,7 @@ function initJobScript() {
 	createAllJobPickups();
 	createAllJobBlips();
 
-	setAllJobIndexes();
+	setAllJobDataIndexes();
 
 	logToConsole(LOG_INFO, "[VRR.Job]: Job script initialized successfully!");
 	return true;
@@ -39,7 +39,7 @@ function loadJobsFromDatabase() {
 					tempJobData.locations = loadJobLocationsFromDatabase(tempJobData.databaseId);
 					tempJobData.equipment = loadJobEquipmentsFromDatabase(tempJobData.databaseId);
 					tempJobData.uniforms = loadJobUniformsFromDatabase(tempJobData.databaseId);
-					//tempJobData.routes = loadJobRoutesFromDatabase(tempJobData.databaseId);
+					tempJobData.routes = loadJobRoutesFromDatabase(tempJobData.databaseId);
 					tempJobs.push(tempJobData);
 					logToConsole(LOG_DEBUG, `[VRR.Job]: Job '${tempJobData.name}' loaded from database successfully!`);
 				}
@@ -96,14 +96,14 @@ function loadJobRoutesFromDatabase(jobDatabaseId) {
 	let dbAssoc;
 
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_route` WHERE `job_route_enabled` = 1 AND `job_route_job` = " + toString(jobDatabaseId));
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM job_route WHERE job_route_enabled = 1 AND job_route_job = ${jobDatabaseId}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempJobRouteData = new JobEquipmentData(dbAssoc);
+					let tempJobRouteData = new JobRouteData(dbAssoc);
 					tempJobRouteData.locations = loadJobRouteLocationsFromDatabase(tempJobRouteData.databaseId);
 					tempJobRoutes.push(tempJobRouteData);
-					logToConsole(LOG_DEBUG, `[VRR.Job]: Job equipment '${tempJobRouteData.name}' loaded from database successfully!`);
+					logToConsole(LOG_DEBUG, `[VRR.Job]: Job route '${tempJobRouteData.name}' loaded from database successfully!`);
 				}
 			}
 			freeDatabaseQuery(dbQuery);
@@ -126,7 +126,7 @@ function loadJobRouteLocationsFromDatabase(jobRouteId) {
 	let dbAssoc;
 
 	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, "SELECT * FROM `job_route_loc` WHERE `job_route_loc_enabled` = 1 AND `job_route_loc_route` = " + toString(jobRouteId));
+		dbQuery = queryDatabase(dbConnection, `SELECT * FROM job_route_loc WHERE job_route_loc_enabled = 1 AND job_route_loc_route = ${jobRouteId}`);
 		if(dbQuery) {
 			if(dbQuery.numRows > 0) {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
@@ -141,7 +141,7 @@ function loadJobRouteLocationsFromDatabase(jobRouteId) {
 	}
 
 	logToConsole(LOG_DEBUG, `[VRR.Job]: ${tempJobRouteLocations.length} locations for job route ${jobRouteId} loaded from database successfully!`);
-	return tempJobEquipmentItems;
+	return tempJobRouteLocations;
 }
 
 // ===========================================================================
@@ -631,6 +631,7 @@ function stopWorking(client) {
 	deleteJobItems(client);
 	restorePlayerJobLockerItems(client);
 	respawnJobVehicle(client);
+    sendPlayerStopJobRoute(client);
 
 	let jobId = getPlayerJob(client);
 	switch(getJobType(jobId)) {
@@ -963,6 +964,8 @@ function createJob(name) {
 	tempJobData.pickupModel = getGameData().pickupModels[getGame()].job;
 
 	getServerData().jobs.push(tempJobData);
+    saveJobToDatabase(tempJobData);
+    setAllJobDataIndexes();
 }
 
 // ===========================================================================
@@ -992,15 +995,8 @@ function deleteJobLocationCommand(command, params, client) {
 
 	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}deleted location {ALTCOLOUR}${closestJobLocation.index} (DB ID ${closestJobLocation.databaseId}) {MAINCOLOUR}for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} {MAINCOLOUR}job`);
 
-	if(closestJobLocation.databaseId > 0) {
-		quickDatabaseQuery(`DELETE FROM job_loc WHERE job_loc_id = ${closestJobLocation.databaseId}`);
-	}
 
-
-	let tempIndex = closestJobLocation.index;
-	let tempJob = closestJobLocation.job;
 	deleteJobLocation(closestJobLocation);
-	getJobData(getJobIdFromDatabaseId(tempJob)).locations.splice(tempIndex, 1);
 }
 
 // ===========================================================================
@@ -1150,7 +1146,7 @@ function setJobPickupCommand(command, params, client) {
 // ===========================================================================
 
 function toggleJobRouteEnabledCommand(command, params, client) {
-	let jobId = getPlayerJobRoute(client);
+	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerJobRoute(client);
 
 	let clients = getClients();
@@ -1187,12 +1183,47 @@ function setJobRouteNameCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getPlayerJobRoute(client);
+	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerJobRoute(client);
 
 	let oldName = getJobData(jobId).routes[jobRoute].name;
 	getJobData(jobId).routes[jobRoute].name = params;
 	messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}${getEnabledDisabledFromBool(getJobData(jobId).enabled)}{MAINCOLOUR} set route {ALTCOLOUR}${oldName}{MAINCOLOUR} to {ALTCOLOUR}${getJobRouteData(jobId, jobRoute).name}{MAINCOLOUR} for the {jobYellow}${getJobData(jobId).name}{MAINCOLOUR} job`);
+}
+
+// ===========================================================================
+
+function setJobRouteAllLocationDelaysCommand(command, params, client) {
+	if(!isPlayerWorking(client)) {
+		messagePlayerError(client, getLocaleString(client, "NeedToBeWorking", "{ALTCOLOUR}/startwork{MAINCOLOUR}"));
+		return false;
+	}
+
+	if(!isPlayerOnJobRoute(client)) {
+		messagePlayerError(client, getLocaleString(client, "NeedToBeOnJobRoute", "{ALTCOLOUR}/startroute{MAINCOLOUR}"));
+		return false;
+	}
+
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let jobId = getPlayerJob(client);
+	let jobRoute = getPlayerJobRoute(client);
+    let delay = getParam(params, " ", 1);
+
+    if(isNaN(delay)) {
+        messagePlayerError(client, getLocaleString(client, "TimeNotNumber"))
+        return false;
+    }
+
+	for(let i in getJobData(jobId).routes[jobRoute].locations) {
+        getJobData(jobId).routes[jobRoute].locations[i].stopDelay = delay;
+        getJobData(jobId).routes[jobRoute].locations[i].needsSaved = true;
+    }
+
+	messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}${getEnabledDisabledFromBool(getJobData(jobId).enabled)}{MAINCOLOUR} set route {ALTCOLOUR}${oldName}{MAINCOLOUR} location's stop delays to {ALTCOLOUR}${delay/1000}{MAINCOLOUR} seconds for the {jobYellow}${getJobData(jobId).name}{MAINCOLOUR} job`);
 }
 
 // ===========================================================================
@@ -1213,14 +1244,14 @@ function setJobRouteVehicleColoursCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getPlayerJobRoute(client);
+	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerJobRoute(client);
 
 	let colour1 = getParam(params, " ", 1);
 	let colour2 = getParam(params, " ", 2);
 
-	getJobData(jobId).routes[jobRoute].vehicleColour1 = colour1;
-	getJobData(jobId).routes[jobRoute].vehicleColour1 = colour2;
+	getJobData(jobId).routes[jobRoute].vehicleColour1 = toInteger(colour1);
+	getJobData(jobId).routes[jobRoute].vehicleColour1 = toInteger(colour2);
 	getJobData(jobId).routes[jobRoute].needsSaved = true;
 
 	let clients = getClients();
@@ -1228,7 +1259,7 @@ function setJobRouteVehicleColoursCommand(command, params, client) {
 		if(isPlayerWorking(clients[i])) {
 			if(isPlayerOnJobRoute(clients[i])) {
 				if(getPlayerJob(clients[i]) == jobId && getPlayerJobRoute(clients[i]) == jobRoute) {
-					setVehicleColours(getPlayerJobVehicle(clients[i]), getJobRouteData(getPlayerJob(clients[i], getPlayerJobRoute(clients[i])).vehicleColour1, getJobRouteData(getPlayerJob(clients[i], getPlayerJobRoute(clients[i])).vehicleColour2, 1, 1)));
+					setVehicleColours(getPlayerVehicle(clients[i]), getJobRouteData(getPlayerJob(clients[i]), getPlayerJobRoute(clients[i])).vehicleColour1, toInteger(colour1), toInteger(colour2), 1, 1);
 					messagePlayerAlert(clients[i], );
 					messagePlayerAlert(clients[i], getLocaleString(client, "CurrentJobRouteVehicleColoursChanged"));
 				}
@@ -1257,7 +1288,7 @@ function setJobRouteFinishMessageCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getPlayerJobRoute(client);
+	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerJobRoute(client);
 
 	getJobData(jobId).routes[jobRoute].finishMessage = params;
@@ -1283,7 +1314,7 @@ function setJobRouteStartMessageCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getPlayerJobRoute(client);
+	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerJobRoute(client);
 
 	getJobData(jobId).routes[jobRoute].startMessage = params;
@@ -1309,7 +1340,7 @@ function setJobRouteLocationArriveMessageCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getPlayerJobRoute(client);
+	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerJobRoute(client);
 
 	getJobData(jobId).routes[jobRoute].locationArriveMessage = params;
@@ -1335,7 +1366,7 @@ function setJobRouteLocationNextMessageCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getPlayerJobRoute(client);
+	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerJobRoute(client);
 
 	getJobData(jobId).routes[jobRoute].locationNextMessage = params;
@@ -1361,7 +1392,7 @@ function setJobRoutePayCommand(command, params, client) {
 		return false;
 	}
 
-	let jobId = getPlayerJobRoute(client);
+	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerJobRoute(client);
 
 	let amount = getParam(params, " ", 1);
@@ -1547,7 +1578,7 @@ function jobStartRouteCommand(command, params, client) {
     }
 
     if(getJobData(getPlayerJob(client)).routes.length == 0) {
-		messagePlayerError(client, "Your job doesn't have any routes!");
+		messagePlayerError(client, "Your job doesn't have any routes for this location!");
         return false;
 	}
 
@@ -1556,7 +1587,22 @@ function jobStartRouteCommand(command, params, client) {
         return false;
 	}
 
-	startJobRoute(client);
+    if(isPlayerOnJobRoute(client)) {
+		messagePlayerError(client, "You're already on a job route! Finish the route or use /stoproute");
+        return false;
+	}
+
+    let forceRoute = -1;
+    if(doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageJobs"))) {
+        if(!areParamsEmpty(params)) {
+            let tempRoute = getJobRouteFromParams(params, getPlayerJob(client));
+            if(tempRoute != false) {
+                forceRoute = tempRoute;
+            }
+        }
+    }
+
+	startJobRoute(client, forceRoute);
 	return true;
 }
 
@@ -1573,17 +1619,17 @@ function jobStopRouteCommand(command, params, client) {
         return false;
     }
 
-    if(!doesPlayerHaveJobType(client, VRR_JOB_BUS) && !doesPlayerHaveJobType(client, VRR_JOB_GARBAGE)) {
-		messagePlayerError(client, "Your job doesn't use a route!");
-        return false;
-	}
+    //if(!doesPlayerHaveJobType(client, VRR_JOB_BUS) && !doesPlayerHaveJobType(client, VRR_JOB_GARBAGE)) {
+	//	messagePlayerError(client, "Your job doesn't use a route!");
+    //    return false;
+	//}
 
 	if(!isPlayerOnJobRoute(client)) {
 		messagePlayerError(client, "You aren't on a job route!");
         return false;
 	}
 
-	stopJobRoute(client);
+	stopJobRoute(client, false, false);
 	return true;
 }
 
@@ -1611,38 +1657,65 @@ function isPlayerWorking(client) {
 
 // ===========================================================================
 
-function startJobRoute(client) {
-	let jobRoute = getRandomJobRoute(getClosestJobLocationForJob(getPlayerPosition(client), getPlayerJob(client)));
+function startJobRoute(client, forceRoute = -1) {
+    let jobId = getPlayerJob(client);
+    let jobRoute = 0;
+
+    if(forceRoute == -1) {
+        jobRoute = getRandomJobRouteForLocation(getClosestJobLocationForJob(getPlayerPosition(client), jobId));
+    } else {
+        jobRoute = forceRoute;
+    }
+
+    if(jobRoute == -1) {
+        messagePlayerError(client, `There are no routes for this location.`);
+        return false;
+    }
+
+    logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} is starting job route ${jobRoute} for job ${jobId}`);
+
 	getPlayerData(client).jobRoute = jobRoute;
-	getPlayerData(client).jobRouteStop = 0;
+	getPlayerData(client).jobRouteLocation = 0;
 	getPlayerData(client).jobRouteVehicle = getPlayerVehicle(client);
-	getPlayerVehicle(client).colour1 = getJobRouteData(getPlayerJob(client), jobRoute).vehicleColour1;
-	getPlayerVehicle(client).colour2 = getJobRouteData(getPlayerJob(client), jobRoute).vehicleColour2;
-	if(getJobRouteData(getPlayerJob(client), jobRoute).locations.length > 0) {
-		showCurrentJobStop(client);
-	}
-	messagePlayerNormal(client, getJobRouteData(getPlayerJob(client), jobRoute).startMessage);
+
+	getPlayerVehicle(client).colour1 = getJobRouteData(jobId, jobRoute).vehicleColour1;
+	getPlayerVehicle(client).colour2 = getJobRouteData(jobId, jobRoute).vehicleColour2;
+
+	messagePlayerNormal(client, getJobRouteData(jobId, jobRoute).startMessage);
+    if(getJobRouteData(jobId, jobRoute).locations.length > 0) {
+		showCurrentJobLocation(client);
+	} else {
+        messagePlayerError(client, `There are no locations for this route.`);
+    }
 }
 
 // ===========================================================================
 
 function stopJobRoute(client, successful = false, alertPlayer = true) {
+    let jobId = getPlayerJob(client);
+
+	if(alertPlayer) {
+		messagePlayerAlert(client, replaceJobRouteStringsInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).finishMessage), jobId, getPlayerJobRoute(client));
+	}
+
+    if(successful == true) {
+        finishSuccessfulJobRoute(client);
+        return false;
+    }
+
 	stopReturnToJobVehicleCountdown(client);
 	sendPlayerStopJobRoute(client);
 	respawnVehicle(getPlayerData(client).jobRouteVehicle);
-	getPlayerData(client).jobRouteVehicle = false;
-	getPlayerData(client).jobRoute = false;
-	getPlayerData(client).jobRouteStop = false;
 
-	if(alertPlayer) {
-		messagePlayerAlert(client, getJobRouteData(getPlayerJob(client), jobRoute).finishMessage);
-	}
+	getPlayerData(client).jobRouteVehicle = false;
+	getPlayerData(client).jobRoute = -1;
+	getPlayerData(client).jobRouteLocation = -1;
 }
 
 // ===========================================================================
 
 function isPlayerOnJobRoute(client) {
-	if(getPlayerData(client).jobRoute != false) {
+	if(getPlayerData(client).jobRoute != -1) {
 		return true;
 	}
 
@@ -1718,23 +1791,30 @@ function canPlayerUseJob(client, jobId) {
 // ===========================================================================
 
 function deleteJobLocation(jobLocationData) {
-	if(jobLocationData.pickup) {
-		deleteGameElement(jobLocationData.pickup);
+	if(jobLocationData.databaseId > 0) {
+		quickDatabaseQuery(`DELETE FROM job_loc WHERE job_loc_id = ${jobLocationData.databaseId}`);
 	}
+
+    deleteJobLocationBlip(tempJob, tempLocation);
+    deleteJobLocationPickup(tempJob, tempLocation);
+	getJobData(getJobIdFromDatabaseId(tempJob)).locations.splice(tempLocation, 1);
+    setAllJobDataIndexes();
 }
 
 // ===========================================================================
 
-function freezeJobVehicleForRouteStop(client) {
+function freezePlayerJobVehicleForRouteLocation(client) {
     getVehicleData(getPlayerVehicle(client)).engine = false;
-	getPlayerVehicle(client).engine = false;
+	setVehicleEngine(getPlayerVehicle(client), getVehicleData(getPlayerVehicle(client)).engine);
+    //setPlayerControlState(client, false);
 }
 
 // ===========================================================================
 
-function unFreezeJobVehicleForRouteStop(client) {
+function unFreezePlayerJobVehicleForRouteLocation(client) {
     getVehicleData(getPlayerVehicle(client)).engine = true;
-	getPlayerVehicle(client).engine = true;
+	setVehicleEngine(getPlayerVehicle(client), getVehicleData(getPlayerVehicle(client)).engine);
+    //setPlayerControlState(client, true);
 }
 
 // ===========================================================================
@@ -1823,7 +1903,7 @@ function saveJobToDatabase(jobData) {
 		return false;
 	}
 
-	if(!jobData.needsSaved) {
+	if(jobData.needsSaved == false) {
 		logToConsole(LOG_DEBUG, `[VRR.Job]: Job ${jobData.name} doesn't need saved. Skipping ...`);
 		return false;
 	}
@@ -1876,8 +1956,8 @@ function saveJobRouteToDatabase(jobRouteData) {
 		return false;
 	}
 
-	if(!jobRouteData.needsSaved) {
-		logToConsole(LOG_DEBUG, `[VRR.Job]: Job route ${jobRouteData.name} (${jobRouteData.databaseId}) doesn't need saved. Skipping ...`);
+	if(jobRouteData.needsSaved == false) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job route ${jobRouteData.name} (DB ID ${jobRouteData.databaseId}) doesn't need saved. Skipping ...`);
 		return false;
 	}
 
@@ -1895,8 +1975,8 @@ function saveJobRouteToDatabase(jobRouteData) {
 			["job_route_job_loc", jobRouteData.locationId],
 			["job_route_enabled", boolToInt(jobRouteData.enabled)],
 			["job_route_name", safeName],
-			["job_route_col1_r", jobRouteData.vehicleColour1],
-			["job_route_col2_r", jobRouteData.vehicleColour2],
+			["job_route_veh_colour1", jobRouteData.vehicleColour1],
+			["job_route_veh_colour2", jobRouteData.vehicleColour2],
 			["job_route_start_msg", safeStartMessage],
 			["job_route_finish_msg", safeFinishMessage],
 			["job_route_loc_arrive_msg", safeLocationArriveMessage],
@@ -1927,14 +2007,14 @@ function saveJobRouteToDatabase(jobRouteData) {
 
 // ===========================================================================
 
-function saveJobRouteLocationsToDatabase(jobRouteLocationData) {
+function saveJobRouteLocationToDatabase(jobRouteLocationData) {
 	if(!jobRouteLocationData) {
 		// Invalid job route position data
 		return false;
 	}
 
-	if(!jobRouteLocationData.needsSaved) {
-		logToConsole(LOG_DEBUG, `[VRR.Job]: Job route location ${jobRouteLocationData.name} (${jobRouteLocationData.databaseId}) doesn't need saved. Skipping ...`);
+	if(jobRouteLocationData.needsSaved == false) {
+		logToConsole(LOG_DEBUG, `[VRR.Job]: Job route location ${jobRouteLocationData.name} (DB ID ${jobRouteLocationData.databaseId}) doesn't need saved. Skipping ...`);
 		return false;
 	}
 
@@ -1951,7 +2031,7 @@ function saveJobRouteLocationsToDatabase(jobRouteLocationData) {
 			["job_route_loc_z", jobRouteLocationData.position.z],
 			["job_route_loc_pay", jobRouteLocationData.pay],
 			["job_route_loc_delay", jobRouteLocationData.stopDelay],
-			["job_route_loc_prev", jobRouteLocationData.previousStop]
+
 		];
 
 		let dbQuery = null;
@@ -2177,7 +2257,7 @@ function saveAllJobsToDatabase() {
 		for(let p in getServerData().jobs[i].routes) {
 			saveJobRouteToDatabase(getServerData().jobs[i].routes[p]);
 
-			for(let q in getServerData().jobs[i].routes[p].routes) {
+			for(let q in getServerData().jobs[i].routes[p].locations) {
 				saveJobRouteLocationToDatabase(getServerData().jobs[i].routes[p].locations[q]);
 			}
 		}
@@ -2325,12 +2405,32 @@ function isPlayerOnJobBlackList(client, jobId) {
 
 // ===========================================================================
 
-function playerArrivedAtJobRouteStop(client) {
+function playerArrivedAtJobRouteLocation(client) {
+    let jobId = getPlayerJob(client);
+
 	if(!isPlayerOnJobRoute(client)) {
 		return false;
 	}
 
-	playerArrivedAtJobRouteLocationStop(client);
+    if(isLastLocationOnJobRoute(jobId, getPlayerJobRoute(client), getPlayerJobRouteLocation(client))) {
+        finishSuccessfulJobRoute(client);
+        return false;
+    }
+
+    showGameMessage(client, removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationArriveMessage), getJobData(jobId).colour, 3500);
+    if(getJobRouteLocationData(jobId, getPlayerJobRoute(client),getPlayerJobRouteLocation(client)).stopDelay > 0) {
+        freezePlayerJobVehicleForRouteLocation(client);
+        getPlayerData(client).jobRouteLocation = getNextLocationOnJobRoute(jobId, getPlayerJobRoute(client), getPlayerJobRouteLocation(client));
+        setTimeout(function() {
+            showCurrentJobLocation(client);
+            showGameMessage(client, removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationNextMessage), getJobData(jobId).colour, 3500);
+            unFreezePlayerJobVehicleForRouteLocation(client);
+        }, getJobRouteLocationData(jobId, getPlayerJobRoute(client),getPlayerJobRouteLocation(client)).stopDelay);
+    } else {
+        getPlayerData(client).jobRouteLocation = getNextLocationOnJobRoute(jobId, getPlayerJobRoute(client), getPlayerJobRouteLocation(client));
+        showCurrentJobLocation(client);
+        showGameMessage(client, removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationNextMessage), getJobData(jobId).colour, 3500);
+    }
 }
 
 // ===========================================================================
@@ -2458,7 +2558,7 @@ function createJobRouteLocationCommand(command, params, client) {
 
 	let routeId = getPlayerData(client).jobRoute;
 	let jobRouteData = getServerData().jobs[jobId].routes[routeId];
-	let routeLocationName = getParam(params, " ", 1);
+	let routeLocationName = params;
 
 	createJobRouteLocation(routeLocationName, getPlayerPosition(client), jobRouteData);
 	messageAdmins(`${getPlayerName(client)}{MAINCOLOUR} created location {ALTCOLOUR}${routeLocationName}{MAINCOLOUR} for route {ALTCOLOUR}${jobRouteData.name}{MAINCOLOUR} for job {jobYellow}${getJobData(jobId).name}`);
@@ -2477,26 +2577,30 @@ function createJobRoute(routeName, closestJobLocation) {
 	tempJobRouteData.vehicleColour1 = 1;
 	tempJobRouteData.vehicleColour2 = 1;
 	tempJobRouteData.pay = 500;
-	tempJobRouteData.startMessage = `You are now on route {ALTCOLOUR}${routeName}{MAINCOLOUR} for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} job!`;
-	tempJobRouteData.finishMessage = `You have finished route {ALTCOLOUR}${routeName}{MAINCOLOUR} for the {jobYellow}${getJobData(closestJobLocation.jobIndex).name} job, and will receive $${tempJobRouteData.pay} next payday!`;
-	tempJobRouteData.locationArriveMessage = `You arrived at a point in job route {ALTCOLOUR}${routeName}{MAINCOLOUR}.`;
-	tempJobRouteData.locationNextMessage = `Drive to the next point on the route (looking for the blinking dot on the map).`;
+    tempJobRouteData.jobIndex = closestJobLocation.jobIndex;
+	tempJobRouteData.startMessage = `You are now on route {ALTCOLOUR}{JOBROUTENAME}{MAINCOLOUR} for the {jobYellow}{JOBNAME}{MAINCOLOUR} job!`;
+	tempJobRouteData.finishMessage = `You have finished the {ALTCOLOUR}{JOBROUTENAME}{MAINCOLOUR} route and {ALTCOLOUR}{JOBROUTEPAY}{MAINCOLOUR} has been added to your next paycheck!`;
+	tempJobRouteData.locationArriveMessage = `You arrived at a stop.`;
+	tempJobRouteData.locationNextMessage = `Drive to the next stop.`;
 
 	getJobData(closestJobLocation.jobIndex).routes.push(tempJobRouteData);
+    saveJobRouteToDatabase(tempJobRouteData);
 	setAllJobDataIndexes();
 }
 
 // ===========================================================================
 
 function createJobRouteLocation(routeLocationName, position, jobRouteData) {
-	let tempJobRouteData = new JobRouteData(false);
+	let tempJobRouteLocationData = new JobRouteLocationData(false);
 	tempJobRouteLocationData.name = routeLocationName;
-	tempJobRouteLocationData.jobRoute = jobRouteData.databaseId;
+	tempJobRouteLocationData.routeId = jobRouteData.databaseId;
 	tempJobRouteLocationData.enabled = true;
 	tempJobRouteLocationData.needsSaved = true;
 	tempJobRouteLocationData.position = position;
+    tempJobRouteLocationData.routeIndex = jobRouteData.index;
 
-	getJobData(jobRouteData.jobIndex).routes[jobRouteData.index].push(tempJobRouteLocationData);
+	getJobData(jobRouteData.jobIndex).routes[jobRouteData.index].locations.push(tempJobRouteLocationData);
+    saveJobRouteLocationToDatabase(tempJobRouteLocationData);
 	setAllJobDataIndexes();
 }
 
@@ -2505,7 +2609,7 @@ function createJobRouteLocation(routeLocationName, position, jobRouteData) {
 function deleteJobRouteLocationCommand(command, params, client) {
 	let closestJobRouteLocation = getClosestJobRouteLocation(getPlayerPosition(client));
 
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}deleted route location {ALTCOLOUR}${closestJobRouteLocation.index} (DB ID ${closestJobRouteLocation.databaseId}) {MAINCOLOUR}for the {ALTCOLOUR}${closestJobRouteLocation.name}{jobYellow} route of the ${getJobData(closestJobLocation.jobIndex).name} {MAINCOLOUR}job`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)}{MAINCOLOUR} deleted route location {ALTCOLOUR}${closestJobRouteLocation.index} (DB ID ${closestJobRouteLocation.databaseId}){MAINCOLOUR} for the {ALTCOLOUR}${closestJobRouteLocation.name}{jobYellow} route of the {jobYellow}${getJobData(closestJobLocation.jobIndex).name}{MAINCOLOUR} job`);
 
 	if(closestJobRouteLocation.databaseId > 0) {
 		quickDatabaseQuery(`DELETE FROM job_route_loc WHERE job_route_loc_id = ${closestJobRouteLocation.databaseId}`);
@@ -2516,6 +2620,7 @@ function deleteJobRouteLocationCommand(command, params, client) {
 
 	getJobData(getJobIdFromDatabaseId(tempJob)).routes[tempJobRoute].locations.splice(tempIndex, 1);
 	setAllJobDataIndexes();
+    collectAllGarbage();
 }
 
 // ===========================================================================
@@ -2523,6 +2628,10 @@ function deleteJobRouteLocationCommand(command, params, client) {
 function deleteJobRouteCommand(command, params, client) {
 	let jobId = getPlayerJob(client);
 	let jobRoute = getPlayerData(client).jobRoute;
+
+    if(!areParamsEmpty(client)) {
+        jobRoute = getJobRouteFromParams(params);
+    }
 
 	let jobRouteData = getServerData().jobs[jobId].routes[jobRoute];
 
@@ -2538,54 +2647,18 @@ function deleteJobRouteCommand(command, params, client) {
 		}
 	}
 
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}deleted route {ALTCOLOUR}${jobRouteData.name} (DB ID ${jobRouteData.databaseId}) {MAINCOLOUR}for the ${getJobData(jobId).name} {MAINCOLOUR}job`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)}{MAINCOLOUR} deleted route {ALTCOLOUR}${jobRouteData.name} (DB ID ${jobRouteData.databaseId}) {MAINCOLOUR}for the {jobYellow}${getJobData(jobId).name}{MAINCOLOUR} job`);
 
-	quickDatabaseQuery(`DELETE FROM job_route_loc WHERE job_route_loc_route = ${jobRouteData.databaseId}`);
-	quickDatabaseQuery(`DELETE FROM job_route WHERE job_route_id = ${jobRouteData.databaseId}`);
+    if(jobRouteData.databaseId > 0) {
+        quickDatabaseQuery(`DELETE FROM job_route WHERE job_route_id = ${jobRouteData.databaseId}`);
+        quickDatabaseQuery(`DELETE FROM job_route_loc WHERE job_route_loc_route = ${jobRouteData.databaseId}`);
+    }
 
 	clearArray(getServerData().jobs[jobId].routes[jobRoute].locations);
 	getServerData().jobs[jobId].routes.splice(jobRoute, 1);
 
 	setAllJobDataIndexes();
 	collectAllGarbage();
-}
-
-// ===========================================================================
-
-function setAllJobIndexes() {
-	for(let i in getServerData().jobs) {
-		getServerData().jobs[i].index = i;
-
-		for(let j in getServerData().jobs[i].locations) {
-			getServerData().jobs[i].locations[j].index = j;
-			getServerData().jobs[i].locations[j].jobIndex = i;
-		}
-
-		for(let k in getServerData().jobs[i].uniforms) {
-			getServerData().jobs[i].uniforms[k].index = k;
-			getServerData().jobs[i].uniforms[k].jobIndex = i;
-		}
-
-		for(let m in getServerData().jobs[i].equipment) {
-			getServerData().jobs[i].equipment[m].index = m;
-			getServerData().jobs[i].equipment[m].jobIndex = i;
-
-			for(let n in getServerData().jobs[i].equipment[m].items) {
-				getServerData().jobs[i].equipment[m].items[n].index = n;
-				getServerData().jobs[i].equipment[m].items[n].equipmentIndex = m;
-			}
-		}
-
-		for(let p in getServerData().jobs[i].routes) {
-			getServerData().jobs[i].routes[j].index = p;
-			getServerData().jobs[i].routes[j].jobIndex = i;
-
-			for(let q in getServerData().jobs[i].routes[p].locations) {
-				getServerData().jobs[i].routes[p].items[q].index = n;
-				getServerData().jobs[i].routes[p].items[q].routeIndex = p;
-			}
-		}
-	}
 }
 
 // ===========================================================================
@@ -2664,9 +2737,13 @@ function getPlayerJobVehicle(client) {
 
 // ===========================================================================
 
-function getRandomJobRoute(closestJobLocation) {
-	let randomRoute = getRandom(0, closestJobLocation.routeCache.length-1);
-	return getJobData(closestJobLocation.jobIndex).routes[randomRoute].index;
+function getRandomJobRouteForLocation(closestJobLocation) {
+    if(closestJobLocation.routeCache.length > 0) {
+        let randomRoute = getRandom(0, closestJobLocation.routeCache.length-1);
+        let routeId = closestJobLocation.routeCache[randomRoute];
+        return getJobRouteData(closestJobLocation.jobIndex, routeId).index;
+    }
+    return -1;
 }
 
 // ===========================================================================
@@ -2682,6 +2759,17 @@ function getJobRouteData(jobId, routeId) {
 
 // ===========================================================================
 
+/**
+ * @param {number} jobIndex - The data index of the job
+ * @param {number} routeIndex - The data index of the job route
+ * @return {JobRouteLocationData} The jobroutes's data (class instance)
+ */
+ function getJobRouteLocationData(jobId, routeId, routeLocationId) {
+	return getServerData().jobs[jobId].routes[routeId].locations[routeLocationId];
+}
+
+// ===========================================================================
+
 function getClosestJobLocationForJob(position, jobId) {
 	let closestJobLocation = false;
 	for(let i in getServerData().jobs[jobId].locations) {
@@ -2691,3 +2779,100 @@ function getClosestJobLocationForJob(position, jobId) {
 	}
 	return closestJobLocation;
 }
+
+// ===========================================================================
+
+function getPlayerJobRoute(client) {
+    return getPlayerData(client).jobRoute;
+}
+
+// ===========================================================================
+
+function getPlayerJobRouteLocation(client) {
+    return getPlayerData(client).jobRouteLocation;
+}
+
+// ===========================================================================
+
+function showCurrentJobLocation(client) {
+    let jobId = getPlayerJob(client);
+    sendJobRouteLocationToPlayer(client, getJobRouteLocationData(jobId, getPlayerJobRoute(client), getPlayerJobRouteLocation(client)).position, getJobData(jobId).colour);
+}
+
+// ===========================================================================
+
+function finishSuccessfulJobRoute(client) {
+    let jobId = getPlayerJob(client);
+    let jobRouteData = getJobRouteData(jobId, getPlayerJobRoute(client));
+    let payout = toInteger(applyServerInflationMultiplier(jobRouteData.pay));
+    getPlayerData(client).payDayAmount = getPlayerData(client).payDayAmount + payout;
+
+    messagePlayerSuccess(client, replaceJobRouteStringsInMessage(jobRouteData.finishMessage, jobId, jobRouteData.index));
+
+    stopReturnToJobVehicleCountdown(client);
+    sendPlayerStopJobRoute(client);
+    respawnVehicle(getPlayerData(client).jobRouteVehicle);
+
+    getPlayerData(client).jobRouteVehicle = false;
+    getPlayerData(client).jobRoute = -1;
+    getPlayerData(client).jobRouteLocation = -1;
+}
+
+// ===========================================================================
+
+function getNextLocationOnJobRoute(jobId, routeId, currentLocationId) {
+    if(!isLastLocationOnJobRoute(jobId, routeId, currentLocationId)) {
+        return currentLocationId+1;
+    } else {
+        return getJobRouteData(jobId, routeId).locations.length-1;
+    }
+}
+
+// ===========================================================================
+
+function isLastLocationOnJobRoute(jobId, routeId, currentLocationId) {
+    if(currentLocationId == getJobRouteData(jobId, routeId).locations.length-1) {
+        return true;
+    }
+    return false;
+}
+
+// ===========================================================================
+
+function getJobRouteFromParams(params, jobId) {
+	if(isNaN(params)) {
+		for(let i in getServerData().jobs[jobId].routes) {
+			if(toLowerCase(getServerData().jobs[jobId].routes[i].name).indexOf(toLowerCase(params)) != -1) {
+				return i;
+			}
+		}
+	} else {
+		if(typeof getServerData().jobs[jobId].routes[params] != "undefined") {
+			return toInteger(params);
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function replaceJobRouteStringsInMessage(messageText, jobId, jobRouteId) {
+    let tempJobRouteData = getJobRouteData(jobId, jobRouteId);
+
+	let tempFind = `{JOBROUTENAME}`;
+	let tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, tempJobRouteData.name);
+
+    tempFind = `{JOBROUTEPAY}`;
+	tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, `$${tempJobRouteData.pay}`);
+
+    tempFind = `{JOBNAME}`;
+	tempRegex = new RegExp(tempFind, 'g');
+	messageText = messageText.replace(tempRegex, getJobData(tempJobRouteData.jobIndex).name);
+
+    return messageText;
+}
+
+// ===========================================================================

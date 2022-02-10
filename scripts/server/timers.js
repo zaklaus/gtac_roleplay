@@ -251,16 +251,18 @@ function showRandomTipToAllPlayers() {
 function checkInactiveVehicleRespawns() {
 	let vehicles = getElementsByType(ELEMENT_VEHICLE);
 	for(let i in vehicles) {
-		if(isVehicleUnoccupied(vehicles[i])) {
-			if(getVehicleData(vehicles[i]).lastActiveTime != false) {
-				if(getCurrentUnixTimestamp() - getVehicleData(vehicles[i]).lastActiveTime >= getGlobalConfig().vehicleInactiveRespawnDelay) {
-					respawnVehicle(vehicles[i]);
-					getVehicleData(vehicles[i]).lastActiveTime = false;
-				}
-			}
-		} else {
-			getVehicleData(vehicles[i]).lastActiveTime = getCurrentUnixTimestamp();
-		}
+        if(getVehicleData(vehicles[i] != false)) {
+            if(isVehicleUnoccupied(vehicles[i])) {
+                if(getVehicleData(vehicles[i]).lastActiveTime != false) {
+                    if(getCurrentUnixTimestamp() - getVehicleData(vehicles[i]).lastActiveTime >= getGlobalConfig().vehicleInactiveRespawnDelay) {
+                        respawnVehicle(vehicles[i]);
+                        getVehicleData(vehicles[i]).lastActiveTime = false;
+                    }
+                }
+            } else {
+                getVehicleData(vehicles[i]).lastActiveTime = getCurrentUnixTimestamp();
+            }
+        }
 	}
 }
 

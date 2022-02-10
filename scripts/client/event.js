@@ -196,7 +196,7 @@ function onPedInflictDamage(event, damagedEntity, damagerEntity, weaponId, healt
 
 function onLocalPlayerEnterSphere(event, sphere) {
     logToConsole(LOG_DEBUG, `[VRR.Event] Local player entered sphere`);
-    if(sphere == jobRouteStopSphere) {
+    if(sphere == jobRouteLocationSphere) {
         enteredJobRouteSphere();
     }
 }

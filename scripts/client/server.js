@@ -39,7 +39,7 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.heading", setLocalPlayerHeading);
     addNetworkEventHandler("vrr.interior", setLocalPlayerInterior);
     addNetworkEventHandler("vrr.minuteDuration", setMinuteDuration);
-    addNetworkEventHandler("vrr.showJobRouteStop", showJobRouteStop);
+    addNetworkEventHandler("vrr.showJobRouteLocation", showJobRouteLocation);
     addNetworkEventHandler("vrr.snow", setSnowState);
     addNetworkEventHandler("vrr.health", setLocalPlayerHealth);
     addNetworkEventHandler("vrr.enterPropertyKey", setEnterPropertyKey);
@@ -160,8 +160,8 @@ function tellServerPlayerUsedKeyBind(key) {
 
 // ===========================================================================
 
-function tellServerPlayerArrivedAtJobRouteStop() {
-    sendNetworkEventToServer("vrr.arrivedAtJobRouteStop");
+function tellServerPlayerArrivedAtJobRouteLocation() {
+    sendNetworkEventToServer("vrr.arrivedAtJobRouteLocation");
 }
 
 // ===========================================================================

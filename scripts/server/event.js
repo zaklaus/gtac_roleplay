@@ -18,6 +18,7 @@ function initEventScript() {
 function addAllEventHandlers() {
     addEventHandler("onResourceStart", onResourceStart);
     addEventHandler("onResourceStop", onResourceStop);
+    addEventHandler("onServerStop", onResourceStop);
 
     addEventHandler("onProcess", onProcess);
     addEventHandler("onEntityProcess", onEntityProcess);
@@ -251,6 +252,7 @@ function onResourceStop(event, resource) {
         clearArray(getServerData().itemTypes);
         clearArray(getServerData().groundItemCache);
         clearArray(getServerData().groundPlantCache);
+        kickAllClients();
     }
 
     collectAllGarbage();
@@ -321,7 +323,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
                 resetVehiclePosition(vehicle);
             } else if(getVehicleData(vehicle).rentPrice > 0) {
                 if(getVehicleData(vehicle).rentedBy != client) {
-                    messagePlayerAlert(client, getLocaleString(client, "VehicleForRent", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)}`, `{ALTCOLOUR}/vehrent{MAINCOLOUR}`));
+                    messagePlayerAlert(client, getLocaleString(client, "VehicleForRent", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)}{MAINCOLOUR}`, `{ALTCOLOUR}/vehrent{MAINCOLOUR}`));
                     resetVehiclePosition(vehicle);
                 } else {
                     messagePlayerAlert(client, `You are renting this ${getVehicleName(vehicle)} for {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute. {MAINCOLOUR}Use {ALTCOLOUR}/stoprent {MAINCOLOUR}if you want to stop renting it.`);

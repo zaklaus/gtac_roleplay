@@ -466,6 +466,7 @@ function setVehicleLights(vehicle, lights) {
 
 function setVehicleEngine(vehicle, engine) {
 	vehicle.engine = engine;
+    setEntityData(vehicle, "vrr.engine", engine, true);
 }
 
 // ===========================================================================

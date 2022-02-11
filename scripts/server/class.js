@@ -180,9 +180,8 @@ class ClientData {
 		this.loginAttemptsRemaining = 3;
 		this.afk = false;
 
-		this.jobRoute = false;
-		this.jobRouteStop = false;
-		this.jobRouteIsland = false;
+		this.jobRoute = -1;
+		this.jobRouteLocation = -1;
 		this.jobRouteVehicle = false;
 
 		this.spawned = false;
@@ -1715,8 +1714,8 @@ class JobRouteData {
 		this.locationIndex = -1;
 		this.needsSaved = false;
 		this.pay = 0;
-		this.vehicleColour1 = toColour(255, 255, 255, 255);
-		this.vehicleColour2 = toColour(255, 255, 255, 255);
+		this.vehicleColour1 = 1;
+		this.vehicleColour2 = 1;
 		this.detail = 0;
 		this.startMessage = "";
 		this.finishMessage = "";
@@ -1733,13 +1732,11 @@ class JobRouteData {
 			this.pay = toInteger(dbAssoc["job_route_pay"]);
 			this.startMessage = toString(dbAssoc["job_route_start_msg"]);
 			this.finishMessage = toString(dbAssoc["job_route_finish_msg"]);
-			this.colour1 = toColour(toInteger(dbAssoc["job_route_col1_r"]), toInteger(dbAssoc["job_route_col1_g"]), toInteger(dbAssoc["job_route_col1_b"]), 255);
-			this.colour2 = toColour(toInteger(dbAssoc["job_route_col2_r"]), toInteger(dbAssoc["job_route_col2_g"]), toInteger(dbAssoc["job_route_col2_b"]), 255);
+            this.locationArriveMessage = toString(dbAssoc["job_route_loc_arrive_msg"]);
+			this.locationNextMessage = toString(dbAssoc["job_route_loc_next_msg"]);
+			this.vehicleColour1 = toInteger(dbAssoc["job_route_veh_colour1"]);
+			this.vehicleColour2 = toInteger(dbAssoc["job_route_veh_colour2"]);
 			this.detail = toInteger(dbAssoc["job_route_detail"]);
-			this.startMessage = toInteger(dbAssoc["job_route_start_msg"]);
-			this.finishMessage = toInteger(dbAssoc["job_route_finish_msg"]);
-			this.locationArriveMessage = toInteger(dbAssoc["job_route_loc_arrive_msg"]);
-			this.locationNextMessage = toInteger(dbAssoc["job_route_loc_next_msg"]);
 		}
 	}
 };
@@ -1751,12 +1748,12 @@ class JobRouteLocationData {
 		this.routeId = 0;
 		this.enabled = false;
 		this.index = -1;
+        this.jobIndex = -1;
 		this.routeIndex = -1;
 		this.needsSaved = false;
 		this.position = toVector3(0.0, 0.0, 0.0);
 		this.stopDelay = 0;
 		this.pay = 0;
-		this.previousStop = 0;
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["job_route_loc_id"]);
@@ -1766,7 +1763,6 @@ class JobRouteLocationData {
 			this.position = toVector3(toFloat(dbAssoc["job_route_loc_x"]), toFloat(dbAssoc["job_route_loc_y"]), toFloat(dbAssoc["job_route_loc_z"]));
 			this.stopDelay = toInteger(dbAssoc["job_route_loc_delay"]);
 			this.pay = toInteger(dbAssoc["job_route_loc_pay"]);
-			this.previousStop = toInteger(dbAssoc["job_route_loc_prev"]);
 		}
 	}
 };

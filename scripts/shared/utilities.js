@@ -1395,3 +1395,67 @@ function getElementTypeName(typeId) {
 }
 
 // ===========================================================================
+
+function fillStringWithCharacter(character, amount) {
+	let tempString = "";
+	for(let i = 0; i <= amount; i++) {
+		tempString = tempString + toString(character);
+	}
+	return tempString;
+}
+
+// ===========================================================================
+
+function fixCharacterName(name) {
+	return String(name.charAt(0).toUpperCase()) + String(name.slice(1).toLowerCase());
+}
+
+// ===========================================================================
+
+function getCurrentTimeStampWithTimeZone(timeZone) {
+	let date = new Date();
+
+	let utcDate = new Date(date.toLocaleString('en-US', { timeZone: "UTC" }));
+	let tzDate = new Date(date.toLocaleString('en-US', { timeZone: timeZone }));
+	let offset = utcDate.getTime() - tzDate.getTime();
+
+	date.setTime( date.getTime() + offset );
+
+	return date;
+};
+
+// ===========================================================================
+
+function getSyncerFromId(syncerId) {
+	let clients = getClients();
+	return clients[syncerId];
+}
+
+// ===========================================================================
+
+function isConsole(client) {
+	if(client == null) {
+		return false;
+	}
+
+	return client.console;
+}
+
+// ===========================================================================
+
+function isSamePlayer(client1, client2) {
+	return (client1 == client2);
+}
+
+// ===========================================================================
+
+function getConsoleClient() {
+	let clients = getClients();
+	for(let i in clients) {
+		if(isConsole(clients[i])) {
+			return clients[i];
+		}
+	}
+}
+
+// ===========================================================================

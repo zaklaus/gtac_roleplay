@@ -52,7 +52,7 @@ function getAreaName(position) {
 // ===========================================================================
 
 function getGameAreas(gameId) {
-	return gameAreas[gameId];
+	return getGameData().areas[gameId];
 }
 
 // ===========================================================================
@@ -299,23 +299,6 @@ function isPlayerMuted(client) {
 
 // ===========================================================================
 
-function isSamePlayer(client1, client2) {
-	return (client1 == client2);
-}
-
-// ===========================================================================
-
-function getConsoleClient() {
-	let clients = getClients();
-	for(let i in clients) {
-		if(isConsole(clients[i])) {
-			return clients[i];
-		}
-	}
-}
-
-// ===========================================================================
-
 function getPlayerFromParams(params) {
 	let clients = getClients();
 	if(isNaN(params)) {
@@ -337,24 +320,6 @@ function getPlayerFromParams(params) {
 	}
 
 	return false;
-}
-
-
-// ===========================================================================
-
-function getSyncerFromId(syncerId) {
-	let clients = getClients();
-	return clients[syncerId];
-}
-
-// ===========================================================================
-
-function isConsole(client) {
-	if(client == null) {
-		return false;
-	}
-
-	return client.console;
 }
 
 // ===========================================================================
@@ -405,26 +370,6 @@ function doesNameContainInvalidCharacters(name) {
 
 // ===========================================================================
 
-function fixCharacterName(name) {
-	return String(name.charAt(0).toUpperCase()) + String(name.slice(1).toLowerCase());
-}
-
-// ===========================================================================
-
-function getCurrentTimeStampWithTimeZone(timeZone) {
-	let date = new Date();
-
-	let utcDate = new Date(date.toLocaleString('en-US', { timeZone: "UTC" }));
-	let tzDate = new Date(date.toLocaleString('en-US', { timeZone: timeZone }));
-	let offset = utcDate.getTime() - tzDate.getTime();
-
-	date.setTime( date.getTime() + offset );
-
-	return date;
-};
-
-// ===========================================================================
-
 function getClientFromSyncerId(syncerId) {
 	return getClients().filter(c => c.index == syncerId)[0];
 }
@@ -445,8 +390,6 @@ async function triggerWebHook(webHookURL, payloadData) {
 		);
 	});
 }
-
-
 
 // ===========================================================================
 
@@ -482,12 +425,10 @@ function clearTemporaryPeds() {
 
 // ===========================================================================
 
-function fillStringWithCharacter(character, amount) {
-	let tempString = "";
-	for(let i = 0; i <= amount; i++) {
-		tempString = tempString + toString(character);
-	}
-	return tempString;
+function kickAllClients() {
+    getClients().forEach((client) => {
+        client.disconnect();
+    })
 }
 
 // ===========================================================================

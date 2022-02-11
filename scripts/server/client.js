@@ -39,7 +39,7 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.onPlayerExitVehicle", onPlayerExitedVehicle);
 
     // Job
-    addNetworkEventHandler("vrr.arrivedAtJobRouteStop", playerArrivedAtJobRouteStop);
+    addNetworkEventHandler("vrr.arrivedAtJobRouteLocation", playerArrivedAtJobRouteLocation);
 
     // Client
     addNetworkEventHandler("vrr.clientReady", playerClientReady);
@@ -284,9 +284,9 @@ function setPlayerWeaponDamageEvent(client, eventType) {
 
 // ===========================================================================
 
-function sendJobRouteStopToPlayer(client, position, colour) {
+function sendJobRouteLocationToPlayer(client, position, colour) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending job route stop data to ${getPlayerDisplayForConsole(client)}`);
-    sendNetworkEventToPlayer("vrr.showJobRouteStop", client, position, colour);
+    sendNetworkEventToPlayer("vrr.showJobRouteLocation", client, position, colour);
 }
 
 // ===========================================================================

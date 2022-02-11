@@ -4487,9 +4487,7 @@ let gameData = {
 				name: "Dillimore",
 			},
 		],
-		[	// GTA UG
-
-		],
+		[], // INVALID
 		[	// GTA IV
 
 			{
@@ -4563,13 +4561,17 @@ let gameData = {
         [], // INVALID
         [], // INVALID
         [], // INVALID
-        [ // Mafia 1
+        [
+            // Mafia 1
         ],
-        [ // Mafia 2
+        [
+            // Mafia 2
         ],
-        [ // Mafia 3
+        [
+            // Mafia 3
         ],
-        [ // Mafia 1 Definitive Edition
+        [
+            // Mafia 1 Definitive Edition
         ],
 	],
 	fireStations: [
@@ -4639,13 +4641,17 @@ let gameData = {
         [], // INVALID
         [], // INVALID
         [], // INVALID
-        [ // Mafia 1
+        [
+            // Mafia 1
         ],
-        [ // Mafia 2
+        [
+            // Mafia 2
         ],
-        [ // Mafia 3
+        [
+            // Mafia 3
         ],
-        [ // Mafia 1 Definitive Edition
+        [
+            // Mafia 1 Definitive Edition
         ],
 	],
 	hospitals: [
@@ -4749,7 +4755,8 @@ let gameData = {
         [], // INVALID
         [], // INVALID
         [], // INVALID
-        [ // Mafia 1
+        [
+            // Mafia 1
 			{
 				position: toVector3(-759.00, 11.40, 747.31),
 				heading: 0.0,
@@ -4757,11 +4764,14 @@ let gameData = {
 				name: "New Ark Hospital",
 			},
         ],
-        [ // Mafia 2
+        [
+            // Mafia 2
         ],
-        [ // Mafia 3
+        [
+            // Mafia 3
         ],
-        [ // Mafia 1 Definitive Edition
+        [
+            // Mafia 1 Definitive Edition
         ],
 	],
 	payAndSprays: [
@@ -4783,29 +4793,33 @@ let gameData = {
 				name: "Shoreside Vale",
 			},
 		],
-		[	// GTA VC
-
+		[
+            // GTA VC
 		],
-		[	// GTA SA
-
+		[
+            // GTA SA
 		],
-		[	// GTA UG
-
+		[
+            // GTA UG
 		],
-		[	// GTA IV
-
+		[
+            // GTA IV
 		],
         [], // GTA IV EFLC
         [], // INVALID
         [], // INVALID
         [], // INVALID
-        [ // Mafia 1
+        [
+            // Mafia 1
         ],
-        [ // Mafia 2
+        [
+            // Mafia 2
         ],
-        [ // Mafia 3
+        [
+            // Mafia 3
         ],
-        [ // Mafia 1 Definitive Edition
+        [
+            // Mafia 1 Definitive Edition
         ],
 	],
 
@@ -4875,7 +4889,7 @@ let gameData = {
         [], // Mafia 1
         [], // Mafia 2
         [], // Mafia 3
-        [], // Mafia 1 DE
+        [], // Mafia 1 Definitive Edition
 	],
 	taxiModels: [
 		[ // INVALID
@@ -5123,6 +5137,194 @@ let gameData = {
         [], // Mafia 3
         [], // Mafia 1 Definitive Edition
     ],
+    fishingLocations: [
+        false,
+        [
+            // GTA III
 
+        ],
+        [
+            // GTA Vice City
+
+        ],
+        [   // GTA San Andreas
+            toVector3(403.8266, -2088.7598, 7.8359),
+            toVector3(398.7553, -2088.7490, 7.8359),
+            toVector3(396.2197,-2088.6692,7.8359),
+            toVector3(391.1094,-2088.7976,7.8359),
+            toVector3(383.4157,-2088.7849,7.8359),
+            toVector3(374.9598,-2088.7979,7.8359),
+            toVector3(369.8107,-2088.7927,7.8359),
+            toVector3(367.3637,-2088.7925,7.8359),
+            toVector3(362.2244,-2088.7981,7.8359),
+            toVector3(354.5382,-2088.7979,7.8359),
+        ],
+        false,
+        [
+            // GTA IV
+
+        ],
+        false,
+        false,
+        false,
+        [
+            // Mafia 1
+        ],
+        [
+            // Mafia 2
+        ],
+        [
+            // Mafia 3
+        ],
+        [
+            // Mafia 1 Definitive Edition
+        ],
+    ],
+    fishingCollectables: [
+        [], // Invalid
+        [   // GTA III
+            // Fish
+            ["Salmon"],
+            ["Tuna"],
+            ["Crab"],
+            ["Trout"],
+            ["Sea Bass"],
+            ["Shark"],
+            ["Turtle"],
+            ["Manta Ray"],
+            ["Cat Fish"],
+            ["Blue Marlin"],
+
+            // Junk
+            ["Rusty Can"],
+            ["Old Pants"],
+            ["Shoes"],
+            ["Garbage"],
+            ["Baby Diaper"],
+            ["Tire"],
+            ["Car Battery"],
+            ["Horse Hoove"],
+            ["Log"],
+            ["Soggy Dildo"],
+            ["Clump of Seaweed"],
+        ],
+        [   // GTA VC
+            // Fish
+            ["Salmon"],
+            ["Tuna"],
+            ["Crab"],
+            ["Trout"],
+            ["Sea Bass"],
+            ["Shark"],
+            ["Turtle"],
+            ["Manta Ray"],
+            ["Cat Fish"],
+            ["Blue Marlin"],
+
+            // Junk
+            ["Rusty Can"],
+            ["Old Pants"],
+            ["Shoes"],
+            ["Garbage"],
+            ["Baby Diaper"],
+            ["Tire"],
+            ["Car Battery"],
+            ["Horse Hoove"],
+            ["Log"],
+            ["Soggy Dildo"],
+            ["Clump of Seaweed"],
+        ],
+        [   // GTA SA
+            // Fish
+            ["Salmon"],
+            ["Tuna"],
+            ["Crab"],
+            ["Trout"],
+            ["Sea Bass"],
+            ["Shark"],
+            ["Turtle"],
+            ["Manta Ray"],
+            ["Cat Fish"],
+            ["Blue Marlin"],
+
+            // Junk
+            ["Rusty Can"],
+            ["Old Pants"],
+            ["Shoes"],
+            ["Garbage"],
+            ["Baby Diaper"],
+            ["Tire"],
+            ["Car Battery"],
+            ["Horse Hoove"],
+            ["Log"],
+            ["Soggy Dildo"],
+            ["Clump of Seaweed"],
+        ],
+        [], // Invalid
+        [   // GTA IV
+            // Fish
+            ["Salmon"],
+            ["Tuna"],
+            ["Crab"],
+            ["Trout"],
+            ["Sea Bass"],
+            ["Shark"],
+            ["Turtle"],
+            ["Manta Ray"],
+            ["Cat Fish"],
+            ["Blue Marlin"],
+
+            // Junk
+            ["Rusty Can"],
+            ["Old Pants"],
+            ["Shoes"],
+            ["Garbage"],
+            ["Baby Diaper"],
+            ["Tire"],
+            ["Car Battery"],
+            ["Horse Hoove"],
+            ["Log"],
+            ["Soggy Dildo"],
+            ["Clump of Seaweed"],
+        ],
+        [   // GTA IV EFLC
+            // Fish
+            ["Salmon"],
+            ["Tuna"],
+            ["Crab"],
+            ["Trout"],
+            ["Sea Bass"],
+            ["Shark"],
+            ["Turtle"],
+            ["Manta Ray"],
+            ["Cat Fish"],
+            ["Blue Marlin"],
+
+            // Junk
+            ["Rusty Can"],
+            ["Old Pants"],
+            ["Shoes"],
+            ["Garbage"],
+            ["Baby Diaper"],
+            ["Tire"],
+            ["Car Battery"],
+            ["Horse Hoove"],
+            ["Log"],
+            ["Soggy Dildo"],
+            ["Clump of Seaweed"],
+        ],
+        [
+            // Mafia 1
+        ],
+        [
+            // Mafia 2
+        ],
+        [
+            // Mafia 3
+        ],
+        [
+            // Mafia 1 Definitive Edition
+        ],
+    ]
 };
 

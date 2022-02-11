@@ -351,10 +351,12 @@ function loadCommands() {
             commandData("jobroutepay", setJobRoutePayCommand, "<amount>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobroutestartmsg", setJobRouteStartMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobroutefinishmsg", setJobRouteFinishMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
-            commandData("jobroutearrivemsg", setJobRouteLocationArriveMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
-            commandData("jobroutenextmsg", setJobRouteLocationNextMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutelocarrivemsg", setJobRouteLocationArriveMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutelocnextmsg", setJobRouteLocationNextMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobrouteenabled", toggleJobRouteEnabledCommand, "", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobroutevehcolours", setJobRouteVehicleColoursCommand, "<colour 1> <colour 2>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutedelays", setJobRouteAllLocationDelaysCommand, "<time in milliseconds>", getStaffFlagValue("ManageJobs"), true, false),
+
             commandData("jobcolour", setJobColourCommand, "<job id/name> <red> <green> <blue>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobblip", setJobBlipCommand, "<job id/name> <blip id/name>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobpickup", setJobPickupCommand, "<job id/name> <pickup id/name>", getStaffFlagValue("ManageJobs"), true, false),
@@ -494,6 +496,11 @@ function loadCommands() {
 
             commandData("vehrespawnall", respawnAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
             commandData("vehrespawnempty", respawnEmptyVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+            commandData("vehrespawnjob", respawnJobVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+            commandData("vehrespawnplr", respawnPlayerVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+            commandData("vehrespawnclan", respawnClanVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+            commandData("vehrespawnpublic", respawnPublicVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+            commandData("vehrespawnbiz", respawnBusinessVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
             commandData("vehreloadall", reloadAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
 
             commandData("vehrent", rentVehicleCommand, "", getStaffFlagValue("None"), true, true),

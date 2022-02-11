@@ -558,6 +558,7 @@ function buyVehicleCommand(command, params, client) {
 	getPlayerData(client).buyingVehicle = vehicle;
 	getVehicleData(vehicle).engine = true;
 	vehicle.engine = true;
+    setEntityData(vehicle, "vrr.engine", getVehicleData(vehicle).engine, true);
 
 	getVehicleData(vehicle).needsSaved = true;
 	setPlayerBuyingVehicleState(client, VRR_VEHBUYSTATE_TESTDRIVE, vehicle.id, getVehiclePosition(vehicle));
@@ -1109,6 +1110,66 @@ function respawnEmptyVehiclesCommand(command, params, client) {
 	}
 
 	messageAdminAction(`All empty vehicles have been respawned by an admin!`);
+}
+
+// ===========================================================================
+
+function respawnJobVehiclesCommand(command, params, client) {
+	for(let i in getServerData().vehicles) {
+		if(getServerData().vehicles[i].ownerType == VRR_VEHOWNER_JOB) {
+			respawnVehicle(getServerData().vehicles[i].vehicle);
+		}
+    }
+
+	messageAdminAction(`All job vehicles have been respawned by an admin!`);
+}
+
+// ===========================================================================
+
+function respawnClanVehiclesCommand(command, params, client) {
+	for(let i in getServerData().vehicles) {
+		if(getServerData().vehicles[i].ownerType == VRR_VEHOWNER_CLAN) {
+			respawnVehicle(getServerData().vehicles[i].vehicle);
+		}
+    }
+
+	messageAdminAction(`All clan vehicles have been respawned by an admin!`);
+}
+
+// ===========================================================================
+
+function respawnPlayerVehiclesCommand(command, params, client) {
+	for(let i in getServerData().vehicles) {
+		if(getServerData().vehicles[i].ownerType == VRR_VEHOWNER_PLAYER) {
+			respawnVehicle(getServerData().vehicles[i].vehicle);
+		}
+    }
+
+	messageAdminAction(`All player-owned vehicles have been respawned by an admin!`);
+}
+
+// ===========================================================================
+
+function respawnPublicVehiclesCommand(command, params, client) {
+	for(let i in getServerData().vehicles) {
+		if(getServerData().vehicles[i].ownerType == VRR_VEHOWNER_PUBLIC) {
+			respawnVehicle(getServerData().vehicles[i].vehicle);
+		}
+    }
+
+	messageAdminAction(`All public vehicles have been respawned by an admin!`);
+}
+
+// ===========================================================================
+
+function respawnBusinessVehiclesCommand(command, params, client) {
+	for(let i in getServerData().vehicles) {
+		if(getServerData().vehicles[i].ownerType == VRR_VEHOWNER_BIZ) {
+			respawnVehicle(getServerData().vehicles[i].vehicle);
+		}
+    }
+
+	messageAdminAction(`All business-owned vehicles have been respawned by an admin!`);
 }
 
 // ===========================================================================

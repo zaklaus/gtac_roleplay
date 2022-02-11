@@ -868,8 +868,8 @@ function processGameSpecifics() {
 function processVehiclePurchasing() {
     if(vehiclePurchaseState == VRR_VEHBUYSTATE_TESTDRIVE) {
         if(inVehicle == false) {
-            vehiclePurchaseState = VRR_VEHBUYSTATE_EXITEDVEH;
-            sendNetworkEventToServer("vrr.vehBuyState", VRR_VEHBUYSTATE_EXITEDVEH);
+            vehiclePurchaseState = VRR_VEHBUYSTATE_EXITVEH;
+            sendNetworkEventToServer("vrr.vehBuyState", VRR_VEHBUYSTATE_EXITVEH);
             return false;
         } else {
             if(vehiclePurchasing == inVehicle) {

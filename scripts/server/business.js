@@ -281,7 +281,7 @@ function setBusinessOwnerCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = getPlayerCurrentSubAccount(newBusinessOwner).databaseId;
 	getBusinessData(businessId).needsSaved = true;
 
-	messagePlayerSuccess(`{MAINCOLOUR}You gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to {ALTCOLOUR}${newBusinessOwner.name}`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You gave business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR} to {ALTCOLOUR}${getCharacterFullName(newBusinessOwner)}`);
 }
 
 // ===========================================================================
@@ -314,7 +314,7 @@ function setBusinessJobCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = getJobData(jobId).databaseId;
 	getBusinessData(businessId).needsSaved = true;
 
-	messagePlayerSuccess(`{MAINCOLOUR}You set the owner of business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to the {jobYellow}${getJobData(jobId).name}`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You set the owner of business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to the {jobYellow}${getJobData(jobId).name}`);
 }
 
 // ===========================================================================
@@ -343,7 +343,7 @@ function setBusinessClanCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = getClanData(clanId).databaseId;
 	getBusinessData(businessId).needsSaved = true;
 
-	messagePlayerSuccess(`{MAINCOLOUR}You gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to the {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}clan!`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You gave business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}to the {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}clan!`);
 }
 
 // ===========================================================================
@@ -371,10 +371,10 @@ function setBusinessRankCommand(command, params, client) {
 			return false;
 		}
 		getBusinessData(businessId).rank = getClanRankData(clanId, rankId).databaseId;
-		messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set their {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}rank to {ALTCOLOUR}${getClanRankData(clanId, rankId).name} {MAINCOLOUR}of the {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}clan!`);
+		messagePlayerSuccess(client, `{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}rank to {ALTCOLOUR}${getClanRankData(clanId, rankId).name} {MAINCOLOUR}of the {clanOrange}${getClanData(clanId).name} {MAINCOLOUR}clan!`);
 	} else if(getBusinessData(businessId).ownerType == VRR_VEHOWNER_JOB) {
 		getBusinessData(businessId).rank = rankId;
-		messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}rank to {ALTCOLOUR}${rankId} {MAINCOLOUR}of the {jobYellow}${getJobData(getJobIdFromDatabaseId(getBusinessData(businessId).ownerId)).name} {MAINCOLOUR}job!`);
+		messagePlayerSuccess(client, `{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}rank to {ALTCOLOUR}${rankId} {MAINCOLOUR}of the {jobYellow}${getJobData(getJobIdFromDatabaseId(getBusinessData(businessId).ownerId)).name} {MAINCOLOUR}job!`);
 	}
 
 	getBusinessData(businessId).needsSaved = true;
@@ -431,7 +431,7 @@ function setBusinessRankCommand(command, params, client) {
 	getBusinessData(businessId).clanRank = getClanRankData(clanId, clanRankId).level;
 
 	getBusinessData(businessId).needsSaved = true;
-	messagePlayerSuccess(`{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR}'s clan rank to {clanOrange}${getClanRankData(clanId, clanRankId).name} {MAINCOLOUR}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR}'s clan rank to {clanOrange}${getClanRankData(clanId, clanRankId).name} {MAINCOLOUR}(level ${getClanRankData(clanId, clanRankId).level}) and above!`);
 }
 
 // ===========================================================================
@@ -464,7 +464,7 @@ function setBusinessJobCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = getJobData(jobId).databaseId;
 
 	getBusinessData(businessId).needsSaved = true;
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner to the {jobYellow}${getJobData(jobId).name} {MAINCOLOUR}job`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner to the {jobYellow}${getJobData(jobId).name} {MAINCOLOUR}job`);
 }
 
 // ===========================================================================
@@ -485,7 +485,7 @@ function setBusinessPublicCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = 0;
 
 	getBusinessData(businessId).needsSaved = true;
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner set to {ALTCOLOUR}public`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner set to {ALTCOLOUR}public`);
 }
 
 // ===========================================================================
@@ -506,7 +506,7 @@ function removeBusinessOwnerCommand(command, params, client) {
 	getBusinessData(businessId).ownerId = -1;
 
 	getBusinessData(businessId).needsSaved = true;
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}removed business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You removed business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}owner`);
 }
 
 // ===========================================================================
@@ -584,7 +584,7 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 
 	getBusinessData(businessId).entranceFee = entranceFee;
 	getBusinessData(businessId).needsSaved = true;
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}entrance fee to [#AAAAAAA]$${entranceFee}`);
+	messagePlayerSuccess(client, `{MAINCOLOUR}You set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}entrance fee to [#AAAAAAA]$${entranceFee}`);
 }
 
 // ===========================================================================
@@ -1376,11 +1376,6 @@ function createBusinessEntranceBlip(businessId) {
 		getBusinessData(businessId).entranceBlip = createGameBlip(getBusinessData(businessId).entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
 		setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
 		setElementDimension(getBusinessData(businessId).entranceBlip, getBusinessData(businessId).entranceDimension);
-		//getBusinessData(businessId).entranceBlip.streamInDistance = 300;
-		//getBusinessData(businessId).entranceBlip.streamOutDistance = 350;
-		//getBusinessData(businessId).entranceBlip.interior = getBusinessData(businessId).entranceInterior;
-		//setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_ENTRANCE, false);
-		//setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.id", businessId, false);
 		addToWorld(getBusinessData(businessId).entranceBlip);
 	}
 }
@@ -1405,9 +1400,6 @@ function createBusinessExitPickup(businessId) {
 			getBusinessData(businessId).exitPickup = createGamePickup(pickupModelId, getBusinessData(businessId).exitPosition, getGameConfig().pickupTypes[getServerGame()].business);
 			setElementDimension(getBusinessData(businessId).exitPickup, getBusinessData(businessId).exitDimension);
 			setElementOnAllDimensions(getBusinessData(businessId).exitPickup, false);
-			//setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.type", VRR_PICKUP_BUSINESS_EXIT, false);
-			//setEntityData(getBusinessData(businessId).entranceBlip, "vrr.owner.id", businessId, false);
-			//getBusinessData(businessId).exitPickup.interior = getBusinessData(businessId).exitInterior;
 			updateBusinessPickupLabelData(businessId);
 			addToWorld(getBusinessData(businessId).exitPickup);
 		}
@@ -2176,3 +2168,18 @@ function getBusinessFromParams(params) {
 
 // ===========================================================================
 
+function deleteAllBusinessBlips() {
+    for(let i in getServerData().businesses) {
+        deleteBusinessBlips(i);
+    }
+}
+
+// ===========================================================================
+
+function deleteAllBusinessPickups() {
+    for(let i in getServerData().businesses) {
+        deleteBusinessPickups(i);
+    }
+}
+
+// ===========================================================================

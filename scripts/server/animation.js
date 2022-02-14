@@ -108,11 +108,11 @@ function makePlayerPlayAnimation(client, animationSlot, offsetPosition = 1) {
 
     makePedPlayAnimation(getPlayerData(client).ped, animationSlot, offsetPosition);
 
-	if(getAnimationData(animationSlot)[9] != VRR_ANIMMOVE_NONE) {
-		if(getGame() < VRR_GAME_GTA_SA) {
-			setPlayerMouseCameraState(client, true);
-		}
-	}
+	//if(getAnimationData(animationSlot)[9] != VRR_ANIMMOVE_NONE) {
+	//	if(getGame() < VRR_GAME_GTA_SA) {
+	//		setPlayerMouseCameraState(client, true);
+	//	}
+	//}
 }
 
 // ===========================================================================

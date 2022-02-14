@@ -84,3 +84,10 @@ function blinkJobRouteLocationBlip(times, position, colour) {
 }
 
 // ===========================================================================
+
+function hideJobRouteLocation() {
+    destroyElement(jobRouteLocationSphere);
+    destroyElement(jobRouteLocationBlip);
+    jobRouteLocationSphere = null;
+    jobRouteLocationBlip = null;
+}

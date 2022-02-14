@@ -82,7 +82,6 @@ function playStreamingRadioCommand(command, params, client) {
 		let clients = getClients();
 		for(let i in clients) {
 			if(getPlayerVehicle(client) == getPlayerVehicle(clients[i])) {
-				setPlayerVanillaRadioStation(clients[i], 0);
 				playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(client));
 			}
 		}
@@ -108,7 +107,6 @@ function playStreamingRadioCommand(command, params, client) {
 				let clients = getClients();
 				for(let i in clients) {
 					if(getEntityData(clients[i], "vrr.inHouse") == houseId) {
-						setPlayerVanillaRadioStation(clients[i], 0);
 						playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(clients[i]));
 					}
 				}
@@ -134,7 +132,6 @@ function playStreamingRadioCommand(command, params, client) {
 				let clients = getClients();
 				for(let i in clients) {
 					if(getPlayerBusiness(clients[i]) == businessId) {
-						setPlayerVanillaRadioStation(clients[i], 0);
 						playRadioStreamForPlayer(clients[i], getRadioStationData(radioStationId-1).url, true, getPlayerStreamingRadioVolume(clients[i]));
 					}
 				}

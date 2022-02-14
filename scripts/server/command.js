@@ -506,6 +506,7 @@ function loadCommands() {
             commandData("vehrespawnpublic", respawnPublicVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
             commandData("vehrespawnbiz", respawnBusinessVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
             commandData("vehreloadall", reloadAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+            commandData("vehreload", respawnVehicleCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
 
             commandData("vehrent", rentVehicleCommand, "", getStaffFlagValue("None"), true, true),
             commandData("vehrentprice", setVehicleRentPriceCommand, "", getStaffFlagValue("None"), true, true),

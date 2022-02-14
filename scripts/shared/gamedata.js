@@ -3438,7 +3438,7 @@ let gameData = {
 			PoliceStation: 375,
 			FireStation: 406,
 			Hospital: 366,
-			ammunation: 406,
+			Ammunation: 406,
 			PayAndSpray: 406,
 			VehicleDealership: 406,
 			Restaurant: 406,
@@ -3451,6 +3451,10 @@ let gameData = {
 			Misc: 406,
 			Exit: 406,
             Job: 406,
+            SaveDisk: 411,
+            Camera: 382,
+            KillFrenzy: 383,
+            Pill: 367,
 		},
 
 		{ // GTA San Andreas
@@ -3485,21 +3489,21 @@ let gameData = {
 		{},
 
 		{ // GTA 3
-			business: 255,
-			house: 255,
-			bank: 255,
-			clothes: 255,
-			info: 255,
-			job: 255,
+			business: 8,
+			house: 8,
+			bank: 8,
+			clothes: 8,
+			info: 8,
+			job: 8,
 		},
 
 		{ // GTA Vice City
-			business: 255,
-			house: 255,
-			bank: 255,
-			clothes: 255,
-			info: 255,
-			job: 255,
+			business: 10,
+			house: 10,
+			bank: 10,
+			clothes: 10,
+			info: 10,
+			job: 10,
 		},
 
 		{ // GTA San Andreas
@@ -4363,8 +4367,8 @@ let gameData = {
 			BikeSchool: [toVector3(1494.32, 1304.94, 1093.28), 3],
 			Bar1: [toVector3(501.98,-69.15,998.75), 11],
 			Diner1: [toVector3(459.58, -88.60, 999.55), 4],
-			Diner2: [toVector3(454.97, -110.10, 1000.07), 4],
-			Diner3: [toVector3(435.27, -80.95, 999.55), 5],
+			//Diner2: [toVector3(454.97, -110.10, 1000.07), 4],
+			//Diner3: [toVector3(435.27, -80.95, 999.55), 5],
 			SmallPoliceStation: [toVector3(322.19, 302.49, 999.14), 5],
 			Cinema: [toVector3(2179.95,-1009.75,1021.68), 0],
 			Courthouse: [toVector3(1219.51, -1792.69, 2431.34), 0],
@@ -5325,6 +5329,22 @@ let gameData = {
         [
             // Mafia 1 Definitive Edition
         ],
-    ]
+    ],
+    mainWorldDimension: [
+        0, // Invalid
+        0, // GTA 3
+        0, // GTA VC
+        0, // GTA SA
+        0, // GTA UG
+        0, // GTA IV
+        0, // GTA IV EFLC
+        0, // Invalid
+        0, // Invalid
+        0, // Invalid
+        0, // Mafia 1
+        0, // Mafia 2
+        0, // Mafia 3
+        0, // Mafia Definitive Edition
+    ],
 };
 

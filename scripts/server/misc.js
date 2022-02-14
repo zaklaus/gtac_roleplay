@@ -497,3 +497,75 @@ function gpsCommand(command, params, client) {
 		blinkGenericGPSBlipForPlayer(client, getColourByType(blipColour), 10);
 	}
 }
+
+// ===========================================================================
+
+function stuckPlayerCommand(command, params, client) {
+    if((getCurrentUnixTimestamp()-getPlayerData(client).lastStuckCommand) < getGlobalConfig().stuckCommandInterval) {
+        messagePlayerError(client, "CantUseCommandYet");
+        return false;
+    }
+
+    let dimension = getPlayerDimension(client);
+    let interior = getPlayerInterior(client);
+
+    messagePlayerAlert(client, getLocaleString(client, "FixingStuck"));
+
+    if(getGameConfig().skinChangePosition[getServerGame()].length > 0) {
+        if(getPlayerData(client).returnToPosition != null && getPlayerData(client).returnToType == VRR_RETURNTO_TYPE_SKINSELECT) {
+            messagePlayerAlert(client, "You canceled the skin change.");
+            restorePlayerCamera(client);
+
+            setPlayerPosition(client, getPlayerData(client).returnToPosition);
+            setPlayerHeading(client, getPlayerData(client).returnToHeading);
+            setPlayerInterior(client, getPlayerData(client).returnToInterior);
+            setPlayerDimension(client, getPlayerData(client).returnToDimension);
+
+            getPlayerData(client).returnToPosition = null;
+            getPlayerData(client).returnToHeading = null;
+            getPlayerData(client).returnToInterior = null;
+            getPlayerData(client).returnToDimension = null;
+
+            getPlayerData(client).returnToType = VRR_RETURNTO_TYPE_NONE;
+        }
+    }
+
+    //if(getPlayerData(client).returnToPosition != null && getPlayerData(client).returnToType == VRR_RETURNTO_TYPE_ADMINGET) {
+    //    messagePlayerError(client, `You were teleported by an admin and can't use the stuck command`);
+    //    return false;
+    //}
+
+    if(dimension > 0) {
+        let businesses = getServerData().businesses;
+        for(let i in businesses) {
+            if(businesses[i].exitDimension == dimension) {
+                setPlayerPosition(client, businesses[i].entrancePosition);
+                setPlayerDimension(client, businesses[i].entranceDimension);
+                setPlayerInterior(client, businesses[i].entranceInterior);
+
+                return true;
+            }
+        }
+
+        let houses = getServerData().houses;
+        for(let i in houses) {
+            if(houses[i].exitDimension == dimension) {
+                setPlayerPosition(client, houses[i].entrancePosition);
+                setPlayerDimension(client, houses[i].entranceDimension);
+                setPlayerInterior(client, houses[i].entranceInterior);
+
+                return true;
+            }
+        }
+    } else {
+        setPlayerDimension(client, 1);
+        setPlayerDimension(client, getGameData().mainWorldDimension[getGame()]);
+        setPlayerInterior(client, getGameData().mainWorldInterior[getGame()]);
+        setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), 2.0));
+    }
+
+    setPlayerInterior(client, 0);
+    setPlayerDimension(client, 0);
+}
+
+// ===========================================================================

@@ -603,8 +603,8 @@ function processLocalPlayerSphereEntryExitHandling() {
 function processJobRouteSphere() {
     if(game.game == VRR_GAME_GTA_SA) {
         let position = getLocalPlayerPosition();
-        if(jobRouteStopSphere != null) {
-            if(getDistance(position, jobRouteStopSphere.position) <= 2.0) {
+        if(jobRouteLocationSphere != null) {
+            if(getDistance(position, jobRouteLocationSphere.position) <= 2.0) {
                 enteredJobRouteSphere();
             }
         }
@@ -752,6 +752,7 @@ function setUpInitialGame() {
         game.SET_CAR_DENSITY_MULTIPLIER(3.0);
         game.SET_PED_DENSITY_MULTIPLIER(3.0);
         game.onMission = true;
+        SetStandardControlsEnabled(true);
         return true;
     }
 
@@ -786,6 +787,7 @@ function setUpInitialGame() {
 
         game.LOAD_ALL_MODELS_NOW();
         game.onMission = true;
+        SetStandardControlsEnabled(true);
         return true;
     }
 
@@ -794,14 +796,14 @@ function setUpInitialGame() {
         game.setGameStat(STAT_WEAPONTYPE_PISTOL_SILENCED_SKILL, 400);
         game.setGameStat(STAT_WEAPONTYPE_DESERT_EAGLE_SKILL, 400);
         game.setGameStat(STAT_WEAPONTYPE_SHOTGUN_SKILL, 400);
-        game.setGameStat(STAT_WEAPONTYPE_SAWNOFF_SHOTGUN_SKILL, 1);
+        game.setGameStat(STAT_WEAPONTYPE_SAWNOFF_SHOTGUN_SKILL, 400);
         game.setGameStat(STAT_WEAPONTYPE_SPAS12_SHOTGUN_SKILL, 400);
         game.setGameStat(STAT_WEAPONTYPE_MICRO_UZI_SKILL, 400);
         game.setGameStat(STAT_WEAPONTYPE_MP5_SKILL, 400);
         game.setGameStat(STAT_WEAPONTYPE_AK47_SKILL, 400);
         game.setGameStat(STAT_WEAPONTYPE_M4_SKILL, 400);
         game.setGameStat(STAT_DRIVING_SKILL, 9999);
-        game.setGameStat(STAT_FAT, 0);
+        game.setGameStat(STAT_FAT, 9999);
         game.setGameStat(STAT_ENERGY, 9999);
         game.setGameStat(STAT_CYCLE_SKILL, 9999);
         game.setGameStat(STAT_BIKE_SKILL, 9999);
@@ -811,9 +813,9 @@ function setUpInitialGame() {
         game.setGameStat(STAT_RESPECT_TOTAL, 0);
         game.setGameStat(STAT_SEX_APPEAL, 0);
         game.setGameStat(STAT_STAMINA, 9999);
-        game.setGameStat(STAT_TOTAL_PROGRESS, 100);
+        game.setGameStat(STAT_TOTAL_PROGRESS, 9999);
         game.setGameStat(STAT_UNDERWATER_STAMINA, 9999);
-        game.setGameStat(STAT_BODY_MUSCLE, 0);
+        game.setGameStat(STAT_BODY_MUSCLE, 9999);
 
         game.setDefaultInteriors(false);
         game.onMission = true;
@@ -821,7 +823,7 @@ function setUpInitialGame() {
     }
 
     if(getGame() == VRR_GAME_GTA_IV) {
-        natives.allowEmergencyServices(true);
+        natives.allowEmergencyServices(false);
         natives.setCreateRandomCops(true);
         natives.setMaxWantedLevel(0);
         natives.setWantedMultiplier(0.0);

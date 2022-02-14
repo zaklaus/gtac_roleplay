@@ -981,7 +981,7 @@ function forceCharacterNameCommand(command, params, client) {
 	getPlayerCurrentSubAccount(targetClient).firstName = firstName;
 	getPlayerCurrentSubAccount(targetClient).lastName = lastName;
 
-	messageAdmins(`${client.name} {MAINCOLOUR}forced {ALTCOLOUR}${getPlayerName(targetClient)}'s{MAINCOLOUR} current character name from {ALTCOLOUR}${oldName}{MAINCOLOUR} to {ALTCOLOUR}${newName}`);
+	messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}forced {ALTCOLOUR}${getPlayerName(targetClient)}'s{MAINCOLOUR} current character name from {ALTCOLOUR}${oldName}{MAINCOLOUR} to {ALTCOLOUR}${newName}`);
 
 	updateAllPlayerNameTags();
 }
@@ -1016,7 +1016,82 @@ function forcePlayerSkinCommand(command, params, client) {
 	getPlayerCurrentSubAccount(targetClient).skin = skinIndex;
 	setPlayerSkin(targetClient, skinIndex);
 
-	messageAdmins(`${client.name} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s {MAINCOLOUR}skin to {ALTCOLOUR}${getGameData().skins[getGame()][skinIndex][1]}`);
+	messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s{MAINCOLOUR} skin to {ALTCOLOUR}${getGameData().skins[getGame()][skinIndex][1]}`);
+}
+
+// ===========================================================================
+
+function setPlayerHealthCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	//if(areThereEnoughParams(params, 3, " ")) {
+	//	messagePlayerSyntax(client, getCommandSyntaxText(command));
+	//	return false;
+	//}
+
+	let splitParams = params.split("");
+	let targetClient = getParam(params, " ", 1);
+	let health = getParam(params, " ", 2);
+
+    if(!targetClient) {
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+        return false;
+	}
+
+	setPlayerHealth(targetClient, health);
+
+	messageAdmins(`${getPlayerName(client)}{MAINCOLOUR} set ${getPlayerName(targetClient)}'s{MAINCOLOUR} health to {ALTCOLOUR}${health}`);
+}
+
+// ===========================================================================
+
+function setPlayerArmourCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let targetClient = getParam(params, " ", 1);
+	let armour = getParam(params, " ", 2);
+
+    if(!targetClient) {
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+        return false;
+	}
+
+	setPlayerArmour(targetClient, armour);
+
+	messageAdmins(`${getPlayerName(client)}{MAINCOLOUR} set ${getPlayerName(targetClient)}'s{MAINCOLOUR} armour to {ALTCOLOUR}${armour}`);
+}
+
+// ===========================================================================
+
+function setPlayerInfiniteRunCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+    let targetClient = getParam(params, " ", 1);
+	let state = getParam(params, " ", 2) || 0;
+
+    if(!targetClient) {
+        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+        return false;
+	}
+
+    if(isNaN(state)) {
+        messagePlayerError(client, `The infinite run state must be a number!`);
+        return false;
+    }
+
+    state = toInteger(state);
+	setPlayerInfiniteRun(targetClient, intToBool(state));
+
+	messageAdmins(`${getPlayerName(client)}{MAINCOLOUR} ${getBoolRedGreenInlineColour(state)}${(state) ? "enabled" : "disabled"}{MAINCOLOUR} infinite run for {ALTCOLOUR}${getPlayerName(targetClient)}`);
 }
 
 // ===========================================================================
@@ -1037,7 +1112,7 @@ function forcePlayerWantedLevelCommand(command, params, client) {
 
 	forcePlayerWantedLevel(targetClient, wantedLevel);
 
-	//messageAdmins(`${client.name} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s {MAINCOLOUR}skin to {ALTCOLOUR}${getGameData().skins[getGame()][skinIndex][1]}`);
+	//messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s {MAINCOLOUR}skin to {ALTCOLOUR}${getGameData().skins[getGame()][skinIndex][1]}`);
 }
 
 // ===========================================================================
@@ -1057,7 +1132,7 @@ function getAllVehiclesOwnedByPlayerCommand(command, params, client) {
 
 	let vehicles = getAllVehiclesOwnedByPlayer(targetClient);
 
-	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerVehiclesList", getPlayerData(targetClient).accountData.name)));
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerVehiclesList", getCharacterFullName(targetClient))));
 	for(let i in vehicles) {
 		messagePlayerNormal(client, `🚗 {vehiclePurple}[Vehicle Info] {MAINCOLOUR}ID: {ALTCOLOUR}${vehicles[i].index}, {MAINCOLOUR}DatabaseID: {ALTCOLOUR}${vehicles[i].databaseId}, {MAINCOLOUR}Type: {ALTCOLOUR}${getVehicleName(vehicles[i].vehicle)}[${vehicles[i].model}], {MAINCOLOUR}BuyPrice: {ALTCOLOUR}${vehicles[i].buyPrice}, {MAINCOLOUR}RentPrice: {ALTCOLOUR}${vehicles[i].rentPrice}, {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(vehicles[i].locked)}, {MAINCOLOUR}Engine: {ALTCOLOUR}${getYesNoFromBool(vehicles[i].engine)}`);
 	}
@@ -1080,7 +1155,7 @@ function getAllBusinessesOwnedByPlayerCommand(command, params, client) {
 
 	let businesses = getAllBusinessesOwnedByPlayer(targetClient);
 
-	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerBusinessesList", getPlayerData(targetClient).accountData.name)));
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerBusinessesList", getCharacterFullName(targetClient))));
 	for(let i in businesses) {
 		messagePlayerNormal(client, `🏢 {businessBlue}[Business Info] {MAINCOLOUR}Name: {ALTCOLOUR}${businesses[i].name}, {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(intToBool(businesses[i].locked))}, {MAINCOLOUR}ID: {ALTCOLOUR}${businesses[i].index}/${businesses[i].databaseId}`);
 	}
@@ -1103,7 +1178,7 @@ function getAllHousesOwnedByPlayerCommand(command, params, client) {
 
 	let houses = getAllHousesOwnedByPlayer(targetClient);
 
-	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerHousesList", getPlayerData(targetClient).accountData.name)));
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderPlayerHousesList", getCharacterFullName(targetClient))));
 	for(let i in houses) {
 		messagePlayerNormal(client, `🏠 {houseGreen}[House Info] {MAINCOLOUR}Description: {ALTCOLOUR}${houses[i].description}, {MAINCOLOUR}Locked: {ALTCOLOUR}${getYesNoFromBool(intToBool(houses[i].locked))}, {MAINCOLOUR}ID: {ALTCOLOUR}${houses[i].index}/${houses[i].databaseId}`);
 	}

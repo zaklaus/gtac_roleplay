@@ -40,6 +40,7 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.interior", setLocalPlayerInterior);
     addNetworkEventHandler("vrr.minuteDuration", setMinuteDuration);
     addNetworkEventHandler("vrr.showJobRouteLocation", showJobRouteLocation);
+    addNetworkEventHandler("vrr.hideJobRouteLocation", hideJobRouteLocation);
     addNetworkEventHandler("vrr.snow", setSnowState);
     addNetworkEventHandler("vrr.health", setLocalPlayerHealth);
     addNetworkEventHandler("vrr.enterPropertyKey", setEnterPropertyKey);
@@ -98,6 +99,7 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.showLogin", showLoginGUI);
 
     addNetworkEventHandler("vrr.logLevel", setLogLevel);
+    addNetworkEventHandler("vrr.infiniteRun", setLocalPlayerInfiniteRun);
 }
 
 // ===========================================================================
@@ -283,6 +285,16 @@ function forceLocalPlayerWantedLevel(wantedLevel) {
 
 function setLogLevel(level) {
     logLevel = level;
+}
+
+// ===========================================================================
+
+function setLocalPlayerInfiniteRun(state) {
+    if(localPlayer != null) {
+        if(getGame() == VRR_GAME_GTA_III || getGame() == VRR_GAME_GTA_VC) {
+            game.SET_PLAYER_NEVER_GETS_TIRED(game.GET_PLAYER_ID(), boolToInt(state));
+        }
+    }
 }
 
 // ===========================================================================

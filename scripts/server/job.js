@@ -665,6 +665,10 @@ function stopWorking(client) {
 		case VRR_JOB_DRUG:
 			break;
 
+        case VRR_JOB_GENERIC:
+            messagePlayerInfo(client, "Your vehicle has been respawned at your job location");
+            break;
+
 		default:
 			break;
 	}
@@ -744,20 +748,18 @@ function jobUniformCommand(command, params, client) {
 	}
 
 	let uniformId = toInteger(params) || 1;
-	if(uniformId < 1 || uniformId > uniforms.length) {
+	if(uniformId < 0 || uniformId > uniforms.length) {
 		messagePlayerError(client, getLocaleString(client, "InvalidJobUniform"));
 		return false;
 	}
 
-	setPlayerSkin(client, jobData.uniforms[uniformId-1].skin);
-
-	//messagePlayerSuccess(client, `You have been given a {ALTCOLOUR}${uniforms[uniformId-1].name} {MAINCOLOUR}uniform and you can put it on from your inventory.`);
-	meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(jobData.uniforms[uniformId-1].name)} ${jobData.uniforms[uniformId-1].name} uniform`);
-	//let itemId = createItem(getItemTypeFromParams("Outfit"), getJobData(jobId).uniforms[uniformId-1].skin, VRR_ITEM_OWNER_PLAYER, getPlayerCurrentSubAccount(client).databaseId);
-	//let freeSlot = getPlayerFirstEmptyHotBarSlot(client);
-	//getPlayerData(client).hotBarItems[freeSlot] = itemId;
-	//getPlayerData(client).jobEquipmentCache.push(itemId);
-	//updatePlayerHotBar(client);
+    if(uniformId == 0) {
+        setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
+        meActionToNearbyPlayers(client, `takes off their uniform`);
+    } else {
+        setPlayerSkin(client, jobData.uniforms[uniformId-1].skin);
+        meActionToNearbyPlayers(client, `puts on ${getProperDeterminerForName(jobData.uniforms[uniformId-1].name)} ${jobData.uniforms[uniformId-1].name} uniform`);
+    }
 }
 
 // ===========================================================================
@@ -1681,7 +1683,7 @@ function startJobRoute(client, forceRoute = -1) {
 	getPlayerVehicle(client).colour1 = getJobRouteData(jobId, jobRoute).vehicleColour1;
 	getPlayerVehicle(client).colour2 = getJobRouteData(jobId, jobRoute).vehicleColour2;
 
-	messagePlayerNormal(client, getJobRouteData(jobId, jobRoute).startMessage);
+	messagePlayerNormal(client, replaceJobRouteStringsInMessage(getJobRouteData(jobId, jobRoute).startMessage, jobId, jobRoute));
     if(getJobRouteData(jobId, jobRoute).locations.length > 0) {
 		showCurrentJobLocation(client);
 	} else {
@@ -2417,19 +2419,19 @@ function playerArrivedAtJobRouteLocation(client) {
         return false;
     }
 
-    showGameMessage(client, removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationArriveMessage), getJobData(jobId).colour, 3500);
+    showGameMessage(client, replaceJobRouteStringsInMessage(removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationArriveMessage), jobId, getPlayerJobRoute(client)), getJobData(jobId).colour, 3500);
     if(getJobRouteLocationData(jobId, getPlayerJobRoute(client),getPlayerJobRouteLocation(client)).stopDelay > 0) {
         freezePlayerJobVehicleForRouteLocation(client);
         getPlayerData(client).jobRouteLocation = getNextLocationOnJobRoute(jobId, getPlayerJobRoute(client), getPlayerJobRouteLocation(client));
         setTimeout(function() {
             showCurrentJobLocation(client);
-            showGameMessage(client, removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationNextMessage), getJobData(jobId).colour, 3500);
+            showGameMessage(client, replaceJobRouteStringsInMessage(removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationNextMessage), jobId, getPlayerJobRoute(client)), getJobData(jobId).colour, 3500);
             unFreezePlayerJobVehicleForRouteLocation(client);
         }, getJobRouteLocationData(jobId, getPlayerJobRoute(client),getPlayerJobRouteLocation(client)).stopDelay);
     } else {
         getPlayerData(client).jobRouteLocation = getNextLocationOnJobRoute(jobId, getPlayerJobRoute(client), getPlayerJobRouteLocation(client));
         showCurrentJobLocation(client);
-        showGameMessage(client, removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationNextMessage), getJobData(jobId).colour, 3500);
+        showGameMessage(client, replaceJobRouteStringsInMessage(removeColoursInMessage(getJobRouteData(jobId, getPlayerJobRoute(client)).locationNextMessage), jobId, getPlayerJobRoute(client)), getJobData(jobId).colour, 3500);
     }
 }
 
@@ -2630,7 +2632,7 @@ function deleteJobRouteCommand(command, params, client) {
 	let jobRoute = getPlayerData(client).jobRoute;
 
     if(!areParamsEmpty(client)) {
-        jobRoute = getJobRouteFromParams(params);
+        jobRoute = getJobRouteFromParams(params, jobId);
     }
 
 	let jobRouteData = getServerData().jobs[jobId].routes[jobRoute];

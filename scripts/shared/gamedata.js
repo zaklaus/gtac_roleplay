@@ -3489,21 +3489,21 @@ let gameData = {
 		{},
 
 		{ // GTA 3
-			business: 8,
-			house: 8,
-			bank: 8,
-			clothes: 8,
-			info: 8,
-			job: 8,
+			business: 255,
+			house: 255,
+			bank: 255,
+			clothes: 255,
+			info: 255,
+			job: 255,
 		},
 
 		{ // GTA Vice City
-			business: 10,
-			house: 10,
-			bank: 10,
-			clothes: 10,
-			info: 10,
-			job: 10,
+			business: 255,
+			house: 255,
+			bank: 255,
+			clothes: 255,
+			info: 255,
+			job: 255,
 		},
 
 		{ // GTA San Andreas

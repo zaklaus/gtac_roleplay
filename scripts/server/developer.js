@@ -545,6 +545,10 @@ function streamAudioNameToAllPlayersCommand(command, params, client) {
 // ===========================================================================
 
 function fixAllServerBlipsCommand(command, params, client) {
+    deleteAllBusinessBlips();
+    deleteAllJobBlips();
+    deleteAllHouseBlips();
+
 	let blips = getElementsByType(ELEMENT_BLIP);
 	blips.forEach((blip) => {
 		deleteGameElement(blip);

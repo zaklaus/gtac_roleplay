@@ -164,6 +164,12 @@ function messagePlayerWhisper(client, whisperingClient, messageText) {
 // ===========================================================================
 
 function messagePlayerShout(client, shoutingClient, messageText) {
+    messagePlayerNormal(client, `📢 ${getPlayerAccentInlineOutput(shoutingClient)}${getClientSubAccountName(shoutingClient)} (megaphone): ${messageText}!`, getColourByType("yellow"));
+}
+
+// ===========================================================================
+
+function messagePlayerMegaPhone(client, shoutingClient, messageText) {
     messagePlayerNormal(client, `🗣️ ${getPlayerAccentInlineOutput(shoutingClient)}${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
 

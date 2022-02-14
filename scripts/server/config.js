@@ -25,7 +25,7 @@ let globalConfig = {
 	talkDistance: 10,
 	whisperDistance: 2,
 	megaphoneDistance: 40,
-	vehicleLockDistance: 5,
+	vehicleLockDistance: 5.5,
 	startWorkingDistance: 5,
 	takeJobDistance: 5,
 	stopWorkingDistance: 10,

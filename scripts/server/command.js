@@ -393,6 +393,7 @@ function loadCommands() {
             commandData("yes", playerPromptAnswerYesCommand, "", getStaffFlagValue("None"), true, false, "Answers a prompt with YES"),
             commandData("no", playerPromptAnswerNoCommand, "", getStaffFlagValue("None"), true, false, "Answers a prompt with NO"),
             commandData("admins", listOnlineAdminsCommand, "", getStaffFlagValue("None"), true, false, "Shows a list of online admins"),
+            commandData("stuck", stuckPlayerCommand, "", getStaffFlagValue("None"), true, false, "Fixes your position and virtual world if bugged"),
         ],
         radio: [
             commandData("radiostation", playStreamingRadioCommand, "<radio station id>", getStaffFlagValue("None"), true, false, "Plays a radio station in your vehicle, house, or business (depending on which one you're in)"),
@@ -446,6 +447,9 @@ function loadCommands() {
             commandData("geoip", getPlayerGeoIPInformationCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Retrieves GeoIP information on a player (country & city)"),
             commandData("ip", getPlayerIPInformationCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Retrieves IP information on a player"),
             commandData("plrsync", toggleSyncForElementsSpawnedByPlayer, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Sets whether elements spawned by a player are synced (traffic, peds, etc)"),
+            commandData("health", setPlayerHealthCommand, "<player name/id> <health", getStaffFlagValue("BasicModeration"), true, true, "Sets a player's health"),
+            commandData("armour", setPlayerArmourCommand, "<player name/id> <armour>", getStaffFlagValue("BasicModeration"), true, true, "Sets a player's armour"),
+            commandData("infiniterun", setPlayerInfiniteRunCommand, "<player name/id> <state>", getStaffFlagValue("BasicModeration"), true, true, "Toggles a player's infinite sprint"),
         ],
         startup: [],
         subAccount: [

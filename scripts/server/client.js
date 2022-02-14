@@ -447,7 +447,7 @@ function sendPlayerJobType(client, jobType) {
 
 function sendPlayerStopJobRoute(client) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to abort job route to ${getPlayerDisplayForConsole(client)}`);
-    sendNetworkEventToPlayer("vrr.stopJobRoute", client);
+    sendNetworkEventToPlayer("vrr.hideJobRouteLocation", client);
 }
 
 // ===========================================================================
@@ -1090,13 +1090,6 @@ function sendPlayerPedPartsAndProps(client) {
 
 // ===========================================================================
 
-function setPlayerVanillaRadioStation(client, radioStationId) {
-    sendNetworkEventToPlayer("vrr.vanillaRadio", client, radioStationId);
-    return true;
-}
-
-// ===========================================================================
-
 function forcePlayerWantedLevel(client, wantedLevel) {
     sendNetworkEventToPlayer("vrr.wantedLevel", client, wantedLevel);
     return true;
@@ -1140,6 +1133,12 @@ function receiveVehiclePurchaseStateUpdateFromClient(client, state) {
 
 function sendPlayerLogLevel(client, tempLogLevel = logLevel) {
     sendNetworkEventToPlayer("vrr.logLevel", client, tempLogLevel);
+}
+
+// ==========================================================================
+
+function setPlayerInfiniteRun(client, state) {
+    sendNetworkEventToPlayer("vrr.infiniteRun", client, state);
 }
 
 // ==========================================================================

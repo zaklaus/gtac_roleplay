@@ -695,7 +695,7 @@ function setBusinessPickupCommand(command, params, client) {
 
 	getBusinessData(businessId).needsSaved = true;
 
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}pickup display to {ALTCOLOUR}${toLowerCase(typeParam)}'!`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)}{MAINCOLOUR} set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}pickup display to {ALTCOLOUR}${typeParam}!`);
 }
 
 // ===========================================================================
@@ -716,7 +716,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			getBusinessData(businessId).exitInterior = -1;
 			getBusinessData(businessId).hasInterior = false;
 			getBusinessData(businessId).exitPickupModel = -1;
-			messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}removed business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}interior`);
+			messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}removed business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR} interior`);
 			return false;
 		}
 
@@ -748,7 +748,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 
 	getBusinessData(businessId).needsSaved = true;
 
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name} {MAINCOLOUR}interior type to {ALTCOLOUR}${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)}{MAINCOLOUR} set business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR} interior type to {ALTCOLOUR}${typeParam}`);
 }
 
 // ===========================================================================
@@ -784,7 +784,7 @@ function setBusinessBlipCommand(command, params, client) {
 	resetBusinessBlips(businessId);
 	getBusinessData(businessId).needsSaved = true;
 
-	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR} blip display to {ALTCOLOUR}${toLowerCase(typeParam)}`);
+	messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}set business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR} blip display to {ALTCOLOUR}${typeParam}`);
 }
 
 // ===========================================================================

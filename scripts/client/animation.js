@@ -18,7 +18,7 @@ function makePedPlayAnimation(pedId, animGroup, animId, animType, animSpeed, loo
             }
             getElementFromId(pedId).addAnimation(animGroup, animId);
 
-            if(getElementFromId(pedId) == localPlayer && !freezePlayer) {
+            if(getElementFromId(pedId) == localPlayer && freezePlayer == true) {
                 inAnimation = true;
                 setLocalPlayerControlState(false, false);
                 localPlayer.collisionsEnabled = false;

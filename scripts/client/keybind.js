@@ -36,10 +36,10 @@ function bindAccountKey(key, keyState) {
                 lastKeyBindUse = sdl.ticks;
                 tellServerPlayerUsedKeyBind(key);
             } else {
-                logToConsole(LOG_ERROR, `[VRR.KeyBind]: Failed to use keybind for key ${toUpperCase(getKeyNameFromId(key))} (${key}) - Not allowed to use keybinds!`);
+                logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Failed to use keybind for key ${toUpperCase(getKeyNameFromId(key))} (${key}) - Not allowed to use keybinds!`);
             }
         } else {
-            logToConsole(LOG_ERROR, `[VRR.KeyBind]: Failed to use keybind for key ${toUpperCase(getKeyNameFromId(key))} (${key}) - Not enough time has passed since last keybind use!`);
+            logToConsole(LOG_DEBUG, `[VRR.KeyBind]: Failed to use keybind for key ${toUpperCase(getKeyNameFromId(key))} (${key}) - Not enough time has passed since last keybind use!`);
         }
     });
 }

@@ -114,40 +114,7 @@ function onPlayerQuit(event, client, quitReasonId) {
 async function onPlayerChat(event, client, messageText) {
     event.preventDefault();
 
-    if(!getPlayerData(client)) {
-        messagePlayerError(client, "You need to login before you can chat!");
-        return false;
-    }
-
-    if(!isPlayerLoggedIn(client)) {
-        messagePlayerError(client, "You need to login before you can chat!");
-        return false;
-    }
-
-    if(!isPlayerSpawned(client)) {
-        messagePlayerError(client, "You need to spawn before you can chat!");
-        return false;
-    }
-
-    if(isPlayerMuted(client)) {
-        messagePlayerError(client, "You are muted and can't chat!");
-        return false;
-    }
-
-    messageText = messageText.substring(0, 128);
-
-    /*
-    let clients = getClients();
-	for(let i in clients) {
-		let translatedText;
-		translatedText = await translateMessage(messageText, getPlayerData(client).locale, getPlayerData(clients[i]).locale);
-
-		let original = (getPlayerData(client).locale == getPlayerData(clients[i]).locale) ? `` : ` {ALTCOLOUR}(${messageText})`;
-		messagePlayerNormal(clients[i], `💬 ${getCharacterFullName(client)}: [#FFFFFF]${translatedText}${original}`, clients[i], getColourByName("mediumGrey"));
-	}
-    */
-    messagePlayerNormal(null, `💬 ${getCharacterFullName(client)}: ${messageText}`);
-    messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
+    processPlayerChat(client, messageText);
 }
 
 // ===========================================================================
@@ -158,11 +125,7 @@ function onProcess(event, deltaTime) {
     //checkPlayerPedState();
     //checkVehicleBurning();
 
-    if(getGlobalConfig().useServerSideVehiclePurchaseCheck == true) {
-        getClients().forEach((client) => {
-            checkVehicleBuying(client);
-        });
-    }
+    processVehiclePurchasing();
 }
 
 // ===========================================================================

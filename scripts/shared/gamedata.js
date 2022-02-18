@@ -4254,7 +4254,7 @@ let gameData = {
 			],
 		}
 	],
-	interiorTemplates: [
+	interiors: [
 		false,
 
 		{ // GTA 3
@@ -4276,6 +4276,9 @@ let gameData = {
 			Arena: [toVector3(-1080.49, 1331.16, 13.91), 15],
 			GhettoShack: [toVector3(-962.74, 146.96, 9.40), 12],
 			HotelRoom: [toVector3(226.47, -1274.98, 19.271), 2],
+            ConcertHall: [toVector3(-925.417, 1053.4, 13.2005), 8],
+            RecordingStudio: [toVector3(-879.767, 1156.88, 17.8115), 9],
+            PrintWorks: [toVector3(-1064.98, -279.093, 12.0882), 18],
 		},
 
 		{ // GTA SA
@@ -4338,7 +4341,7 @@ let gameData = {
 			WoozieApartment: [toVector3(-2158.72, 641.29, 1052.38), 1],
 			EightTrackStadium: [toVector3(-1395.96, -208.20, 1051.17), 7],
 			DirtBikeStadium: [toVector3(-1424.93, -664.59, 1059.86), 4],
-			CrackDen: [toVector3(318.57, 1115.21, 1082.98), 5],
+			CrackDen: [toVector3(75.0475, 1094.6, 18.7597), 5],
 			MotelRoom: [toVector3(2251.85, -1138.16, 1050.63), 9],
 			HashburyHouse: [toVector3(2260.76, -1210.45, 1049.02), 10],
 			CJHouse: [toVector3(2496.65, -1696.55, 1014.74), 3],

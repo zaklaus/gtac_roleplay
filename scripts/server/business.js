@@ -720,9 +720,9 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			return false;
 		}
 
-		if(isNull(getGameConfig().interiorTemplates[getServerGame()][typeParam])) {
+		if(isNull(getGameConfig().interiors[getServerGame()][typeParam])) {
 			messagePlayerError(client, "Invalid interior type! Use an interior type name");
-			let interiorTypesList = Object.keys(getGameConfig().interiorTemplates[getServerGame()]);
+			let interiorTypesList = Object.keys(getGameConfig().interiors[getServerGame()]);
 			let chunkedList = splitArrayIntoChunks(interiorTypesList, 10);
 
 			messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderInteriorTypes")));
@@ -732,8 +732,8 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			return false;
 		}
 
-		getBusinessData(businessId).exitPosition = getGameConfig().interiorTemplates[getServerGame()][typeParam][0];
-		getBusinessData(businessId).exitInterior = getGameConfig().interiorTemplates[getServerGame()][typeParam][1];
+		getBusinessData(businessId).exitPosition = getGameConfig().interiors[getServerGame()][typeParam][0];
+		getBusinessData(businessId).exitInterior = getGameConfig().interiors[getServerGame()][typeParam][1];
 		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
 		getBusinessData(businessId).exitPickupModel = getGameConfig().pickupModels[getServerGame()].Exit;
 		getBusinessData(businessId).hasInterior = true;

@@ -1072,7 +1072,6 @@ function playerSwitchItem(client, newHotBarSlot) {
                         deleteItem(getPlayerData(client).hotBarItems[ammoItemSlot]);
                     } else {
                         messagePlayerError(client, getLocaleString(client, "ItemUnequippableNoAmmo", getItemName(newHotBarItem), newHotBarSlot));
-                        return false;
                     }
 				}
 			} else if(getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useType == VRR_ITEM_USETYPE_TAZER) {
@@ -1082,7 +1081,6 @@ function playerSwitchItem(client, newHotBarSlot) {
 					setPlayerWeaponDamageEvent(client, VRR_WEAPON_DAMAGE_EVENT_TAZER);
 				} else {
 					messagePlayerError(client, getLocaleString(client, "ItemUnequippableNoAmmo", getItemName(newHotBarItem), newHotBarSlot));
-					return false;
 				}
 			}
 		}

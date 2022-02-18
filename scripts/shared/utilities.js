@@ -1117,13 +1117,14 @@ async function waitUntil(condition) {
 
 function getGameLocationFromParams(params) {
 	if(isNaN(params)) {
-		for(let i in getGameData().locations[getServerGame()]) {
-			if(toLowerCase(getGameData().locations[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
+        let locations = getGameData().locations[getGame()];
+		for(let i in locations) {
+			if(toLowerCase(locations[i][0]).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
 	} else {
-		if(typeof getGameData().locations[getServerGame()][params] != "undefined") {
+		if(typeof getGameData().locations[getGame()][params] != "undefined") {
 			return toInteger(params);
 		}
 	}

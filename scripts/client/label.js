@@ -253,37 +253,39 @@ function processLabelRendering() {
             for(let i in pickups) {
                 if(pickups[i].getData("vrr.label.type") != null) {
                     if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {
-                        let price = "0";
-                        let rentPrice = "0";
-                        let labelInfoType = VRR_PROPLABEL_INFO_NONE;
-                        if(pickups[i].getData("vrr.label.price") != null) {
-                            price = makeLargeNumberReadable(pickups[i].getData("vrr.label.price"));
-                        }
+                        if(!pickups[i].isOnScreen) {
+                            let price = "0";
+                            let rentPrice = "0";
+                            let labelInfoType = VRR_PROPLABEL_INFO_NONE;
+                            if(pickups[i].getData("vrr.label.price") != null) {
+                                price = makeLargeNumberReadable(pickups[i].getData("vrr.label.price"));
+                            }
 
-                        if(pickups[i].getData("vrr.label.rentprice") != null) {
-                            rentPrice = makeLargeNumberReadable(pickups[i].getData("vrr.label.rentprice"));
-                        }
+                            if(pickups[i].getData("vrr.label.rentprice") != null) {
+                                rentPrice = makeLargeNumberReadable(pickups[i].getData("vrr.label.rentprice"));
+                            }
 
-                        if(pickups[i].getData("vrr.label.help") != null) {
-                            labelInfoType = pickups[i].getData("vrr.label.help");
-                        }
+                            if(pickups[i].getData("vrr.label.help") != null) {
+                                labelInfoType = pickups[i].getData("vrr.label.help");
+                            }
 
-                        switch(pickups[i].getData("vrr.label.type")) {
-                            case VRR_LABEL_BUSINESS:
-                                renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), true, price, rentPrice, labelInfoType);
-                                break;
+                            switch(pickups[i].getData("vrr.label.type")) {
+                                case VRR_LABEL_BUSINESS:
+                                    renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), true, price, rentPrice, labelInfoType);
+                                    break;
 
-                            case VRR_LABEL_HOUSE:
-                                renderPropertyEntranceLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.locked"), false, price, rentPrice, labelInfoType);
-                                break;
+                                case VRR_LABEL_HOUSE:
+                                    renderPropertyEntranceLabel("House", pickups[i].position, pickups[i].getData("vrr.label.locked"), false, price, rentPrice, labelInfoType);
+                                    break;
 
-                            case VRR_LABEL_JOB:
-                                renderJobLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.jobType"));
-                                break;
+                                case VRR_LABEL_JOB:
+                                    renderJobLabel(pickups[i].getData("vrr.label.name"), pickups[i].position, pickups[i].getData("vrr.label.jobType"));
+                                    break;
 
-                            case VRR_LABEL_EXIT:
-                                renderPropertyExitLabel(pickups[i].position);
-                                break;
+                                case VRR_LABEL_EXIT:
+                                    renderPropertyExitLabel(pickups[i].position);
+                                    break;
+                            }
                         }
                     }
                 }

@@ -876,20 +876,6 @@ function createHouseEntrancePickup(houseId) {
 		getHouseData(houseId).entrancePickup = createGamePickup(pickupModelId, getHouseData(houseId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].house);
 		setElementOnAllDimensions(getHouseData(houseId).entrancePickup, false);
 		setElementDimension(getHouseData(houseId).entrancePickup, getHouseData(houseId).entranceDimension);
-		setEntityData(getHouseData(houseId).entrancePickup, "vrr.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
-		setEntityData(getHouseData(houseId).entrancePickup, "vrr.owner.id", houseId, false);
-		setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.type", VRR_LABEL_HOUSE, true);
-		setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.name", getHouseData(houseId).description, true);
-		setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.locked", getHouseData(houseId).locked, true);
-		if(getHouseData(houseId).buyPrice > 0) {
-			setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.price", getHouseData(houseId).buyPrice, true);
-			setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_BUYHOUSE, true);
-		} else {
-			if(getHouseData(houseId).rentPrice > 0) {
-				setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.rentprice", getHouseData(houseId).rentPrice, true);
-				setEntityData(getHouseData(houseId).entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_RENTHOUSE, true);
-			}
-		}
 
 		addToWorld(getHouseData(houseId).entrancePickup);
 	}
@@ -938,9 +924,7 @@ function createHouseExitPickup(houseId) {
 			getHouseData(houseId).exitPickup = createGamePickup(pickupModelId, getHouseData(houseId).exitPosition, getGameConfig().pickupTypes[getServerGame()].house);
 			setElementDimension(getHouseData(houseId).exitPickup, getHouseData(houseId).exitDimension);
 			setElementOnAllDimensions(getHouseData(houseId).exitPickup, false);
-			setEntityData(getHouseData(houseId).exitPickup, "vrr.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
-			setEntityData(getHouseData(houseId).exitPickup, "vrr.owner.id", houseId, false);
-			setEntityData(getHouseData(houseId).exitPickup, "vrr.label.type", VRR_LABEL_EXIT, true);
+            updateHousePickupLabelData(houseId);
 			addToWorld(getHouseData(houseId).exitPickup);
 		}
 	}
@@ -1414,6 +1398,35 @@ function getHouseFromParams(params) {
 		}
 	}
 	return false;
+}
+
+// ===========================================================================
+
+function updateHousePickupLabelData(houseId) {
+    let houseData = getHouseData(houseId);
+
+    if(houseData.entrancePickup != null) {
+        setEntityData(houseData.entrancePickup, "vrr.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
+        setEntityData(houseData.entrancePickup, "vrr.owner.id", houseId, false);
+        setEntityData(houseData.entrancePickup, "vrr.label.type", VRR_LABEL_HOUSE, true);
+        //setEntityData(houseData.entrancePickup, "vrr.label.name", houseData.description, true);
+        setEntityData(houseData.entrancePickup, "vrr.label.locked", houseData.locked, true);
+        if(houseData.buyPrice > 0) {
+            setEntityData(houseData.entrancePickup, "vrr.label.price", houseData.buyPrice, true);
+            setEntityData(houseData.entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_BUYHOUSE, true);
+        } else {
+            if(houseData.rentPrice > 0) {
+                setEntityData(houseData.entrancePickup, "vrr.label.rentprice", houseData.rentPrice, true);
+                setEntityData(houseData.entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_RENTHOUSE, true);
+            }
+        }
+    }
+
+    if(houseData.exitPickup != null) {
+        setEntityData(houseData.exitPickup, "vrr.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
+        setEntityData(houseData.exitPickup, "vrr.owner.id", houseId, false);
+        setEntityData(houseData.exitPickup, "vrr.label.type", VRR_LABEL_EXIT, true);
+    }
 }
 
 // ===========================================================================

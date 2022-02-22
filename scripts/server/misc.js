@@ -116,34 +116,9 @@ function submitBugReportCommand(command, params, client) {
 // ===========================================================================
 
 function enterExitPropertyCommand(command, params, client) {
-	//let closestBusinessEntrance = getClosestBusinessEntrance(getPlayerPosition(client), getPlayerDimension(client));
-	//let closestBusinessExit = getClosestBusinessExit(getPlayerPosition(client), getPlayerDimension(client));
-	//let closestHouseEntrance = getClosestHouseEntrance(getPlayerPosition(client), getPlayerDimension(client));
-	//let closestHouseExit = getClosestHouseExit(getPlayerPosition(client), getPlayerDimension(client));
-
 	let closestProperty = null;
 	let isEntrance = false;
 	let isBusiness = false;
-
-	//if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessEntrance).entrancePosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseEntrance).entrancePosition)) {
-	//	closestEntrance = getBusinessData(closestBusinessEntrance);
-	//} else {
-	//	closestEntrance = getHouseData(closestHouseEntrance);
-	//}
-
-	//if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessExit).exitPosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseExit).exitPosition)) {
-	//	closestExit = getBusinessData(closestBusinessExit);
-	//} else {
-	//	closestExit = getHouseData(closestHouseExit);
-	//}
-
-	//if(getDistance(getPlayerPosition(client), closestEntrance.entrancePosition) <= getDistance(getPlayerPosition(client), closestExit.exitPosition)) {
-	//	closestProperty = closestEntrance;
-	//	isEntrance = true;
-	//} else {
-	//	closestProperty = closestExit;
-	//	isEntrance = false;
-	//}
 
 	if(!getPlayerData(client).currentPickup) {
 		return false;
@@ -468,12 +443,17 @@ function gpsCommand(command, params, client) {
 			break;
 
 		default: {
-			locationType = VRR_GPS_TYPE_BUSINESS;
-			blipColour = "businessBlue";
 			let itemTypeId = getItemTypeFromParams(params);
-			if(getItemTypeData(itemTypeId)) {
+			if(getItemTypeData(itemTypeId) != false) {
+                locationType = VRR_GPS_TYPE_BUSINESS;
+                blipColour = "businessBlue";
 				useType = getItemTypeData(itemTypeId).useType;
-			}
+			} else {
+                let gameLocationId = getGameLocationFromParams(params);
+                if(gameLocationId != false) {
+                    position = getGameData().locations[getServerGame()][gameLocationId][1]
+                }
+            }
 		}
 	}
 
@@ -494,8 +474,17 @@ function gpsCommand(command, params, client) {
 			return false;
 		}
 
-		blinkGenericGPSBlipForPlayer(client, getColourByType(blipColour), 10);
+        hideAllBlipsForPlayerGPS(client);
+		blinkGenericGPSBlipForPlayer(client, getBusinessData(businessId).entrancePosition, getBusinessData(businessId).entranceBlipModel, getColourByType(blipColour), 10);
+        messagePlayerSuccess(client, "Look for the blinking icon on your mini map");
 	}
+
+    if(locationType == VRR_GPS_TYPE_GAMELOC) {
+        hideAllBlipsForPlayerGPS(client);
+        blinkGenericGPSBlipForPlayer(client, position, 0, getColourByType(blipColour), 10);
+        messagePlayerSuccess(client, "Look for the blinking icon on your mini map");
+        return true;
+    }
 }
 
 // ===========================================================================

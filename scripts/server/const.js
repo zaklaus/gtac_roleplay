@@ -152,7 +152,7 @@ const VRR_ISLAND_VICEEAST = 1;                   // Eastern Island of VC
 const VRR_ISLAND_LOSSANTOS = 0;                  // Los Santos
 const VRR_ISLAND_LASVENTURAS = 1;                // Las Venturas
 const VRR_ISLAND_SANFIERRO = 2;                  // San Fierro
-const VRR_ISLAND_REDCOUNTYNORTH = 4;             // Red County North (spans all the way from Palamino/shore on the east east to border of Flint Co on the west)
+const VRR_ISLAND_REDCOUNTYNORTH = 4;             // Red County North (spans all the way from Palamino/shore on the east east to border of Flint County on the west)
 const VRR_ISLAND_BONECOUNTYNORTH = 5;            // Bone County North (usually called Tierra Robada)
 const VRR_ISLAND_BONECOUNTYSOUTH = 6;            // Bone County South
 
@@ -207,25 +207,25 @@ const VRR_ITEM_USETYPE_WALKIETALKIE = 31;        //
 const VRR_ITEM_USETYPE_BOOMBOX = 32;             //
 const VRR_ITEM_USETYPE_EARBUDS = 33;             //
 const VRR_ITEM_USETYPE_BADGE = 34;               //
-const VRR_ITEM_USETYPE_DRINK = 35;               //
-const VRR_ITEM_USETYPE_EXTINGUISHER = 36;        //
-const VRR_ITEM_USETYPE_SPRAYPAINT = 37;          //
-const VRR_ITEM_USETYPE_PEPPERSPRAY = 38;         //
-const VRR_ITEM_USETYPE_FLASHLIGHT = 39;          //
-const VRR_ITEM_USETYPE_AIRPLANETICKET = 40;      //
-const VRR_ITEM_USETYPE_TRAINTICKET = 41;         //
-const VRR_ITEM_USETYPE_VEHUPGRADE_PART = 42;     //
-const VRR_ITEM_USETYPE_VEHTIRE = 43;             //
-const VRR_ITEM_USETYPE_FUELCAN = 44;             //
-const VRR_ITEM_USETYPE_VEHCOLOUR = 45;           //
-const VRR_ITEM_USETYPE_VEHLIVERY = 46;           //
-const VRR_ITEM_USETYPE_VEHREPAIR = 47;           //
-const VRR_ITEM_USETYPE_SMOKEDRUG = 48;           //
-const VRR_ITEM_USETYPE_SNORTDRUG = 49;           //
-const VRR_ITEM_USETYPE_PLANT = 50;
-const VRR_ITEM_USETYPE_MEGAPHONE = 51;
-const VRR_ITEM_USETYPE_INJECTDRUG = 52;
-const VRR_ITEM_USETYPE_ALCOHOL = 53;
+const VRR_ITEM_USETYPE_DRINK = 35;               // Drinkable item. Action output shows "Player_Name drinks some (drink name)"
+const VRR_ITEM_USETYPE_EXTINGUISHER = 36;        // Extinguisher item. Allows putting out fires
+const VRR_ITEM_USETYPE_SPRAYPAINT = 37;          // Spraypaint item. Allows spraying custom clan tags on walls
+const VRR_ITEM_USETYPE_PEPPERSPRAY = 38;         // Pepper spray item. Incapacitates nearby player
+const VRR_ITEM_USETYPE_FLASHLIGHT = 39;          // Flashlight item. Unusable for now, but plan to cast a custom light beam
+const VRR_ITEM_USETYPE_AIRPLANETICKET = 40;      // Airplane ticket. Allows a character to move to another server
+const VRR_ITEM_USETYPE_TRAINTICKET = 41;         // Train ticket. Allows a character to move to another server
+const VRR_ITEM_USETYPE_VEHUPGRADE_PART = 42;     // Vehicle update part item. Allows adding custom parts like spoilers, side skirts, roof scoops, etc
+const VRR_ITEM_USETYPE_VEHTIRE = 43;             // Vehicle tire item. Allows changing the tire/rim types
+const VRR_ITEM_USETYPE_FUELCAN = 44;             // Fuel can item. Allows refueling of a nearby vehicle anywhere
+const VRR_ITEM_USETYPE_VEHCOLOUR = 45;           // Vehicle colour item. Changes primary and secondary vehicle colours
+const VRR_ITEM_USETYPE_VEHLIVERY = 46;           // Vehicle livery/paintjob item. Applies decals and special paint jobs
+const VRR_ITEM_USETYPE_VEHREPAIR = 47;           // Vehicle repair item. Much longer use time
+const VRR_ITEM_USETYPE_SMOKEDRUG = 48;           // Smokable drug. Action output shows "Player_Name smokes some (drug)"
+const VRR_ITEM_USETYPE_SNORTDRUG = 49;           // Snortable drug. Action output shows "Player_Name snorts some (drug)"
+const VRR_ITEM_USETYPE_PLANT = 50;               // Plantable item. Pot plants, coke plants, etc
+const VRR_ITEM_USETYPE_MEGAPHONE = 51;           // Megaphone item. Allows shouting over greater distances. Also called a bullhorn
+const VRR_ITEM_USETYPE_INJECTDRUG = 52;          // Injectable drug. Action output shows "Player_Name injects some (drug)"
+const VRR_ITEM_USETYPE_ALCOHOL = 53;             // Alcohol. Applies an intoxication/drunkness effect
 
 // Item Drop Types
 const VRR_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped
@@ -291,15 +291,18 @@ const VRR_PEDSTATE_INITEM = 12;                  // In item (crate, box, etc)
 const VRR_PEDSTATE_HANDSUP = 13;                 // Has hands up (surrendering)
 const VRR_PEDSTATE_SPAWNING = 14;                // Spawning
 
+// Two-Factor Authentication States
 const VRR_2FA_STATE_NONE = 0;                    // None
 const VRR_2FA_STATE_CODEINPUT = 1;               // Waiting on player to enter code to play
 const VRR_2FA_STATE_SETUP_CODETOAPP = 2;         // Providing player with a code to put in their auth app
 const VRR_2FA_STATE_SETUP_CODEFROMAPP = 3;       // Waiting on player to enter code from auth app to set up
 
+// Reset Password States
 const VRR_RESETPASS_STATE_NONE = 0;             // None
 const VRR_RESETPASS_STATE_CODEINPUT = 1;        // Waiting on player to enter code sent via email
 const VRR_RESETPASS_STATE_SETPASS = 2;          // Waiting on player to enter new password
 
+// NPC Trigger Condition Match Types
 const VRR_NPC_COND_MATCH_NONE = 0;               // None (invalid)
 const VRR_NPC_COND_MATCH_EQ = 1;                 // Must be equal to
 const VRR_NPC_COND_MATCH_GT = 2;                 // Must be greater than
@@ -311,30 +314,36 @@ const VRR_NPC_COND_MATCH_CONTAINS_CASE = 7;      // Must contain string (case se
 const VRR_NPC_COND_MATCH_EXACT = 8;              // Must match string exactly (case insensitive)
 const VRR_NPC_COND_MATCH_EXACT_CASE = 9;         // Must match string exactly (case insensitive)
 
+// Business Types
 const VRR_BIZ_TYPE_NONE = 0;                     // None (invalid)
 const VRR_BIZ_TYPE_NORMAL = 1;                   // Normal business (sells items)
 const VRR_BIZ_TYPE_BANK = 2;                     // Bank
 const VRR_BIZ_TYPE_PUBLIC = 3;                   // Public business (Government, public service, etc)
 
+// Return-To types (for when a player is teleported)
 const VRR_RETURNTO_TYPE_NONE = 0;                // "Return to" data is invalid
 const VRR_RETURNTO_TYPE_ADMINGET = 1;            // "Return to" data is from admin teleporting
 const VRR_RETURNTO_TYPE_SKINSELECT = 2;          // "Return to" data is from skin select
 
-const VRR_DECKCARD_GAME_NONE = 0;
-const VRR_DECKCARD_GAME_BLACKJACK = 1;
-const VRR_DECKCARD_GAME_TEXASHOLDEM = 2;
-const VRR_DECKCARD_GAME_FIVECARDDRAW = 3;
-const VRR_DECKCARD_GAME_FIVECARDSTUD = 4;
-const VRR_DECKCARD_GAME_HIGHLOW = 5;
+// Card Game Types
+const VRR_DECKCARD_GAME_NONE = 0;                // None (invalid)
+const VRR_DECKCARD_GAME_BLACKJACK = 1;           // Blackjack
+const VRR_DECKCARD_GAME_TEXASHOLDEM = 2;         // Texas Hold-em
+const VRR_DECKCARD_GAME_FIVECARDDRAW = 3;        // Five Card Draw
+const VRR_DECKCARD_GAME_FIVECARDSTUD = 4;        // Five Card Stud
+const VRR_DECKCARD_GAME_HIGHLOW = 5;             // High-Low (Also known as War)
 
-const VRR_DECKCARD_SUIT_NONE = 0;
-const VRR_DECKCARD_SUIT_SPADE = 1;
-const VRR_DECKCARD_SUIT_CLUB = 2;
-const VRR_DECKCARD_SUIT_HEART = 3;
-const VRR_DECKCARD_SUIT_DIAMOND = 4;
+// Card Suits
+const VRR_DECKCARD_SUIT_NONE = 0;                // None (invalid)
+const VRR_DECKCARD_SUIT_SPADE = 1;               // Spades
+const VRR_DECKCARD_SUIT_CLUB = 2;                // Clubs
+const VRR_DECKCARD_SUIT_HEART = 3;               // Hearts
+const VRR_DECKCARD_SUIT_DIAMOND = 4;             // Diamonds
 
-const VRR_GPS_TYPE_NONE = 0;
-const VRR_GPS_TYPE_BUSINESS = 1;
-const VRR_GPS_TYPE_POLICE = 2;
-const VRR_GPS_TYPE_HOSPITAL = 3;
-const VRR_GPS_TYPE_JOB = 4;
+// GPS State Types
+const VRR_GPS_TYPE_NONE = 0;                     // None (invalid)
+const VRR_GPS_TYPE_BUSINESS = 1;                 // Business
+const VRR_GPS_TYPE_POLICE = 2;                   // Police Station
+const VRR_GPS_TYPE_HOSPITAL = 3;                 // Hospital
+const VRR_GPS_TYPE_JOB = 4;                      // Job
+const VRR_GPS_TYPE_GAMELOC = 5;                  // Game Location

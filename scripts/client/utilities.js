@@ -902,3 +902,18 @@ function setVehiclePurchaseState(state, vehicleId, position) {
 }
 
 // ===========================================================================
+
+function processVehicleFires() {
+    let vehicles = getElementsByType(ELEMENT_VEHICLE);
+    for(let i in vehicles) {
+        if(vehicles[i].isSyncer) {
+            if(!doesEntityDataExist(vehicles[i], "vrr.fire")) {
+                triggerNetworkEvent("vrr.vehFire", vehicles[i].id);
+            } else {
+                vehicles[i].health = 249;
+            }
+        }
+    }
+}
+
+// ===========================================================================

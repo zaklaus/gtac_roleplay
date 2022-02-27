@@ -188,8 +188,10 @@ function setLocalPlayerControlState(controlState, cursorState = false) {
         game.SET_PLAYER_CONTROL(localClient.index, boolToInt(controlState));
     }
 
-    localPlayer.collisionsEnabled = controlState;
-    localPlayer.invincible = true;
+    if(getGame() != VRR_GAME_GTA_IV) {
+        localPlayer.collisionsEnabled = controlState;
+        localPlayer.invincible = true;       
+    }
 }
 
 // ===========================================================================

@@ -1008,7 +1008,7 @@ function forcePlayerSkinCommand(command, params, client) {
         return false;
 	}
 
-	if(!skinIndex) {
+	if(skinIndex == false) {
         messagePlayerError(client, "That skin is invalid!");
         return false;
 	}

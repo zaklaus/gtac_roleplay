@@ -62,7 +62,8 @@ let serverBitFlagKeys = {
 		"TwoFactorAuthVerified",
 		"NonRoleplayCharacterName",
 		"CanHearEverything",
-		"DontSyncClientElements"
+		"DontSyncClientElements",
+		"IsTester"
 	],
 	factionFlagKeys: [
 		"None",

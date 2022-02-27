@@ -1264,9 +1264,9 @@ function deleteItem(itemId) {
 			ownerTypeString = "Player";
 			owner = getPlayerFromCharacterId(getItemData(itemId).ownerId);
 			if(getPlayerData(owner) != false) {
-				switchPlayerActiveHotBarSlot(getPlayerData(owner), -1);
+				switchPlayerActiveHotBarSlot(owner, -1);
 				getPlayerData(owner).hotBarItems[getPlayerData(owner).hotBarItems.indexOf(itemId)] = -1;
-				updatePlayerHotBar(getPlayerData(owner));
+				updatePlayerHotBar(owner);
 			}
 			break;
 

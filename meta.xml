@@ -25,7 +25,6 @@
 	<script src="scripts/server/chat.js" type="server" language="javascript" />
 	<script src="scripts/server/clan.js" type="server" language="javascript" />
 	<script src="scripts/server/client.js" type="server" language="javascript" />
-	<script src="scripts/server/colour.js" type="server" language="javascript" />
 	<script src="scripts/server/const.js" type="server" language="javascript" />
 	<script src="scripts/server/database.js" type="server" language="javascript" />
 	<script src="scripts/server/developer.js" type="server" language="javascript" />

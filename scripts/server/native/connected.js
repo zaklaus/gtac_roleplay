@@ -196,7 +196,11 @@ function removePlayerFromVehicle(client) {
 
 function setPlayerSkin(client, skinIndex) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s skin to ${getGameData().skins[getGame()][skinIndex][0]} (Index: ${skinIndex}, Name: ${getGameData().skins[getGame()][skinIndex][1]})`);
-    client.player.modelIndex = getGameData().skins[getGame()][skinIndex][0];
+	if(getGame() == VRR_GAME_GTA_IV) {
+		triggerNetworkEvent("vrr.localPlayerSkin", client, getGameData().skins[getGame()][skinIndex][0]);
+	} else {
+		client.player.modelIndex = getGameData().skins[getGame()][skinIndex][0];
+	}
 }
 
 // ===========================================================================

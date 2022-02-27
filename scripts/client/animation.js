@@ -56,14 +56,18 @@ function makePedStopAnimation(pedId) {
         return false;
     }
 
-    if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
-        getElementFromId(pedId).clearAnimations();
-    } else {
-        getElementFromId(pedId).clearObjective();
+    if(getGame() != VRR_GAME_GTA_IV) {
+        if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
+            getElementFromId(pedId).clearAnimations();
+        } else {
+            getElementFromId(pedId).clearObjective();
+        }
     }
 
     if(getElementFromId(pedId) == localPlayer) {
-        localPlayer.collisionsEnabled = true;
+        if(getGame() != VRR_GAME_GTA_IV) {
+            localPlayer.collisionsEnabled = true;
+        }
         setLocalPlayerControlState(true, false);
     }
 }

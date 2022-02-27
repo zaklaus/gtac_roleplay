@@ -54,7 +54,8 @@ function processSkinSelectKeyPress(keyCode) {
             logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[skinSelectorIndex][0]})`);
             skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
             if(getGame() == VRR_GAME_GTA_IV) {
-                natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+                //natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+                localPlayer.skin = allowedSkins[skinSelectorIndex][0];
             } else {
                 localPlayer.skin = allowedSkins[skinSelectorIndex][0];
             }
@@ -67,7 +68,8 @@ function processSkinSelectKeyPress(keyCode) {
             logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[skinSelectorIndex][0]})`);
             skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
             if(getGame() == VRR_GAME_GTA_IV) {
-                natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+                //natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+                localPlayer.skin = allowedSkins[skinSelectorIndex][0];
             } else {
                 localPlayer.skin = allowedSkins[skinSelectorIndex][0];
             }
@@ -118,7 +120,8 @@ function toggleSkinSelect(state) {
         }
 
         if(getGame() == VRR_GAME_GTA_IV) {
-            natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+            //natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
         } else {
             localPlayer.skin = allowedSkins[skinSelectorIndex][0];
         }

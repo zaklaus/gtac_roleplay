@@ -837,7 +837,7 @@ function setUpInitialGame() {
         natives.setPlayersDropMoneyInNetworkGame(false);
         natives.setSyncWeatherAndGameTime(false);
         natives.usePlayerColourInsteadOfTeamColour(true);
-        natives.setDisplayPlayerNameAndIcon(false);
+        natives.setDisplayPlayerNameAndIcon(natives.getPlayerId(), false);
         natives.removeTemporaryRadarBlipsForPickups();
         natives.setPickupsFixCars(false);
         natives.displayCash(true);

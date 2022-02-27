@@ -82,6 +82,7 @@ function addAllNetworkHandlers() {
 
     addNetworkEventHandler("vrr.pedAnim", makePedPlayAnimation);
     addNetworkEventHandler("vrr.pedStopAnim", makePedStopAnimation);
+    addNetworkEventHandler("vrr.localPlayerSkin", setLocalPlayerSkin);
     addNetworkEventHandler("vrr.forcePedAnim", forcePedAnimation);
     addNetworkEventHandler("vrr.hideAllGUI", hideAllGUI);
     addNetworkEventHandler("vrr.gameScript", setGameScriptState);
@@ -128,10 +129,12 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
     logToConsole(LOG_DEBUG, `[VRR.Main] Updating render states (HUD: ${hudState}, Labels: ${labelState}, Bottom Text: ${smallGameMessageState}, Scoreboard: ${scoreboardState}, HotBar: ${hotBarState}, Item Action Delay: ${itemActionDelayState})`);
     renderHUD = hudState;
 
-    if(typeof setHUDEnabled != "undefined") {
-        if(getGame() == VRR_GAME_GTA_IV) {
-            natives.displayHud(false);
-        } else {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        natives.displayCash(hudState);
+        natives.displayAmmo(hudState);
+        natives.displayHud(hudState);
+    } else {
+        if(typeof setHUDEnabled != "undefined") {
             setHUDEnabled(hudState);
         }
     }
@@ -294,6 +297,17 @@ function setLocalPlayerInfiniteRun(state) {
         if(getGame() == VRR_GAME_GTA_III || getGame() == VRR_GAME_GTA_VC) {
             game.SET_PLAYER_NEVER_GETS_TIRED(game.GET_PLAYER_ID(), boolToInt(state));
         }
+    }
+}
+
+// ===========================================================================
+
+function setLocalPlayerSkin(skinId) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        //natives.changePlayerModel(natives.getPlayerId(), skinId);
+        localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+    } else {
+        localPlayer.skin = skinId;
     }
 }
 

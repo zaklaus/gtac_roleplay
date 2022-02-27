@@ -53,7 +53,11 @@ function processSkinSelectKeyPress(keyCode) {
             }
             logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[skinSelectorIndex][0]})`);
             skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
-            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+            if(getGame() == VRR_GAME_GTA_IV) {
+                natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+            } else {
+                localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+            }
         } else if(keyCode == SDLK_PAGEDOWN) {
             if(skinSelectorIndex <= 0) {
                 skinSelectorIndex = allowedSkins.length-1;
@@ -62,7 +66,11 @@ function processSkinSelectKeyPress(keyCode) {
             }
             logToConsole(LOG_DEBUG, `Switching to skin ${allowedSkins[skinSelectorIndex][1]} (Index: ${skinSelectorIndex}, Skin: ${allowedSkins[skinSelectorIndex][0]})`);
             skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
-            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+            if(getGame() == VRR_GAME_GTA_IV) {
+                natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+            } else {
+                localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+            }
         } else if(keyCode == SDLK_RETURN) {
             sendNetworkEventToServer("vrr.skinSelected", skinSelectorIndex);
             toggleSkinSelect(false);
@@ -109,7 +117,12 @@ function toggleSkinSelect(state) {
             game.setCameraLookAt(frontCameraPosition, localPlayer.position, true);
         }
 
-        localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        if(getGame() == VRR_GAME_GTA_IV) {
+            natives.changePlayerModel(natives.getPlayerId(), allowedSkins[skinSelectorIndex][0]);
+        } else {
+            localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        }
+        
         skinSelectMessageTextTop = allowedSkins[skinSelectorIndex][1];
         setLocalPlayerControlState(false, false);
     } else {

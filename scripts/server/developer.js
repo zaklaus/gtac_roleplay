@@ -341,7 +341,7 @@ function executeClientCodeCommand(command, params, client) {
 	let targetCode = splitParams.slice(1).join(" ");
 
 	if(!targetClient) {
-		messagePlayerError(client, "That player was not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
@@ -354,6 +354,33 @@ function executeClientCodeCommand(command, params, client) {
 
 	messagePlayerSuccess(client, "Executing client code for " + toString(targetgetPlayerName(client)) + "!");
 	messagePlayerNormal(client, "Code: " + targetCode);
+	return true;
+}
+
+// ===========================================================================
+
+function setPlayerTesterStatusCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(params);
+
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
+
+	if(!hasBitFlag(getPlayerData(targetClient).accountData.flags.moderation, getModerationFlagValue("IsTester"))) {
+		getPlayerData(targetClient).accountData.flags.moderation = addBitFlag(getPlayerData(targetClient).accountData.flags.moderation, getModerationFlagValue("IsTester"));
+	} else {
+		getPlayerData(targetClient).accountData.flags.moderation = removeBitFlag(getPlayerData(targetClient).accountData.flags.moderation, getModerationFlagValue("IsTester"));
+	}
+
+	let enabled = hasBitFlag(getPlayerData(targetClient).accountData.flags.moderation, getModerationFlagValue("IsTester"));
+
+	messageAdminAction(`{ALTCOLOUR}${client.name} ${getBoolRedGreenInlineColour(enabled)}${toUpperCase(getEnabledDisabledFromBool(enabled))} {ALTCOLOUR}${targetClient.name}'s {MAINCOLOUR}tester status`)
 	return true;
 }
 

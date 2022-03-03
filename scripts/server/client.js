@@ -410,14 +410,14 @@ function showPlayerPromptGUI(client, promptMessage, promptTitle, yesButtonText, 
 
 // ===========================================================================
 
-function showPlayerInfoGUI(client, infoMessage, infoTitle) {
+function showPlayerInfoGUI(client, infoMessage, infoTitle, buttonText = "OK") {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show info GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${infoTitle}, Message: ${infoMessage})`);
     sendNetworkEventToPlayer("vrr.showInfo", client, infoMessage, infoTitle, buttonText);
 }
 
 // ===========================================================================
 
-function showPlayerErrorGUI(client, errorMessage, errorTitle) {
+function showPlayerErrorGUI(client, errorMessage, errorTitle, buttonText = "OK") {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending show error GUI signal to ${getPlayerDisplayForConsole(client)} (Title: ${errorTitle}, Message: ${errorMessage})`);
     sendNetworkEventToPlayer("vrr.showInfo", client, errorMessage, errorTitle, buttonText);
 }
@@ -518,13 +518,6 @@ function sendPlayerSetInterior(client, interior) {
 function sendPlayerFrozenState(client, state) {
     logToConsole(LOG_DEBUG, `[VRR.Client] Sending set frozen signal to ${getPlayerDisplayForConsole(client)} (State: ${toUpperCase(getYesNoFromBool(state))})`);
     sendNetworkEventToPlayer("vrr.frozen", client, state);
-}
-
-// ===========================================================================
-
-function givePlayerWeapon(client, weaponId, ammo, active = true) {
-    logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to give weapon (Weapon: ${weaponId}, Ammo: ${ammo})`);
-    sendNetworkEventToPlayer("vrr.giveWeapon", client, weaponId, ammo, active);
 }
 
 // ===========================================================================

@@ -91,7 +91,7 @@ function initGUI() {
 
 // ===========================================================================
 
-let closeAllWindows = function() {
+function closeAllWindows() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Closing all GUI windows`);
 	infoDialog.window.shown = false;
 	yesNoDialog.window.shown = false;
@@ -116,7 +116,7 @@ let closeAllWindows = function() {
 
 // ===========================================================================
 
-let isAnyGUIActive = function() {
+function isAnyGUIActive() {
 	if(!guiReady) {
 		return false;
 	}

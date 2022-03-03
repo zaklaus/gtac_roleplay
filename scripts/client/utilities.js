@@ -285,26 +285,21 @@ function enterVehicleAsPassenger() {
 
 function giveLocalPlayerWeapon(weaponId, ammo, active) {
     logToConsole(LOG_DEBUG, `[VRR.Utilities] Giving weapon ${weaponId} with ${ammo} ammo`);
-    localPlayer.giveWeapon(weaponId, ammo, active);
-    forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(weaponId));
-    forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(weaponId));
     forceWeapon = weaponId;
-}
-
-// ===========================================================================
-
-function giveLocalPlayerWeapon(weaponId, ammo, active) {
-    logToConsole(LOG_DEBUG, `[VRR.Utilities] Giving weapon ${weaponId} with ${ammo} ammo`);
     if(getGame() == VRR_GAME_MAFIA_ONE) {
         localPlayer.giveWeapon(weaponId, 0, ammo);
         forceWeaponAmmo = 0;
         forceWeaponClipAmmo = ammo;
     } else {
         localPlayer.giveWeapon(weaponId, ammo, active);
-        forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(weaponId));
-        forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(weaponId));
+        if(getGame() < VRR_GAME_GTA_IV) {
+            forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(weaponId));
+            forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(weaponId));
+        } else {
+            forceWeaponAmmo = ammo;
+            forceWeaponClipAmmo = ammo;
+        }
     }
-    forceWeapon = weaponId;
 }
 
 // ===========================================================================
@@ -620,11 +615,15 @@ function forceLocalPlayerEquippedWeaponItem() {
         if(forceWeapon != 0) {
             if(localPlayer.weapon != forceWeapon) {
                 localPlayer.weapon = forceWeapon;
-                localPlayer.setWeaponClipAmmunition(getWeaponSlot(forceWeapon), forceWeaponClipAmmo);
-                localPlayer.setWeaponAmmunition(getWeaponSlot(forceWeapon), forceWeaponAmmo);
+                if(getGame() <= VRR_GAME_GTA_IV) {
+                    localPlayer.setWeaponClipAmmunition(getWeaponSlot(forceWeapon), forceWeaponClipAmmo);
+                    localPlayer.setWeaponAmmunition(getWeaponSlot(forceWeapon), forceWeaponAmmo);
+                }
             } else {
-                forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(forceWeapon));
-                forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(forceWeapon));
+                if(getGame() <= VRR_GAME_GTA_IV) {
+                    forceWeaponClipAmmo = localPlayer.getWeaponClipAmmunition(getWeaponSlot(forceWeapon));
+                    forceWeaponAmmo = localPlayer.getWeaponAmmunition(getWeaponSlot(forceWeapon));
+                }
             }
         } else {
             if(localPlayer.weapon > 0) {
@@ -840,10 +839,10 @@ function setUpInitialGame() {
         natives.setDisplayPlayerNameAndIcon(natives.getPlayerId(), false);
         natives.removeTemporaryRadarBlipsForPickups();
         natives.setPickupsFixCars(false);
-        natives.displayCash(true);
-        natives.displayAmmo(true);
-        natives.displayHud(true);
-        natives.displayAreaName(true);
+        natives.displayCash(false);
+        natives.displayAmmo(false);
+        natives.displayHud(false);
+        natives.displayAreaName(false);
         natives.setPoliceRadarBlips(false);
 
         natives.requestAnims("DANCING");

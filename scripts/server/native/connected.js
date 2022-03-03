@@ -1014,3 +1014,10 @@ function setVehicleHealth(vehicle, health) {
 }
 
 // ===========================================================================
+
+function givePlayerWeapon(client, weaponId, ammo, active = true) {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to give weapon (Weapon: ${weaponId}, Ammo: ${ammo})`);
+    sendNetworkEventToPlayer("vrr.giveWeapon", client, weaponId, ammo, active);
+}
+
+// ===========================================================================

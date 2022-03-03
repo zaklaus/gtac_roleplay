@@ -99,7 +99,7 @@ function playerPromptAnswerYes(client) {
 // ===========================================================================
 
 function canPlayerUseGUI(client) {
-    return (getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client));
+    return (doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client));
 }
 
 // ===========================================================================

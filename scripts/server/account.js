@@ -106,7 +106,7 @@ function toggleAccountGUICommand(command, params, client) {
 
 	if(!isPlayerLoggedIn(client)) {
 		if(getPlayerData().accountData.databaseId != 0) {
-			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+			if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 				showPlayerLoginGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI`);
 			} else {
@@ -115,7 +115,7 @@ function toggleAccountGUICommand(command, params, client) {
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
 			}
 		} else {
-			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+			if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 				showPlayerRegistrationGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 			} else {
@@ -566,8 +566,24 @@ function loginSuccess(client) {
 		client.administrator = true;
 	}
 
+	if(hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("Testing"))) {
+		if(!hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("IsTester"))) {
+			if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the error GUI (not a tester).`);
+				showPlayerErrorGUI(client, getLocaleString(client, "NotATester"), getLocaleString(client, "AccessDenied"));
+			} else {
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
+				messagePlayerError(client, getLocaleString(client, "NotATester"));
+			}
+			setTimeout(function() {
+				client.disconnect();
+			}, 3500);
+			return false;
+		}
+	}
+
 	if(getPlayerData(client).subAccounts.length == 0) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerPromptGUI(client, `You have no characters. Would you like to make one?`, "No characters");
 			getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters prompt GUI`);
@@ -760,7 +776,7 @@ function checkLogin(client, password) {
 
 	if(isPlayerLoggedIn(client)) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is already logged in`);
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginSuccessGUI(client);
 		} else {
 			messagePlayerError(client, "You are already logged in!");
@@ -771,7 +787,7 @@ function checkLogin(client, password) {
 
 	if(!isPlayerRegistered(client)) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is not registered`);
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerRegistrationGUI(client);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 		} else {
@@ -783,7 +799,7 @@ function checkLogin(client, password) {
 
 	if(areParamsEmpty(password)) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (empty password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginFailedGUI(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		} else {
@@ -799,7 +815,7 @@ function checkLogin(client, password) {
 
 	if(!isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), password))) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (wrong password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginFailedGUI(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		} else {
@@ -819,7 +835,7 @@ function checkLogin(client, password) {
 	//	return true;
 	//}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		showPlayerLoginSuccessGUI(client);
 	}
 
@@ -836,7 +852,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	logToConsole(LOG_DEBUG, `[VRR.Account]: Checking registration for ${getPlayerName(client)}`);
 
 	if(isPlayerRegistered(client)) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginGUI(client);
 		} else {
 			messagePlayerError(client, getLocaleString(client, "AlreadyRegistered"));
@@ -846,7 +862,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 
 	if(isPlayerLoggedIn(client)) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginSuccessGUI(client);
 		} else {
 			messagePlayerError(client, getLocaleString(client, "AlreadyLoggedIn"));
@@ -856,7 +872,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 
 	if(areParamsEmpty(password)) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPassword"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password is blank)`);
 		} else {
@@ -866,7 +882,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		return false;
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(confirmPassword)) {
 			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPasswordConfirm"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password confirm is blank)`);
@@ -874,7 +890,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		}
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(emailAddress)) {
 			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoEmail"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (email address is blank)`);
@@ -882,7 +898,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		}
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		if(password != confirmPassword) {
 			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedPasswordMismatch"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password and confirm don't match)`);
@@ -891,7 +907,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	}
 
 	if(!doesPasswordMeetRequirements(password)) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			// Work on this later. Function should return true by default anyway for now.
 			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPasswordWeak"));
 			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password doesn't meet requirements)`);
@@ -901,7 +917,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		return false
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		if(!isValidEmailAddress(emailAddress)) {
 			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedInvalidEmail"));
 			return false
@@ -910,7 +926,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 
 	let accountData = createAccount(getPlayerName(client), password, emailAddress);
 	if(!accountData) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedCreateError"));
 		} else {
 			messagePlayerAlert(client, getLocaleString(client, "RegistrationFailedCreateError"));
@@ -929,7 +945,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
     }
 	messagePlayerAlert(client, getLocaleString(client, "RegistrationCreateCharReminder"));
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		showPlayerRegistrationSuccessGUI(client);
 		showPlayerPromptGUI(client, getLocaleString(client, "NoCharactersMessage"), getLocaleString(client, "NoCharactersWindowTitle"), getLocaleString(client, "Yes"), getLocaleString(client, "No"));
 		getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
@@ -1084,6 +1100,12 @@ function initClient(client) {
 		return false;
 	}
 
+	if(client.getData("vrr.isInitialized") != null || client.getData("vrr.isInitialized") == true) {
+		return false;
+	}
+
+	client.setData("vrr.isInitialized", true, false);
+
 	sendPlayerGUIColours(client);
 	sendPlayerGUIInit(client);
 	updatePlayerSnowState(client);
@@ -1109,7 +1131,7 @@ function initClient(client) {
 					messagePlayerAlert(client, getLocaleString(client, "AutoLoggedInIP"));
 					loginSuccess(client);
 				} else {
-					if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+					if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);
 						showPlayerLoginGUI(client);
 					} else {
@@ -1119,7 +1141,7 @@ function initClient(client) {
 					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 				}
 			} else {
-				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+				if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI.`);
 					showPlayerRegistrationGUI(client);
 				} else {

@@ -566,29 +566,31 @@ function loginSuccess(client) {
 		client.administrator = true;
 	}
 
-	if(hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("Testing"))) {
+	if(doesServerHaveTesterOnlyEnabled()) {
 		if(!hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("IsTester"))) {
-			if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
-				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the error GUI (not a tester).`);
-				showPlayerErrorGUI(client, getLocaleString(client, "NotATester"), getLocaleString(client, "AccessDenied"));
-			} else {
-				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
-				messagePlayerError(client, getLocaleString(client, "NotATester"));
-			}
 			setTimeout(function() {
 				client.disconnect();
 			}, 3500);
-			return false;
+
+			if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the error GUI (not a tester).`);
+				showPlayerErrorGUI(client, getLocaleString(client, "NotATester"), getLocaleString(client, "AccessDenied"));
+				return false;
+			} else {
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the "not a tester" error message (GUI disabled).`);
+				messagePlayerError(client, getLocaleString(client, "NotATester"));
+				return false;
+			}			
 		}
 	}
 
 	if(getPlayerData(client).subAccounts.length == 0) {
 		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerPromptGUI(client, `You have no characters. Would you like to make one?`, "No characters");
+			showPlayerPromptGUI(client, getLocaleString(client, "NoCharactersGUIMessage"), getLocaleString(client, "NoCharactersGUIWindowTitle"));
 			getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters prompt GUI`);
 		} else {
-			messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
+			messagePlayerAlert(client, getLocaleString(client, "NoCharactersChatMessage", `{ALTCOLOUR}/newchar{MAINCOLOUR}`));
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters message (GUI disabled)`);
 		}
 	} else {
@@ -942,22 +944,36 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	messagePlayerSuccess(client, getLocaleString(client, "RegistrationSuccess"));
 	if(checkForSMTPModule() && getEmailConfig().enabled) {
 		messagePlayerAlert(client, getLocaleString(client, "RegistrationEmailVerifyReminder"));
+		let emailVerificationCode = generateEmailVerificationCode();
+		setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+		sendEmailVerificationEmail(client, emailVerificationCode);
+		logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} was sent a registration email verification code`);
     }
-	messagePlayerAlert(client, getLocaleString(client, "RegistrationCreateCharReminder"));
 
-	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
-		showPlayerRegistrationSuccessGUI(client);
-		showPlayerPromptGUI(client, getLocaleString(client, "NoCharactersMessage"), getLocaleString(client, "NoCharactersWindowTitle"), getLocaleString(client, "Yes"), getLocaleString(client, "No"));
-		getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
+	if(doesServerHaveTesterOnlyEnabled() && !isPlayerATester(client)) {
+		setTimeout(function() {
+			client.disconnect();
+		}, 5000);
 
-		if(checkForSMTPModule() && getEmailConfig().enabled) {
-			let emailVerificationCode = generateEmailVerificationCode();
-			setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
-			sendEmailVerificationEmail(client, emailVerificationCode);
-			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} was sent a registration email verification code`);
-		}
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the error GUI (not a tester).`);
+			showPlayerErrorGUI(client, getLocaleString(client, "NotATester"), getLocaleString(client, "AccessDenied"));
+			return false;
+		} else {
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the "not a tester" error message (GUI disabled).`);
+			messagePlayerError(client, getLocaleString(client, "NotATester"));
+			return false;
+		}	
 	} else {
-		messagePlayerAlert(client, getLocaleString(client, "NoCharactersChatMessage"));
+		messagePlayerAlert(client, getLocaleString(client, "RegistrationCreateCharReminder"));
+
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+			showPlayerRegistrationSuccessGUI(client);
+			showPlayerPromptGUI(client, getLocaleString(client, "NoCharactersMessage"), getLocaleString(client, "NoCharactersWindowTitle"), getLocaleString(client, "Yes"), getLocaleString(client, "No"));
+			getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
+		} else {
+			messagePlayerAlert(client, getLocaleString(client, "NoCharactersChatMessage"), `{ALTCOLOUR}/newchar{MAINCOLOUR}`);
+		}
 	}
 };
 
@@ -1473,6 +1489,12 @@ function checkPlayerTwoFactorAuthentication(client, authCode) {
 
 	client.disconnect();
 	return false;
+}
+
+// ===========================================================================
+
+function isPlayerATester(client) {
+
 }
 
 // ===========================================================================

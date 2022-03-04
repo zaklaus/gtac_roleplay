@@ -231,7 +231,7 @@ function showCharacterSelectToClient(client) {
 		}
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).currentSubAccount = 0;
 		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
@@ -290,10 +290,10 @@ function checkNewCharacter(client, firstName, lastName) {
 
 	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName);
 	if(!subAccountData) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerNewCharacterFailedGUI(client, "Your character could not be created!");
 		} else {
-			messagePlayerAlert(client, "Your character could not be created!");
+			messagePlayerError(client, "Your character could not be created!");
 		}
 		messagePlayerAlert(client, `${getServerName()} staff have been notified of the problem and will fix it soon.`);
 		return false;

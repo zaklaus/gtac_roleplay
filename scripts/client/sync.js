@@ -10,13 +10,13 @@
 function processSync(event, deltaTime) {
     if(localPlayer != null) {
         if(!areServerElementsSupported()) {
-            triggerNetworkEvent("vrr.player.position", localPlayer.position);
-            triggerNetworkEvent("vrr.player.heading", localPlayer.heading);
+            sendNetworkEventToServer("vrr.player.position", localPlayer.position);
+            sendNetworkEventToServer("vrr.player.heading", localPlayer.heading);
         }
 
         //if(game.game == VRR_GAME_GTA_SA) {
         //    let lookAtPos = getLocalPlayerLookAtPosition();
-        //    triggerNetworkEvent("vrr.player.lookat", lookAtPos);
+        //    sendNetworkEventToServer("vrr.player.lookat", lookAtPos);
         //    setEntityData(localPlayer, "vrr.headLook", lookAtPos);
         //    let peds = getPeds();
         //    for(let i in peds) {
@@ -31,7 +31,7 @@ function processSync(event, deltaTime) {
                 logToConsole(LOG_DEBUG, `Local player died`);
                 localPlayer.clearWeapons();
                 calledDeathEvent = true;
-                triggerNetworkEvent("vrr.playerDeath");
+                sendNetworkEventToServer("vrr.playerDeath");
             }
         }
 
@@ -84,33 +84,43 @@ function syncVehicleProperties(vehicle) {
         }
     }
 
-    //if(doesEntityDataExist(vehicle, "vrr.panelStatus")) {
-    //    let panelsStatus = getEntityData(vehicle, "vrr.panelStatus");
-    //    for(let i in panelsStatus) {
-    //        vehicle.setPanelStatus(i, panelsStatus[i]);
-    //    }
-    //}
+    if(doesEntityDataExist(vehicle, "vrr.invincible")) {
+        let invincible = getEntityData(vehicle, "vrr.invincible");
+        element.setProofs(invincible, invincible, invincible, invincible, invincible);
+    }
 
-    //if(doesEntityDataExist(vehicle, "vrr.wheelStatus")) {
-    //    let wheelsStatus = getEntityData(vehicle, "vrr.wheelStatus");
-    //    for(let i in wheelsStatus) {
-    //        vehicle.setWheelStatus(i, wheelsStatus[i]);
-    //    }
-    //}
+    if(doesEntityDataExist(vehicle, "vrr.panelStatus")) {
+        let panelsStatus = getEntityData(vehicle, "vrr.panelStatus");
+        for(let i in panelsStatus) {
+            vehicle.setPanelStatus(i, panelsStatus[i]);
+        }
+    }
 
-    //if(doesEntityDataExist(vehicle, "vrr.lightStatus")) {
-    //    let lightStatus = getEntityData(vehicle, "vrr.lightStatus");
-    //    for(let i in lightStatus) {
-    //        vehicle.setLightStatus(i, lightStatus[i]);
-    //    }
-    //}
+    if(doesEntityDataExist(vehicle, "vrr.wheelStatus")) {
+        let wheelsStatus = getEntityData(vehicle, "vrr.wheelStatus");
+        for(let i in wheelsStatus) {
+            vehicle.setWheelStatus(i, wheelsStatus[i]);
+        }
+    }
 
-    //if(doesEntityDataExist(vehicle, "vrr.suspensionHeight")) {
-    //    let suspensionHeight = getEntityData(vehicle, "vrr.suspensionHeight");
-    //    vehicle.setSuspensionHeight(suspensionHeight);
-    //}
+    if(doesEntityDataExist(vehicle, "vrr.lightStatus")) {
+        let lightStatus = getEntityData(vehicle, "vrr.lightStatus");
+        for(let i in lightStatus) {
+            vehicle.setLightStatus(i, lightStatus[i]);
+        }
+    }
+
+    if(doesEntityDataExist(vehicle, "vrr.suspensionHeight")) {
+        let suspensionHeight = getEntityData(vehicle, "vrr.suspensionHeight");
+        vehicle.setSuspensionHeight(suspensionHeight);
+    }
 
     if(getGame() == VRR_GAME_GTA_SA) {
+        let allUpgrades = getGameData().vehicleUpgrades[getGame()];
+        for(let i in allUpgrades) {
+            vehicle.removeUpgrade(i);
+        }
+
         if(doesEntityDataExist(vehicle, "vrr.upgrades")) {
             let upgrades = getEntityData(vehicle, "vrr.upgrades");
             for(let i in upgrades) {
@@ -129,18 +139,6 @@ function syncVehicleProperties(vehicle) {
             } else if(getGame() == VRR_GAME_GTA_IV) {
                 vehicle.livery = livery;
             }
-        }
-    }
-
-    if(getGame() == VRR_GAME_GTA_III) {
-        if(vehicle.isOwner && vehicle.modelIndex == 116) {
-            vehicle.colour1 = 0;
-            vehicle.colour2 = 1;
-        }
-    } else if(getGame() == VRR_GAME_GTA_VC) {
-        if(vehicle.isOwner && vehicle.modelIndex == 156) {
-            vehicle.colour1 = 0;
-            vehicle.colour2 = 1;
         }
     }
 }

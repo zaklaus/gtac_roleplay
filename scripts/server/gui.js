@@ -77,10 +77,12 @@ function playerPromptAnswerYes(client) {
                     createItem(getPlayerData(client).businessOrderItem, getPlayerData(client).businessOrderValue, VRR_ITEM_OWNER_BIZFLOOR, getBusinessData(getPlayerData(client).businessOrderBusiness).databaseId, getPlayerData(client).businessOrderAmount);
                     cacheBusinessItems(getPlayerData(client).businessOrderBusiness);
                     getBusinessData(getPlayerData(client).businessOrderBusiness).till -= getPlayerData(client).businessOrderCost;
+                    updateBusinessPickupLabelData(getPlayerData(client).businessOrderBusiness);
                     getPlayerData(client).businessOrderAmount = 0;
                     getPlayerData(client).businessOrderBusiness = false;
                     getPlayerData(client).businessOrderItem = -1;
                     getPlayerData(client).businessOrderValue = -1;
+
                 }
             } else {
                 showPlayerErrorGUI(client, `You aren't ordering anything for a business!`, `Business Order Canceled`);
@@ -97,7 +99,7 @@ function playerPromptAnswerYes(client) {
 // ===========================================================================
 
 function canPlayerUseGUI(client) {
-    return (getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client));
+    return (doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client));
 }
 
 // ===========================================================================
@@ -110,6 +112,24 @@ function playerPromptAnswerYesCommand(command, params, client) {
 
 function playerPromptAnswerNoCommand(command, params, client) {
     playerPromptAnswerNo(client);
+}
+
+// ===========================================================================
+
+function playerToggledGUI(client) {
+    toggleAccountGUICommand("gui", "", client);
+}
+
+// ===========================================================================
+
+function showPlayerChangePasswordGUI(client) {
+    sendNetworkEventToPlayer("vrr.changePassword", client);
+}
+
+// ===========================================================================
+
+function showPlayerTwoFactorAuthenticationGUI(client) {
+    sendNetworkEventToPlayer("vrr.2fa", client);
 }
 
 // ===========================================================================

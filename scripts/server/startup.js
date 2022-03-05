@@ -20,7 +20,7 @@ function initServerScripts() {
 	initClanScript();
 	initHouseScript();
 	initChatScript();
-	initModerationScript();
+	initStaffScript();
 	initAccountScript();
 	initSubAccountScript();
 	initChatScript();

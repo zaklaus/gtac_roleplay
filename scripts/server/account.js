@@ -16,7 +16,7 @@ function initAccountScript() {
 
 function loginCommand(command, params, client) {
 	if(!isPlayerRegistered(client)) {
-		messagePlayerError(client, "Your name is not registered! Use /register to make an account.");
+		messagePlayerError(client, getLocaleString(client, "NameNotRegistered"));
 		return false;
 	}
 
@@ -36,10 +36,10 @@ function toggleAutoLoginByIPCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Automatic login by IP is now {softRed}OFF {white}`);
+		messagePlayerSuccess(client, getLocaleString(client, "AutomaticLoginIPToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Automatic login by IP is now {softGreen}ON {white}(${client.ip})`);
+		messagePlayerSuccess(client, getLocaleString(client, "AutomaticLoginIPToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
 	}
 	return true;
 }
@@ -51,10 +51,10 @@ function toggleNoRandomTipsCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Random tips are now {softRed}OFF`);
+		messagePlayerSuccess(client, getLocaleString(client, "RandomTipsToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Random tips are now {softGreen}ON`);
+		messagePlayerSuccess(client, getLocaleString(client, "RandomTipsToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
 	}
 	return true;
 }
@@ -66,10 +66,10 @@ function toggleNoActionTipsCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Action tips are now {softRed}OFF`);
+		messagePlayerSuccess(client, getLocaleString(client, "ActionTipsToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Action tips are now {softGreen}ON`);
+		messagePlayerSuccess(client, getLocaleString(client, "ActionTipsToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
 	}
 	return true;
 }
@@ -81,10 +81,10 @@ function toggleAutoSelectLastCharacterCommand(command, params, client) {
 
 	if(hasBitFlag(getPlayerData(client).accountData.settings, flagValue)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Automatic spawn as last used character is now {softRed}OFF`);
+		messagePlayerSuccess(client, getLocaleString(client, "AutoSpawnLastCharToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerSuccess(client, `Automatic spawn as last used character is now {softGreen}ON`);
+		messagePlayerSuccess(client, getLocaleString(client, "AutoSpawnLastCharToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
 	}
 	return true;
 }
@@ -96,17 +96,17 @@ function toggleAccountGUICommand(command, params, client) {
 
 	if(!doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerNormal(client, `⚙️ GUI is now {softGreen}ON. {white}(if server has it enabled)`);
+		messagePlayerNormal(client, getLocaleString(client, "GUIAccountSettingToggle", `{softRed}${toUpperCase(getLocaleString(client, "Off"))}`));
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	} else {
 		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
-		messagePlayerNormal(client, `⚙️ GUI is now {softRed}OFF. {white}(Any GUI stuff will be use via commands and message in the chatbox)`);
-		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account OFF.`);
+		messagePlayerNormal(client, getLocaleString(client, "GUIAccountSettingToggle", `{softGreen}${toUpperCase(getLocaleString(client, "On"))}`));
+		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled GUI for their account ON.`);
 	}
 
 	if(!isPlayerLoggedIn(client)) {
 		if(getPlayerData().accountData.databaseId != 0) {
-			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+			if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 				showPlayerLoginGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI`);
 			} else {
@@ -115,7 +115,7 @@ function toggleAccountGUICommand(command, params, client) {
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled)`);
 			}
 		} else {
-			if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+			if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 				showPlayerRegistrationGUI(client);
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 			} else {
@@ -170,34 +170,30 @@ function toggleAccountServerLogoCommand(command, params, client) {
 
 // ===========================================================================
 
-// UNFINISHED!
-// TO-DO: Make GUI, add command to generate code to add to auth app and command to input code returned by auth app
 function toggleAccountTwoFactorAuthCommand(command, params, client) {
 	let flagValue = getAccountSettingsFlagValue("TwoStepAuth");
 
 	if(getEmailConfig().enabled) {
-		if(getPlayerData(client).accountData.emailAddress != "") {
-			messagePlayerError(client, `You need to add your email to your account to use two-factor authentication.`);
-			messagePlayerTip(client, `{MAINCOLOUR}Use {ALTCOLOUR}/setemail {MAINCOLOUR}to add your email.`);
+		if(getPlayerData(client).accountData.emailAddress == "") {
+			messagePlayerError(client, getLocaleString(client, "NeedEmailFor2FA"));
+			messagePlayerTip(client, getLocaleString(client, "SetEmailHelpTip", `{ALTCOLOUR}/setemail{MAINCOLOUR}`));
 			return false;
 		}
 
-		if(isAccountEmailVerified(getPlayerData(client).accountData)) {
-			messagePlayerError(client, `You need to verify your email to your account to use two-factor authentication.`);
-			messagePlayerTip(client, `{MAINCOLOUR}Use {ALTCOLOUR}/verifyemail {MAINCOLOUR}to verify your email.`);
+		if(!isAccountEmailVerified(getPlayerData(client).accountData)) {
+			messagePlayerError(client, getLocaleString(client, "NeedEmailVerifiedFor2FA"));
+			messagePlayerTip(client, getLocaleString(client, "VerifyEmailHelpTip", `{ALTCOLOUR}/verifyemail{MAINCOLOUR}`));
 			return false;
 		}
 	}
 
 	if(!doesPlayerHaveTwoFactorAuthEnabled(client)) {
-		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
+		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `{MAINCOLOUR}You have turned ${getBoolRedGreenInlineColour(false)}ON {MAINCOLOUR} two factor authentication!{ALTCOLOUR}${addtoAuthenticatorCode}`);
-		messagePlayerAlert(client, `You will be required to enter a code sent to your email every time you log on.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication ON for their account`);
 	} else {
-		getPlayerData(client).accountData.settings = addBitFlag(getPlayerData(client).accountData.settings, flagValue);
+		getPlayerData(client).accountData.settings = removeBitFlag(getPlayerData(client).accountData.settings, flagValue);
 		messagePlayerSuccess(client, `You have turned ${getBoolRedGreenInlineColour(false)}OFF {MAINCOLOUR}two-factor authentication for login.`);
-		messagePlayerAlert(client, `You won't be required to enter a code sent to your email every time you log on anymore.`);
 		logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} has toggled two-factor authentication OFF for their account`);
 	}
 	return true;
@@ -230,11 +226,10 @@ function changeAccountPasswordCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let oldPassword = splitParams[0];
-	let newPassword = splitParams[1];
+	let oldPassword = getParam(params, " ", 1);
+	let newPassword = getParam(params, " ", 2);
 
-	if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), oldPassword))) {
+	if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerData(client).accountData.name, oldPassword))) {
 		messagePlayerError(client, `The old password is invalid!`);
 		return false;
 	}
@@ -282,8 +277,7 @@ function setAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let emailAddress = splitParams[0];
+	let emailAddress = getParam(params, " ", 1);
 
 	if(!isValidEmailAddress(emailAddress)) {
 		messagePlayerError(client, `The email '${emailAddress} is not valid!`);
@@ -320,8 +314,7 @@ function verifyAccountEmailCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let verificationCode = splitParams[0];
+	let verificationCode = getParam(params, " ", 1);
 
 	if(isAccountEmailVerified(getPlayerData(client).accountData)) {
 		messagePlayerError(client, `You already verified your email!`);
@@ -353,8 +346,7 @@ function resetAccountPasswordCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let verificationCode = splitParams[0] || "";
+	let verificationCode = getParam(params, " ", 1) || "";
 
 	if(!isAccountEmailVerified(getPlayerData(client).accountData)) {
 		messagePlayerError(client, `Your email is not verified. Your password will not be reset!`);
@@ -386,8 +378,7 @@ function setAccountDiscordCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let discordName = splitParams[0];
+	let discordName = getParam(params, " ", 1);
 
 	if(!isValidEmailAddress(emailAddress)) {
 		messagePlayerError(client, `The discord '${discordName} is not valid!`);
@@ -459,7 +450,6 @@ function loadAccountFromName(accountName, fullLoad = false) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 				let tempAccountData = new AccountData(dbAssoc);
 				if(fullLoad) {
-					tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 					tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
 					tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
 					tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
@@ -486,7 +476,6 @@ function loadAccountFromId(accountId, fullLoad = false) {
 			let tempAccountData = new AccountData(dbAssoc);
 			freeDatabaseQuery(dbQuery);
 			if(fullLoad) {
-				tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 				tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
 				tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
 				tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
@@ -577,13 +566,31 @@ function loginSuccess(client) {
 		client.administrator = true;
 	}
 
+	if(doesServerHaveTesterOnlyEnabled()) {
+		if(!hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("IsTester"))) {
+			setTimeout(function() {
+				client.disconnect();
+			}, 3500);
+
+			if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the error GUI (not a tester).`);
+				showPlayerErrorGUI(client, getLocaleString(client, "NotATester"), getLocaleString(client, "AccessDenied"));
+				return false;
+			} else {
+				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the "not a tester" error message (GUI disabled).`);
+				messagePlayerError(client, getLocaleString(client, "NotATester"));
+				return false;
+			}			
+		}
+	}
+
 	if(getPlayerData(client).subAccounts.length == 0) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerPromptGUI(client, `You have no characters. Would you like to make one?`, "No characters");
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+			showPlayerPromptGUI(client, getLocaleString(client, "NoCharactersGUIMessage"), getLocaleString(client, "NoCharactersGUIWindowTitle"));
 			getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters prompt GUI`);
 		} else {
-			messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
+			messagePlayerAlert(client, getLocaleString(client, "NoCharactersChatMessage", `{ALTCOLOUR}/newchar{MAINCOLOUR}`));
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the no characters message (GUI disabled)`);
 		}
 	} else {
@@ -621,6 +628,7 @@ function saveAccountToDatabase(accountData) {
 			["acct_code_verifyemail", accountData.emailVerificationCode],
 			["acct_streaming_radio_volume", accountData.streamingRadioVolume],
 			["acct_ip", accountData.ipAddress],
+			["acct_locale", accountData.locale],
 		];
 
 		let data2 = [
@@ -749,10 +757,10 @@ function createAccount(name, password, email = "") {
 		if(getDatabaseInsertId(dbConnection) > 0) {
 			let tempAccountData = loadAccountFromId(getDatabaseInsertId(dbConnection), false);
 			createDefaultAccountServerData(tempAccountData.databaseId);
-			tempAccountData.keyBinds = loadAccountKeybindsFromDatabase(tempAccountData.databaseId);
 			tempAccountData.messages = loadAccountMessagesFromDatabase(tempAccountData.databaseId);
 			tempAccountData.notes = loadAccountStaffNotesFromDatabase(tempAccountData.databaseId);
 			tempAccountData.contacts = loadAccountContactsFromDatabase(tempAccountData.databaseId);
+			tempAccountData.flags.admin = 0;
 			return tempAccountData;
 		}
 	}
@@ -770,7 +778,7 @@ function checkLogin(client, password) {
 
 	if(isPlayerLoggedIn(client)) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is already logged in`);
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginSuccessGUI(client);
 		} else {
 			messagePlayerError(client, "You are already logged in!");
@@ -781,7 +789,7 @@ function checkLogin(client, password) {
 
 	if(!isPlayerRegistered(client)) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but is not registered`);
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerRegistrationGUI(client);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI`);
 		} else {
@@ -793,7 +801,7 @@ function checkLogin(client, password) {
 
 	if(areParamsEmpty(password)) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (empty password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginFailedGUI(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		} else {
@@ -809,7 +817,7 @@ function checkLogin(client, password) {
 
 	if(!isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), password))) {
 		logToConsole(LOG_WARN, `[VRR.Account] ${getPlayerDisplayForConsole(client)} attempted to login but failed (wrong password). ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining`);
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginFailedGUI(client, `Invalid password! ${getPlayerData(client).loginAttemptsRemaining} tries remaining.`);
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI with ${getPlayerData(client).loginAttemptsRemaining} login attempts remaining alert.`);
 		} else {
@@ -823,7 +831,13 @@ function checkLogin(client, password) {
 		return false;
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	//if(doesPlayerHaveTwoFactorAuthEnabled(client)) {
+	//	getPlayerData(client).twoFactorAuthCode = toUpperCase(generateRandomString(6));
+	//	showPlayerTwoFactorAuthenticationGUI(client);
+	//	return true;
+	//}
+
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		showPlayerLoginSuccessGUI(client);
 	}
 
@@ -840,76 +854,84 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	logToConsole(LOG_DEBUG, `[VRR.Account]: Checking registration for ${getPlayerName(client)}`);
 
 	if(isPlayerRegistered(client)) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginGUI(client);
 		} else {
-			messagePlayerError(client, "Your name is already registered!");
+			messagePlayerError(client, getLocaleString(client, "AlreadyRegistered"));
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (already registered)`);
 		}
 		return false;
 	}
 
 	if(isPlayerLoggedIn(client)) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerLoginSuccessGUI(client);
 		} else {
-			messagePlayerError(client, "You are already logged in!");
+			messagePlayerError(client, getLocaleString(client, "AlreadyLoggedIn"));
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (already logged in)`);
 		}
 		return false;
 	}
 
 	if(areParamsEmpty(password)) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerRegistrationFailedGUI(client, "Password cannot be blank!");
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPassword"));
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password is blank)`);
 		} else {
 			messagePlayerError(client, "The password cannot be blank!");
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password is blank)`);
 		}
 		return false;
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(confirmPassword)) {
-			showPlayerRegistrationFailedGUI(client, "Password confirm cannot be blank!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPasswordConfirm"));
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password confirm is blank)`);
 			return false;
 		}
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		if(areParamsEmpty(emailAddress)) {
-			showPlayerRegistrationFailedGUI(client, "Email address cannot be blank!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoEmail"));
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (email address is blank)`);
 			return false;
 		}
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		if(password != confirmPassword) {
-			showPlayerRegistrationFailedGUI(client, "The passwords must match!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedPasswordMismatch"));
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password and confirm don't match)`);
 			return false;
 		}
 	}
 
 	if(!doesPasswordMeetRequirements(password)) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			// Work on this later. Function should return true by default anyway for now.
-			showPlayerRegistrationFailedGUI(client, "Password doesn't meet requirements!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedNoPasswordWeak"));
+			logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to create an account (password doesn't meet requirements)`);
 		} else {
 			messagePlayerError(client, "Password doesn't meet requirements!");
 		}
 		return false
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		if(!isValidEmailAddress(emailAddress)) {
-			showPlayerRegistrationFailedGUI(client, "You must put a valid email!");
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedInvalidEmail"));
 			return false
 		}
 	}
 
 	let accountData = createAccount(getPlayerName(client), password, emailAddress);
 	if(!accountData) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-			showPlayerRegistrationFailedGUI(client, "Your account could not be created!");
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+			showPlayerRegistrationFailedGUI(client, getLocaleString(client, "RegistrationFailedCreateError"));
 		} else {
-			messagePlayerAlert(client, "Your account could not be created!");
+			messagePlayerAlert(client, getLocaleString(client, "RegistrationFailedCreateError"));
 		}
 
 		messagePlayerAlert(client, `${getServerName()} staff have been notified of the problem and will fix it shortly.`);
@@ -919,26 +941,120 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 	getPlayerData(client).accountData = accountData;
 	getPlayerData(client).loggedIn = true;
 
-	messagePlayerSuccess(client, "Your account has been created!");
+	messagePlayerSuccess(client, getLocaleString(client, "RegistrationSuccess"));
 	if(checkForSMTPModule() && getEmailConfig().enabled) {
-		messagePlayerAlert(client, "Don't forget to verify your email! A verification code has been sent to you");
+		messagePlayerAlert(client, getLocaleString(client, "RegistrationEmailVerifyReminder"));
+		let emailVerificationCode = generateEmailVerificationCode();
+		setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
+		sendEmailVerificationEmail(client, emailVerificationCode);
+		logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} was sent a registration email verification code`);
     }
-	messagePlayerAlert(client, "To play on the server, you will need to make a character.");
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
-		showPlayerRegistrationSuccessGUI(client);
-		showPlayerPromptGUI(client, "You have no characters. Would you like to make one?", "No Characters");
-		getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
+	if(doesServerHaveTesterOnlyEnabled() && !isPlayerATester(client)) {
+		setTimeout(function() {
+			client.disconnect();
+		}, 5000);
 
-		if(checkForSMTPModule() && getEmailConfig().enabled) {
-			let emailVerificationCode = generateEmailVerificationCode();
-			setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
-			sendEmailVerificationEmail(client, emailVerificationCode);
-		}
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the error GUI (not a tester).`);
+			showPlayerErrorGUI(client, getLocaleString(client, "NotATester"), getLocaleString(client, "AccessDenied"));
+			return false;
+		} else {
+			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the "not a tester" error message (GUI disabled).`);
+			messagePlayerError(client, getLocaleString(client, "NotATester"));
+			return false;
+		}	
 	} else {
-		messagePlayerAlert(client, `You have no characters. Use /newchar to make one.`);
+		messagePlayerAlert(client, getLocaleString(client, "RegistrationCreateCharReminder"));
+
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
+			showPlayerRegistrationSuccessGUI(client);
+			showPlayerPromptGUI(client, getLocaleString(client, "NoCharactersMessage"), getLocaleString(client, "NoCharactersWindowTitle"), getLocaleString(client, "Yes"), getLocaleString(client, "No"));
+			getPlayerData(client).promptType = VRR_PROMPT_CREATEFIRSTCHAR;
+		} else {
+			messagePlayerAlert(client, getLocaleString(client, "NoCharactersChatMessage"), `{ALTCOLOUR}/newchar{MAINCOLOUR}`);
+		}
 	}
 };
+
+// ===========================================================================
+
+function checkAccountResetPasswordRequest(client, inputText) {
+	if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_NONE) {
+		if(toLowerCase(getPlayerData(client).accountData.emailAddress) != toLowerCase(inputText)) {
+			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to reset their password (email not correct)`);
+			return false;
+		}
+
+		let passwordResetCode = toUpperCase(generateEmailVerificationCode());
+		getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_CODEINPUT;
+		getPlayerData(client).passwordResetCode = passwordResetCode;
+		sendPasswordResetEmail(client, passwordResetCode);
+		showPlayerResetPasswordCodeInputGUI(client);
+		logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} reset their password. Awaiting verification code input ...`);
+	} else if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_CODEINPUT) {
+		if(getPlayerData(client).passwordResetCode == toUpperCase(inputText)) {
+			getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_SETPASS;
+			showPlayerChangePasswordGUI(client);
+			logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)} entered the correct reset password verification code. Awaiting new password input ...`);
+		} else {
+			getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
+			client.disconnect();
+			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to reset their password (verification code not correct)`);
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function checkAccountChangePassword(client, newPassword, confirmNewPassword) {
+	if(!isPlayerLoggedIn(client)) {
+		if(getPlayerData(client).passwordResetState != VRR_RESETPASS_STATE_SETPASS) {
+			//getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
+			//client.disconnect();
+			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to change their password (not logged in or not using reset password)`);
+			return false;
+		}
+	}
+
+	//if(isAccountPasswordCorrect(getPlayerData(client).accountData, hashAccountPassword(getPlayerName(client), oldPassword))) {
+	//	messagePlayerError(client, `The old password is incorrect!`);
+	//	return false;
+	//}
+
+	if(!doesPasswordMeetRequirements(newPassword)) {
+		let passwordRequirementsString = `${needsCapitals}, ${needsNumbers}, ${needsSymbols}`;
+		let needsCapitals = getLocaleString(client, "PasswordNeedsCapitals", "1");
+		let needsNumbers = getLocaleString(client, "PasswordNeedsNumbers", "1");
+		let needsSymbols = getLocaleString(client, "PasswordNeedsSymbols", "1");
+
+		messagePlayerError(client, getLocaleString(client, "AccountPasswordNeedsImproved"));
+		messagePlayerInfo(client, getLocaleString(client, "PasswordNeedsBase", passwordRequirementsString));
+		logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to change their password (password doesn't mean requirements)`);
+		return false;
+	}
+
+	if(newPassword != confirmNewPassword) {
+		messagePlayerError(client, getLocaleString(client, "PasswordsDontMatch"));
+		logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to change their password (password and confirm don't match)`);
+		return false;
+	}
+
+	getPlayerData(client).accountData.password = hashAccountPassword(getPlayerData(client).accountData.name, newPassword);
+	getPlayerData(client).accountData.needsSaved = true;
+	getPlayerData(client).passwordResetCode = "";
+
+	saveAccountToDatabase(getPlayerData(client).accountData);
+
+	if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_SETPASS) {
+		getPlayerData(client).passwordResetState = VRR_RESETPASS_STATE_NONE;
+	}
+
+	messagePlayerSuccess(client, getLocaleString(client, "PasswordChanged"));
+	showPlayerLoginGUI(client);
+}
 
 // ===========================================================================
 
@@ -985,9 +1101,6 @@ function savePlayerToDatabase(client) {
 				getPlayerCurrentSubAccount(client).interior = getPlayerInterior(client);
 				getPlayerCurrentSubAccount(client).dimension = getPlayerDimension(client);
 			}
-
-			getPlayerCurrentSubAccount(client).inHouse = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : 0;
-			getPlayerCurrentSubAccount(client).inBusiness = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : 0;
 		}
 
 		saveSubAccountToDatabase(getPlayerCurrentSubAccount(client));
@@ -1002,6 +1115,12 @@ function initClient(client) {
 	if(isConsole(client)) {
 		return false;
 	}
+
+	if(client.getData("vrr.isInitialized") != null || client.getData("vrr.isInitialized") == true) {
+		return false;
+	}
+
+	client.setData("vrr.isInitialized", true, false);
 
 	sendPlayerGUIColours(client);
 	sendPlayerGUIInit(client);
@@ -1019,36 +1138,37 @@ function initClient(client) {
 
 			getServerData().clients[client.index] = new ClientData(client, tempAccountData, tempSubAccounts);
 
-			let sessionId = saveConnectionToDatabase(client);
-			getServerData().clients[client.index].session = sessionId;
-			getServerData().clients[client.index].connectTime = Math.ceil(sdl.ticks);
+			getServerData().clients[client.index].sessionId = saveConnectionToDatabase(client);
+			getServerData().clients[client.index].connectTime = getCurrentUnixTimestamp();
+			requestClientInfo(client);
 
 			if(tempAccountData != false) {
 				if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {
-					messagePlayerAlert(client, "You have been automatically logged in via IP!");
+					messagePlayerAlert(client, getLocaleString(client, "AutoLoggedInIP"));
 					loginSuccess(client);
 				} else {
-					if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+					if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);
 						showPlayerLoginGUI(client);
-						addPlayerKeyBind(client, getKeyIdFromParams("insert"), "gui", "");
 					} else {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
-						messagePlayerNormal(client, `Welcome back to ${getServerName()}, ${getPlayerName(client)}! Please /login to continue.`, getColourByName("softGreen"));
+						messagePlayerNormal(client, getLocaleString(client, "WelcomeBack", getServerName(), getPlayerName(client), "/login"),getColourByName("softGreen"));
 					}
 					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 				}
 			} else {
-				if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+				if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register GUI.`);
 					showPlayerRegistrationGUI(client);
-					addPlayerKeyBind(client, getKeyIdFromParams("insert"), "gui", "");
 				} else {
 					logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the register message (GUI disabled).`);
-					messagePlayerNormal(client, `Welcome to ${getServerName()}, ${getPlayerName(client)}! Please /register to continue.`, getColourByName("softGreen"));
+					messagePlayerNormal(client, getLocaleString(client, "WelcomeNewPlayer", getServerName(), getPlayerName(client), "/register"), getColourByName("softGreen"));
 				}
 				playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 			}
+
+			getServerData().clients[client.index].keyBinds = loadAccountKeybindsFromDatabase(getServerData().clients[client.index].accountData.databaseId);
+			sendAccountKeyBindsToClient(client);
 		}
 	}, 2500);
 }
@@ -1061,11 +1181,9 @@ function saveConnectionToDatabase(client) {
 		let safeName = escapeDatabaseString(dbConnection, getPlayerName(client));
 		let dbQueryString = `INSERT INTO conn_main (conn_when_connect, conn_server, conn_script_version, conn_game_version, conn_client_version, conn_name, conn_ip) VALUES (NOW(), ${getServerConfig().databaseId}, '${scriptVersion}', '${client.gameVersion}', '0.0.0', '${safeName}', '${client.ip}')`;
 		queryDatabase(dbConnection, dbQueryString);
-		let connectionId = getDatabaseInsertId(dbConnection);
-		setEntityData(client, "vrr.connection", connectionId, false);
-		getPlayerData(client).connectionId = connectionId;
-		requestClientInfo(client);
+		return getDatabaseInsertId(dbConnection);
 	}
+	return 0;
 }
 
 // ===========================================================================
@@ -1096,19 +1214,21 @@ function loadAccountKeybindsFromDatabase(accountDatabaseID) {
 		tempAccountKeybinds.push(tempKeyBindData);
 	}
 
-	if(dbConnection) {
-		dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID} AND acct_hotkey_server = ${getServerId()}`);
-		if(dbQuery) {
-			if(dbQuery.numRows > 0) {
-				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
-					let tempAccountKeyBindData = new KeyBindData(dbAssoc);
-					tempAccountKeybinds.push(tempAccountKeyBindData);
-					logToConsole(LOG_DEBUG, `[VRR.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${toUpperCase(getKeyNameFromId(tempAccountKeyBindData.key))}') loaded from database successfully!`);
+	if(accountDatabaseID != 0 && typeof accountDatabaseId != "undefined") {
+		if(dbConnection) {
+			dbQuery = queryDatabase(dbConnection, `SELECT * FROM acct_hotkey WHERE acct_hotkey_enabled = 1 AND acct_hotkey_acct = ${accountDatabaseID} AND acct_hotkey_server = ${getServerId()}`);
+			if(dbQuery) {
+				if(dbQuery.numRows > 0) {
+					while(dbAssoc = fetchQueryAssoc(dbQuery)) {
+						let tempAccountKeyBindData = new KeyBindData(dbAssoc);
+						tempAccountKeybinds.push(tempAccountKeyBindData);
+						logToConsole(LOG_DEBUG, `[VRR.Account]: Account keybind '${tempAccountKeyBindData.databaseId}' (Key ${tempAccountKeyBindData.key} '${toUpperCase(getKeyNameFromId(tempAccountKeyBindData.key))}') loaded from database successfully!`);
+					}
 				}
+				freeDatabaseQuery(dbQuery);
 			}
-			freeDatabaseQuery(dbQuery);
+			disconnectFromDatabase(dbConnection);
 		}
-		disconnectFromDatabase(dbConnection);
 	}
 
 	logToConsole(LOG_DEBUG, `[VRR.Account]: ${tempAccountKeybinds.length} account keybinds for account ${accountDatabaseID} loaded from database successfully!`);
@@ -1252,6 +1372,12 @@ function isAccountTwoFactorAuthenticationVerified(accountData) {
 
 // ===========================================================================
 
+function doesPlayerHaveTwoFactorAuthEnabled(client) {
+	return hasBitFlag(getPlayerData(client).accountData.flags.settings, getAccountSettingsFlagValue("TwoFactorAuth"));
+}
+
+// ===========================================================================
+
 function setAccountEmail(accountData, emailAddress) {
 	accountData.emailAddress = emailAddress;
 }
@@ -1276,6 +1402,16 @@ function sendEmailVerificationEmail(client, emailVerificationCode) {
 	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
 
 	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Confirm email on ${getServerName()}`, emailBodyText);
+}
+
+// ===========================================================================
+
+function sendPasswordResetEmail(client, verificationCode) {
+	let emailBodyText = getEmailConfig().bodyContent.confirmPasswordReset;
+	emailBodyText = emailBodyText.replace("{VERIFICATIONCODE}", verificationCode);
+	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
+
+	sendEmail(getPlayerData(client).accountData.emailAddress, getPlayerData(client).accountData.name, `Reset your password on ${getServerName()}`, emailBodyText);
 }
 
 // ===========================================================================
@@ -1321,7 +1457,7 @@ function sendAccountLoginSuccessNotification(emailAddress, name, ip, game = getS
 	let emailBodyText = getEmailConfig().bodyContent.accountAuthSuccessAlert;
 	emailBodyText = emailBodyText.replace("{GAMENAME}", getGameName(game));
 	emailBodyText = emailBodyText.replace("{IPADDRESS}", ip);
-	emailBodyText = emailBodyText.replace("{LOCATION}", `${cityName}, ${countryName}, ${countryName}`);
+	emailBodyText = emailBodyText.replace("{LOCATION}", `${cityName}, ${subDivisionName}, ${countryName}`);
 	emailBodyText = emailBodyText.replace("{SERVERNAME}", getServerName());
 	emailBodyText = emailBodyText.replace("{TIMESTAMP}", date.toLocaleString('en-US'));
 
@@ -1339,6 +1475,26 @@ function isAccountSettingFlagEnabled(accountData, flagValue) {
 
 function doesPlayerHaveRandomTipsDisabled(client) {
 	return isAccountSettingFlagEnabled(getPlayerData(client).accountData, getAccountSettingsFlagValue("NoRandomTips"));
+}
+
+// ===========================================================================
+
+function checkPlayerTwoFactorAuthentication(client, authCode) {
+	if(getPlayerData(client).twoFactorAuthCode != "") {
+		if(toUpperCase(getPlayerData(client).twoFactorAuthCode) == toUpperCase(authCode)) {
+			loginSuccess(client);
+			return true;
+		}
+	}
+
+	client.disconnect();
+	return false;
+}
+
+// ===========================================================================
+
+function isPlayerATester(client) {
+
 }
 
 // ===========================================================================

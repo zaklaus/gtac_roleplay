@@ -1,3 +1,10 @@
-[
-    ["English", "english"]
-]
+{
+    "apiEmail": "example@example.com",
+    "defaultLanguage": "en",
+    "locales": [
+        ["English", "english", "en"],
+        ["Russian", "russian", "ru"],
+        ["Polish", "polish", "pl"],
+        ["Spanish", "spanish", "es"]
+    ]
+}

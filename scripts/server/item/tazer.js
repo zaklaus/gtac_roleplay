@@ -19,6 +19,11 @@ function tazePlayer(client) {
     getPlayerData(client).pedState = VRR_PEDSTATE_TAZED;
     setPlayerControlState(client, false);
 
+    let animationId = getAnimationFromParams("tazed");
+    if(animationId != false) {
+        forcePlayerPlayAnimation(client, animationId);
+    }
+
     setTimeout(function() {
         unTazePlayer(client);
         doActionToNearbyPlayers(client, `The tazer effect wears off`);
@@ -29,7 +34,11 @@ function tazePlayer(client) {
 
 function unTazePlayer(client) {
     getPlayerData(client).pedState = VRR_PEDSTATE_READY;
+
     setPlayerControlState(client, true);
+    setPlayerPosition(client, getPlayerData(client).currentAnimationPositionReturnTo);
+    makePedStopAnimation(getPlayerData(client).ped);
+
 }
 
 // ===========================================================================

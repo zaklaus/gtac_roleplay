@@ -163,6 +163,12 @@ function messagePlayerWhisper(client, whisperingClient, messageText) {
 
 // ===========================================================================
 
+function messagePlayerMegaPhone(client, shoutingClient, messageText) {
+    messagePlayerNormal(client, `📢 ${getPlayerAccentInlineOutput(shoutingClient)}${getClientSubAccountName(shoutingClient)} (megaphone): ${messageText}!`, getColourByType("yellow"));
+}
+
+// ===========================================================================
+
 function messagePlayerShout(client, shoutingClient, messageText) {
     messagePlayerNormal(client, `🗣️ ${getPlayerAccentInlineOutput(shoutingClient)}${getClientSubAccountName(shoutingClient)} shouts: ${messageText}!`, getColourByType("shoutMessage"));
 }
@@ -197,7 +203,7 @@ function messagePlayerAdminChat(client, adminChattingClient, messageText) {
 
 function messagePlayerNewbieTip(client, message) {
     if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("NoActionTips"))) {
-        messagePlayerNormal(client, `💡 TIP: ${message}`);
+        messagePlayerNormal(client, `💡 ${message}`);
     }
 }
 
@@ -206,9 +212,43 @@ function messagePlayerNewbieTip(client, message) {
 function messagePlayerTimedRandomTip(client, message) {
     if(isPlayerLoggedIn(client) && isPlayerSpawned(client)) {
         if(!hasBitFlag(getPlayerData(client).accountData.settings, getAccountSettingsFlagValue("NoRandomTips"))) {
-            messagePlayerNormal(client, `💡 TIP: ${message}`);
+            messagePlayerNormal(client, `💡 ${message}`);
         }
     }
+}
+
+// ===========================================================================
+
+function makeChatBoxSectionHeader(name) {
+	let resultString = `{clanOrange}== {jobYellow}${name} `;
+	let endFiller = fillStringWithCharacter("=", getGlobalConfig().chatSectionHeaderLength-resultString.length);
+	return `${resultString} {clanOrange}${endFiller}`;
+}
+
+// ===========================================================================
+
+function clearChatBox(client) {
+	//game.messages.clear();
+	for(let i = 0; i <= 20; i++) {
+		messageClient(" ", client, COLOUR_WHITE);
+	}
+}
+
+// ===========================================================================
+
+function replaceEmojiInString(messageString) {
+	for(let i in emojiReplaceString) {
+		while(messageString.indexOf(emojiReplaceString[i][0]) != -1) {
+			messageString = messageString.replace(emojiReplaceString[i][0], emojiReplaceString[i][1]);
+		}
+	}
+	return messageString;
+}
+
+// ===========================================================================
+
+function messagePlayerHelpContent(client, messageString) {
+    messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${messageString}`);
 }
 
 // ===========================================================================

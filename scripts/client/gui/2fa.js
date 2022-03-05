@@ -47,12 +47,12 @@ function initTwoFactorAuthenticationGUI() {
 		},
 	});
 
-	twoFactorAuth.codeLabel = twoFactorAuth.window.text(20, 135, 260, 20, 'Please enter the code from your authenticator app!', {
+	twoFactorAuth.codeLabel = twoFactorAuth.window.text(20, 135, 260, 20, 'Please enter the code sent to your email!', {
 		main: {
 			textSize: 10.0,
 			textAlign: 0.5,
 			textColour: toColour(200, 200, 200, 255),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -65,7 +65,7 @@ function initTwoFactorAuthenticationGUI() {
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], textInputAlpha),
 			textColour: toColour(200, 200, 200, 255),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		caret: {
 			lineColour: toColour(255, 255, 255, 255),
@@ -73,7 +73,7 @@ function initTwoFactorAuthenticationGUI() {
 		placeholder: {
 			textColour: toColour(200, 200, 200, 150),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 255),
@@ -86,7 +86,7 @@ function initTwoFactorAuthenticationGUI() {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -105,6 +105,8 @@ function showTwoFactorAuthGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	twoFactorAuth.window.shown = true;
+	mexui.focusedControl = twoFactorAuth.codeInput;
+	guiSubmitKey = checkTwoFactorAuth;
 }
 
 // ===========================================================================
@@ -127,7 +129,7 @@ function twoFactorAuthSuccess() {
 
 function checkTwoFactorAuth() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking two-factor authentication with server ...`);
-	triggerNetworkEvent("vrr.checkTwoFactorAuth", twoFactorAuth.codeInput.lines[0]);
+	sendNetworkEventToServer("vrr.2fa", twoFactorAuth.codeInput.lines[0]);
 }
 
 // ===========================================================================

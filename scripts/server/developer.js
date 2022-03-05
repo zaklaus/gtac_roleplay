@@ -119,7 +119,7 @@ function pvd(params) {
 
 // ===========================================================================
 
-function addServerLogLevelCommand(command, params, client) {
+function addLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -150,6 +150,8 @@ function addServerLogLevelCommand(command, params, client) {
 			return;
 	}
 
+	sendPlayerLogLevel(null, logLevel);
+
 	messageAdminAction(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}enabled log level {ALTCOLOUR}${toLowerCase(params)}`);
 
 	return true;
@@ -157,7 +159,7 @@ function addServerLogLevelCommand(command, params, client) {
 
 // ===========================================================================
 
-function getServerLogLevelCommand(command, params, client) {
+function getLogLevelCommand(command, params, client) {
 	let logLevels = [];
 
 	if(hasBitFlag(logLevel, LOG_DEBUG)) {
@@ -187,7 +189,7 @@ function getServerLogLevelCommand(command, params, client) {
 
 // ===========================================================================
 
-function removeServerLogLevelCommand(command, params, client) {
+function removeLogLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -218,6 +220,8 @@ function removeServerLogLevelCommand(command, params, client) {
 			return;
 	}
 
+	sendPlayerLogLevel(null, logLevel);
+
 	messageAdminAction(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}disabled log level {ALTCOLOUR}${toLowerCase(params)}`);
 
 	return true;
@@ -243,9 +247,8 @@ function simulateCommandForPlayerCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
-	let tempCommand = splitParams[1];
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let tempCommand = getParam(params, " ", 2);
 	tempCommand.replace("/", "");
 	let tempParams = splitParams.slice(2).join(" ");
 
@@ -284,8 +287,7 @@ function simulateCommandForAllPlayersCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let tempCommand = splitParams[0];
+	let tempCommand = getParam(params, " ", 1);
 	tempCommand.replace("/", "");
 	let tempParams = splitParams.slice(1).join(" ");
 
@@ -335,12 +337,11 @@ function executeClientCodeCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let targetClient = getPlayerFromParams(splitParams[0]);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let targetCode = splitParams.slice(1).join(" ");
 
 	if(!targetClient) {
-		messagePlayerError(client, "That player was not found!");
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 		return false;
 	}
 
@@ -353,6 +354,33 @@ function executeClientCodeCommand(command, params, client) {
 
 	messagePlayerSuccess(client, "Executing client code for " + toString(targetgetPlayerName(client)) + "!");
 	messagePlayerNormal(client, "Code: " + targetCode);
+	return true;
+}
+
+// ===========================================================================
+
+function setPlayerTesterStatusCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(params);
+
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
+
+	if(!hasBitFlag(getPlayerData(targetClient).accountData.flags.moderation, getModerationFlagValue("IsTester"))) {
+		getPlayerData(targetClient).accountData.flags.moderation = addBitFlag(getPlayerData(targetClient).accountData.flags.moderation, getModerationFlagValue("IsTester"));
+	} else {
+		getPlayerData(targetClient).accountData.flags.moderation = removeBitFlag(getPlayerData(targetClient).accountData.flags.moderation, getModerationFlagValue("IsTester"));
+	}
+
+	let enabled = hasBitFlag(getPlayerData(targetClient).accountData.flags.moderation, getModerationFlagValue("IsTester"));
+
+	messageAdminAction(`{ALTCOLOUR}${client.name} ${getBoolRedGreenInlineColour(enabled)}${toUpperCase(getEnabledDisabledFromBool(enabled))} {ALTCOLOUR}${targetClient.name}'s {MAINCOLOUR}tester status`)
 	return true;
 }
 
@@ -375,8 +403,8 @@ function testEmailCommand(command, params, client) {
 // ===========================================================================
 
 function restartGameModeCommand(command, params, client) {
-	messagePlayerNormal(null, `{clanOrange}The server game mode is restarting!`, getColourByName("orange"));
-	consoleCommand("refresh");
+	messagePlayerNormal(null, `The server game mode is restarting!`, getColourByName("orange"));
+	consoleCommand("/refresh");
 	thisResource.restart();
 	return true;
 }
@@ -521,12 +549,10 @@ function streamAudioURLToAllPlayersCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let url = splitParams[0];
-	let volume = splitParams[1];
+	let url = getParam(params, " ", 1);
+	let volume = getParam(params, " ", 2);
 
 	playRadioStreamForPlayer(null, url, false, volume);
-	//https://www.dropbox.com/s/xw4m0y0guyzrwkk/lets-get-ready-to-rumble.ogg?dl=0
 }
 
 // ===========================================================================
@@ -537,12 +563,54 @@ function streamAudioNameToAllPlayersCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let name = splitParams[0];
-	let volume = splitParams[1];
+	let name = getParam(params, " ", 1);
+	let volume = getParam(params, " ", 2);
 
 	playAudioFileForPlayer(null, name, false, volume);
-	//https://www.dropbox.com/s/xw4m0y0guyzrwkk/lets-get-ready-to-rumble.ogg?dl=0
+}
+
+// ===========================================================================
+
+function fixAllServerBlipsCommand(command, params, client) {
+    deleteAllBusinessBlips();
+    deleteAllJobBlips();
+    deleteAllHouseBlips();
+
+	let blips = getElementsByType(ELEMENT_BLIP);
+	blips.forEach((blip) => {
+		deleteGameElement(blip);
+	});
+
+	createAllJobBlips();
+	createAllBusinessBlips();
+	createAllHouseBlips();
+}
+
+// ===========================================================================
+
+function fixAllServerPickupsCommand(command, params, client) {
+	let pickups = getElementsByType(ELEMENT_PICKUP);
+	pickups.forEach((pickup) => {
+		deleteGameElement(pickup);
+	});
+
+	createAllJobPickups();
+	createAllBusinessPickups();
+	createAllHousePickups();
+}
+
+// ===========================================================================
+
+function resetAllServerAmbienceElementsCommand(command, params, client) {
+	clearTemporaryPeds();
+	cleartTemporaryVehicles();
+}
+
+// ===========================================================================
+
+function reloadEconomyConfigurationCommand(command, params, client) {
+	getGlobalConfig().economy = loadEconomyConfig();
+	messageAdmins(`${client.name} {MAINCOLOUR}has reloaded the economy settings`);
 }
 
 // ===========================================================================

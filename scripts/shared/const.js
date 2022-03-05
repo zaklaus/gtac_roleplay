@@ -33,7 +33,7 @@ const VRR_WEAPON_DAMAGE_EVENT_MACE = 4;
 const VRR_GAME_GTA_III = 1;
 const VRR_GAME_GTA_VC = 2;
 const VRR_GAME_GTA_SA = 3;
-const VRR_GAME_GTA_IV = 4;
+const VRR_GAME_GTA_IV = 5;
 const VRR_GAME_GTA_V = 50;
 const VRR_GAME_MAFIA_ONE = 10;
 const VRR_GAME_MAFIA_TWO = 11;
@@ -61,10 +61,13 @@ const VRR_PROPLABEL_INFO_BUYBIZ = 8;
 
 // Animation Types
 const VRR_ANIMTYPE_NONE = 0;
-const VRR_ANIMTYPE_ADD = 1;
+const VRR_ANIMTYPE_NORMAL = 1;
 const VRR_ANIMTYPE_BLEND = 2;
 const VRR_ANIMTYPE_SHARED = 3;                  // Forces this animation to play in sync with another ped's mirrored anim (handshake, kiss, gang signs, etc)
 const VRR_ANIMTYPE_SPECIALACTION = 4;           // This animtype uses a special action (only in SA)
+const VRR_ANIMTYPE_SURRENDER = 5;               // This animtype is used to surrender (like handsup or cower)
+const VRR_ANIMTYPE_FORCED = 6;                  // This animtype is forced (can't use stopanim to get out of it)
+const VRR_ANIMTYPE_FREEZE = 7;                  // This animtype is forced (can't use stopanim to get out of it)
 
 // Animation Move Types
 const VRR_ANIMMOVE_NONE = 0;

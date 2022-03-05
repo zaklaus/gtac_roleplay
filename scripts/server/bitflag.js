@@ -62,6 +62,8 @@ let serverBitFlagKeys = {
 		"TwoFactorAuthVerified",
 		"NonRoleplayCharacterName",
 		"CanHearEverything",
+		"DontSyncClientElements",
+		"IsTester"
 	],
 	factionFlagKeys: [
 		"None",
@@ -408,7 +410,7 @@ function getModerationFlagValue(flagName) {
 
 // ===========================================================================
 
-function getServerSettingFlagValue(flagName) {
+function getServerSettingsFlagValue(flagName) {
     if(flagName == "All") {
         return -1;
 	}
@@ -434,11 +436,12 @@ function givePlayerStaffFlag(client, flagName) {
 // ===========================================================================
 
 function takePlayerStaffFlag(client, flagName) {
-	if(!getStaffFlagValue(flagName)) {
+	let flagValue = getStaffFlagValue(flagName);
+	if(!flagValue) {
 		return false;
 	}
 
-	getPlayerData(client).accountData.flags.admin = getPlayerData(client).accountData.flags.admin & ~getStaffFlagValue(flagName);
+	getPlayerData(client).accountData.flags.admin = removeBitFlag(getPlayerData(client).accountData.flags.admin, flagValue);
 	return true;
 }
 

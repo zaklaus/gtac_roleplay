@@ -22,7 +22,7 @@ let login = {
 
 function initLoginGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating login GUI ...`);
-	login.window = mexui.window(game.width/2-150, game.height/2-129, 300, 258, 'LOGIN', {
+	login.window = mexui.window(game.width/2-150, game.height/2-130, 300, 260, 'LOGIN', {
 		main: {
 			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 			transitionTime: 500,
@@ -42,7 +42,7 @@ function initLoginGUI() {
 	login.window.titleBarIconSize = toVector2(0,0);
 	login.window.titleBarHeight = 0;
 
-	login.logoImage = login.window.image(100, 20, 100, 100, mainLogoPath, {
+	login.logoImage = login.window.image(5, 20, 290, 80, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},
@@ -53,7 +53,7 @@ function initLoginGUI() {
 			textSize: 10.0,
 			textAlign: 0.5,
 			textColour: toColour(200, 200, 200, 255),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -66,7 +66,7 @@ function initLoginGUI() {
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], textInputAlpha),
 			textColour: toColour(200, 200, 200, 255),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		caret: {
 			lineColour: toColour(255, 255, 255, 255),
@@ -74,7 +74,7 @@ function initLoginGUI() {
 		placeholder: {
 			textColour: toColour(200, 200, 200, 150),
 			textSize: 10.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], 255),
@@ -88,7 +88,7 @@ function initLoginGUI() {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 12.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -96,13 +96,12 @@ function initLoginGUI() {
 		},
 	}, checkLogin);
 
-	/*
-	login.forgotPasswordButton = login.window.button(200, 240, 60, 15, 'FORGOT PASSWORD', {
+	login.forgotPasswordButton = login.window.button(200, 240, 80, 15, 'RESET PASS', {
 		main: {
 			backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
 			textColour: toColour(0, 0, 0, 255),
 			textSize: 8.0,
-			textFont: robotoFont,
+			textFont: mainFont,
 			textAlign: 0.5,
 		},
 		focused: {
@@ -110,18 +109,17 @@ function initLoginGUI() {
 		},
 	}, switchToPasswordResetGUI);
 
-	login.resetPasswordLabel = login.window.text(20, 140, 60, 15, 'Need to reset your password? Click here >', {
+	login.resetPasswordLabel = login.window.text(125, 240, 60, 15, 'Forgot your password?', {
 		main: {
 			textSize: 8.0,
 			textAlign: 1.0,
-			textColour: toColour(200, 200, 200, 255),
-			textFont: robotoFont,
+			textColour: toColour(180, 180, 180, 255),
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},
 	});
-	*/
 
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Created login GUI`);
 }
@@ -134,15 +132,16 @@ function showLoginGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	login.window.shown = true;
-
-	showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
+	mexui.focusedControl = login.passwordInput;
+	guiSubmitKey = checkLogin;
+	//showSmallGameMessage(`If you don't have a mouse cursor, press ${toUpperCase(getKeyNameFromId(disableGUIKey))} to disable GUI`, COLOUR_WHITE, 7500);
 }
 
 // ===========================================================================
 
 function checkLogin() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Checking login with server ...`);
-	triggerNetworkEvent("vrr.checkLogin", login.passwordInput.lines[0]);
+	sendNetworkEventToServer("vrr.checkLogin", login.passwordInput.lines[0]);
 }
 
 // ===========================================================================
@@ -158,7 +157,15 @@ function loginFailed(errorMessage) {
 
 function loginSuccess() {
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Server reports login was successful`);
+	guiSubmitKey = false;
 	closeAllWindows();
 }
 
 // ===========================================================================
+
+function switchToPasswordResetGUI() {
+	closeAllWindows();
+	logToConsole(LOG_DEBUG, `[VRR.GUI] Showing password reset dialog window`);
+	showResetPasswordGUI();
+	return false;
+}

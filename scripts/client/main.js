@@ -64,6 +64,8 @@ let vehiclePurchaseState = VRR_VEHBUYSTATE_NONE;
 let vehiclePurchasing = null;
 let vehiclePurchasePosition = null;
 
+let forceWantedLevel = 0;
+
 // Pre-cache all allowed skins
 let allowedSkins = getAllowedSkins(getGame());
 

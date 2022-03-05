@@ -365,3 +365,12 @@ Obviously this would still be using slashes for commands still. The way this wor
         * Set drop position offset
         * Set drop rotation offset
 ---
+### Tutorial
+    * Pick up item (grab bottle of beer off ground)
+    * Equip item (switch to bottle of beer item)
+    * Use item (drink bottle of beer item)
+    * Drop item (drop empty bottle on ground)
+    * Take item from vehicle trunk (grab crate from vehicle)
+    * Place item on ground (crate)
+    * Take second beer from crate
+    * Store second beer in trunk

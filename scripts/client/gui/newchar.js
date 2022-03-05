@@ -21,7 +21,7 @@ let newCharacter = {
 
 function initNewCharacterGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating new character GUI ...`);
-    newCharacter.window = mexui.window(game.width/2-130, game.height/2-100, 300, 200, 'Character Name', {
+    newCharacter.window = mexui.window(game.width/2-130, game.height/2-100, 300, 200, 'New Character', {
         main: {
             backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
             transitionTime: 500,
@@ -40,7 +40,7 @@ function initNewCharacterGUI() {
     newCharacter.window.titleBarIconSize = toVector2(0,0);
     newCharacter.window.titleBarHeight = 0;
 
-    newCharacter.mainLogoImage = newCharacter.window.image(115, 10, 65, 65, mainLogoPath, {
+    newCharacter.mainLogoImage = newCharacter.window.image(5, 20, 290, 80, mainLogoPath, {
         focused: {
             borderColour: toColour(0, 0, 0, 0),
         },
@@ -51,7 +51,7 @@ function initNewCharacterGUI() {
             textSize: 10.0,
             textAlign: 0.5,
             textColour: toColour(200, 200, 200, 255),
-            textFont: robotoFont,
+            textFont: mainFont,
         },
         focused: {
             borderColour: toColour(0, 0, 0, 0),
@@ -63,7 +63,7 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(200, 200, 200, 255),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
         },
         caret: {
             lineColour: toColour(255, 255, 255, 255),
@@ -72,7 +72,7 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(200, 200, 200, 200),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
         }
     });
     newCharacter.firstNameInput.placeholder = "First Name";
@@ -82,7 +82,7 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(200, 200, 200, 255),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
         },
         caret: {
             lineColour: toColour(255, 255, 255, 255),
@@ -91,7 +91,7 @@ function initNewCharacterGUI() {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(150, 150, 150, 200),
             textSize: 10.0,
-            textFont: robotoFont,
+            textFont: mainFont,
         }
     });
     newCharacter.lastNameInput.placeholder = "Last Name";
@@ -100,8 +100,8 @@ function initNewCharacterGUI() {
         main: {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(255, 255, 255, 255),
-            textSize: 12.0,
-            textFont: robotoFont,
+            textSize: 10.0,
+            textFont: mainFont,
             textAlign: 0.5,
         },
         focused: {
@@ -143,7 +143,7 @@ function checkNewCharacter() {
 		return false;
 	}
 
-	triggerNetworkEvent("vrr.checkNewCharacter",
+	sendNetworkEventToServer("vrr.checkNewCharacter",
 		newCharacter.firstNameInput.lines[0],
 		newCharacter.lastNameInput.lines[0],
 	);
@@ -157,6 +157,8 @@ function showNewCharacterGUI() {
 	setChatWindowEnabled(false);
 	mexui.setInput(true);
 	newCharacter.window.shown = true;
+    mexui.focusedInput = newCharacter.firstNameInput;
+    guiSubmitButton = checkNewCharacter;
 }
 
 // ===========================================================================

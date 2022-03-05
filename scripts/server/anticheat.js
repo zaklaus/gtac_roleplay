@@ -249,3 +249,43 @@ function isPlayerExemptFromAntiCheat(client) {
 }
 
 // ===========================================================================
+
+function canPlayerUsePoliceJob(client) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.policeBanned) {
+		return false;
+	}
+
+	return true;
+}
+
+// ===========================================================================
+
+function canClientUseFireJob(client) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.fireBanned) {
+		return false;
+	}
+
+	return true;
+}
+
+// ===========================================================================
+
+function canClientUseAmmunations(client) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.AmmuBanned) {
+		return false;
+	}
+
+	return true;
+}
+
+// ===========================================================================
+
+function canClientUseGuns(client) {
+	if(getPlayerData(client).accountData.flags.moderation & getServerBitFlags().moderationFlags.GunBanned) {
+		return false;
+	}
+
+	return true;
+}
+
+// ===========================================================================

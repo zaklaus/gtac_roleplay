@@ -18,101 +18,108 @@ function initServerScript() {
 function addAllNetworkHandlers() {
     logToConsole(LOG_DEBUG, "[VRR.Server]: Adding network handlers ...");
 
-    addNetworkHandler("vrr.smallGameMessage", showSmallGameMessage);
-    addNetworkHandler("vrr.working", setLocalPlayerWorkingState);
-    addNetworkHandler("vrr.jobType", setLocalPlayerJobType);
-    addNetworkHandler("vrr.passenger", enterVehicleAsPassenger);
+    addNetworkEventHandler("vrr.smallGameMessage", showSmallGameMessage);
+    addNetworkEventHandler("vrr.working", setLocalPlayerWorkingState);
+    addNetworkEventHandler("vrr.jobType", setLocalPlayerJobType);
+    addNetworkEventHandler("vrr.passenger", enterVehicleAsPassenger);
 
-    addNetworkHandler("vrr.freeze", setLocalPlayerFrozenState);
-    addNetworkHandler("vrr.control", setLocalPlayerControlState);
-    addNetworkHandler("vrr.fadeCamera", fadeLocalCamera);
-    addNetworkHandler("vrr.removeFromVehicle", removeLocalPlayerFromVehicle);
-    addNetworkHandler("vrr.clearPeds", clearLocalPlayerOwnedPeds);
-    addNetworkHandler("vrr.restoreCamera", restoreLocalCamera);
-    addNetworkHandler("vrr.cameraLookAt", setLocalCameraLookAt);
-    addNetworkHandler("vrr.logo", setServerLogoRenderState);
-    addNetworkHandler("vrr.ambience", setCityAmbienceState);
-    addNetworkHandler("vrr.runCode", runClientCode);
-    addNetworkHandler("vrr.clearWeapons", clearLocalPlayerWeapons);
-    addNetworkHandler("vrr.giveWeapon",  giveLocalPlayerWeapon);
-    addNetworkHandler("vrr.position", setLocalPlayerPosition);
-    addNetworkHandler("vrr.heading", setLocalPlayerHeading);
-    addNetworkHandler("vrr.interior", setLocalPlayerInterior);
-    addNetworkHandler("vrr.minuteDuration", setMinuteDuration);
-    addNetworkHandler("vrr.showJobRouteStop", showJobRouteStop);
-    addNetworkHandler("vrr.snow", setSnowState);
-    addNetworkHandler("vrr.health", setLocalPlayerHealth);
-    addNetworkHandler("vrr.enterPropertyKey", setEnterPropertyKey);
-    addNetworkHandler("vrr.skinSelect", toggleSkinSelect);
-    addNetworkHandler("vrr.hotbar", updatePlayerHotBar);
-    addNetworkHandler("vrr.pedSpeech", playPedSpeech);
-    addNetworkHandler("vrr.clearPedState", clearLocalPedState);
-    addNetworkHandler("vrr.drunkEffect", setLocalPlayerDrunkEffect);
-    addNetworkHandler("vrr.showItemActionDelay", showItemActionDelay);
-    addNetworkHandler("vrr.set2DRendering", setPlayer2DRendering);
-    addNetworkHandler("vrr.mouseCursor", toggleMouseCursor);
-    addNetworkHandler("vrr.mouseCamera", toggleMouseCamera);
-    addNetworkHandler("vrr.mouseCameraForce", setMouseCameraState);
-    addNetworkHandler("vrr.weaponDamageEnabled", setPlayerWeaponDamageEnabled);
-    addNetworkHandler("vrr.weaponDamageEvent", setPlayerWeaponDamageEvent);
-    addNetworkHandler("vrr.spawned", onServerSpawnedPlayer);
-    addNetworkHandler("vrr.money", setLocalPlayerCash);
-    addNetworkHandler("vrr.armour", setLocalPlayerArmour);
+    addNetworkEventHandler("vrr.freeze", setLocalPlayerFrozenState);
+    addNetworkEventHandler("vrr.control", setLocalPlayerControlState);
+    addNetworkEventHandler("vrr.fadeCamera", fadeLocalCamera);
+    addNetworkEventHandler("vrr.removeFromVehicle", removeLocalPlayerFromVehicle);
+    addNetworkEventHandler("vrr.clearPeds", clearLocalPlayerOwnedPeds);
+    addNetworkEventHandler("vrr.restoreCamera", restoreLocalCamera);
+    addNetworkEventHandler("vrr.cameraLookAt", setLocalCameraLookAt);
+    addNetworkEventHandler("vrr.logo", setServerLogoRenderState);
+    addNetworkEventHandler("vrr.ambience", setCityAmbienceState);
+    addNetworkEventHandler("vrr.runCode", runClientCode);
+    addNetworkEventHandler("vrr.clearWeapons", clearLocalPlayerWeapons);
+    addNetworkEventHandler("vrr.giveWeapon",  giveLocalPlayerWeapon);
+    addNetworkEventHandler("vrr.position", setLocalPlayerPosition);
+    addNetworkEventHandler("vrr.heading", setLocalPlayerHeading);
+    addNetworkEventHandler("vrr.interior", setLocalPlayerInterior);
+    addNetworkEventHandler("vrr.minuteDuration", setMinuteDuration);
+    addNetworkEventHandler("vrr.showJobRouteLocation", showJobRouteLocation);
+    addNetworkEventHandler("vrr.hideJobRouteLocation", hideJobRouteLocation);
+    addNetworkEventHandler("vrr.snow", setSnowState);
+    addNetworkEventHandler("vrr.health", setLocalPlayerHealth);
+    addNetworkEventHandler("vrr.enterPropertyKey", setEnterPropertyKey);
+    addNetworkEventHandler("vrr.skinSelect", toggleSkinSelect);
+    addNetworkEventHandler("vrr.hotbar", updatePlayerHotBar);
+    addNetworkEventHandler("vrr.pedSpeech", playPedSpeech);
+    addNetworkEventHandler("vrr.clearPedState", clearLocalPedState);
+    addNetworkEventHandler("vrr.drunkEffect", setLocalPlayerDrunkEffect);
+    addNetworkEventHandler("vrr.showItemActionDelay", showItemActionDelay);
+    addNetworkEventHandler("vrr.set2DRendering", setPlayer2DRendering);
+    addNetworkEventHandler("vrr.mouseCursor", toggleMouseCursor);
+    addNetworkEventHandler("vrr.mouseCamera", toggleMouseCamera);
+    addNetworkEventHandler("vrr.mouseCameraForce", setMouseCameraState);
+    addNetworkEventHandler("vrr.weaponDamageEnabled", setPlayerWeaponDamageEnabled);
+    addNetworkEventHandler("vrr.weaponDamageEvent", setPlayerWeaponDamageEvent);
+    addNetworkEventHandler("vrr.spawned", onServerSpawnedPlayer);
+    addNetworkEventHandler("vrr.money", setLocalPlayerCash);
+    addNetworkEventHandler("vrr.armour", setLocalPlayerArmour);
+    addNetworkEventHandler("vrr.wantedLevel", forceLocalPlayerWantedLevel);
 
-    addNetworkHandler("vrr.delKeyBind", unBindAccountKey);
-    addNetworkHandler("vrr.addKeyBind", bindAccountKey);
-    addNetworkHandler("vrr.clearKeyBinds", clearKeyBinds);
+    addNetworkEventHandler("vrr.delKeyBind", unBindAccountKey);
+    addNetworkEventHandler("vrr.addKeyBind", bindAccountKey);
+    addNetworkEventHandler("vrr.clearKeyBinds", clearKeyBinds);
 
-    addNetworkHandler("vrr.nametag", updatePlayerNameTag);
-    addNetworkHandler("vrr.ping", updatePlayerPing);
+    addNetworkEventHandler("vrr.nametag", updatePlayerNameTag);
+    addNetworkEventHandler("vrr.ping", updatePlayerPing);
 
-    addNetworkHandler("vrr.m", receiveChatBoxMessageFromServer);
-    addNetworkHandler("vrr.chatScrollLines", setChatScrollLines);
+    addNetworkEventHandler("vrr.m", receiveChatBoxMessageFromServer);
+    addNetworkEventHandler("vrr.chatScrollLines", setChatScrollLines);
 
-    addNetworkHandler("vrr.radioStream", playStreamingRadio);
-    addNetworkHandler("vrr.audioFileStream", playAudioFile);
-    addNetworkHandler("vrr.stopRadioStream", stopStreamingRadio);
-    addNetworkHandler("vrr.radioVolume", setStreamingRadioVolume);
+    addNetworkEventHandler("vrr.radioStream", playStreamingRadio);
+    addNetworkEventHandler("vrr.audioFileStream", playAudioFile);
+    addNetworkEventHandler("vrr.stopRadioStream", stopStreamingRadio);
+    addNetworkEventHandler("vrr.radioVolume", setStreamingRadioVolume);
 
-    addNetworkHandler("vrr.veh.lights", setVehicleLights);
-    addNetworkHandler("vrr.veh.engine", setVehicleEngine);
-    addNetworkHandler("vrr.veh.repair", repairVehicle);
+    addNetworkEventHandler("vrr.veh.lights", setVehicleLights);
+    addNetworkEventHandler("vrr.veh.engine", setVehicleEngine);
+    addNetworkEventHandler("vrr.veh.repair", repairVehicle);
 
-    addNetworkHandler("vrr.pedAnim", makePedPlayAnimation);
-    addNetworkHandler("vrr.pedStopAnim", makePedStopAnimation);
-    addNetworkHandler("vrr.hideAllGUI", hideAllGUI);
-    addNetworkHandler("vrr.gameScript", setGameScriptState);
-    addNetworkHandler("vrr.clientInfo", serverRequestedClientInfo);
-    addNetworkHandler("vrr.interiorLights", updateInteriorLightsState);
+    addNetworkEventHandler("vrr.pedAnim", makePedPlayAnimation);
+    addNetworkEventHandler("vrr.pedStopAnim", makePedStopAnimation);
+    addNetworkEventHandler("vrr.localPlayerSkin", setLocalPlayerSkin);
+    addNetworkEventHandler("vrr.forcePedAnim", forcePedAnimation);
+    addNetworkEventHandler("vrr.hideAllGUI", hideAllGUI);
+    addNetworkEventHandler("vrr.gameScript", setGameScriptState);
+    addNetworkEventHandler("vrr.clientInfo", serverRequestedClientInfo);
+    addNetworkEventHandler("vrr.interiorLights", updateInteriorLightsState);
 
-    addNetworkHandler("vrr.syncElement", forceSyncElementProperties);
-    addNetworkHandler("vrr.elementPosition", setElementPosition);
-    addNetworkHandler("vrr.elementCollisions", setElementCollisionsEnabled);
+    addNetworkEventHandler("vrr.syncElement", forceSyncElementProperties);
+    addNetworkEventHandler("vrr.elementPosition", setElementPosition);
+    addNetworkEventHandler("vrr.elementCollisions", setElementCollisionsEnabled);
 
-    addNetworkHandler("vrr.vehBuyState", setVehiclePurchaseState);
+    addNetworkEventHandler("vrr.vehBuyState", setVehiclePurchaseState);
 
-    addNetworkHandler("vrr.showRegistration", showRegistrationGUI);
-    addNetworkHandler("vrr.showNewCharacter", showNewCharacterGUI);
-    addNetworkHandler("vrr.showLogin", showLoginGUI);
+    addNetworkEventHandler("vrr.showRegistration", showRegistrationGUI);
+    addNetworkEventHandler("vrr.showNewCharacter", showNewCharacterGUI);
+    addNetworkEventHandler("vrr.showLogin", showLoginGUI);
+
+    addNetworkEventHandler("vrr.logLevel", setLogLevel);
+    addNetworkEventHandler("vrr.infiniteRun", setLocalPlayerInfiniteRun);
 }
 
 // ===========================================================================
 
 function sendResourceReadySignalToServer() {
-    triggerNetworkEvent("vrr.clientReady");
+    sendNetworkEventToServer("vrr.clientReady");
 }
 
 // ===========================================================================
 
 function sendResourceStartedSignalToServer() {
-    triggerNetworkEvent("vrr.clientStarted");
+    sendNetworkEventToServer("vrr.clientStarted");
 }
 
 // ===========================================================================
 
 function sendResourceStoppedSignalToServer() {
     if(isConnected) {
-        triggerNetworkEvent("vrr.clientStopped");
+        sendNetworkEventToServer("vrr.clientStopped");
     }
 }
 
@@ -122,10 +129,12 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
     logToConsole(LOG_DEBUG, `[VRR.Main] Updating render states (HUD: ${hudState}, Labels: ${labelState}, Bottom Text: ${smallGameMessageState}, Scoreboard: ${scoreboardState}, HotBar: ${hotBarState}, Item Action Delay: ${itemActionDelayState})`);
     renderHUD = hudState;
 
-    if(typeof setHUDEnabled != "undefined") {
-        if(getGame() == VRR_GAME_GTA_IV) {
-            natives.displayHud(false);
-        } else {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        natives.displayCash(hudState);
+        natives.displayAmmo(hudState);
+        natives.displayHud(hudState);
+    } else {
+        if(typeof setHUDEnabled != "undefined") {
             setHUDEnabled(hudState);
         }
     }
@@ -151,19 +160,19 @@ function onServerSpawnedPlayer(state) {
 // ===========================================================================
 
 function tellServerPlayerUsedKeyBind(key) {
-    triggerNetworkEvent("vrr.useKeyBind", key);
+    sendNetworkEventToServer("vrr.useKeyBind", key);
 }
 
 // ===========================================================================
 
-function tellServerPlayerArrivedAtJobRouteStop() {
-    triggerNetworkEvent("vrr.arrivedAtJobRouteStop");
+function tellServerPlayerArrivedAtJobRouteLocation() {
+    sendNetworkEventToServer("vrr.arrivedAtJobRouteLocation");
 }
 
 // ===========================================================================
 
 function tellServerItemActionDelayComplete() {
-    triggerNetworkEvent("vrr.itemActionDelayComplete");
+    sendNetworkEventToServer("vrr.itemActionDelayComplete");
 }
 
 // ===========================================================================
@@ -173,13 +182,13 @@ function sendServerClientInfo() {
     if(typeof CLIENT_VERSION_MAJOR != "undefined") {
         clientVersion = `${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_PATCH}.${CLIENT_VERSION_BUILD}`;
     }
-    triggerNetworkEvent("vrr.clientInfo", clientVersion, game.width, game.height);
+    sendNetworkEventToServer("vrr.clientInfo", clientVersion, game.width, game.height);
 }
 
 // ===========================================================================
 
 function sendServerNewAFKStatus(state) {
-    triggerNetworkEvent("vrr.afk", state);
+    sendNetworkEventToServer("vrr.afk", state);
 }
 
 // ===========================================================================
@@ -235,6 +244,10 @@ function setElementPosition(elementId, position) {
         return false;
     }
 
+    if(!getElementFromId(elementId).isSyncer) {
+        return false;
+    }
+
     getElementFromId(elementId).position = position;
 }
 
@@ -246,25 +259,6 @@ function setElementCollisionsEnabled(elementId, state) {
     }
 
     getElementFromId(elementId).collisionsEnabled = state;
-}
-
-// ===========================================================================
-
-function makePedStopAnimation(pedId) {
-    if(getElementFromId(pedId) == null) {
-        return false;
-    }
-
-    if(getGame() == VRR_GAME_GTA_VC || getGame() == VRR_GAME_GTA_SA) {
-        getElementFromId(pedId).clearAnimations();
-    } else {
-        getElementFromId(pedId).clearObjective();
-    }
-
-    if(getElementFromId(pedId) == localPlayer) {
-        localPlayer.collisionsEnabled = true;
-        setLocalPlayerControlState(true, false);
-    }
 }
 
 // ===========================================================================
@@ -281,6 +275,39 @@ function setLocalPlayerPedPartsAndProps(parts, props) {
 function setLocalPlayerArmour(armour) {
     if(typeof localPlayer.armour != "undefined") {
         localPlayer.armour = armour;
+    }
+}
+
+// ===========================================================================
+
+function forceLocalPlayerWantedLevel(wantedLevel) {
+    forceWantedLevel = toInteger(wantedLevel);
+}
+
+// ===========================================================================
+
+function setLogLevel(level) {
+    logLevel = level;
+}
+
+// ===========================================================================
+
+function setLocalPlayerInfiniteRun(state) {
+    if(localPlayer != null) {
+        if(getGame() == VRR_GAME_GTA_III || getGame() == VRR_GAME_GTA_VC) {
+            game.SET_PLAYER_NEVER_GETS_TIRED(game.GET_PLAYER_ID(), boolToInt(state));
+        }
+    }
+}
+
+// ===========================================================================
+
+function setLocalPlayerSkin(skinId) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        //natives.changePlayerModel(natives.getPlayerId(), skinId);
+        localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+    } else {
+        localPlayer.skin = skinId;
     }
 }
 

@@ -18,6 +18,7 @@ function initEventScript() {
 function addAllEventHandlers() {
     addEventHandler("onResourceStart", onResourceStart);
     addEventHandler("onResourceStop", onResourceStop);
+    addEventHandler("onServerStop", onResourceStop);
 
     addEventHandler("onProcess", onProcess);
     addEventHandler("onEntityProcess", onEntityProcess);
@@ -74,6 +75,13 @@ function onElementStreamIn(event, element, client) {
     //if(getPlayerDimension(client) != getElementDimension(element)) {
     //    event.preventDefault();
     //}
+
+    if(getPlayerData(getClientFromIndex(element.owner)) != false    ) {
+        if(hasBitFlag(getPlayerData(getClientFromIndex(element.owner)).accountData.flags.moderation, getModerationFlagValue("DontSyncClientElements"))) {
+            event.preventDefault();
+            destroyGameElement(element);
+        }
+    }
 }
 
 // ===========================================================================
@@ -87,6 +95,7 @@ function onElementStreamOut(event, element, client) {
 function onPlayerQuit(event, client, quitReasonId) {
     logToConsole(LOG_INFO, `👋 Client ${getPlayerDisplayForConsole(client)} disconnected (${disconnectReasons[quitReasonId]}[${quitReasonId}])`);
     updateConnectionLogOnQuit(client, quitReasonId);
+
     if(isPlayerLoggedIn(client)) {
         messagePlayerNormal(null, `👋 ${getPlayerName(client)} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
         savePlayerToDatabase(client);
@@ -95,36 +104,17 @@ function onPlayerQuit(event, client, quitReasonId) {
     }
 
     messageDiscordEventChannel(`👋 ${getPlayerDisplayForConsole(client)} has left the server.`);
+
+    clearTemporaryVehicles();
+    clearTemporaryPeds();
 }
 
 // ===========================================================================
 
-function onPlayerChat(event, client, messageText) {
+async function onPlayerChat(event, client, messageText) {
     event.preventDefault();
 
-    if(!getPlayerData(client)) {
-        messagePlayerError(client, "You need to login before you can chat!");
-        return false;
-    }
-
-    if(!isPlayerLoggedIn(client)) {
-        messagePlayerError(client, "You need to login before you can chat!");
-        return false;
-    }
-
-    if(!isPlayerSpawned(client)) {
-        messagePlayerError(client, "You need to spawn before you can chat!");
-        return false;
-    }
-
-    if(isPlayerMuted(client)) {
-        messagePlayerError(client, "You are muted and can't chat!");
-        return false;
-    }
-
-    messageText = messageText.substring(0, 128);
-    messagePlayerNormal(null, replaceColoursInMessage(`{MAINCOLOUR}💬 [${hexFromToColour(getPlayerColour(client))}]${getCharacterFullName(client)}: {MAINCOLOUR}${messageText}`), getPlayerColour(client));
-    messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
+    processPlayerChat(client, messageText);
 }
 
 // ===========================================================================
@@ -135,9 +125,7 @@ function onProcess(event, deltaTime) {
     //checkPlayerPedState();
     //checkVehicleBurning();
 
-    getClients().forEach((client) => {
-        checkVehicleBuying(client);
-    });
+    processVehiclePurchasing();
 }
 
 // ===========================================================================
@@ -156,10 +144,6 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
             return false;
         }
 
-        if(seat == 0) {
-            vehicle.engine = getVehicleData(vehicle).engine;
-        }
-
         if(getVehicleData(vehicle).locked) {
             if(doesPlayerHaveVehicleKeys(client, vehicle)) {
                 if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "lock")) {
@@ -170,7 +154,13 @@ function onPedEnteringVehicle(event, ped, vehicle, seat) {
             } else {
                 messagePlayerNormal(client, `🔒 This ${getVehicleName(vehicle)} is locked and you don't have the keys to unlock it`);
             }
+
+            getPlayerData(client).enteringVehicle = null;
+            makePlayerStopAnimation(client);
+            return false;
         }
+
+        getPlayerData(client).enteringVehicle = vehicle;
     }
 }
 
@@ -225,6 +215,7 @@ function onResourceStop(event, resource) {
         clearArray(getServerData().itemTypes);
         clearArray(getServerData().groundItemCache);
         clearArray(getServerData().groundPlantCache);
+        kickAllClients();
     }
 
     collectAllGarbage();
@@ -275,21 +266,27 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             return false;
         }
 
+        //if(getPlayerData(client).enteringVehicle == null || getPlayerData(client).enteringVehicle != vehicle) {
+        //    messagePlayerError(client, "You can't enter this vehicle!");
+        //    removePlayerFromVehicle(client);
+        //    messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}tried to warp into a locked vehicle`);
+        //    return false;
+        //}
+
         logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
         getPlayerData(client).lastVehicle = vehicle;
+        getVehicleData(vehicle).lastActiveTime = getCurrentUnixTimestamp();
 
         if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
             vehicle.engine = getVehicleData(vehicle).engine;
 
             if(getVehicleData(vehicle).buyPrice > 0) {
-                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for sale! Cost: {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice)}`);
-                messagePlayerTip(client, `Use /vehbuy if you want to buy it.`);
+                messagePlayerAlert(client, getLocaleString(client, "VehicleForSale", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice)}{MAINCOLOUR}`, `{ALTCOLOUR}/vehbuy{MAINCOLOUR}`));
                 resetVehiclePosition(vehicle);
             } else if(getVehicleData(vehicle).rentPrice > 0) {
                 if(getVehicleData(vehicle).rentedBy != client) {
-                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)} is for rent! Cost: {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute`);
-                    messagePlayerTip(client, `Use /vehrent if you want to rent it.`);
+                    messagePlayerAlert(client, getLocaleString(client, "VehicleForRent", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)}{MAINCOLOUR}`, `{ALTCOLOUR}/vehrent{MAINCOLOUR}`));
                     resetVehiclePosition(vehicle);
                 } else {
                     messagePlayerAlert(client, `You are renting this ${getVehicleName(vehicle)} for {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute. {MAINCOLOUR}Use {ALTCOLOUR}/stoprent {MAINCOLOUR}if you want to stop renting it.`);
@@ -327,15 +324,17 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
             }
 
             if(!getVehicleData(vehicle).engine) {
-                if(doesPlayerHaveVehicleKeys(client, vehicle)) {
-                    if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                        messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} {MAINCOLOUR}to start it.`);
+                if(getVehicleData(vehicle).buyPrice == 0 && getVehicleData(vehicle).rentPrice == 0) {
+                    if(doesPlayerHaveVehicleKeys(client, vehicle)) {
+                        if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
+                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} {MAINCOLOUR}to start it.`);
+                        } else {
+                            messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
+                        }
                     } else {
-                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
-                    }
-                } else {
-                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
+                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
 
+                    }
                 }
                 resetVehiclePosition(vehicle);
             }
@@ -387,7 +386,7 @@ function onPlayerExitedVehicle(client, vehicle) {
         }
     }
 
-    getVehicleData(vehicle).respawnTime = getCurrentUnixTimestamp() + getGlobalConfig().vehicleInactiveRespawnDelay;
+    getVehicleData(vehicle).lastActiveTime = getCurrentUnixTimestamp();
 
     logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} exited a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 }
@@ -415,6 +414,8 @@ function onPlayerDeath(client, position) {
                     fadeCamera(client, true, 1.0);
                 }
                 updatePlayerSpawnedState(client, true);
+                makePlayerStopAnimation(client);
+                setPlayerControlState(client, true);
 			} else {
                 let closestHospital = getClosestHospital(getPlayerPosition(client));
                 client.despawnPlayer();
@@ -426,6 +427,8 @@ function onPlayerDeath(client, position) {
                     fadeCamera(client, true, 1.0);
                 }
                 updatePlayerSpawnedState(client, true);
+                makePlayerStopAnimation(client);
+                setPlayerControlState(client, true);
 			}
 		}, 2000);
 	}, 1000);
@@ -522,9 +525,6 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting player armour for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).armour}`);
         setPlayerArmour(client, getPlayerCurrentSubAccount(client).armour);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
-        updateAllPlayerNameTags();
-
         logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
         sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
 
@@ -551,9 +551,6 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
         updatePlayerHotBar(client);
-
-        logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom keybinds to ${getPlayerDisplayForConsole(client)}`);
-        sendAccountKeyBindsToClient(client);
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
         getPlayerData(client).switchingCharacter = false;
@@ -595,6 +592,9 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
         updatePlayerCash(client);
+
+        logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
+        updateAllPlayerNameTags();
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
     //}

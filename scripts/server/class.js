@@ -22,8 +22,6 @@ function initClassScript() {
 class ServerData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
-		this.name = "";
-		this.password = "";
 		this.needsSaved = false;
 
 		this.newCharacter = {
@@ -59,6 +57,8 @@ class ServerData {
 		this.guiTextColourSecondary = [0, 0, 0];
 		this.showLogo = true;
 		this.inflationMultiplier = 1;
+		this.testerOnly = false;
+		this.settings = 0;
 
 		this.antiCheat = {
 			enabled: false,
@@ -104,52 +104,47 @@ class ServerData {
 				bank: dbAssoc["svr_newchar_bank"],
 				skin: dbAssoc["svr_newchar_skin"],
 			},
+			this.settings = toInteger(dbAssoc["svr_settings"]);
+
 			this.connectCameraPosition = toVector3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
 			this.connectCameraLookAt = toVector3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
-
-			//this.characterSelectCameraPosition = toVector3(dbAssoc["svr_charselect_cam_pos_x"], dbAssoc["svr_charselect_cam_pos_y"], dbAssoc["svr_charselect_cam_pos_z"]);
-			//this.characterSelectCameraLookAt = toVector3(dbAssoc["svr_charselect_cam_lookat_x"], dbAssoc["svr_charselect_cam_lookat_y"], dbAssoc["svr_charselect_cam_lookat_z"]);
-
-			//this.characterSelectPedPosition = toVector3(dbAssoc["svr_charselect_ped_pos_x"], dbAssoc["svr_charselect_ped_pos_y"], dbAssoc["svr_charselect_ped_pos_z"]);
-			//this.characterSelectPedHeading = toFloat(dbAssoc["svr_charselect_ped_rot_z"]);
-			//this.characterSelectInterior = toInteger(dbAssoc["svr_charselect_int"]);
-			//this.characterSelectDimension = toInteger(dbAssoc["svr_charselect_int"]);
 
 			this.hour = toInteger(dbAssoc["svr_start_time_hour"]);
 			this.minute = toInteger(dbAssoc["svr_start_time_min"]);
 			this.minuteDuration = toInteger(dbAssoc["svr_time_min_duration"]);
 			this.weather = toInteger(dbAssoc["svr_start_weather"]);
-			this.fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
-			this.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
-			this.useGUI = intToBool(dbAssoc["svr_gui"]);
+			this.fallingSnow = hasBitFlag(this.settings, getServerSettingsFlagValue("FallingSnow"));
+			this.groundSnow = hasBitFlag(this.settings, getServerSettingsFlagValue("GroundSnow"));
+			this.useGUI = hasBitFlag(this.settings, getServerSettingsFlagValue("GUI"));
 			this.guiColourPrimary = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
 			this.guiColourSecondary = [toInteger(dbAssoc["svr_gui_col2_r"]), toInteger(dbAssoc["svr_gui_col2_g"]), toInteger(dbAssoc["svr_gui_col2_b"])];
 			this.guiTextColourPrimary = [toInteger(dbAssoc["svr_gui_textcol1_r"]), toInteger(dbAssoc["svr_gui_textcol1_g"]), toInteger(dbAssoc["svr_gui_textcol1_b"])];
 			//this.guiTextColourSecondary = [toInteger(dbAssoc["svr_gui_textcol2_r"]), toInteger(dbAssoc["svr_gui_textcol2_g"]), toInteger(dbAssoc["svr_gui_textcol2_b"])];
-			this.showLogo = intToBool(dbAssoc["svr_logo"]);
+			this.showLogo = hasBitFlag(this.settings, getServerSettingsFlagValue("Logo"));
 			this.inflationMultiplier = toFloat(dbAssoc["svr_inflation_multiplier"]);
+			this.testerOnly = hasBitFlag(this.settings, getServerSettingsFlagValue("Testing"));
 
 			this.antiCheat = {
-				enabled: intToBool(dbAssoc["svr_ac_enabled"]),
-				checkGameScripts: intToBool(dbAssoc["svr_ac_check_scripts"]),
-				gameScriptBlackListEnabled: intToBool(dbAssoc["svr_ac_script_bl"]),
-				gameScriptWhiteListEnabled: intToBool(dbAssoc["svr_ac_script_wl"]),
+				enabled: hasBitFlag(this.settings, getServerSettingsFlagValue("Anticheat")),
+				checkGameScripts: hasBitFlag(this.settings, getServerSettingsFlagValue("CheckGameScripts")),
+				gameScriptBlackListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptBlackList")),
+				gameScriptWhiteListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptWhiteList")),
 				gameScriptWhiteList: [],
 				gameScriptBlackList: [],
 			};
 
 			this.discordBotToken = intToBool(dbAssoc["svr_discord_bot_token"]);
-			this.discordEnabled = intToBool(dbAssoc["svr_discord_bot_enabled"]);
+			this.discordEnabled = hasBitFlag(this.settings, getServerSettingsFlagValue("DiscordBot"));
 
-			this.createJobPickups = intToBool(dbAssoc["svr_job_pickups"]);
-			this.createBusinessPickups = intToBool(dbAssoc["svr_biz_pickups"]);
-			this.createHousePickups = intToBool(dbAssoc["svr_house_pickups"]);
-			this.createJobBlips = intToBool(dbAssoc["svr_job_blips"]);
-			this.createBusinessBlips = intToBool(dbAssoc["svr_biz_blips"]);
-			this.createHouseBlips = intToBool(dbAssoc["svr_house_blips"]);
+			this.createJobPickups = hasBitFlag(this.settings, getServerSettingsFlagValue("JobPickups"));
+			this.createBusinessPickups = hasBitFlag(this.settings, getServerSettingsFlagValue("BusinessPickups"));
+			this.createHousePickups = hasBitFlag(this.settings, getServerSettingsFlagValue("HousePickups"));
+			this.createJobBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("JobBlips"));
+			this.createBusinessBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("BusinessBlips"));
+			this.createHouseBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("HouseBlips"));
 
 			this.introMusicURL = dbAssoc["svr_intro_music"];
-			this.useRealTime = intToBool(dbAssoc["svr_time_realtime_enabled"]);
+			this.useRealTime = hasBitFlag(this.settings, getServerSettingsFlagValue("RealTime"));
 			this.realTimeZone = dbAssoc["svr_time_realtime_timezone"];
 
 			this.discordConfig = {
@@ -178,10 +173,10 @@ class ClientData {
 		this.connectTime = 0;
 		this.clientVersion = "0.0.0";
 		this.loginAttemptsRemaining = 3;
+		this.afk = false;
 
-		this.jobRoute = false;
-		this.jobRouteStop = false;
-		this.jobRouteIsland = false;
+		this.jobRoute = -1;
+		this.jobRouteLocation = -1;
 		this.jobRouteVehicle = false;
 
 		this.spawned = false;
@@ -247,10 +242,27 @@ class ClientData {
 		this.returnToType = VRR_RETURNTO_TYPE_NONE;
 
 		this.changingCharacterName = false;
-
 		this.currentPickup = false;
-
 		this.usingSkinSelect = false;
+		this.keyBinds = [];
+		this.sessionId = 0;
+		this.incomingDamageMultiplier = 1;
+		this.weaponDamageEvent = VRR_WEAPON_DAMAGE_EVENT_NORMAL;
+
+		this.currentAnimation = -1;
+		this.currentAnimationPositionOffset = false;
+		this.currentAnimationPositionReturnTo = false;
+		this.animationStart = 0;
+		this.animationForced = false;
+
+		this.passwordResetState = VRR_RESETPASS_STATE_NONE;
+		this.passwordResetCode = "";
+
+		this.lastJobVehicle = null;
+		this.health = 100;
+		this.locale = 0;
+
+		this.enteringVehicle = null;
 	}
 };
 
@@ -276,7 +288,6 @@ class AccountData {
 
 		this.notes = [];
 		this.messages = [];
-		this.keyBinds = [];
 		this.contacts = [];
 		this.subAccounts = [];
 
@@ -286,6 +297,7 @@ class AccountData {
 		this.chatScrollLines = 1;
 
 		this.streamingRadioVolume = 20;
+		this.locale = 0;
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["acct_id"];
@@ -306,7 +318,6 @@ class AccountData {
 
 			this.notes = [];
 			this.messages = [];
-			this.keyBinds = [];
 			this.contacts = [];
 			this.subAccounts = [];
 
@@ -314,6 +325,7 @@ class AccountData {
 			this.twoFactorAuthVerificationCode = dbAssoc["acct_code_2fa"];
 			this.chatScrollLines = toInteger(dbAssoc["acct_svr_chat_scroll_lines"]);
 			this.streamingRadioVolume = toInteger(dbAssoc["acct_streaming_radio_volume"]);
+			this.locale = toInteger(dbAssoc["acct_locale"]);
 		}
 	}
 };
@@ -420,7 +432,6 @@ class SubAccountData {
 		this.clanTitle = 0;
 		this.isWorking = false;
 		this.jobUniform = this.skin;
-		this.lastJobVehicle = null;
 		this.job = 0;
 		this.jobRank = 0;
 		this.weapons = [];
@@ -893,10 +904,6 @@ class VehicleData {
 		this.colour2IsRGBA = 0;
 		this.colour3IsRGBA = 0;
 		this.colour4IsRGBA = 0;
-		this.colour1RGBA = toColour(255, 255, 255, 255);
-		this.colour2RGBA = toColour(255, 255, 255, 255);
-		this.colour3RGBA = toColour(255, 255, 255, 255);
-		this.colour4RGBA = toColour(255, 255, 255, 255);
 		this.colour1 = (vehicle) ? vehicle.colour1 : 1;
 		this.colour2 = (vehicle) ? vehicle.colour2 : 1;
 		this.colour3 = (vehicle) ? vehicle.colour3 : 1;
@@ -944,7 +951,7 @@ class VehicleData {
 		this.interior = 0;
 		this.dimension = 0;
 
-		this.respawnTime = 0;
+		this.lastActiveTime = false;
 
 		if(dbAssoc) {
 			// General Info
@@ -968,10 +975,6 @@ class VehicleData {
 			this.colour2IsRGBA = intToBool(toInteger(dbAssoc["veh_col2_isrgba"]));
 			this.colour3IsRGBA = intToBool(toInteger(dbAssoc["veh_col3_isrgba"]));
 			this.colour4IsRGBA = intToBool(toInteger(dbAssoc["veh_col4_isrgba"]));
-			this.colour1RGBA = toColour(toInteger(dbAssoc["veh_col1_r"]), toInteger(dbAssoc["veh_col1_g"]), toInteger(dbAssoc["veh_col1_b"]), toInteger(dbAssoc["veh_col1_a"]));
-			this.colour2RGBA = toColour(toInteger(dbAssoc["veh_col2_r"]), toInteger(dbAssoc["veh_col2_g"]), toInteger(dbAssoc["veh_col2_b"]), toInteger(dbAssoc["veh_col2_a"]));
-			this.colour3RGBA = toColour(toInteger(dbAssoc["veh_col3_r"]), toInteger(dbAssoc["veh_col3_g"]), toInteger(dbAssoc["veh_col3_b"]), toInteger(dbAssoc["veh_col3_a"]));
-			this.colour4RGBA = toColour(toInteger(dbAssoc["veh_col4_r"]), toInteger(dbAssoc["veh_col4_g"]), toInteger(dbAssoc["veh_col4_b"]), toInteger(dbAssoc["veh_col4_a"]));
 			this.colour1 = toInteger(dbAssoc["veh_col1"]);
 			this.colour2 = toInteger(dbAssoc["veh_col2"]);
 			this.colour3 = toInteger(dbAssoc["veh_col3"]);
@@ -1085,6 +1088,7 @@ class JobData {
 		this.locations = [];
 		this.whiteList = [];
 		this.blackList = [];
+		this.routes = [];
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["job_id"];
@@ -1104,6 +1108,7 @@ class JobData {
 			this.locations = [];
 			this.whiteList = [];
 			this.blackList = [];
+			this.routes = [];
 		}
 	}
 };
@@ -1229,7 +1234,7 @@ class JobUniformData {
 class JobLocationData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
-		this.job = 0;
+		this.jobId = 0;
 		this.position = toVector3(0.0, 0.0, 0.0);
 		this.blip = false;
 		this.pickup = false;
@@ -1239,10 +1244,11 @@ class JobLocationData {
 		this.index = -1;
 		this.jobIndex = -1;
 		this.needsSaved = false;
+		this.routeCache = [];
 
 		if(dbAssoc) {
 			this.databaseId = dbAssoc["job_loc_id"];
-			this.job = dbAssoc["job_loc_job"];
+			this.jobId = dbAssoc["job_loc_job"];
 			this.position = toVector3(dbAssoc["job_loc_pos_x"], dbAssoc["job_loc_pos_y"], dbAssoc["job_loc_pos_z"]);
 			this.blip = false;
 			this.pickup = false;
@@ -1445,6 +1451,20 @@ class ItemTypeData {
 		this.takeDelay = 0;
 		this.giveDelay = 0;
 		this.dropDelay = 0;
+		this.useAnimationName = "";
+		this.dropAnimationName = "";
+		this.pickupAnimationName = "";
+		this.giveAnimationName = "";
+		this.putAnimationName = "";
+		this.takeAnimationName = "";
+		this.switchAnimationName = "";
+		this.useAnimationIndex = false;
+		this.dropAnimationIndex = false;
+		this.pickupAnimationIndex = false;
+		this.giveAnimationIndex = false;
+		this.putAnimationIndex = false;
+		this.takeAnimationIndex = false;
+		this.switchAnimationIndex = false;
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["item_type_id"]);
@@ -1475,6 +1495,13 @@ class ItemTypeData {
 			this.takeDelay = toInteger(dbAssoc["item_type_delay_take"]);
 			this.giveDelay = toInteger(dbAssoc["item_type_delay_give"]);
 			this.dropDelay = toInteger(dbAssoc["item_type_delay_drop"]);
+			this.useAnimationName = toInteger(dbAssoc["item_type_anim_use"]);
+			this.switchAnimationName = toInteger(dbAssoc["item_type_anim_switch"]);
+			this.pickupAnimationName = toInteger(dbAssoc["item_type_anim_pickup"]);
+			this.putAnimationName = toInteger(dbAssoc["item_type_anim_put"]);
+			this.takeAnimationName = toInteger(dbAssoc["item_type_anim_take"]);
+			this.giveAnimationName = toInteger(dbAssoc["item_type_anim_give"]);
+			this.dropAnimationName = toInteger(dbAssoc["item_type_anim_drop"]);
 		}
 	}
 };
@@ -1578,6 +1605,7 @@ class NPCTriggerData {
 		this.npcId = 0;
 		this.index = 0;
 		this.npc = 0;
+		this.npcIndex = -1;
 		this.triggerType = 0;
 		this.conditions = [];
 		this.responses = [];
@@ -1595,6 +1623,7 @@ class NPCTriggerConditionData {
 		this.databaseId = 0;
 		this.triggerId = 0;
 		this.index = 0;
+		this.triggerIndex = 0;
 		this.conditionType = 0;
 		this.conditionValue = false;
 		this.matchType = false;
@@ -1614,6 +1643,7 @@ class NPCTriggerResponseData {
 		this.databaseId = 0;
 		this.triggerId = 0;
 		this.index = 0;
+		this.triggerIndex = 0;
 		this.responseType = 0;
 		this.responseValue = false;
 
@@ -1672,26 +1702,35 @@ class JobRouteData {
 		this.databaseId = 0;
 		this.name = "";
 		this.jobId = 0;
+		this.locationId = 0;
 		this.enabled = false;
 		this.index = -1;
 		this.jobIndex = -1;
+		this.locationIndex = -1;
 		this.needsSaved = false;
 		this.pay = 0;
-		this.vehicleColour1 = toColour(255, 255, 255, 255);
-		this.vehicleColour2 = toColour(255, 255, 255, 255);
+		this.vehicleColour1 = 1;
+		this.vehicleColour2 = 1;
 		this.detail = 0;
+		this.startMessage = "";
+		this.finishMessage = "";
+		this.locationArriveMessage = "";
+		this.locationNextMessage = "";
 		this.locations = [];
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["job_route_id"]);
 			this.name = toString(dbAssoc["job_route_name"]);
 			this.jobId = toInteger(dbAssoc["job_route_job"]);
+			this.locationId = toInteger(dbAssoc["job_route_job_loc"]);
 			this.enabled = intToBool(toInteger(dbAssoc["job_route_enabled"]));
 			this.pay = toInteger(dbAssoc["job_route_pay"]);
 			this.startMessage = toString(dbAssoc["job_route_start_msg"]);
 			this.finishMessage = toString(dbAssoc["job_route_finish_msg"]);
-			this.colour1 = toColour(toInteger(dbAssoc["job_route_col1_r"]), toInteger(dbAssoc["job_route_col1_g"]), toInteger(dbAssoc["job_route_col1_b"]), 255);
-			this.colour2 = toColour(toInteger(dbAssoc["job_route_col2_r"]), toInteger(dbAssoc["job_route_col2_g"]), toInteger(dbAssoc["job_route_col2_b"]), 255);
+            this.locationArriveMessage = toString(dbAssoc["job_route_loc_arrive_msg"]);
+			this.locationNextMessage = toString(dbAssoc["job_route_loc_next_msg"]);
+			this.vehicleColour1 = toInteger(dbAssoc["job_route_veh_colour1"]);
+			this.vehicleColour2 = toInteger(dbAssoc["job_route_veh_colour2"]);
 			this.detail = toInteger(dbAssoc["job_route_detail"]);
 		}
 	}
@@ -1704,12 +1743,12 @@ class JobRouteLocationData {
 		this.routeId = 0;
 		this.enabled = false;
 		this.index = -1;
+        this.jobIndex = -1;
 		this.routeIndex = -1;
 		this.needsSaved = false;
 		this.position = toVector3(0.0, 0.0, 0.0);
 		this.stopDelay = 0;
 		this.pay = 0;
-		this.previousStop = 0;
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["job_route_loc_id"]);
@@ -1719,7 +1758,6 @@ class JobRouteLocationData {
 			this.position = toVector3(toFloat(dbAssoc["job_route_loc_x"]), toFloat(dbAssoc["job_route_loc_y"]), toFloat(dbAssoc["job_route_loc_z"]));
 			this.stopDelay = toInteger(dbAssoc["job_route_loc_delay"]);
 			this.pay = toInteger(dbAssoc["job_route_loc_pay"]);
-			this.previousStop = toInteger(dbAssoc["job_route_loc_prev"]);
 		}
 	}
 };

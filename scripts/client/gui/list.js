@@ -41,7 +41,7 @@ function initListGUI() {
 			textSize: 10.0,
 			textAlign: 0.5,
 			textColour: toColour(255, 255, 255, 220),
-			textFont: robotoFont,
+			textFont: mainFont,
 		},
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
@@ -71,6 +71,37 @@ function initListGUI() {
 		}
 	});
 	logToConsole(LOG_DEBUG, `[VRR.GUI] Created list dialog GUI`);
+}
+
+// ===========================================================================
+
+function showListGUI() {
+	closeAllWindows();
+	logToConsole(LOG_DEBUG, `[VRR.GUI] Showing login window`);
+	setChatWindowEnabled(false);
+	mexui.setInput(true);
+	listDialog.window.shown = true;
+	guiSubmitKey = checkListDialogSelection;
+	guiUpKey = selectPreviousListItem;
+	guiDownKey = selectNextListItem;
+}
+
+// ===========================================================================
+
+function checkListDialogSelection() {
+
+}
+
+// ===========================================================================
+
+function selectPreviousListItem() {
+
+}
+
+// ===========================================================================
+
+function selectNextListItem() {
+
 }
 
 // ===========================================================================

@@ -75,6 +75,12 @@ function saveAllServerDataToDatabase() {
 	}
 
 	try {
+		saveAllJobsToDatabase();
+	} catch(error) {
+		logToConsole(LOG_ERROR, `Could not save jobs to database: ${error}`);
+	}
+
+	try {
 		saveServerConfigToDatabase();
 	} catch(error) {
 		logToConsole(LOG_ERROR, `Could not save server config to database: ${error}`);
@@ -97,8 +103,16 @@ function initTimers() {
 // ===========================================================================
 
 function oneMinuteTimerFunction() {
+	logToConsole(LOG_DEBUG, `[VRR.Event] Checking server game time`);
 	checkServerGameTime();
+
+	logToConsole(LOG_DEBUG, `[VRR.Event] Checking rentable vehicles`);
 	vehicleRentCheck();
+
+	logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
+	updateAllPlayerNameTags();
+
+	logToConsole(LOG_DEBUG, `[VRR.Event] Collecting all garbage`);
 	collectAllGarbage();
 }
 
@@ -237,9 +251,18 @@ function showRandomTipToAllPlayers() {
 function checkInactiveVehicleRespawns() {
 	let vehicles = getElementsByType(ELEMENT_VEHICLE);
 	for(let i in vehicles) {
-		if(getCurrentUnixTimestamp() - getVehicleData(vehicles[i]).respawnTime >= getGlobalConfig().vehicleInactiveRespawnDelay) {
-			respawnVehicle(vehicles[i]);
-		}
+        if(getVehicleData(vehicles[i] != false)) {
+            if(isVehicleUnoccupied(vehicles[i])) {
+                if(getVehicleData(vehicles[i]).lastActiveTime != false) {
+                    if(getCurrentUnixTimestamp() - getVehicleData(vehicles[i]).lastActiveTime >= getGlobalConfig().vehicleInactiveRespawnDelay) {
+                        respawnVehicle(vehicles[i]);
+                        getVehicleData(vehicles[i]).lastActiveTime = false;
+                    }
+                }
+            } else {
+                getVehicleData(vehicles[i]).lastActiveTime = getCurrentUnixTimestamp();
+            }
+        }
 	}
 }
 

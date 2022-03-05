@@ -2,8 +2,8 @@
 // Vortrex's Roleplay Resource
 // https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
-// FILE: gtac.js
-// DESC: Provides natives for GTA and Mafia Connected mods
+// FILE: connected.js
+// DESC: Provides wrapped natives for GTA Connected and Mafia Connected mods
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
@@ -208,7 +208,11 @@ function removePlayerFromVehicle(client) {
 
 function setPlayerSkin(client, skinIndex) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s skin to ${getGameData().skins[getGame()][skinIndex][0]} (Index: ${skinIndex}, Name: ${getGameData().skins[getGame()][skinIndex][1]})`);
-    client.player.modelIndex = getGameData().skins[getGame()][skinIndex][0];
+	if(getGame() == VRR_GAME_GTA_IV) {
+		triggerNetworkEvent("vrr.localPlayerSkin", client, getGameData().skins[getGame()][skinIndex][0]);
+	} else {
+		client.player.modelIndex = getGameData().skins[getGame()][skinIndex][0];
+	}
 }
 
 // ===========================================================================
@@ -222,12 +226,13 @@ function getPlayerSkin(client) {
 function setPlayerHealth(client, health) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s health to ${health}`);
     sendPlayerSetHealth(client, health);
+	getServerData(client).health = health;
 }
 
 // ===========================================================================
 
 function getPlayerHealth(client) {
-    return client.player.health;
+    return getServerData(client).health;
 }
 
 // ===========================================================================
@@ -235,6 +240,7 @@ function getPlayerHealth(client) {
 function setPlayerArmour(client, armour) {
     logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s armour to ${armour}`);
     sendPlayerSetArmour(client, armour);
+    //client.player.armour = armour;
 }
 
 // ===========================================================================
@@ -436,46 +442,6 @@ function setElementOnAllDimensions(element, state) {
 
 // ===========================================================================
 
-function setElementDefaultExistance(element, state) {
-    if(!isNull(element) && element != false) {
-        element.defaultExistance = state;
-    }
-}
-
-// ===========================================================================
-
-function setElementExistsFor(element, client, state) {
-    if(!isNull(element) && element != false) {
-        element.setExistsFor(client, state);
-    }
-}
-
-// ===========================================================================
-
-function clearElementExistsFor(element) {
-    if(!isNull(element) && element != false) {
-        element.clearExistsFor();
-    }
-}
-
-// ===========================================================================
-
-function setElementStreamInDistance(element, distance) {
-    if(!isNull(element) && element != false) {
-        element.streamInDistance = distance;
-    }
-}
-
-// ===========================================================================
-
-function setElementStreamOutDistance(element, distance) {
-    if(!isNull(element) && element != false) {
-        element.streamOutDistance = distance;
-    }
-}
-
-// ===========================================================================
-
 function destroyGameElement(element) {
     if(!isNull(element) && element != false) {
         destroyElement(element);
@@ -516,6 +482,7 @@ function setVehicleLights(vehicle, lights) {
 
 function setVehicleEngine(vehicle, engine) {
 	vehicle.engine = engine;
+    setEntityData(vehicle, "vrr.engine", engine, true);
 }
 
 // ===========================================================================
@@ -642,7 +609,7 @@ function getPlayerElement(client) {
 // ===========================================================================
 
 function setElementPosition(element, position) {
-	triggerNetworkEvent("vrr.elementPosition", getClientFromSyncerId(element.syncer), element.id, position);
+	sendNetworkEventToPlayer("vrr.elementPosition", null, element.id, position);
 }
 
 // ===========================================================================
@@ -667,7 +634,7 @@ function setElementInterior(element, interior) {
 // ===========================================================================
 
 function setElementCollisionsEnabled(element, state) {
-	triggerNetworkEvent("vrr.elementCollisions", getClientFromSyncerId(element.syncer), element.id, state);
+	sendNetworkEventToPlayer("vrr.elementCollisions", null, element.id, state);
 }
 
 // ===========================================================================
@@ -697,6 +664,372 @@ function getElementModel(element) {
     if(typeof element.model != "undefined") {
         return element.model;
     }
+}
+
+// ===========================================================================
+
+function givePlayerWeaponAmmo(client, ammo) {
+    givePlayerWeapon(client, getPlayerWeapon(client), getPlayerWeaponAmmo(client) + ammo);
+}
+
+// ===========================================================================
+
+function getPlayerWeapon(client) {
+    return client.player.weapon;
+}
+
+// ===========================================================================
+
+function connectToDatabase() {
+	if(databaseConfig.usePersistentConnection) {
+		if(persistentDatabaseConnection == null) {
+			logToConsole(LOG_DEBUG, "[VRR.Database] Initializing database connection ...");
+			persistentDatabaseConnection = module.mysql.connect(databaseConfig.host, databaseConfig.user, databaseConfig.pass, databaseConfig.name, databaseConfig.port);
+			if(persistentDatabaseConnection.error) {
+				console.warn("[VRR.Database] Database connection error: " + toString(persistentDatabaseConnection.error));
+				persistentDatabaseConnection = null;
+				return false;
+			}
+
+			logToConsole(LOG_DEBUG, "[VRR.Database] Database connection successful!");
+			return persistentDatabaseConnection;
+		} else {
+			logToConsole(LOG_DEBUG, "[VRR.Database] Using existing database connection.");
+			return persistentDatabaseConnection;
+		}
+	} else {
+		let databaseConnection = module.mysql.connect(databaseConfig.host, databaseConfig.user, databaseConfig.pass, databaseConfig.name, databaseConfig.port);
+		if(databaseConnection.error) {
+			console.warn("[VRR.Database] Database connection error: " + toString(persistentDatabaseConnection.error));
+			return false;
+		} else {
+			return databaseConnection;
+		}
+	}
+}
+
+// ===========================================================================
+
+function disconnectFromDatabase(dbConnection) {
+	if(!databaseConfig.usePersistentConnection) {
+		try {
+			dbConnection.close();
+			logToConsole(LOG_DEBUG, `[VRR.Database] Database connection closed successfully`);
+		} catch(error) {
+			logToConsole(LOG_ERROR, `[VRR.Database] Database connection could not be closed! (Error: ${error})`);
+		}
+	}
+	return true;
+}
+
+// ===========================================================================
+
+function queryDatabase(dbConnection, queryString) {
+	logToConsole(LOG_DEBUG, `[VRR.Database] Query string: ${queryString}`);
+	return dbConnection.query(queryString);
+}
+
+// ===========================================================================
+
+function escapeDatabaseString(dbConnection, unsafeString = "") {
+	if(!dbConnection) {
+		dbConnection = connectToDatabase();
+	}
+
+	if(typeof unsafeString == "string") {
+		return dbConnection.escapeString(unsafeString);
+	}
+	return unsafeString;
+}
+
+// ===========================================================================
+
+function getDatabaseInsertId(dbConnection) {
+	return dbConnection.insertId;
+}
+
+// ===========================================================================
+
+function getQueryNumRows(dbQuery) {
+	return dbQuery.numRows;
+}
+
+// ===========================================================================
+
+function getDatabaseError(dbConnection) {
+	return dbConnection.error;
+}
+
+// ===========================================================================
+
+function freeDatabaseQuery(dbQuery) {
+	if(dbQuery != null) {
+		dbQuery.free();
+	}
+	return;
+}
+
+// ===========================================================================
+
+function fetchQueryAssoc(dbQuery) {
+	return dbQuery.fetchAssoc();
+}
+
+// ===========================================================================
+
+function quickDatabaseQuery(queryString) {
+	let dbConnection = connectToDatabase();
+	let insertId = 0;
+	if(dbConnection) {
+		//logToConsole(LOG_DEBUG, `[VRR.Database] Query string: ${queryString}`);
+		let dbQuery = queryDatabase(dbConnection, queryString);
+		if(getDatabaseInsertId(dbConnection)) {
+			insertId = getDatabaseInsertId(dbConnection);
+			logToConsole(LOG_DEBUG, `[VRR.Database] Query returned insert id ${insertId}`);
+		}
+
+		if(dbQuery) {
+			try {
+				freeDatabaseQuery(dbQuery);
+				logToConsole(LOG_DEBUG, `[VRR.Database] Query result free'd successfully`);
+			} catch(error) {
+				logToConsole(LOG_ERROR, `[VRR.Database] Query result could not be free'd! (Error: ${error})`);
+			}
+		}
+
+		disconnectFromDatabase(dbConnection);
+
+		if(insertId != 0) {
+			return insertId;
+		}
+
+		return true;
+	}
+	return false;
+}
+
+// ===========================================================================
+
+function executeDatabaseQueryCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(!targetClient) {
+		messagePlayerError(client, "That player was not found!");
+		return false;
+	}
+
+	if(targetCode == "") {
+		messagePlayerError(client, "You didn't enter any code!");
+		return false;
+	}
+
+	let success = quickDatabaseQuery(params);
+
+	if(!success) {
+		messagePlayerAlert(client, `Database query failed to execute: {ALTCOLOUR}${query}`);
+	} else if(typeof success != "boolean") {
+		messagePlayeSuccess(client, `Database query successful: {ALTCOLOUR}${query}`);
+		messagePlayerInfo(client, `Returns: ${success}`);
+	} else {
+		messagePlayerSuccess(client, `Database query successful: {ALTCOLOUR}${query}`);
+	}
+	return true;
+}
+
+// ===========================================================================
+
+function setConstantsAsGlobalVariablesInDatabase() {
+	let dbConnection = connectToDatabase();
+	let entries = Object.entries(global);
+	for(let i in entries) {
+		logToConsole(LOG_DEBUG, `[VRR.Database] Checking entry ${i} (${entries[i]})`);
+		if(toString(i).slice(0, 3).indexOf("VRR_") != -1) {
+			logToConsole(LOG_DEBUG, `[VRR.Database] Adding ${i} (${entries[i]}) to database global variables`);
+		}
+	}
+}
+
+// ===========================================================================
+
+function loadDatabaseConfiguration() {
+	let databaseConfigFile = loadTextFile("config/database.json");
+	return JSON.parse(databaseConfigFile);
+}
+
+// ===========================================================================
+
+function createDatabaseInsertQuery(tableName, data) {
+	let fields = [];
+	let values = [];
+
+	for(let i in data) {
+		if(data[i][1] != "undefined" && data[i][1] != NaN && data[i][0] != 'NaN') {
+			if(data[i][1] != "undefined" && data[i][1] != NaN && data[i][1] != 'NaN') {
+				fields.push(data[i][0]);
+
+				if(typeof data[i][1] == "string") {
+					values.push(`'${data[i][1]}'`);
+				} else {
+					values.push(data[i][1]);
+				}
+			}
+		}
+	}
+
+	let queryString = `INSERT INTO ${tableName} (${fields.join(", ")}) VALUES (${values.join(", ")})`;
+	return queryString;
+}
+
+// ===========================================================================
+
+function createDatabaseUpdateQuery(tableName, data, whereClause) {
+	let values = [];
+
+	for(let i in data) {
+		if(data[i][0] != "undefined" && data[i][0] != NaN && data[i][0] != 'NaN') {
+			if(data[i][1] != "undefined" && data[i][1] != NaN && data[i][1] != 'NaN') {
+				if(typeof data[i][1] == "string") {
+					values.push(`${data[i][0]}='${data[i][1]}'`);
+				} else {
+					values.push(`${data[i][0]}=${data[i][1]}`);
+				}
+			}
+		}
+	}
+
+	let queryString = `UPDATE ${tableName} SET ${values.join(", ")} WHERE ${whereClause}`;
+	return queryString;
+}
+
+// ===========================================================================
+
+function sendNetworkEventToPlayer(eventName, client, ...args) {
+	let argsArray = [eventName, client];
+	argsArray = argsArray.concat(args);
+	triggerNetworkEvent.apply(null, argsArray);
+}
+
+// ===========================================================================
+
+function addNetworkEventHandler(eventName, handlerFunction) {
+    addNetworkHandler(eventName, handlerFunction);
+}
+
+// ===========================================================================
+
+function getElementId(element) {
+	return element.id;
+}
+
+// ===========================================================================
+
+function getClientFromIndex(index) {
+	let clients = getClients();
+	for(let i in clients) {
+		if(clients[i].index == index) {
+			return clients[i];
+		}
+	}
+}
+
+// ===========================================================================
+
+function getClientsInRange(position, distance) {
+	return getPlayersInRange(position, distance);
+}
+
+// ===========================================================================
+
+function getCiviliansInRange(position, distance) {
+	return getElementsByTypeInRange(ELEMENT_PED, position, distance).filter(x => !x.isType(ELEMENT_PLAYER));
+}
+
+// ===========================================================================
+
+function getPlayersInRange(position, distance) {
+	return getClients().filter(x => getDistance(position, getPlayerPosition(x)) <= distance);
+}
+
+// ===========================================================================
+
+function getElementsByTypeInRange(elementType, position, distance) {
+	return getElementsByType(elementType).filter(x => getDistance(position, getElementPosition(x)) <= distance);
+}
+
+// ===========================================================================
+
+function getClosestCivilian(position) {
+	return getClosestElementByType(ELEMENT_PED, position).filter(ped => !ped.isType(ELEMENT_PLAYER));
+}
+
+// ===========================================================================
+
+function getVehiclesInRange(position, range) {
+	return getElementsByTypeInRange(ELEMENT_VEHICLE, position, range);
+}
+
+// ===========================================================================
+
+function getClosestVehicle(position) {
+	return getClosestElementByType(ELEMENT_VEHICLE, position);
+}
+
+// ===========================================================================
+
+function getClosestElementByType(elementType, position) {
+	return getElementsByType(elementType).reduce((i, j) => (getDistance(position, getElementPosition(i)) <= getDistance(position, getElementPosition(j))) ? i : j);
+}
+
+// ===========================================================================
+
+function getVehicleFirstEmptySeat(vehicle) {
+	for(let i = 0; i <= 4; i++) {
+		if(vehicle.getOccupant(i) == null) {
+			return i;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function isVehicleTrain(vehicle) {
+	if(getGame() == VRR_GAME_GTA_III) {
+		if(vehicle.modelIndex == 124) {
+			return true;
+		}
+	}
+
+	return false
+}
+
+// ===========================================================================
+
+function warpPedIntoVehicle(ped, vehicle, seatId) {
+	ped.warpIntoVehicle(vehicle, seatId);
+}
+
+// ===========================================================================
+
+function getPlayerPing(client) {
+	return client.ping
+}
+
+// ===========================================================================
+
+function setVehicleHealth(vehicle, health) {
+	vehicle.health = 1000;
+}
+
+// ===========================================================================
+
+function givePlayerWeapon(client, weaponId, ammo, active = true) {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to give weapon (Weapon: ${weaponId}, Ammo: ${ammo})`);
+    sendNetworkEventToPlayer("vrr.giveWeapon", client, weaponId, ammo, active);
 }
 
 // ===========================================================================

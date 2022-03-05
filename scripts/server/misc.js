@@ -21,7 +21,7 @@ function getPositionCommand(command, params, client) {
 	let position = getPlayerPosition(client);
 
 	messagePlayerNormal(client, `Your position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
-	logToConsole(LOG_DEBUG, `${getPlayerDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
+	logToConsole(LOG_INFO, `${getPlayerDisplayForConsole(client)}'s position is: ${position.x.toFixed(2)}, ${position.y.toFixed(2)}, ${position.z.toFixed(2)}`);
 	return true;
 }
 
@@ -59,8 +59,7 @@ function setNewCharacterMoneyCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split(" ");
-	let amount = toInteger(splitParams[0]) || 1000;
+let amount = toInteger(getParam(params, " ", 1)) || 1000;
 
 	getServerConfig().newCharacter.cash = amount;
 	getServerConfig().needsSaved = true;
@@ -117,34 +116,9 @@ function submitBugReportCommand(command, params, client) {
 // ===========================================================================
 
 function enterExitPropertyCommand(command, params, client) {
-	//let closestBusinessEntrance = getClosestBusinessEntrance(getPlayerPosition(client), getPlayerDimension(client));
-	//let closestBusinessExit = getClosestBusinessExit(getPlayerPosition(client), getPlayerDimension(client));
-	//let closestHouseEntrance = getClosestHouseEntrance(getPlayerPosition(client), getPlayerDimension(client));
-	//let closestHouseExit = getClosestHouseExit(getPlayerPosition(client), getPlayerDimension(client));
-
 	let closestProperty = null;
 	let isEntrance = false;
 	let isBusiness = false;
-
-	//if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessEntrance).entrancePosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseEntrance).entrancePosition)) {
-	//	closestEntrance = getBusinessData(closestBusinessEntrance);
-	//} else {
-	//	closestEntrance = getHouseData(closestHouseEntrance);
-	//}
-
-	//if(getDistance(getPlayerPosition(client), getBusinessData(closestBusinessExit).exitPosition) <= getDistance(getPlayerPosition(client), getHouseData(closestHouseExit).exitPosition)) {
-	//	closestExit = getBusinessData(closestBusinessExit);
-	//} else {
-	//	closestExit = getHouseData(closestHouseExit);
-	//}
-
-	//if(getDistance(getPlayerPosition(client), closestEntrance.entrancePosition) <= getDistance(getPlayerPosition(client), closestExit.exitPosition)) {
-	//	closestProperty = closestEntrance;
-	//	isEntrance = true;
-	//} else {
-	//	closestProperty = closestExit;
-	//	isEntrance = false;
-	//}
 
 	if(!getPlayerData(client).currentPickup) {
 		return false;
@@ -191,18 +165,18 @@ function enterExitPropertyCommand(command, params, client) {
 	if(isEntrance) {
 		if(getDistance(closestProperty.entrancePosition, getPlayerPosition(client)) <= getGlobalConfig().enterPropertyDistance) {
 			if(closestProperty.locked) {
-				meActionToNearbyPlayers(client, `tries to open the ${(isBusiness) ? "business" : "house"} door but fails because it's locked`);
+				meActionToNearbyPlayers(client, getLocaleString(client, "EnterExitPropertyDoorLocked", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 				return false;
 			}
 
 			if(!closestProperty.hasInterior) {
-				messagePlayerAlert(client, `This ${(isBusiness) ? "business" : "house"} does not have an interior, but you can still use commands at the door icon.`);
+				messagePlayerAlert(client, getLocaleString(client, "PropertyNoInterior", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 				return false;
 			}
 
 			clearPlayerStateToEnterExitProperty(client);
 			getPlayerData(client).pedState = VRR_PEDSTATE_ENTERINGPROPERTY;
-			meActionToNearbyPlayers(client, `opens the door and enters the ${(isBusiness) ? "business" : "house"}`);
+			meActionToNearbyPlayers(client, getLocaleString(client, "EntersProperty", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 
 			if(isFadeCameraSupported()) {
 				fadeCamera(client, false, 1.0);
@@ -232,12 +206,12 @@ function enterExitPropertyCommand(command, params, client) {
 	} else {
 		if(getDistance(closestProperty.exitPosition, getPlayerPosition(client)) <= getGlobalConfig().exitPropertyDistance) {
 			if(closestProperty.locked) {
-				meActionToNearbyPlayers(client, `tries to open the ${(isBusiness) ? "business" : "house"} door but fails because it's locked`);
+				meActionToNearbyPlayers(client, getLocaleString(client, "EnterExitPropertyDoorLocked", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 				return false;
 			}
 			getPlayerData(client).pedState = VRR_PEDSTATE_EXITINGPROPERTY;
 			clearPlayerStateToEnterExitProperty(client)
-			meActionToNearbyPlayers(client, `opens the door and exits the ${(isBusiness) ? "business" : "house"}`);
+			meActionToNearbyPlayers(client, getLocaleString(client, "ExitsProperty", (isBusiness) ? getLocaleString(client, "Business") : getLocaleString(client, "House")));
 
 			if(isFadeCameraSupported()) {
 				fadeCamera(client, false, 1.0);
@@ -276,7 +250,7 @@ function getPlayerInfoCommand(command, params, client) {
 			targetClient = getPlayerFromParams(params);
 
 			if(!getPlayerData(targetClient)) {
-				messagePlayerError(client, "Player not found!");
+				messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
 				return false;
 			}
 		}
@@ -309,11 +283,8 @@ function getPlayerInfoCommand(command, params, client) {
 // ===========================================================================
 
 function playerChangeAFKState(client, afkState) {
-    if(afkState) {
-        setEntityData(client, "vrr.afk", true, true);
-    } else {
-        client.removeData("vrr.afk");
-    }
+    getPlayerData(client).afk = afkState;
+	updateAllPlayerNameTags();
 }
 
 // ===========================================================================
@@ -366,14 +337,16 @@ function updateServerGameTime() {
 
 function listOnlineAdminsCommand(command, params, client) {
 	//== Admins ===================================
-	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Admins {clanOrange}===================================`);
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderAdminsList")));
 
 	let admins = [];
 	let clients = getClients();
 	for(let i in clients) {
 		if(getPlayerData(clients[i])) {
-			if(getPlayerData(clients[i]).accountData.flags.admin != 0) {
-				admins.push(`{ALTCOLOUR}[${getPlayerData(clients[i]).accountData.staffTitle}] {MAINCOLOUR}${getCharacterFullName(clients[i])}`);
+			if(typeof getPlayerData(clients[i]).accountData.flags.admin != "undefined") {
+				if(getPlayerData(clients[i]).accountData.flags.admin > 0 || getPlayerData(clients[i]).accountData.flags.admin == -1) {
+					admins.push(`{ALTCOLOUR}[${getPlayerData(clients[i]).accountData.staffTitle}] {MAINCOLOUR}${getCharacterFullName(clients[i])}`);
+				}
 			}
 		}
 	}
@@ -387,13 +360,34 @@ function listOnlineAdminsCommand(command, params, client) {
 // ===========================================================================
 
 function gpsCommand(command, params, client) {
-	//== Businesses ===================================
-	messagePlayerNormal(client, `{clanOrange}== {jobYellow}Businesses {clanOrange}================================`);
+	messagePlayerNormal(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBusinessList")));
+
+	let locationType = VRR_GPS_TYPE_NONE;
+	let useType = VRR_ITEM_USETYPE_NONE;
+	let blipColour = "white";
 
 	switch(toLowerCase(params)) {
+		case "police":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_POLICE;
+			break;
+
+		case "hospital":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_HOSPITAL;
+			break;
+
+		case "job":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_JOB;
+			break;
+
 		case "skin":
 		case "skins":
 		case "clothes":
+		case "player":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_SKIN;
 			break;
 
@@ -402,47 +396,165 @@ function gpsCommand(command, params, client) {
 		case "weapon":
 		case "weapons":
 		case "wep":
+		case "weps":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_WEAPON;
 			break;
 
 		case "food":
 		case "eat":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_FOOD;
 			break;
 
 		case "drink":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_DRINK;
 			break;
 
+		case "alcohol":
+		case "booze":
+		case "bar":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
+			useType = VRR_ITEM_USETYPE_ALCOHOL;
+			break;
+
 		case "repair":
+		case "carrepair":
+		case "vehrepair":
+		case "spray":
+		case "fix":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_VEHREPAIR;
 			break;
 
+		case "vehiclecolour":
+		case "vehcolour":
+		case "carcolour":
 		case "colour":
+			blipColour = "businessBlue"
+			locationType = VRR_GPS_TYPE_BUSINESS;
 			useType = VRR_ITEM_USETYPE_VEHCOLOUR;
 			break;
 
 		default: {
 			let itemTypeId = getItemTypeFromParams(params);
-			if(getItemTypeData(itemTypeId)) {
+			if(getItemTypeData(itemTypeId) != false) {
+                locationType = VRR_GPS_TYPE_BUSINESS;
+                blipColour = "businessBlue";
 				useType = getItemTypeData(itemTypeId).useType;
-			}
+			} else {
+                let gameLocationId = getGameLocationFromParams(params);
+                if(gameLocationId != false) {
+                    position = getGameData().locations[getServerGame()][gameLocationId][1]
+                }
+            }
 		}
 	}
 
-	let businessId = getClosestBusinessWithBuyableItemOfUseType(useType);
-	if(!businessId) {
-		messagePlayerError(client, `There is no business with that item available`);
+	if(locationType == VRR_GPS_TYPE_NONE) {
+		messagePlayerError(client, getLocaleString(client, "InvalidGPSLocation"));
 		return false;
 	}
 
-	if(!getBusinessData(businessId)) {
-		messagePlayerError(client, `There is no business with that item available`);
-		return false;
+	if(locationType == VRR_GPS_TYPE_BUSINESS) {
+		let businessId = getClosestBusinessWithBuyableItemOfUseType(useType);
+		if(!businessId) {
+			messagePlayerError(client, getLocaleString(client, "NoBusinessWithItemType"));
+			return false;
+		}
+
+		if(!getBusinessData(businessId)) {
+			messagePlayerError(client, getLocaleString(client, "NoBusinessWithItemType"));
+			return false;
+		}
+
+        hideAllBlipsForPlayerGPS(client);
+		blinkGenericGPSBlipForPlayer(client, getBusinessData(businessId).entrancePosition, getBusinessData(businessId).entranceBlipModel, getColourByType(blipColour), 10);
+        messagePlayerSuccess(client, "Look for the blinking icon on your mini map");
 	}
 
-	blinkGenericGPSBlipForPlayer(client, getColourByType("businessBlue"), 10);
+    if(locationType == VRR_GPS_TYPE_GAMELOC) {
+        hideAllBlipsForPlayerGPS(client);
+        blinkGenericGPSBlipForPlayer(client, position, 0, getColourByType(blipColour), 10);
+        messagePlayerSuccess(client, "Look for the blinking icon on your mini map");
+        return true;
+    }
 }
 
 // ===========================================================================
 
+function stuckPlayerCommand(command, params, client) {
+    if((getCurrentUnixTimestamp()-getPlayerData(client).lastStuckCommand) < getGlobalConfig().stuckCommandInterval) {
+        messagePlayerError(client, "CantUseCommandYet");
+        return false;
+    }
+
+    let dimension = getPlayerDimension(client);
+    let interior = getPlayerInterior(client);
+
+    messagePlayerAlert(client, getLocaleString(client, "FixingStuck"));
+
+    if(getGameConfig().skinChangePosition[getServerGame()].length > 0) {
+        if(getPlayerData(client).returnToPosition != null && getPlayerData(client).returnToType == VRR_RETURNTO_TYPE_SKINSELECT) {
+            messagePlayerAlert(client, "You canceled the skin change.");
+            restorePlayerCamera(client);
+
+            setPlayerPosition(client, getPlayerData(client).returnToPosition);
+            setPlayerHeading(client, getPlayerData(client).returnToHeading);
+            setPlayerInterior(client, getPlayerData(client).returnToInterior);
+            setPlayerDimension(client, getPlayerData(client).returnToDimension);
+
+            getPlayerData(client).returnToPosition = null;
+            getPlayerData(client).returnToHeading = null;
+            getPlayerData(client).returnToInterior = null;
+            getPlayerData(client).returnToDimension = null;
+
+            getPlayerData(client).returnToType = VRR_RETURNTO_TYPE_NONE;
+        }
+    }
+
+    //if(getPlayerData(client).returnToPosition != null && getPlayerData(client).returnToType == VRR_RETURNTO_TYPE_ADMINGET) {
+    //    messagePlayerError(client, `You were teleported by an admin and can't use the stuck command`);
+    //    return false;
+    //}
+
+    if(dimension > 0) {
+        let businesses = getServerData().businesses;
+        for(let i in businesses) {
+            if(businesses[i].exitDimension == dimension) {
+                setPlayerPosition(client, businesses[i].entrancePosition);
+                setPlayerDimension(client, businesses[i].entranceDimension);
+                setPlayerInterior(client, businesses[i].entranceInterior);
+
+                return true;
+            }
+        }
+
+        let houses = getServerData().houses;
+        for(let i in houses) {
+            if(houses[i].exitDimension == dimension) {
+                setPlayerPosition(client, houses[i].entrancePosition);
+                setPlayerDimension(client, houses[i].entranceDimension);
+                setPlayerInterior(client, houses[i].entranceInterior);
+
+                return true;
+            }
+        }
+    } else {
+        setPlayerDimension(client, 1);
+        setPlayerDimension(client, getGameData().mainWorldDimension[getGame()]);
+        setPlayerInterior(client, getGameData().mainWorldInterior[getGame()]);
+        setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), 2.0));
+    }
+
+    setPlayerInterior(client, 0);
+    setPlayerDimension(client, 0);
+}
+
+// ===========================================================================

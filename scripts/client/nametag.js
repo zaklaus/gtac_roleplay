@@ -165,6 +165,13 @@ function updateNametags(element) {
 
 			let distance = playerPos.distance(elementPos);
 			if(distance <= nametagDistance) {
+				if(typeof game.processLineOfSight != "undefined") {
+					let losCheck = game.processLineOfSight(playerPos, elementPos, true, false, false, true, true, false, true, true);
+					if(losCheck != null) {
+						return false;
+					}
+				}
+
 				if(element.type == ELEMENT_PLAYER) {
                     let name = element.name;
                     let colour = COLOUR_WHITE;

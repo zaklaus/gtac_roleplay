@@ -68,12 +68,12 @@ function loadCommands() {
             commandData("stopanim", stopPlayerAnimationCommand, "", getStaffFlagValue("None"), true, true, "Stops your current animation"),
         ],
         antiCheat: [
-            commandData("addacscriptwl", addAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("Developer"), true, true),
-            commandData("delacscriptwl", removeAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("Developer"), true, true),
-            commandData("addacscriptbl", addAntiCheatBlackListedScriptCommand, "<script name>", getStaffFlagValue("Developer"), true, true),
-            commandData("delacscriptbl", removeAntiCheatBlackListedScriptCommand, "<script name>", getStaffFlagValue("Developer"), true, true),
-            commandData("setacscriptbl", toggleAntiCheatScriptBlackListCommand, "<0/1 state>", getStaffFlagValue("Developer"), true, true),
-            commandData("setacscriptwl", toggleAntiCheatScriptWhiteListCommand, "<0/1 state>", getStaffFlagValue("Developer"), true, true),
+            commandData("addacscriptwl", addAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("ManageAntiCheat"), true, true),
+            commandData("delacscriptwl", removeAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("ManageAntiCheat"), true, true),
+            commandData("addacscriptbl", addAntiCheatBlackListedScriptCommand, "<script name>", getStaffFlagValue("ManageAntiCheat"), true, true),
+            commandData("delacscriptbl", removeAntiCheatBlackListedScriptCommand, "<script name>", getStaffFlagValue("ManageAntiCheat"), true, true),
+            commandData("setacscriptbl", toggleAntiCheatScriptBlackListCommand, "<0/1 state>", getStaffFlagValue("ManageAntiCheat"), true, true),
+            commandData("setacscriptwl", toggleAntiCheatScriptWhiteListCommand, "<0/1 state>", getStaffFlagValue("ManageAntiCheat"), true, true),
             //commandData("setac", toggleGlobalAntiCheatCommand, "<0/1 state>", getStaffFlagValue("Developer"), true, true),
             //commandData("ac", getGlobalAntiCheatStatusCommand, "<0/1 state>", getStaffFlagValue("Developer"), true, true),
         ],
@@ -109,8 +109,9 @@ function loadCommands() {
             commandData("bizitemprice", setBusinessItemSellPriceCommand, "<item slot> <sell price>", getStaffFlagValue("None"), true, true, "Sets the purchase price of a business item"),
             commandData("bizname", setBusinessNameCommand, "<name>", getStaffFlagValue("None"), true, true, "Changes a business name"),
             commandData("bizowner", setBusinessOwnerCommand, "<player name/id>", getStaffFlagValue("None"), true, true, "Changes the owner of a business"),
+            commandData("bizdelowner", removeBusinessOwnerCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Removes the owner of a business"),
             commandData("bizpublic", setBusinessPublicCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Changes a business to public (city hall, govt buildings, etc)"),
-            commandData("bizpublic", setBusinessJobCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Changes the owner of a business to a job"),
+            commandData("bizjob", setBusinessJobCommand, "", getStaffFlagValue("ManageBusinesses"), true, true, "Changes the owner of a business to a job"),
             commandData("bizrank", setBusinessRankCommand, "", getStaffFlagValue("None"), true, true, "Changes the job/clan rank required to use the business"),
             commandData("bizclan", setBusinessClanCommand, "", getStaffFlagValue("None"), true, true, "Changes the owner of a business to a clan"),
             commandData("bizbuyprice", setBusinessBuyPriceCommand, "<amount>", getStaffFlagValue("None"), true, true, "Changes the price to buy the business"),
@@ -182,10 +183,10 @@ function loadCommands() {
             commandData("cmddisable", disableCommand, "<command>", getStaffFlagValue("Developer"), true, true, "Disables a specific command"),
         ],
         config: [
-            commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("ManageServer"), true, true, "Sets the time. Hours are required, minute is optional and will default to 0"),
-            commandData("setminuteduration", setMinuteDurationCommand, "<time in ms>", getStaffFlagValue("ManageServer"), true, true, "Sets how long a minute lasts in milliseconds. 60000 is real time."),
-            commandData("setweather", setWeatherCommand, "<weather id/name>", getStaffFlagValue("ManageServer"), true, true, "Change the weather to specified type."),
-            commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("ManageServer"), true, true, "Toggles winter/snow"),
+            commandData("settime", setTimeCommand, "<hour> [minute]", getStaffFlagValue("ManageWorld"), true, true, "Sets the time. Hours are required, minute is optional and will default to 0"),
+            commandData("setminuteduration", setMinuteDurationCommand, "<time in ms>", getStaffFlagValue("ManageWorld"), true, true, "Sets how long a minute lasts in milliseconds. 60000 is real time."),
+            commandData("setweather", setWeatherCommand, "<weather id/name>", getStaffFlagValue("ManageWorld"), true, true, "Change the weather to specified type."),
+            commandData("setsnow", setSnowingCommand, "<falling snow> <ground snow>", getStaffFlagValue("ManageWorld"), true, true, "Toggles winter/snow"),
             commandData("setlogo", toggleServerLogoCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles the corner server logo display on/off"),
             commandData("setgui", toggleServerGUICommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles server GUI on/off"),
             commandData("setguicolours", setServerGUIColoursCommand, "<red> <green> <blue>", getStaffFlagValue("ManageServer"), true, true),
@@ -195,6 +196,8 @@ function loadCommands() {
             commandData("reloadcfg", reloadServerConfigurationCommand, "", getStaffFlagValue("ManageServer"), true, true, "Loads and applies the server configuration"),
             commandData("reloademailcfg", reloadEmailConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the email configuration"),
             commandData("reloaddbcfg", reloadDatabaseConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the database configuration"),
+            commandData("reloadlocalecfg", reloadLocaleConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the locale configuration and texts"),
+            commandData("reloadaccentcfg", reloadAccentConfigurationCommand, "", getStaffFlagValue("Developer"), true, true, "Loads and applies the accent configuration and texts"),
 
             commandData("setbizblips", toggleServerBusinessBlipsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all business blips on/off"),
             commandData("sethouseblips", toggleServerHouseBlipsCommand, "<0/1 state>", getStaffFlagValue("ManageServer"), true, true, "Toggles all house blips on/off"),
@@ -215,17 +218,25 @@ function loadCommands() {
             commandData("saveall", saveAllServerDataCommand, "", getStaffFlagValue("Developer"), true, true),
             commandData("docmd", simulateCommandForPlayerCommand, "<player name/id> <command> [params]", getStaffFlagValue("Developer"), true, true),
             commandData("docmdall", simulateCommandForAllPlayersCommand, "<command> [params]", getStaffFlagValue("Developer"), true, true),
-            commandData("addloglvl", addServerLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
-            commandData("delloglvl", removeServerLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
-            commandData("loglvl", getServerLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
+            commandData("addloglvl", addLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
+            commandData("delloglvl", removeLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
+            commandData("loglvl", getLogLevelCommand, "<log level name>", getStaffFlagValue("Developer"), true, true),
 
             commandData("nosave", togglePauseSavingToDatabaseCommand, "", getStaffFlagValue("Developer"), true, true),
             commandData("streamurlall", streamAudioURLToAllPlayersCommand, "<url> <volume>", getStaffFlagValue("Developer"), true, true),
             commandData("streamnameall", streamAudioNameToAllPlayersCommand, "<name> <volume>", getStaffFlagValue("Developer"), true, true),
 
             commandData("forceresetpass", forceAccountPasswordResetCommand, "<account name>", getStaffFlagValue("Developer"), true, true),
+            commandData("fixblips", fixAllServerBlipsCommand, "", getStaffFlagValue("Developer"), true, true),
+            commandData("fixpickups", fixAllServerPickupsCommand, "", getStaffFlagValue("Developer"), true, true),
+            commandData("resetambience", resetAllServerAmbienceElementsCommand, "", getStaffFlagValue("ManageWorld"), true, true),
         ],
         discord: [],
+        economy: [
+            commandData("tax", taxInfoCommand, "", getStaffFlagValue("None"), true, true),
+            commandData("wealth", wealthInfoCommand, "", getStaffFlagValue("None"), true, true),
+            commandData("forcepayday", forcePlayerPayDayCommand, "<player name/id>", getStaffFlagValue("ManageServer"), true, true, "Gives a player an instant payday."),
+        ],
         email: [
             commandData("testemail", testEmailCommand, "<email address>", getStaffFlagValue("Developer"), true, true),
         ],
@@ -243,7 +254,7 @@ function loadCommands() {
             commandData("skin", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
             commandData("skins", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
             commandData("clothes", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
-            commandData("setskin", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
+            //commandData("setskin", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
             commandData("changeskin", helpGetSkinCommand, "", getStaffFlagValue("None"), false, false),
         ],
         house: [
@@ -268,6 +279,7 @@ function loadCommands() {
         ],
         item: [
             commandData("i", playerSwitchHotBarSlotCommand, "<slot id>", getStaffFlagValue("None"), true, false, "Switches to the item in the specified slot of your inventory."),
+            commandData("item", playerSwitchHotBarSlotCommand, "<slot id>", getStaffFlagValue("None"), true, false, "Switches to the item in the specified slot of your inventory."),
             commandData("addgrounditem", createGroundItemCommand, "<item name/id>", getStaffFlagValue("ManageItems"), true, false, "Spawns a new item on the ground at your position."),
             commandData("additem", createItemCommand, "<item name/id>", getStaffFlagValue("ManageItems"), true, false, "Spawns a new item in your hotbar inventory."),
             commandData("delgrounditem", deleteGroundItemCommand, "", getStaffFlagValue("ManageItems"), true, false, "Destroys the nearest item on the ground."),
@@ -323,15 +335,35 @@ function loadCommands() {
             commandData("drag", policeDragCommand, "", getStaffFlagValue("None"), true, false),
             commandData("search", policeSearchCommand, "", getStaffFlagValue("None"), true, false),
 
-            // Bus/Garbage
+            // Routes
             commandData("startroute", jobStartRouteCommand, "", getStaffFlagValue("None"), true, false),
             commandData("stoproute", jobStopRouteCommand, "", getStaffFlagValue("None"), true, false),
 
             // Admin Job Stuff
+            commandData("addjob", createJobCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("addjobloc", createJobLocationCommand, "<job name/id>", getStaffFlagValue("ManageJobs"), true, false),
             commandData("deljobloc", deleteJobLocationCommand, "", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("addjobroute", createJobRouteCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("addjobrouteloc", createJobRouteLocationCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("deljobroute", deleteJobRouteCommand, "", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("deljobrouteloc", deleteJobRouteLocationCommand, "", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutename", setJobRouteNameCommand, "<name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutepay", setJobRoutePayCommand, "<amount>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutestartmsg", setJobRouteStartMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutefinishmsg", setJobRouteFinishMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutelocarrivemsg", setJobRouteLocationArriveMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutelocnextmsg", setJobRouteLocationNextMessageCommand, "<new message>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobrouteenabled", toggleJobRouteEnabledCommand, "", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutevehcolours", setJobRouteVehicleColoursCommand, "<colour 1> <colour 2>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobroutedelays", setJobRouteAllLocationDelaysCommand, "<time in milliseconds>", getStaffFlagValue("ManageJobs"), true, false),
+
+            commandData("jobcolour", setJobColourCommand, "<job id/name> <red> <green> <blue>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobblip", setJobBlipCommand, "<job id/name> <blip id/name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobpickup", setJobPickupCommand, "<job id/name> <pickup id/name>", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobwl", toggleJobWhiteListCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobwhitelist", toggleJobWhiteListCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobblacklist", toggleJobBlackListCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
+            commandData("jobbl", toggleJobBlackListCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobtoggle", toggleJobEnabledCommand, "[job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobaddplayerwl", addPlayerToJobWhiteListCommand, "<player name/id> [job id]", getStaffFlagValue("ManageJobs"), true, false),
             commandData("jobaddplayerbl", addPlayerToJobBlackListCommand, "<player name/id> [job id]", getStaffFlagValue("ManageJobs"), true, false),
@@ -347,7 +379,12 @@ function loadCommands() {
             commandData("unbindkey", removeKeyBindCommand, "<key id/name>", getStaffFlagValue("None"), true, false, "Removes an existing keybind from your account"),
             commandData("keybinds", showKeyBindListCommand, "", getStaffFlagValue("None"), true, false, "Shows a list of all your current keybinds"),
         ],
-        locale: [],
+        locale: [
+            commandData("lang", setLocaleCommand, "<language name>", getStaffFlagValue("None"), true, false, "Sets your language"),
+            commandData("language", setLocaleCommand, "<language name>", getStaffFlagValue("None"), true, false, "Sets your language"),
+            commandData("locale", setLocaleCommand, "<language name>", getStaffFlagValue("None"), true, false, "Sets your language"),
+            commandData("setlang", setLocaleCommand, "<language name>", getStaffFlagValue("None"), true, false, "Sets your language"),
+        ],
         messaging: [],
         misc: [
             commandData("pos", getPositionCommand, "", getStaffFlagValue("BasicModeration"), true, false, "Shows your current coordinates"),
@@ -359,48 +396,8 @@ function loadCommands() {
             commandData("yes", playerPromptAnswerYesCommand, "", getStaffFlagValue("None"), true, false, "Answers a prompt with YES"),
             commandData("no", playerPromptAnswerNoCommand, "", getStaffFlagValue("None"), true, false, "Answers a prompt with NO"),
             commandData("admins", listOnlineAdminsCommand, "", getStaffFlagValue("None"), true, false, "Shows a list of online admins"),
-        ],
-        moderation: [
-            commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Kicks a player from the server"),
-            commandData("mute", muteClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Mutes a player, preventing them from using any chat."),
-            commandData("freeze", freezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Freeze a player, preventing them from moving."),
-            commandData("unmute", unMuteClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Unmutes a player, allowing them to chat again."),
-            commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Unfreezes a player, allowing them to move again."),
-            commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a player."),
-            commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports a player to you."),
-            commandData("getveh", getVehicleCommand, "<vehicle id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports a vehicle to you."),
-            commandData("returnplr", returnPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Returns a player to their previous position."),
-            commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to specific coordinates with optional interior and dimension."),
-            commandData("gotoveh", gotoVehicleCommand, "<vehicle id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a vehicle by ID."),
-            commandData("gotobiz", gotoBusinessCommand, "<business id/name>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a business by ID or name."),
-            commandData("gotohouse", gotoHouseCommand, "<house id/name>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a house by ID or description."),
-            commandData("gotojob", gotoJobLocationCommand, "<job id/name> <location id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a job location by name and location ID."),
-            commandData("gotoloc", gotoGameLocationCommand, "<location name>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a game location by name."),
-            commandData("gotospawn", gotoNewPlayerSpawnCommand, "", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to the new player spawn location"),
-            commandData("fr", teleportForwardCommand, "<distance in meters>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you forward a certain distance in meters."),
-            commandData("ba", teleportBackwardCommand, "<distance in meters>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you backward a certain distance in meters."),
-            commandData("lt", teleportLeftCommand, "<distance in meters>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to the left a certain distance in meters."),
-            commandData("rt", teleportRightCommand, "<distance in meters>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to the right a certain distance in meters."),
-            commandData("up", teleportUpCommand, "<distance in meters>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you upward a certain distance in meters."),
-            commandData("dn", teleportDownCommand, "<distance in meters>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you downward a certain distance in meters."),
-            commandData("int", playerInteriorCommand, "<interior id>", getStaffFlagValue("BasicModeration"), true, true, "Gets or sets a player's game interior."),
-            commandData("vw", playerVirtualWorldCommand, "<virtual world id>", getStaffFlagValue("BasicModeration"), true, true, "Gets or sets a player's virtual world/dimension."),
-            commandData("addstaffflag", addStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("ManageAdmins"), true, true, "Gives a player a staff flaf (this server only)."),
-            commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("ManageAdmins"), true, true, "Takes a player's staff flag by name (this server only)."),
-            commandData("getstaffflags", getStaffFlagsCommand, "<player name/id>", getStaffFlagValue("ManageAdmins"), true, true, "Shows a list of all staff flags a player has (this server only)."),
-            commandData("clearstaffflags", clearStaffFlagsCommand, "<player name/id>", getStaffFlagValue("ManageAdmins"), true, true, "Removes all staff flags for a player (this server only)."),
-            commandData("staffflags", allStaffFlagsCommand, "", getStaffFlagValue("ManageAdmins"), true, true, "Shows a list of all valid staff flag names."),
-            commandData("givemoney", givePlayerMoneyCommand, "<player name/id> <amount>", getStaffFlagValue("serverManager"), true, true),
-            commandData("nonrpname", forceCharacterNameChangeCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Forces a player to change their current character's name."),
-            commandData("forcename", forceCharacterNameCommand, "<player name/id> <first name> <last name>", getStaffFlagValue("BasicModeration"), true, true, "Changes a character's name directly."),
-            commandData("forceskin", forcePlayerSkinCommand, "<player name/id> <skin id/name>", getStaffFlagValue("BasicModeration"), true, true, "Changes a character's skin directly."),
-            commandData("forcefightstyle", forceFightStyleCommand, "<player name/id> <fight style name>", getStaffFlagValue("BasicModeration"), true, true, "Changes a character's fight style."),
-            commandData("plrinfo", getPlayerInfoCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows basic info about the specified player"),
-            commandData("getplrhouse", getAllHousesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all houses owned by the player"),
-            commandData("getplrbiz", getAllBusinessesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all businesses owned by the player"),
-            commandData("getplrveh", getAllVehiclesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all vehicles owned by the player"),
-            commandData("geoip", getGeoIPInformationCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Retrieves GeoIP information on a player (country & city)"),
-            commandData("forcepayday", forcePlayerPayDayCommand, "<player name/id>", getStaffFlagValue("ManageServer"), true, true, "Gives a player an instant payday."),
+            commandData("stuck", stuckPlayerCommand, "", getStaffFlagValue("None"), true, false, "Fixes your position and virtual world if bugged"),
+            commandData("gps", gpsCommand, "[item or place name]", getStaffFlagValue("None"), true, false, "Shows you locations for special places or where to buy items"),
         ],
         radio: [
             commandData("radiostation", playStreamingRadioCommand, "<radio station id>", getStaffFlagValue("None"), true, false, "Plays a radio station in your vehicle, house, or business (depending on which one you're in)"),
@@ -409,6 +406,55 @@ function loadCommands() {
             commandData("radioreloadall", reloadAllRadioStationsCommand, "", getStaffFlagValue("ManageServer"), true, false, "Reloads all radio stations from database (use after making changes)"),
         ],
         security: [],
+        staff: [
+            commandData("kick", kickClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Kicks a player from the server"),
+            commandData("mute", muteClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Mutes a player, preventing them from using any chat."),
+            commandData("freeze", freezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Freeze a player, preventing them from moving."),
+            commandData("unmute", unMuteClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Unmutes a player, allowing them to chat again."),
+            commandData("unfreeze", unFreezeClientCommand, "<player name/id> [reason]", getStaffFlagValue("BasicModeration"), true, true, "Unfreezes a player, allowing them to move again."),
+            commandData("goto", gotoPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a player."),
+            commandData("gethere", getPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports a player to you."),
+            commandData("getveh", getVehicleCommand, "<vehicle id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports a vehicle to you."),
+            commandData("warpinveh", warpIntoVehicleCommand, "[vehicle id]", getStaffFlagValue("ManageVehicles"), true, false),
+            commandData("returnplr", returnPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Returns a player to their previous position."),
+            commandData("gotopos", gotoPositionCommand, "<x> <y> <z> [int] [vw]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to specific coordinates with optional interior and dimension."),
+            commandData("gotoveh", gotoVehicleCommand, "<vehicle id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a vehicle by ID."),
+            commandData("gotobiz", gotoBusinessCommand, "<business id/name>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a business by ID or name."),
+            commandData("gotohouse", gotoHouseCommand, "<house id/name>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a house by ID or description."),
+            commandData("gotojob", gotoJobLocationCommand, "<job id/name> <location id>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a job location by name and location ID."),
+            commandData("gotoloc", gotoGameLocationCommand, "<location name>", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to a game location by name."),
+            commandData("gotospawn", gotoNewPlayerSpawnCommand, "", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to the new player spawn location"),
+            commandData("fr", teleportForwardCommand, "[distance in meters]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you forward a certain distance in meters."),
+            commandData("ba", teleportBackwardCommand, "[distance in meters]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you backward a certain distance in meters."),
+            commandData("lt", teleportLeftCommand, "[distance in meters]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to the left a certain distance in meters."),
+            commandData("rt", teleportRightCommand, "[distance in meters]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you to the right a certain distance in meters."),
+            commandData("up", teleportUpCommand, "[distance in meters]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you upward a certain distance in meters."),
+            commandData("dn", teleportDownCommand, "[distance in meters]", getStaffFlagValue("BasicModeration"), true, true, "Teleports you downward a certain distance in meters."),
+            commandData("int", playerInteriorCommand, "<player name/id> [interior id]", getStaffFlagValue("BasicModeration"), true, true, "Gets or sets a player's game interior."),
+            commandData("vw", playerVirtualWorldCommand, "<player name/id> [virtual world id]", getStaffFlagValue("BasicModeration"), true, true, "Gets or sets a player's virtual world/dimension."),
+            commandData("addstaffflag", addStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("ManageAdmins"), true, true, "Gives a player a staff flag by name (this server only)."),
+            commandData("delstaffflag", takeStaffFlagCommand, "<player name/id> <flag name>", getStaffFlagValue("ManageAdmins"), true, true, "Takes a player's staff flag by name (this server only)."),
+            commandData("getstaffflags", getStaffFlagsCommand, "<player name/id>", getStaffFlagValue("ManageAdmins"), true, true, "Shows a list of all staff flags a player has (this server only)."),
+            commandData("clearstaffflags", clearStaffFlagsCommand, "<player name/id>", getStaffFlagValue("ManageAdmins"), true, true, "Removes all staff flags for a player (this server only)."),
+            commandData("staffflags", allStaffFlagsCommand, "", getStaffFlagValue("ManageAdmins"), true, true, "Shows a list of all valid staff flag names."),
+            commandData("givemoney", givePlayerMoneyCommand, "<player name/id> <amount>", getStaffFlagValue("serverManager"), true, true),
+            commandData("nonrpname", forceCharacterNameChangeCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Forces a player to change their current character's name."),
+            commandData("setname", forceCharacterNameCommand, "<player name/id> <first name> <last name>", getStaffFlagValue("BasicModeration"), true, true, "Changes a character's name directly."),
+            commandData("setskin", forcePlayerSkinCommand, "<player name/id> <skin id/name>", getStaffFlagValue("BasicModeration"), true, true, "Changes a character's skin."),
+            commandData("setaccent", forcePlayerAccentCommand, "<player name/id> <accent name>", getStaffFlagValue("BasicModeration"), true, true, "Changes a character's accent."),
+            commandData("setfightstyle", forceFightStyleCommand, "<player name/id> <fight style name>", getStaffFlagValue("BasicModeration"), true, true, "Changes a character's fight style."),
+            commandData("setstars", forcePlayerWantedLevelCommand, "<player name/id> <wanted level>", getStaffFlagValue("BasicModeration"), true, true, "Forces a player to have a wanted level"),
+            commandData("plrinfo", getPlayerInfoCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows basic info about the specified player"),
+            commandData("getplrhouse", getAllHousesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all houses owned by the player"),
+            commandData("getplrbiz", getAllBusinessesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all businesses owned by the player"),
+            commandData("getplrveh", getAllVehiclesOwnedByPlayerCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Shows a list of all vehicles owned by the player"),
+            commandData("geoip", getPlayerGeoIPInformationCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Retrieves GeoIP information on a player (country & city)"),
+            commandData("ip", getPlayerIPInformationCommand, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Retrieves IP information on a player"),
+            commandData("plrsync", toggleSyncForElementsSpawnedByPlayer, "<player name/id>", getStaffFlagValue("BasicModeration"), true, true, "Sets whether elements spawned by a player are synced (traffic, peds, etc)"),
+            commandData("health", setPlayerHealthCommand, "<player name/id> <health", getStaffFlagValue("BasicModeration"), true, true, "Sets a player's health"),
+            commandData("armour", setPlayerArmourCommand, "<player name/id> <armour>", getStaffFlagValue("BasicModeration"), true, true, "Sets a player's armour"),
+            commandData("infiniterun", setPlayerInfiniteRunCommand, "<player name/id> <state>", getStaffFlagValue("BasicModeration"), true, true, "Toggles a player's infinite sprint"),
+        ],
         startup: [],
         subAccount: [
             commandData("switchchar", switchCharacterCommand, "", getStaffFlagValue("None"), true, false),
@@ -433,6 +479,7 @@ function loadCommands() {
             commandData("addveh", createVehicleCommand, "<model id/name>", getStaffFlagValue("ManageVehicles"), true, false),
             commandData("tempveh", createTemporaryVehicleCommand, "<model id/name>", getStaffFlagValue("ManageVehicles"), true, false),
             commandData("delveh", deleteVehicleCommand, "", getStaffFlagValue("ManageVehicles"), true, false),
+            commandData("nearveh", getNearbyVehiclesCommand, "", getStaffFlagValue("None"), true, false),
 
             commandData("oldveh", getLastVehicleInfoCommand, "", getStaffFlagValue("None"), true, false),
             commandData("lastveh", getLastVehicleInfoCommand, "", getStaffFlagValue("None"), true, false),
@@ -455,19 +502,25 @@ function loadCommands() {
             commandData("vehinfo", getVehicleInfoCommand, "", getStaffFlagValue("None"), true, true),
             commandData("vehpark", toggleVehicleSpawnLockCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
 
-            commandData("vehrespawnall", respawnAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
-            commandData("vehrespawnempty", respawnEmptyVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
-            commandData("vehreloadall", reloadAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true),
+            commandData("vehrespawnall", respawnAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Respawns all vehicles (also respawns all traffic vehicles)"),
+            commandData("vehrespawnempty", respawnEmptyVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Respawns all empty/unoccupied vehicles"),
+            commandData("vehrespawnjob", respawnJobVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Respawns all job vehicles"),
+            commandData("vehrespawnplr", respawnPlayerVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Respawns all player-owned vehicles"),
+            commandData("vehrespawnclan", respawnClanVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Respawns all clan-owned vehicles"),
+            commandData("vehrespawnpublic", respawnPublicVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Respawns all public vehicles"),
+            commandData("vehrespawnbiz", respawnBusinessVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Respawns all business-owned vehicles"),
+            commandData("vehrespawn", respawnVehicleCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Respawns your current vehicle"),
+            commandData("vehreloadall", reloadAllVehiclesCommand, "", getStaffFlagValue("ManageVehicles"), true, true, "Deletes and reloads all vehicles from database"),
 
-            commandData("vehrent", rentVehicleCommand, "", getStaffFlagValue("None"), true, true),
-            commandData("vehrentprice", setVehicleRentPriceCommand, "", getStaffFlagValue("None"), true, true),
-            commandData("vehbuyprice", setVehicleBuyPriceCommand, "", getStaffFlagValue("None"), true, true),
-            commandData("stoprent", stopRentingVehicleCommand, "", getStaffFlagValue("None"), true, true),
-            commandData("vehbuy", buyVehicleCommand, "", getStaffFlagValue("None"), true, true),
-            commandData("vehcolour", vehicleAdminColourCommand, "<colour1> <colour2>", getStaffFlagValue("None"), true, true),
-            commandData("vehlivery", vehicleAdminLiveryCommand, "<livery id>", getStaffFlagValue("None"), true, true),
-            commandData("vehrepair", vehicleAdminRepairCommand, "", getStaffFlagValue("None"), true, true),
-            commandData("passenger", enterVehicleAsPassengerCommand, "", getStaffFlagValue("None"), true, true),
+            commandData("vehrent", rentVehicleCommand, "", getStaffFlagValue("None"), true, true, "Starts renting your current vehicle (if rentable)"),
+            commandData("vehrentprice", setVehicleRentPriceCommand, "", getStaffFlagValue("None"), true, true, "Sets your vehicle's rent price"),
+            commandData("vehbuyprice", setVehicleBuyPriceCommand, "", getStaffFlagValue("None"), true, true, "Sets your vehicle's rent price"),
+            commandData("stoprent", stopRentingVehicleCommand, "", getStaffFlagValue("None"), true, true, "Stops renting your vehicle"),
+            commandData("vehbuy", buyVehicleCommand, "", getStaffFlagValue("None"), true, true, "Purchases your vehicle"),
+            commandData("vehcolour", vehicleAdminColourCommand, "<colour1> <colour2>", getStaffFlagValue("None"), true, true, "Sets a vehicle's colour"),
+            commandData("vehlivery", vehicleAdminLiveryCommand, "<livery id>", getStaffFlagValue("None"), true, true, "Sets your vehicle's livery/paintjob"),
+            commandData("vehrepair", vehicleAdminRepairCommand, "", getStaffFlagValue("None"), true, true, "Repairs your vehicle"),
+            commandData("passenger", enterVehicleAsPassengerCommand, "", getStaffFlagValue("None"), true, true, "Enters a vehicle as passenger"),
         ],
     };
 
@@ -650,7 +703,13 @@ function processPlayerCommand(command, params, client) {
 
     if(!doesCommandExist(toLowerCase(command))) {
         console.warn(`[VRR.Command] ${getPlayerDisplayForConsole(client)} attempted to use command, but failed (invalid command): /${command} ${paramsDisplay}`);
-        messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Use /help for commands and information.`);
+
+        let possibleCommand = getCommandFromParams(command);
+        if(possibleCommand != false && doesPlayerHaveStaffPermission(client, getCommandRequiredPermissions(toLowerCase(possibleCommand.command)))) {
+            messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Did you mean {ALTCOLOUR}/${possibleCommand.command} ?`);
+        } else {
+            messagePlayerError(client, `The command {ALTCOLOUR}/${command} {MAINCOLOUR}does not exist! Use /help for commands and information.`);
+        }
         return false;
     }
 
@@ -696,7 +755,7 @@ addCommandHandler("cmd", function(command, params, client) {
     }
 
     let splitParams = params.split(" ");
-    let newCommand = splitParams[0];
+    let newCommand = getParam(params, " ", 1);
     let newParams = splitParams.slice(1).join(" ");
 
     getCommand(newCommand).handlerFunction(newCommand, newParams, client);
@@ -752,3 +811,44 @@ function getCommandAliasesNames(command) {
 
 // ===========================================================================
 
+function areParamsEmpty(params) {
+	if(!params || params == "" || params.length == 0 || typeof params == "undefined") {
+		return true;
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
+function getParamsCount(params, delimiter = " ") {
+	return params.split(delimiter).length;
+}
+
+// ===========================================================================
+
+function areThereEnoughParams(params, requiredAmount, delimiter = " ") {
+	return (params.split(delimiter).length >= requiredAmount);
+}
+
+// ===========================================================================
+
+function getParam(params, delimiter, index) {
+	return params.split(delimiter)[index-1];
+}
+
+// ===========================================================================
+
+function getCommandFromParams(params) {
+	for(let i in serverCommands) {
+		for(let j in serverCommands[i]) {
+			if(toLowerCase(serverCommands[i][j].command).indexOf(toLowerCase(params)) != -1) {
+				return serverCommands[i][j];
+			}
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================

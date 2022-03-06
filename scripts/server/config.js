@@ -75,9 +75,22 @@ let globalConfig = {
 
 // ===========================================================================
 
-function loadGameConfig() {
-	return gameData;
-};
+function initConfigScript() {
+	logToConsole(LOG_INFO, "[VRR.Config]: Initializing config script ...");
+	logToConsole(LOG_DEBUG, "[VRR.Config]: Loading global config ...");
+	loadGlobalConfig();
+
+	logToConsole(LOG_DEBUG, "[VRR.Config]: Loading server config ...");
+	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port, getMultiplayerMod());
+
+	logToConsole(LOG_DEBUG, "[VRR.Config]: Applying server config ...");
+	applyConfigToServer(serverConfig);
+	
+	logToConsole(LOG_DEBUG, "[VRR.Config]: All config loaded and applied successfully!");
+
+	logToConsole(LOG_INFO, "[VRR.Config]: Config script initialized!");
+}
+
 
 // ===========================================================================
 
@@ -85,19 +98,6 @@ function loadGlobalConfig() {
 	getGlobalConfig().economy = loadEconomyConfig();
 	getGlobalConfig().locale = loadLocaleConfig();
 	getGlobalConfig().accents = loadAccentConfig();
-}
-
-// ===========================================================================
-
-function initConfigScript() {
-	logToConsole(LOG_INFO, "[VRR.Config]: Initializing config script ...");
-	gameConfig = loadGameConfig();
-	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port, getMultiplayerMod());
-	applyConfigToServer(serverConfig);
-
-	loadGlobalConfig();
-
-	logToConsole(LOG_INFO, "[VRR.Config]: Config script initialized!");
 }
 
 // ===========================================================================

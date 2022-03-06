@@ -169,3 +169,5 @@ function switchToPasswordResetGUI() {
 	showResetPasswordGUI();
 	return false;
 }
+
+// ===========================================================================

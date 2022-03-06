@@ -1125,6 +1125,10 @@ let serverEmoji = [
 
 // ===========================================================================
 
+function getGameConfig() {
+	return gameData;
+}
+
 // ===========================================================================
 
 function makeLargeNumberReadable(num) {
@@ -1537,13 +1541,7 @@ function isGameFeatureSupported(featureName) {
 // ===========================================================================
 
 function getAllowedSkins(gameId = getGame()) {
-	return getGameData().skins[gameId].filter(skin => skin[2] == true);
-}
-
-// ===========================================================================
-
-function getGameData() {
-	return gameData;
+	return getGameConfig().skins[gameId].filter(skin => skin[2] == true);
 }
 
 // ===========================================================================
@@ -1561,7 +1559,7 @@ function getAllowedSkinIndexFromSkin(skin) {
 // ===========================================================================
 
 function getSkinIndexFromModel(model, gameId = getGame()) {
-	let skins = getGameData().skins[gameId];
+	let skins = getGameConfig().skins[gameId];
 	for(let i in skins) {
 		if(toLowerCase(skins[i][0]).indexOf(toLowerCase(model)) != -1) {
 			return i;
@@ -1574,7 +1572,7 @@ function getSkinIndexFromModel(model, gameId = getGame()) {
 // ===========================================================================
 
 function getSkinIndexFromName(name, gameId = getGame()) {
-	let skins = getGameData().skins[gameId];
+	let skins = getGameConfig().skins[gameId];
 	for(let i in skins) {
 		if(toLowerCase(skins[i][1]).indexOf(toLowerCase(name)) != -1) {
 			return i;
@@ -1587,7 +1585,7 @@ function getSkinIndexFromName(name, gameId = getGame()) {
 // ===========================================================================
 
 function getObjectModelIndexFromModel(model, gameId = getGame()) {
-	let objects = getGameData().objects[gameId];
+	let objects = getGameConfig().objects[gameId];
 	for(let i in objects) {
 		if(toLowerCase(objects[i][0]).indexOf(toLowerCase(model)) != -1) {
 			return i;
@@ -1600,7 +1598,7 @@ function getObjectModelIndexFromModel(model, gameId = getGame()) {
 // ===========================================================================
 
 function getGameName(gameId = getGame()) {
-	return getGameData().gameNames[gameId];
+	return getGameConfig().gameNames[gameId];
 }
 
 // ===========================================================================
@@ -1623,7 +1621,7 @@ function getVehicleModelIndexFromParams(params, gameId = getGame()) {
 // ===========================================================================
 
 function getVehicleModelIndexFromName(name, gameId = getGame()) {
-	let vehicles = getGameData().vehicles[gameId];
+	let vehicles = getGameConfig().vehicles[gameId];
 	for(let i in vehicles) {
 		if(toLowerCase(vehicles[i][1]).indexOf(toLowerCase(name)) != -1) {
 			return i;
@@ -1636,7 +1634,7 @@ function getVehicleModelIndexFromName(name, gameId = getGame()) {
 // ===========================================================================
 
 function getVehicleModelIndexFromModel(model, gameId = getGame()) {
-	let vehicles = getGameData().vehicles[gameId];
+	let vehicles = getGameConfig().vehicles[gameId];
 	for(let i in vehicles) {
 		if(isNaN(model)) {
 			if(toLowerCase(vehicles[i][0]).indexOf(toLowerCase(model)) != -1) {
@@ -1655,7 +1653,7 @@ function getVehicleModelIndexFromModel(model, gameId = getGame()) {
 // ===========================================================================
 
 function getVehicleModelFromName(name, gameId = getGame()) {
-	let vehicles = getGameData().vehicles[gameId];
+	let vehicles = getGameConfig().vehicles[gameId];
 	for(let i in vehicles) {
 		if(toLowerCase(vehicles[i][1]).indexOf(toLowerCase(name)) != -1) {
 			return vehicles[i][0];
@@ -1668,7 +1666,7 @@ function getVehicleModelFromName(name, gameId = getGame()) {
 // ===========================================================================
 
 function getVehicleNameFromModel(model, gameId = getGame()) {
-	let vehicles = getGameData().vehicles[gameId];
+	let vehicles = getGameConfig().vehicles[gameId];
 	for(let i in vehicles) {
 		if(isNaN(model)) {
 			if(toLowerCase(vehicles[i][0]).indexOf(toLowerCase(model)) != -1) {
@@ -1704,7 +1702,7 @@ function getSkinModelIndexFromParams(params, gameId = getServerGame()) {
 // ===========================================================================
 
 function getSkinNameFromModel(model, gameId = getServerGame()) {
-	let skins = getGameData().skins[gameId];
+	let skins = getGameConfig().skins[gameId];
 	for(let i in skins) {
 		if(toLowerCase(skins[i][0]).indexOf(toLowerCase(model)) != -1) {
 			return skins[i][1];
@@ -1717,7 +1715,7 @@ function getSkinNameFromModel(model, gameId = getServerGame()) {
 // ===========================================================================
 
 function getSkinModelFromName(name, gameId = getServerGame()) {
-	let skins = getGameData().skins[gameId];
+	let skins = getGameConfig().skins[gameId];
 	for(let i in skins) {
 		if(toLowerCase(skins[i][1]).indexOf(toLowerCase(name)) != -1) {
 			return skins[i][0];
@@ -1745,7 +1743,7 @@ function getObjectModelIndexFromParams(params, gameId = getServerGame()) {
 // ===========================================================================
 
 function getObjectNameFromModel(model, gameId = getServerGame()) {
-	let objects = getGameData().objects[gameId];
+	let objects = getGameConfig().objects[gameId];
 	for(let i in objects) {
 		if(toLowerCase(objects[i][0]).indexOf(toLowerCase(model)) != -1) {
 			return objects[i][1];
@@ -1758,7 +1756,7 @@ function getObjectNameFromModel(model, gameId = getServerGame()) {
 // ===========================================================================
 
 function getObjectModelFromName(name, gameId = getServerGame()) {
-	let objects = getGameData().objects[gameId];
+	let objects = getGameConfig().objects[gameId];
 	for(let i in objects) {
 		if(toLowerCase(objects[i][1]).indexOf(toLowerCase(name)) != -1) {
 			return objects[i][0];
@@ -2074,14 +2072,14 @@ async function waitUntil(condition) {
 
 function getGameLocationFromParams(params) {
 	if(isNaN(params)) {
-        let locations = getGameData().locations[getGame()];
+        let locations = getGameConfig().locations[getGame()];
 		for(let i in locations) {
 			if(toLowerCase(locations[i][0]).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
 	} else {
-		if(typeof getGameData().locations[getGame()][params] != "undefined") {
+		if(typeof getGameConfig().locations[getGame()][params] != "undefined") {
 			return toInteger(params);
 		}
 	}

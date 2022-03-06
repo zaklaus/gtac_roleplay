@@ -231,12 +231,6 @@ function getServerConfig() {
 
 // ===========================================================================
 
-function getGameConfig() {
-	return gameConfig;
-}
-
-// ===========================================================================
-
 function getGlobalConfig() {
 	return globalConfig;
 }
@@ -353,7 +347,7 @@ function setWeatherCommand(command, params, client) {
 
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} set the weather to {ALTCOLOUR}${getGameData().weatherNames[getServerGame()][toInteger(weatherId)]}`);
+    messageAdminAction(`${getPlayerName(client)} set the weather to {ALTCOLOUR}${getGameConfig().weatherNames[getServerGame()][toInteger(weatherId)]}`);
     updateServerRules();
 	return true;
 }
@@ -381,18 +375,6 @@ function setSnowingCommand(command, params, client) {
 
 	getServerConfig().fallingSnow = intToBool(falling);
 	getServerConfig().groundSnow = intToBool(ground);
-
-	if(falling == true && doesServerHaveFallingSnowEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("FallingSnow"));
-	} else if(falling == false && !doesServerHaveFallingSnowEnabled()) {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("FallingSnow"));
-	}
-
-	if(ground == true && doesServerHaveGroundSnowEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("GroundSnow"));
-	} else if(ground == false && !doesServerHaveGroundSnowEnabled()) {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("GroundSnow"));
-	}
 
 	updatePlayerSnowState(null);
 
@@ -451,13 +433,7 @@ function setServerGUIColoursCommand(command, params, client) {
  *
  */
 function toggleServerLogoCommand(command, params, client) {
-	if(doesServerHaveServerLogoEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("ServerLogo"));
-		getServerConfig().useLogo = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("ServerLogo"));
-		getServerConfig().useLogo = true;
-	}
+	getServerConfig().useLogo = !getServerConfig().useLogo;
 	getServerConfig().needsSaved = true;
 
 	updatePlayerShowLogoState(null, getServerConfig().useLogo);
@@ -479,13 +455,7 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerJobBlipsCommand(command, params, client) {
-	if(doesServerHaveJobBlipsEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("JobBlips"));
-		getServerConfig().createJobBlips = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("JobBlips"));
-		getServerConfig().createJobBlips = true;
-	}
+	getServerConfig().createJobBlips = !getServerConfig().createJobBlips;
 	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveJobBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createJobBlips))} {MAINCOLOUR}all job blips`);
@@ -505,13 +475,7 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerJobPickupsCommand(command, params, client) {
-	if(doesServerHaveJobPickupsEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("JobPickups"));
-		getServerConfig().createJobPickups = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("JobPickups"));
-		getServerConfig().createJobPickups = true;
-	}
+	getServerConfig().createJobPickups = !getServerConfig().createJobPickups;
 	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveJobPickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createJobPickups))} {MAINCOLOUR}all job pickups`);
@@ -531,13 +495,7 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerBusinessBlipsCommand(command, params, client) {
-	if(doesServerHaveBusinessBlipsEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("BusinessBlips"));
-		getServerConfig().createBusinessBlips = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("BusinessBlips"));
-		getServerConfig().createBusinessBlips = true;
-	}
+	getServerConfig().createBusinessBlips = !getServerConfig().createBusinessBlips;	
 	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveBusinessBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createBusinessBlips))} {MAINCOLOUR}all business blips`);
@@ -557,13 +515,7 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerBusinessPickupsCommand(command, params, client) {
-	if(doesServerHaveBusinessPickupsEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("BusinessPickups"));
-		getServerConfig().createBusinessPickups = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("BusinessPickups"));
-		getServerConfig().createBusinessPickups = true;
-	}
+	getServerConfig().createBusinessPickups = !getServerConfig().createBusinessPickups;	
 	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveBusinessPickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createBusinessPickups))} {MAINCOLOUR}all business pickups`);
@@ -583,13 +535,7 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerHouseBlipsCommand(command, params, client) {
-	if(doesServerHaveHouseBlipsEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("HousePickups"));
-		getServerConfig().createHouseBlips = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("HouseBlips"));
-		getServerConfig().createHousePickups = true;
-	}
+	getServerConfig().createHouseBlips = !getServerConfig().createHouseBlips;	
 	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveHouseBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createHouseBlips))} {MAINCOLOUR}all house blips`);
@@ -609,13 +555,7 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerHousePickupsCommand(command, params, client) {
-	if(doesServerHaveHousePickupsEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("HousePickups"));
-		getServerConfig().createHousePickups = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("HousePickups"));
-		getServerConfig().createHousePickups = true;
-	}
+	getServerConfig().createHousePickups = !getServerConfig().createHousePickups;
 	getServerConfig().needsSaved = true;
 
     messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveHousePickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createHousePickups))} {MAINCOLOUR}all house pickups`);
@@ -635,13 +575,7 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
 function toggleServerGUICommand(command, params, client) {
-	if(doesServerHaveGUIEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("GUI"));
-		getServerConfig().useGUI = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("GUI"));
-		getServerConfig().useGUI = true;
-	}
+	getServerConfig().useGUI = !getServerConfig().useGUI;
 
 	getServerConfig().needsSaved = true;
 
@@ -662,17 +596,11 @@ function toggleServerGUICommand(command, params, client) {
  *
  */
 function toggleServerUseRealWorldTimeCommand(command, params, client) {
-	if(doesServerHaveRealTimeEnabled()) {
-		getServerConfig().settings = removeBitFlag(getServerConfig().settings, getServerSettingsFlagValue("RealTime"));
-		getServerConfig().useRealTime = false;
-	} else {
-		getServerConfig().settings = addBitFlag(getServerConfig().settings, getServerSettingsFlagValue("RealTime"));
-		getServerConfig().useRealTime = true;
-	}
+	getServerConfig().useRealTime = !getServerConfig().useRealTime;
 	
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned real-world time ${toLowerCase(getOnOffFromBool(doesServerHaveRealTimeEnabled()))} for this server (GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)})`);
+    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned real-world time ${getServerConfig().useRealTime} for this server (GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)})`);
 	updateServerGameTime();
     updateServerRules();
 	return true;
@@ -805,67 +733,67 @@ function loadAccentConfig() {
 // ===========================================================================
 
 function doesServerHaveGUIEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("GUI"));
+	return getServerConfig().useGUI;
 }
 
 // ===========================================================================
 
 function doesServerHaveTesterOnlyEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("Testing"));
+	return getServerConfig().testerOnly;
 }
 
 // ===========================================================================
 
 function doesServerHaveRealTimeEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("RealTime"));
+	return getServerConfig().useRealTime;
 }
 
 // ===========================================================================
 
 function doesServerHaveBusinessPickupsEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("BusinessPickups"));
+	return getServerConfig().createBusinessPickups
 }
 
 // ===========================================================================
 
 function doesServerHaveHousePickupsEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("HousePickups"));
+	return getServerConfig().createHousePickups;
 }
 
 // ===========================================================================
 
 function doesServerHaveJobPickupsEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("JobPickups"));
+	return getServerConfig().createJobPickups;
 }
 
 // ===========================================================================
 
 function doesServerHaveBusinesBlipsEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("BusinessBlips"));
+	return getServerConfig().createBusinessBlips;
 }
 
 // ===========================================================================
 
 function doesServerHaveHouseBlipsEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("HouseBlips"));
+	return getServerConfig().createHouseBlips;
 }
 
 // ===========================================================================
 
 function doesServerHaveJobBlipsEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("JobBlips"));
+	return getServerConfig().createJobBlips;
 }
 
 // ===========================================================================
 
 function doesServerHaveFallingSnowEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("FallingSnow"));
+	return getServerConfig().fallingSnow;
 }
 
 // ===========================================================================
 
 function doesServerHaveGroundSnowEnabled() {
-	return hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("GroundSnow"));
+	return getServerConfig().groundSnow;
 }
 
 // ===========================================================================

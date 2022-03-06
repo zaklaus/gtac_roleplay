@@ -451,7 +451,7 @@ function gpsCommand(command, params, client) {
 			} else {
                 let gameLocationId = getGameLocationFromParams(params);
                 if(gameLocationId != false) {
-                    position = getGameData().locations[getServerGame()][gameLocationId][1]
+                    position = getGameConfig().locations[getServerGame()][gameLocationId][1]
                 }
             }
 		}
@@ -548,8 +548,8 @@ function stuckPlayerCommand(command, params, client) {
         }
     } else {
         setPlayerDimension(client, 1);
-        setPlayerDimension(client, getGameData().mainWorldDimension[getGame()]);
-        setPlayerInterior(client, getGameData().mainWorldInterior[getGame()]);
+        setPlayerDimension(client, getGameConfig().mainWorldDimension[getGame()]);
+        setPlayerInterior(client, getGameConfig().mainWorldInterior[getGame()]);
         setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), 2.0));
     }
 

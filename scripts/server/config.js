@@ -7,10 +7,10 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
-let serverConfig = {};
-let databaseConfig = {};
-let emailConfig = {};
-let gameConfig = {};
+let serverConfig = false;
+let databaseConfig = false;
+let emailConfig = false;
+let gameConfig = false;
 
 // ===========================================================================
 
@@ -222,10 +222,10 @@ function saveServerConfigToDatabase() {
  * @return {ServerData} - Server configuration data
  *
  */
-function getServerConfig(serverId = getServerId()) {
-	if(serverId != getServerId()) {
-		return loadServerConfigFromId(serverId);
-	}
+function getServerConfig() {
+	//if(serverId != getServerId()) {
+	//	return loadServerConfigFromId(serverId);
+	//}
 	return serverConfig;
 }
 

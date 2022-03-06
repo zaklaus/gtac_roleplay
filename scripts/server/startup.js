@@ -40,11 +40,12 @@ function initServerScripts() {
 	initLocaleScript();
 
 	initCommandScript();
-	initTimers();
 
 	serverStartTime = getCurrentUnixTimestamp();
 
 	initAllClients();
+
+	initTimers();
 }
 
 // ===========================================================================

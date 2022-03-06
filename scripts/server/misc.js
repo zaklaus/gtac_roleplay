@@ -120,40 +120,70 @@ function enterExitPropertyCommand(command, params, client) {
 	let isEntrance = false;
 	let isBusiness = false;
 
-	if(!getPlayerData(client).currentPickup) {
-		return false;
-	}
-
-	let ownerType = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.type");
-	let ownerId = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.id");
-
-	switch(ownerType) {
-		case VRR_PICKUP_BUSINESS_ENTRANCE:
-			isBusiness = true;
-			isEntrance = true;
-			closestProperty = getServerData().businesses[ownerId];
-			break;
-
-		case VRR_PICKUP_BUSINESS_EXIT:
-			isBusiness = true;
-			isEntrance = false;
-			closestProperty = getServerData().businesses[ownerId];
-			break;
-
-		case VRR_PICKUP_HOUSE_ENTRANCE:
-			isBusiness = false;
-			isEntrance = true;
-			closestProperty = getServerData().houses[ownerId];
-			break;
-
-		case VRR_PICKUP_HOUSE_EXIT:
-			isBusiness = false;
-			isEntrance = false;
-			closestProperty = getServerData().houses[ownerId];
-			break;
-
-		default:
+	if(areServerElementsSupported()) {
+		if(!getPlayerData(client).currentPickup) {
 			return false;
+		}
+
+		let ownerType = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.type");
+		let ownerId = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.id");
+	
+		switch(ownerType) {
+			case VRR_PICKUP_BUSINESS_ENTRANCE:
+				isBusiness = true;
+				isEntrance = true;
+				closestProperty = getServerData().businesses[ownerId];
+				break;
+	
+			case VRR_PICKUP_BUSINESS_EXIT:
+				isBusiness = true;
+				isEntrance = false;
+				closestProperty = getServerData().businesses[ownerId];
+				break;
+	
+			case VRR_PICKUP_HOUSE_ENTRANCE:
+				isBusiness = false;
+				isEntrance = true;
+				closestProperty = getServerData().houses[ownerId];
+				break;
+	
+			case VRR_PICKUP_HOUSE_EXIT:
+				isBusiness = false;
+				isEntrance = false;
+				closestProperty = getServerData().houses[ownerId];
+				break;
+	
+			default:
+				return false;
+		}		
+	} else {
+		for(let i in getServerData().businesses) {
+			if(getPlayerDimension(client) == mainWorldDimension[getGame()] && getPlayerInterior(client) == mainWorldInterior[getGame()]) {
+				let businessId = getClosestBusinessEntrance(getPlayerPosition(client), dimension);
+				isBusiness = true;
+				isEntrance = true;
+				closestProperty = getServerData().businesses[businessId];		
+			} else {
+				let businessId = getClosestBusinessExit(getPlayerPosition(client), dimension);
+				isBusiness = true;
+				isEntrance = false;
+				closestProperty = getServerData().businesses[businessId];	
+			}
+		}
+
+		for(let j in getServerData().houses) {
+			if(getPlayerDimension(client) == mainWorldDimension[getGame()] && getPlayerInterior(client) == mainWorldInterior[getGame()]) {
+				let houseId = getClosestHouseEntrance(getPlayerPosition(client), dimension);
+				isBusiness = false;
+				isEntrance = true;
+				closestProperty = getServerData().businesses[houseId];	
+			} else {
+				let houseId = getClosestHouseExit(getPlayerPosition(client), dimension);
+				isBusiness = false;
+				isEntrance = false;
+				closestProperty = getServerData().businesses[houseId];	
+			}
+		}
 	}
 
 	if(closestProperty == null) {

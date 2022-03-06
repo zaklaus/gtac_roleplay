@@ -1336,6 +1336,10 @@ function createAllBusinessBlips() {
 // ===========================================================================
 
 function createBusinessEntrancePickup(businessId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+	
 	if(!getServerConfig().createBusinessPickups) {
 		return false;
 	}
@@ -1348,18 +1352,24 @@ function createBusinessEntrancePickup(businessId) {
 		}
 
 		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating entrance pickup for business ${getBusinessData(businessId).name} (model ${pickupModelId})`);
-
-		getBusinessData(businessId).entrancePickup = createGamePickup(pickupModelId, getBusinessData(businessId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].business);
-		setElementOnAllDimensions(getBusinessData(businessId).entrancePickup, false);
-		setElementDimension(getBusinessData(businessId).entrancePickup, getBusinessData(businessId).entranceDimension);
-		updateBusinessPickupLabelData(businessId);
-		addToWorld(getBusinessData(businessId).entrancePickup);
+		
+		if(areServerElementsSupported()) {
+			getBusinessData(businessId).entrancePickup = createGamePickup(pickupModelId, getBusinessData(businessId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].business);
+			setElementOnAllDimensions(getBusinessData(businessId).entrancePickup, false);
+			setElementDimension(getBusinessData(businessId).entrancePickup, getBusinessData(businessId).entranceDimension);
+			updateBusinessPickupLabelData(businessId);
+			addToWorld(getBusinessData(businessId).entrancePickup);
+		}
 	}
 }
 
 // ===========================================================================
 
 function createBusinessEntranceBlip(businessId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(!getServerConfig().createBusinessBlips) {
 		return false;
 	}
@@ -1372,11 +1382,13 @@ function createBusinessEntranceBlip(businessId) {
 		}
 
 		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating entrance blip for business ${getBusinessData(businessId).name} (model ${blipModelId})`);
-
-		getBusinessData(businessId).entranceBlip = createGameBlip(getBusinessData(businessId).entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
-		setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
-		setElementDimension(getBusinessData(businessId).entranceBlip, getBusinessData(businessId).entranceDimension);
-		addToWorld(getBusinessData(businessId).entranceBlip);
+		
+		if(areServerElementsSupported()) {
+			getBusinessData(businessId).entranceBlip = createGameBlip(getBusinessData(businessId).entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
+			setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
+			setElementDimension(getBusinessData(businessId).entranceBlip, getBusinessData(businessId).entranceDimension);
+			addToWorld(getBusinessData(businessId).entranceBlip);
+		}
 	}
 }
 
@@ -1396,12 +1408,14 @@ function createBusinessExitPickup(businessId) {
 			}
 
 			logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating exit pickup for business ${getBusinessData(businessId).name} (model ${pickupModelId})`);
-
-			getBusinessData(businessId).exitPickup = createGamePickup(pickupModelId, getBusinessData(businessId).exitPosition, getGameConfig().pickupTypes[getServerGame()].business);
-			setElementDimension(getBusinessData(businessId).exitPickup, getBusinessData(businessId).exitDimension);
-			setElementOnAllDimensions(getBusinessData(businessId).exitPickup, false);
-			updateBusinessPickupLabelData(businessId);
-			addToWorld(getBusinessData(businessId).exitPickup);
+			
+			if(areServerElementsSupported()) {
+				getBusinessData(businessId).exitPickup = createGamePickup(pickupModelId, getBusinessData(businessId).exitPosition, getGameConfig().pickupTypes[getServerGame()].business);
+				setElementDimension(getBusinessData(businessId).exitPickup, getBusinessData(businessId).exitDimension);
+				setElementOnAllDimensions(getBusinessData(businessId).exitPickup, false);
+				updateBusinessPickupLabelData(businessId);
+				addToWorld(getBusinessData(businessId).exitPickup);
+			}
 		}
 	}
 }
@@ -1421,15 +1435,17 @@ function createBusinessExitBlip(businessId) {
 				blipModelId = getBusinessData(businessId).exitBlipModel;
 			}
 
-			logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating exit blip for business ${getBusinessData(businessId).name} (model ${blipModelId})`);
+			if(areServerElementsSupported()) {
+				logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating exit blip for business ${getBusinessData(businessId).name} (model ${blipModelId})`);
 
-			getBusinessData(businessId).exitBlip = createGameBlip(getBusinessData(businessId).exitPosition, blipModelId, 1, getColourByName("businessBlue"));
-			setElementDimension(getBusinessData(businessId).exitBlip, getBusinessData(businessId).entranceDimension);
-			setElementOnAllDimensions(getBusinessData(businessId).exitBlip, false);
-			//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
-			//setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_EXIT, false);
-			//setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.id", businessId, false);
-			addToWorld(getBusinessData(businessId).exitBlip);
+				getBusinessData(businessId).exitBlip = createGameBlip(getBusinessData(businessId).exitPosition, blipModelId, 1, getColourByName("businessBlue"));
+				setElementDimension(getBusinessData(businessId).exitBlip, getBusinessData(businessId).entranceDimension);
+				setElementOnAllDimensions(getBusinessData(businessId).exitBlip, false);
+				//getBusinessData(businessId).exitBlip.interior = getBusinessData(businessId).exitInterior;
+				//setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.type", VRR_BLIP_BUSINESS_EXIT, false);
+				//setEntityData(getBusinessData(businessId).exitBlip, "vrr.owner.id", businessId, false);
+				addToWorld(getBusinessData(businessId).exitBlip);
+			}
 		}
 	}
 }
@@ -1907,6 +1923,10 @@ function getBusinessIdFromDatabaseId(databaseId) {
 // ===========================================================================
 
 function updateBusinessPickupLabelData(businessId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).exitPickup != null) {
 		setEntityData(getBusinessData(businessId).exitPickup, "vrr.owner.type", VRR_PICKUP_BUSINESS_EXIT, false);
 		setEntityData(getBusinessData(businessId).exitPickup, "vrr.owner.id", businessId, false);

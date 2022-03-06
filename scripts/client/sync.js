@@ -392,3 +392,19 @@ function syncElementProperties(element) {
 }
 
 // ===========================================================================
+
+function receiveBlipFromServer(model, position) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        
+    }
+}
+
+// ===========================================================================
+
+function receivePickupFromServer(model, position) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        
+    }
+}
+
+// ===========================================================================

@@ -873,11 +873,13 @@ function createHouseEntrancePickup(houseId) {
 			pickupModelId = getHouseData(houseId).entrancePickupModel;
 		}
 
-		getHouseData(houseId).entrancePickup = createGamePickup(pickupModelId, getHouseData(houseId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].house);
-		setElementOnAllDimensions(getHouseData(houseId).entrancePickup, false);
-		setElementDimension(getHouseData(houseId).entrancePickup, getHouseData(houseId).entranceDimension);
-
-		addToWorld(getHouseData(houseId).entrancePickup);
+		if(areServerElementsSupported()) {
+			getHouseData(houseId).entrancePickup = createGamePickup(pickupModelId, getHouseData(houseId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].house);
+			setElementOnAllDimensions(getHouseData(houseId).entrancePickup, false);
+			setElementDimension(getHouseData(houseId).entrancePickup, getHouseData(houseId).entranceDimension);
+			addToWorld(getHouseData(houseId).entrancePickup);
+		}
+		updateHousePickupLabelData(houseId);
 	}
 }
 
@@ -895,14 +897,16 @@ function createHouseEntranceBlip(houseId) {
 			blipModelId = getHouseData(houseId).entranceBlipModel;
 		}
 
-		getHouseData(houseId).entranceBlip = createGameBlip(getHouseData(houseId).entrancePosition, blipModelId, 1, getColourByName("houseGreen"));
-		setElementDimension(getHouseData(houseId).entranceBlip, getHouseData(houseId).entranceDimension);
-		setElementOnAllDimensions(getHouseData(houseId).entranceBlip, false);
-		//getHouseData(houseId).entranceBlip.streamInDistance = 300;
-		//getHouseData(houseId).entranceBlip.streamOutDistance = 350;
-		setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
-		setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.id", houseId, false);
-		addToWorld(getHouseData(houseId).entranceBlip);
+		if(areServerElementsSupported()) {
+			getHouseData(houseId).entranceBlip = createGameBlip(getHouseData(houseId).entrancePosition, blipModelId, 1, getColourByName("houseGreen"));
+			setElementDimension(getHouseData(houseId).entranceBlip, getHouseData(houseId).entranceDimension);
+			setElementOnAllDimensions(getHouseData(houseId).entranceBlip, false);
+			//getHouseData(houseId).entranceBlip.streamInDistance = 300;
+			//getHouseData(houseId).entranceBlip.streamOutDistance = 350;
+			setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
+			setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.id", houseId, false);
+			addToWorld(getHouseData(houseId).entranceBlip);
+		}
 	}
 }
 
@@ -921,11 +925,13 @@ function createHouseExitPickup(houseId) {
 				pickupModelId = getHouseData(houseId).exitPickupModel;
 			}
 
-			getHouseData(houseId).exitPickup = createGamePickup(pickupModelId, getHouseData(houseId).exitPosition, getGameConfig().pickupTypes[getServerGame()].house);
-			setElementDimension(getHouseData(houseId).exitPickup, getHouseData(houseId).exitDimension);
-			setElementOnAllDimensions(getHouseData(houseId).exitPickup, false);
-            updateHousePickupLabelData(houseId);
-			addToWorld(getHouseData(houseId).exitPickup);
+			if(areServerElementsSupported()) {
+				getHouseData(houseId).exitPickup = createGamePickup(pickupModelId, getHouseData(houseId).exitPosition, getGameConfig().pickupTypes[getServerGame()].house);
+				setElementDimension(getHouseData(houseId).exitPickup, getHouseData(houseId).exitDimension);
+				setElementOnAllDimensions(getHouseData(houseId).exitPickup, false);
+				addToWorld(getHouseData(houseId).exitPickup);
+			}
+			updateHousePickupLabelData(houseId);
 		}
 	}
 }
@@ -945,12 +951,14 @@ function createHouseExitBlip(houseId) {
 				blipModelId = getHouseData(houseId).exitBlipModel;
 			}
 
-			getHouseData(houseId).exitBlip = createGameBlip(blipModelId, getHouseData(houseId).exitPosition, 1, getColourByName("houseGreen"));
-			setElementDimension(getHouseData(houseId).exitBlip, getHouseData(houseId).entranceDimension);
-			setElementOnAllDimensions(getHouseData(houseId).exitBlip, false);
-			setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.type", VRR_BLIP_HOUSE_EXIT, false);
-			setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.id", houseId, false);
-			addToWorld(getHouseData(houseId).exitBlip);
+			if(areServerElementsSupported()) {
+				getHouseData(houseId).exitBlip = createGameBlip(blipModelId, getHouseData(houseId).exitPosition, 1, getColourByName("houseGreen"));
+				setElementDimension(getHouseData(houseId).exitBlip, getHouseData(houseId).entranceDimension);
+				setElementOnAllDimensions(getHouseData(houseId).exitBlip, false);
+				setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.type", VRR_BLIP_HOUSE_EXIT, false);
+				setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.id", houseId, false);
+				addToWorld(getHouseData(houseId).exitBlip);
+			}
 		}
 	}
 }
@@ -1403,6 +1411,10 @@ function getHouseFromParams(params) {
 // ===========================================================================
 
 function updateHousePickupLabelData(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
     let houseData = getHouseData(houseId);
 
     if(houseData.entrancePickup != null) {

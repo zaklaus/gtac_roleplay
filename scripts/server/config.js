@@ -85,7 +85,7 @@ function initConfigScript() {
 
 	logToConsole(LOG_DEBUG, "[VRR.Config]: Applying server config ...");
 	applyConfigToServer(serverConfig);
-	
+
 	logToConsole(LOG_DEBUG, "[VRR.Config]: All config loaded and applied successfully!");
 
 	logToConsole(LOG_INFO, "[VRR.Config]: Config script initialized!");
@@ -144,10 +144,12 @@ function loadServerConfigFromId(tempServerId) {
 
 function applyConfigToServer(tempServerConfig) {
 	if(isTimeSupported()) {
-		setGameTime(tempServerConfig.hour, tempServerConfig.minute, tempServerConfig.minuteDuration)
+		logToConsole(LOG_DEBUG, `[VRR.Config]: Setting time to to ${tempServerConfig.hour}:${tempServerConfig.minute} with minute duration of ${tempServerConfig.minuteDuration}`);
+		setGameTime(tempServerConfig.hour, tempServerConfig.minute, tempServerConfig.minuteDuration);
 	}
 
 	if(isWeatherSupported()) {
+		logToConsole(LOG_DEBUG, `[VRR.Config]: Setting weather to ${tempServerConfig.weather}`);
 		game.forceWeather(tempServerConfig.weather);
 	}
 

@@ -79,17 +79,25 @@ function initAllClients() {
 // ===========================================================================
 
 function updateServerRules() {
+	logToConsole(LOG_DEBUG, `[VRR.Utilities]: Updating all server rules ...`);
 	if(isTimeSupported()) {
-		server.setRule("Time", makeReadableTime(getServerConfig().hour, getServerConfig().minute));
+		let value = makeReadableTime(getServerConfig().hour, getServerConfig().minute);
+		logToConsole(LOG_DEBUG, `[VRR.Utilities]: Setting server rule "Time" as ${value}`);
+		server.setRule("Time", value);
 	}
 
 	if(isWeatherSupported()) {
-		server.setRule("Weather", getGameData().weatherNames[getServerGame()][getServerConfig().weather]);
+		let value = getGameData().weatherNames[getServerGame()][getServerConfig().weather];
+		logToConsole(LOG_DEBUG, `[VRR.Utilities]: Setting server rule "Weather" as ${value}`);
+		server.setRule("Weather", value);
 	}
 
 	if(isSnowSupported()) {
-		server.setRule("Snowing", getYesNoFromBool(getServerConfig().fallingSnow));
+		let value = getYesNoFromBool(getServerConfig().fallingSnow);
+		logToConsole(LOG_DEBUG, `[VRR.Utilities]: Setting server rule "Snowing" as ${value}`);
+		server.setRule("Snowing", value);
 	}
+	logToConsole(LOG_DEBUG, `[VRR.Utilities]: All server rules updated successfully!`);
 }
 
 // ===========================================================================

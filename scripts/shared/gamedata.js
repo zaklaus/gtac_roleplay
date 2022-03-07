@@ -4006,7 +4006,7 @@ let gameData = {
 		},
         {}, // GTA UG
         { // GTA IV
-			clothingStore: [
+			ClothingStore: [
 				["Outfit", 500, 2]
 			],
 			LegalGunStore: [
@@ -5394,6 +5394,22 @@ let gameData = {
         ],
     ],
     mainWorldDimension: [
+        0, // Invalid
+        0, // GTA 3
+        0, // GTA VC
+        0, // GTA SA
+        0, // GTA UG
+        0, // GTA IV
+        0, // GTA IV EFLC
+        0, // Invalid
+        0, // Invalid
+        0, // Invalid
+        0, // Mafia 1
+        0, // Mafia 2
+        0, // Mafia 3
+        0, // Mafia Definitive Edition
+    ],
+    mainWorldInterior: [
         0, // Invalid
         0, // GTA 3
         0, // GTA VC

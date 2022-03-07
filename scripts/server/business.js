@@ -1335,11 +1335,7 @@ function createAllBusinessBlips() {
 
 // ===========================================================================
 
-function createBusinessEntrancePickup(businessId) {
-	if(!areServerElementsSupported()) {
-		return false;
-	}
-	
+function createBusinessEntrancePickup(businessId) {	
 	if(!getServerConfig().createBusinessPickups) {
 		return false;
 	}
@@ -1359,6 +1355,8 @@ function createBusinessEntrancePickup(businessId) {
 			setElementDimension(getBusinessData(businessId).entrancePickup, getBusinessData(businessId).entranceDimension);
 			updateBusinessPickupLabelData(businessId);
 			addToWorld(getBusinessData(businessId).entrancePickup);
+		} else {
+			sendBusinessEntranceToPlayer(null, businessId, getBusinessData(businessId), getBusinessData(businessId).entrancePosition, getBusinessData(businessId).entranceBlipModel, getBusinessData(businessId).entrancePickupModel, getBusinessData(businessId).hasInterior, false);
 		}
 	}
 }
@@ -1388,6 +1386,8 @@ function createBusinessEntranceBlip(businessId) {
 			setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
 			setElementDimension(getBusinessData(businessId).entranceBlip, getBusinessData(businessId).entranceDimension);
 			addToWorld(getBusinessData(businessId).entranceBlip);
+		} else {
+			sendBusinessEntranceToPlayer(null, businessId, getBusinessData(businessId).name, getBusinessData(businessId).entrancePosition, blipModelId, getBusinessData(businessId).entrancePickupModel, getBusinessData(businessId).hasInterior, false);
 		}
 	}
 }
@@ -1551,6 +1551,10 @@ function doesBusinessHaveInterior(businessId) {
 // ===========================================================================
 
 function deleteBusinessEntrancePickup(businessId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).entrancePickup != null) {
 		//removeFromWorld(getBusinessData(businessId).entrancePickup);
 		deleteGameElement(getBusinessData(businessId).entrancePickup);
@@ -1561,6 +1565,10 @@ function deleteBusinessEntrancePickup(businessId) {
 // ===========================================================================
 
 function deleteBusinessExitPickup(businessId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).exitPickup != null) {
 		//removeFromWorld(getBusinessData(businessId).exitPickup);
 		deleteGameElement(getBusinessData(businessId).exitPickup);
@@ -1571,6 +1579,10 @@ function deleteBusinessExitPickup(businessId) {
 // ===========================================================================
 
 function deleteBusinessEntranceBlip(businessId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).entranceBlip != null) {
 		//removeFromWorld(getBusinessData(businessId).entranceBlip);
 		deleteGameElement(getBusinessData(businessId).entranceBlip);
@@ -1581,6 +1593,10 @@ function deleteBusinessEntranceBlip(businessId) {
 // ===========================================================================
 
 function deleteBusinessExitBlip(businessId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getBusinessData(businessId).exitBlip != null) {
 		//removeFromWorld(getBusinessData(businessId).exitBlip);
 		deleteGameElement(getBusinessData(businessId).exitBlip);

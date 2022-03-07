@@ -1147,3 +1147,31 @@ function sendHouseEntranceToPlayer(client, houseId, entrancePosition, blipModel,
 }
 
 // ==========================================================================
+
+function sendAllBusinessEntrancesToPlayer(client) {
+    let businesses = getServerData().businesses;
+    for(let i in businesses) {
+        if(businesses[i].entranceBlipModel > 0) {
+            sendBusinessEntranceToPlayer(client, businesses[i].index, businesses[i].name, businesses[i].entrancePosition, businesses[i].entranceBlipModel, businesses[i].entrancePickupModel, businesses[i].hasInterior, false);
+        }
+    }
+}
+
+// ==========================================================================
+
+function sendAllHouseEntrancesToPlayer(client) {
+    let houses = getServerData().houses;
+    for(let i in houses) {
+        if(houses[i].entranceBlipModel > 0) {
+            sendBusinessEntranceToPlayer(client, businesses[i].index, houses[i].entrancePosition, houses[i].entranceBlipModel, houses[i].entrancePickupModel, houses[i].hasInterior);
+        }
+    }
+}
+
+// ==========================================================================
+
+function makePlayerHoldObjectModel(client, modelIndex) {
+    sendNetworkEventToPlayer("vrr.holdObject", client, modelIndex);
+}
+
+// ==========================================================================

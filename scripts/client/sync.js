@@ -393,15 +393,34 @@ function syncElementProperties(element) {
 
 // ===========================================================================
 
-function receiveBlipFromServer(model, position) {
+function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems) {
     if(getGame() == VRR_GAME_GTA_IV) {
-        
+        if(typeof businessBlips[businessId] != "undefined") {
+            if(blipModel == -1) {
+                natives.removeBlipAndClearIndex(businessBlips[businessId]);
+                businessBlips.splice(businessId, 1);
+            } else {
+                natives.setBlipCoordinates(businessBlips[businessId], entrancePosition);
+                natives.changeBlipSprite(businessBlips[businessId], blipModel);
+                natives.changeBlipNameFromAscii(businessBlips[businessId], `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
+            }
+        } else {
+            if(blipModel != -1) {
+                let blipId = natives.addBlipForCoord(entrancePosition);
+                if(blipId) {
+                    businessBlips[businessId] = blipId;
+                    natives.changeBlipSprite(blipId, blipModel);
+                    natives.setBlipMarkerLongDistance(blipId, true);
+                    natives.changeBlipNameFromAscii(blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
+                }
+            }
+        }
     }
 }
 
 // ===========================================================================
 
-function receivePickupFromServer(model, position) {
+function receiveHouseFromServer(houseId, entrancePosition, blipModel, pickupModel, hasInterior) {
     if(getGame() == VRR_GAME_GTA_IV) {
         
     }

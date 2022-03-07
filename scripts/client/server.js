@@ -101,6 +101,11 @@ function addAllNetworkHandlers() {
 
     addNetworkEventHandler("vrr.logLevel", setLogLevel);
     addNetworkEventHandler("vrr.infiniteRun", setLocalPlayerInfiniteRun);
+
+    addNetworkEventHandler("vrr.business", receiveBusinessFromServer);
+    addNetworkEventHandler("vrr.house", receiveHouseFromServer);
+
+    addNetworkEventHandler("vrr.holdObject", localPlayerHoldObject);
 }
 
 // ===========================================================================
@@ -308,6 +313,14 @@ function setLocalPlayerSkin(skinId) {
         localPlayer.skin = allowedSkins[skinSelectorIndex][0];
     } else {
         localPlayer.skin = skinId;
+    }
+}
+
+// ===========================================================================
+
+function makePedHoldObject(client, modelIndex) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        
     }
 }
 

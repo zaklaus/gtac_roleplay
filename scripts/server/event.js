@@ -596,6 +596,12 @@ function onPlayerSpawn(client) {
         logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
         updateAllPlayerNameTags();
 
+        if(!areServerElementsSupported()) {
+            sendAllBusinessEntrancesToPlayer(client);
+            sendAllHouseEntrancesToPlayer(client);
+            //sendAllJobLocationsToPlayer(client);
+        }
+
         getPlayerData(client).payDayTickStart = sdl.ticks;
     //}
 }

@@ -1140,6 +1140,10 @@ function doesHouseHaveInterior(houseId) {
 // ===========================================================================
 
 function deleteHouseEntrancePickup(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getHouseData(houseId).entrancePickup != null) {
 		//removeFromWorld(getHouseData(houseId).entrancePickup);
 		deleteGameElement(getHouseData(houseId).entrancePickup);
@@ -1150,6 +1154,10 @@ function deleteHouseEntrancePickup(houseId) {
 // ===========================================================================
 
 function deleteHouseExitPickup(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getHouseData(houseId).exitPickup != null) {
 		//removeFromWorld(getHouseData(houseId).exitPickup);
 		deleteGameElement(getHouseData(houseId).exitPickup);
@@ -1160,6 +1168,10 @@ function deleteHouseExitPickup(houseId) {
 // ===========================================================================
 
 function deleteHouseEntranceBlip(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getHouseData(houseId).entranceBlip != null) {
 		//removeFromWorld(getHouseData(houseId).entranceBlip);
 		deleteGameElement(getHouseData(houseId).entranceBlip);
@@ -1170,6 +1182,10 @@ function deleteHouseEntranceBlip(houseId) {
 // ===========================================================================
 
 function deleteHouseExitBlip(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getHouseData(houseId).exitBlip != null) {
 		//removeFromWorld(getHouseData(houseId).exitBlip);
 		deleteGameElement(getHouseData(houseId).exitBlip);

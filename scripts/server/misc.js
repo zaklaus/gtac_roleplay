@@ -158,13 +158,13 @@ function enterExitPropertyCommand(command, params, client) {
 		}		
 	} else {
 		for(let i in getServerData().businesses) {
-			if(getPlayerDimension(client) == mainWorldDimension[getGame()] && getPlayerInterior(client) == mainWorldInterior[getGame()]) {
-				let businessId = getClosestBusinessEntrance(getPlayerPosition(client), dimension);
+			if(getPlayerDimension(client) == getGameConfig().mainWorldDimension[getGame()] && getPlayerInterior(client) == getGameConfig().mainWorldInterior[getGame()]) {
+				let businessId = getClosestBusinessEntrance(getPlayerPosition(client), getPlayerDimension(client));
 				isBusiness = true;
 				isEntrance = true;
 				closestProperty = getServerData().businesses[businessId];		
 			} else {
-				let businessId = getClosestBusinessExit(getPlayerPosition(client), dimension);
+				let businessId = getClosestBusinessExit(getPlayerPosition(client), getPlayerDimension(client));
 				isBusiness = true;
 				isEntrance = false;
 				closestProperty = getServerData().businesses[businessId];	
@@ -172,13 +172,13 @@ function enterExitPropertyCommand(command, params, client) {
 		}
 
 		for(let j in getServerData().houses) {
-			if(getPlayerDimension(client) == mainWorldDimension[getGame()] && getPlayerInterior(client) == mainWorldInterior[getGame()]) {
-				let houseId = getClosestHouseEntrance(getPlayerPosition(client), dimension);
+			if(getPlayerDimension(client) == getGameConfig().mainWorldDimension[getGame()] && getPlayerInterior(client) == getGameConfig().mainWorldInterior[getGame()]) {
+				let houseId = getClosestHouseEntrance(getPlayerPosition(client), getPlayerDimension(client));
 				isBusiness = false;
 				isEntrance = true;
 				closestProperty = getServerData().businesses[houseId];	
 			} else {
-				let houseId = getClosestHouseExit(getPlayerPosition(client), dimension);
+				let houseId = getClosestHouseExit(getPlayerPosition(client), getPlayerDimension(client));
 				isBusiness = false;
 				isEntrance = false;
 				closestProperty = getServerData().businesses[houseId];	

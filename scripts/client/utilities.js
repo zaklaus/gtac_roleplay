@@ -348,6 +348,9 @@ function setLocalPlayerInterior(interior) {
         if(!isGTAIV()) {
             localPlayer.interior = interior;
             game.cameraInterior = interior;
+        } else {
+            let interiorId = natives.getInteriorAtCoords(localPlayer.position);
+            natives.activateInterior(interiorId, true);
         }
     }
 

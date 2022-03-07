@@ -22,7 +22,7 @@ let login = {
 
 function initLoginGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating login GUI ...`);
-	login.window = mexui.window(game.width/2-150, game.height/2-130, 300, 260, 'LOGIN', {
+	login.window = mexui.window(game.width/2-150, game.height/2-135, 300, 275, 'LOGIN', {
 		main: {
 			backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
 			transitionTime: 500,
@@ -42,7 +42,7 @@ function initLoginGUI() {
 	login.window.titleBarIconSize = toVector2(0,0);
 	login.window.titleBarHeight = 0;
 
-	login.logoImage = login.window.image(5, 20, 290, 80, mainLogoPath, {
+	login.logoImage = login.window.image(5, 20, 290, 100, mainLogoPath, {
 		focused: {
 			borderColour: toColour(0, 0, 0, 0),
 		},

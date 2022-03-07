@@ -388,5 +388,6 @@
     "FixingStuck": "Исправляет вашу текущую позицию и виртуальный мир ...",
     "CantUseCommandYet": "Подождите некоторое время перед тем как использовать комманду снова!",
     "NotATester": "Вы не тестировщик!",
-    "AccessDenied": "Доступ запрещен"
+    "AccessDenied": "Доступ запрещен",
+    "InvalidSkin": "That skin is invalid!"
 }

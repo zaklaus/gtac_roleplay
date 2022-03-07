@@ -393,5 +393,6 @@
     "FixingStuck": "Fixing your position and virtual world ...",
     "CantUseCommandYet": "You must wait before you can use this command again!",
     "NotATester": "You are not a tester!",
-    "AccessDenied": "AccessDenied"
+    "AccessDenied": "AccessDenied",
+    "InvalidSkin": "That skin is invalid!"
 }

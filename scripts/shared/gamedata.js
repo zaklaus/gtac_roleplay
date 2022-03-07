@@ -3488,6 +3488,24 @@ let gameData = {
         {
             // GTA Underground
         },
+        {   // GTA IV
+			PoliceStation: -1,
+			FireStation: -1,
+			Hospital: -1,
+			Ammunation: -1,
+			PayAndSpray: -1,
+			VehicleDealership: -1,
+			Restaurant: -1,
+			FastFood: -1,
+			Bank: -1,
+			FuelStation: -1,
+			Business: -1,
+			House: -1,
+			Clothes: -1,
+			Misc: -1,
+			Exit: -1,
+            Job: -1,
+        }
 	],
 	pickupTypes: [
 		{},
@@ -3517,7 +3535,18 @@ let gameData = {
 			clothes: 1,
 			info: 1,
 			job: 1,
-		}
+		},
+        {
+            // GTA Underground
+        },
+		{ // GTA IV
+			business: -1,
+			house: -1,
+			bank: -1,
+			clothes: -1,
+			info: -1,
+			job: -1,
+		}        
 	],
 
 	// THIS IS SCREEN HEIGHT, NOT ACTUAL DOOR POSITION IN THE WORLD

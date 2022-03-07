@@ -1003,13 +1003,17 @@ function forcePlayerSkinCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[0]);
 	let skinIndex = getSkinModelIndexFromParams(splitParams.slice(1).join(" "), getGame());
 
+	console.warn(targetClient.name);
+	console.warn(splitParams.slice(1).join(" "));
+	console.warn(skinIndex);
+
     if(!targetClient) {
         messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
 	if(skinIndex == false) {
-        messagePlayerError(client, "That skin is invalid!");
+        messagePlayerError(client, getLocaleString(client, "InvalidSkin"));
         return false;
 	}
 

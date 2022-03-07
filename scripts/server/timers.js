@@ -180,7 +180,7 @@ function updatePings() {
 // ===========================================================================
 
 function checkServerGameTime() {
-	if(!getServerConfig().useRealTime) {
+	//if(!getServerConfig().useRealTime) {
 		if(getServerConfig().minute >= 59) {
 			getServerConfig().minute = 0;
 			if(getServerConfig().hour >= 23) {
@@ -191,11 +191,11 @@ function checkServerGameTime() {
 		} else {
 			getServerConfig().minute = getServerConfig().minute + 1;
 		}
-	} else {
-		let dateTime = getCurrentTimeStampWithTimeZone(getServerConfig().realTimeZone);
-		getServerConfig().hour = dateTime.getHours();
-		getServerConfig().minute = dateTime.getMinutes();
-	}
+	//} else {
+	//	let dateTime = getCurrentTimeStampWithTimeZone(getServerConfig().realTimeZone);
+	//	getServerConfig().hour = dateTime.getHours();
+	//	getServerConfig().minute = dateTime.getMinutes();
+	//}
 
 	updateTimeRule();
 }

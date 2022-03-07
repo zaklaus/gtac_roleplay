@@ -404,7 +404,11 @@ function clearLocalPedState() {
 // ===========================================================================
 
 function getWeaponSlot(weaponId) {
-	return weaponSlots[game.game][weaponId];
+    if(getGame() == VRR_GAME_GTA_IV) {
+        return false;
+    }
+    
+	return weaponSlots[getGame()][weaponId];
 }
 
 // ===========================================================================

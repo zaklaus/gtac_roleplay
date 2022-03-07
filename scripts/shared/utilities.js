@@ -1684,7 +1684,7 @@ function getVehicleNameFromModel(model, gameId = getGame()) {
 
 // ===========================================================================
 
-function getSkinModelIndexFromParams(params, gameId = getServerGame()) {
+function getSkinModelIndexFromParams(params, gameId = getGame()) {
 	let fromName = getSkinIndexFromName(params, gameId);
 	let fromModel = getSkinIndexFromModel(params, gameId);
 
@@ -1701,7 +1701,7 @@ function getSkinModelIndexFromParams(params, gameId = getServerGame()) {
 
 // ===========================================================================
 
-function getSkinNameFromModel(model, gameId = getServerGame()) {
+function getSkinNameFromModel(model, gameId = getGame()) {
 	let skins = getGameConfig().skins[gameId];
 	for(let i in skins) {
 		if(toLowerCase(skins[i][0]).indexOf(toLowerCase(model)) != -1) {
@@ -1714,7 +1714,7 @@ function getSkinNameFromModel(model, gameId = getServerGame()) {
 
 // ===========================================================================
 
-function getSkinModelFromName(name, gameId = getServerGame()) {
+function getSkinModelFromName(name, gameId = getGame()) {
 	let skins = getGameConfig().skins[gameId];
 	for(let i in skins) {
 		if(toLowerCase(skins[i][1]).indexOf(toLowerCase(name)) != -1) {
@@ -1725,7 +1725,7 @@ function getSkinModelFromName(name, gameId = getServerGame()) {
 
 // ===========================================================================
 
-function getObjectModelIndexFromParams(params, gameId = getServerGame()) {
+function getObjectModelIndexFromParams(params, gameId = getGame()) {
 	let fromName = getObjectModelIndexFromName(params, gameId);
 	let fromModel = getObjectModelIndexFromModel(params, gameId);
 
@@ -1742,7 +1742,7 @@ function getObjectModelIndexFromParams(params, gameId = getServerGame()) {
 
 // ===========================================================================
 
-function getObjectNameFromModel(model, gameId = getServerGame()) {
+function getObjectNameFromModel(model, gameId = getGame()) {
 	let objects = getGameConfig().objects[gameId];
 	for(let i in objects) {
 		if(toLowerCase(objects[i][0]).indexOf(toLowerCase(model)) != -1) {
@@ -1755,7 +1755,7 @@ function getObjectNameFromModel(model, gameId = getServerGame()) {
 
 // ===========================================================================
 
-function getObjectModelFromName(name, gameId = getServerGame()) {
+function getObjectModelFromName(name, gameId = getGame()) {
 	let objects = getGameConfig().objects[gameId];
 	for(let i in objects) {
 		if(toLowerCase(objects[i][1]).indexOf(toLowerCase(name)) != -1) {

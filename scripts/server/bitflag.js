@@ -62,7 +62,8 @@ let serverBitFlagKeys = {
 		"TwoFactorAuthVerified",
 		"NonRoleplayCharacterName",
 		"CanHearEverything",
-		"DontSyncClientElements"
+		"DontSyncClientElements",
+		"IsTester"
 	],
 	factionFlagKeys: [
 		"None",
@@ -409,7 +410,7 @@ function getModerationFlagValue(flagName) {
 
 // ===========================================================================
 
-function getServerSettingFlagValue(flagName) {
+function getServerSettingsFlagValue(flagName) {
     if(flagName == "All") {
         return -1;
 	}

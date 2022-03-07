@@ -195,8 +195,12 @@ function removePlayerFromVehicle(client) {
 // ===========================================================================
 
 function setPlayerSkin(client, skinIndex) {
-    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s skin to ${getGameData().skins[getGame()][skinIndex][0]} (Index: ${skinIndex}, Name: ${getGameData().skins[getGame()][skinIndex][1]})`);
-    client.player.modelIndex = getGameData().skins[getGame()][skinIndex][0];
+    logToConsole(LOG_DEBUG, `Setting ${getPlayerDisplayForConsole(client)}'s skin to ${getGameConfig().skins[getGame()][skinIndex][0]} (Index: ${skinIndex}, Name: ${getGameConfig().skins[getGame()][skinIndex][1]})`);
+	if(getGame() == VRR_GAME_GTA_IV) {
+		triggerNetworkEvent("vrr.localPlayerSkin", client, getGameConfig().skins[getGame()][skinIndex][0]);
+	} else {
+		client.player.modelIndex = getGameConfig().skins[getGame()][skinIndex][0];
+	}
 }
 
 // ===========================================================================
@@ -413,7 +417,7 @@ function createGameObject(modelIndex, position) {
     if(!isGameFeatureSupported("objects")) {
         return false;
     }
-    return game.createObject(getGameData().objects[getGame()][modelIndex][0], position);
+    return game.createObject(getGameConfig().objects[getGame()][modelIndex][0], position);
 }
 
 // ===========================================================================
@@ -435,7 +439,7 @@ function destroyGameElement(element) {
 // ===========================================================================
 
 function isMeleeWeapon(weaponId, gameId = getServerGame()) {
-    return (getGameData().meleeWeapons[gameId].indexOf(weaponId) != -1);
+    return (getGameConfig().meleeWeapons[gameId].indexOf(weaponId) != -1);
 }
 
 // ===========================================================================
@@ -523,7 +527,7 @@ function setVehicleColours(vehicle, colour1, colour2, colour3 = -1, colour4 = -1
 // ===========================================================================
 
 function createGameVehicle(modelIndex, position, heading) {
-	return game.createVehicle(getGameData().vehicles[getGame()][modelIndex][0], position, heading);
+	return game.createVehicle(getGameConfig().vehicles[getGame()][modelIndex][0], position, heading);
 }
 
 // ===========================================================================
@@ -574,7 +578,7 @@ function setPlayerFightStyle(client, fightStyleId) {
 		return false;
 	}
 
-    setEntityData(getPlayerElement(client), "vrr.fightStyle", [getGameData().fightStyles[getServerGame()][fightStyleId][1][0], getGameData().fightStyles[getServerGame()][fightStyleId][1][1]]);
+    setEntityData(getPlayerElement(client), "vrr.fightStyle", [getGameConfig().fightStyles[getServerGame()][fightStyleId][1][0], getGameConfig().fightStyles[getServerGame()][fightStyleId][1][1]]);
     forcePlayerToSyncElementProperties(null, getPlayerElement(client));
 }
 
@@ -1007,6 +1011,13 @@ function getPlayerPing(client) {
 
 function setVehicleHealth(vehicle, health) {
 	vehicle.health = 1000;
+}
+
+// ===========================================================================
+
+function givePlayerWeapon(client, weaponId, ammo, active = true) {
+    logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to ${getPlayerDisplayForConsole(client)} to give weapon (Weapon: ${weaponId}, Ammo: ${ammo})`);
+    sendNetworkEventToPlayer("vrr.giveWeapon", client, weaponId, ammo, active);
 }
 
 // ===========================================================================

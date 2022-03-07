@@ -52,7 +52,7 @@ function getAreaName(position) {
 // ===========================================================================
 
 function getGameAreas(gameId) {
-	return getGameData().areas[gameId];
+	return getGameConfig().areas[gameId];
 }
 
 // ===========================================================================
@@ -79,30 +79,46 @@ function initAllClients() {
 // ===========================================================================
 
 function updateServerRules() {
+	logToConsole(LOG_DEBUG, `[VRR.Utilities]: Updating all server rules ...`);
+	
+	logToConsole(LOG_DEBUG, `[VRR.Utilities]: Time support: ${isTimeSupported()}`);
 	if(isTimeSupported()) {
-		server.setRule("Time", makeReadableTime(getServerConfig().hour, getServerConfig().minute));
+		if(getServerConfig() != false) {
+			let value = makeReadableTime(getServerConfig().hour, getServerConfig().minute);
+			logToConsole(LOG_DEBUG, `[VRR.Utilities]: Setting server rule "Time" as ${value}`);
+			server.setRule("Time", value);
+		}
 	}
 
 	if(isWeatherSupported()) {
-		server.setRule("Weather", getGameData().weatherNames[getServerGame()][getServerConfig().weather]);
+		if(getServerConfig() != false) {
+			let value = getGameConfig().weatherNames[getServerGame()][getServerConfig().weather];
+			logToConsole(LOG_DEBUG, `[VRR.Utilities]: Setting server rule "Weather" as ${value}`);
+			server.setRule("Weather", value);
+		}
 	}
 
 	if(isSnowSupported()) {
-		server.setRule("Snowing", getYesNoFromBool(getServerConfig().fallingSnow));
+		if(getServerConfig() != false) {
+			let value = getYesNoFromBool(getServerConfig().fallingSnow);
+			logToConsole(LOG_DEBUG, `[VRR.Utilities]: Setting server rule "Snowing" as ${value}`);
+			server.setRule("Snowing", value);
+		}
 	}
+	logToConsole(LOG_DEBUG, `[VRR.Utilities]: All server rules updated successfully!`);
 }
 
 // ===========================================================================
 
 function getWeatherFromParams(params) {
 	if(isNaN(params)) {
-		for(let i in getGameData().weatherNames[getServerGame()]) {
-			if(toLowerCase(getGameData().weatherNames[getServerGame()][i]).indexOf(toLowerCase(params)) != -1) {
+		for(let i in getGameConfig().weatherNames[getServerGame()]) {
+			if(toLowerCase(getGameConfig().weatherNames[getServerGame()][i]).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
 	} else {
-		if(typeof getGameData().weatherNames[getServerGame()][params] != "undefined") {
+		if(typeof getGameConfig().weatherNames[getServerGame()][params] != "undefined") {
 			return toInteger(params);
 		}
 	}
@@ -114,13 +130,13 @@ function getWeatherFromParams(params) {
 
 function getFightStyleFromParams(params) {
 	if(isNaN(params)) {
-		for(let i in getGameData().fightStyles[getServerGame()]) {
-			if(toLowerCase(getGameData().fightStyles[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
+		for(let i in getGameConfig().fightStyles[getServerGame()]) {
+			if(toLowerCase(getGameConfig().fightStyles[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
 	} else {
-		if(typeof getGameData().fightStyles[getServerGame()][params] != "undefined") {
+		if(typeof getGameConfig().fightStyles[getServerGame()][params] != "undefined") {
 			return toInteger(params);
 		}
 	}
@@ -132,26 +148,26 @@ function getFightStyleFromParams(params) {
 
 function getClosestHospital(position) {
 	let closest = 0;
-	for(let i in getGameData().hospitals[getServerGame()]) {
-		if(getDistance(getGameData().hospitals[getServerGame()][i].position, position) < getDistance(getGameData().hospitals[getServerGame()][closest].position, position)) {
+	for(let i in getGameConfig().hospitals[getServerGame()]) {
+		if(getDistance(getGameConfig().hospitals[getServerGame()][i].position, position) < getDistance(getGameConfig().hospitals[getServerGame()][closest].position, position)) {
 			closest = i;
 		}
 	}
 
-	return getGameData().hospitals[getServerGame()][closest];
+	return getGameConfig().hospitals[getServerGame()][closest];
 }
 
 // ===========================================================================
 
 function getClosestPoliceStation(position) {
 	let closest = 0;
-	for(let i in getGameData().policeStations[getServerGame()]) {
-		if(getDistance(getGameData().policeStations[getServerGame()][i].position, position) < getDistance(getGameData().policeStations[getServerGame()][closest].position, position)) {
+	for(let i in getGameConfig().policeStations[getServerGame()]) {
+		if(getDistance(getGameConfig().policeStations[getServerGame()][i].position, position) < getDistance(getGameConfig().policeStations[getServerGame()][closest].position, position)) {
 			closest = i;
 		}
 	}
 
-	return getGameData().policeStations[getServerGame()][closest];
+	return getGameConfig().policeStations[getServerGame()][closest];
 }
 
 // ===========================================================================
@@ -190,8 +206,8 @@ function getPlayerIsland(client) {
 // ===========================================================================
 
 function isAtPayAndSpray(position) {
-	for(let i in getGameData().payAndSprays[getServerGame()]) {
-		if(getDistance(position, getGameData().payAndSprays[getServerGame()][i]) <= getGlobalConfig().payAndSprayDistance) {
+	for(let i in getGameConfig().payAndSprays[getServerGame()]) {
+		if(getDistance(position, getGameConfig().payAndSprays[getServerGame()][i]) <= getGlobalConfig().payAndSprayDistance) {
 			return true;
 		}
 	}
@@ -429,6 +445,14 @@ function kickAllClients() {
     getClients().forEach((client) => {
         client.disconnect();
     })
+}
+
+// ===========================================================================
+
+function updateTimeRule() {
+	if(isTimeSupported()) {
+		server.setRule("Time", makeReadableTime(game.time.hour, game.time.minute));
+	}
 }
 
 // ===========================================================================

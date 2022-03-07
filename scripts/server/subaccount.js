@@ -231,13 +231,13 @@ function showCharacterSelectToClient(client) {
 		}
 	}
 
-	if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+	if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 		getPlayerData(client).currentSubAccount = 0;
 		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 		let tempSubAccount = getPlayerData(client).subAccounts[0];
 		let ClanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
-		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, ClanName, lastPlayedText, getGameData().skins[getGame()][tempSubAccount.skin][0]);
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, ClanName, lastPlayedText, getGameConfig().skins[getGame()][tempSubAccount.skin][0]);
 
 		//spawnPlayer(client, getServerConfig().characterSelectPedPosition, getServerConfig().characterSelectPedHeading, getPlayerCurrentSubAccount(client).skin, getServerConfig().characterSelectInterior, getServerConfig().characterSelectDimension);
 		//setTimeout(function() {
@@ -290,10 +290,10 @@ function checkNewCharacter(client, firstName, lastName) {
 
 	let subAccountData = createSubAccount(getPlayerData(client).accountData.databaseId, firstName, lastName);
 	if(!subAccountData) {
-		if(getServerConfig().useGUI && doesPlayerHaveGUIEnabled(client)) {
+		if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 			showPlayerNewCharacterFailedGUI(client, "Your character could not be created!");
 		} else {
-			messagePlayerAlert(client, "Your character could not be created!");
+			messagePlayerError(client, "Your character could not be created!");
 		}
 		messagePlayerAlert(client, `${getServerName()} staff have been notified of the problem and will fix it soon.`);
 		return false;
@@ -321,7 +321,7 @@ function checkPreviousCharacter(client) {
 
 		let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
-		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, getGameData().skins[getGame()][tempSubAccount.skin][0]);
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, getGameConfig().skins[getGame()][tempSubAccount.skin][0]);
 
 		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 	}
@@ -342,7 +342,7 @@ function checkNextCharacter(client) {
 
 		let clanName = (tempSubAccount.clan != 0) ? getClanData(getClanIdFromDatabaseId(tempSubAccount.clan)).name : "None";
 		let lastPlayedText = (tempSubAccount.lastLogin != 0) ? `${msToTime(getCurrentUnixTimestamp()-tempSubAccount.lastLogin)} ago` : "Never";
-		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, getGameData().skins[getGame()][tempSubAccount.skin][0]);
+		showPlayerCharacterSelectGUI(client, tempSubAccount.firstName, tempSubAccount.lastName, tempSubAccount.cash, clanName, lastPlayedText, getGameConfig().skins[getGame()][tempSubAccount.skin][0]);
 
 		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Setting ${getPlayerDisplayForConsole(client)}'s character to ID ${getPlayerData(client).currentSubAccount}`);
 	}
@@ -371,10 +371,12 @@ function selectCharacter(client, characterId = -1) {
 	//setPlayerCameraLookAt(client, getPosBehindPos(spawnPosition, spawnHeading, 5), spawnPosition);
 	getPlayerData(client).pedState = VRR_PEDSTATE_SPAWNING;
 
-	if(getGame() < VRR_GAME_MAFIA_ONE) {
-		spawnPlayer(client, spawnPosition, spawnHeading, getGameData().skins[getGame()][skin][0], spawnInterior, spawnDimension);
-	} else {
-		spawnPlayer(client, getGameData().skins[getGame()][skin][0], spawnPosition, spawnHeading);
+	if(getGame() < VRR_GAME_GTA_IV) {
+		spawnPlayer(client, spawnPosition, spawnHeading, getGameConfig().skins[getGame()][skin][0], spawnInterior, spawnDimension);
+	} else if(getGame() == VRR_GAME_GTA_IV) {
+		spawnPlayer(client, spawnPosition, spawnHeading, getGameConfig().skins[getGame()][skin][0], spawnInterior, spawnDimension);
+	} else if(getGame() >= VRR_GAME_MAFIA_ONE) {
+		spawnPlayer(client, getGameConfig().skins[getGame()][skin][0], spawnPosition, spawnHeading);
 	}
 
 	removePlayerKeyBind(client, getKeyIdFromParams("insert"));
@@ -515,7 +517,7 @@ function setFightStyleCommand(command, params, client) {
 
 	if(!fightStyle) {
 		messagePlayerError(client, `That fight style doesn't exist!`);
-		messagePlayerError(client, `Fight styles: ${getGameData().fightStyles[getServerGame()].map(fs => fs[0]).join(", ")}`);
+		messagePlayerError(client, `Fight styles: ${getGameConfig().fightStyles[getServerGame()].map(fs => fs[0]).join(", ")}`);
 		return false;
 	}
 
@@ -527,7 +529,7 @@ function setFightStyleCommand(command, params, client) {
 	}
 
 	setPlayerFightStyle(client, fightStyleId);
-	messagePlayerSuccess(client, `Your fight style has been set to ${getGameData().fightStyles[getServerGame()][fightStyleId][0]}`)
+	messagePlayerSuccess(client, `Your fight style has been set to ${getGameConfig().fightStyles[getServerGame()][fightStyleId][0]}`)
 
 	return true;
 }
@@ -560,13 +562,13 @@ function forceFightStyleCommand(command, params, client) {
 
 	if(!fightStyleId) {
 		messagePlayerError(client, `That fight style doesn't exist!`);
-		messagePlayerError(client, `Fight styles: ${getGameData().fightStyles[getServerGame()].map(fs => fs[0]).join(", ")}`);
+		messagePlayerError(client, `Fight styles: ${getGameConfig().fightStyles[getServerGame()].map(fs => fs[0]).join(", ")}`);
 		return false;
 	}
 
 	getPlayerCurrentSubAccount(client).fightStyle = fightStyleId;
 	setPlayerFightStyle(client, fightStyleId);
-	messagePlayerSuccess(client, `You set ${getCharacterFullName(targetClient)}'s fight style to ${getGameData().fightStyles[getServerGame()][fightStyleId][0]}`)
+	messagePlayerSuccess(client, `You set ${getCharacterFullName(targetClient)}'s fight style to ${getGameConfig().fightStyles[getServerGame()][fightStyleId][0]}`)
 
 	return true;
 }

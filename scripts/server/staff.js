@@ -374,19 +374,19 @@ function gotoGameLocationCommand(command, params, client) {
 	}
 
 	setPlayerVelocity(client, toVector3(0.0, 0.0, 0.0));
-	setPlayerPosition(client, getGameData().locations[getServerGame()][gameLocationId][1]);
+	setPlayerPosition(client, getGameConfig().locations[getServerGame()][gameLocationId][1]);
 	setPlayerInterior(client, 0);
 	setPlayerDimension(client, 0);
 	updateInteriorLightsForPlayer(client, true);
 
 	//setTimeout(function() {
-	//	setPlayerPosition(client, getGameData().locations[getServerGame()][gameLocationId][1]);
+	//	setPlayerPosition(client, getGameConfig().locations[getServerGame()][gameLocationId][1]);
 	//	setPlayerInterior(client, 0);
 	//	setPlayerDimension(client, 0);
 	//	updateInteriorLightsForPlayer(client, true);
 	//}, 500);
 
-	messagePlayerSuccess(client, `You teleported to game location {ALTCOLOUR}${getGameData().locations[getServerGame()][gameLocationId][0]}`);
+	messagePlayerSuccess(client, `You teleported to game location {ALTCOLOUR}${getGameConfig().locations[getServerGame()][gameLocationId][0]}`);
 }
 
 // ===========================================================================
@@ -1003,20 +1003,24 @@ function forcePlayerSkinCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[0]);
 	let skinIndex = getSkinModelIndexFromParams(splitParams.slice(1).join(" "), getGame());
 
+	console.warn(targetClient.name);
+	console.warn(splitParams.slice(1).join(" "));
+	console.warn(skinIndex);
+
     if(!targetClient) {
         messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
-	if(!skinIndex) {
-        messagePlayerError(client, "That skin is invalid!");
+	if(skinIndex == false) {
+        messagePlayerError(client, getLocaleString(client, "InvalidSkin"));
         return false;
 	}
 
 	getPlayerCurrentSubAccount(targetClient).skin = skinIndex;
 	setPlayerSkin(targetClient, skinIndex);
 
-	messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s{MAINCOLOUR} skin to {ALTCOLOUR}${getGameData().skins[getGame()][skinIndex][1]}`);
+	messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s{MAINCOLOUR} skin to {ALTCOLOUR}${getGameConfig().skins[getGame()][skinIndex][1]}`);
 }
 
 // ===========================================================================
@@ -1112,7 +1116,7 @@ function forcePlayerWantedLevelCommand(command, params, client) {
 
 	forcePlayerWantedLevel(targetClient, wantedLevel);
 
-	//messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s {MAINCOLOUR}skin to {ALTCOLOUR}${getGameData().skins[getGame()][skinIndex][1]}`);
+	//messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s {MAINCOLOUR}skin to {ALTCOLOUR}${getGameConfig().skins[getGame()][skinIndex][1]}`);
 }
 
 // ===========================================================================

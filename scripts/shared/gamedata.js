@@ -1255,15 +1255,15 @@ let gameData = {
             [-1084007777,"Triad Member 3,"                 , true],
             [-164935626 ,"Triad Member 4,"                 , true],
             [-751071255 ,"Female Maid"                     , true],
-            [-109247258 ,"Female Binco Worker"             , true],
+            [-109247258 ,"Female Binco Worker"             , false],
             [ 1366257926,"Female Bank Teller"              , true],
             [ 346338575 ,"Female Doctor"                   , true],
             [ 1350216795,"Female Gym Worker"               , true],
-            [ 924926104 ,"Female Burger Shot Worker"       , true],
-            [-346378101 ,"Female Cluckin Bell Worker"      , true],
-            [-2104311883,"Female Rockstar Cafe Worker"     , true],
-            [ 212900845 ,"Female TW@ Cafe Worker"          , true],
-            [-290070895 ,"Female Well Stacked Pizza Worker", true],
+            [ 924926104 ,"Female Burger Shot Worker"       , false],
+            [-346378101 ,"Female Cluckin Bell Worker"      , false],
+            [-2104311883,"Female Rockstar Cafe Worker"     , false],
+            [ 212900845 ,"Female TW@ Cafe Worker"          , false],
+            [-290070895 ,"Female Well Stacked Pizza Worker", false],
             [ 552542187 ,"Hooker"                          , true],
             [ 996267216 ,"Hooker 2,"                       , true],
             [-1193778389,"Nurse"                           , true],
@@ -1271,8 +1271,8 @@ let gameData = {
             [ 1353709999,"Stripper 2,"                     , true],
             [ 24233425  ,"Waitress"                        , true],
             [-1761003415,"Alcoholic Man"                   , true],
-            [ 1075583233,"Armoured Truck Driver"           , true],
-            [ 134077503 ,"Bus Driver"                      , true],
+            [ 1075583233,"Armoured Truck Driver"           , false],
+            [ 134077503 ,"Bus Driver"                      , false],
             [ 757349871 ,"Generic Asian Man"               , true],
             [-1827421800,"Black Crackhead"                 , true],
             [ 219393781 ,"Doctor (Scrubs)"                 , true],
@@ -1281,10 +1281,10 @@ let gameData = {
             [ 2105015949,"Cook"                            , true],
             [-200234085 ,"Italian Mob Enforcer"            , true],
             [ 800131009 ,"Factory Worker"                  , true],
-            [-999506922 ,"FIB Agent"                       , true],
+            [-999506922 ,"FIB Agent"                       , false],
             [-1993909080,"Fat Delivery Driver"             , true],
-            [ 610888851 ,"Fire Chief"                      , true],
-            [ 486302863 ,"Mercenary Soldier"               , true],
+            [ 610888851 ,"Fire Chief"                      , false],
+            [ 486302863 ,"Mercenary Soldier"               , false],
             [-778316080 ,"Helicopter Pilot"                , false],
             [ 624314380 ,"Hotel Doorman"                   , true],
             [-1784833142,"Korean Cook"                     , true],
@@ -1295,7 +1295,7 @@ let gameData = {
             [ 807236245 ,"Generic Man"                     , true],
             [-284362863 ,"Postal Worker"                   , true],
             [-1188246269,"Saxophone Player"                , true],
-            [-1870989171,"Security Guard"                  , true],
+            [-1870989171,"Security Guard"                  , false],
             [ 420915580 ,"Stadium Food Vendor"             , true],
             [ 1878085135,"Stadium Food Cook"               , true],
             [ 142730876 ,"Street Food Vendor"              , true],
@@ -1309,7 +1309,7 @@ let gameData = {
             [-1284047560,"Janitor"                         , true],
             [ 22944263  ,"Hotel Doorman 2,"                , true],
             [ 1178487645,"Mob Boss"                        , true],
-            [-1464712858,"Airport Worker"                  , true],
+            [-1464712858,"Airport Worker"                  , false],
             [-2139064254,"Bartender"                       , true],
             [-1780698891,"Biker Bouncer"                   , true],
             [-409283472 ,"High End Club Bouncer"           , true],
@@ -1343,9 +1343,9 @@ let gameData = {
             [ 501136335 ,"Generic Male 1,"                 , true],
             [ 186619473 ,"Generic Male 2,"                 , true],
             [-111611196 ,"Generic Male 3,"                 , true],
-            [-1175077216,"Paramedic"                       , true],
-            [-1676937780,"Prisoner"                        , true],
-            [ 215190023 ,"Prisoner 2,"                     , true],
+            [-1175077216,"Paramedic"                       , false],
+            [-1676937780,"Prisoner"                        , false],
+            [ 215190023 ,"Prisoner 2,"                     , false],
             [ 1552970117,"Roman's Taxi Service Driver"     , true],
             [-1481923910,"Male Runner"                     , true],
             [ 357919731 ,"Male Shop Assistant 1,"          , true],
@@ -1493,7 +1493,7 @@ let gameData = {
             [-1927496394,"Street Punk 2,"                  , true],
             [ 1374242512,"Street Punk 3,"                  , true],
             [-1139941790,"Tough Guy"                       , true],
-            [ 809067472 ,"Male Tourist"                    ,false]
+            [ 809067472 ,"Male Tourist"                    , true]
         ],
         [], // GTA IV EFLC
         [], // Unknown
@@ -2849,7 +2849,7 @@ let gameData = {
 			["South Bohan Police Station", [435.40, 1592.29, 17.353], 3.087, null],
 			["Northern Gardens Police Station", [974.93, 1870.45, 23.073], -1.621, null],
 			["South Slopes Police Station", [1233.25, -89.13, 28.034], 1.568, null],
-			["Middle Part East Police Station", [50.12, 679.88, 15.316], 1.569, null],
+			["Middle Park East Police Station", [50.12, 679.88, 15.316], 1.569, null],
 			["East Holland Police Station", [85.21, 1189.82, 14.755], 3.127, null],
 			["Francis International Airport Police Station", [2170.87, 448.87, 6.085], 1.501, null],
 			["Chinatown Police Station", [213.12, -211.70, 10.752], 0.200, null],
@@ -3488,6 +3488,24 @@ let gameData = {
         {
             // GTA Underground
         },
+        {   // GTA IV
+			PoliceStation: -1,
+			FireStation: -1,
+			Hospital: -1,
+			Ammunation: -1,
+			PayAndSpray: -1,
+			VehicleDealership: -1,
+			Restaurant: -1,
+			FastFood: -1,
+			Bank: -1,
+			FuelStation: -1,
+			Business: -1,
+			House: -1,
+			Clothes: -1,
+			Misc: -1,
+			Exit: -1,
+            Job: -1,
+        }
 	],
 	pickupTypes: [
 		{},
@@ -3517,7 +3535,18 @@ let gameData = {
 			clothes: 1,
 			info: 1,
 			job: 1,
-		}
+		},
+        {
+            // GTA Underground
+        },
+		{ // GTA IV
+			business: -1,
+			house: -1,
+			bank: -1,
+			clothes: -1,
+			info: -1,
+			job: -1,
+		}        
 	],
 
 	// THIS IS SCREEN HEIGHT, NOT ACTUAL DOOR POSITION IN THE WORLD
@@ -3977,7 +4006,7 @@ let gameData = {
 		},
         {}, // GTA UG
         { // GTA IV
-			clothingStore: [
+			ClothingStore: [
 				["Outfit", 500, 2]
 			],
 			LegalGunStore: [
@@ -5365,6 +5394,22 @@ let gameData = {
         ],
     ],
     mainWorldDimension: [
+        0, // Invalid
+        0, // GTA 3
+        0, // GTA VC
+        0, // GTA SA
+        0, // GTA UG
+        0, // GTA IV
+        0, // GTA IV EFLC
+        0, // Invalid
+        0, // Invalid
+        0, // Invalid
+        0, // Mafia 1
+        0, // Mafia 2
+        0, // Mafia 3
+        0, // Mafia Definitive Edition
+    ],
+    mainWorldInterior: [
         0, // Invalid
         0, // GTA 3
         0, // GTA VC

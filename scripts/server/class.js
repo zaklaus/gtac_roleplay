@@ -22,8 +22,6 @@ function initClassScript() {
 class ServerData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
-		this.name = "";
-		this.password = "";
 		this.needsSaved = false;
 
 		this.newCharacter = {
@@ -59,6 +57,8 @@ class ServerData {
 		this.guiTextColourSecondary = [0, 0, 0];
 		this.showLogo = true;
 		this.inflationMultiplier = 1;
+		this.testerOnly = false;
+		this.settings = 0;
 
 		this.antiCheat = {
 			enabled: false,
@@ -104,52 +104,47 @@ class ServerData {
 				bank: dbAssoc["svr_newchar_bank"],
 				skin: dbAssoc["svr_newchar_skin"],
 			},
+			this.settings = toInteger(dbAssoc["svr_settings"]);
+
 			this.connectCameraPosition = toVector3(dbAssoc["svr_connectcam_pos_x"], dbAssoc["svr_connectcam_pos_y"], dbAssoc["svr_connectcam_pos_z"]);
 			this.connectCameraLookAt = toVector3(dbAssoc["svr_connectcam_lookat_x"], dbAssoc["svr_connectcam_lookat_y"], dbAssoc["svr_connectcam_lookat_z"]);
-
-			//this.characterSelectCameraPosition = toVector3(dbAssoc["svr_charselect_cam_pos_x"], dbAssoc["svr_charselect_cam_pos_y"], dbAssoc["svr_charselect_cam_pos_z"]);
-			//this.characterSelectCameraLookAt = toVector3(dbAssoc["svr_charselect_cam_lookat_x"], dbAssoc["svr_charselect_cam_lookat_y"], dbAssoc["svr_charselect_cam_lookat_z"]);
-
-			//this.characterSelectPedPosition = toVector3(dbAssoc["svr_charselect_ped_pos_x"], dbAssoc["svr_charselect_ped_pos_y"], dbAssoc["svr_charselect_ped_pos_z"]);
-			//this.characterSelectPedHeading = toFloat(dbAssoc["svr_charselect_ped_rot_z"]);
-			//this.characterSelectInterior = toInteger(dbAssoc["svr_charselect_int"]);
-			//this.characterSelectDimension = toInteger(dbAssoc["svr_charselect_int"]);
 
 			this.hour = toInteger(dbAssoc["svr_start_time_hour"]);
 			this.minute = toInteger(dbAssoc["svr_start_time_min"]);
 			this.minuteDuration = toInteger(dbAssoc["svr_time_min_duration"]);
 			this.weather = toInteger(dbAssoc["svr_start_weather"]);
-			this.fallingSnow = intToBool(dbAssoc["svr_start_snow_falling"]);
-			this.groundSnow = intToBool(dbAssoc["svr_start_snow_ground"]);
-			this.useGUI = intToBool(dbAssoc["svr_gui"]);
+			this.fallingSnow = hasBitFlag(this.settings, getServerSettingsFlagValue("FallingSnow"));
+			this.groundSnow = hasBitFlag(this.settings, getServerSettingsFlagValue("GroundSnow"));
+			this.useGUI = hasBitFlag(this.settings, getServerSettingsFlagValue("GUI"));
 			this.guiColourPrimary = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
 			this.guiColourSecondary = [toInteger(dbAssoc["svr_gui_col2_r"]), toInteger(dbAssoc["svr_gui_col2_g"]), toInteger(dbAssoc["svr_gui_col2_b"])];
 			this.guiTextColourPrimary = [toInteger(dbAssoc["svr_gui_textcol1_r"]), toInteger(dbAssoc["svr_gui_textcol1_g"]), toInteger(dbAssoc["svr_gui_textcol1_b"])];
 			//this.guiTextColourSecondary = [toInteger(dbAssoc["svr_gui_textcol2_r"]), toInteger(dbAssoc["svr_gui_textcol2_g"]), toInteger(dbAssoc["svr_gui_textcol2_b"])];
-			this.showLogo = intToBool(dbAssoc["svr_logo"]);
+			this.showLogo = hasBitFlag(this.settings, getServerSettingsFlagValue("Logo"));
 			this.inflationMultiplier = toFloat(dbAssoc["svr_inflation_multiplier"]);
+			this.testerOnly = hasBitFlag(this.settings, getServerSettingsFlagValue("Testing"));
 
 			this.antiCheat = {
-				enabled: intToBool(dbAssoc["svr_ac_enabled"]),
-				checkGameScripts: intToBool(dbAssoc["svr_ac_check_scripts"]),
-				gameScriptBlackListEnabled: intToBool(dbAssoc["svr_ac_script_bl"]),
-				gameScriptWhiteListEnabled: intToBool(dbAssoc["svr_ac_script_wl"]),
+				enabled: hasBitFlag(this.settings, getServerSettingsFlagValue("Anticheat")),
+				checkGameScripts: hasBitFlag(this.settings, getServerSettingsFlagValue("CheckGameScripts")),
+				gameScriptBlackListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptBlackList")),
+				gameScriptWhiteListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptWhiteList")),
 				gameScriptWhiteList: [],
 				gameScriptBlackList: [],
 			};
 
 			this.discordBotToken = intToBool(dbAssoc["svr_discord_bot_token"]);
-			this.discordEnabled = intToBool(dbAssoc["svr_discord_bot_enabled"]);
+			this.discordEnabled = hasBitFlag(this.settings, getServerSettingsFlagValue("DiscordBot"));
 
-			this.createJobPickups = intToBool(dbAssoc["svr_job_pickups"]);
-			this.createBusinessPickups = intToBool(dbAssoc["svr_biz_pickups"]);
-			this.createHousePickups = intToBool(dbAssoc["svr_house_pickups"]);
-			this.createJobBlips = intToBool(dbAssoc["svr_job_blips"]);
-			this.createBusinessBlips = intToBool(dbAssoc["svr_biz_blips"]);
-			this.createHouseBlips = intToBool(dbAssoc["svr_house_blips"]);
+			this.createJobPickups = hasBitFlag(this.settings, getServerSettingsFlagValue("JobPickups"));
+			this.createBusinessPickups = hasBitFlag(this.settings, getServerSettingsFlagValue("BusinessPickups"));
+			this.createHousePickups = hasBitFlag(this.settings, getServerSettingsFlagValue("HousePickups"));
+			this.createJobBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("JobBlips"));
+			this.createBusinessBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("BusinessBlips"));
+			this.createHouseBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("HouseBlips"));
 
 			this.introMusicURL = dbAssoc["svr_intro_music"];
-			this.useRealTime = intToBool(dbAssoc["svr_time_realtime_enabled"]);
+			this.useRealTime = hasBitFlag(this.settings, getServerSettingsFlagValue("RealTime"));
 			this.realTimeZone = dbAssoc["svr_time_realtime_timezone"];
 
 			this.discordConfig = {

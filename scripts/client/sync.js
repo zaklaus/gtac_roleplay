@@ -116,7 +116,7 @@ function syncVehicleProperties(vehicle) {
     }
 
     if(getGame() == VRR_GAME_GTA_SA) {
-        let allUpgrades = getGameData().vehicleUpgrades[getGame()];
+        let allUpgrades = getGameConfig().vehicleUpgrades[getGame()];
         for(let i in allUpgrades) {
             vehicle.removeUpgrade(i);
         }
@@ -388,6 +388,22 @@ function syncElementProperties(element) {
 
         default:
             break;
+    }
+}
+
+// ===========================================================================
+
+function receiveBlipFromServer(model, position) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        
+    }
+}
+
+// ===========================================================================
+
+function receivePickupFromServer(model, position) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        
     }
 }
 

@@ -1135,3 +1135,15 @@ function setPlayerInfiniteRun(client, state) {
 }
 
 // ==========================================================================
+
+function sendBusinessEntranceToPlayer(client, businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems) {
+    sendNetworkEventToPlayer("vrr.business", client, businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems);
+}
+
+// ==========================================================================
+
+function sendHouseEntranceToPlayer(client, houseId, entrancePosition, blipModel, pickupModel, hasInterior) {
+    sendNetworkEventToPlayer("vrr.house", client, houseId, entrancePosition, blipModel, pickupModel, hasInterior);
+}
+
+// ==========================================================================

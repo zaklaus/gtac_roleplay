@@ -3405,7 +3405,7 @@ let gameData = {
             Clothes: 50,
 			Pizza: 0,
 			Chicken: 22,
-			Burger: 10,
+			Burger: 21,
             Bar: 47,
 			Club: 48,
 			Gym: 54,

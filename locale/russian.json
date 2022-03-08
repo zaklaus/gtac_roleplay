@@ -390,5 +390,7 @@
     "NotATester": "Вы не тестировщик!",
     "AccessDenied": "Доступ запрещен",
     "InvalidSkin": "That skin is invalid!",
-    "HeaderInteriorTypes": "Interiors"
+    "HeaderInteriorTypes": "Interiors List",
+    "ViewInventoryKeyPressTip": "Press {1} to see your items",
+    "ViewInventoryCommandTip": "Use {1} to see your items"
 }

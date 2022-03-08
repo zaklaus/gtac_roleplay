@@ -602,6 +602,8 @@ function onPlayerSpawn(client) {
             //sendAllJobLocationsToPlayer(client);
         }
 
+        requestPlayerPedNetworkId(client);
+
         getPlayerData(client).payDayTickStart = sdl.ticks;
     //}
 }

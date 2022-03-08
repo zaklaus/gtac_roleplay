@@ -113,38 +113,14 @@ class ServerData {
 			this.minute = toInteger(dbAssoc["svr_start_time_min"]);
 			this.minuteDuration = toInteger(dbAssoc["svr_time_min_duration"]);
 			this.weather = toInteger(dbAssoc["svr_start_weather"]);
-			this.fallingSnow = hasBitFlag(this.settings, getServerSettingsFlagValue("FallingSnow"));
-			this.groundSnow = hasBitFlag(this.settings, getServerSettingsFlagValue("GroundSnow"));
-			this.useGUI = hasBitFlag(this.settings, getServerSettingsFlagValue("GUI"));
 			this.guiColourPrimary = [toInteger(dbAssoc["svr_gui_col1_r"]), toInteger(dbAssoc["svr_gui_col1_g"]), toInteger(dbAssoc["svr_gui_col1_b"])];
 			this.guiColourSecondary = [toInteger(dbAssoc["svr_gui_col2_r"]), toInteger(dbAssoc["svr_gui_col2_g"]), toInteger(dbAssoc["svr_gui_col2_b"])];
 			this.guiTextColourPrimary = [toInteger(dbAssoc["svr_gui_textcol1_r"]), toInteger(dbAssoc["svr_gui_textcol1_g"]), toInteger(dbAssoc["svr_gui_textcol1_b"])];
 			//this.guiTextColourSecondary = [toInteger(dbAssoc["svr_gui_textcol2_r"]), toInteger(dbAssoc["svr_gui_textcol2_g"]), toInteger(dbAssoc["svr_gui_textcol2_b"])];
-			this.showLogo = hasBitFlag(this.settings, getServerSettingsFlagValue("Logo"));
 			this.inflationMultiplier = toFloat(dbAssoc["svr_inflation_multiplier"]);
-			this.testerOnly = hasBitFlag(this.settings, getServerSettingsFlagValue("Testing"));
-
-			this.antiCheat = {
-				enabled: hasBitFlag(this.settings, getServerSettingsFlagValue("Anticheat")),
-				//checkGameScripts: hasBitFlag(this.settings, getServerSettingsFlagValue("CheckGameScripts")),
-				//gameScriptBlackListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptBlackList")),
-				//gameScriptWhiteListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptWhiteList")),
-				//gameScriptWhiteList: [],
-				//gameScriptBlackList: [],
-			};
 
 			this.discordBotToken = intToBool(dbAssoc["svr_discord_bot_token"]);
-			this.discordEnabled = hasBitFlag(this.settings, getServerSettingsFlagValue("DiscordBot"));
-
-			this.createJobPickups = hasBitFlag(this.settings, getServerSettingsFlagValue("JobPickups"));
-			this.createBusinessPickups = hasBitFlag(this.settings, getServerSettingsFlagValue("BusinessPickups"));
-			this.createHousePickups = hasBitFlag(this.settings, getServerSettingsFlagValue("HousePickups"));
-			this.createJobBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("JobBlips"));
-			this.createBusinessBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("BusinessBlips"));
-			this.createHouseBlips = hasBitFlag(this.settings, getServerSettingsFlagValue("HouseBlips"));
-
 			this.introMusicURL = dbAssoc["svr_intro_music"];
-			this.useRealTime = hasBitFlag(this.settings, getServerSettingsFlagValue("RealTime"));
 			this.realTimeZone = dbAssoc["svr_time_realtime_timezone"];
 
 			this.discordConfig = {

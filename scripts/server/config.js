@@ -131,6 +131,22 @@ function loadServerConfigFromId(tempServerId) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 				let tempServerConfigData = new ServerData(dbAssoc);
+
+				tempServerConfigData.fallingSnow = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("FallingSnow"));
+				tempServerConfigData.groundSnow = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("GroundSnow"));
+				tempServerConfigData.useGUI = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("GUI"));
+				tempServerConfigData.showLogo = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("Logo"));
+				tempServerConfigData.testerOnly = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("Testing"));
+				tempServerConfigData.discordEnabled = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("DiscordBot"));
+				tempServerConfigData.createJobPickups = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("JobPickups"));
+				tempServerConfigData.createBusinessPickups = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("BusinessPickups"));
+				tempServerConfigData.createHousePickups = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("HousePickups"));
+				tempServerConfigData.createJobBlips = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("JobBlips"));
+				tempServerConfigData.createBusinessBlips = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("BusinessBlips"));
+				tempServerConfigData.createHouseBlips = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("HouseBlips"));
+				tempServerConfigData.useRealTime = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("RealTime"));
+				tempServerConfigData.antiCheat.enabled = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("Anticheat"));
+
 				freeDatabaseQuery(dbQuery);
 				return tempServerConfigData;
 			}

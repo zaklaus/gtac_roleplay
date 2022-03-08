@@ -250,11 +250,12 @@ function processLabelRendering() {
     if(renderLabels && areWorldLabelsSupported()) {
         if(localPlayer != null) {
             if(!areServerElementsSupported()) {
-                //for(let i in businessBlips) {
+                //for(let i in businesses) {
                 //    if(pickups[i].getData("vrr.label.type") != null) {
                 //        if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {                
                 
                 // natives.getScreenViewportId
+                // natives.getGameViewportId
                 // natives.getViewportPositionOfCoord
             } else {
                 let pickups = getElementsByType(ELEMENT_PICKUP);

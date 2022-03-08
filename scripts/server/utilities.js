@@ -63,7 +63,9 @@ function getGameAreas(gameId) {
  */
 function getPlayerData(client) {
 	if(client != null) {
-		return getServerData().clients[client.index];
+		if(isClientInitialized(client)) {
+			return getServerData().clients[client.index];
+		}
 	}
 	return false;
 }
@@ -453,6 +455,12 @@ function updateTimeRule() {
 	if(isTimeSupported()) {
 		server.setRule("Time", makeReadableTime(game.time.hour, game.time.minute));
 	}
+}
+
+// ===========================================================================
+
+function isClientInitialized(client) {
+	return (typeof getServerData().clients[client.index] != "undefined");
 }
 
 // ===========================================================================

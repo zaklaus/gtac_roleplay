@@ -877,9 +877,6 @@ function createHouseEntrancePickup(houseId) {
 			getHouseData(houseId).entrancePickup = createGamePickup(pickupModelId, getHouseData(houseId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].house);
 			setElementOnAllDimensions(getHouseData(houseId).entrancePickup, false);
 			setElementDimension(getHouseData(houseId).entrancePickup, getHouseData(houseId).entranceDimension);
-			setElementStreamInDistance(getBusinessData(businessId).entrancePickup, getGlobalConfig().housePickupStreamInDistance);
-			setElementStreamOutDistance(getBusinessData(businessId).entrancePickup, getGlobalConfig().housePickupStreamOutDistance);
-			setElementTransient(getHouseData(houseId).entrancePickup, false);
 			addToWorld(getHouseData(houseId).entrancePickup);
 		}
 		updateHousePickupLabelData(houseId);
@@ -904,9 +901,8 @@ function createHouseEntranceBlip(houseId) {
 			getHouseData(houseId).entranceBlip = createGameBlip(getHouseData(houseId).entrancePosition, blipModelId, 1, getColourByName("houseGreen"));
 			setElementDimension(getHouseData(houseId).entranceBlip, getHouseData(houseId).entranceDimension);
 			setElementOnAllDimensions(getHouseData(houseId).entranceBlip, false);
-			setElementStreamInDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().houseBlipStreamInDistance);
-			setElementStreamOutDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().houseBlipStreamOutDistance);
-			setElementTransient(getHouseData(houseId).entranceBlip, false);
+			//getHouseData(houseId).entranceBlip.streamInDistance = 300;
+			//getHouseData(houseId).entranceBlip.streamOutDistance = 350;
 			setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
 			setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.id", houseId, false);
 			addToWorld(getHouseData(houseId).entranceBlip);
@@ -933,9 +929,6 @@ function createHouseExitPickup(houseId) {
 				getHouseData(houseId).exitPickup = createGamePickup(pickupModelId, getHouseData(houseId).exitPosition, getGameConfig().pickupTypes[getServerGame()].house);
 				setElementDimension(getHouseData(houseId).exitPickup, getHouseData(houseId).exitDimension);
 				setElementOnAllDimensions(getHouseData(houseId).exitPickup, false);
-				setElementStreamInDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().housePickupStreamInDistance);
-				setElementStreamOutDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().housePickupStreamOutDistance);
-				setElementTransient(getHouseData(houseId).exitPickup, false);
 				addToWorld(getHouseData(houseId).exitPickup);
 			}
 			updateHousePickupLabelData(houseId);
@@ -962,9 +955,6 @@ function createHouseExitBlip(houseId) {
 				getHouseData(houseId).exitBlip = createGameBlip(blipModelId, getHouseData(houseId).exitPosition, 1, getColourByName("houseGreen"));
 				setElementDimension(getHouseData(houseId).exitBlip, getHouseData(houseId).entranceDimension);
 				setElementOnAllDimensions(getHouseData(houseId).exitBlip, false);
-				setElementStreamInDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().houseBlipStreamInDistance);
-				setElementStreamOutDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().houseBlipStreamOutDistance);
-				setElementTransient(getHouseData(houseId).exitBlip, false);
 				setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.type", VRR_BLIP_HOUSE_EXIT, false);
 				setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.id", houseId, false);
 				addToWorld(getHouseData(houseId).exitBlip);

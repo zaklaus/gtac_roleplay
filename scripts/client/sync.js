@@ -14,18 +14,6 @@ function processSync(event, deltaTime) {
             sendNetworkEventToServer("vrr.player.heading", localPlayer.heading);
         }
 
-        //if(game.game == VRR_GAME_GTA_SA) {
-        //    let lookAtPos = getLocalPlayerLookAtPosition();
-        //    sendNetworkEventToServer("vrr.player.lookat", lookAtPos);
-        //    setEntityData(localPlayer, "vrr.headLook", lookAtPos);
-        //    let peds = getPeds();
-        //    for(let i in peds) {
-        //        if(doesEntityDataExist(peds[i], "vrr.headLook")) {
-        //            peds[i].lookAt(getEntityData(peds[i], "vrr.headLook"), 99999);
-        //        }
-        //    }
-        //}
-
         if(localPlayer.health <= 0) {
             if(!calledDeathEvent) {
                 logToConsole(LOG_DEBUG, `Local player died`);
@@ -391,32 +379,7 @@ function syncElementProperties(element) {
     }
 }
 
-// ===========================================================================
 
-function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems) {
-    if(getGame() == VRR_GAME_GTA_IV) {
-        if(typeof businessBlips[businessId] != "undefined") {
-            if(blipModel == -1) {
-                natives.removeBlipAndClearIndex(businessBlips[businessId]);
-                businessBlips.splice(businessId, 1);
-            } else {
-                natives.setBlipCoordinates(businessBlips[businessId], entrancePosition);
-                natives.changeBlipSprite(businessBlips[businessId], blipModel);
-                natives.changeBlipNameFromAscii(businessBlips[businessId], `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
-            }
-        } else {
-            if(blipModel != -1) {
-                let blipId = natives.addBlipForCoord(entrancePosition);
-                if(blipId) {
-                    businessBlips[businessId] = blipId;
-                    natives.changeBlipSprite(blipId, blipModel);
-                    natives.setBlipMarkerLongDistance(blipId, true);
-                    natives.changeBlipNameFromAscii(blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
-                }
-            }
-        }
-    }
-}
 
 // ===========================================================================
 

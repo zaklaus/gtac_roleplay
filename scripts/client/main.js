@@ -69,8 +69,8 @@ let forceWantedLevel = 0;
 // Pre-cache all allowed skins
 let allowedSkins = getAllowedSkins(getGame());
 
-let businessBlips = {};
-let houseBlips = {};
-let jobBlips = {};
+let businesses = {};
+let houses = {};
+let jobs = {};
 
 // ===========================================================================

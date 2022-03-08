@@ -121,12 +121,12 @@ function setUpInitialGame() {
         natives.setPickupsFixCars(false);
 
         // HUD and Display
-        natives.displayCash(false);
-        natives.displayAmmo(false);
-        natives.displayHud(false);
-        natives.displayRadar(false);
-        natives.displayAreaName(false);
-        natives.displayPlayerNames(false);
+        //natives.displayCash(false);
+        //natives.displayAmmo(false);
+        //natives.displayHud(false);
+        //natives.displayRadar(false);
+        //natives.displayAreaName(false);
+        //natives.displayPlayerNames(false);
         natives.setPoliceRadarBlips(false);
         natives.removeTemporaryRadarBlipsForPickups();
         natives.displayNonMinigameHelpMessages(false);

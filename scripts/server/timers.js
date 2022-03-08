@@ -128,14 +128,16 @@ function vehicleRentCheck() {
 	// Loop through players, not vehicles. Much more efficient (and doesn't consume resources when no players are connected)
 	let clients = getClients();
 	for(let i in clients) {
-		if(getPlayerData(clients[i]) != false) {
-			if(isPlayerLoggedIn(clients[i] && isPlayerSpawned(clients[i]))) {
-				if(getPlayerData(clients[i]).rentingVehicle != false) {
-					if(getPlayerCurrentSubAccount(clients[i]).cash < getServerData().vehicles[getPlayerData(clients[i]).rentingVehicle].rentPrice) {
-						messagePlayerAlert(clients[i], `You do not have enough money to continue renting this vehicle!`);
-						stopRentingVehicle(clients[i]);
-					} else {
-						takePlayerCash(clients[i], getServerData().vehicles[getPlayerData(clients[i]).rentingVehicle].rentPrice);
+		if(isClientInitialized(clients[i])) {
+			if(getPlayerData(clients[i]) != false) {
+				if(isPlayerLoggedIn(clients[i] && isPlayerSpawned(clients[i]))) {
+					if(getPlayerData(clients[i]).rentingVehicle != false) {
+						if(getPlayerCurrentSubAccount(clients[i]).cash < getServerData().vehicles[getPlayerData(clients[i]).rentingVehicle].rentPrice) {
+							messagePlayerAlert(clients[i], `You do not have enough money to continue renting this vehicle!`);
+							stopRentingVehicle(clients[i]);
+						} else {
+							takePlayerCash(clients[i], getServerData().vehicles[getPlayerData(clients[i]).rentingVehicle].rentPrice);
+						}
 					}
 				}
 			}
@@ -168,10 +170,12 @@ function vehicleRentCheck() {
 function updatePings() {
 	let clients = getClients();
 	for(let i in clients) {
-		if(!clients[i].console) {
-			updatePlayerPing(clients[i]);
-			if(isPlayerSpawned(clients[i])) {
-				updatePlayerCash(clients[i]);
+		if(isClientInitialized(clients[i])) {
+			if(!clients[i].console) {
+				updatePlayerPing(clients[i]);
+				if(isPlayerSpawned(clients[i])) {
+					updatePlayerCash(clients[i]);
+				}
 			}
 		}
 	}
@@ -205,14 +209,16 @@ function checkServerGameTime() {
 function checkPayDays() {
 	let clients = getClients();
 	for(let i in clients) {
-		if(isPlayerLoggedIn(clients[i]) && isPlayerSpawned(clients[i])) {
-			getPlayerData(clients[i]).payDayStart = sdl.ticks;
-			playerPayDay(clients[i]);
+		if(isClientInitialized(clients[i])) {
+			if(isPlayerLoggedIn(clients[i]) && isPlayerSpawned(clients[i])) {
+				getPlayerData(clients[i]).payDayStart = sdl.ticks;
+				playerPayDay(clients[i]);
 
-			//if(sdl.ticks-getPlayerData(clients[i]).payDayTickStart >= getGlobalConfig().payDayTickCount) {
-			//	getPlayerData(clients[i]).payDayStart = sdl.ticks;
-			//	playerPayDay(clients[i]);
-			//}
+				//if(sdl.ticks-getPlayerData(clients[i]).payDayTickStart >= getGlobalConfig().payDayTickCount) {
+				//	getPlayerData(clients[i]).payDayStart = sdl.ticks;
+				//	playerPayDay(clients[i]);
+				//}
+			}
 		}
 	}
 
@@ -230,9 +236,11 @@ function showRandomTipToAllPlayers() {
 
 	let clients = getClients();
 	for(let i in clients) {
-		if(isPlayerLoggedIn(clients[i]) && isPlayerSpawned(clients[i])) {
-			if(!doesPlayerHaveRandomTipsDisabled(clients[i])) {
-				messagePlayerTimedRandomTip(null, randomTips[tipId]);
+		if(isClientInitialized(clients[i])) {
+			if(isPlayerLoggedIn(clients[i]) && isPlayerSpawned(clients[i])) {
+				if(!doesPlayerHaveRandomTipsDisabled(clients[i])) {
+					messagePlayerTimedRandomTip(null, randomTips[tipId]);
+				}
 			}
 		}
 	}

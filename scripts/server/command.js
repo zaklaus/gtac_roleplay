@@ -68,12 +68,6 @@ function loadCommands() {
             commandData("stopanim", stopPlayerAnimationCommand, "", getStaffFlagValue("None"), true, true, "Stops your current animation"),
         ],
         antiCheat: [
-            commandData("addacscriptwl", addAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("ManageAntiCheat"), true, true),
-            commandData("delacscriptwl", removeAntiCheatWhiteListedScriptCommand, "<script name>", getStaffFlagValue("ManageAntiCheat"), true, true),
-            commandData("addacscriptbl", addAntiCheatBlackListedScriptCommand, "<script name>", getStaffFlagValue("ManageAntiCheat"), true, true),
-            commandData("delacscriptbl", removeAntiCheatBlackListedScriptCommand, "<script name>", getStaffFlagValue("ManageAntiCheat"), true, true),
-            commandData("setacscriptbl", toggleAntiCheatScriptBlackListCommand, "<0/1 state>", getStaffFlagValue("ManageAntiCheat"), true, true),
-            commandData("setacscriptwl", toggleAntiCheatScriptWhiteListCommand, "<0/1 state>", getStaffFlagValue("ManageAntiCheat"), true, true),
             //commandData("setac", toggleGlobalAntiCheatCommand, "<0/1 state>", getStaffFlagValue("Developer"), true, true),
             //commandData("ac", getGlobalAntiCheatStatusCommand, "<0/1 state>", getStaffFlagValue("Developer"), true, true),
         ],

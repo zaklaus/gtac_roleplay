@@ -63,8 +63,7 @@ function listAccentsCommand(command, params, client) {
 
 	let chunkedList = splitArrayIntoChunks(accentList, 8);
 
-	messagePlayerInfo(client, `{clanOrange}== {jobYellow}Accents {clanOrange}==================================`);
-
+	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "AccentList")));
 	for(let i in chunkedList) {
 		messagePlayerInfo(client, chunkedList[i].join(", "));
 	}
@@ -112,7 +111,7 @@ function addAccentCommand(command, params, client) {
 
 	getGlobalConfig().accents.push(newAccentName);
 	saveAccentConfig();
-	messageAdmins(`${client.name} {MAINCOLOUR}added a new accent: ${newAccentName}`);
+	messageAdmins(`${client.name}{MAINCOLOUR} added a new accent: ${newAccentName}`);
 }
 
 // ===========================================================================
@@ -132,7 +131,7 @@ function removeAccentCommand(command, params, client) {
 
 	getGlobalConfig().accents.push(newAccentName);
 	saveAccentConfig();
-	messageAdmins(`${client.name} {MAINCOLOUR}added a new accent: ${newAccentName}`);
+	messageAdmins(`${client.name}{MAINCOLOUR} added a new accent: ${newAccentName}`);
 }
 
 // ===========================================================================

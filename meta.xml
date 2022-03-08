@@ -115,6 +115,7 @@
 	<!-- Client Scripts -->
 	<script src="scripts/client/afk.js" type="client" language="javascript" />
 	<script src="scripts/client/animation.js" type="client" language="javascript" />
+	<script src="scripts/client/business.js" type="client" language="javascript" />
 	<script src="scripts/client/chatbox.js" type="client" language="javascript" />
 	<script src="scripts/client/event.js" type="client" language="javascript" />
 	<script src="scripts/client/gui.js" type="client" language="javascript" />

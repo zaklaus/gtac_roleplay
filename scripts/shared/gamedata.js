@@ -2541,7 +2541,7 @@ let gameData = {
             [594, "BeerCan"],
             [592, "BottleYellow"],
             [500, "ArmourVest"],
-            [510, "PizzzBox"],
+            [510, "PizzaBox"],
             [597, "SodaBottle"],
             [502, "GenericPackage2"]
         ],
@@ -2603,7 +2603,9 @@ let gameData = {
             [2601, "CanSoda"],
         ],
         [], // GTA UG
-        [], // GTA IV
+        [
+            // GTA IV
+        ], 
         [], // GTA IV EFLC
         [], // INVALID
         [], // INVALID
@@ -3405,15 +3407,25 @@ let gameData = {
             Clothes: 50,
 			Pizza: 0,
 			Chicken: 22,
-			Burger: 10,
+			Burger: 21,
             Bar: 47,
-			Club: 48,
+			Club: 51,
 			Gym: 54,
 			RepairGarage: 75,
 			Trophy: 81,
 			Race: 65,
 			Job: 80,
             Misc: 0,
+            ComedyClub: 70,
+            CabaretClub: 71,
+            Ransom: 72,
+            StripClub: 66,
+            Male: 63,
+            Female: 64,
+            TrainStation: 58,
+            Heart: 54,
+            Bowling: 49,
+            Internet: 24,
 		},
 	],
 	pickupModels: [

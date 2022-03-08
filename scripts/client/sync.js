@@ -14,18 +14,6 @@ function processSync(event, deltaTime) {
             sendNetworkEventToServer("vrr.player.heading", localPlayer.heading);
         }
 
-        //if(game.game == VRR_GAME_GTA_SA) {
-        //    let lookAtPos = getLocalPlayerLookAtPosition();
-        //    sendNetworkEventToServer("vrr.player.lookat", lookAtPos);
-        //    setEntityData(localPlayer, "vrr.headLook", lookAtPos);
-        //    let peds = getPeds();
-        //    for(let i in peds) {
-        //        if(doesEntityDataExist(peds[i], "vrr.headLook")) {
-        //            peds[i].lookAt(getEntityData(peds[i], "vrr.headLook"), 99999);
-        //        }
-        //    }
-        //}
-
         if(localPlayer.health <= 0) {
             if(!calledDeathEvent) {
                 logToConsole(LOG_DEBUG, `Local player died`);
@@ -391,17 +379,11 @@ function syncElementProperties(element) {
     }
 }
 
-// ===========================================================================
 
-function receiveBlipFromServer(model, position) {
-    if(getGame() == VRR_GAME_GTA_IV) {
-        
-    }
-}
 
 // ===========================================================================
 
-function receivePickupFromServer(model, position) {
+function receiveHouseFromServer(houseId, entrancePosition, blipModel, pickupModel, hasInterior) {
     if(getGame() == VRR_GAME_GTA_IV) {
         
     }

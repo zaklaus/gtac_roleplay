@@ -58,7 +58,7 @@ function loadBusinessesFromDatabase() {
 				while(dbAssoc = fetchQueryAssoc(dbQuery)) {
 					let tempBusinessData = new BusinessData(dbAssoc);
 					tempBusinessData.locations = loadBusinessLocationsFromDatabase(tempBusinessData.databaseId);
-					tempBusinessData.gameScripts = loadBusinessGameScriptsFromDatabase(tempBusinessData.databaseId);
+					//tempBusinessData.gameScripts = loadBusinessGameScriptsFromDatabase(tempBusinessData.databaseId);
 					tempBusinesses.push(tempBusinessData);
 					logToConsole(LOG_INFO, `[VRR.Business]: Business '${tempBusinessData.name}' (ID ${tempBusinessData.databaseId}) loaded from database successfully!`);
 				}
@@ -105,6 +105,7 @@ function loadBusinessLocationsFromDatabase(businessId) {
 
 // ===========================================================================
 
+/*
 function loadBusinessGameScriptsFromDatabase(businessId) {
 	logToConsole(LOG_VERBOSE, `[VRR.Business]: Loading business game scripts for business ${businessId} from database ...`);
 
@@ -133,6 +134,7 @@ function loadBusinessGameScriptsFromDatabase(businessId) {
 	logToConsole(LOG_VERBOSE, `[VRR.Business]: ${tempBusinessGameScripts.length} game scripts for business ${businessId} loaded from database successfully!`);
 	return tempBusinessGameScripts;
 }
+*/
 
 // ===========================================================================
 
@@ -2058,19 +2060,19 @@ function doesBusinessHaveAnyItemsToBuy(businessId) {
 
 // ===========================================================================
 
-function sendPlayerBusinessGameScripts(client, businessId) {
-	for(let i in getBusinessData(businessId).gameScripts) {
-		sendPlayerGameScriptState(client, getBusinessData(businessId).gameScripts[i].state);
-	}
-}
+//function sendPlayerBusinessGameScripts(client, businessId) {
+//	for(let i in getBusinessData(businessId).gameScripts) {
+//		sendPlayerGameScriptState(client, getBusinessData(businessId).gameScripts[i].state);
+//	}
+//}
 
 // ===========================================================================
 
-function clearPlayerBusinessGameScripts(client, businessId) {
-	for(let i in getBusinessData(businessId).gameScripts) {
-		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
-	}
-}
+//function clearPlayerBusinessGameScripts(client, businessId) {
+//	for(let i in getBusinessData(businessId).gameScripts) {
+//		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
+//	}
+//}
 
 // ===========================================================================
 

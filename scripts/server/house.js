@@ -1281,19 +1281,19 @@ function getHouseIdFromDatabaseId(databaseId) {
 
 // ===========================================================================
 
-function sendPlayerHouseGameScripts(client, houseId) {
-	for(let i in getHouseData(houseId).gameScripts) {
-		sendPlayerGameScriptState(client, getHouseData(houseId).gameScripts[i].state);
-	}
-}
+//function sendPlayerHouseGameScripts(client, houseId) {
+//	for(let i in getHouseData(houseId).gameScripts) {
+//		sendPlayerGameScriptState(client, getHouseData(houseId).gameScripts[i].state);
+//	}
+//}
 
 // ===========================================================================
 
-function clearPlayerHouseGameScripts(client, houseId) {
-	for(let i in getHouseData(houseId).gameScripts) {
-		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
-	}
-}
+//function clearPlayerHouseGameScripts(client, houseId) {
+//	for(let i in getHouseData(houseId).gameScripts) {
+//		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
+//	}
+//}
 
 // ===========================================================================
 

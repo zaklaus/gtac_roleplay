@@ -155,6 +155,18 @@ function setVehicleHeading(vehicle, heading) {
 
 // ===========================================================================
 
+function getElementTransient(element) {
+    return element.transient;
+}
+
+// ===========================================================================
+
+function setElementTransient(element, state) {
+    return element.transient = state;
+}
+
+// ===========================================================================
+
 function getVehicleSyncer(vehicle) {
     return getElementSyncer(vehicle);
 }
@@ -342,7 +354,7 @@ function setElementDimension(element, dimension) {
 // ===========================================================================
 
 function setElementRotation(element, rotation) {
-    return element.setRotation(rotation);
+    return element.rotation = rotation;
 }
 
 // ===========================================================================
@@ -500,7 +512,7 @@ function getVehicleEngine(vehicle) {
 // ===========================================================================
 
 function getVehicleLocked(vehicle) {
-	return vehicle.locked;
+	return vehicle.lockedStatus;
 }
 
 // ===========================================================================

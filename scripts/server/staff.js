@@ -46,7 +46,7 @@ function setStaffTitleCommand(command, params, client) {
 		return false;
 	}
 
-	let splitParams = params.split("");
+	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let staffTitle = splitParams.slice(1).join(" ");
 
@@ -999,20 +999,16 @@ function forcePlayerSkinCommand(command, params, client) {
 	//	return false;
 	//}
 
-	let splitParams = params.split("");
+	let splitParams = params.split(" ");
 	let targetClient = getPlayerFromParams(splitParams[0]);
 	let skinIndex = getSkinModelIndexFromParams(splitParams.slice(1).join(" "), getGame());
-
-	console.warn(targetClient.name);
-	console.warn(splitParams.slice(1).join(" "));
-	console.warn(skinIndex);
 
     if(!targetClient) {
         messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
         return false;
 	}
 
-	if(skinIndex == false) {
+	if(!skinIndex) {
         messagePlayerError(client, getLocaleString(client, "InvalidSkin"));
         return false;
 	}
@@ -1036,7 +1032,7 @@ function setPlayerHealthCommand(command, params, client) {
 	//	return false;
 	//}
 
-	let splitParams = params.split("");
+	let splitParams = params.split(" ");
 	let targetClient = getParam(params, " ", 1);
 	let health = getParam(params, " ", 2);
 

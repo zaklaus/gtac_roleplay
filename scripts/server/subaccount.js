@@ -481,6 +481,11 @@ function isPlayerCreatingCharacter(client) {
 
 // ===========================================================================
 
+/**
+ *
+ * @return {SubAccountData} - The player's current subaccount/character data
+ *
+ */
 function getPlayerCurrentSubAccount(client) {
 	if(!getPlayerData(client)) {
 		return false;

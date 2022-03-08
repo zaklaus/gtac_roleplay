@@ -139,6 +139,8 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
         natives.displayCash(hudState);
         natives.displayAmmo(hudState);
         natives.displayHud(hudState);
+        natives.displayRadar(hudState);
+        natives.displayAreaName(hudState);
     } else {
         if(typeof setHUDEnabled != "undefined") {
             setHUDEnabled(hudState);

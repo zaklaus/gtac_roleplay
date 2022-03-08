@@ -140,7 +140,7 @@ function setUpInitialGame() {
         // Population
         natives.dontSuppressAnyCarModels(5.0);
         natives.dontSuppressAnyPedModels(5.0);
-        natives.forceGenerateParkedCarsTooCloseToOthers(5.0);
+        natives.forceGenerateParkedCarsTooCloseToOthers(true);
         natives.setParkedCarDensityMultiplier(5.0);
         natives.setRandomCarDensityMultiplier(5.0);
         natives.setPedDensityMultiplier(5.0);

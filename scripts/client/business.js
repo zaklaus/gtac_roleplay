@@ -7,7 +7,7 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-class BusinessData() {
+class BusinessData {
     constructor(index, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems) {
         this.index = index;
         this.name = name;

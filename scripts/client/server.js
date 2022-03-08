@@ -303,8 +303,9 @@ function setLocalPlayerInfiniteRun(state) {
 
 function setLocalPlayerSkin(skinId) {
     if(getGame() == VRR_GAME_GTA_IV) {
-        //natives.changePlayerModel(natives.getPlayerId(), skinId);
-        localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        natives.changePlayerModel(natives.getPlayerId(), skinId);
+        //localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        //localPlayer.modelIndex = allowedSkins[skinSelectorIndex][0];
     } else {
         localPlayer.skin = skinId;
     }

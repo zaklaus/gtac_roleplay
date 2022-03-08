@@ -2541,7 +2541,7 @@ let gameData = {
             [594, "BeerCan"],
             [592, "BottleYellow"],
             [500, "ArmourVest"],
-            [510, "PizzzBox"],
+            [510, "PizzaBox"],
             [597, "SodaBottle"],
             [502, "GenericPackage2"]
         ],
@@ -2603,7 +2603,9 @@ let gameData = {
             [2601, "CanSoda"],
         ],
         [], // GTA UG
-        [], // GTA IV
+        [
+            // GTA IV
+        ], 
         [], // GTA IV EFLC
         [], // INVALID
         [], // INVALID

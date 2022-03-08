@@ -62,11 +62,11 @@ class ServerData {
 
 		this.antiCheat = {
 			enabled: false,
-			checkGameScripts: false,
-			gameScriptWhiteListEnabled: false,
-			gameScriptBlackListEnabled: false,
-			gameScriptWhiteList: [],
-			gameScriptBlackList: [],
+			//checkGameScripts: false,
+			//gameScriptWhiteListEnabled: false,
+			//gameScriptBlackListEnabled: false,
+			//gameScriptWhiteList: [],
+			//gameScriptBlackList: [],
 		};
 
 		this.discordBotToken = "";
@@ -126,11 +126,11 @@ class ServerData {
 
 			this.antiCheat = {
 				enabled: hasBitFlag(this.settings, getServerSettingsFlagValue("Anticheat")),
-				checkGameScripts: hasBitFlag(this.settings, getServerSettingsFlagValue("CheckGameScripts")),
-				gameScriptBlackListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptBlackList")),
-				gameScriptWhiteListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptWhiteList")),
-				gameScriptWhiteList: [],
-				gameScriptBlackList: [],
+				//checkGameScripts: hasBitFlag(this.settings, getServerSettingsFlagValue("CheckGameScripts")),
+				//gameScriptBlackListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptBlackList")),
+				//gameScriptWhiteListEnabled: hasBitFlag(this.settings, getServerSettingsFlagValue("GameScriptWhiteList")),
+				//gameScriptWhiteList: [],
+				//gameScriptBlackList: [],
 			};
 
 			this.discordBotToken = intToBool(dbAssoc["svr_discord_bot_token"]);
@@ -263,6 +263,8 @@ class ClientData {
 		this.locale = 0;
 
 		this.enteringVehicle = null;
+
+		this.pedId = -1;
 	}
 };
 
@@ -672,7 +674,7 @@ class HouseData {
 
 		this.itemCache = [];
 		this.locations = [];
-		this.gameScripts = [];
+		//this.gameScripts = [];
 
 		this.entrancePosition = false;
 		this.entranceRotation = 0.0;

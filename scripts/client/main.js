@@ -72,5 +72,6 @@ let allowedSkins = getAllowedSkins(getGame());
 let businesses = [];
 let houses = [];
 let jobs = [];
+let vehicles = [];
 
 // ===========================================================================

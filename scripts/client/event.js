@@ -144,9 +144,7 @@ function onElementStreamIn(event, element) {
 
 function onLocalPlayerExitedVehicle(event, vehicle, seat) {
     logToConsole(LOG_DEBUG, `[VRR.Event] Local player exited vehicle`);
-    if(areServerElementsSupported()) {
-        sendNetworkEventToServer("vrr.onPlayerExitVehicle", getVehicleForNetworkEvent(vehicle), seat);
-    }
+    sendNetworkEventToServer("vrr.onPlayerExitVehicle", getVehicleForNetworkEvent(vehicle), seat);
 
     if(inVehicleSeat) {
         parkedVehiclePosition = false;
@@ -159,17 +157,13 @@ function onLocalPlayerExitedVehicle(event, vehicle, seat) {
 function onLocalPlayerEnteredVehicle(event, vehicle, seat) {
     logToConsole(LOG_DEBUG, `[VRR.Event] Local player entered vehicle`);
 
-    if(areServerElementsSupported()) {
-        sendNetworkEventToServer("vrr.onPlayerEnterVehicle", getVehicleForNetworkEvent(vehicle), seat);
+    sendNetworkEventToServer("vrr.onPlayerEnterVehicle", getVehicleForNetworkEvent(vehicle), seat);
 
-        if(inVehicleSeat == 0) {
-            if(inVehicle.owner != -1) {
-                inVehicle.engine = false;
-                if(!inVehicle.engine) {
-                    parkedVehiclePosition = inVehicle.position;
-                    parkedVehicleHeading = inVehicle.heading;
-                }
-            }
+    if(inVehicleSeat == 0) {
+        inVehicle.engine = false;
+        if(!inVehicle.engine) {
+            parkedVehiclePosition = inVehicle.position;
+            parkedVehicleHeading = inVehicle.heading;
         }
     }
 }

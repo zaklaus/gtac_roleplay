@@ -586,8 +586,9 @@ function onPlayerSpawn(client) {
 
     if(!areServerElementsSupported()) {
         sendAllBusinessesToPlayer(client);
-        sendAllHousesToPlayer(client);
+        //sendAllHousesToPlayer(client);
         //sendAllJobLocationsToPlayer(client);
+        //sendAllVehiclesToPlayer(client);
 
         requestPlayerPedNetworkId(client);
     }    

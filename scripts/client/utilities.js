@@ -683,9 +683,11 @@ function processLocalPlayerVehicleEntryExitHandling() {
 
 // ===========================================================================
 
-function getVehicleForNetworkEvent(vehicleArg) {
-    // Soon this will also be used to get the IV vehicle via it's ID
-    return vehicleArg;
+function getVehicleForNetworkEvent(vehicle) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        return natives.getNetworkIdFromVehicle(vehicle);
+    }
+    return vehicle;
 }
 
 // ===========================================================================

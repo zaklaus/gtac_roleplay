@@ -251,8 +251,10 @@ function processLabelRendering() {
         if(localPlayer != null) {
             if(!areServerElementsSupported()) {
                 //for(let i in businesses) {
-                //    if(pickups[i].getData("vrr.label.type") != null) {
-                //        if(getDistance(localPlayer.position, pickups[i].position) <= renderLabelDistance) {                
+                //    if(getDistance(localPlayer.position, businesses[i].entrancePosition) <= 75.0) {     
+                //        natives.drawColouredCylinder(businesses[i].entrancePosition, 0.0, 0.0, 0, 153, 255);
+                //    }
+                //}
                 
                 // natives.getScreenViewportId
                 // natives.getGameViewportId

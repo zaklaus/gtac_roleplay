@@ -526,8 +526,10 @@ function setVehicleColours(vehicle, colour1, colour2, colour3 = -1, colour4 = -1
 
 // ===========================================================================
 
-function createGameVehicle(modelIndex, position, heading) {
-	return game.createVehicle(getGameConfig().vehicles[getGame()][modelIndex][0], position, heading);
+function createGameVehicle(modelIndex, position, heading, toClient = null) {
+	if(areServerElementsSupported()) {
+		return game.createVehicle(getGameConfig().vehicles[getGame()][modelIndex][0], position, heading);
+	}
 }
 
 // ===========================================================================

@@ -1014,8 +1014,8 @@ function makePedPlayAnimation(ped, animationSlot, positionOffset) {
 
 // ===========================================================================
 
-function makePedStopAnimation(ped) {
-    sendNetworkEventToPlayer("vrr.pedStopAnim", null, ped.id);
+function makePedStopAnimation(pedId) {
+    sendNetworkEventToPlayer("vrr.pedStopAnim", null, pedId);
 }
 
 // ===========================================================================
@@ -1145,13 +1145,13 @@ function sendAllHousesToPlayer(client) {
 // ==========================================================================
 
 function makePlayerHoldObjectModel(client, modelIndex) {
-    sendNetworkEventToPlayer("vrr.holdObject", client, getPlayerData(client).pedId, modelIndex);
+    sendNetworkEventToPlayer("vrr.holdObject", client, getPlayerData(client).ped, modelIndex);
 }
 
 // ==========================================================================
 
 function receivePlayerPedNetworkId(client, pedId) {
-    getPlayerData(client).pedId = pedId;
+    getPlayerData(client).ped = pedId;
 }
 
 // ==========================================================================

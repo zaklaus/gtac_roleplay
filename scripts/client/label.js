@@ -247,19 +247,19 @@ function renderJobLabel(name, position, jobType) {
 // -------------------------------------------------------------------------
 
 function processLabelRendering() {
-    if(renderLabels && areWorldLabelsSupported()) {
-        if(localPlayer != null) {
-            if(!areServerElementsSupported()) {
-                //for(let i in businesses) {
-                //    if(getDistance(localPlayer.position, businesses[i].entrancePosition) <= 75.0) {     
-                //        natives.drawColouredCylinder(businesses[i].entrancePosition, 0.0, 0.0, 0, 153, 255);
-                //    }
-                //}
-                
-                // natives.getScreenViewportId
-                // natives.getGameViewportId
-                // natives.getViewportPositionOfCoord
-            } else {
+    if(renderLabels) {
+        if(!areServerElementsSupported()) {
+            if(localPlayer != null) {
+                for(let i in businesses) {
+                    if(getDistance(localPlayer.position, businesses[i].entrancePosition) <= 75.0) {     
+                        natives.drawColouredCylinder(getPosBelowPos(businesses[i].entrancePosition, 1.0), 0.0, 0.0, 0, 153, 255, 255);
+                    }
+                }
+            }
+        }
+        
+        if(areWorldLabelsSupported()) {
+            if(localPlayer != null) {
                 let pickups = getElementsByType(ELEMENT_PICKUP);
                 for(let i in pickups) {
                     if(pickups[i].getData("vrr.label.type") != null) {

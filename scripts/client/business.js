@@ -28,12 +28,22 @@ function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel
         if(getBusinessData(businessId) != false) {
             if(blipModel == -1) {
                 natives.removeBlipAndClearIndex(getBusinessData(businessId).blipId);
-                businesses.splice(getBusinessData(businessId).index, 1);
-                setAllBusinessDataIndexes();
+                getBusinessData(businessId).blipId = -1;
+                //businesses.splice(getBusinessData(businessId).index, 1);
+                //setAllBusinessDataIndexes();
             } else {
-                natives.setBlipCoordinates(getBusinessData(businessId).blipId, getBusinessData(businessId).entrancePosition);
-                natives.changeBlipSprite(getBusinessData(businessId).blipId, getBusinessData(businessId).blipModel);
-                natives.changeBlipNameFromAscii(getBusinessData(businessId).blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
+                if(getBusinessData(businessId).blipId != -1) {
+                    natives.setBlipCoordinates(getBusinessData(businessId).blipId, getBusinessData(businessId).entrancePosition);
+                    natives.changeBlipSprite(getBusinessData(businessId).blipId, getBusinessData(businessId).blipModel);
+                    natives.changeBlipNameFromAscii(getBusinessData(businessId).blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
+                } else {
+                    let blipId = natives.addBlipForCoord(entrancePosition);
+                    if(blipId) {
+                        getBusinessData(businessId).blipId = blipId;
+                        natives.changeBlipSprite(blipId, blipModel);
+                        natives.setBlipMarkerLongDistance(blipId, false);      
+                    }
+                }
             }
         } else {
             if(blipModel != -1) {
@@ -42,7 +52,7 @@ function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel
                 if(blipId) {
                     tempBusinessData.blipId = blipId;
                     natives.changeBlipSprite(blipId, blipModel);
-                    natives.setBlipMarkerLongDistance(blipId, true);
+                    natives.setBlipMarkerLongDistance(blipId, false);
                     natives.changeBlipNameFromAscii(blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
                 }
                 businesses.push(tempBusinessData);

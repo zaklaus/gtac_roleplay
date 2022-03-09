@@ -34,8 +34,6 @@ function getLocaleString(client, stringName, ...args) {
         submitBugReport(client, `(AUTOMATED REPORT) Locale string "${stringName}" is missing for "${getPlayerLocaleName(client)}"`);
     }
 
-    tempString = replaceColoursInMessage(tempString);
-
     for(let i = 1; i <= args.length; i++) {
         tempString = tempString.replace(`{${i}}`, args[i-1]);
     }
@@ -47,7 +45,6 @@ function getLocaleString(client, stringName, ...args) {
 
 function getGroupedLocaleString(client, stringName, index, ...args) {
     let tempString = getRawGroupedLocaleString(stringName, getPlayerData(client).locale, index);
-    tempString = replaceColoursInMessage(tempString);
 
     for(let i = 1; i <= args.length; i++) {
         tempString = tempString.replace(`{${i}}`, args[i-1]);

@@ -239,8 +239,6 @@ class ClientData {
 		this.locale = 0;
 
 		this.enteringVehicle = null;
-
-		this.pedId = -1;
 	}
 };
 

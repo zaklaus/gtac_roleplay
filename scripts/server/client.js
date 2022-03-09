@@ -68,9 +68,8 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.weaponDamage", playerDamagedByPlayer);
 
     // Misc
-    addNetworkEventHandler("vrr.player.position", updatePositionInPlayerData);
-    addNetworkEventHandler("vrr.player.heading", updateHeadingInPlayerData);
-    addNetworkEventHandler("vrr.player.lookat", setPlayerHeadLookPosition);
+    addNetworkEventHandler("vrr.plr.pos", updatePositionInPlayerData);
+    addNetworkEventHandler("vrr.plr.rot", updateHeadingInPlayerData);
     addNetworkEventHandler("vrr.skinSelected", playerFinishedSkinSelection);
     addNetworkEventHandler("vrr.clientInfo", updateConnectionLogOnClientInfoReceive);
     addNetworkEventHandler("vrr.vehBuyState", receiveVehiclePurchaseStateUpdateFromClient);
@@ -716,6 +715,18 @@ function updateHeadingInPlayerData(client, heading) {
 
 // ===========================================================================
 
+function updatePositionInVehicleData(client, vehicle, position) {
+    getVehicleData(vehicle).syncPosition = position;
+}
+
+// ===========================================================================
+
+function updateHeadingInVehicleData(client, vehicle, heading) {
+    getVehicleData(vehicle).syncHeading = heading;
+}
+
+// ===========================================================================
+
 function forcePlayerIntoSkinSelect(client) {
     if(getGameConfig().skinChangePosition[getServerGame()].length > 0) {
         getPlayerData(client).returnToPosition = getPlayerPosition(client);
@@ -1023,14 +1034,6 @@ function hideAllPlayerGUI(client) {
 
 // ===========================================================================
 
-function setPlayerHeadLookPosition(client, position) {
-    if(client.player != null) {
-        setEntityData(client.player, "vrr.headLook", position, true);
-    }
-}
-
-// ===========================================================================
-
 function requestClientInfo(client) {
     sendNetworkEventToPlayer("vrr.clientInfo", client);
 }
@@ -1111,35 +1114,31 @@ function setPlayerInfiniteRun(client, state) {
 
 // ==========================================================================
 
-function sendBusinessEntranceToPlayer(client, businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems) {
+function sendBusinessToPlayer(client, businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems) {
     sendNetworkEventToPlayer("vrr.business", client, businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems);
 }
 
 // ==========================================================================
 
-function sendHouseEntranceToPlayer(client, houseId, entrancePosition, blipModel, pickupModel, hasInterior) {
+function sendHouseToPlayer(client, houseId, entrancePosition, blipModel, pickupModel, hasInterior) {
     sendNetworkEventToPlayer("vrr.house", client, houseId, entrancePosition, blipModel, pickupModel, hasInterior);
 }
 
 // ==========================================================================
 
-function sendAllBusinessEntrancesToPlayer(client) {
+function sendAllBusinessesToPlayer(client) {
     let businesses = getServerData().businesses;
     for(let i in businesses) {
-        if(businesses[i].entranceBlipModel > 0) {
-            sendBusinessEntranceToPlayer(client, businesses[i].index, businesses[i].name, businesses[i].entrancePosition, businesses[i].entranceBlipModel, businesses[i].entrancePickupModel, businesses[i].hasInterior, false);
-        }
+        sendBusinessToPlayer(client, businesses[i].index, businesses[i].name, businesses[i].entrancePosition, businesses[i].entranceBlipModel, businesses[i].entrancePickupModel, businesses[i].hasInterior, false);
     }
 }
 
 // ==========================================================================
 
-function sendAllHouseEntrancesToPlayer(client) {
+function sendAllHousesToPlayer(client) {
     let houses = getServerData().houses;
     for(let i in houses) {
-        if(houses[i].entranceBlipModel > 0) {
-            sendBusinessEntranceToPlayer(client, businesses[i].index, houses[i].entrancePosition, houses[i].entranceBlipModel, houses[i].entrancePickupModel, houses[i].hasInterior);
-        }
+        sendHouseToPlayer(client, houses[i].index, houses[i].entrancePosition, houses[i].entranceBlipModel, houses[i].entrancePickupModel, houses[i].hasInterior);
     }
 }
 

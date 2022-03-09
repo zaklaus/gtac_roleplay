@@ -121,12 +121,12 @@ function setUpInitialGame() {
         natives.setPickupsFixCars(false);
 
         // HUD and Display
-        natives.displayCash(false);
-        natives.displayAmmo(false);
-        natives.displayHud(false);
-        natives.displayRadar(false);
-        natives.displayAreaName(false);
-        natives.displayPlayerNames(false);
+        //natives.displayCash(false);
+        //natives.displayAmmo(false);
+        //natives.displayHud(false);
+        //natives.displayRadar(false);
+        //natives.displayAreaName(false);
+        //natives.displayPlayerNames(false);
         natives.setPoliceRadarBlips(false);
         natives.removeTemporaryRadarBlipsForPickups();
         natives.displayNonMinigameHelpMessages(false);
@@ -138,14 +138,14 @@ function setUpInitialGame() {
         natives.setPlayersDropMoneyInNetworkGame(false);
 
         // Population
-        natives.dontSuppressAnyCarModels(5.0);
-        natives.dontSuppressAnyPedModels(5.0);
-        natives.forceGenerateParkedCarsTooCloseToOthers(5.0);
-        natives.setParkedCarDensityMultiplier(5.0);
-        natives.setRandomCarDensityMultiplier(5.0);
-        natives.setPedDensityMultiplier(5.0);
-        natives.setCarDensityMultiplier(5.0);
-        natives.setScenarioPedDensityMultiplier(5.0, 5.0);
+        //natives.dontSuppressAnyCarModels(5.0);
+        //natives.dontSuppressAnyPedModels(5.0);
+        //natives.forceGenerateParkedCarsTooCloseToOthers(true);
+        //natives.setParkedCarDensityMultiplier(5.0);
+        //natives.setRandomCarDensityMultiplier(5.0);
+        //natives.setPedDensityMultiplier(5.0);
+        //natives.setCarDensityMultiplier(5.0);
+        //natives.setScenarioPedDensityMultiplier(5.0, 5.0);
         natives.switchRandomTrains(true);
         natives.switchRandomBoats(true);
         natives.switchAmbientPlanes(true);

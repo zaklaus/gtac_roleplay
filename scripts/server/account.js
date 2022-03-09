@@ -1126,6 +1126,7 @@ function initClient(client) {
 	updatePlayerSnowState(client);
 
 	showConnectCameraToPlayer(client);
+
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
 
 	setTimeout(function() {

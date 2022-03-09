@@ -120,40 +120,70 @@ function enterExitPropertyCommand(command, params, client) {
 	let isEntrance = false;
 	let isBusiness = false;
 
-	if(!getPlayerData(client).currentPickup) {
-		return false;
-	}
-
-	let ownerType = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.type");
-	let ownerId = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.id");
-
-	switch(ownerType) {
-		case VRR_PICKUP_BUSINESS_ENTRANCE:
-			isBusiness = true;
-			isEntrance = true;
-			closestProperty = getServerData().businesses[ownerId];
-			break;
-
-		case VRR_PICKUP_BUSINESS_EXIT:
-			isBusiness = true;
-			isEntrance = false;
-			closestProperty = getServerData().businesses[ownerId];
-			break;
-
-		case VRR_PICKUP_HOUSE_ENTRANCE:
-			isBusiness = false;
-			isEntrance = true;
-			closestProperty = getServerData().houses[ownerId];
-			break;
-
-		case VRR_PICKUP_HOUSE_EXIT:
-			isBusiness = false;
-			isEntrance = false;
-			closestProperty = getServerData().houses[ownerId];
-			break;
-
-		default:
+	if(areServerElementsSupported()) {
+		if(!getPlayerData(client).currentPickup) {
 			return false;
+		}
+
+		let ownerType = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.type");
+		let ownerId = getEntityData(getPlayerData(client).currentPickup, "vrr.owner.id");
+	
+		switch(ownerType) {
+			case VRR_PICKUP_BUSINESS_ENTRANCE:
+				isBusiness = true;
+				isEntrance = true;
+				closestProperty = getServerData().businesses[ownerId];
+				break;
+	
+			case VRR_PICKUP_BUSINESS_EXIT:
+				isBusiness = true;
+				isEntrance = false;
+				closestProperty = getServerData().businesses[ownerId];
+				break;
+	
+			case VRR_PICKUP_HOUSE_ENTRANCE:
+				isBusiness = false;
+				isEntrance = true;
+				closestProperty = getServerData().houses[ownerId];
+				break;
+	
+			case VRR_PICKUP_HOUSE_EXIT:
+				isBusiness = false;
+				isEntrance = false;
+				closestProperty = getServerData().houses[ownerId];
+				break;
+	
+			default:
+				return false;
+		}		
+	} else {
+		for(let i in getServerData().businesses) {
+			if(getPlayerDimension(client) == getGameConfig().mainWorldDimension[getGame()] && getPlayerInterior(client) == getGameConfig().mainWorldInterior[getGame()]) {
+				let businessId = getClosestBusinessEntrance(getPlayerPosition(client), getPlayerDimension(client));
+				isBusiness = true;
+				isEntrance = true;
+				closestProperty = getServerData().businesses[businessId];		
+			} else {
+				let businessId = getClosestBusinessExit(getPlayerPosition(client), getPlayerDimension(client));
+				isBusiness = true;
+				isEntrance = false;
+				closestProperty = getServerData().businesses[businessId];	
+			}
+		}
+
+		for(let j in getServerData().houses) {
+			if(getPlayerDimension(client) == getGameConfig().mainWorldDimension[getGame()] && getPlayerInterior(client) == getGameConfig().mainWorldInterior[getGame()]) {
+				let houseId = getClosestHouseEntrance(getPlayerPosition(client), getPlayerDimension(client));
+				isBusiness = false;
+				isEntrance = true;
+				closestProperty = getServerData().businesses[houseId];	
+			} else {
+				let houseId = getClosestHouseExit(getPlayerPosition(client), getPlayerDimension(client));
+				isBusiness = false;
+				isEntrance = false;
+				closestProperty = getServerData().businesses[houseId];	
+			}
+		}
 	}
 
 	if(closestProperty == null) {
@@ -451,7 +481,7 @@ function gpsCommand(command, params, client) {
 			} else {
                 let gameLocationId = getGameLocationFromParams(params);
                 if(gameLocationId != false) {
-                    position = getGameData().locations[getServerGame()][gameLocationId][1]
+                    position = getGameConfig().locations[getServerGame()][gameLocationId][1]
                 }
             }
 		}
@@ -548,8 +578,8 @@ function stuckPlayerCommand(command, params, client) {
         }
     } else {
         setPlayerDimension(client, 1);
-        setPlayerDimension(client, getGameData().mainWorldDimension[getGame()]);
-        setPlayerInterior(client, getGameData().mainWorldInterior[getGame()]);
+        setPlayerDimension(client, getGameConfig().mainWorldDimension[getGame()]);
+        setPlayerInterior(client, getGameConfig().mainWorldInterior[getGame()]);
         setPlayerPosition(client, getPosAbovePos(getPlayerPosition(client), 2.0));
     }
 

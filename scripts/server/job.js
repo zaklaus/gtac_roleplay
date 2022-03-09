@@ -962,8 +962,8 @@ function createJob(name) {
 	tempJobData.name = name;
 	tempJobData.enabled = true;
 	tempJobData.needsSaved = true;
-	tempJobData.blipModel = getGameData().blipSprites[getGame()].job;
-	tempJobData.pickupModel = getGameData().pickupModels[getGame()].job;
+	tempJobData.blipModel = getGameConfig().blipSprites[getGame()].job;
+	tempJobData.pickupModel = getGameConfig().pickupModels[getGame()].job;
 
 	getServerData().jobs.push(tempJobData);
     saveJobToDatabase(tempJobData);

@@ -408,7 +408,7 @@ function onPlayerDeath(client, position) {
                 client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestJail.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
-                spawnPlayer(client, closestJail.position, closestJail.heading, getGameData().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
+                spawnPlayer(client, closestJail.position, closestJail.heading, getGameConfig().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
 
                 if(isFadeCameraSupported()) {
                     fadeCamera(client, true, 1.0);
@@ -421,7 +421,7 @@ function onPlayerDeath(client, position) {
                 client.despawnPlayer();
                 getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
                 getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
-                spawnPlayer(client, closestHospital.position, closestHospital.heading, getGameData().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
+                spawnPlayer(client, closestHospital.position, closestHospital.heading, getGameConfig().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
 
                 if(isFadeCameraSupported()) {
                     fadeCamera(client, true, 1.0);
@@ -595,6 +595,14 @@ function onPlayerSpawn(client) {
 
         logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
         updateAllPlayerNameTags();
+
+        if(!areServerElementsSupported()) {
+            sendAllBusinessEntrancesToPlayer(client);
+            sendAllHouseEntrancesToPlayer(client);
+            //sendAllJobLocationsToPlayer(client);
+        }
+
+        requestPlayerPedNetworkId(client);
 
         getPlayerData(client).payDayTickStart = sdl.ticks;
     //}

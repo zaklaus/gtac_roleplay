@@ -104,6 +104,7 @@ function closeAllWindows() {
 	listDialog.window.shown = false;
 	resetPassword.window.shown = false;
 	passwordChange.window.shown = false;
+	
 	mexui.setInput(false);
 	mexui.focusedControl = false;
 
@@ -299,13 +300,21 @@ function processGUIKeyPress(keyCode) {
 		if(guiSubmitKey != false) {
 			guiSubmitKey();
 		}
-	} else if(keyCode == SDLK_LEFT) {
+	} else if(keyCode == getKeyIdFromParams("left") || keyCode == getKeyIdFromParams("a")) {
 		if(guiLeftKey != false) {
 			guiLeftKey();
 		}
-	} else if(keyCode == SDLK_RIGHT) {
+	} else if(keyCode == getKeyIdFromParams("right") || keyCode == getKeyIdFromParams("d")) {
 		if(guiRightKey != false) {
 			guiRightKey();
+		}
+	} else if(keyCode == getKeyIdFromParams("down") || keyCode == getKeyIdFromParams("s")) {
+		if(guiDownKey != false) {
+			guiDownKey();
+		}
+	} else if(keyCode == getKeyIdFromParams("up") || keyCode == getKeyIdFromParams("w")) {
+		if(guiUpKey != false) {
+			guiUpKey();
 		}
 	}
 }

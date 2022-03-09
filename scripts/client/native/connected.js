@@ -52,7 +52,7 @@ function deleteGameElement(element, position) {
 // ===========================================================================
 
 function createGameVehicle(modelIndex, position, heading) {
-    return game.createVehicle(getGameData().vehicles[getGame()][modelIndex][0], position, heading);
+    return game.createVehicle(getGameConfig().vehicles[getGame()][modelIndex][0], position, heading);
 }
 
 // ===========================================================================

@@ -2541,7 +2541,7 @@ let gameData = {
             [594, "BeerCan"],
             [592, "BottleYellow"],
             [500, "ArmourVest"],
-            [510, "PizzzBox"],
+            [510, "PizzaBox"],
             [597, "SodaBottle"],
             [502, "GenericPackage2"]
         ],
@@ -2603,7 +2603,9 @@ let gameData = {
             [2601, "CanSoda"],
         ],
         [], // GTA UG
-        [], // GTA IV
+        [
+            // GTA IV
+        ], 
         [], // GTA IV EFLC
         [], // INVALID
         [], // INVALID
@@ -2849,7 +2851,7 @@ let gameData = {
 			["South Bohan Police Station", [435.40, 1592.29, 17.353], 3.087, null],
 			["Northern Gardens Police Station", [974.93, 1870.45, 23.073], -1.621, null],
 			["South Slopes Police Station", [1233.25, -89.13, 28.034], 1.568, null],
-			["Middle Part East Police Station", [50.12, 679.88, 15.316], 1.569, null],
+			["Middle Park East Police Station", [50.12, 679.88, 15.316], 1.569, null],
 			["East Holland Police Station", [85.21, 1189.82, 14.755], 3.127, null],
 			["Francis International Airport Police Station", [2170.87, 448.87, 6.085], 1.501, null],
 			["Chinatown Police Station", [213.12, -211.70, 10.752], 0.200, null],
@@ -3318,10 +3320,18 @@ let gameData = {
 	],
 	meleeWeapons: [
 		[],
-		[1],
-		[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-		[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-		[],
+		[1], // III
+		[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], // VC
+		[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], // SA
+		[], // UG
+        [1, 3], // IV
+        [], // Invalid
+        [], // Invalid
+        [], // Invalid
+        [], // M1
+        [], // M2
+        [], // M3
+        [], // M1DE
 	],
 	blipSprites: [
 		false,
@@ -3405,15 +3415,25 @@ let gameData = {
             Clothes: 50,
 			Pizza: 0,
 			Chicken: 22,
-			Burger: 10,
+			Burger: 21,
             Bar: 47,
-			Club: 48,
+			Club: 51,
 			Gym: 54,
 			RepairGarage: 75,
 			Trophy: 81,
 			Race: 65,
 			Job: 80,
             Misc: 0,
+            ComedyClub: 70,
+            CabaretClub: 71,
+            Ransom: 72,
+            StripClub: 66,
+            Male: 63,
+            Female: 64,
+            TrainStation: 58,
+            Heart: 54,
+            Bowling: 49,
+            Internet: 24,
 		},
 	],
 	pickupModels: [
@@ -3488,6 +3508,24 @@ let gameData = {
         {
             // GTA Underground
         },
+        {   // GTA IV
+			PoliceStation: -1,
+			FireStation: -1,
+			Hospital: -1,
+			Ammunation: -1,
+			PayAndSpray: -1,
+			VehicleDealership: -1,
+			Restaurant: -1,
+			FastFood: -1,
+			Bank: -1,
+			FuelStation: -1,
+			Business: -1,
+			House: -1,
+			Clothes: -1,
+			Misc: -1,
+			Exit: -1,
+            Job: -1,
+        }
 	],
 	pickupTypes: [
 		{},
@@ -3517,7 +3555,18 @@ let gameData = {
 			clothes: 1,
 			info: 1,
 			job: 1,
-		}
+		},
+        {
+            // GTA Underground
+        },
+		{ // GTA IV
+			business: -1,
+			house: -1,
+			bank: -1,
+			clothes: -1,
+			info: -1,
+			job: -1,
+		}        
 	],
 
 	// THIS IS SCREEN HEIGHT, NOT ACTUAL DOOR POSITION IN THE WORLD
@@ -3977,7 +4026,7 @@ let gameData = {
 		},
         {}, // GTA UG
         { // GTA IV
-			clothingStore: [
+			ClothingStore: [
 				["Outfit", 500, 2]
 			],
 			LegalGunStore: [
@@ -3997,8 +4046,8 @@ let gameData = {
 				["M4", 500, 2],
 				["Beretta Shotgun", 500, 2],
 				["Sniper Rifle", 500, 2],
+                ["Micro Uzi Ammo", 500, 2],
 				["MP5 Ammo", 500, 2],
-				["Micro Uzi Ammo", 500, 2],
 				["AK-47 Ammo", 500, 2],
 				["M4 Ammo", 500, 2],
 				["Beretta Shotgun Ammo", 500, 2],
@@ -4386,7 +4435,34 @@ let gameData = {
 		},
 
 		{ // GTA IV
-
+            Office2: [toVector3(-1153.30, 417.37, 5.578), 0],
+            House1: [toVector3(-426.16, 1466.52, 38.971), 0],
+            House2: [toVector3(-969.77, 883.27, 18.817), 0],
+            House3: [toVector3(95.75, 851.68, 45.051), 0],
+            House4: [toVector3(603.04, 1404.06, 17.479), 0],
+            House5: [toVector3(892.56, -502.13, 19.407), 0],
+            House6: [toVector3(-524.09, 830.54, 23.627), 0],
+            House7: [toVector3(806.36, 146.68, 29.243), 0],
+            House8: [toVector3(356.91, 1511.28, 21.432), 0],
+            House9: [toVector3(1319.40, -847.02, 8.872), 0],
+            House10: [toVector3(1331.40, 126.60, 36.558), 0],
+            House11: [toVector3(1387.81, 622.66, 35.857), 0],
+            House12: [toVector3(932.74, -189.29, 35.143), 0],
+            House13: [toVector3(-1397.85, 1473.89, 26.447), 0],
+            House14: [toVector3(806.36, 146.68, 29.243), 0],
+            House15: [toVector3(-526.49, 829.41, 23.627), 0],
+            Gym: [toVector3(403.31, 1480.32, 11.834), 0],
+            PoliceStation: [toVector3(-406.52, 286.57, 13.682), 0],
+            FancyRestaurant: [toVector3(-118.24, -259.06, 12.654), 0],
+            Basement: [toVector3(1304.38, -856.66, 5.490), 0],
+            Office1: [toVector3(-409.31, 285.49, 18.592), 0],
+            Office2: [toVector3(-1153.30, 417.37, 5.578), 0],
+            Office3: [toVector3(817.64, -259.77, 15.343), 0],
+            Office4: [toVector3(-86.35, 56.70, 75.953), 0],
+            HospitalRoom: [toVector3(1240.00, 192.44, 33.553), 0],
+            Church: [toVector3(-286.72, -282.36, 15.632), 0],
+            Prison: [toVector3(-1082.69, -364.05, 7.404), 0],
+            Ship: [toVector3(-336.53, -1494.56, 9.945), 0],
 		},
 
         {}, // GTA IV EFLC
@@ -5338,6 +5414,22 @@ let gameData = {
         ],
     ],
     mainWorldDimension: [
+        0, // Invalid
+        0, // GTA 3
+        0, // GTA VC
+        0, // GTA SA
+        0, // GTA UG
+        0, // GTA IV
+        0, // GTA IV EFLC
+        0, // Invalid
+        0, // Invalid
+        0, // Invalid
+        0, // Mafia 1
+        0, // Mafia 2
+        0, // Mafia 3
+        0, // Mafia Definitive Edition
+    ],
+    mainWorldInterior: [
         0, // Invalid
         0, // GTA 3
         0, // GTA VC

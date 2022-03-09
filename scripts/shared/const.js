@@ -82,10 +82,10 @@ const VRR_MPMOD_GTAC = 1;
 const VRR_MPMOD_MAFIAC = 2;
 
 // Business/House Game Script States
-const VRR_GAMESCRIPT_NONE = 0;
-const VRR_GAMESCRIPT_DENY = 1;
-const VRR_GAMESCRIPT_ALLOW = 2;
-const VRR_GAMESCRIPT_FORCE = 3;
+//const VRR_GAMESCRIPT_NONE = 0;
+//const VRR_GAMESCRIPT_DENY = 1;
+//const VRR_GAMESCRIPT_ALLOW = 2;
+//const VRR_GAMESCRIPT_FORCE = 3;
 
 // Vehicle Purchase States
 const VRR_VEHBUYSTATE_NONE = 0;

@@ -21,7 +21,7 @@ let newCharacter = {
 
 function initNewCharacterGUI() {
     logToConsole(LOG_DEBUG, `[VRR.GUI] Creating new character GUI ...`);
-    newCharacter.window = mexui.window(game.width/2-130, game.height/2-100, 300, 200, 'New Character', {
+    newCharacter.window = mexui.window(game.width/2-130, game.height/2-115, 300, 230, 'New Character', {
         main: {
             backgroundColour: toColour(secondaryColour[0], secondaryColour[1], secondaryColour[2], windowAlpha),
             transitionTime: 500,
@@ -46,7 +46,7 @@ function initNewCharacterGUI() {
         },
     });
 
-    newCharacter.messageLabel = newCharacter.window.text(20, 75, 260, 20, 'Name your character', {
+    newCharacter.messageLabel = newCharacter.window.text(20, 100, 260, 20, 'Name your character', {
         main: {
             textSize: 10.0,
             textAlign: 0.5,
@@ -58,7 +58,7 @@ function initNewCharacterGUI() {
         },
     });
 
-    newCharacter.firstNameInput = newCharacter.window.textInput(20, 100, 260, 25, '', {
+    newCharacter.firstNameInput = newCharacter.window.textInput(20, 125, 260, 25, '', {
         main: {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(200, 200, 200, 255),
@@ -77,7 +77,7 @@ function initNewCharacterGUI() {
     });
     newCharacter.firstNameInput.placeholder = "First Name";
 
-    newCharacter.lastNameInput = newCharacter.window.textInput(20, 130, 260, 25, '', {
+    newCharacter.lastNameInput = newCharacter.window.textInput(20, 155, 260, 25, '', {
         main: {
             backgroundColour: toColour(0, 0, 0, 120),
             textColour: toColour(200, 200, 200, 255),
@@ -96,7 +96,7 @@ function initNewCharacterGUI() {
     });
     newCharacter.lastNameInput.placeholder = "Last Name";
 
-    newCharacter.createCharacterButton = newCharacter.window.button(20, 160, 260, 25, 'CREATE CHARACTER', {
+    newCharacter.createCharacterButton = newCharacter.window.button(20, 185, 260, 25, 'CREATE CHARACTER', {
         main: {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(255, 255, 255, 255),

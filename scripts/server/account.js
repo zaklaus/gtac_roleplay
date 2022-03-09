@@ -599,7 +599,6 @@ function loginSuccess(client) {
 
 	getPlayerData(client).accountData.ipAddress = client.ip;
 
-	//sendRemovedWorldObjectsToPlayer(client);
 	sendPlayerChatScrollLines(client, getPlayerData(client).accountData.chatScrollLines);
 
 	messagePlayerNormal(null, `👋 ${getPlayerName(client)} has joined the server`, getColourByName("softYellow"));
@@ -1127,6 +1126,7 @@ function initClient(client) {
 	updatePlayerSnowState(client);
 
 	showConnectCameraToPlayer(client);
+
 	messageClient(`Please wait ...`, client, getColourByName("softGreen"));
 
 	setTimeout(function() {

@@ -85,7 +85,6 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.localPlayerSkin", setLocalPlayerSkin);
     addNetworkEventHandler("vrr.forcePedAnim", forcePedAnimation);
     addNetworkEventHandler("vrr.hideAllGUI", hideAllGUI);
-    addNetworkEventHandler("vrr.gameScript", setGameScriptState);
     addNetworkEventHandler("vrr.clientInfo", serverRequestedClientInfo);
     addNetworkEventHandler("vrr.interiorLights", updateInteriorLightsState);
 
@@ -101,6 +100,13 @@ function addAllNetworkHandlers() {
 
     addNetworkEventHandler("vrr.logLevel", setLogLevel);
     addNetworkEventHandler("vrr.infiniteRun", setLocalPlayerInfiniteRun);
+
+    addNetworkEventHandler("vrr.business", receiveBusinessFromServer);
+    addNetworkEventHandler("vrr.house", receiveHouseFromServer);
+
+    addNetworkEventHandler("vrr.holdObject", makePedHoldObject);
+
+    addNetworkEventHandler("vrr.playerPedId", sendLocalPlayerNetworkIdToServer);
 }
 
 // ===========================================================================
@@ -133,6 +139,8 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
         natives.displayCash(hudState);
         natives.displayAmmo(hudState);
         natives.displayHud(hudState);
+        natives.displayRadar(hudState);
+        natives.displayAreaName(hudState);
     } else {
         if(typeof setHUDEnabled != "undefined") {
             setHUDEnabled(hudState);
@@ -205,18 +213,6 @@ function setEnterPropertyKey(key) {
 
 // ===========================================================================
 
-function setGameScriptState(scriptName, state) {
-    if(state == VRR_GAMESCRIPT_FORCE) {
-        logToConsole(`[VRR.Server] Starting game script '${scriptName}'`);
-        game.startNewScript(scriptName);
-    } else if(state == VRR_GAMESCRIPT_DENY) {
-        logToConsole(`[VRR.Server] Terminating game script '${scriptName}'`);
-        game.terminateScript(scriptName);
-    }
-}
-
-// ===========================================================================
-
 function serverRequestedClientInfo() {
     sendServerClientInfo();
 }
@@ -266,6 +262,9 @@ function setElementCollisionsEnabled(elementId, state) {
 function setLocalPlayerPedPartsAndProps(parts, props) {
     for(let i in parts) {
         localPlayer.changeBodyPart(parts[0], parts[1], parts[2]);
+    }
+
+    for(let i in props) {
         localPlayer.changeBodyProp(props[0], props[1]);
     }
 }
@@ -304,11 +303,26 @@ function setLocalPlayerInfiniteRun(state) {
 
 function setLocalPlayerSkin(skinId) {
     if(getGame() == VRR_GAME_GTA_IV) {
-        //natives.changePlayerModel(natives.getPlayerId(), skinId);
-        localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        natives.changePlayerModel(natives.getPlayerId(), skinId);
+        //localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        //localPlayer.modelIndex = allowedSkins[skinSelectorIndex][0];
     } else {
         localPlayer.skin = skinId;
     }
+}
+
+// ===========================================================================
+
+function makePedHoldObject(pedId, modelIndex) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        natives.givePedAmbientObject(natives.getPedFromNetworkId(pedId), getGameConfig().objects[getGame()][modelIndex][1])
+    }
+}
+
+// ===========================================================================
+
+function sendLocalPlayerNetworkIdToServer() {
+    sendNetworkEventToServer("vrr.playerPedId", natives.getNetworkIdFromPed(localPlayer));
 }
 
 // ===========================================================================

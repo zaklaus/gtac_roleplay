@@ -1732,7 +1732,7 @@ function getItemValueDisplay(itemType, value) {
 	} else if(getItemTypeData(itemType).useType == VRR_ITEM_USETYPE_WALKIETALKIE) {
 		return toString(toString(value).slice(0,-2)+"."+toString(value).slice(-1)+"MHz");
 	} else if(getItemTypeData(itemType).useType == VRR_ITEM_USETYPE_VEHCOLOUR) {
-		return `[${getGameData().vehicleColourHex[value]}]SAMPLE[#FFFFFF]`;
+		return `[${getGameConfig().vehicleColourHex[value]}]SAMPLE[#FFFFFF]`;
 	} else {
 		return value;
 	}

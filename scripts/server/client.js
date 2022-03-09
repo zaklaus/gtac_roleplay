@@ -74,6 +74,7 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.skinSelected", playerFinishedSkinSelection);
     addNetworkEventHandler("vrr.clientInfo", updateConnectionLogOnClientInfoReceive);
     addNetworkEventHandler("vrr.vehBuyState", receiveVehiclePurchaseStateUpdateFromClient);
+    addNetworkEventHandler("vrr.playerPedId", receivePlayerPedNetworkId);
 }
 
 // ===========================================================================
@@ -219,29 +220,6 @@ function updatePlayerSnowState(client) {
         logToConsole(LOG_DEBUG, `[VRR.Client] Setting ${getPlayerDisplayForConsole(client)}'s snow state (Falling: ${toUpperCase(getOnOffFromBool(getServerConfig().fallingSnow))}, Ground: ${toUpperCase(getOnOffFromBool(getServerConfig().groundSnow))})`);
         sendNetworkEventToPlayer("vrr.snow", client, getServerConfig().fallingSnow, getServerConfig().groundSnow);
     }
-}
-
-// ===========================================================================
-
-function sendExcludedModelsForGroundSnowToPlayer(client) {
-    if(getGameConfig().excludedGroundSnowModels[getServerGame()].length > 0) {
-        for(let i in getGameConfig().excludedGroundSnowModels[getServerGame()]) {
-            logToConsole(LOG_DEBUG, `[VRR.Misc] Sending excluded model ${i} for ground snow to ${getPlayerName(client)}`);
-            sendNetworkEventToPlayer("vrr.excludeGroundSnow", client, getGameConfig().excludedGroundSnowModels[getServerGame()][i]);
-        }
-    }
-}
-
-// ===========================================================================
-
-function sendRemovedWorldObjectsToPlayer(client) {
-    if(getGameConfig().removedWorldObjects[getServerGame()].length > 0) {
-        for(let i in getGameConfig().removedWorldObjects[getServerGame()]) {
-            logToConsole(LOG_DEBUG, `[VRR.Client] Sending removed world object ${i} (${getGameConfig().removedWorldObjects[getServerGame()][i][0]}) to ${getPlayerName(client)}`);
-            sendNetworkEventToPlayer("vrr.removeWorldObject", client, getGameConfig().removedWorldObjects[getServerGame()][i][0], getGameConfig().removedWorldObjects[getServerGame()][i][1], getGameConfig().removedWorldObjects[getServerGame()][i][2]);
-        }
-    }
-	return true;
 }
 
 // ===========================================================================
@@ -1053,12 +1031,6 @@ function setPlayerHeadLookPosition(client, position) {
 
 // ===========================================================================
 
-function sendPlayerGameScriptState(client, scriptName, state) {
-    sendNetworkEventToPlayer("vrr.gameScript", client, scriptName, state);
-}
-
-// ===========================================================================
-
 function requestClientInfo(client) {
     sendNetworkEventToPlayer("vrr.clientInfo", client);
 }
@@ -1078,7 +1050,10 @@ function forcePlayerToSyncElementProperties(client, element) {
 // ===========================================================================
 
 function sendPlayerPedPartsAndProps(client) {
-    sendNetworkEventToPlayer("vrr.ped")
+    let bodyParts = getPlayerCurrentSubAccount(client).bodyParts;
+    let bodyProps = getPlayerCurrentSubAccount(client).bodyProps;
+
+    sendNetworkEventToPlayer("vrr.ped", client, [bodyParts.hair, bodyParts.head, bodyParts.upper, bodyParts.lower], [bodyProps.hair, bodyProps.eyes, bodyProps.head, bodyProps.leftHand, bodyProps.rightHand, bodyProps.leftWrist, bodyProps.rightWrist, bodyParts.hip, bodyProps.leftFoot, bodyProps.rightFoot]); 
 }
 
 // ===========================================================================
@@ -1132,6 +1107,58 @@ function sendPlayerLogLevel(client, tempLogLevel = logLevel) {
 
 function setPlayerInfiniteRun(client, state) {
     sendNetworkEventToPlayer("vrr.infiniteRun", client, state);
+}
+
+// ==========================================================================
+
+function sendBusinessEntranceToPlayer(client, businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems) {
+    sendNetworkEventToPlayer("vrr.business", client, businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems);
+}
+
+// ==========================================================================
+
+function sendHouseEntranceToPlayer(client, houseId, entrancePosition, blipModel, pickupModel, hasInterior) {
+    sendNetworkEventToPlayer("vrr.house", client, houseId, entrancePosition, blipModel, pickupModel, hasInterior);
+}
+
+// ==========================================================================
+
+function sendAllBusinessEntrancesToPlayer(client) {
+    let businesses = getServerData().businesses;
+    for(let i in businesses) {
+        if(businesses[i].entranceBlipModel > 0) {
+            sendBusinessEntranceToPlayer(client, businesses[i].index, businesses[i].name, businesses[i].entrancePosition, businesses[i].entranceBlipModel, businesses[i].entrancePickupModel, businesses[i].hasInterior, false);
+        }
+    }
+}
+
+// ==========================================================================
+
+function sendAllHouseEntrancesToPlayer(client) {
+    let houses = getServerData().houses;
+    for(let i in houses) {
+        if(houses[i].entranceBlipModel > 0) {
+            sendBusinessEntranceToPlayer(client, businesses[i].index, houses[i].entrancePosition, houses[i].entranceBlipModel, houses[i].entrancePickupModel, houses[i].hasInterior);
+        }
+    }
+}
+
+// ==========================================================================
+
+function makePlayerHoldObjectModel(client, modelIndex) {
+    sendNetworkEventToPlayer("vrr.holdObject", client, getPlayerData(client).pedId, modelIndex);
+}
+
+// ==========================================================================
+
+function receivePlayerPedNetworkId(client, pedId) {
+    getPlayerData(client).pedId = pedId;
+}
+
+// ==========================================================================
+
+function requestPlayerPedNetworkId(client) {
+    sendNetworkEventToPlayer("vrr.playerPedId", client);
 }
 
 // ==========================================================================

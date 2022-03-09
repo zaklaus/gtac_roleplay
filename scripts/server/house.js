@@ -873,6 +873,7 @@ function createHouseEntrancePickup(houseId) {
 			pickupModelId = getHouseData(houseId).entrancePickupModel;
 		}
 
+	if(areServerElementsSupported()) {
 		getHouseData(houseId).entrancePickup = createGamePickup(pickupModelId, getHouseData(houseId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].house);
 		setElementOnAllDimensions(getHouseData(houseId).entrancePickup, false);
 		setElementDimension(getHouseData(houseId).entrancePickup, getHouseData(houseId).entranceDimension);
@@ -897,15 +898,17 @@ function createHouseEntranceBlip(houseId) {
 			blipModelId = getHouseData(houseId).entranceBlipModel;
 		}
 
-		getHouseData(houseId).entranceBlip = createGameBlip(getHouseData(houseId).entrancePosition, blipModelId, 1, getColourByName("houseGreen"));
-		setElementDimension(getHouseData(houseId).entranceBlip, getHouseData(houseId).entranceDimension);
-		setElementOnAllDimensions(getHouseData(houseId).entranceBlip, false);
-		setElementStreamInDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().houseBlipStreamInDistance);
-		setElementStreamOutDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().houseBlipStreamOutDistance);
-		setElementTransient(getHouseData(houseId).entranceBlip, false);
-		setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
-		setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.id", houseId, false);
-		addToWorld(getHouseData(houseId).entranceBlip);
+		if(areServerElementsSupported()) {
+			getHouseData(houseId).entranceBlip = createGameBlip(getHouseData(houseId).entrancePosition, blipModelId, 1, getColourByName("houseGreen"));
+			setElementDimension(getHouseData(houseId).entranceBlip, getHouseData(houseId).entranceDimension);
+			setElementOnAllDimensions(getHouseData(houseId).entranceBlip, false);
+			setElementStreamInDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().houseBlipStreamInDistance);
+			setElementStreamOutDistance(getBusinessData(businessId).entranceBlip, getGlobalConfig().houseBlipStreamOutDistance);
+			setElementTransient(getHouseData(houseId).entranceBlip, false);
+			setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.type", VRR_BLIP_HOUSE_ENTRANCE, false);
+			setEntityData(getHouseData(houseId).entranceBlip, "vrr.owner.id", houseId, false);
+			addToWorld(getHouseData(houseId).entranceBlip);
+		}
 	}
 }
 
@@ -924,13 +927,16 @@ function createHouseExitPickup(houseId) {
 				pickupModelId = getHouseData(houseId).exitPickupModel;
 			}
 
-			getHouseData(houseId).exitPickup = createGamePickup(pickupModelId, getHouseData(houseId).exitPosition, getGameConfig().pickupTypes[getServerGame()].house);
-			setElementDimension(getHouseData(houseId).exitPickup, getHouseData(houseId).exitDimension);
-			setElementOnAllDimensions(getHouseData(houseId).exitPickup, false);
-			setElementStreamInDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().housePickupStreamInDistance);
-			setElementStreamOutDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().housePickupStreamOutDistance);
-			setElementTransient(getHouseData(houseId).exitPickup, false);
-			addToWorld(getHouseData(houseId).exitPickup);
+			if(areServerElementsSupported()) {
+				getHouseData(houseId).exitPickup = createGamePickup(pickupModelId, getHouseData(houseId).exitPosition, getGameConfig().pickupTypes[getServerGame()].house);
+				setElementDimension(getHouseData(houseId).exitPickup, getHouseData(houseId).exitDimension);
+				setElementOnAllDimensions(getHouseData(houseId).exitPickup, false);
+				setElementStreamInDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().housePickupStreamInDistance);
+				setElementStreamOutDistance(getBusinessData(businessId).exitPickup, getGlobalConfig().housePickupStreamOutDistance);
+				setElementTransient(getHouseData(houseId).exitPickup, false);
+				addToWorld(getHouseData(houseId).exitPickup);
+			}
+			updateHousePickupLabelData(houseId);
 		}
 	}
 }
@@ -950,15 +956,17 @@ function createHouseExitBlip(houseId) {
 				blipModelId = getHouseData(houseId).exitBlipModel;
 			}
 
-			getHouseData(houseId).exitBlip = createGameBlip(blipModelId, getHouseData(houseId).exitPosition, 1, getColourByName("houseGreen"));
-			setElementDimension(getHouseData(houseId).exitBlip, getHouseData(houseId).entranceDimension);
-			setElementOnAllDimensions(getHouseData(houseId).exitBlip, false);
-			setElementStreamInDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().houseBlipStreamInDistance);
-			setElementStreamOutDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().houseBlipStreamOutDistance);
-			setElementTransient(getHouseData(houseId).exitBlip, false);
-			setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.type", VRR_BLIP_HOUSE_EXIT, false);
-			setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.id", houseId, false);
-			addToWorld(getHouseData(houseId).exitBlip);
+			if(areServerElementsSupported()) {
+				getHouseData(houseId).exitBlip = createGameBlip(blipModelId, getHouseData(houseId).exitPosition, 1, getColourByName("houseGreen"));
+				setElementDimension(getHouseData(houseId).exitBlip, getHouseData(houseId).entranceDimension);
+				setElementOnAllDimensions(getHouseData(houseId).exitBlip, false);
+				setElementStreamInDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().houseBlipStreamInDistance);
+				setElementStreamOutDistance(getBusinessData(businessId).exitBlip, getGlobalConfig().houseBlipStreamOutDistance);
+				setElementTransient(getHouseData(houseId).exitBlip, false);
+				setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.type", VRR_BLIP_HOUSE_EXIT, false);
+				setEntityData(getHouseData(houseId).exitBlip, "vrr.owner.id", houseId, false);
+				addToWorld(getHouseData(houseId).exitBlip);
+			}
 		}
 	}
 }
@@ -1140,6 +1148,10 @@ function doesHouseHaveInterior(houseId) {
 // ===========================================================================
 
 function deleteHouseEntrancePickup(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getHouseData(houseId).entrancePickup != null) {
 		//removeFromWorld(getHouseData(houseId).entrancePickup);
 		deleteGameElement(getHouseData(houseId).entrancePickup);
@@ -1150,6 +1162,10 @@ function deleteHouseEntrancePickup(houseId) {
 // ===========================================================================
 
 function deleteHouseExitPickup(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getHouseData(houseId).exitPickup != null) {
 		//removeFromWorld(getHouseData(houseId).exitPickup);
 		deleteGameElement(getHouseData(houseId).exitPickup);
@@ -1160,6 +1176,10 @@ function deleteHouseExitPickup(houseId) {
 // ===========================================================================
 
 function deleteHouseEntranceBlip(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getHouseData(houseId).entranceBlip != null) {
 		//removeFromWorld(getHouseData(houseId).entranceBlip);
 		deleteGameElement(getHouseData(houseId).entranceBlip);
@@ -1170,6 +1190,10 @@ function deleteHouseEntranceBlip(houseId) {
 // ===========================================================================
 
 function deleteHouseExitBlip(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
 	if(getHouseData(houseId).exitBlip != null) {
 		//removeFromWorld(getHouseData(houseId).exitBlip);
 		deleteGameElement(getHouseData(houseId).exitBlip);
@@ -1265,19 +1289,19 @@ function getHouseIdFromDatabaseId(databaseId) {
 
 // ===========================================================================
 
-function sendPlayerHouseGameScripts(client, houseId) {
-	for(let i in getHouseData(houseId).gameScripts) {
-		sendPlayerGameScriptState(client, getHouseData(houseId).gameScripts[i].state);
-	}
-}
+//function sendPlayerHouseGameScripts(client, houseId) {
+//	for(let i in getHouseData(houseId).gameScripts) {
+//		sendPlayerGameScriptState(client, getHouseData(houseId).gameScripts[i].state);
+//	}
+//}
 
 // ===========================================================================
 
-function clearPlayerHouseGameScripts(client, houseId) {
-	for(let i in getHouseData(houseId).gameScripts) {
-		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
-	}
-}
+//function clearPlayerHouseGameScripts(client, houseId) {
+//	for(let i in getHouseData(houseId).gameScripts) {
+//		sendPlayerGameScriptState(client, VRR_GAMESCRIPT_DENY);
+//	}
+//}
 
 // ===========================================================================
 
@@ -1411,6 +1435,10 @@ function getHouseFromParams(params) {
 // ===========================================================================
 
 function updateHousePickupLabelData(houseId) {
+	if(!areServerElementsSupported()) {
+		return false;
+	}
+
     let houseData = getHouseData(houseId);
 
     if(houseData.entrancePickup != null) {

@@ -70,7 +70,7 @@ function stopPlayerAnimationCommand(command, params, client) {
 // ===========================================================================
 
 function showAnimationListCommand(command, params, client) {
-	let animList = getGameData().animations[getServerGame()].map(function(x) { return x[0]; });
+	let animList = getGameConfig().animations[getServerGame()].map(function(x) { return x[0]; });
 
 	let chunkedList = splitArrayIntoChunks(animList, 10);
 
@@ -88,7 +88,7 @@ function showAnimationListCommand(command, params, client) {
  * @return {Array} The animation's data (array)
  */
 function getAnimationData(animationSlot, gameId = getServerGame()) {
-    return getGameData().animations[gameId][animationSlot];
+    return getGameConfig().animations[gameId][animationSlot];
 }
 
 // ===========================================================================
@@ -145,13 +145,13 @@ function makePlayerStopAnimation(client) {
 
 function getAnimationFromParams(params) {
 	if(isNaN(params)) {
-		for(let i in getGameData().animations[getServerGame()]) {
-			if(toLowerCase(getGameData().animations[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
+		for(let i in getGameConfig().animations[getServerGame()]) {
+			if(toLowerCase(getGameConfig().animations[getServerGame()][i][0]).indexOf(toLowerCase(params)) != -1) {
 				return i;
 			}
 		}
 	} else {
-		if(typeof getGameData().animations[getServerGame()][params] != "undefined") {
+		if(typeof getGameConfig().animations[getServerGame()][params] != "undefined") {
 			return toInteger(params);
 		}
 	}

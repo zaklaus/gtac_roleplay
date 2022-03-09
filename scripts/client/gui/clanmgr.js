@@ -16,3 +16,5 @@ let clanManager = {
     businessesTab: null,
     housesTab: null,
 };
+
+// ===========================================================================

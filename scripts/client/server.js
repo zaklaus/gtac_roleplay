@@ -107,6 +107,8 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.holdObject", makePedHoldObject);
 
     addNetworkEventHandler("vrr.playerPedId", sendLocalPlayerNetworkIdToServer);
+
+    addNetworkEventHandler("vrr.ped", setLocalPlayerPedPartsAndProps);
 }
 
 // ===========================================================================
@@ -255,18 +257,6 @@ function setElementCollisionsEnabled(elementId, state) {
     }
 
     getElementFromId(elementId).collisionsEnabled = state;
-}
-
-// ===========================================================================
-
-function setLocalPlayerPedPartsAndProps(parts, props) {
-    for(let i in parts) {
-        localPlayer.changeBodyPart(parts[0], parts[1], parts[2]);
-    }
-
-    for(let i in props) {
-        localPlayer.changeBodyProp(props[0], props[1]);
-    }
 }
 
 // ===========================================================================

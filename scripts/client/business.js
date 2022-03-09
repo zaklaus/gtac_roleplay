@@ -24,40 +24,64 @@ class BusinessData {
 // ===========================================================================
 
 function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems) {
+    logToConsole(LOG_DEBUG, `[VRR.Business] Received business ${businessId} (${name}) from server`);
+    
     if(getGame() == VRR_GAME_GTA_IV) {
         if(getBusinessData(businessId) != false) {
+            let businessData = getBusinessData(businessId);
+            businessData.name = name;
+            businessData.entrancePosition = entrancePosition;
+            businessData.blipModel = blipModel;
+            businessData.pickupModel = pickupModel;
+            businessData.hasInterior = hasInterior;
+            businessData.hasItems = hasItems;    
+
+            logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId} already exists. Checking blip ...`);
             if(blipModel == -1) {
-                natives.removeBlipAndClearIndex(getBusinessData(businessId).blipId);
-                getBusinessData(businessId).blipId = -1;
-                //businesses.splice(getBusinessData(businessId).index, 1);
-                //setAllBusinessDataIndexes();
+                if(businessData.blipId != -1) {
+                    logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId}'s blip has been removed by the server`);
+                    natives.removeBlipAndClearIndex(getBusinessData(businessId).blipId);
+                    businessData.blipId = -1;
+                    //businesses.splice(businessData.index, 1);
+                    //setAllBusinessDataIndexes();
+                } else {
+                    logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId}'s blip is unchanged`);
+                }
             } else {
-                if(getBusinessData(businessId).blipId != -1) {
-                    natives.setBlipCoordinates(getBusinessData(businessId).blipId, getBusinessData(businessId).entrancePosition);
-                    natives.changeBlipSprite(getBusinessData(businessId).blipId, getBusinessData(businessId).blipModel);
-                    natives.changeBlipNameFromAscii(getBusinessData(businessId).blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
+                if(businessData.blipId != -1) {
+                    logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId}'s blip has been changed by the server`);
+                    natives.setBlipCoordinates(businessData.blipId, businessData.entrancePosition);
+                    natives.changeBlipSprite(businessData.blipId, businessData.blipModel);
+                    natives.setBlipMarkerLongDistance(businessData.blipId, true);
+                    natives.changeBlipNameFromAscii(businessData.blipId, `${businessData.name.substr(0, 24)}${(businessData.name.length > 24) ? " ...": ""}`);
                 } else {
                     let blipId = natives.addBlipForCoord(entrancePosition);
                     if(blipId) {
-                        getBusinessData(businessId).blipId = blipId;
-                        natives.changeBlipSprite(blipId, blipModel);
-                        natives.setBlipMarkerLongDistance(blipId, false);      
+                        businessData.blipId = blipId;
+                        natives.changeBlipSprite(businessData.blipId, businessData.blipModel);
+                        natives.setBlipMarkerLongDistance(businessData.blipId, true);      
+                        natives.changeBlipNameFromAscii(businessData.blipId, `${businessData.name.substr(0, 24)}${(businessData.name.length > 24) ? " ...": ""}`);
                     }
+                    logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId}'s blip has been added by the server (Model ${blipModel}, ID ${blipId})`);
                 }
             }
         } else {
+            logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId} doesn't exist. Adding ...`);
+            let tempBusinessData = new BusinessData(businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems);
             if(blipModel != -1) {
-                let tempBusinessData = new BusinessData(businessId, name, entrancePosition, blipModel, pickupModel, hasInterior, hasItems);
                 let blipId = natives.addBlipForCoord(entrancePosition);
                 if(blipId) {
                     tempBusinessData.blipId = blipId;
-                    natives.changeBlipSprite(blipId, blipModel);
-                    natives.setBlipMarkerLongDistance(blipId, false);
-                    natives.changeBlipNameFromAscii(blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
+                    natives.changeBlipSprite(tempBusinessData.blipId, blipModel);
+                    natives.setBlipMarkerLongDistance(tempBusinessData.blipId, true);
+                    natives.changeBlipNameFromAscii(tempBusinessData.blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
                 }
-                businesses.push(tempBusinessData);
-                setAllBusinessDataIndexes();
+                logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId}'s blip has been added by the server (Model ${blipModel}, ID ${blipId})`);
+            } else {
+                logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId} has no blip.`);
             }
+            businesses.push(tempBusinessData);
+            setAllBusinessDataIndexes();
         }
     }
 }
@@ -69,8 +93,15 @@ function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel
  * @return {BusinessData} The business's data (class instance)
  */
 function getBusinessData(businessId) {
-    let tempBusinessData = businesses.find((b) => b.businessId == businessId);
-    return (typeof tempBusinessData != "undefined") ? tempBusinessData : false;
+    //let tempBusinessData = businesses.find((b) => b.businessId == businessId);
+    //return (typeof tempBusinessData != "undefined") ? tempBusinessData[0] : false;
+    for(let i in businesses) {
+        if(businesses[i].businessId == businessId) {
+            return businesses[i];
+        }
+    }
+
+    return false;
 }
 
 // ===========================================================================

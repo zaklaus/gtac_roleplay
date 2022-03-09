@@ -174,13 +174,15 @@ function spawnAllVehicles() {
  * @return {VehicleData} The vehicles's data (class instance)
  */
 function getVehicleData(vehicle) {
-	if(isVehicleObject(vehicle)) {
-		let dataIndex = getEntityData(vehicle, "vrr.dataSlot");
-		if(typeof getServerData().vehicles[dataIndex] != "undefined") {
-			return getServerData().vehicles[dataIndex];
+	if(getGame() != VRR_GAME_GTA_IV) {
+		if(isVehicleObject(vehicle)) {
+			let dataIndex = getEntityData(vehicle, "vrr.dataSlot");
+			if(typeof getServerData().vehicles[dataIndex] != "undefined") {
+				return getServerData().vehicles[dataIndex];
+			}
 		}
 	} else {
-
+		return getServerVehicles().find((v) => v.ivNetworkId == vehicle);
 	}
 
 	return false;
@@ -1404,7 +1406,11 @@ function createPermanentVehicle(modelIndex, position, heading, interior = 0, dim
 	}
 
 	let slot = getServerData().vehicles.push(tempVehicleData);
-	setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
+
+	if(areServerElementsSupported()) {
+		setEntityData(vehicle, "vrr.dataSlot", slot-1, false);
+	}
+
 
 	return vehicle;
 }

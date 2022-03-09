@@ -240,131 +240,115 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
         return false;
     }
 
-    if(client.player == null) {
+    let vehicle = null;
+
+    if(getGame() == VRR_GAME_GTA_IV) {
+        vehicle = getVehicleFromIVNetworkId(clientVehicle);
+    } else {
+        if(client.player == null) {
+            return false;
+        }
+
+        await waitUntil(() => client != null && client.player != null && client.player.vehicle != null);
+
+        vehicle = client.player.vehicle;
+    }
+
+    if(!getVehicleData(vehicle)) {
         return false;
     }
 
-    await waitUntil(() => client != null && client.player != null && client.player.vehicle != null);
-    //setTimeout(function() {
-        //if(client.player.vehicle == null) {
-        //    onPlayerEnteredVehicle(client, clientVehicle, seat);
-        //}
+    logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
 
-        let vehicle = client.player.vehicle;
+    getPlayerData(client).lastVehicle = vehicle;
+    getVehicleData(vehicle).lastActiveTime = getCurrentUnixTimestamp();
 
-        //if(vehicle.syncer != client.index) {
-        //    if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
-        //        vehicle.setSyncer(client, true);
-        //    }
-        //}
+    if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
+        vehicle.engine = getVehicleData(vehicle).engine;
 
-        if(vehicle.owner != -1) {
-            return false;
-        }
-
-        if(!getVehicleData(vehicle)) {
-            return false;
-        }
-
-        //if(getPlayerData(client).enteringVehicle == null || getPlayerData(client).enteringVehicle != vehicle) {
-        //    messagePlayerError(client, "You can't enter this vehicle!");
-        //    removePlayerFromVehicle(client);
-        //    messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}tried to warp into a locked vehicle`);
-        //    return false;
-        //}
-
-        logToConsole(LOG_DEBUG, `[VRR.Event] ${getPlayerDisplayForConsole(client)} entered a ${getVehicleName(vehicle)} (ID: ${vehicle.getData("vrr.dataSlot")}, Database ID: ${getVehicleData(vehicle).databaseId})`);
-
-        getPlayerData(client).lastVehicle = vehicle;
-        getVehicleData(vehicle).lastActiveTime = getCurrentUnixTimestamp();
-
-        if(getPlayerVehicleSeat(client) == VRR_VEHSEAT_DRIVER) {
-            vehicle.engine = getVehicleData(vehicle).engine;
-
-            if(getVehicleData(vehicle).buyPrice > 0) {
-                messagePlayerAlert(client, getLocaleString(client, "VehicleForSale", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice)}{MAINCOLOUR}`, `{ALTCOLOUR}/vehbuy{MAINCOLOUR}`));
+        if(getVehicleData(vehicle).buyPrice > 0) {
+            messagePlayerAlert(client, getLocaleString(client, "VehicleForSale", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).buyPrice)}{MAINCOLOUR}`, `{ALTCOLOUR}/vehbuy{MAINCOLOUR}`));
+            resetVehiclePosition(vehicle);
+        } else if(getVehicleData(vehicle).rentPrice > 0) {
+            if(getVehicleData(vehicle).rentedBy != client) {
+                messagePlayerAlert(client, getLocaleString(client, "VehicleForRent", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)}{MAINCOLOUR}`, `{ALTCOLOUR}/vehrent{MAINCOLOUR}`));
                 resetVehiclePosition(vehicle);
-            } else if(getVehicleData(vehicle).rentPrice > 0) {
-                if(getVehicleData(vehicle).rentedBy != client) {
-                    messagePlayerAlert(client, getLocaleString(client, "VehicleForRent", getVehicleName(vehicle), `{ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)}{MAINCOLOUR}`, `{ALTCOLOUR}/vehrent{MAINCOLOUR}`));
-                    resetVehiclePosition(vehicle);
-                } else {
-                    messagePlayerAlert(client, `You are renting this ${getVehicleName(vehicle)} for {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute. {MAINCOLOUR}Use {ALTCOLOUR}/stoprent {MAINCOLOUR}if you want to stop renting it.`);
-                }
             } else {
-                let ownerName = "Nobody";
-                let ownerType = "None";
-                ownerType = toLowerCase(getVehicleOwnerTypeText(getVehicleData(vehicle).ownerType));
-                switch(getVehicleData(vehicle).ownerType) {
-                    case VRR_VEHOWNER_CLAN:
-                        ownerName = getClanData(getClanIdFromDatabaseId(getVehicleData(vehicle).ownerId)).name;
-                        ownerType = "clan";
-                        break;
-
-                    case VRR_VEHOWNER_JOB:
-                        ownerName = getJobData(getJobIdFromDatabaseId(getVehicleData(vehicle).ownerId)).name;
-                        ownerType = "job";
-                        break;
-
-                    case VRR_VEHOWNER_PLAYER:
-                        let subAccountData = loadSubAccountFromId(getVehicleData(vehicle).ownerId);
-                        ownerName = `${subAccountData.firstName} ${subAccountData.lastName}`;
-                        ownerType = "player";
-                        break;
-
-                    case VRR_VEHOWNER_BIZ:
-                        ownerName = getBusinessData(getVehicleData(vehicle).ownerId).name;
-                        ownerType = "business";
-                        break;
-
-                    default:
-                        break;
-                }
-                messagePlayerAlert(client, `This ${getVehicleName(vehicle)} belongs to {ALTCOLOUR}${ownerName} (${ownerType})`);
+                messagePlayerAlert(client, `You are renting this ${getVehicleName(vehicle)} for {ALTCOLOUR}$${makeLargeNumberReadable(getVehicleData(vehicle).rentPrice)} per minute. {MAINCOLOUR}Use {ALTCOLOUR}/stoprent {MAINCOLOUR}if you want to stop renting it.`);
             }
+        } else {
+            let ownerName = "Nobody";
+            let ownerType = "None";
+            ownerType = toLowerCase(getVehicleOwnerTypeText(getVehicleData(vehicle).ownerType));
+            switch(getVehicleData(vehicle).ownerType) {
+                case VRR_VEHOWNER_CLAN:
+                    ownerName = getClanData(getClanIdFromDatabaseId(getVehicleData(vehicle).ownerId)).name;
+                    ownerType = "clan";
+                    break;
 
-            if(!getVehicleData(vehicle).engine) {
-                if(getVehicleData(vehicle).buyPrice == 0 && getVehicleData(vehicle).rentPrice == 0) {
-                    if(doesPlayerHaveVehicleKeys(client, vehicle)) {
-                        if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
-                            messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} {MAINCOLOUR}to start it.`);
-                        } else {
-                            messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
-                        }
+                case VRR_VEHOWNER_JOB:
+                    ownerName = getJobData(getJobIdFromDatabaseId(getVehicleData(vehicle).ownerId)).name;
+                    ownerType = "job";
+                    break;
+
+                case VRR_VEHOWNER_PLAYER:
+                    let subAccountData = loadSubAccountFromId(getVehicleData(vehicle).ownerId);
+                    ownerName = `${subAccountData.firstName} ${subAccountData.lastName}`;
+                    ownerType = "player";
+                    break;
+
+                case VRR_VEHOWNER_BIZ:
+                    ownerName = getBusinessData(getVehicleData(vehicle).ownerId).name;
+                    ownerType = "business";
+                    break;
+
+                default:
+                    break;
+            }
+            messagePlayerAlert(client, `This ${getVehicleName(vehicle)} belongs to {ALTCOLOUR}${ownerName} (${ownerType})`);
+        }
+
+        if(!getVehicleData(vehicle).engine) {
+            if(getVehicleData(vehicle).buyPrice == 0 && getVehicleData(vehicle).rentPrice == 0) {
+                if(doesPlayerHaveVehicleKeys(client, vehicle)) {
+                    if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "engine")) {
+                        messagePlayerTip(client, `This ${getVehicleName(vehicle)}'s engine is off. Press {ALTCOLOUR}${toUpperCase(getKeyNameFromId(getPlayerKeyBindForCommand(client, "engine").key))} {MAINCOLOUR}to start it.`);
                     } else {
-                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
-
+                        messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off. Use /engine to start it`);
                     }
-                }
-                resetVehiclePosition(vehicle);
-            }
+                } else {
+                    messagePlayerAlert(client, `This ${getVehicleName(vehicle)}'s engine is off and you don't have the keys to start it`);
 
-            let currentSubAccount = getPlayerCurrentSubAccount(client);
-
-            if(isPlayerWorking(client)) {
-                if(getVehicleData(vehicle).ownerType == VRR_VEHOWNER_JOB) {
-                    if(getVehicleData(vehicle).ownerId == getPlayerCurrentSubAccount(client).job) {
-                        getPlayerCurrentSubAccount(client).lastJobVehicle = vehicle;
-                        messagePlayerInfo(client, `Use /startroute to start working in this vehicle`);
-                    }
                 }
             }
+            resetVehiclePosition(vehicle);
+        }
 
-            if(isPlayerWorking(client)) {
-                if(isPlayerOnJobRoute(client)) {
-                    if(vehicle == getPlayerJobRouteVehicle(client)) {
-                        stopReturnToJobVehicleCountdown(client);
-                    }
+        let currentSubAccount = getPlayerCurrentSubAccount(client);
+
+        if(isPlayerWorking(client)) {
+            if(getVehicleData(vehicle).ownerType == VRR_VEHOWNER_JOB) {
+                if(getVehicleData(vehicle).ownerId == getPlayerCurrentSubAccount(client).job) {
+                    getPlayerCurrentSubAccount(client).lastJobVehicle = vehicle;
+                    messagePlayerInfo(client, `Use /startroute to start working in this vehicle`);
                 }
             }
         }
 
-        if(getVehicleData(vehicle).streamingRadioStation != -1) {
-            if(getPlayerData(client).streamingRadioStation != getVehicleData(vehicle).streamingRadioStation) {
-                playRadioStreamForPlayer(client, radioStations[getVehicleData(vehicle).streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
+        if(isPlayerWorking(client)) {
+            if(isPlayerOnJobRoute(client)) {
+                if(vehicle == getPlayerJobRouteVehicle(client)) {
+                    stopReturnToJobVehicleCountdown(client);
+                }
             }
         }
-    //}, client.ping+500);
+    }
+
+    if(getVehicleData(vehicle).streamingRadioStation != -1) {
+        if(getPlayerData(client).streamingRadioStation != getVehicleData(vehicle).streamingRadioStation) {
+            playRadioStreamForPlayer(client, radioStations[getVehicleData(vehicle).streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
+        }
+    }
 }
 
 // ===========================================================================
@@ -492,120 +476,123 @@ function onPlayerSpawn(client) {
         return false;
     }
 
-    //logToConsole(LOG_DEBUG, `[VRR.Event] Setting player skin for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).skin}`);
-    //setPlayerSkin(client, getPlayerCurrentSubAccount(client).skin);
-
-    //if(getPlayerData(client).pedState != VRR_PEDSTATE_READY) {
+    if(isCustomCameraSupported()) {
         restorePlayerCamera(client);
+    }
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Storing ${getPlayerDisplayForConsole(client)} ped in client data `);
+    if(areServerElementsSupported()) {
         getPlayerData(client).ped = client.player;
+    }
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
-        messagePlayerAlert(client, `You are now playing as: {businessBlue}${getCharacterFullName(client)}`, getColourByName("white"));
-        messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
-        messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
+    logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)} the 'now playing as' message`);
+    messagePlayerAlert(client, `You are now playing as: {businessBlue}${getCharacterFullName(client)}`, getColourByName("white"));
+    messagePlayerNormal(client, "This server is in early development and may restart at any time for updates.", getColourByName("orange"));
+    messagePlayerNormal(client, "Please report any bugs using /bug and suggestions using /idea", getColourByName("yellow"));
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
-        updatePlayerSpawnedState(client, true);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Updating spawned state for ${getPlayerDisplayForConsole(client)} to true`);
+    updatePlayerSpawnedState(client, true);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
-        setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Setting player interior for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).interior}`);
+    setPlayerInterior(client, getPlayerCurrentSubAccount(client).interior);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
-        setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Setting player dimension for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).dimension}`);
+    setPlayerDimension(client, getPlayerCurrentSubAccount(client).dimension);
 
-        //if(getPlayerCurrentSubAccount(client).interior != 0 || getPlayerCurrentSubAccount(client).dimension != 0) {
-        //    updateAllInteriorVehiclesForPlayer(client, getPlayerCurrentSubAccount(client).interior, getPlayerCurrentSubAccount(client).dimension);
-        //}
+    //if(getPlayerCurrentSubAccount(client).interior != 0 || getPlayerCurrentSubAccount(client).dimension != 0) {
+    //    updateAllInteriorVehiclesForPlayer(client, getPlayerCurrentSubAccount(client).interior, getPlayerCurrentSubAccount(client).dimension);
+    //}
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player health for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).health}`);
-        setPlayerHealth(client, getPlayerCurrentSubAccount(client).health);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Setting player health for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).health}`);
+    setPlayerHealth(client, getPlayerCurrentSubAccount(client).health);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player armour for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).armour}`);
-        setPlayerArmour(client, getPlayerCurrentSubAccount(client).armour);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Setting player armour for ${getPlayerDisplayForConsole(client)} to ${getPlayerCurrentSubAccount(client).armour}`);
+    setPlayerArmour(client, getPlayerCurrentSubAccount(client).armour);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
-        sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Sending ${getPlayerDisplayForConsole(client)}'s job type to their client (${getJobIndexFromDatabaseId(getPlayerCurrentSubAccount(client))})`);
+    sendPlayerJobType(client, getPlayerCurrentSubAccount(client).job);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Enabling all rendering states for ${getPlayerDisplayForConsole(client)}`);
-        setPlayer2DRendering(client, true, true, true, true, true, true);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Enabling all rendering states for ${getPlayerDisplayForConsole(client)}`);
+    setPlayer2DRendering(client, true, true, true, true, true, true);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Sending snow states to ${getPlayerDisplayForConsole(client)}`);
+    if(isSnowSupported()) {
         updatePlayerSnowState(client);
+    }
 
-        if(getServerGame() == VRR_GAME_GTA_SA) {
-            logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
-            setEntityData(client.player, "vrr.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
+    if(areServerElementsSupported() && getServerGame() == VRR_GAME_GTA_SA) {
+        logToConsole(LOG_DEBUG, `[VRR.Event] Setting player walk and fightstyle for ${getPlayerDisplayForConsole(client)}`);
+        setEntityData(client.player, "vrr.walkStyle", getPlayerCurrentSubAccount(client).walkStyle, true);
 
-            setPlayerFightStyle(client, getPlayerCurrentSubAccount(client).fightStyle);
-        }
+        setPlayerFightStyle(client, getPlayerCurrentSubAccount(client).fightStyle);
+    }
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
-        if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
-            updatePlayerShowLogoState(client, true);
-        }
+    logToConsole(LOG_DEBUG, `[VRR.Event] Updating logo state for ${getPlayerDisplayForConsole(client)}`);
+    if(getServerConfig().showLogo && doesPlayerHaveLogoEnabled(client)) {
+        updatePlayerShowLogoState(client, true);
+    }
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Caching ${getPlayerDisplayForConsole(client)}'s hotbar items`);
-        cachePlayerHotBarItems(client);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Caching ${getPlayerDisplayForConsole(client)}'s hotbar items`);
+    cachePlayerHotBarItems(client);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
-        updatePlayerHotBar(client);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s hotbar`);
+    updatePlayerHotBar(client);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
-        getPlayerData(client).switchingCharacter = false;
+    logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s switchchar state to false`);
+    getPlayerData(client).switchingCharacter = false;
 
-        if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
-            let keyId = getPlayerKeyBindForCommand(client, "enter");
-            logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId.key}, ${toUpperCase(getKeyNameFromId(keyId.key))}) to ${getPlayerDisplayForConsole(client)}`);
-            sendPlayerEnterPropertyKey(client, keyId.key);
-        }
+    if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand(client, "enter")) {
+        let keyId = getPlayerKeyBindForCommand(client, "enter");
+        logToConsole(LOG_DEBUG, `[VRR.Event] Sending custom enter property key ID (${keyId.key}, ${toUpperCase(getKeyNameFromId(keyId.key))}) to ${getPlayerDisplayForConsole(client)}`);
+        sendPlayerEnterPropertyKey(client, keyId.key);
+    }
 
-        //if(isGTAIV()) {
-        //    setEntityData(client.player, "vrr.bodyPartHair", getPlayerCurrentSubAccount(client).bodyParts.hair, true);
-        //    setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyParts.head, true);
-        //    setEntityData(client.player, "vrr.bodyPartUpper", getPlayerCurrentSubAccount(client).bodyParts.upper, true);
-        //    setEntityData(client.player, "vrr.bodyPartLower", getPlayerCurrentSubAccount(client).bodyParts.lower, true);
-        //    setEntityData(client.player, "vrr.bodyPropHair", getPlayerCurrentSubAccount(client).bodyProps.hair, true);
-        //    setEntityData(client.player, "vrr.bodyPropEyes", getPlayerCurrentSubAccount(client).bodyProps.eyes, true);
-        //    setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyProps.head, true);
-        //    setEntityData(client.player, "vrr.bodyPartLeftHand", getPlayerCurrentSubAccount(client).bodyProps.leftHand, true);
-        //    setEntityData(client.player, "vrr.bodyPartRightHand", getPlayerCurrentSubAccount(client).bodyProps.rightHand, true);
-        //    setEntityData(client.player, "vrr.bodyPartLeftWrist", getPlayerCurrentSubAccount(client).bodyProps.leftWrist, true);
-        //    setEntityData(client.player, "vrr.bodyPartRightWrist", getPlayerCurrentSubAccount(client).bodyProps.rightWrist, true);
-        //    setEntityData(client.player, "vrr.bodyPartHip", getPlayerCurrentSubAccount(client).bodyProps.hip, true);
-        //    setEntityData(client.player, "vrr.bodyPartLeftFoot", getPlayerCurrentSubAccount(client).bodyProps.leftFoot, true);
-        //    setEntityData(client.player, "vrr.bodyPartRightFoot", getPlayerCurrentSubAccount(client).bodyProps.rightFoot, true);
-        //}
+    //if(isGTAIV()) {
+    //    setEntityData(client.player, "vrr.bodyPartHair", getPlayerCurrentSubAccount(client).bodyParts.hair, true);
+    //    setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyParts.head, true);
+    //    setEntityData(client.player, "vrr.bodyPartUpper", getPlayerCurrentSubAccount(client).bodyParts.upper, true);
+    //    setEntityData(client.player, "vrr.bodyPartLower", getPlayerCurrentSubAccount(client).bodyParts.lower, true);
+    //    setEntityData(client.player, "vrr.bodyPropHair", getPlayerCurrentSubAccount(client).bodyProps.hair, true);
+    //    setEntityData(client.player, "vrr.bodyPropEyes", getPlayerCurrentSubAccount(client).bodyProps.eyes, true);
+    //    setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyProps.head, true);
+    //    setEntityData(client.player, "vrr.bodyPartLeftHand", getPlayerCurrentSubAccount(client).bodyProps.leftHand, true);
+    //    setEntityData(client.player, "vrr.bodyPartRightHand", getPlayerCurrentSubAccount(client).bodyProps.rightHand, true);
+    //    setEntityData(client.player, "vrr.bodyPartLeftWrist", getPlayerCurrentSubAccount(client).bodyProps.leftWrist, true);
+    //    setEntityData(client.player, "vrr.bodyPartRightWrist", getPlayerCurrentSubAccount(client).bodyProps.rightWrist, true);
+    //    setEntityData(client.player, "vrr.bodyPartHip", getPlayerCurrentSubAccount(client).bodyProps.hip, true);
+    //    setEntityData(client.player, "vrr.bodyPartLeftFoot", getPlayerCurrentSubAccount(client).bodyProps.leftFoot, true);
+    //    setEntityData(client.player, "vrr.bodyPartRightFoot", getPlayerCurrentSubAccount(client).bodyProps.rightFoot, true);
+    //}
 
-        if(isGTAIV()) {
-            sendPlayerPedPartsAndProps(client);
-        }
+    if(isGTAIV()) {
+        //sendPlayerPedPartsAndProps(client);
+    }
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
-        getPlayerData(client).pedState = VRR_PEDSTATE_READY;
+    logToConsole(LOG_DEBUG, `[VRR.Event] Setting ${getPlayerDisplayForConsole(client)}'s ped state to ready`);
+    getPlayerData(client).pedState = VRR_PEDSTATE_READY;
 
+    if(areServerElementsSupported()) {
         syncPlayerProperties(client);
         //setTimeout(function() {
         //    syncPlayerProperties(client);
         //}, 1000);
+    }
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
-        updatePlayerCash(client);
+    logToConsole(LOG_DEBUG, `[VRR.Event] Syncing ${getPlayerDisplayForConsole(client)}'s cash ${getPlayerCurrentSubAccount(client).cash}`);
+    updatePlayerCash(client);
 
-        logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
-        updateAllPlayerNameTags();
+    logToConsole(LOG_DEBUG, `[VRR.Event] Updating all player name tags`);
+    updateAllPlayerNameTags();
 
-        if(!areServerElementsSupported()) {
-            sendAllBusinessEntrancesToPlayer(client);
-            sendAllHouseEntrancesToPlayer(client);
-            //sendAllJobLocationsToPlayer(client);
-        }
+    if(!areServerElementsSupported()) {
+        sendAllBusinessesToPlayer(client);
+        sendAllHousesToPlayer(client);
+        //sendAllJobLocationsToPlayer(client);
 
         requestPlayerPedNetworkId(client);
+    }    
 
-        getPlayerData(client).payDayTickStart = sdl.ticks;
-    //}
+    getPlayerData(client).payDayTickStart = sdl.ticks;
 }
 
 // ===========================================================================

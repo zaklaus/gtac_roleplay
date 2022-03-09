@@ -44,8 +44,8 @@ function receiveHouseFromServer(houseId, entrancePosition, blipModel, pickupMode
                 }
             }
         } else {
+            let tempHouseData = new HouseData(houseId, entrancePosition, blipModel, pickupModel, hasInterior, hasItems);
             if(blipModel != -1) {
-                let tempHouseData = new HouseData(houseId, entrancePosition, blipModel, pickupModel, hasInterior, hasItems);
                 let blipId = natives.addBlipForCoord(entrancePosition);
                 if(blipId) {
                     tempHouseData.blipId = blipId;
@@ -53,9 +53,9 @@ function receiveHouseFromServer(houseId, entrancePosition, blipModel, pickupMode
                     natives.setBlipMarkerLongDistance(blipId, false);
                     //natives.changeBlipNameFromAscii(blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
                 }
-                houses.push(tempHouseData);
-                setAllHouseDataIndexes();
             }
+            houses.push(tempHouseData);
+            setAllHouseDataIndexes();
         }
     }
 }

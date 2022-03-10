@@ -95,8 +95,7 @@ function onProcess(event, deltaTime) {
     processGameSpecifics();
     processNearbyPickups();
     processVehiclePurchasing();
-    processVehicleFires();
-}
+    //processVehicleFires();
 
 // ===========================================================================
 

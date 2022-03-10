@@ -13,10 +13,10 @@ function processSync(event, deltaTime) {
             sendNetworkEventToServer("vrr.plr.pos", localPlayer.position);
             sendNetworkEventToServer("vrr.plr.rot", localPlayer.heading);
 
-            if(localPlayer.vehicle != null) {
-                sendNetworkEventToServer("vrr.veh.pos", getVehicleForNetworkEvent(localPlayer.vehicle), localPlayer.vehicle.position);
-                sendNetworkEventToServer("vrr.veh.rot", getVehicleForNetworkEvent(localPlayer.vehicle), localPlayer.vehicle.heading);
-            }
+            //if(localPlayer.vehicle != null) {
+            //    sendNetworkEventToServer("vrr.veh.pos", getVehicleForNetworkEvent(localPlayer.vehicle), localPlayer.vehicle.position);
+            //    sendNetworkEventToServer("vrr.veh.rot", getVehicleForNetworkEvent(localPlayer.vehicle), localPlayer.vehicle.heading);
+            //}
         }
 
         if(localPlayer.health <= 0) {

@@ -13,6 +13,8 @@ function initChatScript() {
 	return true;
 }
 
+// ===========================================================================
+
 function processPlayerChat(client, messageText) {
     if(!getPlayerData(client)) {
         messagePlayerError(client, "You need to login before you can chat!");
@@ -47,7 +49,7 @@ function processPlayerChat(client, messageText) {
 	}
     */
     messagePlayerNormal(null, `💬 ${getCharacterFullName(client)}: ${messageText}`);
-    messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
+    //messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
 }
 
 // ===========================================================================

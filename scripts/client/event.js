@@ -96,6 +96,7 @@ function onProcess(event, deltaTime) {
     processNearbyPickups();
     processVehiclePurchasing();
     //processVehicleFires();
+}
 
 // ===========================================================================
 

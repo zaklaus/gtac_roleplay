@@ -520,9 +520,8 @@ function sendPlayerRemoveFromVehicle(client) {
 
 // ===========================================================================
 
-function sendChatBoxMessageToPlayer(client, message, colour) {
-    sendNetworkEventToPlayer("vrr.m", client, message, colour)
-    //messageClient(message, client, colour);
+function sendChatBoxMessageToPlayer(client, messageText, colour) {
+    messageClient(messageText, client, colour);
 }
 
 // ===========================================================================

@@ -16,28 +16,33 @@ function initChatScript() {
 // ===========================================================================
 
 function processPlayerChat(client, messageText) {
-    if(!getPlayerData(client)) {
-        messagePlayerError(client, "You need to login before you can chat!");
-        return false;
-    }
+	if(!isConsole(client)) {
+		if(!getPlayerData(client)) {
+			messagePlayerError(client, "You need to login before you can chat!");
+			return false;
+		}
 
-    if(!isPlayerLoggedIn(client)) {
-        messagePlayerError(client, "You need to login before you can chat!");
-        return false;
-    }
+		if(!isPlayerLoggedIn(client)) {
+			messagePlayerError(client, "You need to login before you can chat!");
+			return false;
+		}
 
-    if(!isPlayerSpawned(client)) {
-        messagePlayerError(client, "You need to spawn before you can chat!");
-        return false;
-    }
+		if(!isPlayerSpawned(client)) {
+			messagePlayerError(client, "You need to spawn before you can chat!");
+			return false;
+		}
 
-    if(isPlayerMuted(client)) {
-        messagePlayerError(client, "You are muted and can't chat!");
-        return false;
-    }
+		if(isPlayerMuted(client)) {
+			messagePlayerError(client, "You are muted and can't chat!");
+			return false;
+		}
 
-    messageText = messageText.substring(0, 128);
-
+		messageText = messageText.substring(0, 128);
+		messagePlayerNormal(null, `💬 ${getCharacterFullName(client)}: ${messageText}`);
+	} else {
+		messagePlayerNormal(null, `🛡️ (ADMIN) - ${messageText}`);
+	}
+	
     /*
     let clients = getClients();
 	for(let i in clients) {
@@ -48,7 +53,7 @@ function processPlayerChat(client, messageText) {
 		messagePlayerNormal(clients[i], `💬 ${getCharacterFullName(client)}: [#FFFFFF]${translatedText}${original}`, clients[i], getColourByName("mediumGrey"));
 	}
     */
-    messagePlayerNormal(null, `💬 ${getCharacterFullName(client)}: ${messageText}`);
+    
     //messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
 }
 

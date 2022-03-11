@@ -225,3 +225,10 @@ function onCameraProcess(event) {
 }
 
 // ===========================================================================
+
+function onChatOutput(event, messageText, colour) {
+    //event.preventDefault();
+    //receiveChatBoxMessageFromServer(messageText, colour);
+}
+
+// ===========================================================================

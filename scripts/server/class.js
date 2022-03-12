@@ -239,8 +239,6 @@ class ClientData {
 		this.locale = 0;
 
 		this.enteringVehicle = null;
-
-		this.pedId = -1;
 	}
 };
 
@@ -863,6 +861,11 @@ class VehicleData {
 		this.vehicle = vehicle;
 		this.index = -1;
 		this.needsSaved = false;
+
+		// GTA IV
+		this.ivNetworkId = -1;
+		this.syncPosition = toVector3(0.0, 0.0, 0.0);
+		this.syncHeading = 0.0;
 
 		// Ownership
 		this.ownerType = VRR_VEHOWNER_NONE;

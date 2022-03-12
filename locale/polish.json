@@ -391,5 +391,7 @@
     "NotATester": "You are not a tester!",
     "AccessDenied": "AccessDenied",
     "InvalidSkin": "That skin is invalid!",
-    "HeaderInteriorTypes": "Interiors"
+    "HeaderInteriorTypes": "Interiors List",
+    "ViewInventoryKeyPressTip": "Press {1} to see your items",
+    "ViewInventoryCommandTip": "Use {1} to see your items"
 }

@@ -683,9 +683,11 @@ function processLocalPlayerVehicleEntryExitHandling() {
 
 // ===========================================================================
 
-function getVehicleForNetworkEvent(vehicleArg) {
-    // Soon this will also be used to get the IV vehicle via it's ID
-    return vehicleArg;
+function getVehicleForNetworkEvent(vehicle) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        return natives.getNetworkIdFromVehicle(vehicle);
+    }
+    return vehicle;
 }
 
 // ===========================================================================
@@ -806,6 +808,21 @@ function setVehiclePurchaseState(state, vehicleId, position) {
     }
 
     vehiclePurchasePosition = position;
+}
+
+// ===========================================================================
+
+function processVehicleFires() {
+    let vehicles = getElementsByType(ELEMENT_VEHICLE);
+    for(let i in vehicles) {
+        if(vehicles[i].isSyncer) {
+            if(!doesEntityDataExist(vehicles[i], "vrr.fire")) {
+                triggerNetworkEvent("vrr.vehFire", vehicles[i].id);
+            } else {
+                vehicles[i].health = 249;
+            }
+        }
+    }
 }
 
 // ===========================================================================

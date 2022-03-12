@@ -1358,7 +1358,7 @@ function createBusinessEntrancePickup(businessId) {
 			updateBusinessPickupLabelData(businessId);
 			addToWorld(getBusinessData(businessId).entrancePickup);
 		} else {
-			sendBusinessEntranceToPlayer(null, businessId, getBusinessData(businessId), getBusinessData(businessId).entrancePosition, getBusinessData(businessId).entranceBlipModel, getBusinessData(businessId).entrancePickupModel, getBusinessData(businessId).hasInterior, false);
+			sendBusinessToPlayer(null, businessId, getBusinessData(businessId), getBusinessData(businessId).entrancePosition, getBusinessData(businessId).entranceBlipModel, getBusinessData(businessId).entrancePickupModel, getBusinessData(businessId).hasInterior, false);
 		}
 	}
 }
@@ -1389,7 +1389,7 @@ function createBusinessEntranceBlip(businessId) {
 			setElementDimension(getBusinessData(businessId).entranceBlip, getBusinessData(businessId).entranceDimension);
 			addToWorld(getBusinessData(businessId).entranceBlip);
 		} else {
-			sendBusinessEntranceToPlayer(null, businessId, getBusinessData(businessId).name, getBusinessData(businessId).entrancePosition, blipModelId, getBusinessData(businessId).entrancePickupModel, getBusinessData(businessId).hasInterior, false);
+			sendBusinessToPlayer(null, businessId, getBusinessData(businessId).name, getBusinessData(businessId).entrancePosition, blipModelId, getBusinessData(businessId).entrancePickupModel, getBusinessData(businessId).hasInterior, false);
 		}
 	}
 }
@@ -1765,9 +1765,9 @@ function buyFromBusinessCommand(command, params, client) {
 
 	if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand("inv")) {
 		let keyData = getPlayerKeyBindForCommand("inv");
-		messagePlayerNewbieTip(client, getLocaleString(client, "ViewInventoryKeyPressTip"), `{ALTCOLOUR}${getKeyNameFromId(keyData.key)}{MAINCOLOUR}`);
+		messagePlayerNewbieTip(client, getLocaleString(client, "ViewInventoryKeyPressTip", `{ALTCOLOUR}${getKeyNameFromId(keyData.key)}{MAINCOLOUR}`));
 	} else {
-		messagePlayerNewbieTip(client, getLocaleString(client, "ViewInventoryKeyPressTip"), `{ALTCOLOUR}/inv{MAINCOLOUR}`);
+		messagePlayerNewbieTip(client, getLocaleString(client, "ViewInventoryKeyPressTip", `{ALTCOLOUR}/inv{MAINCOLOUR}`));
 	}
 }
 

@@ -10,8 +10,13 @@
 function processSync(event, deltaTime) {
     if(localPlayer != null) {
         if(!areServerElementsSupported()) {
-            sendNetworkEventToServer("vrr.player.position", localPlayer.position);
-            sendNetworkEventToServer("vrr.player.heading", localPlayer.heading);
+            sendNetworkEventToServer("vrr.plr.pos", localPlayer.position);
+            sendNetworkEventToServer("vrr.plr.rot", localPlayer.heading);
+
+            //if(localPlayer.vehicle != null) {
+            //    sendNetworkEventToServer("vrr.veh.pos", getVehicleForNetworkEvent(localPlayer.vehicle), localPlayer.vehicle.position);
+            //    sendNetworkEventToServer("vrr.veh.rot", getVehicleForNetworkEvent(localPlayer.vehicle), localPlayer.vehicle.heading);
+            //}
         }
 
         if(localPlayer.health <= 0) {
@@ -39,12 +44,20 @@ function setVehicleEngine(vehicleId, state) {
 // ===========================================================================
 
 function setVehicleLights(vehicleId, state) {
+
+
     if(getGame() != VRR_GAME_MAFIA_ONE) {
         if(!state) {
             getElementFromId(vehicleId).lightStatus = 2;
         } else {
             getElementFromId(vehicleId).lightStatus = 1;
         }
+    } else if(getGame() == VRR_GAME_GTA_IV) {
+        if(!state) {
+            natives.forceCarLights(natives.getVehicleFromNetworkId(vehicleId, 0));
+        } else {
+            natives.forceCarLights(natives.getVehicleFromNetworkId(vehicleId, 1));
+        }     
     } else {
         if(!state) {
             getElementFromId(vehicleId).lights = false;
@@ -63,6 +76,10 @@ function repairVehicle(syncId) {
 // ===========================================================================
 
 function syncVehicleProperties(vehicle) {
+    if(!areServerElementsSupported()) {
+        return false;
+    }
+
     if(doesEntityDataExist(vehicle, "vrr.lights")) {
         let lightStatus = getEntityData(vehicle, "vrr.lights");
         if(!lightStatus) {
@@ -134,6 +151,10 @@ function syncVehicleProperties(vehicle) {
 // ===========================================================================
 
 function syncCivilianProperties(civilian) {
+    if(!areServerElementsSupported()) {
+        return false;
+    }
+
     if(getGame() == VRR_GAME_GTA_III) {
         if(doesEntityDataExist(civilian, "vrr.scale")) {
             let scaleFactor = getEntityData(civilian, "vrr.scale");
@@ -226,6 +247,10 @@ function syncCivilianProperties(civilian) {
 // ===========================================================================
 
 function syncPlayerProperties(player) {
+    if(!areServerElementsSupported()) {
+        return false;
+    }
+
     if(getGame() == VRR_GAME_GTA_III) {
         if(doesEntityDataExist(player, "vrr.scale")) {
             let scaleFactor = getEntityData(player, "vrr.scale");
@@ -335,6 +360,10 @@ function syncPlayerProperties(player) {
 // ===========================================================================
 
 function syncObjectProperties(object) {
+    if(!areServerElementsSupported()) {
+        return false;
+    }
+
     if(getGame() == VRR_GAME_GTA_III || getGame() == VRR_GAME_GTA_VC) {
         if(doesEntityDataExist(object, "vrr.scale")) {
             let scaleFactor = getEntityData(object, "vrr.scale");
@@ -351,6 +380,10 @@ function syncObjectProperties(object) {
 // ===========================================================================
 
 function syncElementProperties(element) {
+    if(!areServerElementsSupported()) {
+        return false;
+    }
+
     if(doesEntityDataExist(element, "vrr.interior")) {
         if(typeof element.interior != "undefined") {
             element.interior = getEntityData(element, "vrr.interior");
@@ -386,6 +419,18 @@ function syncElementProperties(element) {
 function receiveHouseFromServer(houseId, entrancePosition, blipModel, pickupModel, hasInterior) {
     if(getGame() == VRR_GAME_GTA_IV) {
         
+    }
+}
+
+// ===========================================================================
+
+function setLocalPlayerPedPartsAndProps(parts, props) {
+    for(let i in parts) {
+        localPlayer.changeBodyPart(parts[i][0], parts[i][1], parts[i][2]);
+    }
+
+    for(let j in props) {
+        localPlayer.changeBodyProp(props[j][0], props[j][1]);
     }
 }
 

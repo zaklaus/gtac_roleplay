@@ -283,6 +283,7 @@ function showConnectCameraToPlayer(client) {
 		//setPlayerDimension(client, 0);
 		setPlayerCameraLookAt(client, getServerConfig().connectCameraPosition, getServerConfig().connectCameraLookAt);
 	}
+	setPlayer2DRendering(client, false, false, false, false, false, false);
 }
 
 // ===========================================================================

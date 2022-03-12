@@ -107,6 +107,8 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.holdObject", makePedHoldObject);
 
     addNetworkEventHandler("vrr.playerPedId", sendLocalPlayerNetworkIdToServer);
+
+    addNetworkEventHandler("vrr.ped", setLocalPlayerPedPartsAndProps);
 }
 
 // ===========================================================================
@@ -139,6 +141,8 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
         natives.displayCash(hudState);
         natives.displayAmmo(hudState);
         natives.displayHud(hudState);
+        natives.displayRadar(hudState);
+        natives.displayAreaName(hudState);
     } else {
         if(typeof setHUDEnabled != "undefined") {
             setHUDEnabled(hudState);
@@ -257,18 +261,6 @@ function setElementCollisionsEnabled(elementId, state) {
 
 // ===========================================================================
 
-function setLocalPlayerPedPartsAndProps(parts, props) {
-    for(let i in parts) {
-        localPlayer.changeBodyPart(parts[0], parts[1], parts[2]);
-    }
-
-    for(let i in props) {
-        localPlayer.changeBodyProp(props[0], props[1]);
-    }
-}
-
-// ===========================================================================
-
 function setLocalPlayerArmour(armour) {
     if(typeof localPlayer.armour != "undefined") {
         localPlayer.armour = armour;
@@ -301,8 +293,9 @@ function setLocalPlayerInfiniteRun(state) {
 
 function setLocalPlayerSkin(skinId) {
     if(getGame() == VRR_GAME_GTA_IV) {
-        //natives.changePlayerModel(natives.getPlayerId(), skinId);
-        localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        natives.changePlayerModel(natives.getPlayerId(), skinId);
+        //localPlayer.skin = allowedSkins[skinSelectorIndex][0];
+        //localPlayer.modelIndex = allowedSkins[skinSelectorIndex][0];
     } else {
         localPlayer.skin = skinId;
     }

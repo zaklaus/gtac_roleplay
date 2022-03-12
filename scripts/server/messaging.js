@@ -33,19 +33,27 @@ function messageAdminAction(messageText) {
  *
  */
 function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
-    if(isConsole(client) || client == null) {
-        logToConsole(LOG_INFO, `${removeColoursInMessage(messageText)}`);
+    //if(isConsole(client) || client == null) {
+    //    logToConsole(LOG_INFO, `${removeColoursInMessage(messageText)}`);
+    //}
+
+    messageText = replaceColoursInMessage(messageText);
+
+    if(client == null) {
+        message(messageText, colour);
+    } else {
+        messageClient(messageText, client, colour);
     }
 
-    sendChatBoxMessageToPlayer(client, `${replaceColoursInMessage(messageText)}`, colour);
+    //sendChatBoxMessageToPlayer(client, messageText, colour);
     return true;
 }
 
 // ===========================================================================
 
 function messageAdmins(messageText, colour = getColourByName("softRed")) {
-    let plainMessage = removeColoursInMessage(messageText);
-    console.warn(`🛡️ ${plainMessage}`);
+    //let plainMessage = removeColoursInMessage(messageText);
+    //console.warn(`🛡️ ${plainMessage}`);
 
     let clients = getClients();
     for(let i in clients) {
@@ -54,9 +62,9 @@ function messageAdmins(messageText, colour = getColourByName("softRed")) {
         }
     }
 
-    if(getServerConfig().discordConfig.sendAdminEvents) {
-        messageDiscordAdminChannel(plainMessage);
-    }
+    //if(getServerConfig().discordConfig.sendAdminEvents) {
+    //    messageDiscordAdminChannel(plainMessage);
+    //}
 }
 
 // ===========================================================================
@@ -232,17 +240,6 @@ function clearChatBox(client) {
 	for(let i = 0; i <= 20; i++) {
 		messageClient(" ", client, COLOUR_WHITE);
 	}
-}
-
-// ===========================================================================
-
-function replaceEmojiInString(messageString) {
-	for(let i in emojiReplaceString) {
-		while(messageString.indexOf(emojiReplaceString[i][0]) != -1) {
-			messageString = messageString.replace(emojiReplaceString[i][0], emojiReplaceString[i][1]);
-		}
-	}
-	return messageString;
 }
 
 // ===========================================================================

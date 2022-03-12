@@ -80,13 +80,27 @@ function initConfigScript() {
 	logToConsole(LOG_DEBUG, "[VRR.Config]: Loading global config ...");
 	loadGlobalConfig();
 
-	logToConsole(LOG_DEBUG, "[VRR.Config]: Loading server config ...");
+	logToConsole(LOG_INFO, "[VRR.Config]: Loading server config ...");
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port, getMultiplayerMod());
 
-	logToConsole(LOG_DEBUG, "[VRR.Config]: Applying server config ...");
-	applyConfigToServer(serverConfig);
+	logToConsole(LOG_INFO, "[VRR.Config]: Applying server config ...");
+	getServerConfig().fallingSnow = intToBool(toInteger(server.getCVar("fallingsnow")));
+	getServerConfig().groundSnow = intToBool(toInteger(server.getCVar("groundsnow")));
+	getServerConfig().useGUI = intToBool(toInteger(server.getCVar("gui")));
+	getServerConfig().showLogo = false;
+	getServerConfig().testerOnly = intToBool(toInteger(server.getCVar("testeronly")));
+	getServerConfig().discordEnabled = false;
+	getServerConfig().createJobPickups = intToBool(toInteger(server.getCVar("jobpickups")));
+	getServerConfig().createBusinessPickups = intToBool(toInteger(server.getCVar("businesspickups")));
+	getServerConfig().createHousePickups = intToBool(toInteger(server.getCVar("housepickups")));
+	getServerConfig().createJobBlips = intToBool(toInteger(server.getCVar("jobblips")));
+	getServerConfig().createBusinessBlips = intToBool(toInteger(server.getCVar("businessblips")));
+	getServerConfig().createHouseBlips = intToBool(toInteger(server.getCVar("houseblips")));
+	getServerConfig().useRealTime = intToBool(toInteger(server.getCVar("realtime")));
+	getServerConfig().antiCheat.enabled = intToBool(toInteger(server.getCVar("anticheat")));
 
-	logToConsole(LOG_DEBUG, "[VRR.Config]: All config loaded and applied successfully!");
+	applyConfigToServer(serverConfig);
+	logToConsole(LOG_DEBUG, "[VRR.Config]: Server config applied successfully!");
 
 	logToConsole(LOG_INFO, "[VRR.Config]: Config script initialized!");
 }
@@ -131,22 +145,6 @@ function loadServerConfigFromId(tempServerId) {
 			if(dbQuery.numRows > 0) {
 				let dbAssoc = fetchQueryAssoc(dbQuery);
 				let tempServerConfigData = new ServerData(dbAssoc);
-
-				tempServerConfigData.fallingSnow = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("FallingSnow"));
-				tempServerConfigData.groundSnow = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("GroundSnow"));
-				tempServerConfigData.useGUI = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("GUI"));
-				tempServerConfigData.showLogo = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("Logo"));
-				tempServerConfigData.testerOnly = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("Testing"));
-				tempServerConfigData.discordEnabled = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("DiscordBot"));
-				tempServerConfigData.createJobPickups = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("JobPickups"));
-				tempServerConfigData.createBusinessPickups = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("BusinessPickups"));
-				tempServerConfigData.createHousePickups = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("HousePickups"));
-				tempServerConfigData.createJobBlips = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("JobBlips"));
-				tempServerConfigData.createBusinessBlips = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("BusinessBlips"));
-				tempServerConfigData.createHouseBlips = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("HouseBlips"));
-				tempServerConfigData.useRealTime = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("RealTime"));
-				tempServerConfigData.antiCheat.enabled = hasBitFlag(tempServerConfigData.settings, getServerSettingsFlagValue("Anticheat"));
-
 				freeDatabaseQuery(dbQuery);
 				return tempServerConfigData;
 			}

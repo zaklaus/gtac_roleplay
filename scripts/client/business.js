@@ -52,14 +52,16 @@ function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel
                     logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId}'s blip has been changed by the server`);
                     natives.setBlipCoordinates(businessData.blipId, businessData.entrancePosition);
                     natives.changeBlipSprite(businessData.blipId, businessData.blipModel);
-                    natives.setBlipMarkerLongDistance(businessData.blipId, true);
+                    natives.setBlipMarkerLongDistance(businessData.blipId, false);
+                    natives.setBlipAsShortRange(tempBusinessData.blipId, true);
                     natives.changeBlipNameFromAscii(businessData.blipId, `${businessData.name.substr(0, 24)}${(businessData.name.length > 24) ? " ...": ""}`);
                 } else {
                     let blipId = natives.addBlipForCoord(entrancePosition);
                     if(blipId) {
                         businessData.blipId = blipId;
                         natives.changeBlipSprite(businessData.blipId, businessData.blipModel);
-                        natives.setBlipMarkerLongDistance(businessData.blipId, true);      
+                        natives.setBlipMarkerLongDistance(businessData.blipId, false);      
+                        natives.setBlipAsShortRange(tempBusinessData.blipId, true);
                         natives.changeBlipNameFromAscii(businessData.blipId, `${businessData.name.substr(0, 24)}${(businessData.name.length > 24) ? " ...": ""}`);
                     }
                     logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId}'s blip has been added by the server (Model ${blipModel}, ID ${blipId})`);
@@ -73,7 +75,8 @@ function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel
                 if(blipId) {
                     tempBusinessData.blipId = blipId;
                     natives.changeBlipSprite(tempBusinessData.blipId, blipModel);
-                    natives.setBlipMarkerLongDistance(tempBusinessData.blipId, true);
+                    natives.setBlipMarkerLongDistance(tempBusinessData.blipId, false);
+                    natives.setBlipAsShortRange(tempBusinessData.blipId, true);
                     natives.changeBlipNameFromAscii(tempBusinessData.blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
                 }
                 logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId}'s blip has been added by the server (Model ${blipModel}, ID ${blipId})`);

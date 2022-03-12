@@ -80,29 +80,27 @@ function initConfigScript() {
 	logToConsole(LOG_DEBUG, "[VRR.Config]: Loading global config ...");
 	loadGlobalConfig();
 
-	logToConsole(LOG_DEBUG, "[VRR.Config]: Loading server config ...");
+	logToConsole(LOG_INFO, "[VRR.Config]: Loading server config ...");
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port, getMultiplayerMod());
 
-	logToConsole(LOG_DEBUG, "[VRR.Config]: Applying server config ...");
-
-	getServerConfig().fallingSnow = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("FallingSnow"));
-	getServerConfig().groundSnow = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("GroundSnow"));
-	getServerConfig().useGUI = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("GUI"));
-	getServerConfig().showLogo = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("Logo"));
-	getServerConfig().testerOnly = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("Testing"));
-	getServerConfig().discordEnabled = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("DiscordBot"));
-	getServerConfig().createJobPickups = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("JobPickups"));
-	getServerConfig().createBusinessPickups = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("BusinessPickups"));
-	getServerConfig().createHousePickups = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("HousePickups"));
-	getServerConfig().createJobBlips = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("JobBlips"));
-	getServerConfig().createBusinessBlips = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("BusinessBlips"));
-	getServerConfig().createHouseBlips = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("HouseBlips"));
-	getServerConfig().useRealTime = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("RealTime"));
-	getServerConfig().antiCheat.enabled = hasBitFlag(getServerConfig().settings, getServerSettingsFlagValue("Anticheat"));
+	logToConsole(LOG_INFO, "[VRR.Config]: Applying server config ...");
+	getServerConfig().fallingSnow = intToBool(toInteger(server.getCVar("fallingsnow")));
+	getServerConfig().groundSnow = intToBool(toInteger(server.getCVar("groundsnow")));
+	getServerConfig().useGUI = intToBool(toInteger(server.getCVar("gui")));
+	getServerConfig().showLogo = false;
+	getServerConfig().testerOnly = intToBool(toInteger(server.getCVar("testeronly")));
+	getServerConfig().discordEnabled = false;
+	getServerConfig().createJobPickups = intToBool(toInteger(server.getCVar("jobpickups")));
+	getServerConfig().createBusinessPickups = intToBool(toInteger(server.getCVar("businesspickups")));
+	getServerConfig().createHousePickups = intToBool(toInteger(server.getCVar("housepickups")));
+	getServerConfig().createJobBlips = intToBool(toInteger(server.getCVar("jobblips")));
+	getServerConfig().createBusinessBlips = intToBool(toInteger(server.getCVar("businessblips")));
+	getServerConfig().createHouseBlips = intToBool(toInteger(server.getCVar("houseblips")));
+	getServerConfig().useRealTime = intToBool(toInteger(server.getCVar("realtime")));
+	getServerConfig().antiCheat.enabled = intToBool(toInteger(server.getCVar("anticheat")));
 
 	applyConfigToServer(serverConfig);
-
-	logToConsole(LOG_DEBUG, "[VRR.Config]: All config loaded and applied successfully!");
+	logToConsole(LOG_DEBUG, "[VRR.Config]: Server config applied successfully!");
 
 	logToConsole(LOG_INFO, "[VRR.Config]: Config script initialized!");
 }

@@ -84,20 +84,20 @@ function initConfigScript() {
 	serverConfig = loadServerConfigFromGameAndPort(server.game, server.port, getMultiplayerMod());
 
 	logToConsole(LOG_INFO, "[VRR.Config]: Applying server config ...");
-	getServerConfig().fallingSnow = intToBool(toInteger(server.getCVar("fallingsnow")));
-	getServerConfig().groundSnow = intToBool(toInteger(server.getCVar("groundsnow")));
-	getServerConfig().useGUI = intToBool(toInteger(server.getCVar("gui")));
+	getServerConfig().fallingSnow = intToBool(toInteger(server.getCVar("vrr_fallingsnow")));
+	getServerConfig().groundSnow = intToBool(toInteger(server.getCVar("vrr_groundsnow")));
+	getServerConfig().useGUI = intToBool(toInteger(server.getCVar("vrr_gui")));
 	getServerConfig().showLogo = false;
-	getServerConfig().testerOnly = intToBool(toInteger(server.getCVar("testeronly")));
+	getServerConfig().testerOnly = intToBool(toInteger(server.getCVar("vrr_testeronly")));
 	getServerConfig().discordEnabled = false;
-	getServerConfig().createJobPickups = intToBool(toInteger(server.getCVar("jobpickups")));
-	getServerConfig().createBusinessPickups = intToBool(toInteger(server.getCVar("businesspickups")));
-	getServerConfig().createHousePickups = intToBool(toInteger(server.getCVar("housepickups")));
-	getServerConfig().createJobBlips = intToBool(toInteger(server.getCVar("jobblips")));
-	getServerConfig().createBusinessBlips = intToBool(toInteger(server.getCVar("businessblips")));
-	getServerConfig().createHouseBlips = intToBool(toInteger(server.getCVar("houseblips")));
-	getServerConfig().useRealTime = intToBool(toInteger(server.getCVar("realtime")));
-	getServerConfig().antiCheat.enabled = intToBool(toInteger(server.getCVar("anticheat")));
+	getServerConfig().createJobPickups = intToBool(toInteger(server.getCVar("vrr_jobpickups")));
+	getServerConfig().createBusinessPickups = intToBool(toInteger(server.getCVar("vrr_businesspickups")));
+	getServerConfig().createHousePickups = intToBool(toInteger(server.getCVar("vrr_housepickups")));
+	getServerConfig().createJobBlips = intToBool(toInteger(server.getCVar("vrr_jobblips")));
+	getServerConfig().createBusinessBlips = intToBool(toInteger(server.getCVar("vrr_businessblips")));
+	getServerConfig().createHouseBlips = intToBool(toInteger(server.getCVar("vrr_houseblips")));
+	getServerConfig().useRealTime = intToBool(toInteger(server.getCVar("vrr_realtime")));
+	getServerConfig().antiCheat.enabled = intToBool(toInteger(server.getCVar("vrr_anticheat")));
 
 	applyConfigToServer(serverConfig);
 	logToConsole(LOG_DEBUG, "[VRR.Config]: Server config applied successfully!");

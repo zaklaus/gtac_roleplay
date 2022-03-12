@@ -7,6 +7,229 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+// Item Owners
+const VRR_ITEM_OWNER_NONE = 0;                   // None
+const VRR_ITEM_OWNER_PLAYER = 1;                 // Item is in a player's inventory
+const VRR_ITEM_OWNER_VEHTRUNK = 2;               // Item is in a vehicle's trunk
+const VRR_ITEM_OWNER_VEHDASH = 3;                // Item is in a vehicle's glove compartment
+const VRR_ITEM_OWNER_BIZFLOOR = 4;               // Item is in the public area of a business (on the floor = ready to buy)
+const VRR_ITEM_OWNER_BIZSTORAGE = 5;             // Item is in a business's storage area (stock room)
+const VRR_ITEM_OWNER_HOUSE = 6;                  // Item is in a house
+const VRR_ITEM_OWNER_SAFE = 7;                   // Item is in a safe (safes can be anywhere)
+const VRR_ITEM_OWNER_ITEM = 8;                   // Item is in another item (trashbag, briefcase, wallet, suitcase, crate/box, barrel, etc)
+const VRR_ITEM_OWNER_GROUND = 9;                 // Item is on the ground
+const VRR_ITEM_OWNER_JOBLOCKER = 10;             // Item is in player's job locker
+const VRR_ITEM_OWNER_LOCKER = 10;                // Item is in player's locker
+
+// ===========================================================================
+
+// Item Use Types
+const VRR_ITEM_USETYPE_NONE = 0;                 // Has no effect
+const VRR_ITEM_USETYPE_WEAPON = 1;               // Equips weapon
+const VRR_ITEM_USETYPE_AMMO_CLIP = 2;            // Magazine for weapon. If in inventory, R will load it into gun
+const VRR_ITEM_USETYPE_PHONE = 3;                // Pulls out phone
+const VRR_ITEM_USETYPE_GPS = 4;                  // Not sure how I want this to work yet
+const VRR_ITEM_USETYPE_MAP = 5;                  // Shows minimap on HUD
+const VRR_ITEM_USETYPE_SKIN = 6;                 // Changes skin (uses skin changer)
+const VRR_ITEM_USETYPE_PEDPART = 7;              // Changes ped part (clothing, skin, hair, etc) (UNUSED)
+const VRR_ITEM_USETYPE_PEDPROP = 8;              // Changes ped prop (watches, glasses, hats, etc) (UNUSED)
+const VRR_ITEM_USETYPE_STORAGE = 9;              // Shows stored items. Backpack, crate, briefcase, wallet, etc
+const VRR_ITEM_USETYPE_VEHKEY = 10;              // Locks/unlocks a vehicle and allows starting engine without hotwire
+const VRR_ITEM_USETYPE_BIZKEY = 11;              // Locks/unlocks a business
+const VRR_ITEM_USETYPE_HOUSEKEY = 12;            // Locks/unlocks a house
+const VRR_ITEM_USETYPE_SEED = 13;                // Plants a seed
+const VRR_ITEM_USETYPE_WEED = 14;                // Light drug effect (short term relief of addiction symptoms?)
+const VRR_ITEM_USETYPE_COKE = 15;                // Medium drug effect (medium term relief of addiction symptoms?)
+const VRR_ITEM_USETYPE_METH = 16;                // Heavy drug effect (extended term relief of addiction symptoms?)
+const VRR_ITEM_USETYPE_CIGAR = 17;               // Just for appearance. Makes people look cool I guess
+const VRR_ITEM_USETYPE_WATER = 18;               // Replenishes small amount of health
+const VRR_ITEM_USETYPE_FOOD = 19;                // Eat food. Replenishes a small amount of health
+const VRR_ITEM_USETYPE_BEER = 20;                // Subtle drunk effect. Replenishes small amount of health.
+const VRR_ITEM_USETYPE_WINE = 21;                // Moderate drunk effect. Replenishes moderate amount of health.
+const VRR_ITEM_USETYPE_LIQUOR = 22;              // Heavy drunk effect. Replenishes large amount of health.
+const VRR_ITEM_USETYPE_COFFEE = 23;              // Replenishes moderate amount of health.
+const VRR_ITEM_USETYPE_AMMO_ROUND = 23;          // Bullet. Loads into magazine. Not used at the moment
+const VRR_ITEM_USETYPE_HANDCUFF = 24;            //
+const VRR_ITEM_USETYPE_ROPE = 25;                //
+const VRR_ITEM_USETYPE_BLINDFOLD = 26;           //
+const VRR_ITEM_USETYPE_TAZER = 27;               //
+const VRR_ITEM_USETYPE_ARMOUR = 28;              //
+const VRR_ITEM_USETYPE_HEALTH = 29;              //
+const VRR_ITEM_USETYPE_AED = 30;                 //
+const VRR_ITEM_USETYPE_WALKIETALKIE = 31;        //
+const VRR_ITEM_USETYPE_BOOMBOX = 32;             //
+const VRR_ITEM_USETYPE_EARBUDS = 33;             //
+const VRR_ITEM_USETYPE_BADGE = 34;               //
+const VRR_ITEM_USETYPE_DRINK = 35;               // Drinkable item. Action output shows "Player_Name drinks some (drink name)"
+const VRR_ITEM_USETYPE_EXTINGUISHER = 36;        // Extinguisher item. Allows putting out fires
+const VRR_ITEM_USETYPE_SPRAYPAINT = 37;          // Spraypaint item. Allows spraying custom clan tags on walls
+const VRR_ITEM_USETYPE_PEPPERSPRAY = 38;         // Pepper spray item. Incapacitates nearby player
+const VRR_ITEM_USETYPE_FLASHLIGHT = 39;          // Flashlight item. Unusable for now, but plan to cast a custom light beam
+const VRR_ITEM_USETYPE_AIRPLANETICKET = 40;      // Airplane ticket. Allows a character to move to another server
+const VRR_ITEM_USETYPE_TRAINTICKET = 41;         // Train ticket. Allows a character to move to another server
+const VRR_ITEM_USETYPE_VEHUPGRADE_PART = 42;     // Vehicle update part item. Allows adding custom parts like spoilers, side skirts, roof scoops, etc
+const VRR_ITEM_USETYPE_VEHTIRE = 43;             // Vehicle tire item. Allows changing the tire/rim types
+const VRR_ITEM_USETYPE_FUELCAN = 44;             // Fuel can item. Allows refueling of a nearby vehicle anywhere
+const VRR_ITEM_USETYPE_VEHCOLOUR = 45;           // Vehicle colour item. Changes primary and secondary vehicle colours
+const VRR_ITEM_USETYPE_VEHLIVERY = 46;           // Vehicle livery/paintjob item. Applies decals and special paint jobs
+const VRR_ITEM_USETYPE_VEHREPAIR = 47;           // Vehicle repair item. Much longer use time
+const VRR_ITEM_USETYPE_SMOKEDRUG = 48;           // Smokable drug. Action output shows "Player_Name smokes some (drug)"
+const VRR_ITEM_USETYPE_SNORTDRUG = 49;           // Snortable drug. Action output shows "Player_Name snorts some (drug)"
+const VRR_ITEM_USETYPE_PLANT = 50;               // Plantable item. Pot plants, coke plants, etc
+const VRR_ITEM_USETYPE_MEGAPHONE = 51;           // Megaphone item. Allows shouting over greater distances. Also called a bullhorn
+const VRR_ITEM_USETYPE_INJECTDRUG = 52;          // Injectable drug. Action output shows "Player_Name injects some (drug)"
+const VRR_ITEM_USETYPE_ALCOHOL = 53;             // Alcohol. Applies an intoxication/drunkness effect
+
+// ===========================================================================
+
+// Item Drop Types
+const VRR_ITEM_DROPTYPE_NONE = 0;                // Can't be dropped
+const VRR_ITEM_DROPTYPE_OBJECT = 1;              // Drops as an object on the ground
+const VRR_ITEM_DROPTYPE_PICKUP = 2;              // Drops as a pickup
+const VRR_ITEM_DROPTYPE_OBJECTLIGHT = 3;         // Object that produces an area light effect (lamp, flashlight, etc)
+const VRR_ITEM_DROPTYPE_DESTROY = 4;             // Will destroy the item on drop (keys mostly but for any tiny object)
+const VRR_ITEM_DROPTYPE_OBJECTSTACK = 5;         // Stackable objects (crates and such). Will sit on top of closest other stackable
+
+// ===========================================================================
+
+// Item Occupied States
+const VRR_ITEM_ACTION_NONE = 0;                  // None
+const VRR_ITEM_ACTION_USE = 1;                   // Using item
+const VRR_ITEM_ACTION_PICKUP = 2;                // Picking up item
+const VRR_ITEM_ACTION_DROP = 3;                  // Dropping item
+const VRR_ITEM_ACTION_SWITCH = 4;                // Switching item
+const VRR_ITEM_ACTION_PUT = 5;                   // Putting item (into trunk, dash, crate, etc)
+const VRR_ITEM_ACTION_TAKE = 6;                  // Taking item (from trunk, dash, crate, etc)
+
+// ===========================================================================
+
+class ItemData {
+	constructor(dbAssoc = false) {
+		this.databaseId = 0;
+		this.index = 0;
+		this.itemTypeIndex = 0;
+		this.itemType = 0;
+		this.ownerType = VRR_ITEM_OWNER_NONE;
+		this.ownerId = 0;
+		this.ownerIndex = -1;
+		this.position = toVector3(0.0, 0.0, 0.0);
+		this.interior = 0;
+		this.dimension = 0;
+		this.object = null;
+		this.buyPrice = 0;
+		this.needsSaved = false;
+		this.amount = 0;
+		this.value = 0;
+		this.enabled = false;
+		this.extra = false;
+
+		if(dbAssoc) {
+			this.databaseId = toInteger(dbAssoc["item_id"]);
+			this.index = 0;
+			this.itemTypeIndex = 0;
+			this.itemType = toInteger(dbAssoc["item_type"]);
+			this.ownerType = toInteger(dbAssoc["item_owner_type"]);;
+			this.ownerId = toInteger(dbAssoc["item_owner_id"]);
+			this.position = toVector3(toFloat(dbAssoc["item_pos_x"]), toFloat(dbAssoc["item_pos_y"]), toFloat(dbAssoc["item_pos_z"]));
+			this.interior = toInteger(dbAssoc["item_int"]);
+			this.dimension = toInteger(dbAssoc["item_vw"]);
+			this.buyPrice = toInteger(dbAssoc["item_buy_price"]);
+			this.amount = toInteger(dbAssoc["item_amount"]);
+			this.value = toInteger(dbAssoc["item_value"]);
+			this.enabled = intToBool(toInteger(dbAssoc["item_enabled"]));
+		}
+	}
+};
+
+// ===========================================================================
+
+class ItemTypeData {
+	constructor(dbAssoc = false) {
+		this.databaseId = 0;
+		this.serverId = 0;
+		this.index = 0;
+		this.name = "Unknown";
+		this.enabled = false;
+		this.useType = VRR_ITEM_USETYPE_NONE;
+		this.useId = 0;
+		this.useValue = 0;
+		this.maxValue = 0;
+		this.dropType = VRR_ITEM_DROPTYPE_NONE;
+		this.useId = 0;
+		this.dropPosition = toVector3(0.0, 0.0, 0.0);
+		this.dropRotation = toVector3(0.0, 0.0, 0.0);
+		this.dropScale = toVector3(0.0, 0.0, 0.0);
+		this.dropModel = 0;
+		this.orderPrice = 0;
+		this.orderValue = 0;
+		this.demandMultiplier = 1;
+		this.supplyMultiplier = 1;
+		this.riskMultiplier = 1;
+		this.needsSaved = false;
+		this.useDelay = 0;
+		this.switchDelay = 0;
+		this.pickupDelay = 0;
+		this.putDelay = 0;
+		this.takeDelay = 0;
+		this.giveDelay = 0;
+		this.dropDelay = 0;
+		this.useAnimationName = "";
+		this.dropAnimationName = "";
+		this.pickupAnimationName = "";
+		this.giveAnimationName = "";
+		this.putAnimationName = "";
+		this.takeAnimationName = "";
+		this.switchAnimationName = "";
+		this.useAnimationIndex = false;
+		this.dropAnimationIndex = false;
+		this.pickupAnimationIndex = false;
+		this.giveAnimationIndex = false;
+		this.putAnimationIndex = false;
+		this.takeAnimationIndex = false;
+		this.switchAnimationIndex = false;
+
+		if(dbAssoc) {
+			this.databaseId = toInteger(dbAssoc["item_type_id"]);
+			this.serverId = toInteger(dbAssoc["item_type_server"]);
+			this.name = dbAssoc["item_type_name"];
+			this.enabled = intToBool(toInteger(dbAssoc["item_type_enabled"]));
+			this.useType = toInteger(dbAssoc["item_type_use_type"]);
+			this.dropType = toInteger(dbAssoc["item_type_drop_type"]);
+			this.useId = toInteger(dbAssoc["item_type_use_id"]);
+			this.dropPosition = toVector3(toFloat(dbAssoc["item_type_drop_pos_x"]), toFloat(dbAssoc["item_type_drop_pos_y"]), toFloat(dbAssoc["item_type_drop_pos_z"]));
+			this.dropRotation = toVector3(toFloat(dbAssoc["item_type_drop_rot_x"]), toFloat(dbAssoc["item_type_drop_rot_y"]), toFloat(dbAssoc["item_type_drop_rot_z"]));
+			this.dropScale = toVector3(toFloat(dbAssoc["item_type_drop_scale_x"]), toFloat(dbAssoc["item_type_drop_scale_y"]), toFloat(dbAssoc["item_type_drop_scale_z"]));
+			this.dropModel = toInteger(dbAssoc["item_type_drop_model"]);
+			this.useId = toInteger(dbAssoc["item_type_use_id"]);
+			this.useValue = toInteger(dbAssoc["item_type_use_value"]);
+			this.maxValue = toInteger(dbAssoc["item_type_max_value"]);
+			this.orderPrice = toInteger(dbAssoc["item_type_order_price"]);
+			this.orderValue = toInteger(dbAssoc["item_type_order_value"]);
+			this.demandMultiplier = toFloat(dbAssoc["item_type_demand_multiplier"]);
+			this.supplyMultiplier = toFloat(dbAssoc["item_type_supply_multiplier"]);
+			this.riskMultiplier = toFloat(dbAssoc["item_type_risk_multiplier"]);
+			this.size = toInteger(dbAssoc["item_type_size"]);
+			this.capacity = toInteger(dbAssoc["item_type_capacity"]);
+			this.useDelay = toInteger(dbAssoc["item_type_delay_use"]);
+			this.switchDelay = toInteger(dbAssoc["item_type_delay_switch"]);
+			this.pickupDelay = toInteger(dbAssoc["item_type_delay_pickup"]);
+			this.putDelay = toInteger(dbAssoc["item_type_delay_put"]);
+			this.takeDelay = toInteger(dbAssoc["item_type_delay_take"]);
+			this.giveDelay = toInteger(dbAssoc["item_type_delay_give"]);
+			this.dropDelay = toInteger(dbAssoc["item_type_delay_drop"]);
+			this.useAnimationName = toInteger(dbAssoc["item_type_anim_use"]);
+			this.switchAnimationName = toInteger(dbAssoc["item_type_anim_switch"]);
+			this.pickupAnimationName = toInteger(dbAssoc["item_type_anim_pickup"]);
+			this.putAnimationName = toInteger(dbAssoc["item_type_anim_put"]);
+			this.takeAnimationName = toInteger(dbAssoc["item_type_anim_take"]);
+			this.giveAnimationName = toInteger(dbAssoc["item_type_anim_give"]);
+			this.dropAnimationName = toInteger(dbAssoc["item_type_anim_drop"]);
+		}
+	}
+};
+
+// ===========================================================================
+
 function initItemScript() {
 	logToConsole(LOG_INFO, "[VRR.Item]: Initializing item script ...");
 	getServerData().itemTypes = loadItemTypesFromDatabase();

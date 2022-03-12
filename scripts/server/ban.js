@@ -7,6 +7,34 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+// Ban Types
+const VRR_BANTYPE_NONE = 0;
+const VRR_BANTYPE_ACCOUNT = 1;
+const VRR_BANTYPE_SUBACCOUNT = 2;
+const VRR_BANTYPE_IPADDRESS = 3;
+const VRR_BANTYPE_SUBNET = 4;
+
+// ===========================================================================
+
+class BanData {
+	constructor(dbAssoc = false) {
+		this.databaseId = 0;
+		this.type = VRR_BANTYPE_NONE;
+		this.detail = "";
+		this.ipAddress = "";
+		this.name = "";
+		this.reason = "";
+
+		if(dbAssoc) {
+			this.databaseId = toInteger(dbAssoc["ban_id"]);
+			this.type = dbAssoc["ban_type"];
+			this.detail = toInteger(dbAssoc["ban_detail"]);
+			this.ipAddress = toInteger(dbAssoc["ban_ip"]);
+			this.reason = toInteger(dbAssoc["ban_reason"]);
+		}
+	}
+}
+
 // ===========================================================================
 
 function initBanScript() {

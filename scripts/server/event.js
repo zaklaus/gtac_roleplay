@@ -254,7 +254,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
         vehicle = client.player.vehicle;
     }
 
-    if(!getVehicleData(vehicle)) {
+    if(getVehicleData(vehicle) == false) {
         return false;
     }
 

@@ -7,6 +7,13 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+// Prompts (used for client GUI prompt responses)
+const VRR_PROMPT_NONE = 0;
+const VRR_PROMPT_CREATEFIRSTCHAR = 1;
+const VRR_PROMPT_BIZORDER = 2;
+
+// ===========================================================================
+
 function initGUIScript() {
 	logToConsole(LOG_INFO, "[VRR.GUI]: Initializing GUI script ...");
 	logToConsole(LOG_INFO, "[VRR.GUI]: GUI script initialized successfully!");

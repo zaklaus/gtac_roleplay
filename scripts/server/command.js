@@ -7,6 +7,38 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+
+/**
+ * @class Representing a command's data. Loaded and saved in the database
+ */
+ class CommandData {
+	enable() {
+		this.enabled = true;
+	}
+
+	disable() {
+		this.enabled = false;
+	}
+
+	toggleEnabled() {
+		this.enabled = !this.enabled;
+	}
+
+	constructor(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord, helpDescription) {
+		this.command = command;
+		this.handlerFunction = handlerFunction;
+		this.syntaxString = syntaxString;
+		this.requiredStaffFlags = requiredStaffFlags;
+		this.enabled = true;
+		this.requireLogin = requireLogin;
+		this.allowOnDiscord = allowOnDiscord;
+		this.helpDescription = helpDescription;
+		this.aliases = [];
+	}
+};
+
+// ===========================================================================
+
 let serverCommands = [];
 
 // ===========================================================================

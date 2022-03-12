@@ -7,6 +7,18 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+// Gate Owner Types
+const VRR_GATEOWNER_NONE = 0;                   // Not owned
+const VRR_GATEOWNER_PLAYER = 1;                 // Owner is a player (character/subaccount)
+const VRR_GATEOWNER_JOB = 2;                    // Owned by a job
+const VRR_GATEOWNER_CLAN = 3;                   // Owned by a clan
+const VRR_GATEOWNER_FACTION = 4;                // Owned by a faction
+const VRR_GATEOWNER_PUBLIC = 5;                 // Public gate. Technically not owned. This probably won't be used.
+const VRR_GATEOWNER_BUSINESS = 6;               // Owned by a business. Back lots, unloading areas, and other stuff like that
+const VRR_GATEOWNER_HOUSE = 7;                  // Owned by a house. Like for mansions with closed private areas.
+
+// ===========================================================================
+
 function doesPlayerHaveGateKeys(client, vehicle) {
 	let gateData = getGateData(vehicle);
 

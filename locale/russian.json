@@ -392,5 +392,6 @@
     "InvalidSkin": "That skin is invalid!",
     "HeaderInteriorTypes": "Interiors List",
     "ViewInventoryKeyPressTip": "Press {1} to see your items",
-    "ViewInventoryCommandTip": "Use {1} to see your items"
+    "ViewInventoryCommandTip": "Use {1} to see your items",
+    "GUIAccountSettingToggle": "You have turned {1} GUI"
 }

@@ -160,7 +160,7 @@ function createItemCommand(command, params, client) {
 	let value = splitParams.slice(-1) || 1;
 
 	if(!getItemTypeData(itemType)) {
-		messagePlayerError(client, getLocaleString("InvalidItemType"));
+		messagePlayerError(client, getLocaleString(client, "InvalidItemType"));
 		return false;
 	}
 

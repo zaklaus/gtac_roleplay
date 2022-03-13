@@ -150,6 +150,9 @@ function getVehicleHeading(vehicle) {
 // ===========================================================================
 
 function setVehicleHeading(vehicle, heading) {
+	if(getGame() == VRR_GAME_GTA_IV) {
+		return sendNetworkEventToPlayer("vrr.vehPosition", null, getVehicleForNetworkEvent(vehicle), heading);
+	}
     return vehicle.heading = heading;
 }
 
@@ -162,7 +165,13 @@ function getVehicleSyncer(vehicle) {
 // ===========================================================================
 
 function getVehicleForNetworkEvent(vehicle) {
-    return vehicle;
+	if(getGame() == VRR_GAME_GTA_IV) {
+		if(getVehicleData(vehicle).ivNetworkId != -1) {
+			return getVehicleData(vehicle).ivNetworkId;
+		}
+		return -1;
+	}
+    return vehicle.id;
 }
 
 // ===========================================================================

@@ -151,6 +151,11 @@ function setUpInitialGame() {
         natives.switchAmbientPlanes(true);
         natives.switchMadDrivers(false);
 
+        // Singleplayer Cellphone
+        natives.requestScript("spcellphone");
+        natives.startNewScript("spcellphone", 0);
+        //natives.setMessagesWaiting(false);
+
         natives.requestAnims("DANCING");
         return true;
     }

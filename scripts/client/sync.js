@@ -10,8 +10,8 @@
 function processSync(event, deltaTime) {
     if(localPlayer != null) {
         if(!areServerElementsSupported()) {
-            sendNetworkEventToServer("vrr.plr.pos", localPlayer.position);
-            sendNetworkEventToServer("vrr.plr.rot", localPlayer.heading);
+            sendNetworkEventToServer("vrr.plr.pos", (localPlayer.vehicle != null) ? localPlayer.vehicle.position : localPlayer.position);
+            sendNetworkEventToServer("vrr.plr.rot", (localPlayer.vehicle != null) ? localPlayer.vehicle.heading : localPlayer.heading);
 
             //if(localPlayer.vehicle != null) {
             //    sendNetworkEventToServer("vrr.veh.pos", getVehicleForNetworkEvent(localPlayer.vehicle), localPlayer.vehicle.position);

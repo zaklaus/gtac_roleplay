@@ -1,7 +1,8 @@
 {
     "TranslationProvidedBy": "PerikiyoXD",
-    "LocaleEnglishName": "Español",
-    "LocaleNativeName": "Inglés",
+    "LocaleEnglishName": "Spanish",
+    
+    "LocaleNativeName": "Español",
     "LocaleOffer": "Este servidor se encuentra disponible en Español. Utilice {1} para usarlo",
     "LocaleChanged1": "El idioma se ha configurado a {1}",
     "LocaleChanged2": "El servidor mostrará los mensajes en {1}",

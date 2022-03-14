@@ -292,8 +292,19 @@ function setLocalPlayerInfiniteRun(state) {
 // ===========================================================================
 
 function setLocalPlayerSkin(skinId) {
+    logToConsole(LOG_INFO, skinId);
     if(getGame() == VRR_GAME_GTA_IV) {
-        natives.changePlayerModel(natives.getPlayerId(), skinId);
+        if(natives.isModelInCdimage(skinId)) {
+            natives.requestModel(skinId);
+            natives.loadAllObjectsNow();
+            if(natives.hasModelLoaded(skinId)) {
+                natives.changePlayerModel(natives.getPlayerId(), skinId);
+            }
+        }
+
+        //natives.requestModel(skinId);
+        //natives.changePlayerModel(natives.getPlayerId(), skinId);
+
         //localPlayer.skin = allowedSkins[skinSelectorIndex][0];
         //localPlayer.modelIndex = allowedSkins[skinSelectorIndex][0];
     } else {

@@ -375,11 +375,13 @@ function selectCharacter(client, characterId = -1) {
 		spawnPlayer(client, spawnPosition, spawnHeading, getGameConfig().skins[getGame()][skin][0], spawnInterior, spawnDimension);
 	} else if(getGame() == VRR_GAME_GTA_IV) {
 		spawnPlayer(client, spawnPosition, spawnHeading, getGameConfig().skins[getGame()][skin][0], spawnInterior, spawnDimension);
+		//clearPlayerWeapons(client);
 		//setPlayerSkin(client, skin);
 		//setPlayerPosition(client, spawnPosition);
 		//setPlayerHeading(client, spawnHeading);
 		//setPlayerInterior(client, spawnInterior);
 		//setPlayerDimension(client, spawnDimension);
+		//restorePlayerCamera(client);
 	} else if(getGame() >= VRR_GAME_MAFIA_ONE) {
 		spawnPlayer(client, getGameConfig().skins[getGame()][skin][0], spawnPosition, spawnHeading);
 	}

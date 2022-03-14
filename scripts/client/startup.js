@@ -126,11 +126,11 @@ function setUpInitialGame() {
         //natives.displayHud(false);
         //natives.displayRadar(false);
         //natives.displayAreaName(false);
-        //natives.displayPlayerNames(false);
+        natives.displayPlayerNames(true);
         natives.setPoliceRadarBlips(false);
         natives.removeTemporaryRadarBlipsForPickups();
         natives.displayNonMinigameHelpMessages(false);
-        natives.setDisplayPlayerNameAndIcon(natives.getPlayerId(), false);        
+        natives.setDisplayPlayerNameAndIcon(natives.getPlayerId(), true);        
 
         // Item/Money Dropping
         natives.setMoneyCarriedByAllNewPeds(0);
@@ -156,6 +156,7 @@ function setUpInitialGame() {
         natives.startNewScript("spcellphone", 0);
         //natives.setMessagesWaiting(false);
 
+        // Animation libraries
         natives.requestAnims("DANCING");
         return true;
     }

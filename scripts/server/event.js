@@ -410,6 +410,7 @@ function onPlayerDeath(client, position) {
                 if(isFadeCameraSupported()) {
                     fadeCamera(client, true, 1.0);
                 }
+                
                 updatePlayerSpawnedState(client, true);
                 makePlayerStopAnimation(client);
                 setPlayerControlState(client, true);

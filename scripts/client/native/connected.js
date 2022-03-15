@@ -20,7 +20,11 @@ function getPlayerPosition() {
 // ===========================================================================
 
 function setPlayerPosition(position) {
-    localPlayer.position = position;
+	if(getGame() == VRR_GAME_GTA_IV) {
+		natives.setCharCoordinates(localPlayer, position);
+	} else {
+		localPlayer.position = position;
+	}
 }
 
 // ===========================================================================
@@ -139,6 +143,23 @@ function getVehiclesInRange(position, range) {
 		}
 	}
 	return inRangeVehicles;
+}
+
+// ===========================================================================
+
+function createGameBlip(blipModel, position, name = "") {
+	if(getGame() == VRR_GAME_GTA_IV) {
+		let blipId = natives.addBlipForCoord(position);
+		if(blipId) {
+			natives.changeBlipSprite(blipId, blipModel);
+			natives.setBlipMarkerLongDistance(blipId, false);
+			natives.setBlipAsShortRange(blipId, true);
+			natives.changeBlipNameFromAscii(blipId, `${name.substr(0, 24)}${(name.length > 24) ? " ...": ""}`);
+			return blipId;
+		}		
+	}
+
+	return -1;
 }
 
 // ===========================================================================

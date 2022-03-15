@@ -569,6 +569,7 @@ function loginSuccess(client) {
 	if(doesServerHaveTesterOnlyEnabled()) {
 		if(!hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("IsTester"))) {
 			setTimeout(function() {
+				getPlayerData(client).customDisconnectReason = "Kicked - Not a tester";
 				client.disconnect();
 			}, 3500);
 

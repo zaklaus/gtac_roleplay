@@ -60,7 +60,8 @@ function onPlayerJoin(event, client) {
         fadeCamera(client, true, 1.0);
     }
 
-    messageDiscordEventChannel(`👋 ${getPlayerDisplayForConsole(client)} has joined the server.`);
+    messageAdmins(`${client.name} is joining the server ...`);
+    //messageDiscordEventChannel(`👋 ${getPlayerDisplayForConsole(client)} has joined the server.`);
 }
 
 // ===========================================================================
@@ -97,7 +98,11 @@ function onPlayerQuit(event, client, quitReasonId) {
     updateConnectionLogOnQuit(client, quitReasonId);
 
     if(isPlayerLoggedIn(client)) {
-        messagePlayerNormal(null, `👋 ${getPlayerName(client)} has left the server (${disconnectReasons[quitReasonId]})`, getColourByName("softYellow"));
+        let reasonText = disconnectReasons[quitReasonId];
+        if(getPlayerData(client).customDisconnectReason != "") {
+            reasonText = getPlayerData(client).customDisconnectReason;
+        }
+        messagePlayerNormal(null, `👋 ${getPlayerName(client)} has left the server (${reasonText})`, getColourByName("softYellow"));
         savePlayerToDatabase(client);
         resetClientStuff(client);
         getServerData().clients[client.index] = null;
@@ -587,8 +592,8 @@ function onPlayerSpawn(client) {
 
     if(!areServerElementsSupported()) {
         sendAllBusinessesToPlayer(client);
-        //sendAllHousesToPlayer(client);
-        //sendAllJobLocationsToPlayer(client);
+        sendAllHousesToPlayer(client);
+        sendAllJobsToPlayer(client);
         //sendAllVehiclesToPlayer(client);
 
         requestPlayerPedNetworkId(client);

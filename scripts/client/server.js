@@ -87,6 +87,7 @@ function addAllNetworkHandlers() {
     addNetworkEventHandler("vrr.hideAllGUI", hideAllGUI);
     addNetworkEventHandler("vrr.clientInfo", serverRequestedClientInfo);
     addNetworkEventHandler("vrr.interiorLights", updateInteriorLightsState);
+    addNetworkEventHandler("vrr.cutsceneInterior", setCutsceneInterior);
 
     addNetworkEventHandler("vrr.syncElement", forceSyncElementProperties);
     addNetworkEventHandler("vrr.elementPosition", setElementPosition);
@@ -324,6 +325,21 @@ function makePedHoldObject(pedId, modelIndex) {
 
 function sendLocalPlayerNetworkIdToServer() {
     sendNetworkEventToServer("vrr.playerPedId", natives.getNetworkIdFromPed(localPlayer));
+}
+
+// ===========================================================================
+
+function setCutsceneInterior(cutsceneName) {
+    if(getGame() == VRR_GAME_GTA_IV) {
+        if(cutsceneName == "") {
+            natives.clearCutscene();
+        } else {
+            if(natives.isInteriorScene()) {
+                natives.clearCutscene();
+            }
+            natives.initCutscene(cutsceneName);
+        }
+    }
 }
 
 // ===========================================================================

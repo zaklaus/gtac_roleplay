@@ -1143,6 +1143,17 @@ function sendAllHousesToPlayer(client) {
 
 // ==========================================================================
 
+function sendAllJobsToPlayer(client) {
+    //let jobs = getServerData().jobs;
+    //for(let i in jobs) {
+    //    for(let j in jobs[i].locations) {
+    //        sendJobToPlayer(client, jobs[i].index, jobs[i].name, jobs[i].locations[j].position, jobs[i].blipModel);
+    //    }
+    //}
+}
+
+// ==========================================================================
+
 function makePlayerHoldObjectModel(client, modelIndex) {
     sendNetworkEventToPlayer("vrr.holdObject", client, getPlayerData(client).ped, modelIndex);
 }
@@ -1157,6 +1168,13 @@ function receivePlayerPedNetworkId(client, pedId) {
 
 function requestPlayerPedNetworkId(client) {
     sendNetworkEventToPlayer("vrr.playerPedId", client);
+}
+
+// ==========================================================================
+
+function setPlayerInCutsceneInterior(client, cutsceneName) {
+    getPlayerData(client).interiorCutscene = cutsceneName;
+    sendNetworkEventToPlayer("vrr.cutsceneInterior", client, cutsceneName);
 }
 
 // ==========================================================================

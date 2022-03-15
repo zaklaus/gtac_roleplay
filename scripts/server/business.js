@@ -11,8 +11,6 @@ function initBusinessScript() {
 	logToConsole(LOG_INFO, "[VRR.Business]: Initializing business script ...");
 	getServerData().businesses = loadBusinessesFromDatabase();
 
-
-
 	createAllBusinessPickups();
 	createAllBusinessBlips();
 
@@ -139,7 +137,7 @@ function loadBusinessGameScriptsFromDatabase(businessId) {
 // ===========================================================================
 
 function createBusinessCommand(command, params, client) {
-	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].Business, getGameConfig().blipSprites[getServerGame()].Business, getPlayerInterior(client), getPlayerDimension(client));
+	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].Business, getGameConfig().blipSprites[getServerGame()].Business, getPlayerInterior(client), getPlayerDimension(client), getPlayerData(client).interiorCutscene);
 	tempBusinessData.needsSaved = true;
 	let businessId = getServerData().businesses.push(tempBusinessData);
 	setAllBusinessIndexes();
@@ -182,7 +180,7 @@ function createBusinessLocationCommand(command, params, client) {
 
 // ===========================================================================
 
-function createBusiness(name, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = -1, exitVirtualWorld = -1, exitPickupModel = -1, exitBlipModel = -1) {
+function createBusiness(name, entrancePosition, exitPosition, entrancePickupModel = -1, entranceBlipModel = -1, entranceInteriorId = 0, entranceVirtualWorld = 0, exitInteriorId = -1, exitVirtualWorld = -1, exitPickupModel = -1, exitBlipModel = -1, entranceCutscene = "") {
 	let tempBusinessData = new BusinessData(false);
 	tempBusinessData.name = name;
 
@@ -192,6 +190,7 @@ function createBusiness(name, entrancePosition, exitPosition, entrancePickupMode
 	tempBusinessData.entranceBlipModel = entranceBlipModel;
 	tempBusinessData.entranceInterior = entranceInteriorId;
 	tempBusinessData.entranceDimension = entranceVirtualWorld;
+	tempBusinessData.entranceCutscene = entranceCutscene;
 
 	tempBusinessData.exitPosition = exitPosition;
 	tempBusinessData.exitRotation = 0.0;
@@ -717,6 +716,7 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 			getBusinessData(businessId).exitDimension = 0;
 			getBusinessData(businessId).exitInterior = -1;
 			getBusinessData(businessId).hasInterior = false;
+			getBusinessData(businessId).interiorCutscene = "";
 			getBusinessData(businessId).exitPickupModel = -1;
 			messageAdmins(`{ALTCOLOUR}${getPlayerName(client)} {MAINCOLOUR}removed business {businessBlue}${getBusinessData(businessId).name}{MAINCOLOUR} interior`);
 			return false;
@@ -738,6 +738,9 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 		getBusinessData(businessId).exitInterior = getGameConfig().interiors[getServerGame()][typeParam][1];
 		getBusinessData(businessId).exitDimension = getBusinessData(businessId).databaseId+getGlobalConfig().businessDimensionStart;
 		getBusinessData(businessId).exitPickupModel = getGameConfig().pickupModels[getServerGame()].Exit;
+		if(getGameConfig().interiors[getServerGame()][typeParam].length == 3) {
+			getBusinessData(businessId).interiorCutscene = getGameConfig().interiors[getServerGame()][typeParam][2];
+		}
 		getBusinessData(businessId).hasInterior = true;
 	}
 
@@ -1256,6 +1259,8 @@ function saveBusinessToDatabase(businessId) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeBusinessName = escapeDatabaseString(dbConnection, tempBusinessData.name);
+		let safeExitCutscene = escapeDatabaseString(dbConnection, tempBusinessData.exitCustscene);
+		let safeEntranceCutscene = escapeDatabaseString(dbConnection, tempBusinessData.entranceCutscene);
 
 		let data = [
 			["biz_server", getServerId()],
@@ -1273,6 +1278,7 @@ function saveBusinessToDatabase(businessId) {
 			["biz_entrance_vw", tempBusinessData.entranceDimension],
 			["biz_entrance_pickup", tempBusinessData.entrancePickupModel],
 			["biz_entrance_blip", tempBusinessData.entranceBlipModel],
+			["biz_entrance_cutscene", safeEntranceCutscene],
 			["biz_exit_pos_x", tempBusinessData.exitPosition.x],
 			["biz_exit_pos_y", tempBusinessData.exitPosition.y],
 			["biz_exit_pos_z", tempBusinessData.exitPosition.z],
@@ -1281,6 +1287,7 @@ function saveBusinessToDatabase(businessId) {
 			["biz_exit_vw", tempBusinessData.exitDimension],
 			["biz_exit_pickup", tempBusinessData.exitPickupModel],
 			["biz_exit_blip", tempBusinessData.exitBlipModel],
+			["biz_exit_cutscene", safeExitCutscene],
 			["biz_has_interior", boolToInt(tempBusinessData.hasInterior)],
 			["biz_interior_lights", boolToInt(tempBusinessData.interiorLights)],
 			["biz_label_help_type", tempBusinessData.labelHelpType],

@@ -737,6 +737,8 @@ function saveHouseToDatabase(houseId) {
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
 		let safeHouseDescription = escapeDatabaseString(dbConnection, tempHouseData.description);
+		let safeExitCutscene = escapeDatabaseString(dbConnection, tempHouseData.exitCutscene);
+		let safeEntranceCutscene = escapeDatabaseString(dbConnection, tempHouseData.entranceCutscene);
 
 		let data = [
 			["house_server", getServerId()],
@@ -753,6 +755,7 @@ function saveHouseToDatabase(houseId) {
 			["house_entrance_vw", tempHouseData.entranceDimension],
 			["house_entrance_pickup", tempHouseData.entrancePickupModel],
 			["house_entrance_blip", tempHouseData.entranceBlipModel],
+			["house_entrance_cutscene", safeEntranceCutscene],
 			["house_exit_pos_x", tempHouseData.exitPosition.x],
 			["house_exit_pos_y", tempHouseData.exitPosition.y],
 			["house_exit_pos_z", tempHouseData.exitPosition.z],
@@ -761,10 +764,12 @@ function saveHouseToDatabase(houseId) {
 			["house_exit_vw", tempHouseData.exitDimension],
 			["house_exit_pickup", tempHouseData.exitPickupModel],
 			["house_exit_blip", tempHouseData.exitBlipModel],
+			["house_exit_cutscene", safeExitCutscene],
 			["house_buy_price", tempHouseData.buyPrice],
 			["house_rent_price", tempHouseData.rentPrice],
 			["house_has_interior", boolToInt(tempHouseData.hasInterior)],
 			["house_interior_lights", boolToInt(tempHouseData.interiorLights)],
+
 		];
 
 		let dbQuery = null;

@@ -255,6 +255,18 @@ function processLabelRendering() {
                         natives.drawColouredCylinder(getPosBelowPos(businesses[i].entrancePosition, 1.0), 0.0, 0.0, 0, 153, 255, 255);
                     }
                 }
+
+                for(let i in houses) {
+                    if(getDistance(localPlayer.position, houses[i].entrancePosition) <= 75.0) {     
+                        natives.drawColouredCylinder(getPosBelowPos(houses[i].entrancePosition, 1.0), 0.0, 0.0, 0, 200, 0, 255);
+                    }
+                }    
+                
+                for(let i in jobs) {
+                    if(getDistance(localPlayer.position, jobs[i].position) <= 75.0) {     
+                        natives.drawColouredCylinder(getPosBelowPos(jobs[i].position, 1.0), 0.0, 0.0, 255, 255, 0, 255);
+                    }
+                }                   
             }
         }
         

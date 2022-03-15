@@ -221,8 +221,10 @@ function enterExitPropertyCommand(command, params, client) {
 					if(isFadeCameraSupported()) {
 						fadeCamera(client, true, 1.0);
 					}
+					setPlayerInCutsceneInterior(client, closestProperty.exitCutscene);
 					updateInteriorLightsForPlayer(client, closestProperty.interiorLights);
 				}, 1000);
+				//setPlayerInCutsceneInterior(client, closestProperty.exitCutscene);
 				//updateAllInteriorVehiclesForPlayer(client, closestProperty.exitInterior, closestProperty.exitDimension);
 			}, 1100);
 			if(closestProperty.streamingRadioStation != -1) {
@@ -257,11 +259,14 @@ function enterExitPropertyCommand(command, params, client) {
 					if(isFadeCameraSupported()) {
 						fadeCamera(client, true, 1.0);
 					}
+					setPlayerInCutsceneInterior(client, closestProperty.entranceCutscene);
 					updateInteriorLightsForPlayer(client, true);
 				}, 1000);
 			}, 1100);
+			//setPlayerInCutsceneInterior(client, closestProperty.entranceCutscene);
 			stopRadioStreamForPlayer(client);
 			getPlayerData(client).streamingRadioStation = -1;
+			
 			//logToConsole(LOG_DEBUG, `[VRR.Misc] ${getPlayerDisplayForConsole(client)} exited business ${inBusiness.name}[${inBusiness.index}/${inBusiness.databaseId}]`);
 			return true;
 		}

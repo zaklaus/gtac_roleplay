@@ -2291,24 +2291,33 @@ function createJobLocationPickup(jobId, locationId) {
 		return false;
 	}
 
-	if(getJobData(jobId).pickupModel != -1) {
+	let tempJobData = getJobData(jobId);
+
+	if(tempJobData.pickupModel != -1) {
 		let pickupModelId = getGameConfig().pickupModels[getServerGame()].Job;
 
-		if(getJobData(jobId).pickupModel != 0) {
-			pickupModelId = getJobData(jobId).pickupModel;
+		if(tempJobData.pickupModel != 0) {
+			pickupModelId = tempJobData.pickupModel;
 		}
 
-		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating pickup for location ${locationId} of the ${getServerData().jobs[jobId].name} job`);
+		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating pickup for location ${locationId} of the ${tempJobData.name} job`);
 
-		getJobData(jobId).locations[locationId].pickup = createGamePickup(pickupModelId, getJobData(jobId).locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
-		setElementDimension(getJobData(jobId).locations[locationId].pickup, getJobData(jobId).locations[locationId].dimension);
-		setElementOnAllDimensions(getJobData(jobId).locations[locationId].pickup, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.owner.type", VRR_PICKUP_JOB, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.owner.id", locationId, false);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.label.type", VRR_LABEL_JOB, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.label.name", getJobData(jobId).name, true);
-		setEntityData(getServerData().jobs[jobId].locations[locationId].pickup, "vrr.label.jobType", getJobData(jobId).databaseId, true);
-		addToWorld(getJobData(jobId).locations[locationId].pickup);
+		if(areServerElementsSupported()) {
+			let pickup = createGamePickup(pickupModelId, tempJobData.locations[locationId].position, getGameConfig().pickupTypes[getServerGame()].job);
+			if(pickup != false) {
+				tempJobData.locations[locationId].pickup = pickup;
+				setElementDimension(pickup, tempJobData.locations[locationId].dimension);
+				setElementOnAllDimensions(pickup, false);
+				setEntityData(pickup, "vrr.owner.type", VRR_PICKUP_JOB, false);
+				setEntityData(pickup, "vrr.owner.id", locationId, false);
+				setEntityData(pickup, "vrr.label.type", VRR_LABEL_JOB, true);
+				setEntityData(pickup, "vrr.label.name", tempJobData.name, true);
+				setEntityData(pickup, "vrr.label.jobType", tempJobData.databaseId, true);
+				addToWorld(pickup);
+			}
+		} else {
+			// sendJobToPlayer(null, jobId, tempJobData.name, tempJobData.locations[locationId].position, pickupModel);
+		}
 	}
 }
 
@@ -2319,6 +2328,8 @@ function createJobLocationBlip(jobId, locationId) {
 		return false;
 	}
 
+	let tempJobData = getJobData(jobId);
+
 	if(getJobData(jobId).blipModel != -1) {
 		let blipModelId = getGameConfig().blipSprites[getServerGame()].Job;
 
@@ -2326,12 +2337,17 @@ function createJobLocationBlip(jobId, locationId) {
 			blipModelId = getJobData(jobId).blipModel;
 		}
 
-		getJobData(jobId).locations[locationId].blip = createGameBlip(getJobData(jobId).locations[locationId].position, blipModelId, getColourByType("job"));
-		//setElementStreamInDistance(getServerData().jobs[i].locations[j].blip, 30);
-		//setElementStreamOutDistance(getServerData().jobs[i].locations[j].blip, 40);
-		setElementOnAllDimensions(getJobData(jobId).locations[locationId].blip, false);
-		setElementDimension(getJobData(jobId).locations[locationId].blip, getJobData(jobId).locations[locationId].dimension);
-		addToWorld(getJobData(jobId).locations[locationId].blip);
+		if(areServerElementsSupported()) {
+			let blip = createGameBlip(tempJobData.locations[locationId].position, blipModelId, getColourByType("job"));
+			if(blip != false) {
+				tempJobData.locations[locationId].blip = blip;
+			}
+			setElementOnAllDimensions(blip, false);
+			setElementDimension(blip, tempJobData.locations[locationId].dimension);
+			addToWorld(blip);
+		} else {
+			sendJobToPlayer(null, jobId, tempJobData.name, tempJobData.locations[locationId].position, blipModelId);
+		}
 	}
 }
 

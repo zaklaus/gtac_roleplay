@@ -282,7 +282,7 @@ function enterVehicleAsPassenger() {
         } else {
             for(let i = 0 ; i <= natives.getMaximumNumberOfPassengers(tempVehicle); i++) {
                 if(natives.isCarPassengerSeatFree(tempVehicle, i)) {
-                    natives.taskEnterCarAsPassenger(localPlayer, tempVehicle, i, 1);
+                    natives.taskEnterCarAsPassenger(localPlayer, tempVehicle, i, 10000);
                 }
             }
         }
@@ -360,6 +360,7 @@ function setLocalPlayerInterior(interior) {
             if(getGameConfig().mainWorldInterior != interior) {
                 let interiorId = natives.getInteriorAtCoords(localPlayer.position);
                 natives.activateInterior(interiorId, true);
+                natives.loadAllObjectsNow();
             }
         }
     }

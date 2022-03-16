@@ -135,7 +135,8 @@
 	<script src="scripts/client/skin-select.js" type="client" language="javascript" />
 	<script src="scripts/client/sync.js" type="client" language="javascript" />
 	<script src="scripts/client/utilities.js" type="client" language="javascript" />
-	
+	<script src="scripts/client/vehicle.js" type="client" language="javascript" />
+
 	<!-- MexUI -->
 	<file type="client" src="third-party/mexui/Images/down-arrow.png" />
 	<script language="javascript" type="client" src="third-party/mexui/mexui.js" />

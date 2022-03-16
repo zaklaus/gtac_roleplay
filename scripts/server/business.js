@@ -1251,9 +1251,9 @@ function saveAllBusinessesToDatabase() {
 function saveBusinessToDatabase(businessId) {
 	let tempBusinessData = getServerData().businesses[businessId];
 
-    if(!tempBusinessData.needsSaved) {
-        return false;
-    }
+	if(!tempBusinessData.needsSaved) {
+		return false;
+	}
 
 	logToConsole(LOG_DEBUG, `[VRR.Business]: Saving business '${tempBusinessData.name}' to database ...`);
 	let dbConnection = connectToDatabase();
@@ -1344,7 +1344,7 @@ function createAllBusinessBlips() {
 
 // ===========================================================================
 
-function createBusinessEntrancePickup(businessId) {	
+function createBusinessEntrancePickup(businessId) {
 	if(!getServerConfig().createBusinessPickups) {
 		return false;
 	}
@@ -1357,7 +1357,7 @@ function createBusinessEntrancePickup(businessId) {
 		}
 
 		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating entrance pickup for business ${getBusinessData(businessId).name} (model ${pickupModelId})`);
-		
+
 		if(areServerElementsSupported()) {
 			getBusinessData(businessId).entrancePickup = createGamePickup(pickupModelId, getBusinessData(businessId).entrancePosition, getGameConfig().pickupTypes[getServerGame()].business);
 			setElementOnAllDimensions(getBusinessData(businessId).entrancePickup, false);
@@ -1389,7 +1389,7 @@ function createBusinessEntranceBlip(businessId) {
 		}
 
 		logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating entrance blip for business ${getBusinessData(businessId).name} (model ${blipModelId})`);
-		
+
 		if(areServerElementsSupported()) {
 			getBusinessData(businessId).entranceBlip = createGameBlip(getBusinessData(businessId).entrancePosition, blipModelId, 1, getColourByName("businessBlue"));
 			setElementOnAllDimensions(getBusinessData(businessId).entranceBlip, false);
@@ -1417,7 +1417,7 @@ function createBusinessExitPickup(businessId) {
 			}
 
 			logToConsole(LOG_VERBOSE, `[VRR.Job]: Creating exit pickup for business ${getBusinessData(businessId).name} (model ${pickupModelId})`);
-			
+
 			if(areServerElementsSupported()) {
 				getBusinessData(businessId).exitPickup = createGamePickup(pickupModelId, getBusinessData(businessId).exitPosition, getGameConfig().pickupTypes[getServerGame()].business);
 				setElementDimension(getBusinessData(businessId).exitPickup, getBusinessData(businessId).exitDimension);
@@ -2214,17 +2214,17 @@ function getBusinessFromParams(params) {
 // ===========================================================================
 
 function deleteAllBusinessBlips() {
-    for(let i in getServerData().businesses) {
-        deleteBusinessBlips(i);
-    }
+	for(let i in getServerData().businesses) {
+		deleteBusinessBlips(i);
+	}
 }
 
 // ===========================================================================
 
 function deleteAllBusinessPickups() {
-    for(let i in getServerData().businesses) {
-        deleteBusinessPickups(i);
-    }
+	for(let i in getServerData().businesses) {
+		deleteBusinessPickups(i);
+	}
 }
 
 // ===========================================================================

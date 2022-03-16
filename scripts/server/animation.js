@@ -21,7 +21,7 @@ function playPlayerAnimationCommand(command, params, client) {
 	}
 
 let animationSlot = getAnimationFromParams(getParam(params, " ", 1));
-    let animationPositionOffset = 1;
+	let animationPositionOffset = 1;
 
 	if(!animationSlot) {
 		messagePlayerError(client, getLocaleString(client, "AnimationNotFound"));
@@ -61,7 +61,7 @@ function stopPlayerAnimationCommand(command, params, client) {
 	getPlayerData(client).currentAnimation = -1;
 	getPlayerData(client).currentAnimationPositionOffset = false;
 	getPlayerData(client).currentAnimationPositionReturnTo = false;
-    getPlayerData(client).animationStart = 0;
+	getPlayerData(client).animationStart = 0;
 	getPlayerData(client).animationForced = false;
 
 	setPlayerMouseCameraState(client, false);
@@ -88,7 +88,7 @@ function showAnimationListCommand(command, params, client) {
  * @return {Array} The animation's data (array)
  */
 function getAnimationData(animationSlot, gameId = getServerGame()) {
-    return getGameConfig().animations[gameId][animationSlot];
+	return getGameConfig().animations[gameId][animationSlot];
 }
 
 // ===========================================================================
@@ -100,13 +100,13 @@ function isPlayerInForcedAnimation(client) {
 // ===========================================================================
 
 function makePlayerPlayAnimation(client, animationSlot, offsetPosition = 1) {
-    getPlayerData(client).currentAnimation = animationSlot;
+	getPlayerData(client).currentAnimation = animationSlot;
 	getPlayerData(client).currentAnimationPositionOffset = offsetPosition;
 	getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
-    getPlayerData(client).animationStart = getCurrentUnixTimestamp();
+	getPlayerData(client).animationStart = getCurrentUnixTimestamp();
 	getPlayerData(client).animationForced = false;
 
-    makePedPlayAnimation(getPlayerData(client).ped, animationSlot, offsetPosition);
+	makePedPlayAnimation(getPlayerData(client).ped, animationSlot, offsetPosition);
 
 	//if(getAnimationData(animationSlot)[9] != VRR_ANIMMOVE_NONE) {
 	//	if(getGame() < VRR_GAME_GTA_SA) {
@@ -118,10 +118,10 @@ function makePlayerPlayAnimation(client, animationSlot, offsetPosition = 1) {
 // ===========================================================================
 
 function forcePlayerPlayAnimation(client, animationSlot, offsetPosition = 1) {
-    getPlayerData(client).currentAnimation = animationSlot;
+	getPlayerData(client).currentAnimation = animationSlot;
 	getPlayerData(client).currentAnimationPositionOffset = offsetPosition;
 	getPlayerData(client).currentAnimationPositionReturnTo = getPlayerPosition(client);
-    getPlayerData(client).animationStart = getCurrentUnixTimestamp();
+	getPlayerData(client).animationStart = getCurrentUnixTimestamp();
 	getPlayerData(client).animationForced = true;
 
 	setPlayerControlState(client, false);
@@ -137,7 +137,7 @@ function makePlayerStopAnimation(client) {
 	getPlayerData(client).currentAnimation = -1;
 	getPlayerData(client).currentAnimationPositionOffset = false;
 	getPlayerData(client).currentAnimationPositionReturnTo = false;
-    getPlayerData(client).animationStart = 0;
+	getPlayerData(client).animationStart = 0;
 	getPlayerData(client).animationForced = false;
 }
 

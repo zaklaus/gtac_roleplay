@@ -24,7 +24,7 @@ function getNPCData(ped) {
 	if(ped.getData("vrr.dataIndex")) {
 		return ped.getData("vrr.dataIndex");
 	}
-    return false;
+	return false;
 }
 
 // ===========================================================================
@@ -44,7 +44,7 @@ function createNPCCommand(client, command, params) {
 
 	let position = getPosInFrontOfPos(getPlayerPosition(client), getPlayerHeading(client), 3);
 
-    let tempNPCData = new NPCData(false);
+	let tempNPCData = new NPCData(false);
 	tempNPCData.position = position;
 	tempNPCData.heading = getPlayerHeading(client);
 	tempNPCData.skin = skinId;

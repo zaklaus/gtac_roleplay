@@ -82,7 +82,7 @@ function initAllClients() {
 
 function updateServerRules() {
 	logToConsole(LOG_DEBUG, `[VRR.Utilities]: Updating all server rules ...`);
-	
+
 	logToConsole(LOG_DEBUG, `[VRR.Utilities]: Time support: ${isTimeSupported()}`);
 	if(isTimeSupported()) {
 		if(getServerConfig() != false) {
@@ -363,7 +363,7 @@ function updateConnectionLogOnClientInfoReceive(client, clientVersion, screenWid
 		let safeClientVersion = escapeDatabaseString(dbConnection, clientVersion);
 		let safeScreenWidth = escapeDatabaseString(dbConnection, toString(screenWidth));
 		let safeScreenHeight = escapeDatabaseString(dbConnection, toString(screenHeight));
-    	quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${getPlayerData(client).sessionId}`);
+		quickDatabaseQuery(`UPDATE conn_main SET conn_client_version='${safeClientVersion}', conn_screen_width='${safeScreenWidth}', conn_screen_height='${safeScreenHeight}' WHERE conn_id = ${getPlayerData(client).sessionId}`);
 	}
 }
 
@@ -445,9 +445,9 @@ function clearTemporaryPeds() {
 // ===========================================================================
 
 function kickAllClients() {
-    getClients().forEach((client) => {
-        client.disconnect();
-    })
+	getClients().forEach((client) => {
+		client.disconnect();
+	})
 }
 
 // ===========================================================================

@@ -21,7 +21,7 @@ function processLostFocusAFK(event) {
 // ===========================================================================
 
 function processFocusAFK(event) {
-    sendServerNewAFKStatus(false);
+	sendServerNewAFKStatus(false);
 }
 
 // ===========================================================================

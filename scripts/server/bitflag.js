@@ -311,15 +311,15 @@ function doesPlayerHaveStaffPermission(client, requiredFlags) {
 	}
 
 	// -1 is automatic override (having -1 for staff flags is basically god mode admin level)
-    if(staffFlags == getStaffFlagValue("All")) {
-        return true;
-    }
+	if(staffFlags == getStaffFlagValue("All")) {
+		return true;
+	}
 
-    if(hasBitFlag(staffFlags, requiredFlags)) {
-        return true;
-    }
+	if(hasBitFlag(staffFlags, requiredFlags)) {
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 // ===========================================================================
@@ -341,22 +341,22 @@ function doesPlayerHaveClanPermission(client, requiredFlags) {
 	clanFlags = getPlayerCurrentSubAccount(client).clanFlags | getClanRankFlags(getPlayerCurrentSubAccount(client).clanRank);
 
 	// -1 is automatic override (having -1 for staff flags is basically god mode admin level)
-    if(clanFlags == getClanFlagValue("All")) {
-        return true;
-    }
+	if(clanFlags == getClanFlagValue("All")) {
+		return true;
+	}
 
-    if(hasBitFlag(clanFlags, requiredFlags)) {
-        return true;
-    }
+	if(hasBitFlag(clanFlags, requiredFlags)) {
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 // ===========================================================================
 
 function getStaffFlagValue(flagName) {
-    if(flagName == "All") {
-        return -1;
+	if(flagName == "All") {
+		return -1;
 	}
 
 	if(typeof serverBitFlags.staffFlags[flagName] == "undefined") {
@@ -369,8 +369,8 @@ function getStaffFlagValue(flagName) {
 // ===========================================================================
 
 function getClanFlagValue(flagName) {
-    if(flagName == "All") {
-        return -1;
+	if(flagName == "All") {
+		return -1;
 	}
 
 	if(typeof getServerBitFlags().clanFlags[flagName] == "undefined") {
@@ -383,8 +383,8 @@ function getClanFlagValue(flagName) {
 // ===========================================================================
 
 function getAccountSettingsFlagValue(flagName) {
-    if(flagName == "All") {
-        return -1;
+	if(flagName == "All") {
+		return -1;
 	}
 
 	if(typeof serverBitFlags.accountSettingsFlags[flagName] == "undefined") {
@@ -397,8 +397,8 @@ function getAccountSettingsFlagValue(flagName) {
 // ===========================================================================
 
 function getModerationFlagValue(flagName) {
-    if(flagName == "All") {
-        return -1;
+	if(flagName == "All") {
+		return -1;
 	}
 
 	if(typeof serverBitFlags.moderationFlags[flagName] == "undefined") {
@@ -411,8 +411,8 @@ function getModerationFlagValue(flagName) {
 // ===========================================================================
 
 function getServerSettingsFlagValue(flagName) {
-    if(flagName == "All") {
-        return -1;
+	if(flagName == "All") {
+		return -1;
 	}
 
 	if(typeof serverBitFlags.serverSettings[flagName] == "undefined") {

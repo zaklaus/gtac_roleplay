@@ -20,11 +20,11 @@ function kickClientCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	// Prevent kicking admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
@@ -50,9 +50,9 @@ function setStaffTitleCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let staffTitle = splitParams.slice(1).join(" ");
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	// Prevent setting titles on staff with really high permissions
@@ -77,11 +77,11 @@ function muteClientCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	// Prevent muting admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
@@ -104,14 +104,14 @@ function unMuteClientCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	// Prevent unmuting admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot unmute this person!");
 			return false;
@@ -130,14 +130,14 @@ function freezeClientCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	// Prevent freeze admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot freeze this person!");
 			return false;
@@ -157,14 +157,14 @@ function unFreezeClientCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	// Prevent unfreezing admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot freeze this person!");
 			return false;
@@ -184,11 +184,11 @@ function gotoPlayerCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	setPlayerVelocity(client, toVector3(0.0, 0.0, 0.0));
 	setPlayerPosition(client, getPosBehindPos(getPlayerPosition(targetClient), getPlayerHeading(targetClient), 2));
@@ -216,11 +216,11 @@ function getPlayerGeoIPInformationCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	let countryName = module.geoip.getCountryName(getGlobalConfig().geoIPCountryDatabaseFilePath, targetClient.ip);
 	let subDivisionName = module.geoip.getSubdivisionName(getGlobalConfig().geoIPCityDatabaseFilePath, targetClient.ip);
@@ -237,11 +237,11 @@ function getPlayerIPInformationCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	messagePlayerInfo(client, `{ALTCOLOUR}${targetClient.name}'s{MAINCOLOUR} IP is ${targetClient.ip}`);
 }
@@ -633,10 +633,10 @@ function getPlayerCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	removePlayerFromVehicle(targetClient);
@@ -673,17 +673,17 @@ function returnPlayerCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getPlayerFromParams(params);
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	let targetClient = getPlayerFromParams(params);
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	removePlayerFromVehicle(targetClient);
 
 	if(getPlayerData(targetClient).returnToPosition == null) {
-        messagePlayerError(client, "There is nowhere to return that player to!");
-        return false;
+		messagePlayerError(client, "There is nowhere to return that player to!");
+		return false;
 	}
 
 	setPlayerPosition(targetClient, getPlayerData(targetClient).returnToPosition);
@@ -714,18 +714,18 @@ function addStaffFlagCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let flagName = getParam(params, " ", 2) || "None";
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	if(getStaffFlagValue(flagName) == false) {
 		messagePlayerError(client, getLocaleString(client, "InvalidStaffFlag"));
-        return false;
+		return false;
 	}
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot give staff flags to this person!");
 			return false;
@@ -747,18 +747,18 @@ function takeStaffFlagCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let flagName = getParam(params, " ", 2) || "None";
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	if(getStaffFlagValue(flagName) == false) {
 		messagePlayerError(client, "That staff flag doesn't exist!");
-        return false;
+		return false;
 	}
 
 	// Prevent setting flags on admins with really high permissions
-    if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
+	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
 		if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageServer")) && !doesPlayerHaveStaffPermission(client, getStaffFlagValue("Developer"))) {
 			messagePlayerError(client, "You cannot take staff flags from this person!");
 			return false;
@@ -779,10 +779,10 @@ function clearStaffFlagsCommand(command, params, client) {
 
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
-    }
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
 
 	// Prevent setting flags on admins with really high permissions
 	if(doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("ManageServer")) || doesPlayerHaveStaffPermission(targetClient, getStaffFlagValue("Developer"))) {
@@ -818,9 +818,9 @@ function getStaffFlagsCommand(command, params, client) {
 
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	let tempStaffFlags = [];
@@ -861,9 +861,9 @@ function allStaffFlagsCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let flagName = getParam(params, " ", 2) || "None";
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	let chunkedList = splitArrayIntoChunks(getServerBitFlagKeys().staffFlagKeys, 8);
@@ -885,9 +885,9 @@ function givePlayerMoneyCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let amount = toInteger(getParam(params, " ", 2));
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	givePlayerCash(targetClient, toInteger(amount));
@@ -908,9 +908,9 @@ function forcePlayerAccentCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let newAccent = getParam(params, " ", 2) || "None";
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	if(toLowerCase(newAccent) == "None") {
@@ -940,9 +940,9 @@ function forceCharacterNameChangeCommand(command, params, client) {
 
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	getPlayerData(targetClient).changingCharacterName = true;
@@ -968,9 +968,9 @@ function forceCharacterNameCommand(command, params, client) {
 	let firstName = getParam(params, " ", 2);
 	let lastName = getParam(params, " ", 3);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	firstName = fixCharacterName(firstName);
@@ -1003,14 +1003,14 @@ function forcePlayerSkinCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(splitParams[0]);
 	let skinIndex = getSkinModelIndexFromParams(splitParams.slice(1).join(" "), getGame());
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	if(!skinIndex) {
-        messagePlayerError(client, getLocaleString(client, "InvalidSkin"));
-        return false;
+		messagePlayerError(client, getLocaleString(client, "InvalidSkin"));
+		return false;
 	}
 
 	getPlayerCurrentSubAccount(targetClient).skin = skinIndex;
@@ -1036,9 +1036,9 @@ function setPlayerHealthCommand(command, params, client) {
 	let targetClient = getParam(params, " ", 1);
 	let health = getParam(params, " ", 2);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	setPlayerHealth(targetClient, health);
@@ -1054,12 +1054,12 @@ function setPlayerArmourCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getParam(params, " ", 1);
+	let targetClient = getParam(params, " ", 1);
 	let armour = getParam(params, " ", 2);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	setPlayerArmour(targetClient, armour);
@@ -1075,20 +1075,20 @@ function setPlayerInfiniteRunCommand(command, params, client) {
 		return false;
 	}
 
-    let targetClient = getParam(params, " ", 1);
+	let targetClient = getParam(params, " ", 1);
 	let state = getParam(params, " ", 2) || 0;
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
-    if(isNaN(state)) {
-        messagePlayerError(client, `The infinite run state must be a number!`);
-        return false;
-    }
+	if(isNaN(state)) {
+		messagePlayerError(client, `The infinite run state must be a number!`);
+		return false;
+	}
 
-    state = toInteger(state);
+	state = toInteger(state);
 	setPlayerInfiniteRun(targetClient, intToBool(state));
 
 	messageAdmins(`${getPlayerName(client)}{MAINCOLOUR} ${getBoolRedGreenInlineColour(state)}${(state) ? "enabled" : "disabled"}{MAINCOLOUR} infinite run for {ALTCOLOUR}${getPlayerName(targetClient)}`);
@@ -1105,9 +1105,9 @@ function forcePlayerWantedLevelCommand(command, params, client) {
 	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let wantedLevel = getParam(params, " ", 2);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	forcePlayerWantedLevel(targetClient, wantedLevel);
@@ -1125,9 +1125,9 @@ function getAllVehiclesOwnedByPlayerCommand(command, params, client) {
 
 	let targetClient = getPlayerFromParams(params);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	let vehicles = getAllVehiclesOwnedByPlayer(targetClient);
@@ -1148,9 +1148,9 @@ function getAllBusinessesOwnedByPlayerCommand(command, params, client) {
 
 	let targetClient = getPlayerFromParams(params);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	let businesses = getAllBusinessesOwnedByPlayer(targetClient);
@@ -1171,9 +1171,9 @@ function getAllHousesOwnedByPlayerCommand(command, params, client) {
 
 	let targetClient = getPlayerFromParams(params);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	let houses = getAllHousesOwnedByPlayer(targetClient);
@@ -1194,9 +1194,9 @@ function forceAccountPasswordResetCommand(command, params, client) {
 
 	let targetClient = getPlayerFromParams(params);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 }
 
@@ -1210,9 +1210,9 @@ function toggleSyncForElementsSpawnedByPlayer(command, params, client) {
 
 	let targetClient = getPlayerFromParams(params);
 
-    if(!targetClient) {
-        messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
-        return false;
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
 	}
 
 	if(!hasBitFlag(getPlayerData(client).accountData.flags.moderation, getModerationFlagValue("DontSyncClientElements"))) {

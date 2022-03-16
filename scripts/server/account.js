@@ -581,7 +581,7 @@ function loginSuccess(client) {
 				logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the "not a tester" error message (GUI disabled).`);
 				messagePlayerError(client, getLocaleString(client, "NotATester"));
 				return false;
-			}			
+			}
 		}
 	}
 
@@ -948,7 +948,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 		setAccountEmailVerificationCode(getPlayerData(client).accountData, emailVerificationCode);
 		sendEmailVerificationEmail(client, emailVerificationCode);
 		logToConsole(LOG_WARN, `${getPlayerDisplayForConsole(client)} was sent a registration email verification code`);
-    }
+	}
 
 	if(doesServerHaveTesterOnlyEnabled() && !isPlayerATester(client)) {
 		setTimeout(function() {
@@ -963,7 +963,7 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 			logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the "not a tester" error message (GUI disabled).`);
 			messagePlayerError(client, getLocaleString(client, "NotATester"));
 			return false;
-		}	
+		}
 	} else {
 		messagePlayerAlert(client, getLocaleString(client, "RegistrationCreateCharReminder"));
 

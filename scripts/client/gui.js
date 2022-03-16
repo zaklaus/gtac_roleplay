@@ -104,7 +104,7 @@ function closeAllWindows() {
 	listDialog.window.shown = false;
 	resetPassword.window.shown = false;
 	passwordChange.window.shown = false;
-	
+
 	mexui.setInput(false);
 	mexui.focusedControl = false;
 
@@ -284,8 +284,8 @@ addNetworkEventHandler("vrr.guiInit", function() {
 // ===========================================================================
 
 function hideAllGUI() {
-    closeAllWindows();
-    setChatWindowEnabled(true);
+	closeAllWindows();
+	setChatWindowEnabled(true);
 	guiSubmitKey = false;
 }
 

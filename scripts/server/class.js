@@ -241,7 +241,7 @@ class ClientData {
 		this.enteringVehicle = null;
 
 		this.customDisconnectReason = "";
-		
+
 		this.interiorCutscene = "";
 	}
 };
@@ -578,7 +578,7 @@ class BusinessData {
 
 			this.labelHelpType = toInteger(dbAssoc["biz_label_help_type"]);
 			this.streamingRadioStation = toInteger(dbAssoc["biz_radiostation"]);
-			
+
 		}
 	};
 };
@@ -1721,7 +1721,7 @@ class JobRouteData {
 			this.pay = toInteger(dbAssoc["job_route_pay"]);
 			this.startMessage = toString(dbAssoc["job_route_start_msg"]);
 			this.finishMessage = toString(dbAssoc["job_route_finish_msg"]);
-            this.locationArriveMessage = toString(dbAssoc["job_route_loc_arrive_msg"]);
+			this.locationArriveMessage = toString(dbAssoc["job_route_loc_arrive_msg"]);
 			this.locationNextMessage = toString(dbAssoc["job_route_loc_next_msg"]);
 			this.vehicleColour1 = toInteger(dbAssoc["job_route_veh_colour1"]);
 			this.vehicleColour2 = toInteger(dbAssoc["job_route_veh_colour2"]);
@@ -1737,7 +1737,7 @@ class JobRouteLocationData {
 		this.routeId = 0;
 		this.enabled = false;
 		this.index = -1;
-        this.jobIndex = -1;
+		this.jobIndex = -1;
 		this.routeIndex = -1;
 		this.needsSaved = false;
 		this.position = toVector3(0.0, 0.0, 0.0);

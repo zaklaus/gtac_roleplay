@@ -1436,30 +1436,30 @@ function updateHousePickupLabelData(houseId) {
 		return false;
 	}
 
-    let houseData = getHouseData(houseId);
+	let houseData = getHouseData(houseId);
 
-    if(houseData.entrancePickup != null) {
-        setEntityData(houseData.entrancePickup, "vrr.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
-        setEntityData(houseData.entrancePickup, "vrr.owner.id", houseId, false);
-        setEntityData(houseData.entrancePickup, "vrr.label.type", VRR_LABEL_HOUSE, true);
-        //setEntityData(houseData.entrancePickup, "vrr.label.name", houseData.description, true);
-        setEntityData(houseData.entrancePickup, "vrr.label.locked", houseData.locked, true);
-        if(houseData.buyPrice > 0) {
-            setEntityData(houseData.entrancePickup, "vrr.label.price", houseData.buyPrice, true);
-            setEntityData(houseData.entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_BUYHOUSE, true);
-        } else {
-            if(houseData.rentPrice > 0) {
-                setEntityData(houseData.entrancePickup, "vrr.label.rentprice", houseData.rentPrice, true);
-                setEntityData(houseData.entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_RENTHOUSE, true);
-            }
-        }
-    }
+	if(houseData.entrancePickup != null) {
+		setEntityData(houseData.entrancePickup, "vrr.owner.type", VRR_PICKUP_HOUSE_ENTRANCE, false);
+		setEntityData(houseData.entrancePickup, "vrr.owner.id", houseId, false);
+		setEntityData(houseData.entrancePickup, "vrr.label.type", VRR_LABEL_HOUSE, true);
+		//setEntityData(houseData.entrancePickup, "vrr.label.name", houseData.description, true);
+		setEntityData(houseData.entrancePickup, "vrr.label.locked", houseData.locked, true);
+		if(houseData.buyPrice > 0) {
+			setEntityData(houseData.entrancePickup, "vrr.label.price", houseData.buyPrice, true);
+			setEntityData(houseData.entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_BUYHOUSE, true);
+		} else {
+			if(houseData.rentPrice > 0) {
+				setEntityData(houseData.entrancePickup, "vrr.label.rentprice", houseData.rentPrice, true);
+				setEntityData(houseData.entrancePickup, "vrr.label.help", VRR_PROPLABEL_INFO_RENTHOUSE, true);
+			}
+		}
+	}
 
-    if(houseData.exitPickup != null) {
-        setEntityData(houseData.exitPickup, "vrr.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
-        setEntityData(houseData.exitPickup, "vrr.owner.id", houseId, false);
-        setEntityData(houseData.exitPickup, "vrr.label.type", VRR_LABEL_EXIT, true);
-    }
+	if(houseData.exitPickup != null) {
+		setEntityData(houseData.exitPickup, "vrr.owner.type", VRR_PICKUP_HOUSE_EXIT, false);
+		setEntityData(houseData.exitPickup, "vrr.owner.id", houseId, false);
+		setEntityData(houseData.exitPickup, "vrr.label.type", VRR_LABEL_EXIT, true);
+	}
 }
 
 // ===========================================================================

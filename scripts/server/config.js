@@ -283,18 +283,18 @@ function setTimeCommand(command, params, client) {
 	if(hour > 23 || hour < 0) {
 		messagePlayerError(client, "The hour must be between 0 and 23!");
 		return false;
-    }
+	}
 
 	if(minute > 59 || minute < 0) {
 		messagePlayerError(client, "The minute must be between 0 and 59!");
 		return false;
-    }
+	}
 
 	getServerConfig().hour = hour;
 	getServerConfig().minute = minute;
 
-    game.time.hour = getServerConfig().hour;
-    game.time.minute = getServerConfig().minute;
+	game.time.hour = getServerConfig().hour;
+	game.time.minute = getServerConfig().minute;
 
 	//checkServerGameTime();
 
@@ -322,7 +322,7 @@ function setMinuteDurationCommand(command, params, client) {
 		return false;
 	}
 
-    let minuteDuration = toInteger(params);
+	let minuteDuration = toInteger(params);
 	getServerConfig().minuteDuration = minuteDuration;
 	setTimeMinuteDuration(null, minuteDuration);
 
@@ -354,15 +354,15 @@ function setWeatherCommand(command, params, client) {
 	if(!weatherId) {
 		messagePlayerError(client, `That weather ID or name is invalid!`);
 		return false;
-    }
+	}
 
-    game.forceWeather(toInteger(weatherId));
+	game.forceWeather(toInteger(weatherId));
 	getServerConfig().weather = weatherId;
 
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} set the weather to {ALTCOLOUR}${getGameConfig().weatherNames[getServerGame()][toInteger(weatherId)]}`);
-    updateServerRules();
+	messageAdminAction(`${getPlayerName(client)} set the weather to {ALTCOLOUR}${getGameConfig().weatherNames[getServerGame()][toInteger(weatherId)]}`);
+	updateServerRules();
 	return true;
 }
 
@@ -384,7 +384,7 @@ function setSnowingCommand(command, params, client) {
 	}
 
 	let splitParams = params.split(" ");
-    let falling = toInteger(getParam(params, " ", 1));
+	let falling = toInteger(getParam(params, " ", 1));
 	let ground = toInteger(getParam(params, " ", 2));
 
 	getServerConfig().fallingSnow = intToBool(falling);
@@ -394,8 +394,8 @@ function setSnowingCommand(command, params, client) {
 
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned falling snow ${getBoolRedGreenInlineColour(falling)}${getOnOffFromBool(falling)} {MAINCOLOUR}and ground snow ${getBoolRedGreenInlineColour(ground)}${getOnOffFromBool(ground)}`);
-    updateServerRules();
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned falling snow ${getBoolRedGreenInlineColour(falling)}${getOnOffFromBool(falling)} {MAINCOLOUR}and ground snow ${getBoolRedGreenInlineColour(ground)}${getOnOffFromBool(ground)}`);
+	updateServerRules();
 	return true;
 }
 
@@ -417,7 +417,7 @@ function setServerGUIColoursCommand(command, params, client) {
 	}
 
 	let splitParams = params.split(" ");
-    let colourRed = toInteger(getParam(params, " ", 1)) || 255;
+	let colourRed = toInteger(getParam(params, " ", 1)) || 255;
 	let colourGreen = toInteger(getParam(params, " ", 2)) || 255;
 	let colourBlue = toInteger(getParam(params, " ", 3)) || 255;
 
@@ -430,8 +430,8 @@ function setServerGUIColoursCommand(command, params, client) {
 
 	getServerConfig().needsSaved = true;
 
-    //messageAdminAction(`${getPlayerName(client)} ${getInlineChatColourByName("orange")}set the server ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} ${getInlineChatColourByName("orange")}and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
-    //updateServerRules();
+	//messageAdminAction(`${getPlayerName(client)} ${getInlineChatColourByName("orange")}set the server ${getBoolRedGreenInlineColour(fallingSnow)}${getOnOffFromBool(fallingSnow)} ${getInlineChatColourByName("orange")}and ground snow ${getBoolRedGreenInlineColour(groundSnow)}${getOnOffFromBool(groundSnow)}`);
+	//updateServerRules();
 	return true;
 }
 
@@ -452,8 +452,8 @@ function toggleServerLogoCommand(command, params, client) {
 
 	updatePlayerShowLogoState(null, getServerConfig().useLogo);
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned the server logo image ${getBoolRedGreenInlineColour(doesServerHaveServerLogoEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);
-    updateServerRules();
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned the server logo image ${getBoolRedGreenInlineColour(doesServerHaveServerLogoEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().useLogo))}`);
+	updateServerRules();
 	return true;
 }
 
@@ -472,7 +472,7 @@ function toggleServerLogoCommand(command, params, client) {
 	getServerConfig().createJobBlips = !getServerConfig().createJobBlips;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveJobBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createJobBlips))} {MAINCOLOUR}all job blips`);
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveJobBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createJobBlips))} {MAINCOLOUR}all job blips`);
 	resetAllJobBlips();
 	return true;
 }
@@ -492,7 +492,7 @@ function toggleServerLogoCommand(command, params, client) {
 	getServerConfig().createJobPickups = !getServerConfig().createJobPickups;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveJobPickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createJobPickups))} {MAINCOLOUR}all job pickups`);
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveJobPickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createJobPickups))} {MAINCOLOUR}all job pickups`);
 	resetAllJobPickups();
 	return true;
 }
@@ -509,10 +509,10 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerBusinessBlipsCommand(command, params, client) {
-	getServerConfig().createBusinessBlips = !getServerConfig().createBusinessBlips;	
+	getServerConfig().createBusinessBlips = !getServerConfig().createBusinessBlips;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveBusinessBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createBusinessBlips))} {MAINCOLOUR}all business blips`);
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveBusinessBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createBusinessBlips))} {MAINCOLOUR}all business blips`);
 	resetAllBusinessBlips();
 	return true;
 }
@@ -529,10 +529,10 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerBusinessPickupsCommand(command, params, client) {
-	getServerConfig().createBusinessPickups = !getServerConfig().createBusinessPickups;	
+	getServerConfig().createBusinessPickups = !getServerConfig().createBusinessPickups;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveBusinessPickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createBusinessPickups))} {MAINCOLOUR}all business pickups`);
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveBusinessPickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createBusinessPickups))} {MAINCOLOUR}all business pickups`);
 	resetAllBusinessPickups();
 	return true;
 }
@@ -549,10 +549,10 @@ function toggleServerLogoCommand(command, params, client) {
  *
  */
  function toggleServerHouseBlipsCommand(command, params, client) {
-	getServerConfig().createHouseBlips = !getServerConfig().createHouseBlips;	
+	getServerConfig().createHouseBlips = !getServerConfig().createHouseBlips;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveHouseBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createHouseBlips))} {MAINCOLOUR}all house blips`);
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveHouseBlipsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createHouseBlips))} {MAINCOLOUR}all house blips`);
 	resetAllHouseBlips();
 	return true;
 }
@@ -572,7 +572,7 @@ function toggleServerLogoCommand(command, params, client) {
 	getServerConfig().createHousePickups = !getServerConfig().createHousePickups;
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveHousePickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createHousePickups))} {MAINCOLOUR}all house pickups`);
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned ${getBoolRedGreenInlineColour(doesServerHaveHousePickupsEnabled())}${toUpperCase(getOnOffFromBool(getServerConfig().createHousePickups))} {MAINCOLOUR}all house pickups`);
 	resetAllHousePickups();
 	return true;
 }
@@ -593,8 +593,8 @@ function toggleServerGUICommand(command, params, client) {
 
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned GUI ${toLowerCase(getOnOffFromBool(doesServerHaveGUIEnabled()))} for this server`);
-    updateServerRules();
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned GUI ${toLowerCase(getOnOffFromBool(doesServerHaveGUIEnabled()))} for this server`);
+	updateServerRules();
 	return true;
 }
 
@@ -611,12 +611,12 @@ function toggleServerGUICommand(command, params, client) {
  */
 function toggleServerUseRealWorldTimeCommand(command, params, client) {
 	getServerConfig().useRealTime = !getServerConfig().useRealTime;
-	
+
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned real-world time ${getServerConfig().useRealTime} for this server (GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)})`);
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}turned real-world time ${getServerConfig().useRealTime} for this server (GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)})`);
 	updateServerGameTime();
-    updateServerRules();
+	updateServerRules();
 	return true;
 }
 
@@ -637,12 +637,12 @@ function setServerRealWorldTimeZoneCommand(command, params, client) {
 		return false;
 	}
 
-    getServerConfig().realTimeZone = toInteger(params);
+	getServerConfig().realTimeZone = toInteger(params);
 	getServerConfig().needsSaved = true;
 
-    messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}set the time zone for in-game's real-world time to GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)}`);
+	messageAdminAction(`${getPlayerName(client)} {MAINCOLOUR}set the time zone for in-game's real-world time to GMT ${addPositiveNegativeSymbol(getServerConfig().realTimeZone)}`);
 	updateServerGameTime();
-    updateServerRules();
+	updateServerRules();
 	return true;
 }
 
@@ -662,7 +662,7 @@ function reloadServerConfigurationCommand(command, params, client) {
 	applyConfigToServer(serverConfig);
 	updateServerRules();
 
-    messagePlayerSuccess(client, `You reloaded the server configuration!`);
+	messagePlayerSuccess(client, `You reloaded the server configuration!`);
 	return true;
 }
 
@@ -679,7 +679,7 @@ function reloadServerConfigurationCommand(command, params, client) {
  */
 function reloadEmailConfigurationCommand(command, params, client) {
 	emailConfig = loadEmailConfiguration();
-    messagePlayerSuccess(client, `You reloaded the email configuration!`);
+	messagePlayerSuccess(client, `You reloaded the email configuration!`);
 	return true;
 }
 

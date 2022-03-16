@@ -185,7 +185,7 @@ function saveSubAccountToDatabase(subAccountData) {
 		freeDatabaseQuery(dbQuery);
 
 		disconnectFromDatabase(dbConnection);
-    }
+	}
 }
 
 // ===========================================================================

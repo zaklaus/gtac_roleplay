@@ -42,9 +42,9 @@ function processPlayerChat(client, messageText) {
 	} else {
 		messagePlayerNormal(null, `🛡️ (ADMIN) - ${messageText}`);
 	}
-	
-    /*
-    let clients = getClients();
+
+	/*
+	let clients = getClients();
 	for(let i in clients) {
 		let translatedText;
 		translatedText = await translateMessage(messageText, getPlayerData(client).locale, getPlayerData(clients[i]).locale);
@@ -52,9 +52,9 @@ function processPlayerChat(client, messageText) {
 		let original = (getPlayerData(client).locale == getPlayerData(clients[i]).locale) ? `` : ` {ALTCOLOUR}(${messageText})`;
 		messagePlayerNormal(clients[i], `💬 ${getCharacterFullName(client)}: [#FFFFFF]${translatedText}${original}`, clients[i], getColourByName("mediumGrey"));
 	}
-    */
-    
-    //messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
+	*/
+
+	//messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
 }
 
 // ===========================================================================

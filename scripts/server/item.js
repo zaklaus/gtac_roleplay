@@ -1063,16 +1063,16 @@ function playerSwitchItem(client, newHotBarSlot) {
 					setPlayerWeaponDamageEnabled(client, true);
 					setPlayerWeaponDamageEvent(client, VRR_WEAPON_DAMAGE_EVENT_NORMAL);
 				} else {
-                    let ammoItemSlot = getPlayerFirstAmmoItemForWeapon(client, getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useId);
-                    if(ammoItemSlot != false) {
-                        getItemData(newHotBarItem).value = getItemData(getPlayerData(client).hotBarItems[ammoItemSlot]).value;
-                        givePlayerWeapon(client, toInteger(getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useId), toInteger(getItemData(newHotBarItem).value), true, true);
-                        setPlayerWeaponDamageEnabled(client, true);
-                        setPlayerWeaponDamageEvent(client, VRR_WEAPON_DAMAGE_EVENT_NORMAL);
-                        deleteItem(getPlayerData(client).hotBarItems[ammoItemSlot]);
-                    } else {
-                        messagePlayerError(client, getLocaleString(client, "ItemUnequippableNoAmmo", getItemName(newHotBarItem), newHotBarSlot));
-                    }
+					let ammoItemSlot = getPlayerFirstAmmoItemForWeapon(client, getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useId);
+					if(ammoItemSlot != false) {
+						getItemData(newHotBarItem).value = getItemData(getPlayerData(client).hotBarItems[ammoItemSlot]).value;
+						givePlayerWeapon(client, toInteger(getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useId), toInteger(getItemData(newHotBarItem).value), true, true);
+						setPlayerWeaponDamageEnabled(client, true);
+						setPlayerWeaponDamageEvent(client, VRR_WEAPON_DAMAGE_EVENT_NORMAL);
+						deleteItem(getPlayerData(client).hotBarItems[ammoItemSlot]);
+					} else {
+						messagePlayerError(client, getLocaleString(client, "ItemUnequippableNoAmmo", getItemName(newHotBarItem), newHotBarSlot));
+					}
 				}
 			} else if(getItemTypeData(getItemData(newHotBarItem).itemTypeIndex).useType == VRR_ITEM_USETYPE_TAZER) {
 				if(getItemData(newHotBarItem).value > 0) {
@@ -1698,7 +1698,7 @@ function playerItemActionDelayComplete(client) {
 			break;
 	}
 
-    clearPlayerItemActionState(client);
+	clearPlayerItemActionState(client);
 }
 
 // ===========================================================================
@@ -2084,19 +2084,19 @@ function getItemTypeFromParams(params) {
 // ===========================================================================
 
 function getPlayerFirstAmmoItemForWeapon(client, weaponId) {
-    for(let i in getPlayerData(client).hotBarItems) {
-        if(getPlayerData(client).hotBarItems[i] != -1) {
-            if(getItemData(getPlayerData(client).hotBarItems[i]) != false) {
-                if(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useType == VRR_ITEM_USETYPE_AMMO_CLIP) {
-                    if(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useId == weaponId) {
-                        return i;
-                    }
-                }
-            }
-        }
-    }
+	for(let i in getPlayerData(client).hotBarItems) {
+		if(getPlayerData(client).hotBarItems[i] != -1) {
+			if(getItemData(getPlayerData(client).hotBarItems[i]) != false) {
+				if(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useType == VRR_ITEM_USETYPE_AMMO_CLIP) {
+					if(getItemTypeData(getItemData(getPlayerData(client).hotBarItems[i]).itemTypeIndex).useId == weaponId) {
+						return i;
+					}
+				}
+			}
+		}
+	}
 
-    return false;
+	return false;
 }
 
 // ===========================================================================

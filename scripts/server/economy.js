@@ -30,10 +30,10 @@ function playerPayDay(client) {
 	let wealth = calculateWealth(client);
 	let grossIncome = getPlayerData(client).payDayAmount;
 
-    // Passive income
+	// Passive income
 	grossIncome = grossIncome + getGlobalConfig().economy.passiveIncomePerPayDay;
 
-    // Payday bonus
+	// Payday bonus
 	grossIncome = grossIncome*getGlobalConfig().economy.grossIncomeMultiplier;
 
 	let incomeTaxAmount = calculateIncomeTax(wealth);
@@ -120,12 +120,12 @@ function setPayDayBonusMultiplier(command, params, client) {
 
 	let newMultiplier = params;
 
-    if(isNaN(newMultiplier)) {
-        messagePlayerError(client, getLocaleString(client, "AmountNotNumber"));
-        return false;
-    }
+	if(isNaN(newMultiplier)) {
+		messagePlayerError(client, getLocaleString(client, "AmountNotNumber"));
+		return false;
+	}
 
-    getGlobalConfig().economy.grossIncomeMultiplier = newMultiplier;
+	getGlobalConfig().economy.grossIncomeMultiplier = newMultiplier;
 
 	messageAdminAction(`${client.name} set payday bonus to ${newMultiplier*100}%`);
 }

@@ -48,7 +48,7 @@ function initYesNoDialogGUI() {
         },
     });
 
-    yesNoDialog.yesButton = yesNoDialog.window.button(5, 100, 197, 25, 'YES', {
+    yesNoDialog.yesButton = yesNoDialog.window.button(5, 105, 190, 30, 'YES', {
         main: {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),
@@ -61,7 +61,7 @@ function initYesNoDialogGUI() {
         },
     }, yesNoDialogAnswerYes);
 
-    yesNoDialog.noButton = yesNoDialog.window.button(202, 105, 197, 25, 'NO', {
+    yesNoDialog.noButton = yesNoDialog.window.button(200, 105, 190, 30, 'NO', {
         main: {
             backgroundColour: toColour(primaryColour[0], primaryColour[1], primaryColour[2], buttonAlpha),
             textColour: toColour(primaryTextColour[0], primaryTextColour[1], primaryTextColour[2], 255),

@@ -948,6 +948,10 @@ function saveClanToDatabase(clanId) {
 		return false;
 	}
 
+	if(tempClanData.databaseId == -1) {
+		return false;
+	}
+
 	if(!tempClanData.needsSaved) {
 		return false;
 	}
@@ -1134,6 +1138,11 @@ function getClanRankIdFromDatabaseId(clanId, databaseId) {
 
 // ===========================================================================
 
+/**
+ * @param {number} clanId - The data index of the clan
+ * @param {number} clanRankId - The data index of the clan rank
+ * @return {ClanRankData} The clan rank's data (class instance)
+ */
 function getClanRankData(clanId, rankId) {
 	return getServerData().clans[clanId].ranks[rankId];
 }
@@ -1213,6 +1222,10 @@ let rankId = getClanRankFromParams(clanId, getParam(params, " ", 1));
 }
 */
 
+/**
+ * @param {String} params - The params to search for
+ * @return {Number} The data index of a matching clan
+ */
 function getClanFromParams(params) {
 	if(isNaN(params)) {
 		for(let i in getServerData().clans) {
@@ -1231,6 +1244,11 @@ function getClanFromParams(params) {
 
 // ===========================================================================
 
+/**
+ * @param {Number} clanId - The clan ID to search ranks for
+ * @param {String} params - The params to search for
+ * @return {Number} The data index of a matching clan
+ */
 function getClanRankFromParams(clanId, params) {
 	if(isNaN(params)) {
 		for(let i in getClanData(clanId).ranks) {

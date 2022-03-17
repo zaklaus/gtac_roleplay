@@ -1472,6 +1472,10 @@ function listItemInventoryCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * @param {number} itemId - The data index of the item
+ * @return {ItemData} The item's data (class instance)
+ */
 function getItemData(itemId) {
 	if(typeof getServerData().items[itemId] != "undefined") {
 		return getServerData().items[itemId];
@@ -1481,6 +1485,10 @@ function getItemData(itemId) {
 
 // ===========================================================================
 
+/**
+ * @param {number} itemTypeId - The data index of the item type
+ * @return {ItemTypeData} The item type's data (class instance)
+ */
 function getItemTypeData(itemTypeId) {
 	return getServerData().itemTypes[itemTypeId];
 }
@@ -1489,11 +1497,7 @@ function getItemTypeData(itemTypeId) {
 
 function saveAllItemsToDatabase() {
 	for(let i in getServerData().items) {
-		if(getServerData().items[i].needsSaved) {
-			if(getServerData().items[i].databaseId != -1) {
-				saveItemToDatabase(getServerData().items[i]);
-			}
-		}
+		saveItemToDatabase(i);
 	}
 }
 
@@ -1501,17 +1505,26 @@ function saveAllItemsToDatabase() {
 
 function saveAllItemTypesToDatabase() {
 	for(let i in getServerData().itemTypes) {
-		if(getServerData().itemTypes[i].needsSaved) {
-			if(getServerData().itemTypes[i].databaseId != -1) {
-				saveItemTypeToDatabase(getServerData().itemTypes[i]);
-			}
-		}
+		saveItemTypeToDatabase(i);
 	}
 }
 
 // ===========================================================================
 
-function saveItemToDatabase(itemData) {
+function saveItemToDatabase(itemId) {
+	let itemData = getItemData(itemId);
+	if(itemData == false) {
+		return false;
+	}
+
+	if(itemData.databaseId == -1) {
+		return false;
+	}
+
+	if(!itemData.needsSaved) {
+		return false;
+	}
+
 	logToConsole(LOG_VERBOSE, `[VRR.Item]: Saving item '${itemData.index}' to database ...`);
 
 	let dbConnection = connectToDatabase();
@@ -1553,15 +1566,36 @@ function saveItemToDatabase(itemData) {
 
 // ===========================================================================
 
-function saveItemTypeToDatabase(itemTypeData) {
+function saveItemTypeToDatabase(itemTypeId) {
+	let itemTypeData = getItemTypeData(itemTypeId);
+	if(itemTypeData == false) {
+		return false;
+	}
+
+	if(itemTypeData.databaseId == -1) {
+		return false;
+	}
+
+	if(!itemTypeData.needsSaved) {
+		return false;
+	}
+
 	logToConsole(LOG_VERBOSE, `[VRR.Item]: Saving item type '${itemTypeData.name}' to database ...`);
 
 	let dbConnection = connectToDatabase();
 	if(dbConnection) {
+		let safeItemTypeName = escapeDatabaseString(dbConnection, itemTypeData.name);
+		let safeAnimationUse = escapeDatabaseString(dbConnection, itemTypeData.useAnimationName);
+		let safeAnimationDrop = escapeDatabaseString(dbConnection, itemTypeData.dropAnimationName);
+		let safeAnimationPickup = escapeDatabaseString(dbConnection, itemTypeData.pickupAnimationName);
+		let safeAnimationGive = escapeDatabaseString(dbConnection, itemTypeData.giveAnimationName);
+		let safeAnimationTake = escapeDatabaseString(dbConnection, itemTypeData.takeAnimationName);
+		let safeAnimationSwitch = escapeDatabaseString(dbConnection, itemTypeData.switchAnimationName);
+
 		let data = [
 			["item_type_id", itemTypeData.databaseId],
 			["item_type_server", itemTypeData.serverId],
-			["item_type_name", itemTypeData.name],
+			["item_type_name", safeItemTypeName],
 			["item_type_enabled", itemTypeData.enabled],
 			["item_type_use_type", itemTypeData.useType],
 			["item_type_drop_type", itemTypeData.dropType],
@@ -1592,6 +1626,12 @@ function saveItemTypeToDatabase(itemTypeData) {
 			["item_type_delay_take", itemTypeData.takeDelay],
 			["item_type_delay_give", itemTypeData.giveDelay],
 			["item_type_delay_drop", itemTypeData.dropDelay],
+			["item_type_anim_use", safeAnimationUse],
+			["item_type_anim_drop", safeAnimationDrop],
+			["item_type_anim_pickup", safeAnimationPickup],
+			["item_type_anim_give", safeAnimationGive],
+			["item_type_anim_take", safeAnimationTake],
+			["item_type_anim_switch", safeAnimationSwitch],
 		];
 
 		let dbQuery = null;

@@ -1147,6 +1147,7 @@ function initClient(client) {
 				if(isAccountAutoIPLoginEnabled(tempAccountData) && getPlayerData(client).accountData.ipAddress == client.ip) {
 					messagePlayerAlert(client, getLocaleString(client, "AutoLoggedInIP"));
 					loginSuccess(client);
+					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 				} else {
 					if(doesServerHaveGUIEnabled() && doesPlayerHaveGUIEnabled(client)) {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login GUI.`);

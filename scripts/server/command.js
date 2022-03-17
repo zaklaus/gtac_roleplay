@@ -772,6 +772,19 @@ function listAllCommands() {
 
 // ===========================================================================
 
+function getAllCommandsInSingleArray() {
+	let tempCommands = [];
+	for(let i in serverCommands) {
+		for(let j in serverCommands[i]) {
+			tempCommands.push(serverCommands[i][j]);
+		}
+	}
+
+	return tempCommands;
+}
+
+// ===========================================================================
+
 function doesCommandExist(command) {
 	if(getCommandData(command)) {
 		return true;

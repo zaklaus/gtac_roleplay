@@ -74,6 +74,7 @@ function addAllNetworkHandlers() {
 	addNetworkEventHandler("vrr.clientInfo", updateConnectionLogOnClientInfoReceive);
 	addNetworkEventHandler("vrr.vehBuyState", receiveVehiclePurchaseStateUpdateFromClient);
 	addNetworkEventHandler("vrr.playerPedId", receivePlayerPedNetworkId);
+	addNetworkEventHandler("vrr.playerCop", setPlayerAsCopState);
 }
 
 // ===========================================================================
@@ -1181,6 +1182,18 @@ function setPlayerInCutsceneInterior(client, cutsceneName) {
 
 function makePlayerPedSpeak(client, pedSpeechName) {
 	sendNetworkEventToPlayer("vrr.pedSpeak", client, pedSpeechName);
+}
+
+// ==========================================================================
+
+function setPlayerAsCopState(client, state) {
+	sendNetworkEventToPlayer("vrr.playerCop", client, state);
+}
+
+// ==========================================================================
+
+function tellPlayerToSpawn(client, skinId, position) {
+	sendNetworkEventToPlayer("vrr.spawn", client, skinId, position);
 }
 
 // ==========================================================================

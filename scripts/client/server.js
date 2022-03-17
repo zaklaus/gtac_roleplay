@@ -98,6 +98,8 @@ function addAllNetworkHandlers() {
 	addNetworkEventHandler("vrr.playerPedId", sendLocalPlayerNetworkIdToServer);
 	addNetworkEventHandler("vrr.ped", setLocalPlayerPedPartsAndProps);
 	addNetworkEventHandler("vrr.pedSpeak", makePlayerPedSpeak);
+	addNetworkEventHandler("vrr.playerCop", setPlayerAsCopState);
+	addNetworkEventHandler("vrr.spawn", serverRequestedLocalPlayerSpawn);
 }
 
 // ===========================================================================
@@ -152,7 +154,9 @@ function onServerSpawnedPlayer(state) {
 	isSpawned = state;
 	if(state) {
 		setUpInitialGame();
-		calledDeathEvent = false;
+		setTimeout(function() {
+			calledDeathEvent = false;
+		}, 1000);
 	}
 }
 
@@ -336,6 +340,26 @@ function makePlayerPedSpeak(speechName) {
 		} else {
 			natives.sayAmbientSpeech(localPlayer, speechName, true, false, 1);
 		}
+	}
+}
+
+// ===========================================================================
+
+function setPlayerAsCopState(state) {
+	if(getGame() == VRR_GAME_GTA_IV) {
+		natives.setPlayerAsCop(natives.getPlayerId(), state);
+		natives.setPoliceIgnorePlayer(natives.getPlayerId(), state);
+	}
+}
+
+// ===========================================================================
+
+function serverRequestedLocalPlayerSpawn(skinId, position) {
+	if(getGame() == VRR_GAME_GTA_IV) {
+		natives.createPlayer(skinId, position);
+		//if(isCustomCameraSupported()) {
+		//	game.restoreCamera(true);
+		//}
 	}
 }
 

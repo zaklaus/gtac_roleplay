@@ -465,3 +465,13 @@ function isClientInitialized(client) {
 }
 
 // ===========================================================================
+
+function getPedForNetworkEvent(ped) {
+	if(getGame() == VRR_GAME_GTA_IV) {
+		return ped;
+	} else {
+		return ped.id;
+	}
+}
+
+// ===========================================================================

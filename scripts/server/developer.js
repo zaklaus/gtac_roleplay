@@ -386,6 +386,63 @@ function setPlayerTesterStatusCommand(command, params, client) {
 
 // ===========================================================================
 
+function testPromptGUICommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(params);
+
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
+
+	showPlayerPromptGUI(targetClient, "Testing the two button prompt GUI", "Testing", "Yes", "No")
+	return true;
+}
+
+// ===========================================================================
+
+function testInfoGUICommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(params);
+
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
+
+	showPlayerInfoGUI(targetClient, "Testing the info dialog GUI", "Testing", "Ok");
+	return true;
+}
+
+// ===========================================================================
+
+function testErrorGUICommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(params);
+
+	if(!targetClient) {
+		messagePlayerError(client, getLocaleString(client, "InvalidPlayer"));
+		return false;
+	}
+
+	showPlayerErrorGUI(targetClient, "Testing the error dialog GUI", "Testing", "Ok");
+	return true;
+}
+
+// ===========================================================================
+
 function saveAllServerDataCommand(command, params, client) {
 	messageAdmins(`{clanOrange}Vortrex has forced a manual save of all data. Initiating ...`);
 	saveAllServerDataToDatabase();

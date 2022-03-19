@@ -1315,49 +1315,6 @@ class KeyBindData {
 	}
 };
 
-class BlackListedGameScriptData {
-	constructor(dbAssoc = false) {
-		this.databaseId = 0;
-		this.enabled = false
-		this.serverId = 0;
-		this.scriptName = "";
-		this.index = -1;
-		this.needsSaved = false;
-
-		if(dbAssoc) {
-			this.databaseId = dbAssoc["ac_script_bl_id"];
-			this.enabled = intToBool(dbAssoc["ac_script_bl_enabled"]);
-			this.serverId = dbAssoc["ac_script_bl_server"];
-			this.scriptName = dbAssoc["ac_script_bl_name"];
-		}
-	}
-};
-
-class WhiteListedGameScriptData {
-	constructor(dbAssoc = false) {
-		this.databaseId = 0;
-		this.enabled = false
-		this.serverId = 0;
-		this.scriptName = "";
-		this.index = -1;
-		this.needsSaved = false;
-
-		if(dbAssoc) {
-			this.databaseId = dbAssoc["ac_script_wl_id"];
-			this.enabled = intToBool(dbAssoc["ac_script_wl_enabled"]);
-			this.serverId = dbAssoc["ac_script_wl_server"];
-			this.scriptName = dbAssoc["ac_script_wl_name"];
-		}
-	}
-};
-
-class InteriorTemplateData {
-	constructor(exitPosition, exitInterior) {
-		this.exitPosition = exitPosition;
-		this.exitInterior = exitInterior;
-	}
-};
-
 class RadioStationData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
@@ -1499,6 +1456,7 @@ class ItemTypeData {
 		}
 	}
 };
+
 class NPCData {
 	constructor(dbAssoc = false) {
 		this.databaseId = 0;
@@ -1666,28 +1624,6 @@ class BanData {
 			this.ipAddress = toInteger(dbAssoc["ban_ip"]);
 			this.reason = toInteger(dbAssoc["ban_reason"]);
 		}
-	}
-}
-
-class DeckCardData {
-	constructor(imageName, value) {
-		this.imageName = imageName,
-		this.value = value;
-	}
-}
-
-class DeckCardGameData {
-	constructor() {
-		this.gameType = VRR_DECKCARD_GAME_NONE;
-		this.playedCards = [];
-		this.remainingCards = [];
-	}
-}
-
-class DeckCardHandData {
-	constructor() {
-		this.cards = [];
-		this.total = 0;
 	}
 }
 

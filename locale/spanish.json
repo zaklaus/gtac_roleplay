@@ -1,7 +1,7 @@
 {
     "TranslationProvidedBy": "PerikiyoXD",
     "LocaleEnglishName": "Spanish",
-    
+
     "LocaleNativeName": "Español",
     "LocaleOffer": "Este servidor se encuentra disponible en Español. Utilice {1} para usarlo",
     "LocaleChanged1": "El idioma se ha configurado a {1}",
@@ -270,7 +270,7 @@
     "KeyBindHelp": [
         "Puedes establecer tus propias combinaciones de teclas. Utilice {1} para ver sus teclas vinculadas",
         "Utilice {1} para añadir una nueva combinación de teclas y {2} para eliminar una",
-        "Las teclas por defecto son: {1} para el motor del vehículo, {1} para las luces y {3} para el bloqueo/desbloqueo",
+        "Las teclas por defecto son: {1} para el motor del vehículo, {2} para las luces y {3} para el bloqueo/desbloqueo",
         "Pulsa {1} para ver tus objetos y {2} para equipar un objeto o {3} para desequipar todos",
         "Pulsa {1} para usar el objeto que tienes en la mano, pulsa {2} para dejarlo caer o pulsa {3} para recoger un objeto del suelo"
     ],

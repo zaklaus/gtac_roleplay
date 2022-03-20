@@ -1,7 +1,7 @@
 {
     "TranslationProvidedBy": "Vortrex",
     "LocaleEnglishName": "English",
-    
+
     "LocaleNativeName": "English",
     "LocaleOffer": "This server is available in English. Use {1} to use it.",
     "LocaleChanged1": "Your language is now set to {1}",
@@ -264,7 +264,7 @@
     "KeyBindHelp": [
         "You can set your own key binds. Use {1} to see your binded keys.",
         "Use {1} to add a new keybind and {2} to remove one.",
-        "Default keys are: {1} for vehicle engine, {1} for lights, and {3} for lock/unlock",
+        "Default keys are: {1} for vehicle engine, {2} for lights, and {3} for lock/unlock",
         "Press {1} to see your items and {2} to equip an item or {3} to unequip all.",
         "Press {1} to use the item you're holding, press {2} to drop it, or press {3} to pickup an item from the ground."
     ],

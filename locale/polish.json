@@ -1,7 +1,7 @@
 {
     "TranslationProvidedBy": "Suprise444",
     "LocaleEnglishName": "Polish",
-    
+
     "LocaleNativeName": "Polski",
     "LocaleOffer": "Ten serwer jest dostępny w języku Polskim. Użyj {1} aby go użyć.",
     "LocaleChanged1": "Twój język jest ustawiony na {1}",
@@ -264,7 +264,7 @@
     "KeyBindHelp": [
         "Możesz zmienić przypisania klawiszy. Użyj {1} aby zobaczyć twoje przypisane klawisze.",
         "Użyj {1} aby dodać nowe przypisanie i {2} aby je usunąć.",
-        "Domyślnymi przyciskami są: {1} aby uruchomić pojazd, {1} aby użyć świateł, and {3} aby otworzyć/zamknąć pojazd",
+        "Domyślnymi przyciskami są: {1} aby uruchomić pojazd, {2} aby użyć świateł, and {3} aby otworzyć/zamknąć pojazd",
         "Naciśnij {1} aby zobaczyć swoje itemy i {2} aby wyposażyć się w jakiś przedmiot lub {3} aby go schować.",
         "Naciśnij {1} aby użyć przedmiot, który trzymasz, naciśnij {2} aby go upuścić lub naciśnij {3} aby podnieść jakiś przedmiot z ziemi."
     ],

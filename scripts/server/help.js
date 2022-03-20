@@ -194,51 +194,51 @@ function showMainHelpMessage(client) {
 
 function showAccountHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderAccountHelp")));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Do not share your password with anybody else.`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/changepass{MAINCOLOUR} to change your password.`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Some settings you can use: {ALTCOLOUR}/gui, /logo, /iplogin, /autolastchar, /2fa, /loginalert`);
+
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "AccountHelp", 0));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "AccountHelp", 1, `{ALTCOLOUR}/changepass{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "AccountHelp", 2, `{ALTCOLOUR}/gui, /logo, /iplogin, /autolastchar, /2fa, /loginalert{MAINCOLOUR}`));
 }
 
 // ===========================================================================
 
 function showVehicleHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderVehicleHelp")));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit dealerships to buy new vehicles (Use {ALTCOLOUR}/help dealership {MAINCOLOUR}for more info.)`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Some commands: {ALTCOLOUR}/lock, /engine, /lights, /trunk, /rentveh, /buyveh, /rentprice, /buyprice`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your personal vehicles will save wherever you or somebody else leaves them!`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit a mechanic garage to repair, colour, and tune up your car! {ALTCOLOUR}/help mechanic {MAINCOLOUR} for info`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Don't forget to register and insure your vehicle! Use {ALTCOLOUR}/gps {MAINCOLOUR}to find a DMV for this.`);
+
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "VehicleHelp", 0, `{ALTCOLOUR}/help dealership{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "VehicleHelp", 1, `{ALTCOLOUR}/lock, /engine, /lights, /trunk, /rentveh, /buyveh, /rentprice, /buyprice{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "VehicleHelp", 2));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "VehicleHelp", 3, `{ALTCOLOUR}/help mechanic{MAINCOLOUR}`));
 }
 
 // ===========================================================================
 
 function showVehicleDealershipHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderVehicleDealershipHelp")));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit a vehicle dealer to buy new vehicles. Use {ALTCOLOUR}/gps {MAINCOLOUR}to find one.`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}At the dealer, simply enter a car you want to buy, and the price will be shown to you`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}If you want to buy the vehicle and have enough money, use {ALTCOLOUR}/buyveh {MAINCOLOUR}and you will be given keys`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}A new car for sale will appear when you drive away from the dealer.`);
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "VehicleDealershipHelp", 0, `{ALTCOLOUR}/gps{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "VehicleDealershipHelp", 1));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "VehicleDealershipHelp", 1, `{ALTCOLOUR}/buyveh{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "VehicleDealershipHelp", 2));
 }
 
 // ===========================================================================
 
 function showJobHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderJobHelp")));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Visit job locations get a job and earn money. Look for yellow spots on the map`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}At a job location, use {ALTCOLOUR}/takejob {MAINCOLOUR}to get the job. Use {ALTCOLOUR}/quitjob {MAINCOLOUR}to quit your job`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/startwork {MAINCOLOUR}to begin working. You can also get a job {ALTCOLOUR}/uniform and {ALTCOLOUR}/equipment`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Most job vehicles are locked. Use {ALTCOLOUR}/lock {MAINCOLOUR}near one to enter it.`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}When entering a job vehicle, information on how to do the job will be shown to you.`);
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "JobHelp", 0));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "JobHelp", 1, `{ALTCOLOUR}/takejob{MAINCOLOUR}`, `{ALTCOLOUR}/quitjob{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "JobHelp", 2, `{ALTCOLOUR}/lock{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "JobHelp", 3));
 }
 
 // ===========================================================================
 
 function showChatHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderChatHelp")));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}There are two main types of chat: out-of-character (OOC) and in-character (IC)`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Mixing these two types is not proper roleplay. See {ALTCOLOUR}/rules {MAINCOLOUR}for info.`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Some chat commands: {ALTCOLOUR}/dm /whisper /talk /shout /me.`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Some have shorter names available ({ALTCOLOUR}/t {MAINCOLOUR}for talk, {ALTCOLOUR}/s {MAINCOLOUR}for shout, etc)`);
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "ChatHelp", 0, `{ALTCOLOUR}/buy {MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "ChatHelp", 1, `{ALTCOLOUR}/rules{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "ChatHelp", 2, `{ALTCOLOUR}/dm /whisper /talk /shout /me{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "ChatHelp", 3, `{ALTCOLOUR}/t{MAINCOLOUR}`, `{ALTCOLOUR}/s{MAINCOLOUR}`));
 }
 
 // ===========================================================================
@@ -290,9 +290,9 @@ function showBindKeysHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderBindableKeysHelp")));
 	messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 0, `{ALTCOLOUR}/keybinds {MAINCOLOUR}`));
 	messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 1, `{ALTCOLOUR}/bindkey {MAINCOLOUR}`, `{ALTCOLOUR}/unbindkey {MAINCOLOUR}`));
-	messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 2, `{ALTCOLOUR}K {MAINCOLOUR}`, `{ALTCOLOUR}L {MAINCOLOUR}`, `{ALTCOLOUR}J {MAINCOLOUR}`));
-	messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 3, `{ALTCOLOUR}I {MAINCOLOUR}`, `{ALTCOLOUR}1-9 {MAINCOLOUR}`, `{ALTCOLOUR}0 {MAINCOLOUR}`));
-	messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 4, `{ALTCOLOUR}U {MAINCOLOUR}`, `{ALTCOLOUR}O {MAINCOLOUR}`, `{ALTCOLOUR}P {MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 2, `{ALTCOLOUR}K{MAINCOLOUR}`, `{ALTCOLOUR}L{MAINCOLOUR}`, `{ALTCOLOUR}J{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 3, `{ALTCOLOUR}I{MAINCOLOUR}`, `{ALTCOLOUR}1-9{MAINCOLOUR}`, `{ALTCOLOUR}0{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "KeyBindHelp", 4, `{ALTCOLOUR}U{MAINCOLOUR}`, `{ALTCOLOUR}O{MAINCOLOUR}`, `{ALTCOLOUR}P{MAINCOLOUR}`));
 }
 
 // ===========================================================================
@@ -328,10 +328,10 @@ function showRadioHelpMessage(client) {
 
 function showWealthAndTaxHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderWealthandTaxHelp")));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your taxes on payday are ${100*getGlobalConfig().economy.incomeTaxRate}% of your calculated wealth.`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Your calculated wealth is a total sum based on how many vehicles, houses, and businesses you have.`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Each vehicle is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle}, {MAINCOLOUR}each house is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerHouse}, {MAINCOLOUR}and each business is {ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness}`);
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Use {ALTCOLOUR}/wealth {MAINCOLOUR}to see your current wealth, and {ALTCOLOUR}/tax {MAINCOLOUR}to see how much you'll pay in tax each payday`);
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "WealthAndTaxHelp", 0, `{ALTCOLOUR}${100*getGlobalConfig().economy.incomeTaxRate}%{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "WealthAndTaxHelp", 1));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "WealthAndTaxHelp", 2, `{ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerVehicle}{MAINCOLOUR}`, `{ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerHouse}{MAINCOLOUR}`, `{ALTCOLOUR}${getGlobalConfig().economy.upKeepCosts.upKeepPerBusiness}{MAINCOLOUR}`));
+	messagePlayerHelpContent(client, getGroupedLocaleString(client, "WealthAndTaxHelp", 3, `{ALTCOLOUR}/wealth{MAINCOLOUR}`, `{ALTCOLOUR}/tax{MAINCOLOUR}`));
 }
 
 // ===========================================================================

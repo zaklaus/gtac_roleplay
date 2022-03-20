@@ -980,6 +980,10 @@ function checkRegistration(client, password, confirmPassword = "", emailAddress 
 // ===========================================================================
 
 function checkAccountResetPasswordRequest(client, inputText) {
+	if(!checkForSMTPModule() || !getEmailConfig().enabled) {
+		return false;
+	}
+
 	if(getPlayerData(client).passwordResetState == VRR_RESETPASS_STATE_NONE) {
 		if(toLowerCase(getPlayerData(client).accountData.emailAddress) != toLowerCase(inputText)) {
 			logToConsole(LOG_DEBUG|LOG_WARN, `${getPlayerDisplayForConsole(client)} failed to reset their password (email not correct)`);

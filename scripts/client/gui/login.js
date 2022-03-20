@@ -186,9 +186,10 @@ function loginSuccess() {
 // ===========================================================================
 
 function switchToPasswordResetGUI() {
-	closeAllWindows();
-	logToConsole(LOG_DEBUG, `[VRR.GUI] Showing password reset dialog window`);
-	showResetPasswordGUI();
+	//closeAllWindows();
+	//logToConsole(LOG_DEBUG, `[VRR.GUI] Showing password reset dialog window`);
+	//showResetPasswordGUI();
+	sendNetworkEventToServer("vrr.checkResetPassword", "");
 	return false;
 }
 

@@ -21,7 +21,6 @@ let serverBitFlags = {
 	npcTriggerTypeFlags: {},
 	npcTriggerConditionTypesFlags: {},
 	npcTriggerResponseTypeFlags: {},
-	serverSettings: {}
 };
 
 // ===========================================================================
@@ -119,6 +118,8 @@ let serverBitFlagKeys = {
 		"NoRandomTips",
 		"NoActionTips",
 	],
+
+	// Not going to be used. Use trigger, condition, and response stuff in trigger.js
 	npcTriggerTypeKeys: [
 		"None",
 		"FarProximity",               // Comes within a far distance of NPC
@@ -219,26 +220,6 @@ let serverBitFlagKeys = {
 		"ShowItemsAfterPurchase",
 		"BuyCommandAfterEnterBusiness",
 	],
-	serverSettingsKeys: [
-		"None",
-		"GUI",
-		"ServerLogo",
-		"FallingSnow",
-		"GroundSnow",
-		"Anticheat",
-		"CheckGameScripts",
-		"GameScriptBlackList",
-		"GameScriptWhiteList",
-		"JobBlips",
-		"JobPickups",
-		"BusinessBlips",
-		"BusinessPickups",
-		"HouseBlips",
-		"HousePickups",
-		"DiscordBot",
-		"RealTime",
-		"Testing",
-	],
 };
 
 // ===========================================================================
@@ -255,7 +236,6 @@ function initBitFlagScript() {
 	serverBitFlags.npcTriggerTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerTypeKeys);
 	serverBitFlags.npcTriggerConditionTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerConditionTypeKeys);
 	serverBitFlags.npcTriggerResponseTypes = createBitFlagTable(serverBitFlagKeys.npcTriggerResponseTypeKeys);
-	serverBitFlags.serverSettings = createBitFlagTable(serverBitFlagKeys.serverSettingsKeys);
 	logToConsole(LOG_INFO, "[VRR.BitFlag]: Bit flag script initialized successfully!");
 	return true;
 }
@@ -406,20 +386,6 @@ function getModerationFlagValue(flagName) {
 	}
 
 	return serverBitFlags.moderationFlags[flagName];
-}
-
-// ===========================================================================
-
-function getServerSettingsFlagValue(flagName) {
-	if(flagName == "All") {
-		return -1;
-	}
-
-	if(typeof serverBitFlags.serverSettings[flagName] == "undefined") {
-		return false;
-	}
-
-	return serverBitFlags.serverSettings[flagName];
 }
 
 // ===========================================================================

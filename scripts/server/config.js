@@ -782,7 +782,7 @@ function doesServerHaveJobPickupsEnabled() {
 
 // ===========================================================================
 
-function doesServerHaveBusinesBlipsEnabled() {
+function doesServerHaveBusinessBlipsEnabled() {
 	return getServerConfig().createBusinessBlips;
 }
 

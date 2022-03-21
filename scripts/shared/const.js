@@ -3,7 +3,7 @@
 // https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
 // FILE: const.js
-// DESC: Provides constants
+// DESC: Provides shared constants
 // TYPE: Shared (JavaScript)
 // ===========================================================================
 

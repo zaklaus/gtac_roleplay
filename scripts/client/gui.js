@@ -37,21 +37,6 @@ let guiDownKey = false;
 
 // ===========================================================================
 
-let placesOfOrigin = [
-	"Liberty City",
-	"Vice City",
-	"Los Santos",
-	"San Fierro",
-	"Las Venturas",
-	"San Andreas",
-	"Blaine County",
-	"Red County",
-	"Bone County",
-	"Other",
-];
-
-// ===========================================================================
-
 let characterData = [];
 let currentCharacter = 0;
 

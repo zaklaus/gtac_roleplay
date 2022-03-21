@@ -1,6 +1,14 @@
 // ===========================================================================
+// Vortrex's Roleplay Resource
+// https://github.com/VortrexFTW/gtac_roleplay
+// ===========================================================================
+// FILE: gamedata.js
+// DESC: Provides arrays of game data
+// TYPE: Shared (JavaScript)
+// ===========================================================================
 
 let supportedFeatures = {
+	// Invalid, GTAIII, GTAVC, GTASA, Invalid, GTAIV, Invalid, Invalid, Invalid, M1, M2, M3, M1DE
 	time: [null, true, true, true, false, true, true, null, null, null, false, false, false, false],
 	weather: [null, true, true, true, false, true, true, null, null, null, false, false, false, false],
 	serverElements: [null, true, true, true, false, false, false, null, null, null, true, true, true, true],
@@ -18,6 +26,7 @@ let supportedFeatures = {
 
 // ===========================================================================
 
+// Connected MP mods only
 let extraContentResource = [
 	"",
 	"connectedrp-gta3",

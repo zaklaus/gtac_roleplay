@@ -2,7 +2,7 @@
 // Vortrex's Roleplay Resource
 // https://github.com/VortrexFTW/gtac_roleplay
 // ===========================================================================
-// FILE: v.js
+// FILE: utilities.js
 // DESC: Provides shared utilities
 // TYPE: Shared (JavaScript)
 // ===========================================================================
@@ -266,6 +266,8 @@ let serverColours = {
 		clanOrange: toColour(255, 153, 0, 255),
 	},
 };
+
+// ===========================================================================
 
 let serverEmoji = [
 	[":hash:", "#"],
@@ -1121,6 +1123,21 @@ let serverEmoji = [
 	[":O", "😮" ],
 	[":(", "☹️" ],
 	[":|", "😐" ],
+];
+
+// ===========================================================================
+
+let placesOfOrigin = [
+	"Liberty City",
+	"Vice City",
+	"Los Santos",
+	"San Fierro",
+	"Las Venturas",
+	"San Andreas",
+	"Blaine County",
+	"Red County",
+	"Bone County",
+	"Other",
 ];
 
 // ===========================================================================

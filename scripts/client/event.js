@@ -97,6 +97,7 @@ function onProcess(event, deltaTime) {
 	processGameSpecifics();
 	processNearbyPickups();
 	processVehiclePurchasing();
+	//checkChatBoxAutoHide(); // Will be uncommented on 1.4.0 GTAC update
 	//processVehicleFires();
 }
 

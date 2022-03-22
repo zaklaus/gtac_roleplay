@@ -108,3 +108,18 @@ function updateChatBox() {
 }
 
 // ===========================================================================
+
+function processMouseWheelForChatBox(up) {
+	// There isn't a way to detect whether chat input is active, but mouse cursor is forced shown when typing so ¯\_(ツ)_/¯
+	if(!gui.cursorEnabled) {
+		return false;
+	}
+
+	if(up) {
+		chatBoxScrollUp();
+	} else {
+		chatBoxScrollDown()
+	}
+}
+
+// ===========================================================================

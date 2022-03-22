@@ -51,6 +51,8 @@ function addAllEventHandlers() {
 	addEventHandler("OnFocus", onFocus);
 
 	addEventHandler("OnCameraProcess", onCameraProcess);
+
+	addEventHandler("OnMouseWheel", onMouseWheel);
 }
 
 // ===========================================================================
@@ -229,6 +231,24 @@ function onCameraProcess(event) {
 function onChatOutput(event, messageText, colour) {
 	//event.preventDefault();
 	//receiveChatBoxMessageFromServer(messageText, colour);
+}
+
+// ===========================================================================
+
+function onMouseWheel(event, mouseId, deltaCoordinates, flipped) {
+	if(!flipped) {
+		if(deltaCoordinates.y > 0) {
+			processMouseWheelForChatBox(true);
+		} else {
+			processMouseWheelForChatBox(false);
+		}
+	} else {
+		if(deltaCoordinates.y > 0) {
+			processMouseWheelForChatBox(false);
+		} else {
+			processMouseWheelForChatBox(true);
+		}
+	}
 }
 
 // ===========================================================================

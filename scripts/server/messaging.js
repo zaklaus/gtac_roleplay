@@ -37,15 +37,15 @@ function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
 	//    logToConsole(LOG_INFO, `${removeColoursInMessage(messageText)}`);
 	//}
 
-	messageText = replaceColoursInMessage(messageText);
+	//messageText = replaceColoursInMessage(messageText);
 
-	if(client == null) {
-		message(messageText, colour);
-	} else {
-		messageClient(messageText, client, colour);
-	}
+	//if(client == null) {
+	//	message(messageText, colour);
+	//} else {
+	//	messageClient(messageText, client, colour);
+	//}
 
-	//sendChatBoxMessageToPlayer(client, messageText, colour);
+	sendChatBoxMessageToPlayer(client, messageText, colour);
 	return true;
 }
 

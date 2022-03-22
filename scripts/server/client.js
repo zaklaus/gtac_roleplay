@@ -522,7 +522,8 @@ function sendPlayerRemoveFromVehicle(client) {
 // ===========================================================================
 
 function sendChatBoxMessageToPlayer(client, messageText, colour) {
-	messageClient(messageText, client, colour);
+	//messageClient(messageText, client, colour);
+	sendNetworkEventToPlayer("m", client, messageText, colour);
 }
 
 // ===========================================================================

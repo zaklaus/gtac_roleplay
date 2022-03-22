@@ -18,66 +18,102 @@ function initServerScript() {
 function addAllNetworkHandlers() {
 	logToConsole(LOG_DEBUG, "[VRR.Server]: Adding network handlers ...");
 
+	// Chat history
+	addNetworkEventHandler("m", receiveChatBoxMessageFromServer); // Not prefixed with VRR to make it as small as possible
+	addNetworkEventHandler("vrr.chatScrollLines", setChatScrollLines);
+
+	// Messaging (like textdraws and stuff)
 	addNetworkEventHandler("vrr.smallGameMessage", showSmallGameMessage);
+
+	// Job
+	addNetworkEventHandler("vrr.job", receiveJobFromServer);
 	addNetworkEventHandler("vrr.working", setLocalPlayerWorkingState);
 	addNetworkEventHandler("vrr.jobType", setLocalPlayerJobType);
-	addNetworkEventHandler("vrr.passenger", enterVehicleAsPassenger);
+	addNetworkEventHandler("vrr.showJobRouteLocation", showJobRouteLocation);
+	addNetworkEventHandler("vrr.hideJobRouteLocation", hideJobRouteLocation);
+
+	// Local player states and values
+	addNetworkEventHandler("vrr.restoreCamera", restoreLocalCamera);
+	addNetworkEventHandler("vrr.cameraLookAt", setLocalCameraLookAt);
 	addNetworkEventHandler("vrr.freeze", setLocalPlayerFrozenState);
 	addNetworkEventHandler("vrr.control", setLocalPlayerControlState);
 	addNetworkEventHandler("vrr.fadeCamera", fadeLocalCamera);
 	addNetworkEventHandler("vrr.removeFromVehicle", removeLocalPlayerFromVehicle);
-	addNetworkEventHandler("vrr.clearPeds", clearLocalPlayerOwnedPeds);
-	addNetworkEventHandler("vrr.restoreCamera", restoreLocalCamera);
-	addNetworkEventHandler("vrr.cameraLookAt", setLocalCameraLookAt);
-	addNetworkEventHandler("vrr.logo", setServerLogoRenderState);
-	addNetworkEventHandler("vrr.ambience", setCityAmbienceState);
-	addNetworkEventHandler("vrr.runCode", runClientCode);
 	addNetworkEventHandler("vrr.clearWeapons", clearLocalPlayerWeapons);
 	addNetworkEventHandler("vrr.giveWeapon",  giveLocalPlayerWeapon);
 	addNetworkEventHandler("vrr.position", setLocalPlayerPosition);
 	addNetworkEventHandler("vrr.heading", setLocalPlayerHeading);
 	addNetworkEventHandler("vrr.interior", setLocalPlayerInterior);
-	addNetworkEventHandler("vrr.minuteDuration", setMinuteDuration);
-	addNetworkEventHandler("vrr.showJobRouteLocation", showJobRouteLocation);
-	addNetworkEventHandler("vrr.hideJobRouteLocation", hideJobRouteLocation);
-	addNetworkEventHandler("vrr.snow", setSnowState);
-	addNetworkEventHandler("vrr.health", setLocalPlayerHealth);
-	addNetworkEventHandler("vrr.enterPropertyKey", setEnterPropertyKey);
-	addNetworkEventHandler("vrr.skinSelect", toggleSkinSelect);
-	addNetworkEventHandler("vrr.hotbar", updatePlayerHotBar);
-	addNetworkEventHandler("vrr.pedSpeech", playPedSpeech);
-	addNetworkEventHandler("vrr.clearPedState", clearLocalPedState);
-	addNetworkEventHandler("vrr.drunkEffect", setLocalPlayerDrunkEffect);
-	addNetworkEventHandler("vrr.showItemActionDelay", showItemActionDelay);
-	addNetworkEventHandler("vrr.set2DRendering", setPlayer2DRendering);
-	addNetworkEventHandler("vrr.mouseCursor", toggleMouseCursor);
-	addNetworkEventHandler("vrr.mouseCamera", toggleMouseCamera);
-	addNetworkEventHandler("vrr.mouseCameraForce", setMouseCameraState);
-	addNetworkEventHandler("vrr.weaponDamageEnabled", setPlayerWeaponDamageEnabled);
-	addNetworkEventHandler("vrr.weaponDamageEvent", setPlayerWeaponDamageEvent);
-	addNetworkEventHandler("vrr.spawned", onServerSpawnedPlayer);
+	addNetworkEventHandler("vrr.spawned", onServerSpawnedLocalPlayer);
 	addNetworkEventHandler("vrr.money", setLocalPlayerCash);
 	addNetworkEventHandler("vrr.armour", setLocalPlayerArmour);
-	addNetworkEventHandler("vrr.wantedLevel", forceLocalPlayerWantedLevel);
-	addNetworkEventHandler("vrr.delKeyBind", unBindAccountKey);
-	addNetworkEventHandler("vrr.addKeyBind", bindAccountKey);
-	addNetworkEventHandler("vrr.clearKeyBinds", clearKeyBinds);
-	addNetworkEventHandler("vrr.nametag", updatePlayerNameTag);
-	addNetworkEventHandler("vrr.ping", updatePlayerPing);
-	addNetworkEventHandler("vrr.m", receiveChatBoxMessageFromServer);
-	addNetworkEventHandler("vrr.chatScrollLines", setChatScrollLines);
+	addNetworkEventHandler("vrr.localPlayerSkin", setLocalPlayerSkin);
+	addNetworkEventHandler("vrr.pedSpeak", makeLocalPlayerPedSpeak);
+	addNetworkEventHandler("vrr.infiniteRun", setLocalPlayerInfiniteRun);
+	addNetworkEventHandler("vrr.playerCop", setLocalPlayerAsCopState);
+	addNetworkEventHandler("vrr.health", setLocalPlayerHealth);
+	addNetworkEventHandler("vrr.wantedLevel", setLocalPlayerWantedLevel);
+	addNetworkEventHandler("vrr.playerPedId", sendLocalPlayerNetworkIdToServer);
+	addNetworkEventHandler("vrr.ped", setLocalPlayerPedPartsAndProps);
+	addNetworkEventHandler("vrr.spawn", serverRequestedLocalPlayerSpawn);
+	addNetworkEventHandler("vrr.clearPedState", clearLocalPedState);
+	addNetworkEventHandler("vrr.drunkEffect", setLocalPlayerDrunkEffect);
+
+	// Vehicle
+	addNetworkEventHandler("vrr.vehicle", receiveVehicleFromServer);
+	addNetworkEventHandler("vrr.veh.lights", setVehicleLights);
+	addNetworkEventHandler("vrr.veh.engine", setVehicleEngine);
+	addNetworkEventHandler("vrr.veh.repair", repairVehicle);
+
+	// Radio
 	addNetworkEventHandler("vrr.radioStream", playStreamingRadio);
 	addNetworkEventHandler("vrr.audioFileStream", playAudioFile);
 	addNetworkEventHandler("vrr.stopRadioStream", stopStreamingRadio);
 	addNetworkEventHandler("vrr.radioVolume", setStreamingRadioVolume);
-	addNetworkEventHandler("vrr.veh.lights", setVehicleLights);
-	addNetworkEventHandler("vrr.veh.engine", setVehicleEngine);
-	addNetworkEventHandler("vrr.veh.repair", repairVehicle);
+
+	// Key Bindings
+	addNetworkEventHandler("vrr.delKeyBind", unBindAccountKey);
+	addNetworkEventHandler("vrr.addKeyBind", bindAccountKey);
+	addNetworkEventHandler("vrr.clearKeyBinds", clearKeyBinds);
+
+	// Weapon Damage
+	addNetworkEventHandler("vrr.weaponDamageEnabled", setPlayerWeaponDamageEnabled);
+	addNetworkEventHandler("vrr.weaponDamageEvent", setPlayerWeaponDamageEvent);
+
+	// GUI
+	addNetworkEventHandler("vrr.showRegistration", showRegistrationGUI);
+	addNetworkEventHandler("vrr.showNewCharacter", showNewCharacterGUI);
+	addNetworkEventHandler("vrr.showLogin", showLoginGUI);
+
+	// Business
+	addNetworkEventHandler("vrr.business", receiveBusinessFromServer);
+
+	// House
+	addNetworkEventHandler("vrr.house", receiveHouseFromServer);
+
+	// Misc
+	addNetworkEventHandler("vrr.mouseCursor", toggleMouseCursor);
+	addNetworkEventHandler("vrr.mouseCamera", toggleMouseCamera);
+	addNetworkEventHandler("vrr.clearPeds", clearLocalPlayerOwnedPeds);
+	addNetworkEventHandler("vrr.passenger", enterVehicleAsPassenger);
+	addNetworkEventHandler("vrr.logo", setServerLogoRenderState);
+	addNetworkEventHandler("vrr.ambience", setCityAmbienceState);
+	addNetworkEventHandler("vrr.runCode", runClientCode);
+	addNetworkEventHandler("vrr.minuteDuration", setMinuteDuration);
+	addNetworkEventHandler("vrr.snow", setSnowState);
+	addNetworkEventHandler("vrr.enterPropertyKey", setEnterPropertyKey);
+	addNetworkEventHandler("vrr.skinSelect", toggleSkinSelect);
+	addNetworkEventHandler("vrr.hotbar", updatePlayerHotBar);
+	addNetworkEventHandler("vrr.showItemActionDelay", showItemActionDelay);
+	addNetworkEventHandler("vrr.set2DRendering", set2DRendering);
+	addNetworkEventHandler("vrr.mouseCameraForce", setMouseCameraState);
+	addNetworkEventHandler("vrr.logLevel", setLogLevel);
+	addNetworkEventHandler("vrr.hideAllGUI", hideAllGUI);
+	addNetworkEventHandler("vrr.nametag", updatePlayerNameTag);
+	addNetworkEventHandler("vrr.ping", updatePlayerPing);
 	addNetworkEventHandler("vrr.pedAnim", makePedPlayAnimation);
 	addNetworkEventHandler("vrr.pedStopAnim", makePedStopAnimation);
-	addNetworkEventHandler("vrr.localPlayerSkin", setLocalPlayerSkin);
 	addNetworkEventHandler("vrr.forcePedAnim", forcePedAnimation);
-	addNetworkEventHandler("vrr.hideAllGUI", hideAllGUI);
 	addNetworkEventHandler("vrr.clientInfo", serverRequestedClientInfo);
 	addNetworkEventHandler("vrr.interiorLights", updateInteriorLightsState);
 	addNetworkEventHandler("vrr.cutsceneInterior", setCutsceneInterior);
@@ -85,21 +121,7 @@ function addAllNetworkHandlers() {
 	addNetworkEventHandler("vrr.elementPosition", setElementPosition);
 	addNetworkEventHandler("vrr.elementCollisions", setElementCollisionsEnabled);
 	addNetworkEventHandler("vrr.vehBuyState", setVehiclePurchaseState);
-	addNetworkEventHandler("vrr.showRegistration", showRegistrationGUI);
-	addNetworkEventHandler("vrr.showNewCharacter", showNewCharacterGUI);
-	addNetworkEventHandler("vrr.showLogin", showLoginGUI);
-	addNetworkEventHandler("vrr.logLevel", setLogLevel);
-	addNetworkEventHandler("vrr.infiniteRun", setLocalPlayerInfiniteRun);
-	addNetworkEventHandler("vrr.business", receiveBusinessFromServer);
-	addNetworkEventHandler("vrr.house", receiveHouseFromServer);
-	addNetworkEventHandler("vrr.job", receiveJobFromServer);
-	addNetworkEventHandler("vrr.vehicle", receiveVehicleFromServer);
 	addNetworkEventHandler("vrr.holdObject", makePedHoldObject);
-	addNetworkEventHandler("vrr.playerPedId", sendLocalPlayerNetworkIdToServer);
-	addNetworkEventHandler("vrr.ped", setLocalPlayerPedPartsAndProps);
-	addNetworkEventHandler("vrr.pedSpeak", makePlayerPedSpeak);
-	addNetworkEventHandler("vrr.playerCop", setPlayerAsCopState);
-	addNetworkEventHandler("vrr.spawn", serverRequestedLocalPlayerSpawn);
 }
 
 // ===========================================================================
@@ -124,7 +146,7 @@ function sendResourceStoppedSignalToServer() {
 
 // ===========================================================================
 
-function setPlayer2DRendering(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState) {
+function set2DRendering(hudState, labelState, smallGameMessageState, scoreboardState, hotBarState, itemActionDelayState) {
 	logToConsole(LOG_DEBUG, `[VRR.Main] Updating render states (HUD: ${hudState}, Labels: ${labelState}, Bottom Text: ${smallGameMessageState}, Scoreboard: ${scoreboardState}, HotBar: ${hotBarState}, Item Action Delay: ${itemActionDelayState})`);
 	renderHUD = hudState;
 
@@ -149,7 +171,7 @@ function setPlayer2DRendering(hudState, labelState, smallGameMessageState, score
 
 // ===========================================================================
 
-function onServerSpawnedPlayer(state) {
+function onServerSpawnedLocalPlayer(state) {
 	logToConsole(LOG_DEBUG, `[VRR.Main] Setting spawned state to ${state}`);
 	isSpawned = state;
 	if(state) {
@@ -262,7 +284,7 @@ function setLocalPlayerArmour(armour) {
 
 // ===========================================================================
 
-function forceLocalPlayerWantedLevel(wantedLevel) {
+function setLocalPlayerWantedLevel(wantedLevel) {
 	forceWantedLevel = toInteger(wantedLevel);
 }
 
@@ -330,7 +352,7 @@ function setCutsceneInterior(cutsceneName) {
 
 // ===========================================================================
 
-function makePlayerPedSpeak(speechName) {
+function makeLocalPlayerPedSpeak(speechName) {
 	if(getGame() == VRR_GAME_GTA_IV) {
 		// if player is in vehicle, allow megaphone (if last arg is "1", it will cancel megaphone echo)
 		// Only speeches with _MEGAPHONE will have the bullhorn effect
@@ -340,12 +362,15 @@ function makePlayerPedSpeak(speechName) {
 		} else {
 			natives.sayAmbientSpeech(localPlayer, speechName, true, false, 1);
 		}
+	} else if(getGame() == VRR_GAME_GTA_III || getGame() == VRR_GAME_GTA_VC) {
+		// Don't have a way to get the ped ref ID and can't use ped in arg
+		//game.SET_CHAR_SAY(game.GET_PLAYER_ID(), int);
 	}
 }
 
 // ===========================================================================
 
-function setPlayerAsCopState(state) {
+function setLocalPlayerAsCopState(state) {
 	if(getGame() == VRR_GAME_GTA_IV) {
 		natives.setPlayerAsCop(natives.getPlayerId(), state);
 		natives.setPoliceIgnorePlayer(natives.getPlayerId(), state);

@@ -400,15 +400,6 @@ function isSnowEnabled() {
 
 // ===========================================================================
 
-function playPedSpeech(pedName, speechId) {
-	logToConsole(LOG_DEBUG, `[VRR.Utilities] Making ${pedName}'s ped talk (${speechId})`);
-	if(getMultiplayerMod() == VRR_MPMOD_GTAC) {
-		game.SET_CHAR_SAY(int, int);
-	}
-}
-
-// ===========================================================================
-
 function clearLocalPedState() {
 	logToConsole(LOG_DEBUG, `[VRR.Utilities] Clearing local ped state`);
 	localPlayer.clearObjective();

@@ -21,6 +21,7 @@ function addAllNetworkHandlers() {
 	// Chat history
 	addNetworkEventHandler("m", receiveChatBoxMessageFromServer); // Not prefixed with VRR to make it as small as possible
 	addNetworkEventHandler("vrr.chatScrollLines", setChatScrollLines);
+	addNetworkEventHandler("vrr.chatAutoHideDelay", setChatAutoHideDelay);
 
 	// Messaging (like textdraws and stuff)
 	addNetworkEventHandler("vrr.smallGameMessage", showSmallGameMessage);

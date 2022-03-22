@@ -16,6 +16,9 @@ let maxChatBoxHistory = 500;
 let scrollAmount = 1;
 let maxChatBoxLines = 6;
 
+let chatAutoHideDelay = 0;
+let chatLastUse = 0;
+
 let scrollUpKey = false;
 let scrollDownKey = false;
 
@@ -47,6 +50,10 @@ function unBindChatBoxKeys() {
 
 function receiveChatBoxMessageFromServer(messageString, colour) {
 	logToConsole(LOG_DEBUG, `[VRR.ChatBox]: Received chatbox message from server: ${messageString}`);
+
+	// Just in case it's hidden by auto hide
+	setChatWindowEnabled(true);
+
 	let colouredString = replaceColoursInMessage(messageString);
 
 	if(bottomMessageIndex >= chatBoxHistory.length-1) {
@@ -54,12 +61,19 @@ function receiveChatBoxMessageFromServer(messageString, colour) {
 		bottomMessageIndex = chatBoxHistory.length-1;
 	}
 	addToChatBoxHistory(colouredString, colour);
+	chatLastUse = getCurrentUnixTimestamp();
 }
 
 // ===========================================================================
 
 function setChatScrollLines(amount) {
 	scrollAmount = amount;
+}
+
+// ===========================================================================
+
+function setChatAutoHideDelay(delay) {
+	chatAutoHideDelay = delay*1000;
 }
 
 // ===========================================================================
@@ -105,6 +119,7 @@ function updateChatBox() {
 			message("", COLOUR_WHITE);
 		}
 	}
+	chatLastUse = getCurrentUnixTimestamp();
 }
 
 // ===========================================================================
@@ -118,7 +133,25 @@ function processMouseWheelForChatBox(up) {
 	if(up) {
 		chatBoxScrollUp();
 	} else {
-		chatBoxScrollDown()
+		chatBoxScrollDown();
+	}
+}
+
+// ===========================================================================
+
+function checkChatAutoHide() {
+	// Make sure chat input isn't active
+	if(gui.cursorEnabled) {
+		return false;
+	}
+
+	// Don't process auto-hide if it's disabled
+	if(chatAutoHideDelay == 0) {
+		return false;
+	}
+
+	if(getCurrentUnixTimestamp()-chatLastUse >= chatAutoHideDelay) {
+		setChatWindowEnabled(false);
 	}
 }
 

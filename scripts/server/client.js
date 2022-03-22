@@ -938,6 +938,12 @@ function sendPlayerChatScrollLines(client, amount) {
 
 // ===========================================================================
 
+function sendPlayerChatAutoHideDelay(client, delay) {
+	sendNetworkEventToPlayer("vrr.chatAutoHideDelay", client, delay);
+}
+
+// ===========================================================================
+
 function playRadioStreamForPlayer(client, streamURL, loop = true, volume = 0, element = false) {
 	logToConsole(LOG_DEBUG, `[VRR.Client] Forcing ${getPlayerDisplayForConsole(client)} to stream ${streamURL}`);
 	sendNetworkEventToPlayer("vrr.radioStream", client, streamURL, loop, volume, element);

@@ -55,7 +55,8 @@ function loadCommands() {
 			//commandData("setdiscord", setAccountDiscordCommand, "<discord id>", getStaffFlagValue("None"), true, false, "Set up the integration for discord. Allows you to see info and use in-game commands on discord."),
 			commandData("notips", toggleNoRandomTipsCommand, "", getStaffFlagValue("None"), true, false, "Turn on and off random tips"),
 			commandData("loginalert", toggleAccountLoginAttemptNotificationsCommand, "", getStaffFlagValue("None"), true, false, "Turn on and off email notifications for attempts to login to your account"),
-			commandData("scrolllines", setAccountChatScrollLinesCommand, "", getStaffFlagValue("None"), true, false, "Sets how many chatbox lines to scroll at a time when using pageup/pagedown"),
+			commandData("scrolllines", setAccountChatScrollLinesCommand, "<number of lines>", getStaffFlagValue("None"), true, false, "Sets how many chatbox lines to scroll at a time when using pageup/pagedown"),
+			commandData("chatautohide", setAccountChatAutoHideDelayCommand, "<time in seconds>", getStaffFlagValue("None"), true, false, "Sets how long to wait to hide the chatbox after last use (in seconds)"),
 
 		],
 		ammunation: [],

@@ -271,6 +271,26 @@ function setAccountChatScrollLinesCommand(command, params, client) {
 
 // ===========================================================================
 
+function setAccountChatAutoHideDelayCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	if(isNaN(params)) {
+		messagePlayerError(client, `The delay time must be a number!`);
+		return false;
+	}
+
+	let delay = Math.ceil(toInteger(params));
+
+	getPlayerData(client).accountData.chatAutoHideDelay = delay;
+	sendPlayerChatAutoHideDelay(client, delay);
+	messagePlayerSuccess(client, `Your chatbox will now automatically hide after ${toInteger(delay)} seconds!`);
+}
+
+// ===========================================================================
+
 function setAccountEmailCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -637,6 +657,7 @@ function saveAccountToDatabase(accountData) {
 			["acct_svr_staff_flags", accountData.flags.admin],
 			["acct_svr_mod_flags", accountData.flags.moderation],
 			["acct_svr_chat_scroll_lines", accountData.chatScrollLines],
+			["acct_svr_chat_auto_hide_delay", accountData.chatAutoHideDelay],
 		];
 
 		let queryString1 = createDatabaseUpdateQuery("acct_main", data, `acct_id=${accountData.databaseId}`);

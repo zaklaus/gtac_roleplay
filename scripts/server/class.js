@@ -275,6 +275,7 @@ class AccountData {
 		this.twoFactorAuthVerificationCode = "";
 
 		this.chatScrollLines = 1;
+		this.chatAutoHideDelay = 0;
 
 		this.streamingRadioVolume = 20;
 		this.locale = 0;
@@ -304,6 +305,7 @@ class AccountData {
 			this.emailVerificationCode = dbAssoc["acct_code_verifyemail"];
 			this.twoFactorAuthVerificationCode = dbAssoc["acct_code_2fa"];
 			this.chatScrollLines = toInteger(dbAssoc["acct_svr_chat_scroll_lines"]);
+			this.chatAutoHideDelay = toInteger(dbAssoc["acct_svr_chat_auto_hide_delay"]);
 			this.streamingRadioVolume = toInteger(dbAssoc["acct_streaming_radio_volume"]);
 			this.locale = toInteger(dbAssoc["acct_locale"]);
 		}

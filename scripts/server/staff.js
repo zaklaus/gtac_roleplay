@@ -1033,7 +1033,7 @@ function setPlayerHealthCommand(command, params, client) {
 	//}
 
 	let splitParams = params.split(" ");
-	let targetClient = getParam(params, " ", 1);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let health = getParam(params, " ", 2);
 
 	if(!targetClient) {
@@ -1054,7 +1054,7 @@ function setPlayerArmourCommand(command, params, client) {
 		return false;
 	}
 
-	let targetClient = getParam(params, " ", 1);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let armour = getParam(params, " ", 2);
 
 	if(!targetClient) {
@@ -1075,7 +1075,7 @@ function setPlayerInfiniteRunCommand(command, params, client) {
 		return false;
 	}
 
-	let targetClient = getParam(params, " ", 1);
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
 	let state = getParam(params, " ", 2) || 0;
 
 	if(!targetClient) {

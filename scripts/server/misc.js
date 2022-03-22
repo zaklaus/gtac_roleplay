@@ -35,7 +35,9 @@ function toggleMouseCursorCommand(command, params, client) {
 // ===========================================================================
 
 function toggleMouseCameraCommand(command, params, client) {
-	sendPlayerMouseCameraToggle(client);
+	if(getGame() != VRR_GAME_GTA_VC) {
+		sendPlayerMouseCameraToggle(client);
+	}
 	return true;
 }
 

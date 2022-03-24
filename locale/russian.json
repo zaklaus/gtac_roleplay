@@ -394,5 +394,9 @@
     "HeaderInteriorTypes": "Interiors List",
     "ViewInventoryKeyPressTip": "Press {1} to see your items",
     "ViewInventoryCommandTip": "Use {1} to see your items",
-    "GUIAccountSettingToggle": "You have turned {1} GUI"
+    "GUIAccountSettingToggle": "You have turned {1} GUI",
+
+	"ADDED-23MAR2022": "DO NOT TRANSLATE. This string is just a comment to separate newly added translations",
+	"CarCommandHelp": "You can buy a car by visiting a vehicle dealership. Use {1} for more information.",
+	"SkinCommandHelp": "You can change your skin by visiting a clothes store. Use {1} for more info."
 }

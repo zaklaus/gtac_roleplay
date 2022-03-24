@@ -395,5 +395,9 @@
     "HeaderInteriorTypes": "قائمة التصميمات الداخلية",
     "ViewInventoryKeyPressTip": "اضغط على {1} لرؤية العناصر الخاصة بك",
     "ViewInventoryCommandTip": "استخدم {1} لمشاهدة عناصرك",
-    "GUIAccountSettingToggle": "لقد قمت بتحويل {1} GUI"
+    "GUIAccountSettingToggle": "لقد قمت بتحويل {1} GUI",
+
+	"ADDED-23MAR2022": "DO NOT TRANSLATE. This string is just a comment to separate newly added translations",
+	"CarCommandHelp": "You can buy a car by visiting a vehicle dealership. Use {1} for more information.",
+	"SkinCommandHelp": "You can change your skin by visiting a clothes store. Use {1} for more info."
 }

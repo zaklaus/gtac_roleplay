@@ -256,14 +256,14 @@ function showRulesHelpMessage(client) {
 
 function showWebsiteHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderWebsiteInfo")));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${server.getRule("Website")}`);
+	messagePlayerHelpContent(client, `{MAINCOLOUR}${server.getRule("Website")}`);
 }
 
 // ===========================================================================
 
 function showDiscordHelpMessage(client) {
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderDiscordInfo")));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}${server.getRule("Website")}`);
+	messagePlayerHelpContent(client, `{MAINCOLOUR}${server.getRule("Discord")}`);
 }
 
 // ===========================================================================

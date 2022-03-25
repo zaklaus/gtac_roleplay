@@ -417,5 +417,8 @@
 	"PlayerCharacterBanned": "{1} has been character banned!",
 	"PlayerSubNetBanned": "{1} has been subnet banned!",
 	"CantModifyBusiness": "You can't manage or modify this business",
-	"CantModifyHouse": "You can't manage or modify this house"
+	"CantModifyHouse": "You can't manage or modify this house",
+	"ServerTimeSet": "{1} set the time to {2}",
+	"ServerWeatherSet": "{1} set the weather to {2}",
+	"ServerSnowSet": "{1} turned falling snow {2} and ground snow {3}"
 }

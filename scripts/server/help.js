@@ -380,7 +380,7 @@ function showCommandHelpMessage(client, commandName) {
  *
  */
 function helpGetCarCommand(command, params, client) {
-	messagePlayerAlert(client, `You can buy a car by visiting a vehicle dealership. Use {ALTCOLOUR}/help vehicle {MAINCOLOUR}for more info.`);
+	messagePlayerAlert(client, getLocaleString(client, "CarCommandHelp", `{ALTCOLOUR}/help vehicle{MAINCOLOUR}`));
 }
 
 // ===========================================================================
@@ -395,7 +395,8 @@ function helpGetCarCommand(command, params, client) {
  *
  */
  function helpGetSkinCommand(command, params, client) {
-	messagePlayerAlert(client, `You can change your skin by visiting a clothes store. Use {ALTCOLOUR}/help skin {MAINCOLOUR}for more info.`);
+	messagePlayerAlert(client, getLocaleString(client, "SkinCommandHelp", `{ALTCOLOUR}/help skin{MAINCOLOUR}`));
+	messagePlayerAlert(client, ``);
 }
 
 // ===========================================================================

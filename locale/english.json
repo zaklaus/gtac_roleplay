@@ -399,5 +399,19 @@
 
 	"ADDED-23MAR2022": "DO NOT TRANSLATE. This string is just a comment to separate newly added translations",
 	"CarCommandHelp": "You can buy a car by visiting a vehicle dealership. Use {1} for more information.",
-	"SkinCommandHelp": "You can change your skin by visiting a clothes store. Use {1} for more info."
+	"SkinCommandHelp": "You can change your skin by visiting a clothes store. Use {1} for more info.",
+	"BusinessVehiclesRespawned": "All business vehicles have been respawned by an admin!",
+	"JobVehiclesRespawned": "All job vehicles have been respawned by an admin!",
+	"PlayerVehiclesRespawned": "All player vehicles have been respawned by an admin!",
+	"ClanVehiclesRespawned": "All clan vehicles have been respawned by an admin!",
+	"PublicVehiclesRespawned": "All public have been respawned by an admin!",
+	"EmptyVehiclesRespawned": "All empty vehicles have been respawned by an admin!",
+	"AllVehiclesRespawned": "All vehicles have been respawned by an admin!",
+	"AllVehiclesReloaded": "All vehicles have been reloaded by an admin!",
+	"YourVehicleRespawned": "Your vehicle has been respawned!",
+	"PlayerIPBanned": "{1} has been IP banned!",
+	"PlayerCharacterBanned": "{1} has been character banned!",
+	"PlayerSubNetBanned": "{1} has been subnet banned!",
+	"CantModifyBusiness": "You can't manage or modify this business!",
+	"CantModifyHouse": "You can't manage or modify this house!"
 }

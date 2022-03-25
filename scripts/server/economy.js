@@ -127,7 +127,7 @@ function setPayDayBonusMultiplier(command, params, client) {
 
 	getGlobalConfig().economy.grossIncomeMultiplier = newMultiplier;
 
-	messageAdminAction(`${client.name} set payday bonus to ${newMultiplier*100}%`);
+	announceAdminAction(`${client.name} set payday bonus to ${newMultiplier*100}%`);
 }
 
 // ===========================================================================

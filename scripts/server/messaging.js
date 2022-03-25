@@ -14,7 +14,7 @@ function initMessagingScript() {
 
 // ===========================================================================
 
-function messageAdminAction(messageText) {
+function announceAdminAction(messageText) {
 	messagePlayerNormal(null, `⚠️ ${messageText}`, getColourByName("orange"));
 	if(getServerConfig().discordEnabled) {
 		messageDiscord(`:warning: ${messageText}`);

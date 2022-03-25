@@ -1032,3 +1032,10 @@ function givePlayerWeapon(client, weaponId, ammo, active = true) {
 }
 
 // ===========================================================================
+
+function setPlayerWantedLevel(client, wantedLevel) {
+	sendNetworkEventToPlayer("vrr.wantedLevel", client, wantedLevel);
+	return true;
+}
+
+// ===========================================================================

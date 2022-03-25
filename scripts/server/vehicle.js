@@ -1073,7 +1073,7 @@ function reloadAllVehiclesCommand(command, params, client) {
 	getServerData().vehicles = loadVehiclesFromDatabase();
 	spawnAllVehicles();
 
-	messageAdminAction(`All server vehicles have been reloaded by an admin!`);
+	announceAdminAction(`AllVehiclesReloaded`);
 
 	getVehicleData(vehicle).needsSaved = true;
 }
@@ -1088,7 +1088,7 @@ function respawnVehicleCommand(command, params, client) {
 
 	setAllVehicleIndexes();
 
-	messagePlayerSuccess(client, `Your vehicle has been respawned`);
+	messagePlayerSuccess(client, getLocaleString(client, `YourVehicleRespawned`));
 }
 
 
@@ -1106,7 +1106,7 @@ function respawnAllVehiclesCommand(command, params, client) {
 
 	setAllVehicleIndexes();
 
-	messageAdminAction(`All vehicles have been respawned by an admin!`);
+	announceAdminAction(`AllVehiclesRespawned`);
 }
 
 // ===========================================================================
@@ -1125,7 +1125,7 @@ function respawnEmptyVehiclesCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`All empty vehicles have been respawned by an admin!`);
+	announceAdminAction(`EmptyVehiclesRespawned`);
 }
 
 // ===========================================================================
@@ -1137,7 +1137,7 @@ function respawnJobVehiclesCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`All job vehicles have been respawned by an admin!`);
+	announceAdminAction(`JobVehiclesRespawned`);
 }
 
 // ===========================================================================
@@ -1149,7 +1149,7 @@ function respawnClanVehiclesCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`All clan vehicles have been respawned by an admin!`);
+	announceAdminAction(`ClanVehiclesRespawned`);
 }
 
 // ===========================================================================
@@ -1161,7 +1161,7 @@ function respawnPlayerVehiclesCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`All player-owned vehicles have been respawned by an admin!`);
+	announceAdminAction(`PlayerVehiclesRespawned`);
 }
 
 // ===========================================================================
@@ -1173,7 +1173,7 @@ function respawnPublicVehiclesCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`All public vehicles have been respawned by an admin!`);
+	announceAdminAction(`PublicVehiclesRespawned`);
 }
 
 // ===========================================================================
@@ -1185,7 +1185,7 @@ function respawnBusinessVehiclesCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`All business-owned vehicles have been respawned by an admin!`);
+	announceAdminAction(`BusinessVehiclesRespawned`);
 }
 
 // ===========================================================================

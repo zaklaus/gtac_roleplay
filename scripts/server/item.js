@@ -132,6 +132,15 @@ function deleteGroundItemObject(itemId) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function createGroundItemCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let itemType = getItemTypeFromParams(splitParams.slice(0, -1).join(" "));
@@ -154,6 +163,15 @@ function createGroundItemCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function createItemCommand(command, params, client) {
 	let splitParams = params.split(" ");
 	let itemType = getItemTypeFromParams(splitParams.slice(0, -1).join(" "));
@@ -176,6 +194,15 @@ function createItemCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function useItemCommand(command, params, client) {
 	clearPlayerItemActionState(client);
 
@@ -230,6 +257,15 @@ function useItemCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function deleteGroundItemCommand(command, params, client) {
 	let itemId = getClosestItemOnGround(getPlayerPosition(client));
 
@@ -252,6 +288,15 @@ function deleteGroundItemCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function pickupItemCommand(command, params, client) {
 	clearPlayerItemActionState(client);
 
@@ -303,6 +348,15 @@ function pickupItemCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function dropItemCommand(command, params, client) {
 	clearPlayerItemActionState(client);
 
@@ -364,6 +418,15 @@ function dropItemCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function putItemCommand(command, params, client) {
 	clearPlayerItemActionState(client);
 
@@ -411,6 +474,15 @@ function putItemCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function takeItemCommand(command, params, client) {
 	clearPlayerItemActionState(client);
 
@@ -458,6 +530,15 @@ function takeItemCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function createItemTypeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -470,6 +551,15 @@ function createItemTypeCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setItemTypeDropModelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -490,6 +580,15 @@ function setItemTypeDropModelCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setItemTypeOrderPriceCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -510,6 +609,15 @@ function setItemTypeOrderPriceCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setItemTypeRiskMultiplierCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -530,6 +638,15 @@ function setItemTypeRiskMultiplierCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function toggleItemTypeEnabledCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -549,6 +666,15 @@ function toggleItemTypeEnabledCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setItemTypeUseTypeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -569,6 +695,15 @@ function setItemTypeUseTypeCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setItemTypeUseValueCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1105,6 +1240,15 @@ function playerSwitchItem(client, newHotBarSlot) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function playerSwitchHotBarSlotCommand(command, params, client) {
 	clearPlayerItemActionState(client);
 
@@ -1394,12 +1538,30 @@ function getBestItemToTake(client, slot) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function listPlayerInventoryCommand(command, params, client) {
 	showPlayerInventoryToPlayer(client, client);
 }
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function listBusinessStorageInventoryCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
@@ -1418,6 +1580,15 @@ function listBusinessStorageInventoryCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function listBusinessFloorInventoryCommand(command, params, client) {
 	let businessId = (isPlayerInAnyBusiness(client)) ? getPlayerBusiness(client) : getClosestBusinessEntrance(getPlayerPosition(client));
 
@@ -1436,6 +1607,15 @@ function listBusinessFloorInventoryCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function listHouseInventoryCommand(command, params, client) {
 	let houseId = (isPlayerInAnyHouse(client)) ? getPlayerHouse(client) : getClosestHouseEntrance(getPlayerPosition(client));
 
@@ -1454,6 +1634,15 @@ function listHouseInventoryCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function listItemInventoryCommand(command, params, client) {
 	let itemId = getClosestItemOnGround(getPlayerPosition(client));
 
@@ -1797,6 +1986,15 @@ function getPlayerFirstItemSlotByUseType(client, useType) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function toggleItemEnabledCommand(command, params, client) {
 	if(!getPlayerActiveItem(client)) {
 		messagePlayerError(client, `You aren't holding anything!`);
@@ -1814,6 +2012,15 @@ function toggleItemEnabledCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function deleteItemInPlayerInventoryCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1855,6 +2062,15 @@ function deleteItemInPlayerInventoryCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function deleteAllItemsInPlayerInventoryCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));

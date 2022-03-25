@@ -136,6 +136,15 @@ function loadBusinessGameScriptsFromDatabase(businessId) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function createBusinessCommand(command, params, client) {
 	let tempBusinessData = createBusiness(params, getPlayerPosition(client), toVector3(0.0, 0.0, 0.0), getGameConfig().pickupModels[getServerGame()].Business, getGameConfig().blipSprites[getServerGame()].Business, getPlayerInterior(client), getPlayerDimension(client), getPlayerData(client).interiorCutscene);
 	tempBusinessData.needsSaved = true;
@@ -154,6 +163,15 @@ function createBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function createBusinessLocationCommand(command, params, client) {
 	if(!isPlayerSpawned(client)) {
 		messagePlayerError(client, "You must be spawned to use this command!");
@@ -204,6 +222,15 @@ function createBusiness(name, entrancePosition, exitPosition, entrancePickupMode
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function deleteBusinessCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -222,6 +249,15 @@ function deleteBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function deleteBusinessLocationCommand(command, params, client) {
 	//let businessId = toInteger(getParam(params, " ", 2));
 	//deleteBusinessLocation(businessId);
@@ -230,6 +266,15 @@ function deleteBusinessLocationCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessNameCommand(command, params, client) {
 	let newBusinessName = toString(params);
 
@@ -241,7 +286,7 @@ function setBusinessNameCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change the name of this business!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -254,6 +299,15 @@ function setBusinessNameCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessOwnerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -274,7 +328,7 @@ function setBusinessOwnerCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change the owner of this business!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -287,6 +341,15 @@ function setBusinessOwnerCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessJobCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -307,7 +370,7 @@ function setBusinessJobCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change the owner of this business!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -320,6 +383,15 @@ function setBusinessJobCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessClanCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -336,7 +408,7 @@ function setBusinessClanCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't give this business to a clan!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -349,6 +421,15 @@ function setBusinessClanCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessRankCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -360,7 +441,7 @@ function setBusinessRankCommand(command, params, client) {
 	let rankId = params;
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change this business rank level!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -420,7 +501,7 @@ function setBusinessRankCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change this business rank!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -437,6 +518,15 @@ function setBusinessRankCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessJobCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -470,6 +560,15 @@ function setBusinessJobCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessPublicCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -491,6 +590,15 @@ function setBusinessPublicCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function removeBusinessOwnerCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -512,6 +620,15 @@ function removeBusinessOwnerCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function lockUnlockBusinessCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -525,7 +642,7 @@ function lockUnlockBusinessCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change this business rank!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -569,6 +686,15 @@ function lockUnlockBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessEntranceFeeCommand(command, params, client) {
 	let entranceFee = toInteger(getParam(params, " ", 1)) || 0;
 	let businessId = getPlayerBusiness(client);
@@ -579,7 +705,7 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change the entrance fee for this business!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -590,6 +716,15 @@ function setBusinessEntranceFeeCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function getBusinessInfoCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -631,6 +766,15 @@ function getBusinessInfoCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function getBusinessFloorItemsCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -648,6 +792,15 @@ function getBusinessFloorItemsCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function getBusinessStorageItemsCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -665,6 +818,15 @@ function getBusinessStorageItemsCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessPickupCommand(command, params, client) {
 	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
@@ -701,6 +863,15 @@ function setBusinessPickupCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessInteriorTypeCommand(command, params, client) {
 	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
@@ -758,6 +929,15 @@ function setBusinessInteriorTypeCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessBlipCommand(command, params, client) {
 	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
@@ -794,6 +974,15 @@ function setBusinessBlipCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function giveDefaultItemsToBusinessCommand(command, params, client) {
 	let typeParam = getParam(params, " ", 1) || "business";
 	let businessId = getPlayerBusiness(client);
@@ -836,6 +1025,15 @@ function giveDefaultItemsToBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessEntranceLabelToDealershipCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -851,6 +1049,15 @@ function setBusinessEntranceLabelToDealershipCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function deleteBusinessFloorItemsCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -871,6 +1078,15 @@ function deleteBusinessFloorItemsCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function deleteBusinessStorageItemsCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -891,6 +1107,15 @@ function deleteBusinessStorageItemsCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function withdrawFromBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -906,7 +1131,7 @@ function withdrawFromBusinessCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't withdraw cash from this business!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -925,6 +1150,15 @@ function withdrawFromBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessBuyPriceCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -940,7 +1174,7 @@ function setBusinessBuyPriceCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't change the purchase price for this business!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -958,6 +1192,15 @@ function setBusinessBuyPriceCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function depositIntoBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -993,6 +1236,15 @@ function depositIntoBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function orderItemForBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1026,7 +1278,7 @@ function orderItemForBusinessCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't order items for this business!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -1045,6 +1297,15 @@ function orderItemForBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function orderItemForBusiness(businessId, itemType, amount) {
 	if(getBusinessData(businessId).till < orderTotalCost) {
 		let neededAmount = orderTotalCost-getBusinessData(businessId).till;
@@ -1059,6 +1320,15 @@ function orderItemForBusiness(businessId, itemType, amount) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function viewBusinessTillAmountCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -1072,7 +1342,7 @@ function viewBusinessTillAmountCommand(command, params, client) {
 	}
 
 	if(!canPlayerManageBusiness(client, businessId)) {
-		messagePlayerError(client, "You can't see the till amount for this business!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyBusiness"));
 		return false;
 	}
 
@@ -1081,6 +1351,15 @@ function viewBusinessTillAmountCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function buyBusinessCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -1111,6 +1390,15 @@ function buyBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function moveBusinessEntranceCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -1142,6 +1430,15 @@ function moveBusinessEntranceCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function moveBusinessExitCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -1615,6 +1912,15 @@ function deleteBusinessExitBlip(businessId) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function reloadAllBusinessesCommand(command, params, client) {
 	let clients = getClients();
 	for(let i in clients) {
@@ -1638,7 +1944,7 @@ function reloadAllBusinessesCommand(command, params, client) {
 	setAllBusinessIndexes();
 	cacheAllBusinessItems();
 
-	messageAdminAction(`All businesses have been reloaded by an admin!`);
+	announceAdminAction(`All businesses have been reloaded by an admin!`);
 }
 
 // ===========================================================================
@@ -1679,6 +1985,15 @@ function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function buyFromBusinessCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 
@@ -1780,6 +2095,15 @@ function buyFromBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setBusinessItemSellPriceCommand(command, params, client) {
 	let businessId = getBusinessFromParams(getParam(params, " ", 3)) || getPlayerBusiness(client);
 
@@ -1814,6 +2138,15 @@ function setBusinessItemSellPriceCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function storeItemInBusinessStorageCommand(command, params, client) {
 	let businessId = getBusinessFromParams(getParam(params, " ", 3)) || getPlayerBusiness(client);
 
@@ -1849,6 +2182,15 @@ function storeItemInBusinessStorageCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function stockItemOnBusinessFloorCommand(command, params, client) {
 	let businessId = getPlayerBusiness(client);
 

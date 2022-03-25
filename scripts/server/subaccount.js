@@ -548,45 +548,6 @@ function setFightStyleCommand(command, params, client) {
 
 // ===========================================================================
 
-function forceFightStyleCommand(command, params, client) {
-	if(areParamsEmpty(params)) {
-		messagePlayerSyntax(client, getCommandSyntaxText(command));
-		return false;
-	}
-
-	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
-	let fightStyleId = getFightStyleFromParams(getParam(params, " ", 2));
-
-	//if(!targetClient) {
-	//	messagePlayerError(client, `Player not found!`);
-	//	return false;
-	//}
-
-	//if(!getPlayerData(targetClient)) {
-	//	messagePlayerError(client, `Player not found!`);
-	//	return false;
-	//}
-
-	//if(!isPlayerSpawned(targetClient)) {
-	//	messagePlayerError(client, `That player isn't spawned`);
-	//	return false;
-	//}
-
-	if(!fightStyleId) {
-		messagePlayerError(client, `That fight style doesn't exist!`);
-		messagePlayerError(client, `Fight styles: ${getGameConfig().fightStyles[getServerGame()].map(fs => fs[0]).join(", ")}`);
-		return false;
-	}
-
-	getPlayerCurrentSubAccount(client).fightStyle = fightStyleId;
-	setPlayerFightStyle(client, fightStyleId);
-	messagePlayerSuccess(client, `You set ${getCharacterFullName(targetClient)}'s fight style to ${getGameConfig().fightStyles[getServerGame()][fightStyleId][0]}`)
-
-	return true;
-}
-
-// ===========================================================================
-
 function createDefaultSubAccountServerData(databaseId, thisServerSkin) {
 	for(let i = 1 ; i <= 5 ; i++) {
 		if(i == getServerId()) {

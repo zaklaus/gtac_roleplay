@@ -14,6 +14,15 @@ function initStaffScript() {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function kickClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -34,12 +43,21 @@ function kickClientCommand(command, params, client) {
 		}
 	}
 
-	messageAdminAction(`${getPlayerName(targetClient)} has been kicked from the server.`);
+	announceAdminAction(`${getPlayerName(targetClient)} has been kicked from the server.`);
 	targetClient.disconnect();
 }
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setStaffTitleCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -71,6 +89,15 @@ function setStaffTitleCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function muteClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -97,8 +124,16 @@ function muteClientCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function unMuteClientCommand(command, params, client) {
-
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -124,6 +159,15 @@ function unMuteClientCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function freezeClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -151,6 +195,15 @@ function freezeClientCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function unFreezeClientCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -178,6 +231,15 @@ function unFreezeClientCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function gotoPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -210,6 +272,15 @@ function gotoPlayerCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function getPlayerGeoIPInformationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -231,6 +302,15 @@ function getPlayerGeoIPInformationCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function getPlayerIPInformationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -248,6 +328,15 @@ function getPlayerIPInformationCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function gotoVehicleCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -278,6 +367,15 @@ function gotoVehicleCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function getVehicleCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -299,6 +397,15 @@ function getVehicleCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function warpIntoVehicleCommand(command, params, client) {
 	let vehicle = getClosestVehicle(getPlayerPosition(client));
 
@@ -329,6 +436,15 @@ function warpIntoVehicleCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function gotoBusinessCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -360,6 +476,15 @@ function gotoBusinessCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function gotoGameLocationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -391,6 +516,15 @@ function gotoGameLocationCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function gotoHouseCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -422,6 +556,15 @@ function gotoHouseCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function gotoJobLocationCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -453,6 +596,15 @@ function gotoJobLocationCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function gotoNewPlayerSpawnCommand(command, params, client) {
 	client.player.velocity = toVector3(0.0, 0.0, 0.0);
 	setPlayerPosition(client, getServerConfig().newCharacter.spawnPosition);
@@ -465,6 +617,15 @@ function gotoNewPlayerSpawnCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function gotoPositionCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -489,6 +650,15 @@ function gotoPositionCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function teleportForwardCommand(command, params, client) {
 	let distance = 1.0;
 	if(!areParamsEmpty(params)) {
@@ -504,6 +674,15 @@ function teleportForwardCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function teleportBackwardCommand(command, params, client) {
 	let distance = 1.0;
 	if(!areParamsEmpty(params)) {
@@ -519,6 +698,15 @@ function teleportBackwardCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function teleportLeftCommand(command, params, client) {
 	let distance = 1.0;
 	if(!areParamsEmpty(params)) {
@@ -534,6 +722,15 @@ function teleportLeftCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function teleportUpCommand(command, params, client) {
 	let distance = 1.0;
 	if(!areParamsEmpty(params)) {
@@ -549,6 +746,15 @@ function teleportUpCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function teleportDownCommand(command, params, client) {
 	let distance = 1.0;
 	if(!areParamsEmpty(params)) {
@@ -579,6 +785,15 @@ function teleportRightCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function playerInteriorCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -603,6 +818,15 @@ function playerInteriorCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function playerVirtualWorldCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -627,6 +851,15 @@ function playerVirtualWorldCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function getPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -667,6 +900,15 @@ function getPlayerCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function returnPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -705,7 +947,16 @@ function returnPlayerCommand(command, params, client) {
 
 // ===========================================================================
 
-function addStaffFlagCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function addPlayerStaffFlagCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -738,7 +989,16 @@ function addStaffFlagCommand(command, params, client) {
 
 // ===========================================================================
 
-function takeStaffFlagCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function removePlayerStaffFlagCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -771,7 +1031,16 @@ function takeStaffFlagCommand(command, params, client) {
 
 // ===========================================================================
 
-function clearStaffFlagsCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function removePlayerStaffFlagsCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -798,7 +1067,16 @@ function clearStaffFlagsCommand(command, params, client) {
 
 // ===========================================================================
 
-function getStaffFlagsCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function getPlayerStaffFlagsCommand(command, params, client) {
 	if(getCommand(command).requireLogin) {
 		if(!isPlayerLoggedIn(client)) {
 			messagePlayerError(client, "You must be logged in to use this command!");
@@ -852,7 +1130,16 @@ function getStaffFlagsCommand(command, params, client) {
 
 // ===========================================================================
 
-function allStaffFlagsCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function getStaffFlagsCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -876,6 +1163,15 @@ function allStaffFlagsCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function givePlayerMoneyCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -899,7 +1195,16 @@ function givePlayerMoneyCommand(command, params, client) {
 
 // ===========================================================================
 
-function forcePlayerAccentCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function setPlayerAccentCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -932,6 +1237,15 @@ function forcePlayerAccentCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function forceCharacterNameChangeCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -953,7 +1267,16 @@ function forceCharacterNameChangeCommand(command, params, client) {
 
 // ===========================================================================
 
-function forceCharacterNameCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function setCharacterNameCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -988,7 +1311,16 @@ function forceCharacterNameCommand(command, params, client) {
 
 // ===========================================================================
 
-function forcePlayerSkinCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function setPlayerSkinCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -1021,6 +1353,15 @@ function forcePlayerSkinCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setPlayerHealthCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1048,6 +1389,15 @@ function setPlayerHealthCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setPlayerArmourCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1069,6 +1419,15 @@ function setPlayerArmourCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setPlayerInfiniteRunCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1096,7 +1455,16 @@ function setPlayerInfiniteRunCommand(command, params, client) {
 
 // ===========================================================================
 
-function forcePlayerWantedLevelCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function setPlayerWantedLevelCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -1110,14 +1478,23 @@ function forcePlayerWantedLevelCommand(command, params, client) {
 		return false;
 	}
 
-	forcePlayerWantedLevel(targetClient, wantedLevel);
+	setPlayerWantedLevel(targetClient, wantedLevel);
 
 	//messageAdmins(`${getPlayerName(client)} {MAINCOLOUR}set ${getPlayerName(targetClient)}'s {MAINCOLOUR}skin to {ALTCOLOUR}${getGameConfig().skins[getGame()][skinIndex][1]}`);
 }
 
 // ===========================================================================
 
-function getAllVehiclesOwnedByPlayerCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function getVehiclesOwnedByPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -1140,7 +1517,16 @@ function getAllVehiclesOwnedByPlayerCommand(command, params, client) {
 
 // ===========================================================================
 
-function getAllBusinessesOwnedByPlayerCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function getBusinessesOwnedByPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -1163,7 +1549,16 @@ function getAllBusinessesOwnedByPlayerCommand(command, params, client) {
 
 // ===========================================================================
 
-function getAllHousesOwnedByPlayerCommand(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function getHousesOwnedByPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -1186,6 +1581,15 @@ function getAllHousesOwnedByPlayerCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function forceAccountPasswordResetCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1202,7 +1606,16 @@ function forceAccountPasswordResetCommand(command, params, client) {
 
 // ===========================================================================
 
-function toggleSyncForElementsSpawnedByPlayer(command, params, client) {
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function toggleSyncForElementsSpawnedByPlayerCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
 		return false;
@@ -1261,6 +1674,54 @@ function isPlayerPoliceBanned(client) {
 	}
 
 	return false;
+}
+
+// ===========================================================================
+
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
+function forceFightStyleCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, getCommandSyntaxText(command));
+		return false;
+	}
+
+	let targetClient = getPlayerFromParams(getParam(params, " ", 1));
+	let fightStyleId = getFightStyleFromParams(getParam(params, " ", 2));
+
+	//if(!targetClient) {
+	//	messagePlayerError(client, `Player not found!`);
+	//	return false;
+	//}
+
+	//if(!getPlayerData(targetClient)) {
+	//	messagePlayerError(client, `Player not found!`);
+	//	return false;
+	//}
+
+	//if(!isPlayerSpawned(targetClient)) {
+	//	messagePlayerError(client, `That player isn't spawned`);
+	//	return false;
+	//}
+
+	if(!fightStyleId) {
+		messagePlayerError(client, `That fight style doesn't exist!`);
+		messagePlayerError(client, `Fight styles: ${getGameConfig().fightStyles[getServerGame()].map(fs => fs[0]).join(", ")}`);
+		return false;
+	}
+
+	getPlayerCurrentSubAccount(client).fightStyle = fightStyleId;
+	setPlayerFightStyle(client, fightStyleId);
+	messagePlayerSuccess(client, `You set ${getCharacterFullName(targetClient)}'s fight style to ${getGameConfig().fightStyles[getServerGame()][fightStyleId][0]}`)
+
+	return true;
 }
 
 // ===========================================================================

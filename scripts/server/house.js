@@ -219,7 +219,7 @@ function setHouseOwnerCommand(command, params, client) {
 
 	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageHouses"))) {
 		if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER && getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
-			messagePlayerError(client, "You don't own this house!");
+			messagePlayerError(client, getLocaleString(client, "CantModifyHouse"));
 			return false;
 		}
 	}
@@ -259,7 +259,7 @@ function setHouseClanCommand(command, params, client) {
 
 	if(!doesPlayerHaveStaffPermission(client, getStaffFlagValue("ManageHouses"))) {
 		if(getHouseData(houseId).ownerType == VRR_HOUSEOWNER_PLAYER && getHouseData(houseId).ownerId == getPlayerCurrentSubAccount(client).databaseId) {
-			messagePlayerError(client, "You don't own this house!");
+			messagePlayerError(client, getLocaleString(client, "CantModifyHouse"));
 			return false;
 		}
 	}
@@ -305,7 +305,7 @@ function setHouseClanCommand(command, params, client) {
 	}
 
 	if(doesPlayerHaveClanPermission(client, getClanFlagValue("ManageHouses"))) {
-		messagePlayerError(client, "You can't set clan house ranks!");
+		messagePlayerError(client, getLocaleString(client, "CantModifyHouse"));
 		return false;
 	}
 
@@ -496,7 +496,7 @@ function moveHouseEntranceCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayer(client, "You need to be near or inside a house!");
+		messagePlayer(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -532,7 +532,7 @@ function moveHouseExitCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
 	if(!getHouseData(houseId)) {
-		messagePlayer(client, "You need to be near or inside a house!");
+		messagePlayer(client, getLocaleString(client, "InvalidHouse"));
 		return false;
 	}
 
@@ -994,6 +994,15 @@ function getHouseOwnerTypeText(ownerType) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function getHouseInfoCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
@@ -1035,6 +1044,15 @@ function getHouseInfoCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setHouseBuyPriceCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1063,6 +1081,15 @@ function setHouseBuyPriceCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function setHouseRentPriceCommand(command, params, client) {
 	if(areParamsEmpty(params)) {
 		messagePlayerSyntax(client, getCommandSyntaxText(command));
@@ -1091,6 +1118,15 @@ function setHouseRentPriceCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function buyHouseCommand(command, params, client) {
 	let houseId = getPlayerHouse(client);
 
@@ -1200,6 +1236,15 @@ function deleteHouseExitBlip(houseId) {
 
 // ===========================================================================
 
+/**
+ * This is a command handler function.
+ *
+ * @param {string} command - The command name used by the player
+ * @param {string} params - The parameters/args string used with the command by the player
+ * @param {Client} client - The client/player that used the command
+ * @return {bool} Whether or not the command was successful
+ *
+ */
 function reloadAllHousesCommand(command, params, client) {
 	let clients = getClients();
 	for(let i in clients) {
@@ -1220,7 +1265,7 @@ function reloadAllHousesCommand(command, params, client) {
 	createAllHousePickups();
 	createAllHouseBlips();
 
-	messageAdminAction(`All houses have been reloaded by an admin!`);
+	announceAdminAction(`All houses have been reloaded by an admin!`);
 }
 
 // ===========================================================================

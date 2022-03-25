@@ -1068,13 +1068,6 @@ function sendPlayerPedPartsAndProps(client) {
 
 // ===========================================================================
 
-function forcePlayerWantedLevel(client, wantedLevel) {
-	sendNetworkEventToPlayer("vrr.wantedLevel", client, wantedLevel);
-	return true;
-}
-
-// ===========================================================================
-
 function onPlayerNearPickup(client, pickupId) {
 	getPlayerData(client).currentPickup = getElementFromId(pickupId);
 }

@@ -351,7 +351,7 @@ async function onPlayerEnteredVehicle(client, clientVehicle, seat) {
 
 	if(getVehicleData(vehicle).streamingRadioStation != -1) {
 		if(getPlayerData(client).streamingRadioStation != getVehicleData(vehicle).streamingRadioStation) {
-			playRadioStreamForPlayer(client, radioStations[getVehicleData(vehicle).streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
+			playRadioStreamForPlayer(client, getServerData().radioStations[getVehicleData(vehicle).streamingRadioStation].url, true, getPlayerStreamingRadioVolume(client));
 		}
 	}
 }

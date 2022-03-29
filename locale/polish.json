@@ -416,5 +416,14 @@
 	"CantModifyHouse": "You can't manage or modify this house",
 	"ServerTimeSet": "{1} set the time to {2}",
 	"ServerWeatherSet": "{1} set the weather to {2}",
-	"ServerSnowSet": "{1} turned falling snow {2} and ground snow {3}"
+	"ServerSnowSet": "{1} turned falling snow {2} and ground snow {3}",
+	"AllJobsReloaded": "All server jobs have been reloaded by an admin",
+	"ServerLogoSet": "{1} turned the server logo image {2}",
+	"ServerGUISet": "{1} turned GUI for this server {2}",
+	"ServerBusinessBlipsSet": "{1} turned all business blips {2}",
+	"ServerHouseBlipsSet": "{1} turned all house blips {2}",
+	"ServerJobBlipsSet": "{1} turned all job blips {2}",
+	"ServerBusinessPickupsSet": "{1} turned all business pickups {2}",
+	"ServerHousePickupsSet": "{1} turned all house pickups {2}",
+	"ServerJobPickupsSet": "{1} turned on all job pickups {2}"
 }

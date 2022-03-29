@@ -189,6 +189,7 @@ async function translateMessage(messageText, translateFrom = getGlobalConfig().l
 			if(cachedTranslations[translateFrom][translateTo][i][0] == messageText) {
 				logToConsole(LOG_DEBUG, `[Translate]: Using existing translation for ${getGlobalConfig().locale.locales[translateFrom][0]} to ${getGlobalConfig().locale.locales[translateTo][0]} - (${messageText}), (${cachedTranslations[translateFrom][translateTo][i][1]})`);
 				resolve(cachedTranslations[translateFrom][translateTo][i][1]);
+				return true;
 			}
 		}
 

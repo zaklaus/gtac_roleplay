@@ -942,7 +942,7 @@ function reloadAllJobsCommand(command, params, client) {
 		}
 	}
 
-	announceAdminAction(`All server jobs have been reloaded by an admin!`);
+	announceAdminAction("AllJobsReloaded");
 }
 
 // ===========================================================================

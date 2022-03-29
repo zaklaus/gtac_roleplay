@@ -1478,6 +1478,14 @@ function getBusinessDataFromDatabaseId(databaseId) {
 
 // ===========================================================================
 
+/**
+ * Gets the closest business entrance to a position
+ *
+ * @param {Vector3} position - The position to check
+ * @param {Number} dimension - The dimension to check
+ * @return {Number} The data index of the business
+ *
+ */
 function getClosestBusinessEntrance(position, dimension) {
 	let closest = 0;
 	for(let i in getServerData().businesses) {
@@ -1492,6 +1500,14 @@ function getClosestBusinessEntrance(position, dimension) {
 
 // ===========================================================================
 
+/**
+ * Gets the closest business exit to a position
+ *
+ * @param {Vector3} position - The position to check
+ * @param {Number} dimension - The dimension to check
+ * @return {Number} The data index of the business
+ *
+ */
 function getClosestBusinessExit(position, dimension) {
 	let closest = 0;
 	for(let i in getServerData().businesses) {
@@ -1506,6 +1522,13 @@ function getClosestBusinessExit(position, dimension) {
 
 // ===========================================================================
 
+/**
+ * Gets whether or not a client is in a business
+ *
+ * @param {Client} client - The client to check whether or not is in a business
+ * @return {Boolean} Whether or not the client is in a business
+ *
+ */
 function isPlayerInAnyBusiness(client) {
 	for(let i in getServerData().businesses) {
 		if(getServerData().businesses[i].hasInterior && getServerData().businesses[i].exitDimension == getPlayerDimension(client)) {
@@ -1518,6 +1541,13 @@ function isPlayerInAnyBusiness(client) {
 
 // ===========================================================================
 
+/**
+ * Gets the data index of the business a client is in
+ *
+ * @param {Client} client - The client to check whether or not is in a business
+ * @return {Number} The data index of the business
+ *
+ */
 function getPlayerBusiness(client) {
 	let closestEntrance = getClosestBusinessEntrance(getPlayerPosition(client), getPlayerDimension(client));
 	if(getDistance(getPlayerPosition(client), getBusinessData(closestEntrance).entrancePosition) <= getGlobalConfig().enterPropertyDistance) {
@@ -1535,16 +1565,31 @@ function getPlayerBusiness(client) {
 
 // ===========================================================================
 
+/**
+ * Saves all server businesses to the database
+ *
+ * @return {Boolean} Whether or not the businesses were saved
+ *
+ */
 function saveAllBusinessesToDatabase() {
 	for(let i in getServerData().businesses) {
 		if(getServerData().businesses[i].needsSaved) {
 			saveBusinessToDatabase(i);
 		}
 	}
+
+	return true
 }
 
 // ===========================================================================
 
+/**
+ * Saves a server businesses to the database by data index
+ *
+ * @param {Number} businessId - The data index of the business to save
+ * @return {Boolean} Whether or not the business was saved
+ *
+ */
 function saveBusinessToDatabase(businessId) {
 	let tempBusinessData = getServerData().businesses[businessId];
 
@@ -1614,6 +1659,12 @@ function saveBusinessToDatabase(businessId) {
 
 // ===========================================================================
 
+/**
+ * Creates all server pickups for all businesses
+ *
+ * @return {Boolean} Whether or not the server pickups were created
+ *
+ */
 function createAllBusinessPickups() {
 	if(!getServerConfig().createBusinessPickups) {
 		return false;
@@ -1624,10 +1675,18 @@ function createAllBusinessPickups() {
 		createBusinessExitPickup(i);
 		updateBusinessPickupLabelData(i);
 	}
+
+	return true;
 }
 
 // ===========================================================================
 
+/**
+ * Creates all server blips for all businesses
+ *
+ * @return {Boolean} Whether or not the server blips were created
+ *
+ */
 function createAllBusinessBlips() {
 	if(!getServerConfig().createBusinessBlips) {
 		return false;
@@ -1641,6 +1700,13 @@ function createAllBusinessBlips() {
 
 // ===========================================================================
 
+/**
+ * Creates the entrance pickup for a business by data index
+ *
+ * @param {Number} businessId - The data index of the business to create the pickup for
+ * @return {Boolean} Whether or not the blip was created
+ *
+ */
 function createBusinessEntrancePickup(businessId) {
 	if(!getServerConfig().createBusinessPickups) {
 		return false;
@@ -1664,11 +1730,22 @@ function createBusinessEntrancePickup(businessId) {
 		} else {
 			sendBusinessToPlayer(null, businessId, getBusinessData(businessId), getBusinessData(businessId).entrancePosition, getBusinessData(businessId).entranceBlipModel, getBusinessData(businessId).entrancePickupModel, getBusinessData(businessId).hasInterior, false);
 		}
+
+		return true;
 	}
+
+	return false;
 }
 
 // ===========================================================================
 
+/**
+ * Creates the entrance pickup for a business by data index
+ *
+ * @param {Number} businessId - The data index of the business to create the entrance pickup for
+ * @return {Boolean} Whether or not the blip was created
+ *
+ */
 function createBusinessEntranceBlip(businessId) {
 	if(!areServerElementsSupported()) {
 		return false;
@@ -1700,6 +1777,13 @@ function createBusinessEntranceBlip(businessId) {
 
 // ===========================================================================
 
+/**
+ * Creates the exit pickup for a business by data index
+ *
+ * @param {Number} businessId - The data index of the business to create the exit pickup for
+ * @return {Boolean} Whether or not the pickup was created
+ *
+ */
 function createBusinessExitPickup(businessId) {
 	if(!getServerConfig().createBusinessPickups) {
 		return false;
@@ -1728,6 +1812,13 @@ function createBusinessExitPickup(businessId) {
 
 // ===========================================================================
 
+/**
+ * Creates the exit blip for a business by data index
+ *
+ * @param {Number} businessId - The data index of the business to create the exit blip for
+ * @return {Boolean} Whether or not the blip was created
+ *
+ */
 function createBusinessExitBlip(businessId) {
 	if(!getServerConfig().createBusinessBlips) {
 		return false;
@@ -1758,6 +1849,13 @@ function createBusinessExitBlip(businessId) {
 
 // ===========================================================================
 
+/**
+ * Deletes a business data and removes it from the database by data index
+ *
+ * @param {Number} businessId - The data index of the business to delete
+ * @return {Boolean} Whether or not the business was deleted
+ *
+ */
 function deleteBusiness(businessId, deletedBy = 0) {
 	let tempBusinessData = getServerData().businesses[businessId];
 
@@ -1778,10 +1876,19 @@ function deleteBusiness(businessId, deletedBy = 0) {
 	removePlayersFromBusiness(businessId);
 
 	getServerData().businesses.splice(businessId, 1);
+
+	return true;
 }
 
 // ===========================================================================
 
+/**
+ * Forces all players to exit a business
+ *
+ * @param {Number} businessId - The data index of the business to force all players inside to exit from
+ * @return {Boolean} Whether or not the players were forced to exit
+ *
+ */
 function removePlayersFromBusiness(businessId) {
 	getClients().forEach(function(client) {
 		if(doesBusinessHaveInterior(businessId)) {
@@ -1792,29 +1899,63 @@ function removePlayersFromBusiness(businessId) {
 			}
 		}
 	});
+
+	return true;
 }
 
 // ===========================================================================
 
+/**
+ * Forces a player to exit a business
+ *
+ * @param {Client} client - The client to force to exit the business
+ * @return {Boolean} Whether or not the player was forced to exit
+ *
+ */
 function removePlayerFromBusinesses(client) {
 	if(isPlayerInAnyBusiness(client)) {
 		exitBusiness(client);
+		return true;
 	}
+
+	return false;
 }
 
 // ===========================================================================
 
+/**
+ * Handles a player exiting a business
+ *
+ * @param {Client} client - The client to force to exit the business
+ * @return {Boolean} Whether or not the player successfully exited the business
+ *
+ */
 function exitBusiness(client) {
 	let businessId = getPlayerBusiness(client);
+
+	if(businessId == false) {
+		return false;
+	}
+
 	if(isPlayerSpawned(client)) {
 		setPlayerInterior(client, getServerData().businesses[businessId].entranceInterior);
 		setPlayerDimension(client, getServerData().businesses[businessId].entranceDimension);
 		setPlayerPosition(client, getServerData().businesses[businessId].entrancePosition);
+		return true;
 	}
+
+	return false;
 }
 
 // ===========================================================================
 
+/**
+ * Gets the name of the type of a business owner by type ID
+ *
+ * @param {Number} ownerType - The business owner type ID
+ * @return {String} Name of the business owner type
+ *
+ */
 function getBusinessOwnerTypeText(ownerType) {
 	switch(ownerType) {
 		case VRR_BIZOWNER_CLAN:
@@ -1850,12 +1991,22 @@ function getBusinessData(businessId) {
 
 // ===========================================================================
 
+/**
+ *
+ * @param {Number} businessId - The data index of the business
+ * @returns {Boolean} Whether or not the business has an interior
+ */
 function doesBusinessHaveInterior(businessId) {
 	return getBusinessData(businessId).hasInterior;
 }
 
 // ===========================================================================
 
+/**
+ *
+ * @param {Number} businessId - The data index of the business
+ * @returns {Boolean} Whether or not the entrance pickup of the business was deleted
+ */
 function deleteBusinessEntrancePickup(businessId) {
 	if(!areServerElementsSupported()) {
 		return false;
@@ -1865,11 +2016,20 @@ function deleteBusinessEntrancePickup(businessId) {
 		//removeFromWorld(getBusinessData(businessId).entrancePickup);
 		deleteGameElement(getBusinessData(businessId).entrancePickup);
 		getBusinessData(businessId).entrancePickup = null;
+
+		return true;
 	}
+
+	return false;
 }
 
 // ===========================================================================
 
+/**
+ *
+ * @param {Number} businessId - The data index of the business
+ * @returns {Boolean} Whether or not the exit pickup of the business was deleted
+ */
 function deleteBusinessExitPickup(businessId) {
 	if(!areServerElementsSupported()) {
 		return false;
@@ -1884,6 +2044,11 @@ function deleteBusinessExitPickup(businessId) {
 
 // ===========================================================================
 
+/**
+ *
+ * @param {Number} businessId - The data index of the business
+ * @returns {Boolean} Whether or not the entrance blip of the business was deleted
+ */
 function deleteBusinessEntranceBlip(businessId) {
 	if(!areServerElementsSupported()) {
 		return false;
@@ -1898,6 +2063,11 @@ function deleteBusinessEntranceBlip(businessId) {
 
 // ===========================================================================
 
+/**
+ *
+ * @param {Number} businessId - The data index of the business
+ * @returns {Boolean} Whether or not the exit blip of the business was deleted
+ */
 function deleteBusinessExitBlip(businessId) {
 	if(!areServerElementsSupported()) {
 		return false;
@@ -1949,24 +2119,20 @@ function reloadAllBusinessesCommand(command, params, client) {
 
 // ===========================================================================
 
+/**
+ * Sets the indexes of all businesses
+ *
+ * @returns {Boolean} Whether or not the exit blip of the business was deleted
+ */
 function setAllBusinessIndexes() {
 	for(let i in getServerData().businesses) {
 		getServerData().businesses[i].index = i;
-
-		//for(let j in getServerData().businesses[i].locations) {
-		//	getServerData().businesses[i].locations[j].index = j;
-		//	getServerData().businesses[i].locations[j].businessIndex = i;
-		//}
-
-		//for(let j in getServerData().businesses[i].gameScripts) {
-		//	getServerData().businesses[i].gameScripts[j].index = j;
-		//	getServerData().businesses[i].gameScripts[j].businessIndex = i;
-		//}
 	}
 }
 
 // ===========================================================================
 
+// Adds an item to a business inventory by item type, amount and buy price
 function addToBusinessInventory(businessId, itemType, amount, buyPrice) {
 	let tempItemData = new ItemData(false);
 	tempItemData.amount = amount;
@@ -2226,6 +2392,7 @@ function stockItemOnBusinessFloorCommand(command, params, client) {
 
 // ===========================================================================
 
+// Gets the first free slot in a business's storage items
 function getBusinessStorageFirstFreeItemSlot(businessId) {
 	for(let i in getBusinessData(businessId).storageItemCache) {
 		if(getBusinessData(businessId).storageItemCache[i] == -1) {
@@ -2238,6 +2405,7 @@ function getBusinessStorageFirstFreeItemSlot(businessId) {
 
 // ===========================================================================
 
+// Gets the first free slot in a business's floor items
 function getBusinessFloorFirstFreeItemSlot(businessId) {
 	for(let i in getBusinessData(businessId).floorItemCache) {
 		if(getBusinessData(businessId).floorItemCache[i] == -1) {
@@ -2250,6 +2418,7 @@ function getBusinessFloorFirstFreeItemSlot(businessId) {
 
 // ===========================================================================
 
+// Caches all items for all businesses
 function cacheAllBusinessItems() {
 	logToConsole(LOG_DEBUG, "[VRR.Business] Caching all business items ...");
 	for(let i in getServerData().businesses) {
@@ -2260,6 +2429,7 @@ function cacheAllBusinessItems() {
 
 // ===========================================================================
 
+// Caches all items for a business by businessId
 function cacheBusinessItems(businessId) {
 	getBusinessData(businessId).floorItemCache.splice(0, getBusinessData(businessId).floorItemCache.length);
 	getBusinessData(businessId).storageItemCache.splice(0, getBusinessData(businessId).storageItemCache.length);
@@ -2277,6 +2447,7 @@ function cacheBusinessItems(businessId) {
 
 // ===========================================================================
 
+// Gets a business's data index from a business's databaseId
 function getBusinessIdFromDatabaseId(databaseId) {
 	for(let i in getServerData().businesses) {
 		if(getBusinessData(i).databaseId == databaseId) {
@@ -2289,6 +2460,7 @@ function getBusinessIdFromDatabaseId(databaseId) {
 
 // ===========================================================================
 
+// Updates all pickup data for a business by businessId
 function updateBusinessPickupLabelData(businessId) {
 	if(!areServerElementsSupported()) {
 		return false;
@@ -2330,17 +2502,6 @@ function updateBusinessPickupLabelData(businessId) {
 
 		if(getBusinessData(businessId).buyPrice > 0) {
 			setEntityData(getBusinessData(businessId).entrancePickup, "vrr.label.price", getBusinessData(businessId).buyPrice, true);
-		}
-	}
-}
-
-// ===========================================================================
-
-function getBusinessIdFromDatabaseId(databaseId) {
-	let businesses = getServerData().businesses;
-	for(let i in businesses) {
-		if(businesses[i].databaseId == databaseId) {
-			return i;
 		}
 	}
 }

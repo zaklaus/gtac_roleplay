@@ -2,9 +2,11 @@
     "apiEmail": "example@example.com",
     "defaultLanguage": "en",
     "locales": [
-        ["English", "english", "en"],
-        ["Russian", "russian", "ru"],
-        ["Polish", "polish", "pl"],
-        ["Spanish", "spanish", "es"]
+        ["English", "english", "en", "gb"],
+        ["Russian", "russian", "ru", "ru"],
+        ["Polish", "polish", "pl", "pl"],
+        ["Spanish", "spanish", "es", "es"],
+		["Chinese", "chinese", "zh", "cn"],
+		["Arabic", "arabic", "ar", "sa"]
     ]
 }

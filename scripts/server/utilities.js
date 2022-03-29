@@ -475,3 +475,19 @@ function getPedForNetworkEvent(ped) {
 }
 
 // ===========================================================================
+
+// Get how many times a player connected in the last month by name
+function getPlayerConnectionsInLastMonthByName(name) {
+	let dbConnection = connectToDatabase();
+	if(dbConnection) {
+		let safeName = escapeDatabaseString(dbConnection, name);
+		let result = quickDatabaseQuery(`SELECT COUNT(*) AS count FROM conn_main WHERE conn_when_connect >= NOW() - INTERVAL 1 MONTH AND conn_name = '${safeName}'`);
+		if(result) {
+			return result[0].count;
+		}
+	}
+
+	return 0;
+}
+
+// ===========================================================================

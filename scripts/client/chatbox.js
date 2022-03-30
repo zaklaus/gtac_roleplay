@@ -49,18 +49,21 @@ function unBindChatBoxKeys() {
 // ===========================================================================
 
 function receiveChatBoxMessageFromServer(messageString, colour) {
-	logToConsole(LOG_DEBUG, `[VRR.ChatBox]: Received chatbox message from server: ${messageString}`);
+	logToConsole(LOG_INFO, `[VRR.ChatBox]: Received chatbox message from server: ${messageString}`);
 
 	// Just in case it's hidden by auto hide
 	setChatWindowEnabled(true);
 
 	let colouredString = replaceColoursInMessage(messageString);
 
-	if(bottomMessageIndex >= chatBoxHistory.length-1) {
+	logToConsole(LOG_INFO, `[VRR.ChatBox]: Changed colours in string: ${colouredString}`);
+
+	//if(bottomMessageIndex >= chatBoxHistory.length-1) {
 		message(colouredString, colour);
 		bottomMessageIndex = chatBoxHistory.length-1;
-	}
+	//}
 	addToChatBoxHistory(colouredString, colour);
+
 	chatLastUse = getCurrentUnixTimestamp();
 }
 

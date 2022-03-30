@@ -220,18 +220,13 @@ function onFocus(event) {
 // ===========================================================================
 
 function onLocalPlayerSwitchWeapon(oldWeapon, newWeapon) {
+
 }
 
 // ===========================================================================
 
 function onCameraProcess(event) {
-}
 
-// ===========================================================================
-
-function onChatOutput(event, messageText, colour) {
-	//event.preventDefault();
-	//receiveChatBoxMessageFromServer(messageText, colour);
 }
 
 // ===========================================================================

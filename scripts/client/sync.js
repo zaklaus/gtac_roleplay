@@ -390,26 +390,46 @@ function syncElementProperties(element) {
 		}
 	}
 
-	switch(element.type) {
-		case ELEMENT_VEHICLE:
-			syncVehicleProperties(element);
-			break;
+	if(getGame() == VRR_GAME_MAFIA_ONE) {
+		switch(element.type) {
+			case ELEMENT_VEHICLE:
+				syncVehicleProperties(element);
+				break;
 
-		case ELEMENT_PED:
-			syncCivilianProperties(element);
-			break;
+			case ELEMENT_PED:
+				syncCivilianProperties(element);
+				break;
 
-		case ELEMENT_PLAYER:
-			syncPlayerProperties(element);
-			break;
+			case ELEMENT_PLAYER:
+				syncPlayerProperties(element);
+				break;
 
-		case ELEMENT_OBJECT:
-			syncObjectProperties(element);
-			break;
+			default:
+				break;
+		}
+	} else {
+		switch(element.type) {
+			case ELEMENT_VEHICLE:
+				syncVehicleProperties(element);
+				break;
 
-		default:
-			break;
+			case ELEMENT_PED:
+				syncCivilianProperties(element);
+				break;
+
+			case ELEMENT_PLAYER:
+				syncPlayerProperties(element);
+				break;
+
+			case ELEMENT_OBJECT:
+				syncObjectProperties(element);
+				break;
+
+			default:
+				break;
+		}
 	}
+
 }
 
 

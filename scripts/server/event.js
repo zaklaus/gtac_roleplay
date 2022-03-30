@@ -117,9 +117,8 @@ function onPlayerQuit(event, client, quitReasonId) {
 // ===========================================================================
 
 async function onPlayerChat(event, client, messageText) {
-	event.preventDefault();
-
 	processPlayerChat(client, messageText);
+	event.preventDefault();
 }
 
 // ===========================================================================
@@ -397,7 +396,16 @@ function onPlayerDeath(client, position) {
 				client.despawnPlayer();
 				getPlayerCurrentSubAccount(client).interior = closestJail.interior;
 				getPlayerCurrentSubAccount(client).dimension = closestJail.dimension;
-				spawnPlayer(client, closestJail.position, closestJail.heading, getGameConfig().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
+
+				if(isPlayerWorking(client)) {
+					stopWorking(client);
+				}
+
+				if(getGame() == VRR_GAME_MAFIA_ONE) {
+					spawnPlayer(client, getGameConfig().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0], closestJail.position, closestJail.heading);
+				} else {
+					spawnPlayer(client, closestJail.position, closestJail.heading, getGameConfig().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
+				}
 
 				if(isFadeCameraSupported()) {
 					fadeCamera(client, true, 1.0);
@@ -410,7 +418,16 @@ function onPlayerDeath(client, position) {
 				client.despawnPlayer();
 				getPlayerCurrentSubAccount(client).interior = closestHospital.interior;
 				getPlayerCurrentSubAccount(client).dimension = closestHospital.dimension;
-				spawnPlayer(client, closestHospital.position, closestHospital.heading, getGameConfig().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
+
+				if(isPlayerWorking(client)) {
+					stopWorking(client);
+				}
+
+				if(getGame() == VRR_GAME_MAFIA_ONE) {
+					spawnPlayer(client, getGameConfig().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0], closestHospital.position, closestHospital.heading);
+				} else {
+					spawnPlayer(client, closestHospital.position, closestHospital.heading, getGameConfig().skins[getGame()][getPlayerCurrentSubAccount(client).skin][0]);
+				}
 
 				if(isFadeCameraSupported()) {
 					fadeCamera(client, true, 1.0);
@@ -600,6 +617,14 @@ function onPlayerSpawn(client) {
 	}
 
 	getPlayerData(client).payDayTickStart = sdl.ticks;
+}
+
+// ===========================================================================
+
+function onPlayerCommand(event, client, command) {
+	if(!doesCommandExist(command)) {
+		processPlayerCommand(command, params, client);
+	}
 }
 
 // ===========================================================================

@@ -275,7 +275,7 @@ function checkNewCharacter(client, firstName, lastName) {
 	lastName = lastName.trim();
 
 	if(doesNameContainInvalidCharacters(firstName) || doesNameContainInvalidCharacters(lastName)) {
-		logToConsole(LOG_WARN, `[VRR.Account] Subaccount ${firstName} ${lastName} could not be created (invalid characters in name)`);
+		logToConsole(LOG_INFO|LOG_WARN, `[VRR.Account] Subaccount ${firstName} ${lastName} could not be created (invalid characters in name)`);
 		showPlayerNewCharacterFailedGUI(client, "Invalid characters in name!");
 		return false;
 	}
@@ -371,7 +371,7 @@ function selectCharacter(client, characterId = -1) {
 	//setPlayerCameraLookAt(client, getPosBehindPos(spawnPosition, spawnHeading, 5), spawnPosition);
 	getPlayerData(client).pedState = VRR_PEDSTATE_SPAWNING;
 
-	if(getGame() < VRR_GAME_GTA_IV) {
+	if(getGame() <= VRR_GAME_GTA_SA) {
 		spawnPlayer(client, spawnPosition, spawnHeading, getGameConfig().skins[getGame()][skin][0], spawnInterior, spawnDimension);
 	} else if(getGame() == VRR_GAME_GTA_IV) {
 		spawnPlayer(client, spawnPosition, spawnHeading, getGameConfig().skins[getGame()][skin][0], spawnInterior, spawnDimension);
@@ -382,7 +382,9 @@ function selectCharacter(client, characterId = -1) {
 		//setPlayerInterior(client, spawnInterior);
 		//setPlayerDimension(client, spawnDimension);
 		//restorePlayerCamera(client);
-	} else if(getGame() >= VRR_GAME_MAFIA_ONE) {
+	} else if(getGame() == VRR_GAME_MAFIA_ONE) {
+		//spawnPlayer(client, spawnPosition, spawnHeading, getGameConfig().skins[getGame()][skin][0]);
+		logToConsole(LOG_DEBUG, `[VRR.SubAccount] Spawning ${getPlayerDisplayForConsole(client)} as ${getGameConfig().skins[getGame()][skin][1]} (${getGameConfig().skins[getGame()][skin][0]})`);
 		spawnPlayer(client, getGameConfig().skins[getGame()][skin][0], spawnPosition, spawnHeading);
 	}
 

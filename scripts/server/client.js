@@ -137,7 +137,7 @@ function playerClientStopped(client) {
 
 // ===========================================================================
 
-function showGameMessage(client, text, colour, duration) {
+function showGameMessage(client, text, colour, duration, fontName = "Pricedown") {
 	logToConsole(LOG_DEBUG, `[VRR.Client] Showing game message to ${getPlayerDisplayForConsole(client)} (${text}) for ${duration} milliseconds`);
 	sendNetworkEventToPlayer("vrr.smallGameMessage", client, text, colour, duration);
 }
@@ -210,7 +210,7 @@ function setPlayer2DRendering(client, hudState = false, labelState = false, smal
 
 function syncPlayerProperties(client) {
 	logToConsole(LOG_DEBUG, `[VRR.Client] Sending signal to sync ${getPlayerDisplayForConsole(client)}'s player ped properties`);
-	sendNetworkEventToPlayer("vrr.player.sync", null, client.player);
+	sendNetworkEventToPlayer("vrr.syncElement", null, client.player.id);
 }
 
 // ===========================================================================

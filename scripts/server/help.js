@@ -353,7 +353,7 @@ function showCommandHelpMessage(client, commandName) {
 	let aliases = getCommandAliasesNames(command);
 
 	messagePlayerInfo(client, makeChatBoxSectionHeader(getLocaleString(client, "HeaderCommandInfo", commandName)));
-	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Description: ${command.description}`);
+	messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Description: ${command.helpDescription}`);
 
 	if(aliases.length > 0) {
 		messagePlayerNormal(client, `{clanOrange}• {MAINCOLOUR}Aliases: ${aliases.join(", ")}`);

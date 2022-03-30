@@ -7,6 +7,19 @@
 // TYPE: Server (JavaScript)
 // ===========================================================================
 
+let builtInCommands = [
+	"refresh",
+	"restart",
+	"stop",
+	"start",
+	"reconnect",
+	"setname",
+	"connect",
+	"disconnect",
+	"say",
+	"dumpdoc",
+];
+
 // ===========================================================================
 
 function getPlayerPosition(client) {

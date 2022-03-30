@@ -1018,7 +1018,7 @@ class VehicleData {
 };
 
 /**
- * @class Representing a command's data. Loaded and saved in the database
+ * @class Representing a command's data.
  */
 class CommandData {
 	enable() {
@@ -1033,7 +1033,7 @@ class CommandData {
 		this.enabled = !this.enabled;
 	}
 
-	constructor(command, handlerFunction, syntaxString, requiredStaffFlags, requireLogin, allowOnDiscord, helpDescription) {
+	constructor(command, handlerFunction, syntaxString = "", requiredStaffFlags = 0, requireLogin = true, allowOnDiscord = false, helpDescription = "") {
 		this.command = command;
 		this.handlerFunction = handlerFunction;
 		this.syntaxString = syntaxString;
@@ -1486,6 +1486,10 @@ class NPCData {
 		this.armour = 100;
 		this.currentAction = VRR_NPCACTION_NONE;
 		this.triggers = [];
+		this.typeFlags = 0;
+		this.heedThreats = false;
+		this.threats = 0;
+		this.invincible = false;
 
 		this.bodyParts = {
 			hair: [0,0],
@@ -1529,6 +1533,10 @@ class NPCData {
 			this.fightStyle = toInteger(dbAssoc["npc_fightstyle"]);
 			this.health = toInteger(dbAssoc["npc_health"]);
 			this.armour = toInteger(dbAssoc["npc_armour"]);
+			this.typeFlags = toInteger(dbAssoc["npc_type_flags"]);
+			this.heedThreats = intToBool(dbAssoc["npc_headthreats"]);
+			this.threats = toInteger(dbAssoc["npc_threats"]);
+			this.invincible = intToBool(dbAssoc["npc_invincible"]);
 
 			this.bodyParts = {
 				hair: [toInteger(dbAssoc["npc_hd_part_hair_model"]) || 0, toInteger(dbAssoc["npc_hd_part_hair_texture"]) || 0],

@@ -17,12 +17,12 @@ function initNPCScript() {
 // ===========================================================================
 
 /**
- * @param {Ped} ped - The data index of the NPC
+ * @param {Number} npcId - The data index of the NPC
  * @return {NPCData} The NPC's data (class instancee)
  */
-function getNPCData(ped) {
-	if(ped.getData("vrr.dataIndex")) {
-		return ped.getData("vrr.dataIndex");
+function getNPCData(npcId) {
+	if(typeof getServerData().npcs[npcId] != "undefined") {
+		return getServerData().npcs[npcId];
 	}
 	return false;
 }
@@ -52,6 +52,7 @@ function createNPCCommand(client, command, params) {
 	let npcIndex = getServerData().npcs.push(tempNPCData);
 
 	spawnNPC(npcIndex-1);
+	setAllNPCDataIndexes();
 }
 
 // ===========================================================================
@@ -196,9 +197,17 @@ function saveNPCToDatabase(npcDataId) {
 			}
 		}
 
+		let safeAnimationName = escapeDatabaseString(tempNPCData.animationName);
+		let safeFirstName = escapeDatabaseString(tempNPCData.firstName);
+		let safeLastName = escapeDatabaseString(tempNPCData.lastName);
+		let safeMiddleName = escapeDatabaseString(tempNPCData.middleName);
+
 		let data = [
 			["npc_server", getServerId()],
 			["npc_skin", toInteger(tempNPCData.model)],
+			["npc_name_first", safeFirstName],
+			["npc_name_middle", safeMiddleName],
+			["npc_name_last", safeLastName],
 			["npc_owner_type", toInteger(tempNPCData.ownerType)],
 			["npc_owner_id", toInteger(tempNPCData.ownerId)],
 			["npc_pos_x", toFloat(tempNPCData.position.x)],
@@ -208,6 +217,14 @@ function saveNPCToDatabase(npcDataId) {
 			["npc_scale_x", toFloat(tempNPCData.scale.x)],
 			["npc_scale_y", toFloat(tempNPCData.scale.y)],
 			["npc_scale_z", toFloat(tempNPCData.scale.z)],
+			["npc_animation", safeAnimationName],
+			["npc_health", toInteger(tempNPCData.health)],
+			["npc_armour", toInteger(tempNPCData.armour)],
+			["npc_invincible", boolToInt(tempNPCData.invincible)],
+			["npc_heedthreats", boolToInt(tempNPCData.heedThreats)],
+			["npc_threats", toInteger(tempNPCData.threats)],
+			["npc_stay", boolToInt(tempNPCData.stay)],
+			["npc_type_flags", toInteger(tempNPCData.typeFlags)],
 		];
 
 		let dbQuery = null;
@@ -273,3 +290,35 @@ function spawnAllNPCs() {
 }
 
 // ===========================================================================
+
+function deleteNPCCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, command);
+		return false;
+	}
+
+	let closestNPC = getClosestNPC(client);
+
+	if(!getNPCData(closestNPC)) {
+		messagePlayerError(client, getLocaleString(client, "InvalidNPC"));
+		return false;
+	}
+
+	let npcName = getNPCData(closestNPC).name;
+
+	deleteNPC(closestNPC);
+	messageAdmins(`${client.name} deleted NPC ${npcName}`)
+}
+
+function deleteNPC(npcId) {
+	quickDatabaseQuery(`DELETE FROM npc_main WHERE npc_id=${getNPCData(npcId).databaseId}`);
+
+	if(getNPCData(npcId)) {
+		if(getNPCData(npcId).ped != false) {
+			deleteEntity(getNPCData(npcId).ped);
+		}
+		delete getServerData().npcs[npcId];
+	}
+
+	setAllNPCDataIndexes();
+}

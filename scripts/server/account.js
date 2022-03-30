@@ -1180,6 +1180,12 @@ function initClient(client) {
 					} else {
 						logToConsole(LOG_DEBUG, `[VRR.Account] ${getPlayerDisplayForConsole(client)} is being shown the login message (GUI disabled).`);
 						messagePlayerNormal(client, getLocaleString(client, "WelcomeBack", getServerName(), getPlayerName(client), "/login"),getColourByName("softGreen"));
+
+						//if(checkForGeoIPModule()) {
+						//	let iso = module.geoip.getCountryISO(client.ip);
+						//	let localeId = getLocaleFromCountryISO(iso);
+						//}
+						//showGameMessage(client, getLocaleString(client, "LocaleOffer", `/lang ${getLocaleData(localeId)[2]}`), getColourByName("white"), 10000, "Roboto");
 					}
 					playRadioStreamForPlayer(client, getServerIntroMusicURL(), true, getPlayerStreamingRadioVolume(client));
 				}

@@ -1416,11 +1416,11 @@ function logToConsole(tempLogLevel, text) {
 		text = removeColoursInMessage(text);
 	}
 
-	if((logLevel & tempLogLevel) || logLevel == LOG_ALL) {
-		if(tempLogLevel == LOG_ERROR) {
+	if((logLevel & tempLogLevel)) {
+		if(tempLogLevel & LOG_ERROR) {
 			console.error(text);
 			return true;
-		} else if(tempLogLevel == LOG_WARN) {
+		} else if(tempLogLevel & LOG_WARN) {
 			console.warn(text);
 			return true;
 		} else {
@@ -2335,34 +2335,51 @@ function ArrayBufferToString(buffer) {
 // ===========================================================================
 
 function getElementTypeName(typeId) {
-	switch(typeId) {
-		case ELEMENT_VEHICLE:
-			return "Vehicle";
+	if(getGame() == VRR_GAME_MAFIA_ONE) {
+		switch(typeId) {
+			case ELEMENT_VEHICLE:
+				return "Vehicle";
 
-		case ELEMENT_OBJECT:
-			return "Object";
+			case ELEMENT_PED:
+				return "Ped";
 
-		case ELEMENT_PED:
-			return "Ped";
+			case ELEMENT_PLAYER:
+				return "Player Ped";
 
-		case ELEMENT_PLAYER:
-			return "Player Ped";
+			default:
+				return "Unknown"
+		}
+	} else {
+		switch(typeId) {
+			case ELEMENT_VEHICLE:
+				return "Vehicle";
 
-		case ELEMENT_PICKUP:
-			return "Pickup";
+			case ELEMENT_OBJECT:
+				return "Object";
 
-		case ELEMENT_BLIP:
-			return "Blip";
+			case ELEMENT_PED:
+				return "Ped";
 
-		case ELEMENT_MARKER:
-			return "Marker";
+			case ELEMENT_PLAYER:
+				return "Player Ped";
 
-		case ELEMENT_BUILDING:
-			return "Building";
+			case ELEMENT_PICKUP:
+				return "Pickup";
 
-		default:
-			return "Unknown"
+			case ELEMENT_BLIP:
+				return "Blip";
+
+			case ELEMENT_MARKER:
+				return "Marker";
+
+			case ELEMENT_BUILDING:
+				return "Building";
+
+			default:
+				return "Unknown"
+		}
 	}
+
 
 	return "Unknown";
 }
@@ -2774,6 +2791,13 @@ function replaceEmojiInString(messageString) {
 		}
 	}
 	return messageString;
+}
+
+// ===========================================================================
+
+function isWeekend() {
+	let d = new Date();
+	return d.getDay() == 6 || d.getDay() == 0;
 }
 
 // ===========================================================================

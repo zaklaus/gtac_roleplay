@@ -31,6 +31,7 @@ let serverData = {
 	localeStrings: {},
 	cachedTranslations: [],
 	cachedTranslationFrom: [],
+	triggers: [],
 };
 
 // ===========================================================================

@@ -549,6 +549,8 @@ class BusinessData {
 
 		this.labelHelpType = VRR_PROPLABEL_INFO_NONE;
 
+		this.triggers = [];
+
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["biz_id"]);
 			this.name = toString(dbAssoc["biz_name"]);
@@ -682,6 +684,8 @@ class HouseData {
 		this.exitCutscene = "";
 
 		this.streamingRadioStation = -1;
+
+		this.triggers = [];
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["house_id"]);
@@ -948,6 +952,8 @@ class VehicleData {
 		this.dimension = 0;
 
 		this.lastActiveTime = false;
+
+		this.triggers = [];
 
 		if(dbAssoc) {
 			// General Info
@@ -1510,6 +1516,8 @@ class NPCData {
 			leftFoot: [0,0],
 			rightFoot: [0,0],
 		};
+
+		this.triggers = [];
 
 		if(dbAssoc) {
 			this.databaseId = toInteger(dbAssoc["npc_id"]);

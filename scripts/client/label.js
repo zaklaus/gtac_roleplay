@@ -116,18 +116,18 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 		switch(labelInfoType) {
 			case VRR_PROPLABEL_INFO_ENTER:
 				if(enterPropertyKey) {
-					infoText = `Press ${toUpperCase(getKeyNameFromId(enterPropertyKey))} to enter`;
+					infoText = getLocaleString("PropertyEnterCommandLabel");
 				} else {
-					infoText = `Use /enter to enter`;
+					infoText = getLocaleString("PropertyEnterKeyPressLabel");
 				}
 				break;
 
 			case VRR_PROPLABEL_INFO_BUY:
-				infoText = `Use /buy to purchase items`;
+				infoText = getLocaleString("BuyBusinessItemsLabel");
 				break;
 
 			case VRR_PROPLABEL_INFO_BUYBIZ:
-				infoText = `Use /buy to purchase items`;
+				infoText = getLocaleString("BuyBusinessLabel");
 				break;
 
 			//case VRR_PROPLABEL_INFO_RENTBIZ:
@@ -135,15 +135,15 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 			//    break;
 
 			case VRR_PROPLABEL_INFO_BUYHOUSE:
-				infoText = `Use /housebuy to buy this house`;
+				infoText = getLocaleString("BuyHouseLabel");
 				break;
 
 			case VRR_PROPLABEL_INFO_RENTHOUSE:
-				infoText = `Use /houserent to rent this house`;
+				infoText = getLocaleString("RentHouseLabel");
 				break;
 
 			case VRR_PROPLABEL_INFO_ENTERVEH:
-				infoText = "Enter a vehicle in the parking lot to buy it";
+				infoText = getLocaleString("VehicleDealershipLabel");
 				break;
 
 			case VRR_PROPLABEL_INFO_NONE:

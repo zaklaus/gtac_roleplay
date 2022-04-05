@@ -23,8 +23,8 @@ let smallGameMessageTimer = null;
 
 function initMessagingScript() {
 	logToConsole(LOG_DEBUG, "[VRR.Messaging]: Initializing messaging script ...");
-	smallGameMessageFont = loadSmallGameMessageFonts();
-	bigGameMessageFont = loadSmallGameMessageFonts();
+	smallGameMessageFonts = loadSmallGameMessageFonts();
+	bigGameMessageFonts = loadSmallGameMessageFonts();
 	logToConsole(LOG_DEBUG, "[VRR.Messaging]: Messaging script initialized!");
 }
 
@@ -66,7 +66,7 @@ function processSmallGameMessageRendering() {
 	if(renderSmallGameMessage) {
 		if(smallGameMessageText != "") {
 			if(smallGameMessageFonts[smallGameMessageFontName] != null) {
-				smallGameMessageFonts[smallGameMessageFontName].render(smallGameMessageText, [0, game.height-90], game.width, 0.5, 0.0, smallGameMessageFont[smallGameMessageFontName].size, smallGameMessageColour, true, true, false, true);
+				smallGameMessageFonts[smallGameMessageFontName].render(smallGameMessageText, [0, game.height-90], game.width, 0.5, 0.0, smallGameMessageFonts[smallGameMessageFontName].size, smallGameMessageColour, true, true, false, true);
 			}
 		}
 	}

@@ -439,5 +439,7 @@
 	"LostMoneyFromTaxes": "You lost money since your taxes are more than your paycheck!",
 	"NextPaycheckRepossessionWarning": "If you don't have enough cash to cover taxes on next paycheck, you will lose stuff!",
 	"NotEnoughMoneyForTax": "You don't have enough money to cover your taxes!",
-	"AssetsRepossessedForTax": "You lost {1} vehicles, {2} houses, and {3} businesses because you couldn't pay taxes!"
+	"AssetsRepossessedForTax": "You lost {1} vehicles, {2} houses, and {3} businesses because you couldn't pay taxes!",
+	"Closed": "Closed",
+    "Open": "Open"
 }

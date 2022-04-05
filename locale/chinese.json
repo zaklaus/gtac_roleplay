@@ -435,5 +435,7 @@
 	"LostMoneyFromTaxes": "你应缴纳的税款超过了你的薪水！",
 	"NextPaycheckRepossessionWarning": "若无足够的现金来支付下一份薪水的税款，你将失去一些资产！",
 	"NotEnoughMoneyForTax": "没有足够的现金来支付税款",
-	"AssetsRepossessedForTax": "因未缴纳税款，你已失去 {1} 辆车，{2} 处住宅，{3} 处企业！"
+	"AssetsRepossessedForTax": "因未缴纳税款，你已失去 {1} 辆车，{2} 处住宅，{3} 处企业！",
+	"Closed": "Closed",
+    "Open": "Open"
 }

@@ -621,8 +621,8 @@ function loginSuccess(client) {
 	getPlayerData(client).accountData.ipAddress = client.ip;
 
 	sendPlayerChatScrollLines(client, getPlayerData(client).accountData.chatScrollLines);
-
 	messagePlayerNormal(null, `👋 ${getPlayerName(client)} has joined the server`, getColourByName("softYellow"));
+	messageDiscordChatChannel(`👋 ${getPlayerName(client)} has joined the server`);
 }
 
 // ===========================================================================

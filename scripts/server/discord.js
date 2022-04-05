@@ -88,53 +88,35 @@ function getDiscordUserData(discordUserId) {
 
 // ===========================================================================
 
-function messageDiscordChatChannel(message) {
+function messageDiscordChatChannel(messageString) {
 	if(!getServerConfig().discordConfig.sendChat) {
 		return false;
 	}
 
-	message = removeColoursInMessage(message);
-	console.warn(message);
-	let payloadData = {
-		"username": "Chat",
-		"content": message,
-	};
-
-	triggerWebHook(getServerConfig().discordConfig.chatChannelWebHookURL, JSON.stringify(payloadData));
+	messageString = removeColoursInMessage(messageString);
+	triggerWebHook(getServerConfig().discord.logWebHookURL, JSON.stringify(messageString));
 }
 
 // ===========================================================================
 
-function messageDiscordAdminChannel(message) {
-	if(!getServerConfig().discordConfig.sendAdminEvents) {
+function messageDiscordAdminChannel(messageString) {
+	if(!getServerConfig().discordConfig.sendAdmin) {
 		return false;
 	}
 
-	message = removeColoursInMessage(message);
-	console.warn(message);
-	let payloadData = {
-		"username": "Admin Event",
-		"content": message,
-	};
-
-	triggerWebHook(getServerConfig().discordConfig.adminChannelWebHookURL, JSON.stringify(payloadData));
+	messageString = removeColoursInMessage(messageString);
+	triggerWebHook(getServerConfig().discord.adminWebHookURL, JSON.stringify(messageString));
 }
 
 // ===========================================================================
 
-function messageDiscordEventChannel(message) {
+function messageDiscordEventChannel(messageString) {
 	if(!getServerConfig().discordConfig.sendEvents) {
 		return false;
 	}
 
-	message = removeColoursInMessage(message);
-	console.warn(message);
-	let payloadData = {
-		"username": "Event",
-		"content": message,
-	};
-
-	triggerWebHook(getServerConfig().discordConfig.eventChannelWebHookURL, JSON.stringify(payloadData));
+	messageString = removeColoursInMessage(messageString);
+	triggerWebHook(getServerConfig().discord.logWebHookURL, JSON.stringify(messageString));
 }
 
 // ===========================================================================

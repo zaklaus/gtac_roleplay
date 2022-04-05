@@ -39,6 +39,7 @@ function processPlayerChat(client, messageText) {
 
 		messageText = messageText.substring(0, 128);
 		messagePlayerNormal(null, `💬 ${getCharacterFullName(client)}: ${messageText}`);
+		messageDiscordChatChannel(`💬 ${getCharacterFullName(client)}: ${messageText}`);
 	} else {
 		messagePlayerNormal(null, `🛡️ (ADMIN) - ${messageText}`);
 	}

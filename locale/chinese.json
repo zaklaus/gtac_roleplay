@@ -437,5 +437,11 @@
 	"NotEnoughMoneyForTax": "没有足够的现金来支付税款",
 	"AssetsRepossessedForTax": "因未缴纳税款，你已失去 {1} 辆车，{2} 处住宅，{3} 处企业！",
 	"Closed": "Closed",
-    "Open": "Open"
+    "Open": "Open",
+	"VehicleDealershipLabel": "Enter a vehicle as driver to buy it",
+	"TakeJobLabel": "Use /takejob to work here",
+	"StartWorkLabel": "Use /startwork to start working",
+	"JobEquipAndUniformLabel": "Use /uniform and /equip for job stuff, or /stopwork to stop working",
+	"NotYourJobLabel": "You already have a different job. Use /quitjob if you want this one",
+	"JobLabel": "{1} Job"
 }

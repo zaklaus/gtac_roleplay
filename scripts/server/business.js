@@ -2251,7 +2251,7 @@ function buyFromBusinessCommand(command, params, client) {
 	//messagePlayerSuccess(client, `You bought ${amount} {ALTCOLOUR}${itemName} {MAINCOLOUR}for ${totalCost} ${priceEach}`);
 	meActionToNearbyPlayers(client, `buys a ${itemName}`);
 
-	if(!doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand("inv")) {
+	if(doesPlayerHaveKeyBindsDisabled(client) && doesPlayerHaveKeyBindForCommand("inv")) {
 		let keyData = getPlayerKeyBindForCommand("inv");
 		messagePlayerNewbieTip(client, getLocaleString(client, "ViewInventoryKeyPressTip", `{ALTCOLOUR}${getKeyNameFromId(keyData.key)}{MAINCOLOUR}`));
 	} else {

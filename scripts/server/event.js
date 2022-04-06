@@ -38,7 +38,7 @@ function addAllEventHandlers() {
 	addEventHandler("onPedEnteringVehicle", onPedEnteringVehicle);
 	addEventHandler("onPedExitingVehicle", onPedExitingVehicle);
 
-	addEventHandler("OnPlayerCommand", onPlayerCommand);
+	//addEventHandler("OnPlayerCommand", onPlayerCommand);
 }
 
 // ===========================================================================
@@ -623,7 +623,7 @@ function onPlayerSpawn(client) {
 
 // ===========================================================================
 
-function onPlayerCommand(event, client, command) {
+function onPlayerCommand(event, client, command, params) {
 	if(!doesCommandExist(command)) {
 		processPlayerCommand(command, params, client);
 	}

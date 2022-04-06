@@ -570,6 +570,8 @@ function onPlayerSpawn(client) {
 		sendPlayerEnterPropertyKey(client, keyId.key);
 	}
 
+	sendPlayerLocaleStrings(client);
+
 	//if(isGTAIV()) {
 	//    setEntityData(client.player, "vrr.bodyPartHair", getPlayerCurrentSubAccount(client).bodyParts.hair, true);
 	//    setEntityData(client.player, "vrr.bodyPartHead", getPlayerCurrentSubAccount(client).bodyParts.head, true);

@@ -92,6 +92,9 @@ function addAllNetworkHandlers() {
 	// House
 	addNetworkEventHandler("vrr.house", receiveHouseFromServer);
 
+	// Locale
+	addNetworkEventHandler("vrr.localeString", receiveLocaleStringFromServer);
+
 	// Misc
 	addNetworkEventHandler("vrr.mouseCursor", toggleMouseCursor);
 	addNetworkEventHandler("vrr.mouseCamera", toggleMouseCamera);

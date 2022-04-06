@@ -123,11 +123,11 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 				break;
 
 			case VRR_PROPLABEL_INFO_BUY:
-				infoText = getLocaleString("BuyBusinessItemsLabel");
+				infoText = getLocaleString("BusinessBuyItemsLabel");
 				break;
 
 			case VRR_PROPLABEL_INFO_BUYBIZ:
-				infoText = getLocaleString("BuyBusinessLabel");
+				infoText = getLocaleString("PropertyForSaleLabel");
 				break;
 
 			//case VRR_PROPLABEL_INFO_RENTBIZ:
@@ -135,11 +135,11 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 			//    break;
 
 			case VRR_PROPLABEL_INFO_BUYHOUSE:
-				infoText = getLocaleString("BuyHouseLabel");
+				infoText = getLocaleString("PropertyForSaleLabel");
 				break;
 
 			case VRR_PROPLABEL_INFO_RENTHOUSE:
-				infoText = getLocaleString("RentHouseLabel");
+				infoText = getLocaleString("PropertyForRentLabel");
 				break;
 
 			case VRR_PROPLABEL_INFO_ENTERVEH:
@@ -222,15 +222,15 @@ function renderJobLabel(name, position, jobType) {
 	let text = "";
 	if(jobType == localPlayerJobType) {
 		if(localPlayerWorking) {
-			text = "Use /uniform and /equip for job stuff, or /stopwork to go off duty";
+			text = getLocaleString("JobEquipAndUniformLabel");
 		} else {
-			text = "Use /startwork to go on duty";
+			text = getLocaleString("StartWorkLabel");
 		}
 	} else {
 		if(localPlayerJobType == 0) {
-			text = "Use /takejob to work here";
+			text = getLocaleString("TakeJobLabel");
 		} else {
-			text = "You already have a job. Use /quitjob if you want this one";
+			text = getLocaleString("NotYourJobLabel");
 		}
 	}
 

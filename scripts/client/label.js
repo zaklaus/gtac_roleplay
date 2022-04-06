@@ -78,9 +78,26 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 		return false;
 	}
 
+	if(getGame() == VRR_GAME_GTA_IV) {
+		if(!natives.doesViewportExist(natives.getGameViewportId())) {
+			logToConsole(LOG_INFO, "[VRR.Label]: Game viewport does not exist!");
+			return false;
+		}
+
+		if(!natives.isViewportActive(natives.getGameViewportId())) {
+			logToConsole(LOG_INFO, "[VRR.Label]: Game viewport is not active!");
+			return false;
+		}
+	}
+
 	let tempPosition = position;
 	tempPosition.z = tempPosition.z + propertyLabelHeight;
-	let screenPosition = getScreenFromWorldPosition(tempPosition);
+	let screenPosition = new Vec3(0.0, 0.0, 0.0);
+	if(getGame() == VRR_GAME_GTA_IV) {
+		screenPosition = natives.getViewportPositionOfCoord(tempPosition, natives.getGameViewportId());
+	} else {
+		screenPosition = getScreenFromWorldPosition(tempPosition);
+	}
 
 	if(screenPosition.x < 0 || screenPosition.x > game.width) {
 		return false;
@@ -88,7 +105,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 
 	let text = "";
 	if(price > "0") {
-		text = `For sale: $${price}`;
+		text = getLocaleString("PropertyForSaleLabel", price);
 		let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
 		propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(200, 200, 200, 255), false, true, false, true);
 
@@ -97,7 +114,7 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 
 	text = "";
 	if(rentPrice != "0") {
-		text = `For rent: $${rentPrice} every payday`;
+		text = getLocaleString("PropertyForRentLabel", rentPrice);
 		let size = propertyLabelLockedFont.measure(text, game.width, 0.0, 0.0, propertyLabelLockedFont.size, true, true);
 		propertyLabelLockedFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, propertyLabelLockedFont.size, toColour(200, 200, 200, 255), false, true, false, true);
 
@@ -106,9 +123,9 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 
 
 	if(isBusiness) {
-		text = (locked) ? "CLOSED" : "OPEN";
+		text = (locked) ? toUpperCase(getLocaleString("Closed")) : toUpperCase(getLocaleString("Open"));
 	} else {
-		text = (locked) ? "LOCKED" : "UNLOCKED";
+		text = (locked) ? toUpperCase(getLocaleString("Locked")) : toUpperCase(getLocaleString("Unlocked"));
 	}
 
 	if(!locked && labelInfoType != VRR_PROPLABEL_INFO_NONE) {
@@ -116,18 +133,18 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 		switch(labelInfoType) {
 			case VRR_PROPLABEL_INFO_ENTER:
 				if(enterPropertyKey) {
-					infoText = getLocaleString("PropertyEnterCommandLabel");
+					infoText = getLocaleString("PropertyEnterCommandLabel", "/enter");
 				} else {
-					infoText = getLocaleString("PropertyEnterKeyPressLabel");
+					infoText = getLocaleString("PropertyEnterKeyPressLabel", getKeyNameFromId(enterPropertyKey));
 				}
 				break;
 
 			case VRR_PROPLABEL_INFO_BUY:
-				infoText = getLocaleString("BusinessBuyItemsLabel");
+				infoText = getLocaleString("BusinessBuyItemsLabel", "/buy");
 				break;
 
 			case VRR_PROPLABEL_INFO_BUYBIZ:
-				infoText = getLocaleString("PropertyForSaleLabel");
+				infoText = getLocaleString("PropertyForSaleLabel", price);
 				break;
 
 			//case VRR_PROPLABEL_INFO_RENTBIZ:
@@ -135,11 +152,11 @@ function renderPropertyEntranceLabel(name, position, locked, isBusiness, price, 
 			//    break;
 
 			case VRR_PROPLABEL_INFO_BUYHOUSE:
-				infoText = getLocaleString("PropertyForSaleLabel");
+				infoText = getLocaleString("PropertyForSaleLabel", price);
 				break;
 
 			case VRR_PROPLABEL_INFO_RENTHOUSE:
-				infoText = getLocaleString("PropertyForRentLabel");
+				infoText = getLocaleString("PropertyForRentLabel", rentPrice);
 				break;
 
 			case VRR_PROPLABEL_INFO_ENTERVEH:
@@ -183,9 +200,26 @@ function renderPropertyExitLabel(position) {
 		return false;
 	}
 
+	if(getGame() == VRR_GAME_GTA_IV) {
+		if(!natives.doesViewportExist(natives.getGameViewportId())) {
+			logToConsole(LOG_INFO, "[VRR.Label]: Game viewport does not exist!");
+			return false;
+		}
+
+		if(!natives.isViewportActive(natives.getGameViewportId())) {
+			logToConsole(LOG_INFO, "[VRR.Label]: Game viewport is not active!");
+			return false;
+		}
+	}
+
 	let tempPosition = position;
 	tempPosition.z = tempPosition.z + propertyLabelHeight;
-	let screenPosition = getScreenFromWorldPosition(tempPosition);
+	let screenPosition = new Vec3(0.0, 0.0, 0.0);
+	if(getGame() == VRR_GAME_GTA_IV) {
+		screenPosition = natives.getViewportPositionOfCoord(tempPosition, natives.getGameViewportId());
+	} else {
+		screenPosition = getScreenFromWorldPosition(tempPosition);
+	}
 
 	if(screenPosition.x < 0 || screenPosition.x > game.width) {
 		return false;
@@ -211,9 +245,26 @@ function renderJobLabel(name, position, jobType) {
 		return false;
 	}
 
+	if(getGame() == VRR_GAME_GTA_IV) {
+		if(!natives.doesViewportExist(natives.getGameViewportId())) {
+			logToConsole(LOG_INFO, "[VRR.Label]: Game viewport does not exist!");
+			return false;
+		}
+
+		if(!natives.isViewportActive(natives.getGameViewportId())) {
+			logToConsole(LOG_INFO, "[VRR.Label]: Game viewport is not active!");
+			return false;
+		}
+	}
+
 	let tempPosition = position;
 	tempPosition.z = tempPosition.z + propertyLabelHeight;
-	let screenPosition = getScreenFromWorldPosition(tempPosition);
+	let screenPosition = new Vec3(0.0, 0.0, 0.0);
+	if(getGame() == VRR_GAME_GTA_IV) {
+		screenPosition = natives.getViewportPositionOfCoord(tempPosition, natives.getGameViewportId());
+	} else {
+		screenPosition = getScreenFromWorldPosition(tempPosition);
+	}
 
 	if(screenPosition.x < 0 || screenPosition.x > game.width) {
 		return false;
@@ -222,15 +273,15 @@ function renderJobLabel(name, position, jobType) {
 	let text = "";
 	if(jobType == localPlayerJobType) {
 		if(localPlayerWorking) {
-			text = getLocaleString("JobEquipAndUniformLabel");
+			text = getLocaleString("JobEquipAndUniformLabel", "/equip", "/uniform", "/stopwork");
 		} else {
-			text = getLocaleString("StartWorkLabel");
+			text = getLocaleString("StartWorkLabel", "/startwork");
 		}
 	} else {
 		if(localPlayerJobType == 0) {
-			text = getLocaleString("TakeJobLabel");
+			text = getLocaleString("TakeJobLabel", "/takejob");
 		} else {
-			text = getLocaleString("NotYourJobLabel");
+			text = getLocaleString("NotYourJobLabel", "/quitjob");
 		}
 	}
 
@@ -239,7 +290,7 @@ function renderJobLabel(name, position, jobType) {
 
 	screenPosition.y -= 18;
 
-	text = name + " Job";
+	text = getLocaleString("JobLabel", name);
 	size = jobNameLabelFont.measure(text, game.width, 0.0, 0.0, jobNameLabelFont.size, true, true);
 	jobNameLabelFont.render(text, [screenPosition.x-size[0]/2, screenPosition.y-size[1]/2], game.width, 0.0, 0.0, jobNameLabelFont.size, COLOUR_WHITE, false, true, false, true);
 }
@@ -250,23 +301,26 @@ function processLabelRendering() {
 	if(renderLabels) {
 		if(!areServerElementsSupported()) {
 			if(localPlayer != null) {
-				for(let i in businesses) {
-					if(getDistance(localPlayer.position, businesses[i].entrancePosition) <= 75.0) {
-						natives.drawColouredCylinder(getPosBelowPos(businesses[i].entrancePosition, 1.0), 0.0, 0.0, 0, 153, 255, 255);
+				getServerData().businesses.forEach((business) => {
+					if(getDistance(localPlayer.position, business.entrancePosition) <= 75.0) {
+						natives.drawColouredCylinder(getPosBelowPos(business.entrancePosition, 1.0), 0.0, 0.0, 0, 153, 255, 255);
+						//renderPropertyEntranceLabel(business.name, business.entrancePosition, business.locked, true, makeLargeNumberReadable(business.price), makeLargeNumberReadable(business.rentPrice), business.labelInfoType);
 					}
-				}
+				});
 
-				for(let i in houses) {
-					if(getDistance(localPlayer.position, houses[i].entrancePosition) <= 75.0) {
-						natives.drawColouredCylinder(getPosBelowPos(houses[i].entrancePosition, 1.0), 0.0, 0.0, 0, 200, 0, 255);
+				getServerData().houses.forEach((house) => {
+					if(getDistance(localPlayer.position, house.entrancePosition) <= 75.0) {
+						natives.drawColouredCylinder(getPosBelowPos(house.entrancePosition, 1.0), 0.0, 0.0, 0, 200, 0, 255);
+						//renderPropertyEntranceLabel("House", house.entrancePosition, house.locked, true, makeLargeNumberReadable(house.price), makeLargeNumberReadable(house.rentPrice), 0);
 					}
-				}
+				});
 
-				for(let i in jobs) {
-					if(getDistance(localPlayer.position, jobs[i].position) <= 75.0) {
-						natives.drawColouredCylinder(getPosBelowPos(jobs[i].position, 1.0), 0.0, 0.0, 255, 255, 0, 255);
+				getServerData().jobs.forEach((job) => {
+					if(getDistance(localPlayer.position, job.position) <= 75.0) {
+						natives.drawColouredCylinder(getPosBelowPos(job.position, 1.0), 0.0, 0.0, 255, 255, 0, 255);
+						//renderJobLabel(job.name, job.position, job.jobType);
 					}
-				}
+				});
 			}
 		}
 

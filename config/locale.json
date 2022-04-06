@@ -8,5 +8,22 @@
         ["Spanish", "spanish", "es", "es", ["es", "ar", "bo", "cl", "co", "cr", "do", "ec", "sv", "gt", "hn", "mx", "ni", "pa", "py", "pe", "pr", "uy", "ve"]],
 		["Chinese", "chinese", "zh", "cn", ["cn", "hk", "sg", "tw"]],
 		["Arabic", "arabic", "ar", "sa", ["dz", "bh", "eg",	"iq", "jo", "kw", "lb", "ly", "ma", "om", "qa", "sa", "sy", "tn", "ae", "ye"]]
-    ]
+    ],
+	"sendStringsToClient": [
+		"PropertyEnterCommandLabel",
+		"PropertyEnterKeyPressLabel",
+		"BusinessBuyItemsLabel",
+		"PropertyForSaleLabel",
+		"PropertyForRentLabel",
+		"VehicleDealershipLabel",
+		"TakeJobLabel",
+		"StartWorkLabel",
+		"JobEquipAndUniformLabel",
+		"NotYourJobLabel",
+		"Locked",
+		"Unlocked",
+		"Closed",
+		"Open",
+		"JobLabel"
+	]
 }

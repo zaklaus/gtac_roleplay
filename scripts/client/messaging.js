@@ -7,13 +7,13 @@
 // TYPE: Client (JavaScript)
 // ===========================================================================
 
-let bigGameMessageFont = {};
+let bigGameMessageFonts = {};
 let bigGameMessageFontName = "";
 let bigGameMessageText = "";
 let bigGameMessageColour = COLOUR_WHITE;
 let bigGameMessageTimer = null;
 
-let smallGameMessageFont = {};
+let smallGameMessageFonts = {};
 let smallGameMessageFontName = "";
 let smallGameMessageText = "";
 let smallGameMessageColour = COLOUR_WHITE;

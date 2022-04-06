@@ -443,9 +443,9 @@
 	"Closed": "Closed",
     "Open": "Open",
 	"VehicleDealershipLabel": "Enter a vehicle as driver to buy it",
-	"TakeJobLabel": "Use /takejob to work here",
-	"StartWorkLabel": "Use /startwork to start working",
-	"JobEquipAndUniformLabel": "Use /uniform and /equip for job stuff, or /stopwork to stop working",
-	"NotYourJobLabel": "You already have a different job. Use /quitjob if you want this one",
+	"TakeJobLabel": "Use {1} to work here",
+	"StartWorkLabel": "Use {1} to start working",
+	"JobEquipAndUniformLabel": "Use {1} and {2} for job stuff, or {3} to stop working",
+	"NotYourJobLabel": "You already have a different job. Use {1} if you want this one",
 	"JobLabel": "{1} Job"
 }

@@ -1199,9 +1199,9 @@ function tellPlayerToSpawn(client, skinId, position) {
 // ==========================================================================
 
 function sendPlayerLocaleStrings(client) {
-	let strings = getServerConfig().locale.sendStringsToClient;
+	let strings = getGlobalConfig().locale.sendStringsToClient;
 	for(let i in strings) {
-		sendNetworkEventToPlayer("vrr.localeString", client, i, getLocaleString(client, strings[i]));
+		sendNetworkEventToPlayer("vrr.localeString", client, strings[i], getLocaleString(client, strings[i]));
 	}
 }
 

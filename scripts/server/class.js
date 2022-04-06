@@ -123,13 +123,12 @@ class ServerData {
 			this.introMusicURL = dbAssoc["svr_intro_music"];
 			this.realTimeZone = dbAssoc["svr_time_realtime_timezone"];
 
-			this.discordConfig = {
-				eventChannelWebHookURL: dbAssoc["svr_discord_event_webhook"],
-				chatChannelWebHookURL: dbAssoc["svr_discord_chat_webhook"],
+			this.discord = {
+				logChannelWebhookURL: dbAssoc["svr_discord_event_webhook"],
 				adminChannelWebHookURL: dbAssoc["svr_discord_admin_webhook"],
 				sendEvents: true,
 				sendChat: true,
-				sendAdminEvents: true,
+				sendAdmin: true,
 			};
 		}
 	}

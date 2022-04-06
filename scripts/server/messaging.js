@@ -52,7 +52,7 @@ function messagePlayerNormal(client, messageText, colour = COLOUR_WHITE) {
 // ===========================================================================
 
 function messageAdmins(messageText, colour = getColourByName("softRed")) {
-	//let plainMessage = removeColoursInMessage(messageText);
+	//
 	//console.warn(`🛡️ ${plainMessage}`);
 
 	let clients = getClients();
@@ -62,9 +62,8 @@ function messageAdmins(messageText, colour = getColourByName("softRed")) {
 		}
 	}
 
-	//if(getServerConfig().discordConfig.sendAdminEvents) {
-	//    messageDiscordAdminChannel(plainMessage);
-	//}
+	let plainMessage = removeColoursInMessage(messageText);
+	messageDiscordAdminChannel(plainMessage);
 }
 
 // ===========================================================================

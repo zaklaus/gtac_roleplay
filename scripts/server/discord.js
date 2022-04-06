@@ -89,34 +89,34 @@ function getDiscordUserData(discordUserId) {
 // ===========================================================================
 
 function messageDiscordChatChannel(messageString) {
-	if(!getServerConfig().discordConfig.sendChat) {
+	if(!getServerConfig().discord.sendChat) {
 		return false;
 	}
 
 	messageString = removeColoursInMessage(messageString);
-	triggerWebHook(getServerConfig().discord.logWebHookURL, JSON.stringify(messageString));
+	triggerWebHook(encodeURI(getServerConfig().discord.logChannelWebhookURL), encodeURI(messageString));
 }
 
 // ===========================================================================
 
 function messageDiscordAdminChannel(messageString) {
-	if(!getServerConfig().discordConfig.sendAdmin) {
+	if(!getServerConfig().discord.sendAdmin) {
 		return false;
 	}
 
 	messageString = removeColoursInMessage(messageString);
-	triggerWebHook(getServerConfig().discord.adminWebHookURL, JSON.stringify(messageString));
+	triggerWebHook(encodeURI(getServerConfig().discord.adminChannelWebhookURL), encodeURI(messageString));
 }
 
 // ===========================================================================
 
 function messageDiscordEventChannel(messageString) {
-	if(!getServerConfig().discordConfig.sendEvents) {
+	if(!getServerConfig().discord.sendEvents) {
 		return false;
 	}
 
 	messageString = removeColoursInMessage(messageString);
-	triggerWebHook(getServerConfig().discord.logWebHookURL, JSON.stringify(messageString));
+	triggerWebHook(encodeURI(getServerConfig().discord.logChannelWebhookURL), encodeURI(messageString));
 }
 
 // ===========================================================================

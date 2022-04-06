@@ -395,12 +395,15 @@ function getClientFromSyncerId(syncerId) {
 
 // ===========================================================================
 
-async function triggerWebHook(webHookURL, payloadData) {
+async function triggerWebHook(webHookURL, messageString) {
 	return new Promise(resolve => {
-		//console.warn(webHookURL);
+		let tempURL = getGlobalConfig().discord.webhook.baseURL;
+		tempURL = tempURL.replace("{0}", messageString);
+		tempURL = tempURL.replace("{1}", webHookURL);
+
 		httpGet(
-			webHookURL,
-			`data=${payloadData}`,
+			tempURL,
+			"",
 			function(data) {
 				//console.warn(JSON.parse(data));
 			},

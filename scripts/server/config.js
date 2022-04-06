@@ -112,6 +112,7 @@ function loadGlobalConfig() {
 	getGlobalConfig().economy = loadEconomyConfig();
 	getGlobalConfig().locale = loadLocaleConfig();
 	getGlobalConfig().accents = loadAccentConfig();
+	getGlobalConfig().discord = loadDiscordConfig();
 }
 
 // ===========================================================================
@@ -741,6 +742,15 @@ function loadAccentConfig() {
 	let accentConfig = JSON.parse(loadTextFile(`config/accents.json`));
 	if(accentConfig != null) {
 		return accentConfig;
+	}
+}
+
+// ===========================================================================
+
+function loadDiscordConfig() {
+	let discordConfig = JSON.parse(loadTextFile(`config/discord.json`));
+	if(discordConfig != null) {
+		return discordConfig;
 	}
 }
 

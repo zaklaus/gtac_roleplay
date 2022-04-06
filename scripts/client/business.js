@@ -81,7 +81,7 @@ function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel
 			} else {
 				logToConsole(LOG_DEBUG, `[VRR.Business] Business ${businessId} has no blip.`);
 			}
-			businesses.push(tempBusinessData);
+			getServerData().businesses.push(tempBusinessData);
 			setAllBusinessDataIndexes();
 		}
 	}
@@ -96,6 +96,9 @@ function receiveBusinessFromServer(businessId, name, entrancePosition, blipModel
 function getBusinessData(businessId) {
 	//let tempBusinessData = businesses.find((b) => b.businessId == businessId);
 	//return (typeof tempBusinessData != "undefined") ? tempBusinessData[0] : false;
+
+	let businesses = getServerData().businesses;
+
 	for(let i in businesses) {
 		if(businesses[i].businessId == businessId) {
 			return businesses[i];
@@ -108,8 +111,8 @@ function getBusinessData(businessId) {
 // ===========================================================================
 
 function setAllBusinessDataIndexes() {
-	for(let i in businesses) {
-		businesses[i].index = i;
+	for(let i in getServerData().businesses) {
+		getServerData().businesses[i].index = i;
 	}
 }
 

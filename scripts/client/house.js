@@ -75,7 +75,7 @@ function receiveHouseFromServer(houseId, entrancePosition, blipModel, pickupMode
 			} else {
 				logToConsole(LOG_DEBUG, `[VRR.House] House ${houseId} has no blip.`);
 			}
-			houses.push(tempHouseData);
+			getServerData().houses.push(tempHouseData);
 			setAllHouseDataIndexes();
 		}
 	}
@@ -88,6 +88,7 @@ function receiveHouseFromServer(houseId, entrancePosition, blipModel, pickupMode
  * @return {HouseData} The house's data (class instance)
  */
  function getHouseData(houseId) {
+	let houses = getServerData().houses;
 	for(let i in houses) {
 		if(houses[i].houseId == houseId) {
 			return houses[i];
@@ -100,8 +101,8 @@ function receiveHouseFromServer(houseId, entrancePosition, blipModel, pickupMode
 // ===========================================================================
 
 function setAllHouseDataIndexes() {
-	for(let i in houses) {
-		houses[i].index = i;
+	for(let i in getServerData().houses) {
+		getServerData().houses[i].index = i;
 	}
 }
 

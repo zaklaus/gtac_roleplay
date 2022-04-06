@@ -148,6 +148,7 @@ function setLocaleCommand(command, params, client) {
 	getPlayerData(client).accountData.locale = localeId;
 	getPlayerData(client).locale = localeId;
 	messagePlayerSuccess(client, getLocaleString(client, "LocaleChanged1", getLocaleString(client, "LocaleNativeName")));
+	sendPlayerLocaleStrings(client);
 }
 
 // ===========================================================================

@@ -8,6 +8,10 @@
 // ===========================================================================
 
 function getLocaleString(stringName, ...args) {
+	if(typeof getServerData().localeStrings[stringName] == undefined) {
+		return "";
+	}
+
 	let tempString = getServerData().localeStrings[stringName];
 
 	for(let i = 1; i <= args.length; i++) {
@@ -20,6 +24,7 @@ function getLocaleString(stringName, ...args) {
 // ===========================================================================
 
 function receiveLocaleStringFromServer(stringName, stringValue) {
+	logToConsole(LOG_INFO, `[VRR.Locale]: Received locale string "${stringName}" from server (${stringValue})`);
 	getServerData().localeStrings[stringName] = stringValue;
 }
 

@@ -18,6 +18,7 @@ class BusinessData {
 		this.hasInterior = hasInterior;
 		this.hasItems = hasItems;
 		this.blipId = -1;
+		this.labelInfoType = 0;
 	}
 }
 

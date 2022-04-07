@@ -20,17 +20,17 @@ function playPlayerAnimationCommand(command, params, client) {
 		return false;
 	}
 
-let animationSlot = getAnimationFromParams(getParam(params, " ", 1));
+	let animationSlot = getAnimationFromParams(getParam(params, " ", 1));
 	let animationPositionOffset = 1;
 
 	if(!animationSlot) {
-		messagePlayerError(client, getLocaleString(client, "AnimationNotFound"));
+		messagePlayerError(client, getLocaleString(client, "InvalidAnimation"));
 		messagePlayerInfo(client, getLocaleString(client, "AnimationHelpTip"), `{ALTCOLOUR}/animlist{MAINCOLOUR}`);
 		return false;
 	}
 
 	if(toInteger(animationPositionOffset) < 0 || toInteger(animationPositionOffset) > 3) {
-		messagePlayerError(client, getLocaleString(client, "AnimationInvalidDistance"));
+		messagePlayerError(client, getLocaleString(client, "InvalidAnimationDistance"));
 		return false;
 	}
 
@@ -107,7 +107,7 @@ function makePlayerPlayAnimation(client, animationSlot, offsetPosition = 1) {
 	getPlayerData(client).animationForced = false;
 
 	makePedPlayAnimation(getPlayerData(client).ped, animationSlot, offsetPosition);
-
+	setEntityData(ped, "vrr.anim", [animationData[1], animationData[2]]);
 	//if(getAnimationData(animationSlot)[9] != VRR_ANIMMOVE_NONE) {
 	//	if(getGame() < VRR_GAME_GTA_SA) {
 	//		setPlayerMouseCameraState(client, true);

@@ -1016,12 +1016,15 @@ function makePedPlayAnimation(ped, animationSlot, positionOffset) {
 				break;
 		}
 	//}
+
+	setEntityData(ped, "vrr.animation", animationData[1], animationData[2]);
 	sendNetworkEventToPlayer("vrr.pedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4], animationData[5], positionOffset, freezePlayer);
 }
 
 // ===========================================================================
 
 function makePedStopAnimation(pedId) {
+	removeEntityData(ped, "vrr.animation");
 	sendNetworkEventToPlayer("vrr.pedStopAnim", null, pedId);
 }
 
@@ -1030,6 +1033,7 @@ function makePedStopAnimation(pedId) {
 function forcePedAnimation(ped, animationSlot) {
 	let animationData = getAnimationData(animationSlot);
 
+	removeEntityData(ped, "vrr.animation", animationData[1], animationData[2]);
 	sendNetworkEventToPlayer("vrr.forcePedAnim", null, ped.id, animationData[1], animationData[2], animationData[3], animationData[4]);
 }
 

@@ -232,19 +232,7 @@ function onCameraProcess(event) {
 // ===========================================================================
 
 function onMouseWheel(event, mouseId, deltaCoordinates, flipped) {
-	if(!flipped) {
-		if(deltaCoordinates.y > 0) {
-			processMouseWheelForChatBox(true);
-		} else {
-			processMouseWheelForChatBox(false);
-		}
-	} else {
-		if(deltaCoordinates.y > 0) {
-			processMouseWheelForChatBox(false);
-		} else {
-			processMouseWheelForChatBox(true);
-		}
-	}
+	processMouseWheelForChatBox(mouseId, deltaCoordinates, flipped);
 }
 
 // ===========================================================================

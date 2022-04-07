@@ -127,16 +127,24 @@ function updateChatBox() {
 
 // ===========================================================================
 
-function processMouseWheelForChatBox(up) {
+function processMouseWheelForChatBox(mouseId, deltaCoordinates, flipped) {
 	// There isn't a way to detect whether chat input is active, but mouse cursor is forced shown when typing so ¯\_(ツ)_/¯
 	if(!gui.cursorEnabled) {
 		return false;
 	}
 
-	if(up) {
-		chatBoxScrollUp();
+	if(!flipped) {
+		if(deltaCoordinates.y > 0) {
+			chatBoxScrollUp();
+		} else {
+			chatBoxScrollDown();
+		}
 	} else {
-		chatBoxScrollDown();
+		if(deltaCoordinates.y > 0) {
+			chatBoxScrollDown();
+		} else {
+			chatBoxScrollUp();
+		}
 	}
 }
 

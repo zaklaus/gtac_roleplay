@@ -277,6 +277,7 @@ function spawnNPC(npcIndex) {
 	let civilian = createGameCivilian(getNPCData(npcIndex).model, getNPCData(npcIndex).spawnPosition, getNPCData(npcIndex).spawnRotation);
 	if(civilian) {
 		civilian.setData("vrr.dataIndex", npcIndex);
+		civilian.setData("vrr.animation", getNPCData(npcIndex).animationName);
 		getNPCData(npcIndex).ped = civilian;
 	}
 }
@@ -297,7 +298,7 @@ function deleteNPCCommand(command, params, client) {
 		return false;
 	}
 
-	let closestNPC = getClosestNPC(client);
+	let closestNPC = getClosestNPC(getPlayerPosition(client));
 
 	if(!getNPCData(closestNPC)) {
 		messagePlayerError(client, getLocaleString(client, "InvalidNPC"));
@@ -307,8 +308,10 @@ function deleteNPCCommand(command, params, client) {
 	let npcName = getNPCData(closestNPC).name;
 
 	deleteNPC(closestNPC);
-	messageAdmins(`${client.name} deleted NPC ${npcName}`)
+	messageAdmins(`${client.name}{MAINCOLOUR} deleted NPC {npcPink}${npcName}`)
 }
+
+// ===========================================================================
 
 function deleteNPC(npcId) {
 	quickDatabaseQuery(`DELETE FROM npc_main WHERE npc_id=${getNPCData(npcId).databaseId}`);
@@ -317,8 +320,59 @@ function deleteNPC(npcId) {
 		if(getNPCData(npcId).ped != false) {
 			deleteEntity(getNPCData(npcId).ped);
 		}
-		delete getServerData().npcs[npcId];
+		getServerData().npcs.splice(npcId, 1);
 	}
 
 	setAllNPCDataIndexes();
 }
+
+// ===========================================================================
+
+function setNPCAnimationCommand(command, params, client) {
+	if(areParamsEmpty(params)) {
+		messagePlayerSyntax(client, command);
+		return false;
+	}
+
+	let closestNPC = getClosestNPC(getPlayerPosition(client));
+	let animationId = getAnimationFromParams(getParam(params, " ", 1));
+	let animationPositionOffset = 1;
+
+	if(!getNPCData(closestNPC)) {
+		messagePlayerError(client, getLocaleString(client, "InvalidNPC"));
+		return false;
+	}
+
+	if(!getAnimationData(animationId)) {
+		messagePlayerError(client, getLocaleString(client, "InvalidAnimation"));
+		return false;
+	}
+
+	if(areThereEnoughParams(params, 2, " ")) {
+		if(toInteger(animationPositionOffset) < 0 || toInteger(animationPositionOffset) > 3) {
+			messagePlayerError(client, getLocaleString(client, "InvalidAnimationDistance"));
+			return false;
+		}
+		animationPositionOffset = getParam(params, " ", 2);
+	}
+
+	getNPCData(closestNPC).animationName = animation;
+	makePedPlayAnimation(getNPCData(closestNPC).ped, animationId, animationPositionOffset);
+}
+
+
+// ===========================================================================
+
+function getClosestHospital(position) {
+	let npcs = getServerData().npcs;
+	let closest = 0;
+	for(let i in npcs) {
+		if(getDistance(npcs[i].ped.position, position) < getDistance(npcs[i].ped.position, position)) {
+			closest = i;
+		}
+	}
+
+	return closest;
+}
+
+// ===========================================================================

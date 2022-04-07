@@ -556,6 +556,22 @@ function createGameVehicle(modelIndex, position, heading, toClient = null) {
 
 // ===========================================================================
 
+function createGameCivilian(modelIndex, position, heading, toClient = null) {
+	if(areServerElementsSupported()) {
+		let civilian = game.createCivilian(getGameConfig().skins[getGame()][modelIndex][0], 0);
+		if(!isNull(civilian)) {
+			civilian.position = position;
+			civilian.heading = heading;
+			addToWorld(civilian);
+			return civilian;
+		}
+	}
+
+	return false;
+}
+
+// ===========================================================================
+
 function getIsland(position) {
 	if(getServerGame() == VRR_GAME_GTA_III) {
 		if(position.x > 616) {

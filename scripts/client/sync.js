@@ -239,7 +239,7 @@ function syncCivilianProperties(civilian) {
 	}
 
 	if(doesEntityDataExist(civilian, "vrr.anim")) {
-		let animData = getEntityData(vehicle, "vrr.anim");
+		let animData = getEntityData(civilian, "vrr.anim");
 		civilian.addAnimation(animData[0], animData[1]);
 	}
 }
